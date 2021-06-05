@@ -32,11 +32,17 @@ public protocol HasRemotePicture {
     var picture: URL? { get }
 }
 
-public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture {
+public protocol Calibratable {
+    var offsetTemperature: Double? { get }
+    var offsetHumidity: Double? { get }
+    var offsetPressure: Double? { get }
+}
+
+public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable {
 }
 
 public protocol Shareable {
-    var sharedTo: String { get }
+    var sharedTo: [String] { get } // emails
 }
 
 public protocol ShareableSensor: Sensor, Shareable {

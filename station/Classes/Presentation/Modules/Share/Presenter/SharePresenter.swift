@@ -13,8 +13,8 @@ class SharePresenter {
     var errorPresenter: ErrorPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
 
-    private var ruuviTagId: String!
-    private let maxShareCount: Int = 3
+    private var sensor: RuuviTagSensor!
+    private let maxShareCount: Int = 10
     private var viewModel: ShareViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -35,7 +35,7 @@ extension SharePresenter: ShareViewOutput {
 
         activityPresenter.increment()
         ruuviOwnershipService
-            .share(macId: ruuviTagId.mac, with: email)
+            .share(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] _ in
                 self?.fetchShared()
             }, failure: { [weak self] error in
@@ -48,7 +48,7 @@ extension SharePresenter: ShareViewOutput {
     private func unshareTag(_ email: String) {
         activityPresenter.increment()
         ruuviOwnershipService
-            .unshare(macId: ruuviTagId.mac, with: email)
+            .unshare(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] _ in
                 self?.fetchShared()
             }, failure: { [weak self] error in
@@ -63,11 +63,10 @@ extension SharePresenter: ShareViewOutput {
               !email.isEmpty else {
             return
         }
-        let title = "SharePresenter.UnshareSensor.Title".localized()
+        let title: String? = nil
         let message = String(format: "SharePresenter.UnshareSensor.Message".localized(), email)
-
-        let confirmActionTitle = "SharePresenter.UnshareSensor.ConfirmAction".localized()
-        let cancelActionTitle = "SharePresenter.UnshareSensor.CancelAction".localized()
+        let confirmActionTitle = "Yes".localized()
+        let cancelActionTitle = "No".localized()
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             self?.unshareTag(email)
@@ -86,8 +85,8 @@ extension SharePresenter: ShareViewOutput {
 }
 // MARK: - ShareModuleInput
 extension SharePresenter: ShareModuleInput {
-    func configure(ruuviTagId: String) {
-        self.ruuviTagId = ruuviTagId
+    func configure(sensor: RuuviTagSensor) {
+        self.sensor = sensor
         viewModel = ShareViewModel(maxCount: self.maxShareCount)
     }
 
@@ -100,7 +99,7 @@ extension SharePresenter {
     private func fetchShared() {
         activityPresenter.increment()
         ruuviOwnershipService
-            .loadShared()
+            .loadShared(for: sensor)
             .on(success: { [weak self] shareableSensors in
                 self?.filterEmails(shareableSensors)
                 self?.view.clearInput()
@@ -112,21 +111,10 @@ extension SharePresenter {
     }
 
     private func filterEmails(_ sensors: Set<AnyShareableSensor>) {
-        let oldCount = viewModel.sharedEmails.value?.count
-
-        viewModel.sharedEmails.value = sensors.compactMap({
-            if $0.id == self.ruuviTagId {
-                return $0.sharedTo
-            } else {
-                return nil
-            }
-        })
-        let newCount = viewModel.sharedEmails.value?.count
-        if (newCount == 0 && oldCount != 0)
-            || (newCount != 0 && oldCount == 0) {
-            view.reloadTableView()
-        } else {
-            view.reloadSharedEmailsSection()
-        }
+        viewModel.sharedEmails.value = sensors
+            .first(where: {
+                $0.id == sensor.id
+            })?.sharedTo
+        view.reloadTableView()
     }
 }

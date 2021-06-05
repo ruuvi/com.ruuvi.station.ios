@@ -3,7 +3,7 @@ import RuuviOntology
 
 protocol TagSettingsRouterInput {
     func dismiss(completion: (() -> Void)?)
-    func openShare(for ruuviTagId: String)
+    func openShare(for sensor: RuuviTagSensor)
     func openOffsetCorrection(type: OffsetCorrectionType,
                               ruuviTag: RuuviTagSensor,
                               sensorSettings: SensorSettings?)

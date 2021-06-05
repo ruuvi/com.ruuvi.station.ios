@@ -5,6 +5,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviService
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
@@ -14,7 +15,8 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
+    var alertHandler: AlertService!
     var settings: RuuviLocalSettings!
     var pullWebDaemon: PullWebDaemon!
 
@@ -141,11 +143,19 @@ extension RuuviTagHeartbeatDaemonBTKit {
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings?
                 if let ruuviTagSensor = observer.ruuviTags
-                    .first(where: { $0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId }),
-                   let settings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id }) {
+                    .first(where: { $0.macId?.value == ruuviTag.mac || $0.luid?.any == ruuviTag.luid?.any }),
+                   let settings = observer.sensorSettingsList
+                    .first(where: {
+                            ($0.luid?.any == ruuviTagSensor.luid?.any)
+                                || ($0.macId?.any == ruuviTagSensor.macId?.any)
+                    }) {
                     sensorSettings = settings
                 }
-                observer.alertService.process(heartbeat: ruuviTag.with(sensorSettings: sensorSettings))
+                observer.alertHandler.process(
+                    heartbeat: ruuviTag
+                        .with(sensorSettings: sensorSettings)
+                        .with(source: .heartbeat)
+                )
                 if observer.settings.saveHeartbeats {
                     let uuid = ruuviTag.uuid
                     let interval = observer.settings.saveHeartbeatsIntervalMinutes
@@ -288,7 +298,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     switch change {
                     case .update(let updateSensorSettings):
                         if let updateIndex = self?.sensorSettingsList.firstIndex(
-                            where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                            where: { $0.id == updateSensorSettings.id }
                         ) {
                             self?.sensorSettingsList[updateIndex] = updateSensorSettings
                         } else {
@@ -304,7 +314,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         }
                     case .delete(let deleteSensorSettings):
                         if let deleteIndex = self?.sensorSettingsList.firstIndex(
-                            where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
+                            where: { $0.id == deleteSensorSettings.id }
                         ) {
                             self?.sensorSettingsList.remove(at: deleteIndex)
                         }

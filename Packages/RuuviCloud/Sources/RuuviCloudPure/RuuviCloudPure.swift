@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import Future
 import RuuviOntology
@@ -140,6 +141,34 @@ final class RuuviCloudPure: RuuviCloud {
     }
 
     func update(
+        temperatureOffset: Double?,
+        humidityOffset: Double?,
+        pressureOffset: Double?,
+        for sensor: RuuviTagSensor
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiSensorUpdateRequest(
+            sensor: sensor.id,
+            name: sensor.name,
+            offsetTemperature: temperatureOffset,
+            offsetHumidity: humidityOffset,
+            offsetPressure: pressureOffset
+
+        )
+        api.update(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: sensor.any)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    func update(
         name: String,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
@@ -148,7 +177,14 @@ final class RuuviCloudPure: RuuviCloud {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiSensorUpdateRequest(sensor: sensor.id, name: name)
+        let request = RuuviCloudApiSensorUpdateRequest(
+            sensor: sensor.id,
+            name: name,
+            offsetTemperature: nil,
+            offsetHumidity: nil,
+            offsetPressure: nil
+
+        )
         api.update(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: sensor.with(name: name).any)
@@ -158,14 +194,14 @@ final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
+    func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
         let promise = Promise<Set<AnyShareableSensor>, RuuviCloudError>()
         guard let apiKey = apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiSharedRequest()
-        api.shared(request, authorization: apiKey)
+        let request = RuuviCloudApiGetSensorsRequest(sensor: sensor.id)
+        api.sensors(request, authorization: apiKey)
             .on(success: { response in
                 let arrayOfAny = response.sensors.map({ $0.shareableSensor.any })
                 let setOfAny = Set<AnyShareableSensor>(arrayOfAny)
@@ -361,7 +397,7 @@ final class RuuviCloudPure: RuuviCloud {
                 return nil
             }
             return RuuviTagSensorRecordStruct(
-                ruuviTagId: macId.value,
+                luid: nil,
                 date: $0.date,
                 source: .ruuviNetwork,
                 macId: macId,
@@ -381,3 +417,4 @@ final class RuuviCloudPure: RuuviCloud {
         })
     }
 }
+// swiftlint:enable file_length

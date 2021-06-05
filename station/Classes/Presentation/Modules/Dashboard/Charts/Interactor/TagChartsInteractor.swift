@@ -20,6 +20,8 @@ class TagChartsInteractor {
     var exportService: ExportService!
     var keychainService: KeychainService!
     var ruuviSensorRecords: RuuviServiceSensorRecords!
+    var featureToggleService: FeatureToggleService!
+
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var didMigrationCompleteToken: NSObjectProtocol?
@@ -182,6 +184,7 @@ extension TagChartsInteractor: TagChartModuleOutput {
     }
 
     func chartViewDidChangeViewPort(_ chartView: TagChartView) {
+        guard featureToggleService.isEnabled(.syncZoom) else { return }
         chartViews.filter({ $0 != chartView }).forEach { otherChart in
             let matrix = chartView.viewPortHandler.touchMatrix
             otherChart.viewPortHandler.refresh(
