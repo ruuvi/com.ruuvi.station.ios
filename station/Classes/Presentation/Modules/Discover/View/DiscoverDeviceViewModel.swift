@@ -1,7 +1,8 @@
 import UIKit
+import RuuviOntology
 
 struct DiscoverDeviceViewModel {
-    var id: String
+    var luid: AnyLocalIdentifier?
     var isConnectable: Bool = false
     var rssi: Int?
     var mac: String?
