@@ -44,6 +44,7 @@ def shared_pods
   pod 'RuuviService/SensorRecords', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/AppSettings', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/OffsetCalibration', :path => 'Packages/RuuviService/RuuviService.podspec'
+  pod 'RuuviService/Alert', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviPool', :path => 'Packages/RuuviPool/RuuviPool.podspec', :testspecs => ['Tests']
   pod 'RuuviPool/Coordinator', :path => 'Packages/RuuviPool/RuuviPool.podspec'
   pod 'RuuviRepository', :path => 'Packages/RuuviRepository/RuuviRepository.podspec', :testspecs => ['Tests']
