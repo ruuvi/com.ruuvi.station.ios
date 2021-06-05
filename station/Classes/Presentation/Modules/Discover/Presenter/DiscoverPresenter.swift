@@ -107,7 +107,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
-        if let ruuviTag = ruuviTags.first(where: { $0.ruuviTagId == device.id }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == device.id }) {
             ruuviOwnershipService.add(sensor: ruuviTag.with(name: displayName), record: ruuviTag)
                 .on(success: { [weak self] _ in
                     guard let sSelf = self else { return }
@@ -289,20 +289,25 @@ extension DiscoverPresenter {
 
     private func updateViewDevices() {
         view.devices = ruuviTags.map { (ruuviTag) -> DiscoverDeviceViewModel in
-            if let persistedRuuviTag = persistedSensors.first(where: { $0.id == ruuviTag.ruuviTagId}) {
-                return DiscoverDeviceViewModel(id: ruuviTag.ruuviTagId,
-                                               isConnectable: ruuviTag.isConnectable,
-                                               rssi: ruuviTag.rssi,
-                                               mac: ruuviTag.mac,
-                                               name: persistedRuuviTag.name,
-                                               logo: ruuviLogoImage)
+            if let persistedRuuviTag = persistedSensors
+                .first(where: { $0.id == ruuviTag.id }) {
+                return DiscoverDeviceViewModel(
+                    id: ruuviTag.id,
+                    isConnectable: ruuviTag.isConnectable,
+                    rssi: ruuviTag.rssi,
+                    mac: ruuviTag.mac,
+                    name: persistedRuuviTag.name,
+                    logo: ruuviLogoImage
+                )
             } else {
-                return DiscoverDeviceViewModel(id: ruuviTag.ruuviTagId,
-                                               isConnectable: ruuviTag.isConnectable,
-                                               rssi: ruuviTag.rssi,
-                                               mac: ruuviTag.mac,
-                                               name: nil,
-                                               logo: ruuviLogoImage)
+                return DiscoverDeviceViewModel(
+                    id: ruuviTag.id,
+                    isConnectable: ruuviTag.isConnectable,
+                    rssi: ruuviTag.rssi,
+                    mac: ruuviTag.mac,
+                    name: nil,
+                    logo: ruuviLogoImage
+                )
             }
         }
     }

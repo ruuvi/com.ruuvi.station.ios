@@ -11,7 +11,7 @@ public enum RuuviTagSensorRecordSource: String {
 }
 
 public protocol RuuviTagSensorRecord {
-    var ruuviTagId: String { get }
+    var ruuviTagId: LocalIdentifier? { get }
     var date: Date { get }
     var source: RuuviTagSensorRecordSource { get }
     var macId: MACIdentifier? { get }
@@ -35,7 +35,14 @@ public protocol RuuviTagSensorRecord {
 
 extension RuuviTagSensorRecord {
     public var id: String {
-        return ruuviTagId + "\(date.timeIntervalSince1970)"
+        if let macId = macId,
+            !macId.value.isEmpty {
+            return macId.value + "\(date.timeIntervalSince1970)"
+        } else if let ruuviTagId = ruuviTagId {
+            return ruuviTagId.value + "\(date.timeIntervalSince1970)"
+        } else {
+            fatalError()
+        }
     }
 
     public var any: AnyRuuviTagSensorRecord {
@@ -44,7 +51,7 @@ extension RuuviTagSensorRecord {
 
     public func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: macId.value,
+            ruuviTagId: ruuviTagId,
             date: date,
             source: source,
             macId: macId,
@@ -109,7 +116,7 @@ extension RuuviTagSensorRecord {
 }
 
 public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
-    public var ruuviTagId: String
+    public var ruuviTagId: LocalIdentifier?
     public var date: Date
     public var source: RuuviTagSensorRecordSource
     public var macId: MACIdentifier?
@@ -131,7 +138,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     public var pressureOffset: Double
 
     public init(
-        ruuviTagId: String,
+        ruuviTagId: LocalIdentifier?,
         date: Date,
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
@@ -174,7 +181,7 @@ public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable
         self.object = object
     }
 
-    public var ruuviTagId: String {
+    public var ruuviTagId: LocalIdentifier? {
         return object.ruuviTagId
     }
 
