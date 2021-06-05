@@ -28,7 +28,7 @@ extension WebTagDataRealm {
         let h = Humidity(relative: humidity.value, temperature: t)
         let p = Pressure(pressure.value)
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: id,
+            luid: id.luid,
             date: date,
             source: .weatherProvider,
             macId: nil,

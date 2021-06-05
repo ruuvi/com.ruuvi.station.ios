@@ -4,9 +4,8 @@ import RealmSwift
 
 extension RuuviTagDataRealm {
     public var any: AnyRuuviTagSensorRecord? {
-        guard let ruuviTagId = ruuviTag?.uuid else { return nil }
         let inner = RuuviTagSensorRecordStruct(
-            ruuviTagId: ruuviTagId,
+            luid: ruuviTag?.uuid.luid,
             date: date,
             source: source,
             macId: ruuviTag?.mac?.mac,

@@ -17,7 +17,7 @@ class SettingsTableConfigurator {
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.alertService = r.resolve(AlertService.self)
+        presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)

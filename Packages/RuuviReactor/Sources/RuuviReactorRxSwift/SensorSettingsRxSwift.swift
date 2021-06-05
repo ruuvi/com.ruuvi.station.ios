@@ -6,7 +6,8 @@ import RuuviOntology
 import RuuviContext
 
 class SensorSettingsRxSwift {
-    var ruuviTagId: String
+    var luid: LocalIdentifier?
+    var macId: MACIdentifier?
     var sqlite: SQLiteContext
     var realm: RealmContext
 
@@ -25,13 +26,23 @@ class SensorSettingsRxSwift {
         deleteSubject.onCompleted()
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
-    init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
-        self.ruuviTagId = ruuviTagId
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    init(
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
+        sqlite: SQLiteContext,
+        realm: RealmContext
+    ) {
+        self.luid = luid
+        self.macId = macId
         self.sqlite = sqlite
         self.realm = realm
 
-        let request = SensorSettingsSQLite.filter(SensorSettingsSQLite.ruuviTagIdColumn)
+        let request = SensorSettingsSQLite
+            .filter(
+                SensorSettingsSQLite.luidColumn == luid?.value
+                    || SensorSettingsSQLite.macIdColumn == macId?.value
+            )
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
 
         try! self.ruuviTagController.performFetch()
@@ -52,6 +63,7 @@ class SensorSettingsRxSwift {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             let results = sSelf.realm.main.objects(SensorSettingsRealm.self)
+                .filter("luid == %@ || macId == %@", luid?.value, macId?.value)
             sSelf.ruuviTagRealmCache = results.map({ $0.sensorSettings })
             sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
                 guard let sSelf = self else { return }
