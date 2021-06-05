@@ -61,7 +61,10 @@ class RuuviPersistenceRealm: RuuviPersistence {
         assert(ruuviTag.luid != nil)
         context.bgWorker.enqueue {
             do {
-                if let realmTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTag.id) {
+                if let realmTag = self.context.bg.object(
+                    ofType: RuuviTagRealm.self,
+                    forPrimaryKey: ruuviTag.luid?.value ?? ruuviTag.id
+                ) {
                     try self.context.bg.write {
                         self.context.bg.delete(realmTag)
                     }
@@ -118,7 +121,10 @@ class RuuviPersistenceRealm: RuuviPersistence {
         assert(record.macId == nil)
         context.bgWorker.enqueue {
             do {
-                if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.id) {
+                if let ruuviTag = self.context.bg.object(
+                    ofType: RuuviTagRealm.self,
+                    forPrimaryKey: record.luid?.value ?? record.id
+                ) {
                     let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
                     try self.context.bg.write {
                         self.context.bg.add(data, update: .all)
@@ -142,8 +148,10 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 for record in records {
                     assert(record.macId == nil)
                     let extractedExpr: RuuviTagRealm? = self.context.bg
-                        .object(ofType: RuuviTagRealm.self,
-                                forPrimaryKey: record.id)
+                        .object(
+                            ofType: RuuviTagRealm.self,
+                            forPrimaryKey: record.luid?.value ?? record.id
+                        )
                     if let ruuviTag = extractedExpr {
                         let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
                         try self.context.bg.write {
