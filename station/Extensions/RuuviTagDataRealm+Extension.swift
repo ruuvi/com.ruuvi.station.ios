@@ -47,16 +47,19 @@ extension RuuviTagDataRealm {
         return Voltage(value: voltage, unit: .volts)
     }
     var measurement: RuuviMeasurement {
-        return RuuviMeasurement(ruuviTagId: ruuviTag!.uuid,
-                                measurementSequenceNumber: measurementSequenceNumber.value,
-                                date: date,
-                                rssi: rssi.value,
-                                temperature: unitTemperature,
-                                humidity: unitHumidity,
-                                pressure: unitPressure,
-                                acceleration: acceleration,
-                                voltage: unitVoltage,
-                                movementCounter: movementCounter.value,
-                                txPower: txPower.value)
+        return RuuviMeasurement(
+            luid: ruuviTag?.luid,
+            macId: ruuviTag?.macId,
+            measurementSequenceNumber: measurementSequenceNumber.value,
+            date: date,
+            rssi: rssi.value,
+            temperature: unitTemperature,
+            humidity: unitHumidity,
+            pressure: unitPressure,
+            acceleration: acceleration,
+            voltage: unitVoltage,
+            movementCounter: movementCounter.value,
+            txPower: txPower.value
+        )
     }
 }

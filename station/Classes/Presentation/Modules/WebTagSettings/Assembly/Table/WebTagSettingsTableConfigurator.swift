@@ -16,7 +16,7 @@ class WebTagSettingsTableConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
-        presenter.alertService = r.resolve(AlertService.self)
+        presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
