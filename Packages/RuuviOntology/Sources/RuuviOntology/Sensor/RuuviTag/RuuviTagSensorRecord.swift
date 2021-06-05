@@ -51,7 +51,7 @@ extension RuuviTagSensorRecord {
 
     public func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: luid,
+            luid: luid,
             date: date,
             source: source,
             macId: macId,
@@ -74,7 +74,7 @@ extension RuuviTagSensorRecord {
 extension RuuviTagSensorRecord {
     public func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: luid,
+            luid: luid,
             date: date,
             source: source,
             macId: macId,
@@ -95,7 +95,7 @@ extension RuuviTagSensorRecord {
 
     public func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: luid,
+            luid: luid,
             date: date,
             source: source,
             macId: macId,
@@ -138,7 +138,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     public var pressureOffset: Double
 
     public init(
-        ruuviTagId: LocalIdentifier?,
+        luid: LocalIdentifier?,
         date: Date,
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
@@ -155,7 +155,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
         humidityOffset: Double,
         pressureOffset: Double
     ) {
-        self.luid = ruuviTagId
+        self.luid = luid
         self.date = date
         self.source = source
         self.macId = macId
