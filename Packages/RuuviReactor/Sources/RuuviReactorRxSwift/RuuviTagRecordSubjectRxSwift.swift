@@ -11,7 +11,8 @@ class RuuviTagRecordSubjectRxSwift {
 
     private var sqlite: SQLiteContext
     private var realm: RealmContext
-    private var luid: LocalIdentifier
+    private var luid: LocalIdentifier?
+    private var macId: MACIdentifier?
 
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataRealmCache = [AnyRuuviTagSensorRecord]()
@@ -23,19 +24,24 @@ class RuuviTagRecordSubjectRxSwift {
     }
 
     init(
-        luid: LocalIdentifier,
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
         sqlite: SQLiteContext,
         realm: RealmContext
     ) {
         self.sqlite = sqlite
         self.realm = realm
         self.luid = luid
+        self.macId = macId
     }
 
     func start() {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
-            .filter(RuuviTagDataSQLite.luidColumn == luid.value)
+            .filter(
+                RuuviTagDataSQLite.luidColumn == luid?.value
+                    || RuuviTagDataSQLite.macColumn == macId?.value
+            )
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
         }.removeDuplicates()
@@ -46,7 +52,7 @@ class RuuviTagRecordSubjectRxSwift {
         }
 
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@", luid.value)
+            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@", luid?.value, macId?.value)
             .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmCache = results.compactMap({ $0.any })
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
