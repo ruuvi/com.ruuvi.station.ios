@@ -57,7 +57,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
         case .humidity:
             cloudUpdate = cloud.update(
                 temperatureOffset: nil,
-                humidityOffset: offset ?? 0,
+                humidityOffset: (offset ?? 0) * 100, // fraction locally, % on cloud
                 pressureOffset: nil,
                 for: sensor
             )
@@ -65,7 +65,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
             cloudUpdate = cloud.update(
                 temperatureOffset: nil,
                 humidityOffset: nil,
-                pressureOffset: offset ?? 0,
+                pressureOffset: (offset ?? 0) * 100, // hPA locally, Pa on cloud
                 for: sensor
             )
         }

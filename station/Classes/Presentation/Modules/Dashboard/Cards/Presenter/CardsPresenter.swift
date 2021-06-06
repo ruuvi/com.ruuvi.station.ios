@@ -544,7 +544,7 @@ extension CardsPresenter {
                 }),
                let record = anyRecord {
                 let previousDate = viewModel.date.value ?? Date.distantPast
-                if previousDate < record.date {
+                if previousDate <= record.date {
                     viewModel.update(record)
                 }
             }

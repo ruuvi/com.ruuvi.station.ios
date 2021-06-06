@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Lisää ystävä";
 "ShareViewController.emailTextField.placeholder" = "Anna sähköpostiosoite";
 "ShareViewController.sharedEmails.Title" = "Anturi on jo jaettu %d/%d";
+"Share.Send.button" = "Lähetä";
 "SharePresenter.UnshareSensor.Message" = "Haluatko lopettaa anturin jakamisen käyttäjälle %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "VERKON TIEDOT";
 "TagSettings.NetworkInfo.Owner" = "Omistaja";
@@ -374,9 +375,12 @@
 "OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Syötä anturin oletettu lämpötila tämänhetkisissä olosuhteissa (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterPressure" = "Syötä anturin oletettu paine tämänhetkisissä olosuhteissa (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Syötä anturin oletettu kosteus tämänhetkisissä olosuhteissa (%@): ";
+"OffsetCorrection.OriginalValue.title" = "Alkuperäinen arvo";
+"OffsetCorrection.CorrectedValue.title" = "Korjattu arvo";
 "OffsetCorrection.Temperature.Title" = "Lämpötilapoikkeama";
 "OffsetCorrection.Humidity.Title" = "Kosteuspoikkeama";
 "OffsetCorrection.Pressure.Title" = "Painepoikkeama";
+"OffsetCorrection.Calibrate.button" = "Kalibrointi";
 "TagSettings.SectionHeader.OffsetCorrection.Title" = "KALIBROINTI";
 "TagSettings.OffsetCorrection.Temperature" = "Lämpötila";
 "TagSettings.OffsetCorrection.Humidity" = "Kosteus";

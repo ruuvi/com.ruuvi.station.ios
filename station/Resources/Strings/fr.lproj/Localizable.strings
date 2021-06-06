@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Ajouter un ami";
 "ShareViewController.emailTextField.placeholder" = "Adresse mail";
 "ShareViewController.sharedEmails.Title" = "Le capteur est déjà partagé";
+"Share.Send.button" = "Envoyer";
 "SharePresenter.UnshareSensor.Message" = "Voulez-vous arrêter le partage du capteur avec %@ ?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "RÉSEAU";
 "TagSettings.NetworkInfo.Owner" = "Propriétaire";
@@ -374,9 +375,12 @@
 "OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Entrez la température attendue dans ces conditions (%@):";
 "OffsetCorrection.Dialog.Calibration.EnterPressure" = "Entrez la pression attendue dans ces conditions (%@):";
 "OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Entrez l'humidité attendue dans ces conditions (%@):";
+"OffsetCorrection.OriginalValue.title" = "Valeur originale";
+"OffsetCorrection.CorrectedValue.title" = "Valeur corrigée";
 "OffsetCorrection.Temperature.Title" = "Correction de température";
 "OffsetCorrection.Humidity.Title" = "Correction d'humidité";
 "OffsetCorrection.Pressure.Title" = "Correction de pression";
+"OffsetCorrection.Calibrate.button" = "Correction";
 "TagSettings.SectionHeader.OffsetCorrection.Title" = "CORRECTION";
 "TagSettings.OffsetCorrection.Temperature" = "Température";
 "TagSettings.OffsetCorrection.Humidity" = "Humidité";
