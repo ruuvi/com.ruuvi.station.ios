@@ -98,6 +98,8 @@ class OffsetCorrectionViewModel {
 
         if let value = self.offsetCorrectionValue.value, value != 0 {
             self.hasOffsetValue.value = true
+        } else {
+            self.hasOffsetValue.value = false
         }
     }
 }
