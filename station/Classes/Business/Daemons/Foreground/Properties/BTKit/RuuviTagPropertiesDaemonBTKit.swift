@@ -119,6 +119,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
         }
     }
 
+    // swiftlint:disable:next function_body_length
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
         if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
             // this is the case when data format 3 tag (2.5.9) changes format
@@ -133,20 +134,23 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 isTransitioningFromRealmToSQLite = true
                 idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
                 // now we need to remove the tag from Realm and add it to SQLite
-                sqiltePersistence.create(pair.ruuviTag.with(macId: mac.mac))
-                    .on(success: { [weak self] _ in
-                        self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
-                            self?.realmPersistence.delete(pair.ruuviTag.withoutMac())
-                                .on(success: { [weak self] _ in
-                                    self?.isTransitioningFromRealmToSQLite = false
-                                }, failure: { error in
-                                    self?.post(error: error)
-                                    self?.isTransitioningFromRealmToSQLite = false
-                                })
-                        }, failure: { error in
-                            self?.post(error: error)
-                            self?.isTransitioningFromRealmToSQLite = false
-                        })
+                sqiltePersistence.create(
+                    pair.ruuviTag
+                        .with(macId: mac.mac)
+                        .with(isOwner: true)
+                ).on(success: { [weak self] _ in
+                    self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
+                        self?.realmPersistence.delete(pair.ruuviTag.withoutMac())
+                            .on(success: { [weak self] _ in
+                                self?.isTransitioningFromRealmToSQLite = false
+                            }, failure: { error in
+                                self?.post(error: error)
+                                self?.isTransitioningFromRealmToSQLite = false
+                            })
+                    }, failure: { error in
+                        self?.post(error: error)
+                        self?.isTransitioningFromRealmToSQLite = false
+                    })
                 }, failure: { [weak self] (error) in
                     self?.post(error: error)
                     self?.isTransitioningFromRealmToSQLite = false
@@ -210,7 +214,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 isConnectable: device.isConnectable,
                 name: ruuviTag.name,
                 isClaimed: ruuviTag.isClaimed,
-                isOwner: ruuviTag.isClaimed,
+                isOwner: ruuviTag.isOwner,
                 owner: ruuviTag.owner)
             sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
             sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
