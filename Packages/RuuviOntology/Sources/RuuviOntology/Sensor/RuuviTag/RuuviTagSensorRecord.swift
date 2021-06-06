@@ -121,9 +121,15 @@ extension RuuviTagSensorRecord {
             source: source,
             macId: macId,
             rssi: rssi,
-            temperature: temperature?.withSensorSettings(sensorSettings: sensorSettings),
-            humidity: humidity?.withSensorSettings(sensorSettings: sensorSettings),
-            pressure: pressure?.withSensorSettings(sensorSettings: sensorSettings),
+            temperature: temperature?
+                .minus(value: temperatureOffset)?
+                .plus(sensorSettings: sensorSettings),
+            humidity: humidity?
+                .minus(value: humidityOffset)?
+                .plus(sensorSettings: sensorSettings),
+            pressure: pressure?
+                .minus(value: pressureOffset)?
+                .plus(sensorSettings: sensorSettings),
             acceleration: acceleration,
             voltage: voltage,
             movementCounter: movementCounter,
