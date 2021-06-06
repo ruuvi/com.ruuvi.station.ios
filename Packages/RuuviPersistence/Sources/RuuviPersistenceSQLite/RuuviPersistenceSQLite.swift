@@ -431,8 +431,9 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             if let sqliteSensorRecord = record {
                 try database.dbPool.write { db in
-                    try sqliteSensorRecord.with(sensorSettings: sqliteSensorSettings)
-                        .sqlite.insert(db)
+                    try sqliteSensorRecord.with(
+                        sensorSettings: sqliteSensorSettings
+                    ).sqlite.insert(db)
                 }
             }
             promise.succeed(value: sqliteSensorSettings)
