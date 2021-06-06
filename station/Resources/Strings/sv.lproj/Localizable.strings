@@ -374,9 +374,12 @@
 "OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Ange temperaturen som förväntas av sensorn just nu (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterPressure" = "Ange lufttrycket som förväntas av sensorn just nu (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Ange fuktigheten som förväntas av sensorn just nu (%@): ";
+"OffsetCorrection.OriginalValue.title" = "Ursprungligt värde";
+"OffsetCorrection.CorrectedValue.title" = "Korrigerat värde";
 "OffsetCorrection.Temperature.Title" = "Temperatur offset";
 "OffsetCorrection.Humidity.Title" = "Fuktighet offset";
 "OffsetCorrection.Pressure.Title" = "Lufttryck offset";
+"OffsetCorrection.Calibrate.button" = "Kalibrering";
 "TagSettings.SectionHeader.OffsetCorrection.Title" = "KALIBRERING";
 "TagSettings.OffsetCorrection.Temperature" = "Temperatur";
 "TagSettings.OffsetCorrection.Humidity" = "Fuktighet";

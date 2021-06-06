@@ -40,8 +40,8 @@ class SensorSettingsRxSwift {
 
         let request = SensorSettingsSQLite
             .filter(
-                SensorSettingsSQLite.luidColumn == luid?.value
-                    || SensorSettingsSQLite.macIdColumn == macId?.value
+                (luid?.value != nil && SensorSettingsSQLite.luidColumn == luid?.value)
+                || (macId?.value != nil && SensorSettingsSQLite.macIdColumn == macId?.value)
             )
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
 

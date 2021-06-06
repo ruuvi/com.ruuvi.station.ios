@@ -374,9 +374,12 @@
 "OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Введите ожидаемое значение температуры в текущих условиях (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterPressure" = "Введите ожидаемое значение давления в текущих условиях (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Введите ожидаемое значение влажности в текущих условиях (%@): ";
+"OffsetCorrection.OriginalValue.title" = "Измеренное значение";
+"OffsetCorrection.CorrectedValue.title" = "Откалиброванное значение";
 "OffsetCorrection.Temperature.Title" = "Калибровка по температуре";
 "OffsetCorrection.Humidity.Title" = "Калибровка по влажности";
 "OffsetCorrection.Pressure.Title" = "Калибровка по давлению";
+"OffsetCorrection.Calibrate.button" = "Калибровка";
 "TagSettings.SectionHeader.OffsetCorrection.Title" = "КАЛИБРОВКИ";
 "TagSettings.OffsetCorrection.Temperature" = "Температура";
 "TagSettings.OffsetCorrection.Humidity" = "Влажность";
