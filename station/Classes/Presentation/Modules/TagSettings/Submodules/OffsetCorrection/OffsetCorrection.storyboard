@@ -17,7 +17,7 @@
         <!--Offset Correction Apple View Controller-->
         <scene sceneID="9eu-CR-bnL">
             <objects>
-                <viewController storyboardIdentifier="OffsetCorrectionAppleViewController" id="KfP-FV-34v" customClass="OffsetCorrectionAppleViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OffsetCorrectionAppleViewController" id="KfP-FV-34v" customClass="OffsetCorrectionAppleViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ydf-Ep-WgR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -169,15 +169,17 @@
                         <outlet property="calibrateButton" destination="I2d-ql-qUs" id="NsL-ry-b2X"/>
                         <outlet property="clearButton" destination="30C-Ra-WkM" id="b8D-XV-guO"/>
                         <outlet property="correctedValueLabel" destination="Vpt-LL-XXT" id="X89-X2-WWq"/>
+                        <outlet property="correctedValueTitle" destination="Rq3-OO-vf6" id="mOm-k5-rSH"/>
                         <outlet property="correctedValueView" destination="H3r-Yk-l6h" id="Axd-6Z-4Wl"/>
                         <outlet property="descriptionTextView" destination="gvZ-Yz-kax" id="cFp-lg-4dt"/>
                         <outlet property="offsetValueLabel" destination="XeT-G6-sH9" id="7ha-Pb-DFn"/>
                         <outlet property="originalValueLabel" destination="uUo-hF-EOG" id="Jlo-pc-lAC"/>
+                        <outlet property="originalValueTitle" destination="0gG-zY-0LU" id="663-OY-DXE"/>
                         <outlet property="originalValueUpdateTimeLabel" destination="2De-5r-q5T" id="WW6-iu-3bq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sva-h6-V3c" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="hqu-sp-Jfv" customClass="OffsetCorrectionAppleInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="hqu-sp-Jfv" customClass="OffsetCorrectionAppleInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="KfP-FV-34v" id="kKB-cp-gKX"/>
                     </connections>

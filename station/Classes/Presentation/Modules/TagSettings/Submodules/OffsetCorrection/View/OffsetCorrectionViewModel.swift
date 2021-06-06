@@ -96,6 +96,10 @@ class OffsetCorrectionViewModel {
             self.offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         }
 
-        self.hasOffsetValue.value = self.offsetCorrectionValue.value != nil
+        if let value = self.offsetCorrectionValue.value, value != 0 {
+            self.hasOffsetValue.value = true
+        } else {
+            self.hasOffsetValue.value = false
+        }
     }
 }
