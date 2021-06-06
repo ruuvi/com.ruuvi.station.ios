@@ -278,10 +278,12 @@ class BusinessAssembly: Assembly {
             let pool = r.resolve(RuuviPool.self)!
             let cloud = r.resolve(RuuviCloud.self)!
             let propertiesService = r.resolve(RuuviServiceSensorProperties.self)!
+            let localIDs = r.resolve(RuuviLocalIDs.self)!
             return factory.createOwnership(
                 ruuviCloud: cloud,
                 ruuviPool: pool,
-                propertiesService: propertiesService
+                propertiesService: propertiesService,
+                localIDs: localIDs
             )
         }
 
