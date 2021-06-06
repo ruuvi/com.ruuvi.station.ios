@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Add friend";
 "ShareViewController.emailTextField.placeholder" = "Type email";
 "ShareViewController.sharedEmails.Title" = "Already shared %d/%d";
+"Share.Send.button" = "Send";
 "SharePresenter.UnshareSensor.Message" = "Do you want to unshare sensor for %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
 "TagSettings.NetworkInfo.Owner" = "Owner";

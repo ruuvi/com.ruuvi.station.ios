@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Lägg till vän";
 "ShareViewController.emailTextField.placeholder" = "Ange e-postadress";
 "ShareViewController.sharedEmails.Title" = "Sensorn är redan delad %d/%d";
+"Share.Send.button" = "Skicka";
 "SharePresenter.UnshareSensor.Message" = "Vill du sluta dela sensorn med %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NÄTVERKSINFO";
 "TagSettings.NetworkInfo.Owner" = "Ägare";
