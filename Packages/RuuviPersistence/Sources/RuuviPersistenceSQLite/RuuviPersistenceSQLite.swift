@@ -228,7 +228,9 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 var sqliteRecord: Record?
                 try self?.database.dbPool.read { db in
                     let request = Record.order(Record.dateColumn.desc)
-                        .filter(Record.luidColumn == ruuviTag.luid?.value || Record.macColumn == ruuviTag.macId?.value)
+                        .filter(
+                            (ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
+                                || (ruuviTag.macId?.value != nil && Record.macColumn == ruuviTag.macId?.value))
                     sqliteRecord = try request.fetchOne(db)
                 }
                 promise.succeed(value: sqliteRecord)

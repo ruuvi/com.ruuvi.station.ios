@@ -38,8 +38,8 @@ class RuuviTagLastRecordSubjectRxSwift {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn.desc)
             .filter(
-                RuuviTagDataSQLite.luidColumn == luid?.value
-                    || RuuviTagDataSQLite.macColumn == macId?.value
+                (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
+                || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
             )
         let observation = request.observationForFirst()
 

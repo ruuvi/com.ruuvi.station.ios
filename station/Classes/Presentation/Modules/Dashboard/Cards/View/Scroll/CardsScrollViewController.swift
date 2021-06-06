@@ -376,36 +376,19 @@ extension CardsScrollViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
-        let isConnected = viewModel.isConnected
-        let date = viewModel.date
-        view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
-            if let isConnected = isConnected, isConnected, let date = date?.value {
-                label.text = date.ruuviAgo()
-            } else {
-                if let date = date?.value {
-                    label.text = date.ruuviAgo()
-                } else {
-                    label.text = CardsScrollViewController.localizedCache.notAvailable
-                }
-            }
-            view?.updatedAt = date?.value
-            view?.isConnected = isConnected
+        view.bind(viewModel.isConnected) { view, isConnected in
+            view.isConnected = isConnected
         }
-
-        view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
-            if let isConnected = isConnected, isConnected.value.bound, let date = date {
+        view.updatedLabel.bind(viewModel.date) { label, date in
+            if let date = date {
                 label.text = date.ruuviAgo()
             } else {
-                if let date = date {
-                    label.text = date.ruuviAgo()
-                } else {
-                    label.text = CardsScrollViewController.localizedCache.notAvailable
-                }
+                label.text = CardsScrollViewController.localizedCache.notAvailable
             }
-            view?.updatedAt = date
-            view?.isConnected = isConnected?.value
+        }
+        view.bind(viewModel.date) { view, date in
+            view.updatedAt = date
         }
         view.dataSourceImageView.bind(viewModel.source) { [weak self] imageView, source in
             if let source = source {
