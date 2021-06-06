@@ -44,13 +44,16 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviCloud.getCloudSettings()
             .on(success: { [weak self] cloudSettings in
                 guard let sSelf = self else { return }
-                if let unitTemperature = cloudSettings.unitTemperature {
+                if let unitTemperature = cloudSettings.unitTemperature,
+                   unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
                 }
-                if let unitHumidity = cloudSettings.unitHumidity {
+                if let unitHumidity = cloudSettings.unitHumidity,
+                   unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
                     sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
                 }
-                if let unitPressure = cloudSettings.unitPressure {
+                if let unitPressure = cloudSettings.unitPressure,
+                   unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
                 }
                 promise.succeed(value: cloudSettings)
