@@ -38,8 +38,8 @@ class RuuviTagLastRecordSubjectRxSwift {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn.desc)
             .filter(
-                RuuviTagDataSQLite.luidColumn == luid?.value
-                    || RuuviTagDataSQLite.macColumn == macId?.value
+                (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
+                || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
             )
         let observation = request.observationForFirst()
 
@@ -50,7 +50,10 @@ class RuuviTagLastRecordSubjectRxSwift {
             }
         }
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@", luid?.value, macId?.value)
+            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
+                    luid?.value ?? "invalid",
+                    macId?.value ?? "invalid"
+            )
             .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
