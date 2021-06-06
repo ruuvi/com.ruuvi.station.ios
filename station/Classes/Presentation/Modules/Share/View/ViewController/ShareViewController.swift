@@ -154,6 +154,7 @@ extension ShareViewController {
     private func getButtonCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareSendButtonTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareSendButtonTableViewCell.self, for: indexPath)
         cell.sendButton.addTarget(self, action: #selector(didTapSendButton(_:)), for: .touchUpInside)
+        cell.sendButton.setTitle("Share.Send.button".localized(), for: .normal)
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
