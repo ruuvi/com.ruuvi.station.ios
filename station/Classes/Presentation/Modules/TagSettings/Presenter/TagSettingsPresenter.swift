@@ -554,8 +554,14 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
+            case .insert(let sensor):
+                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
+                    sensor.macId?.any == self?.ruuviTag.macId?.any {
+                    self?.ruuviTag = sensor
+                }
             case .update(let sensor):
-                if sensor.id == self?.ruuviTag.id {
+                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
+                    sensor.macId?.any == self?.ruuviTag.macId?.any {
                     self?.ruuviTag = sensor
                 }
             case .error(let error):
