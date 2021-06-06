@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Добавить друга";
 "ShareViewController.emailTextField.placeholder" = "Введите email";
 "ShareViewController.sharedEmails.Title" = "Предоставлен доступ %d/%d";
+"Share.Send.button" = "Отправить";
 "SharePresenter.UnshareSensor.Message" = "Хотите перестать делиться показаниями датчика с %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "Данные сети";
 "TagSettings.NetworkInfo.Owner" = "Владелец";

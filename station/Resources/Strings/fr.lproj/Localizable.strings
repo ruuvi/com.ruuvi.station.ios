@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Ajouter un ami";
 "ShareViewController.emailTextField.placeholder" = "Adresse mail";
 "ShareViewController.sharedEmails.Title" = "Le capteur est déjà partagé";
+"Share.Send.button" = "Envoyer";
 "SharePresenter.UnshareSensor.Message" = "Voulez-vous arrêter le partage du capteur avec %@ ?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "RÉSEAU";
 "TagSettings.NetworkInfo.Owner" = "Propriétaire";

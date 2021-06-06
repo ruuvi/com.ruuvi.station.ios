@@ -340,6 +340,7 @@
 "ShareViewController.addFriend.Title" = "Lisää ystävä";
 "ShareViewController.emailTextField.placeholder" = "Anna sähköpostiosoite";
 "ShareViewController.sharedEmails.Title" = "Anturi on jo jaettu %d/%d";
+"Share.Send.button" = "Lähetä";
 "SharePresenter.UnshareSensor.Message" = "Haluatko lopettaa anturin jakamisen käyttäjälle %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "VERKON TIEDOT";
 "TagSettings.NetworkInfo.Owner" = "Omistaja";
