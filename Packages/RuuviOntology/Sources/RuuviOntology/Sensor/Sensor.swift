@@ -33,9 +33,9 @@ public protocol HasRemotePicture {
 }
 
 public protocol Calibratable {
-    var offsetTemperature: Double? { get }
-    var offsetHumidity: Double? { get }
-    var offsetPressure: Double? { get }
+    var offsetTemperature: Double? { get } // in degrees
+    var offsetHumidity: Double? { get } // in fraction of one
+    var offsetPressure: Double? { get } // in hPa
 }
 
 public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable {
