@@ -32,9 +32,15 @@ extension Temperature {
         }
     }
 
-    public func withSensorSettings(sensorSettings: SensorSettings?) -> Temperature? {
+    public func plus(sensorSettings: SensorSettings?) -> Temperature? {
         return Temperature(
             self.value + (sensorSettings?.temperatureOffset ?? 0), unit: self.unit
+        )
+    }
+
+    public func minus(value: Double?) -> Temperature? {
+        return Temperature(
+            self.value - (value ?? 0), unit: self.unit
         )
     }
 }
@@ -48,9 +54,15 @@ extension Pressure {
         }
     }
 
-    public func withSensorSettings(sensorSettings: SensorSettings?) -> Pressure? {
+    public func plus(sensorSettings: SensorSettings?) -> Pressure? {
         return Pressure(
             self.value + (sensorSettings?.pressureOffset ?? 0), unit: self.unit
+        )
+    }
+
+    public func minus(value: Double?) -> Pressure? {
+        return Pressure(
+            self.value - (value ?? 0), unit: self.unit
         )
     }
 }
@@ -65,8 +77,12 @@ extension Humidity {
         }
     }
 
-    public func withSensorSettings(sensorSettings: SensorSettings?) -> Humidity? {
+    public func plus(sensorSettings: SensorSettings?) -> Humidity? {
         return Humidity(value: self.value + (sensorSettings?.humidityOffset ?? 0), unit: self.unit)
+    }
+
+    public func minus(value: Double?) -> Humidity? {
+        return Humidity(value: self.value - (value ?? 0), unit: self.unit)
     }
 
     public static var zeroAbsolute: Humidity {
