@@ -228,7 +228,9 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 var sqliteRecord: Record?
                 try self?.database.dbPool.read { db in
                     let request = Record.order(Record.dateColumn.desc)
-                        .filter(Record.luidColumn == ruuviTag.luid?.value || Record.macColumn == ruuviTag.macId?.value)
+                        .filter(
+                            (ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
+                                || (ruuviTag.macId?.value != nil && Record.macColumn == ruuviTag.macId?.value))
                     sqliteRecord = try request.fetchOne(db)
                 }
                 promise.succeed(value: sqliteRecord)
@@ -268,16 +270,17 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
-        let entity = Entity(id: ruuviTag.id,
-                            macId: ruuviTag.macId,
-                            luid: ruuviTag.luid,
-                            name: ruuviTag.name,
-                            version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable,
-                            isClaimed: ruuviTag.isClaimed,
-                            isOwner: ruuviTag.isOwner,
-                            owner: ruuviTag.owner)
-
+        let entity = Entity(
+            id: ruuviTag.id,
+            macId: ruuviTag.macId,
+            luid: ruuviTag.luid,
+            name: ruuviTag.name,
+            version: ruuviTag.version,
+            isConnectable: ruuviTag.isConnectable,
+            isClaimed: ruuviTag.isClaimed,
+            isOwner: ruuviTag.isOwner,
+            owner: ruuviTag.owner
+        )
         do {
             var success = false
             try database.dbPool.write { db in
@@ -364,8 +367,8 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             var sqliteSensorSettings: Settings?
             try self.database.dbPool.read { db in
                 let request = Settings.filter(
-                    Settings.luidColumn == ruuviTag.luid?.value
-                        || Settings.macIdColumn == ruuviTag.macId?.value
+                    (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
+                        || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
                 )
                 sqliteSensorSettings = try request.fetchOne(db)
             }
@@ -400,8 +403,8 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             )
             try database.dbPool.read { db in
                 let request = Settings.filter(
-                    Settings.luidColumn == ruuviTag.luid?.value ||
-                    Settings.macIdColumn == ruuviTag.macId?.value
+                    (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
+                        || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
                 )
                 if let existingSettings = try request.fetchOne(db) {
                     sqliteSensorSettings = existingSettings
@@ -428,8 +431,9 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             if let sqliteSensorRecord = record {
                 try database.dbPool.write { db in
-                    try sqliteSensorRecord.with(sensorSettings: sqliteSensorSettings)
-                        .sqlite.insert(db)
+                    try sqliteSensorRecord.with(
+                        sensorSettings: sqliteSensorSettings
+                    ).sqlite.insert(db)
                 }
             }
             promise.succeed(value: sqliteSensorSettings)
@@ -449,8 +453,8 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             var success = false
             try database.dbPool.write { db in
                 let request = Settings.filter(
-                    Settings.luidColumn == ruuviTag.luid?.value
-                        || Settings.macIdColumn == ruuviTag.macId?.value
+                    (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
+                        || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
                 )
                 let sensorSettings: Settings? = try request.fetchOne(db)
                 if let notNullSensorSettings = sensorSettings {

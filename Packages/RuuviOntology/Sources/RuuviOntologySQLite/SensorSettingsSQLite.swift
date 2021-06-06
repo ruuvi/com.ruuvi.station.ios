@@ -47,8 +47,12 @@ extension SensorSettingsSQLite {
 
 extension SensorSettingsSQLite: FetchableRecord {
     public init(row: Row) {
-        luid = LocalIdentifierStruct(value: row[SensorSettingsSQLite.luidColumn])
-        macId = MACIdentifierStruct(value: row[SensorSettingsSQLite.macIdColumn])
+        if let luidValue = String.fromDatabaseValue(row[SensorSettingsSQLite.luidColumn]) {
+            luid = LocalIdentifierStruct(value: luidValue)
+        }
+        if let macIdValue = String.fromDatabaseValue(row[SensorSettingsSQLite.macIdColumn]) {
+            macId = MACIdentifierStruct(value: macIdValue)
+        }
         temperatureOffset = row[SensorSettingsSQLite.temperatureOffsetColumn]
         temperatureOffsetDate = row[SensorSettingsSQLite.temperatureOffsetDateColumn]
         humidityOffset = row[SensorSettingsSQLite.humidityOffsetColumn]

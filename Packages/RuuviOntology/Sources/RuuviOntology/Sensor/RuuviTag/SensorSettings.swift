@@ -25,9 +25,9 @@ extension SensorSettings {
 }
 
 public enum OffsetCorrectionType: Int {
-    case temperature = 0
-    case humidity = 1
-    case pressure = 2
+    case temperature = 0 // in degrees
+    case humidity = 1 // in fraction of one
+    case pressure = 2 // in hPa
 }
 
 public struct SensorSettingsStruct: SensorSettings {

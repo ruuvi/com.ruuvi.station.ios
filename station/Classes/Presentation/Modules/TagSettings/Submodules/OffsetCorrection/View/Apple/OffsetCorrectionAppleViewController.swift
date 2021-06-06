@@ -12,6 +12,8 @@ class OffsetCorrectionAppleViewController: UIViewController {
         }
     }
 
+    @IBOutlet weak var correctedValueTitle: UILabel!
+    @IBOutlet weak var originalValueTitle: UILabel!
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var originalValueLabel: UILabel!
     @IBOutlet weak var originalValueUpdateTimeLabel: UILabel!
@@ -109,7 +111,10 @@ class OffsetCorrectionAppleViewController: UIViewController {
 extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
     func localize() {
         configDescriptionContent()
-
+        correctedValueTitle.text = "OffsetCorrection.CorrectedValue.title".localized()
+        originalValueTitle.text = "OffsetCorrection.OriginalValue.title".localized()
+        calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
+        clearButton.setTitle("HumidityCalibration.Button.Clear.title".localized(), for: .normal)
         self.title = self.viewModel.title
     }
 
