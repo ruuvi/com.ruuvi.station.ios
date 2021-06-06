@@ -268,16 +268,17 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
-        let entity = Entity(id: ruuviTag.id,
-                            macId: ruuviTag.macId,
-                            luid: ruuviTag.luid,
-                            name: ruuviTag.name,
-                            version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable,
-                            isClaimed: ruuviTag.isClaimed,
-                            isOwner: ruuviTag.isOwner,
-                            owner: ruuviTag.owner)
-
+        let entity = Entity(
+            id: ruuviTag.id,
+            macId: ruuviTag.macId,
+            luid: ruuviTag.luid,
+            name: ruuviTag.name,
+            version: ruuviTag.version,
+            isConnectable: ruuviTag.isConnectable,
+            isClaimed: ruuviTag.isClaimed,
+            isOwner: ruuviTag.isOwner,
+            owner: ruuviTag.owner
+        )
         do {
             var success = false
             try database.dbPool.write { db in
