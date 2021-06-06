@@ -50,7 +50,10 @@ class RuuviTagLastRecordSubjectRxSwift {
             }
         }
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@", luid?.value, macId?.value)
+            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
+                    luid?.value ?? "invalid",
+                    macId?.value ?? "invalid"
+            )
             .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
