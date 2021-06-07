@@ -1,10 +1,10 @@
 import Foundation
 
 enum DfuFlashState: String, CaseIterable {
-    case packageSelection = "Package Selection"
-    case readyForUpload = "Ready For Upload"
-    case uploading = "Uploading"
-    case completed = "Completed"
+    case packageSelection = "DfuFlash.Steps.PackageSelection.text"
+    case readyForUpload = "DfuFlash.Steps.ReadyForUpload.text"
+    case uploading = "DfuFlash.Steps.Uploading.text"
+    case completed = "DfuFlash.Steps.Completed.text"
 }
 
 protocol DfuFlashViewInput: ViewInput {

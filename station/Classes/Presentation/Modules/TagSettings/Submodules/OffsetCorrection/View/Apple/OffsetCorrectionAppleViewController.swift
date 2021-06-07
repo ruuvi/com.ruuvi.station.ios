@@ -55,10 +55,10 @@ class OffsetCorrectionAppleViewController: UIViewController {
             if let hasValue = hasValue, hasValue == true {
                 self?.correctedValueView.isHidden = false
                 self?.clearButton.isEnabled = true
-                self?.clearButton.backgroundColor = .normalButton
+                self?.clearButton.backgroundColor = .normalButtonBackground
             } else {
                 self?.correctedValueView.isHidden = true
-                self?.clearButton.backgroundColor = .disableButton
+                self?.clearButton.backgroundColor = .disableButtonBackground
                 self?.clearButton.isEnabled = false
             }
         }

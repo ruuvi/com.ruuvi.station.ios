@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import iOSDFULibrary
 
-class DfuFlashPresenter: DfuFlashModuleInput {
+class DfuFlashPresenter: NSObject, DfuFlashModuleInput {
     weak var view: DfuFlashViewInput!
     var router: DfuFlashRouter!
 
@@ -107,5 +107,11 @@ extension DfuFlashPresenter: DfuFlasherOutputProtocol {
             break
         }
         errorPresenter.present(error: error)
+    }
+}
+
+extension DfuFlashPresenter: DfuFlashDismissDelegate {
+    func canDismissController() -> Bool {
+        return dfuFlashState != .uploading
     }
 }
