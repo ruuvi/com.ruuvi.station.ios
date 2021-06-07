@@ -61,7 +61,10 @@ class RuuviPersistenceRealm: RuuviPersistence {
         assert(ruuviTag.luid != nil)
         context.bgWorker.enqueue {
             do {
-                if let realmTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTag.id) {
+                if let realmTag = self.context.bg.object(
+                    ofType: RuuviTagRealm.self,
+                    forPrimaryKey: ruuviTag.luid?.value ?? ruuviTag.id
+                ) {
                     try self.context.bg.write {
                         self.context.bg.delete(realmTag)
                     }
@@ -118,7 +121,10 @@ class RuuviPersistenceRealm: RuuviPersistence {
         assert(record.macId == nil)
         context.bgWorker.enqueue {
             do {
-                if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId) {
+                if let ruuviTag = self.context.bg.object(
+                    ofType: RuuviTagRealm.self,
+                    forPrimaryKey: record.luid?.value ?? record.id
+                ) {
                     let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
                     try self.context.bg.write {
                         self.context.bg.add(data, update: .all)
@@ -142,8 +148,10 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 for record in records {
                     assert(record.macId == nil)
                     let extractedExpr: RuuviTagRealm? = self.context.bg
-                        .object(ofType: RuuviTagRealm.self,
-                                forPrimaryKey: record.ruuviTagId)
+                        .object(
+                            ofType: RuuviTagRealm.self,
+                            forPrimaryKey: record.luid?.value ?? record.id
+                        )
                     if let ruuviTag = extractedExpr {
                         let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
                         try self.context.bg.write {
@@ -216,7 +224,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { realmRecord in
                 return RuuviTagSensorRecordStruct(
-                    ruuviTagId: ruuviTagId,
+                    luid: realmRecord.ruuviTag?.luid,
                     date: realmRecord.date,
                     source: realmRecord.source,
                     macId: nil,
@@ -258,7 +266,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                     previousDate = tagDataRealm.date
                     results.append(
                         RuuviTagSensorRecordStruct(
-                            ruuviTagId: ruuviTagId,
+                            luid: tagDataRealm.ruuviTag?.luid,
                             date: tagDataRealm.date,
                             source: tagDataRealm.source,
                             macId: nil,
@@ -303,7 +311,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                     previousDate = realmRecord.date
                     results.append(
                         RuuviTagSensorRecordStruct(
-                            ruuviTagId: ruuviTagId,
+                            luid: realmRecord.ruuviTag?.luid,
                             date: realmRecord.date,
                             source: realmRecord.source,
                             macId: nil,
@@ -339,7 +347,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { record in
                 return RuuviTagSensorRecordStruct(
-                    ruuviTagId: ruuviTagId,
+                    luid: record.ruuviTag?.luid,
                     date: record.date,
                     source: record.source,
                     macId: nil,
@@ -375,7 +383,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
                 let lastRecordResult = RuuviTagSensorRecordStruct(
-                    ruuviTagId: luid.value,
+                    luid: luid,
                     date: lastRecord.date,
                     source: lastRecord.source,
                     macId: nil,
@@ -425,7 +433,9 @@ class RuuviPersistenceRealm: RuuviPersistence {
         }
         context.bgWorker.enqueue {
             if let record = self.context.bg.objects(SensorSettingsRealm.self)
-                .first(where: { $0.ruuviTagId == ruuviTag.luid?.value }) {
+                .first(where: {
+                    $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                }) {
                 promise.succeed(value: record.sensorSettings)
             } else {
                 promise.succeed(value: nil)
@@ -446,7 +456,9 @@ class RuuviPersistenceRealm: RuuviPersistence {
         context.bgWorker.enqueue {
             do {
                 if let record = self.context.bg.objects(SensorSettingsRealm.self)
-                    .first(where: { $0.ruuviTagId == ruuviTag.luid?.value }) {
+                    .first(where: {
+                        $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                    }) {
                     try self.context.bg.write {
                         switch type {
                         case .humidity:
@@ -494,7 +506,9 @@ class RuuviPersistenceRealm: RuuviPersistence {
         context.bgWorker.enqueue {
             do {
                 if let sensorSettingRealm = self.context.bg.objects(SensorSettingsRealm.self)
-                    .first(where: { $0.ruuviTagId == ruuviTag.luid?.value }) {
+                    .first(where: {
+                        $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                    }) {
                     try self.context.bg.write {
                         self.context.bg.delete(sensorSettingRealm)
                     }

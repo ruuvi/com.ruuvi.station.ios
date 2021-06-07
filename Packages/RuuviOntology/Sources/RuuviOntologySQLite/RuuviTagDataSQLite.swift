@@ -4,7 +4,7 @@ import Humidity
 import RuuviOntology
 
 public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
-    public var ruuviTagId: String
+    public var luid: LocalIdentifier?
     public var date: Date
     public var source: RuuviTagSensorRecordSource
     public var macId: MACIdentifier?
@@ -22,7 +22,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     public var pressureOffset: Double
 
     public init(
-        ruuviTagId: String,
+        luid: LocalIdentifier?,
         date: Date,
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
@@ -39,7 +39,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
         humidityOffset: Double,
         pressureOffset: Double
     ) {
-        self.ruuviTagId = ruuviTagId
+        self.luid = luid
         self.date = date
         self.source = source
         self.macId = macId
@@ -61,6 +61,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
 extension RuuviTagDataSQLite {
     public static let idColumn = Column("id")
     public static let ruuviTagIdColumn = Column("ruuviTagId")
+    public static let luidColumn = Column("luid")
     public static let dateColumn = Column("date")
     public static let sourceColumn = Column("source")
     public static let macColumn = Column("mac")
@@ -88,14 +89,20 @@ extension RuuviTagDataSQLite: Equatable {
 
 extension RuuviTagDataSQLite: FetchableRecord {
     public init(row: Row) {
-        ruuviTagId = row[RuuviTagDataSQLite.ruuviTagIdColumn]
+        if let luidValue = String.fromDatabaseValue(row[RuuviTagDataSQLite.luidColumn]) {
+            luid = LocalIdentifierStruct(value: luidValue)
+        } else if let luidValue =  String.fromDatabaseValue(row[RuuviTagDataSQLite.ruuviTagIdColumn]) {
+            luid = LocalIdentifierStruct(value: luidValue)
+        }
         date = row[RuuviTagDataSQLite.dateColumn]
         if let sourceString = String.fromDatabaseValue(row[RuuviTagDataSQLite.sourceColumn]) {
             source = RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
         } else {
             source = .unknown
         }
-        macId = MACIdentifierStruct(value: row[RuuviTagDataSQLite.macColumn])
+        if let macIdValue = String.fromDatabaseValue(row[RuuviTagDataSQLite.macColumn]) {
+            macId = MACIdentifierStruct(value: macIdValue)
+        }
         rssi = row[RuuviTagDataSQLite.rssiColumn]
         if let celsius = Double.fromDatabaseValue(row[RuuviTagDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)
@@ -135,10 +142,11 @@ extension RuuviTagDataSQLite: PersistableRecord {
 
     public func encode(to container: inout PersistenceContainer) {
         container[RuuviTagDataSQLite.idColumn] = id
-        container[RuuviTagDataSQLite.ruuviTagIdColumn] = ruuviTagId
+        container[RuuviTagDataSQLite.luidColumn] = luid?.value
+        container[RuuviTagDataSQLite.macColumn] = macId?.value
+        container[RuuviTagDataSQLite.ruuviTagIdColumn] = macId?.value ?? luid?.value ?? ""
         container[RuuviTagDataSQLite.dateColumn] = date
         container[RuuviTagDataSQLite.sourceColumn] = source.rawValue
-        container[RuuviTagDataSQLite.macColumn] = macId?.value
         container[RuuviTagDataSQLite.rssiColumn] = rssi
         container[RuuviTagDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
         container[RuuviTagDataSQLite.relativeHumidityInPercentColumn] = humidity?.value
@@ -161,6 +169,7 @@ extension RuuviTagDataSQLite {
         try db.create(table: RuuviTagDataSQLite.databaseTableName, body: { table in
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(RuuviTagDataSQLite.ruuviTagIdColumn.name, .text).notNull()
+            table.column(RuuviTagDataSQLite.luidColumn.name, .text)
             table.column(RuuviTagDataSQLite.dateColumn.name, .datetime).notNull()
             table.column(RuuviTagDataSQLite.sourceColumn.name, .text).notNull()
             table.column(RuuviTagDataSQLite.macColumn.name, .text)

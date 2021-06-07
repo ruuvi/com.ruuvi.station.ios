@@ -23,7 +23,8 @@ class CardsPresenter: CardsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     var connectionPersistence: RuuviLocalConnections!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
+    var alertHandler: AlertService!
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
@@ -143,12 +144,16 @@ extension CardsPresenter: CardsViewOutput {
                 humidity = viewModel.humidity.value?
                     .converted(to: .relative(temperature: temperature))
             }
-            self.router.openTagSettings(ruuviTag: ruuviTag,
-                                        temperature: viewModel.temperature.value,
-                                        humidity: humidity,
-                                        sensorSettings: sensorSettingsList.first(
-                                            where: { $0.ruuviTagId == viewModel.id.value }),
-                                        output: self)
+            self.router.openTagSettings(
+                ruuviTag: ruuviTag,
+                temperature: viewModel.temperature.value,
+                humidity: humidity,
+                sensorSettings: sensorSettingsList
+                    .first(where: {
+                            ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
+                                || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
+                    }),
+                output: self)
         } else if viewModel.type == .web,
                   let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag, temperature: viewModel.temperature.value)
@@ -190,15 +195,14 @@ extension CardsPresenter: CardsViewOutput {
     }
     
     func viewDidScroll(to viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value,
-           let sensor = ruuviTags.first(where: { $0.luid?.any == luid }) {
-            restartObservingRuuviTagNetwork(for: sensor)
-            tagCharts?.configure(ruuviTag: sensor)
-        } else if let macId = viewModel.mac.value,
-                  let sensor = ruuviTags.first(where: {$0.macId?.any == macId}) {
-            restartObservingRuuviTagNetwork(for: sensor)
-            tagCharts?.configure(ruuviTag: sensor)
-        }
+        if let sensor = ruuviTags
+            .first(where: {
+                ($0.luid != nil && ($0.luid?.any == viewModel.luid.value))
+                || ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+            }) {
+                restartObservingRuuviTagNetwork(for: sensor)
+                tagCharts?.configure(ruuviTag: sensor)
+        } 
     }
 }
 
@@ -458,7 +462,11 @@ extension CardsPresenter {
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                    let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
+                    let sensorSettings = self?.sensorSettingsList
+                        .first(where: {
+                                ($0.luid?.any == viewModel.luid.value)
+                                    || ($0.macId?.any == viewModel.mac.value)
+                        })
                     viewModel.update(
                         ruuviTag
                             .with(source: .heartbeat)
@@ -478,7 +486,10 @@ extension CardsPresenter {
                     if let ruuviTag = device.ruuvi?.tag,
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
-                            .first(where: { $0.ruuviTagId == viewModel.id.value })
+                            .first(where: {
+                                    ($0.luid?.any == viewModel.luid.value)
+                                        || ($0.macId?.any == viewModel.mac.value)
+                            })
                         viewModel.update(
                             ruuviTag
                                 .with(source: .advertisement)
@@ -503,7 +514,7 @@ extension CardsPresenter {
                             self?.sensorSettingsList.append(sensorSettings)
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
-                                where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                                where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList[updateIndex] = updateSensorSettings
                             } else {
@@ -511,7 +522,7 @@ extension CardsPresenter {
                             }
                         case .delete(let deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettingsList.firstIndex(
-                                where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
+                                where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
                             }
@@ -526,10 +537,14 @@ extension CardsPresenter {
         ruuviTagObserveLastRecordToken?.invalidate()
         ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
-               let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
+               let viewModel = self?.viewModels
+                .first(where: {
+                    ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
+                        || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
+                }),
                let record = anyRecord {
                 let previousDate = viewModel.date.value ?? Date.distantPast
-                if previousDate < record.date {
+                if previousDate <= record.date {
                     viewModel.update(record)
                 }
             }
@@ -867,12 +882,12 @@ extension CardsPresenter {
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({
             if let uuid = $0.luid?.value {
-                alertService.subscribe(self, to: uuid)
+                alertHandler.subscribe(self, to: uuid)
             }
         })
     }
     private func startListeningToWebTagsAlertStatus() {
-        virtualTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+        virtualTags?.forEach({ alertHandler.subscribe(self, to: $0.uuid) })
     }
     private func startObservingLocalNotificationsManager() {
         lnmDidReceiveToken?.invalidate()

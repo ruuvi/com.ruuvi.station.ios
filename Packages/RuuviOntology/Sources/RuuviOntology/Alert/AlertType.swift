@@ -1,8 +1,6 @@
 import Foundation
-import RuuviOntology
 
-enum AlertType: CaseIterable {
-
+public enum AlertType: CaseIterable {
     case temperature(lower: Double, upper: Double)
     case humidity(lower: Humidity, upper: Humidity)
     case dewPoint(lower: Double, upper: Double)
@@ -10,7 +8,7 @@ enum AlertType: CaseIterable {
     case connection
     case movement(last: Int)
 
-    static var allCases: [AlertType] {
+    public static var allCases: [AlertType] {
         return [.temperature(lower: 0, upper: 0),
                 .humidity(lower: Humidity.zeroAbsolute,
                           upper: Humidity.zeroAbsolute),
@@ -21,7 +19,7 @@ enum AlertType: CaseIterable {
     }
 }
 
-enum AlertState {
+public enum AlertState {
     case registered
     case empty
     case firing
