@@ -32,7 +32,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     }
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
-            view.savedDevicesIds = persistedSensors.map({$0.id})
+            view.savedDevicesIds = persistedSensors.map({ $0.luid?.any })
             updateCloseButtonVisibilityState()
         }
     }
@@ -107,8 +107,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
-        if let ruuviTag = ruuviTags.first(where: { $0.ruuviTagId == device.id }) {
-            ruuviOwnershipService.add(sensor: ruuviTag.with(name: displayName), record: ruuviTag)
+        if let ruuviTag = ruuviTags.first(where: { $0.luid?.any == device.luid?.any }) {
+            ruuviOwnershipService.add(
+                sensor: ruuviTag.with(name: displayName),
+                record: ruuviTag.with(source: .advertisement))
                 .on(success: { [weak self] _ in
                     guard let sSelf = self else { return }
                     if sSelf.isOpenedFromWelcome {
@@ -289,20 +291,25 @@ extension DiscoverPresenter {
 
     private func updateViewDevices() {
         view.devices = ruuviTags.map { (ruuviTag) -> DiscoverDeviceViewModel in
-            if let persistedRuuviTag = persistedSensors.first(where: { $0.id == ruuviTag.ruuviTagId}) {
-                return DiscoverDeviceViewModel(id: ruuviTag.ruuviTagId,
-                                               isConnectable: ruuviTag.isConnectable,
-                                               rssi: ruuviTag.rssi,
-                                               mac: ruuviTag.mac,
-                                               name: persistedRuuviTag.name,
-                                               logo: ruuviLogoImage)
+            if let persistedRuuviTag = persistedSensors
+                .first(where: { $0.luid?.any == ruuviTag.luid?.any }) {
+                return DiscoverDeviceViewModel(
+                    luid: ruuviTag.luid?.any,
+                    isConnectable: ruuviTag.isConnectable,
+                    rssi: ruuviTag.rssi,
+                    mac: ruuviTag.mac,
+                    name: persistedRuuviTag.name,
+                    logo: ruuviLogoImage
+                )
             } else {
-                return DiscoverDeviceViewModel(id: ruuviTag.ruuviTagId,
-                                               isConnectable: ruuviTag.isConnectable,
-                                               rssi: ruuviTag.rssi,
-                                               mac: ruuviTag.mac,
-                                               name: nil,
-                                               logo: ruuviLogoImage)
+                return DiscoverDeviceViewModel(
+                    luid: ruuviTag.luid?.any,
+                    isConnectable: ruuviTag.isConnectable,
+                    rssi: ruuviTag.rssi,
+                    mac: ruuviTag.mac,
+                    name: nil,
+                    logo: ruuviLogoImage
+                )
             }
         }
     }

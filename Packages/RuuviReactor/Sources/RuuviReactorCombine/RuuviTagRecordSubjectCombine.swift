@@ -12,7 +12,8 @@ class RuuviTagRecordSubjectCombine {
 
     private var sqlite: SQLiteContext
     private var realm: RealmContext
-    private var ruuviTagId: String
+    private var luid: LocalIdentifier?
+    private var macId: MACIdentifier?
 
     let subject = PassthroughSubject<[AnyRuuviTagSensorRecord], Never>()
 
@@ -23,16 +24,25 @@ class RuuviTagRecordSubjectCombine {
         ruuviTagDataRealmToken?.invalidate()
     }
 
-    init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
+    init(
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
+        sqlite: SQLiteContext,
+        realm: RealmContext
+    ) {
         self.sqlite = sqlite
         self.realm = realm
-        self.ruuviTagId = ruuviTagId
+        self.luid = luid
+        self.macId = macId
     }
 
     func start() {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
-                                        .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
+            .filter(
+                (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
+                || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
+            )
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
         }.removeDuplicates()
@@ -43,8 +53,11 @@ class RuuviTagRecordSubjectCombine {
         }
 
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
-                          .filter("ruuviTag.uuid == %@", ruuviTagId)
-                          .sorted(byKeyPath: "date")
+            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
+                    luid?.value ?? "invalid",
+                    macId?.value ?? "invalid"
+            )
+            .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmCache = results.compactMap({ $0.any })
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
