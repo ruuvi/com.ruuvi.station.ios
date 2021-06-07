@@ -77,6 +77,8 @@ AppStore build source code is available at `master` branch.
 
 Public Beta build source code is available at `beta` branch. 
 
+Latest TestFlight build source code is available at `testflight` branch.
+
 Internal Alpha build source code is available at `alpha` branch. 
 
 Development source code is available at `dev` branch.  
