@@ -4,6 +4,7 @@ import UIKit
 import RuuviOntology
 import RuuviStorage
 import RuuviLocal
+import RuuviService
 
 struct LocalAlertCategory {
     var id: String
@@ -35,9 +36,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var ruuviStorage: RuuviStorage!
     var virtualTagTrunk: VirtualTagTrunk!
     var idPersistence: RuuviLocalIDs!
-    var alertService: AlertService!
     var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
+    var ruuviAlertService: RuuviServiceAlert!
 
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
@@ -86,7 +87,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     func showDidConnect(uuid: String) {
-        if let mutedTill = alertService.mutedTill(type: .connection, for: uuid),
+        if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid),
            mutedTill > Date() {
             return // muted
         }
@@ -100,7 +101,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
+            content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -110,7 +111,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     func showDidDisconnect(uuid: String) {
-        if let mutedTill = alertService.mutedTill(type: .connection, for: uuid),
+        if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid),
            mutedTill > Date() {
             return // muted
         }
@@ -123,7 +124,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
+            content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -133,7 +134,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     func notifyDidMove(for uuid: String, counter: Int) {
-        if let mutedTill = alertService.mutedTill(type: .movement(last: 0), for: uuid),
+        if let mutedTill = ruuviAlertService.mutedTill(type: .movement(last: 0), for: uuid),
            mutedTill > Date() {
             return // muted
         }
@@ -148,7 +149,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = sSelf.alertService.movementDescription(for: uuid) ?? ""
+            content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -193,12 +194,12 @@ extension LocalNotificationsManagerImpl {
         if let shownDate = cache[uuid] {
             let intervalPassed = Date().timeIntervalSince(shownDate) >=
                 TimeInterval(settings.saveHeartbeatsIntervalMinutes * 60)
-            if let mutedTill = alertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
+            if let mutedTill = ruuviAlertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
                 needsToShow = intervalPassed && (Date() > mutedTill)
             } else {
                 needsToShow = intervalPassed
             }
-        } else if let mutedTill = alertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
+        } else if let mutedTill = ruuviAlertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
             needsToShow = Date() > mutedTill
         } else {
             needsToShow = true
@@ -238,13 +239,13 @@ extension LocalNotificationsManagerImpl {
             let body: String
             switch type {
             case .temperature:
-                body = alertService.temperatureDescription(for: uuid) ?? ""
+                body = ruuviAlertService.temperatureDescription(for: uuid) ?? ""
             case .humidity:
-                body = alertService.humidityDescription(for: uuid) ?? ""
+                body = ruuviAlertService.humidityDescription(for: uuid) ?? ""
             case .dewPoint:
-                body = alertService.dewPointDescription(for: uuid) ?? ""
+                body = ruuviAlertService.dewPointDescription(for: uuid) ?? ""
             case .pressure:
-                body = alertService.pressureDescription(for: uuid) ?? ""
+                body = ruuviAlertService.pressureDescription(for: uuid) ?? ""
             }
             content.body = body
 
@@ -328,7 +329,7 @@ extension LocalNotificationsManagerImpl {
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                let isOn = self?.alertService.isOn(type: type, for: uuid) ?? false
+                let isOn = self?.ruuviAlertService.isOn(type: type, for: uuid) ?? false
                 switch type {
                 case .temperature:
                     self?.lowTemperatureAlerts[uuid] = nil
@@ -427,7 +428,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             let type = LowHighNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case lowHigh.disable:
-                alertService.unregister(type: Self.alertType(from: type), for: uuid)
+                ruuviAlertService.unregister(type: Self.alertType(from: type), for: uuid)
             case lowHigh.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -439,7 +440,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             let type = BlastNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case blast.disable:
-                alertService.unregister(type: Self.alertType(from: type), for: uuid)
+                ruuviAlertService.unregister(type: Self.alertType(from: type), for: uuid)
             case blast.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -465,7 +466,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         guard let date = muteOffset() else {
             assertionFailure(); return
         }
-        alertService.mute(
+        ruuviAlertService.mute(
             type: Self.alertType(from: type),
             for: uuid,
             till: date
@@ -476,7 +477,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         guard let date = muteOffset() else {
             assertionFailure(); return
         }
-        alertService.mute(
+        ruuviAlertService.mute(
             type: Self.alertType(from: type),
             for: uuid, till: date
         )

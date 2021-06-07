@@ -22,7 +22,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var foreground: BTForeground!
     var background: BTBackground!
     var calibrationService: CalibrationService!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
     var settings: RuuviLocalSettings!
     var ruuviLocalImages: RuuviLocalImages!
     var connectionPersistence: RuuviLocalConnections!
@@ -108,13 +108,16 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         if let sensorSettings = sensor {
             self.sensorSettings = sensorSettings
         } else {
-            self.sensorSettings = SensorSettingsStruct(ruuviTagId: ruuviTag.id,
-                                                       temperatureOffset: nil,
-                                                       temperatureOffsetDate: nil,
-                                                       humidityOffset: nil,
-                                                       humidityOffsetDate: nil,
-                                                       pressureOffset: nil,
-                                                       pressureOffsetDate: nil)
+            self.sensorSettings = SensorSettingsStruct(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                temperatureOffset: nil,
+                temperatureOffsetDate: nil,
+                humidityOffset: nil,
+                humidityOffsetDate: nil,
+                pressureOffset: nil,
+                pressureOffsetDate: nil
+            )
         }
         self.viewModel.canShowUpdateFirmware.value = featureToggleService.isEnabled(.updateFirmware)
 
@@ -557,8 +560,14 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
+            case .insert(let sensor):
+                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
+                    sensor.macId?.any == self?.ruuviTag.macId?.any {
+                    self?.ruuviTag = sensor
+                }
             case .update(let sensor):
-                if sensor.id == self?.ruuviTag.id {
+                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
+                    sensor.macId?.any == self?.ruuviTag.macId?.any {
                     self?.ruuviTag = sensor
                 }
             case .error(let error):
@@ -603,9 +612,9 @@ extension TagSettingsPresenter {
     }
 
     private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
-        humidity = device.humidity?.withSensorSettings(sensorSettings: sensorSettings)
+        humidity = device.humidity?.plus(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
-            ruuviTagId: device.ruuviTagId,
+            luid: device.luid,
             date: device.date,
             source: source,
             macId: device.mac?.mac,
