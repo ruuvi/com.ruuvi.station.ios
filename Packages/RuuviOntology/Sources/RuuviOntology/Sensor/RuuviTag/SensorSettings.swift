@@ -1,7 +1,9 @@
 import Foundation
 
 public protocol SensorSettings {
-    var ruuviTagId: String { get }
+    var id: String { get }
+    var luid: LocalIdentifier? { get }
+    var macId: MACIdentifier? { get }
     var temperatureOffset: Double? { get }
     var temperatureOffsetDate: Date? { get }
     var humidityOffset: Double? { get }
@@ -12,18 +14,25 @@ public protocol SensorSettings {
 
 extension SensorSettings {
     public var id: String {
-        return "\(ruuviTagId)-settings"
+        if let macId = macId {
+            return "\(macId.value)-settings"
+        } else if let luid = luid {
+            return "\(luid.value)-settings"
+        } else {
+            fatalError()
+        }
     }
 }
 
 public enum OffsetCorrectionType: Int {
-    case temperature = 0
-    case humidity = 1
-    case pressure = 2
+    case temperature = 0 // in degrees
+    case humidity = 1 // in fraction of one
+    case pressure = 2 // in hPa
 }
 
 public struct SensorSettingsStruct: SensorSettings {
-    public var ruuviTagId: String
+    public var luid: LocalIdentifier?
+    public var macId: MACIdentifier?
     public var temperatureOffset: Double?
     public var temperatureOffsetDate: Date?
     public var humidityOffset: Double?
@@ -32,7 +41,8 @@ public struct SensorSettingsStruct: SensorSettings {
     public var pressureOffsetDate: Date?
 
     public init(
-        ruuviTagId: String,
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
         temperatureOffset: Double?,
         temperatureOffsetDate: Date?,
         humidityOffset: Double?,
@@ -40,7 +50,8 @@ public struct SensorSettingsStruct: SensorSettings {
         pressureOffset: Double?,
         pressureOffsetDate: Date?
     ) {
-        self.ruuviTagId = ruuviTagId
+        self.luid = luid
+        self.macId = macId
         self.temperatureOffset = temperatureOffset
         self.temperatureOffsetDate = temperatureOffsetDate
         self.humidityOffset = humidityOffset

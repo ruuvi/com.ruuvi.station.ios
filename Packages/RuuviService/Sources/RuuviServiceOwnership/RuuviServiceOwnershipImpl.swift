@@ -4,20 +4,24 @@ import RuuviOntology
 import RuuviStorage
 import RuuviCloud
 import RuuviPool
+import RuuviLocal
 
 final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
     private let propertiesService: RuuviServiceSensorProperties
+    private let localIDs: RuuviLocalIDs
 
     init(
         cloud: RuuviCloud,
         pool: RuuviPool,
-        propertiesService: RuuviServiceSensorProperties
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs
     ) {
         self.cloud = cloud
         self.pool = pool
         self.propertiesService = propertiesService
+        self.localIDs = localIDs
     }
 
     @discardableResult
@@ -138,6 +142,7 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             }
         }
         propertiesService.removeImage(for: sensor)
+        localIDs.clear(sensor: sensor)
         Future.zip([deleteTagOperation, deleteRecordsOperation])
             .on(success: { _ in
                 if let unclaimOperation = unclaimOperation {

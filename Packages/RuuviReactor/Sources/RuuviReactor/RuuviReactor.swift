@@ -7,7 +7,7 @@ public protocol RuuviReactor {
     ) -> RuuviReactorToken
 
     func observe(
-        _ ruuviTagId: String,
+        _ luid: LocalIdentifier,
         _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void
     ) -> RuuviReactorToken
 

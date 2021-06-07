@@ -12,7 +12,6 @@ extension Notification.Name {
 class MigrationManagerToSQLite: MigrationManager {
 
     // persistence
-    var alertPersistence: AlertPersistence!
     var calibrationPersistence: CalibrationPersistence!
     var connectionPersistence: RuuviLocalConnections!
     var idPersistence: RuuviLocalIDs!

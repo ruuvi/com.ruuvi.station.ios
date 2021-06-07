@@ -16,6 +16,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private var ruuviLocalSyncState: RuuviLocalSyncState
     private let ruuviLocalImages: RuuviLocalImages
     private let ruuviRepository: RuuviRepository
+    private let ruuviLocalIDs: RuuviLocalIDs
 
     init(
         ruuviStorage: RuuviStorage,
@@ -24,7 +25,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
@@ -33,6 +35,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviLocalSyncState = ruuviLocalSyncState
         self.ruuviLocalImages = ruuviLocalImages
         self.ruuviRepository = ruuviRepository
+        self.ruuviLocalIDs = ruuviLocalIDs
     }
 
     @discardableResult
@@ -41,13 +44,16 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviCloud.getCloudSettings()
             .on(success: { [weak self] cloudSettings in
                 guard let sSelf = self else { return }
-                if let unitTemperature = cloudSettings.unitTemperature {
+                if let unitTemperature = cloudSettings.unitTemperature,
+                   unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
                 }
-                if let unitHumidity = cloudSettings.unitHumidity {
+                if let unitHumidity = cloudSettings.unitHumidity,
+                   unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
                     sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
                 }
-                if let unitPressure = cloudSettings.unitPressure {
+                if let unitPressure = cloudSettings.unitPressure,
+                   unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
                 }
                 promise.succeed(value: cloudSettings)
@@ -276,7 +282,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             since: since,
             ruuviCloud: ruuviCloud,
             ruuviRepository: ruuviRepository,
-            syncState: ruuviLocalSyncState
+            syncState: ruuviLocalSyncState,
+            ruuviLocalIDs: ruuviLocalIDs
         )
         operation.completionBlock = { [unowned operation] in
             if let error = operation.error {

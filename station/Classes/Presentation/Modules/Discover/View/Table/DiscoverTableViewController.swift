@@ -1,5 +1,6 @@
 import UIKit
 import BTKit
+import RuuviOntology
 
 enum DiscoverTableSection {
     case webTag
@@ -49,7 +50,7 @@ class DiscoverTableViewController: UITableViewController {
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() {
         didSet {
             shownDevices = devices
-                .filter({ !savedDevicesIds.contains($0.id) })
+                .filter({ !savedDevicesIds.contains( $0.luid )})
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -59,10 +60,10 @@ class DiscoverTableViewController: UITableViewController {
                 })
         }
     }
-    var savedDevicesIds: [String] = [String]() {
+    var savedDevicesIds: [AnyLocalIdentifier?] = [AnyLocalIdentifier?]() {
         didSet {
             shownDevices = devices
-                .filter({ !savedDevicesIds.contains($0.id) })
+                .filter({ !savedDevicesIds.contains($0.luid) })
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -352,7 +353,7 @@ extension DiscoverTableViewController {
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
             return "DiscoverTable.RuuviDevice.prefix".localized()
-                + " " + device.id.prefix(4)
+                + " " + (device.luid?.value.prefix(4) ?? "")
         }
     }
 }
