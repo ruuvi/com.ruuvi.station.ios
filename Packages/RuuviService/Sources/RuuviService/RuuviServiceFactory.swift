@@ -15,13 +15,15 @@ public protocol RuuviServiceFactory {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceCloudSync
 
     func createOwnership(
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
-        propertiesService: RuuviServiceSensorProperties
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -45,6 +47,10 @@ public protocol RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool
     ) -> RuuviServiceOffsetCalibration
+
+    func createAlert(
+        ruuviCloud: RuuviCloud
+    ) -> RuuviServiceAlert
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -58,7 +64,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceCloudSync {
         return RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
@@ -67,19 +74,22 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             ruuviLocalSettings: ruuviLocalSettings,
             ruuviLocalSyncState: ruuviLocalSyncState,
             ruuviLocalImages: ruuviLocalImages,
-            ruuviRepository: ruuviRepository
+            ruuviRepository: ruuviRepository,
+            ruuviLocalIDs: ruuviLocalIDs
         )
     }
 
     public func createOwnership(
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
-        propertiesService: RuuviServiceSensorProperties
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs
     ) -> RuuviServiceOwnership {
         return RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
             pool: ruuviPool,
-            propertiesService: propertiesService
+            propertiesService: propertiesService,
+            localIDs: localIDs
         )
     }
 
@@ -125,5 +135,11 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             cloud: ruuviCloud,
             pool: ruuviPool
         )
+    }
+
+    public func createAlert(
+        ruuviCloud: RuuviCloud
+    ) -> RuuviServiceAlert {
+        return RuuviServiceAlertImpl(cloud: ruuviCloud)
     }
 }

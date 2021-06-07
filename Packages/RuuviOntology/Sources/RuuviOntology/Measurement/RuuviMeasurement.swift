@@ -2,7 +2,18 @@ import Foundation
 import Humidity
 
 public struct RuuviMeasurement {
-    public var ruuviTagId: String
+    public var id: String {
+        if let macId = macId,
+            !macId.value.isEmpty {
+            return macId.value
+        } else if let luid = luid {
+            return luid.value
+        } else {
+            fatalError()
+        }
+    }
+    public var luid: LocalIdentifier?
+    public var macId: MACIdentifier?
     public var measurementSequenceNumber: Int?
     public var date: Date
     public var rssi: Int?
@@ -17,7 +28,8 @@ public struct RuuviMeasurement {
     public var txPower: Int?
 
     public init(
-        ruuviTagId: String,
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
         measurementSequenceNumber: Int?,
         date: Date,
         rssi: Int?,
@@ -29,7 +41,8 @@ public struct RuuviMeasurement {
         movementCounter: Int?,
         txPower: Int?
     ) {
-        self.ruuviTagId = ruuviTagId
+        self.luid = luid
+        self.macId = macId
         self.measurementSequenceNumber = measurementSequenceNumber
         self.date = date
         self.rssi = rssi

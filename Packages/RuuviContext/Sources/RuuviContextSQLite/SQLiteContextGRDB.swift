@@ -63,6 +63,7 @@ extension SQLiteGRDBDatabase {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func migrate(dbPool: DatabasePool) throws {
         var migrator = GRDB.DatabaseMigrator()
 
@@ -117,6 +118,17 @@ extension SQLiteGRDBDatabase {
             try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
                 t.add(column: RuuviTagDataSQLite.sourceColumn.name, .text)
                     .notNull().defaults(to: "unknown")
+            })
+        }
+
+        // v5
+        migrator.registerMigration("Create RuuviTagDataSQLite luid column") { db in
+            guard try db.columns(in: RuuviTagDataSQLite.databaseTableName)
+                    .contains(where: {$0.name == RuuviTagDataSQLite.luidColumn.name}) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagDataSQLite.luidColumn.name, .text)
             })
         }
 

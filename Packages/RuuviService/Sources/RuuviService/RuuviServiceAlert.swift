@@ -1,8 +1,19 @@
 import Foundation
+import Future
 import RuuviOntology
 
-protocol AlertPersistence {
+extension Notification.Name {
+    public static let AlertServiceAlertDidChange = Notification.Name("AlertServiceAlertDidChange")
+}
 
+public enum AlertServiceAlertDidChangeKey: String {
+    case uuid
+    case type
+}
+
+public protocol RuuviServiceAlert {
+    func hasRegistrations(for uuid: String) -> Bool
+    func isOn(type: AlertType, for uuid: String) -> Bool
     func alert(for uuid: String, of type: AlertType) -> AlertType?
     func register(type: AlertType, for uuid: String)
     func unregister(type: AlertType, for uuid: String)
@@ -18,7 +29,7 @@ protocol AlertPersistence {
     func temperatureDescription(for uuid: String) -> String?
     func setTemperature(description: String?, for uuid: String)
 
-    // humidity
+    // humidity (unitHumidity)
     func lowerHumidity(for uuid: String) -> Humidity?
     func setLower(humidity: Humidity?, for uuid: String)
     func upperHumidity(for uuid: String) -> Humidity?
@@ -46,7 +57,7 @@ protocol AlertPersistence {
     func connectionDescription(for uuid: String) -> String?
     func setConnection(description: String?, for uuid: String)
 
-    // movement counter
+    // movement
     func movementCounter(for uuid: String) -> Int?
     func setMovement(counter: Int?, for uuid: String)
     func movementDescription(for uuid: String) -> String?

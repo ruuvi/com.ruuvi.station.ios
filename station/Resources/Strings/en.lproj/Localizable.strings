@@ -316,7 +316,7 @@
 "LocalNotificationsManager.Mute.button" = "Mute for an hour";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
-"Menu.SignOut.text" = "Sign out";
+"TagsManager.SignOutButton" = "Sign out";
 "SignIn.SignInBenefits" = "After signing in, you will be automatically marked as an owner of your nearby Ruuvi sensors. The claimed sensors will be restored after an app re-install.\n\nWith a Ruuvi Gateway router, you'll be able to monitor the claimed sensors remotely and share them with your friends.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.RequestCode" = "Request a Code";
@@ -328,7 +328,6 @@
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
 "TagSettings.ShareButton" = "Share";
-"Syncing..." = "Syncing…";
 "Synchronized" = "Synchronized";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synchronized: %@";
 "MenuTableViewController.None" = "none";
@@ -341,7 +340,6 @@
 "SharePresenter.UnshareSensor.Message" = "Do you want to unshare sensor for %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
 "TagSettings.NetworkInfo.Owner" = "Owner";
-"Menu.RuuviNetworkStatus.text" = "Ruuvi Network status";
 "SignIn.TitleLabel.text" = "Login to\nRuuvi\nNetwork";
 "SignIn.SubtitleLabel.text" = "To enjoy all the features, create an account or login to your existing Ruuvi account by entering your email address.";
 "SignIn.VerificationCodePlaceholder" = "verification code in format: CJSM";

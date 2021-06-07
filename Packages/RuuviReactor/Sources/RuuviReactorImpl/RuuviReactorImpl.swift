@@ -41,21 +41,23 @@ class RuuviReactorImpl: RuuviReactor {
     @available(iOS 13, *)
     private lazy var sensorSettingsCombines = [String: SensorSettingsCombine]()
     #endif
-// swiftlint:disable:next function_body_length
-    func observe(_ ruuviTagId: String,
+
+    // swiftlint:disable:next function_body_length
+    func observe(_ luid: LocalIdentifier,
                  _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RuuviReactorToken {
         #if canImport(Combine)
         if #available(iOS 13, *) {
             var recordCombine: RuuviTagRecordSubjectCombine
-            if let combine = recordCombines[ruuviTagId] {
+            if let combine = recordCombines[luid.value] {
                 recordCombine = combine
             } else {
                 let combine = RuuviTagRecordSubjectCombine(
-                    ruuviTagId: ruuviTagId,
+                    luid: luid,
+                    macId: nil,
                     sqlite: sqliteContext,
                     realm: realmContext
                 )
-                recordCombines[ruuviTagId] = combine
+                recordCombines[luid.value] = combine
                 recordCombine = combine
             }
             let cancellable = recordCombine.subject.sink { values in
@@ -69,13 +71,16 @@ class RuuviReactorImpl: RuuviReactor {
             }
         } else {
             var recordSubjectRxSwift: RuuviTagRecordSubjectRxSwift
-            if let rxSwift = recordRxSwifts[ruuviTagId] {
+            if let rxSwift = recordRxSwifts[luid.value] {
                 recordSubjectRxSwift = rxSwift
             } else {
-                let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
-                recordRxSwifts[ruuviTagId] = rxSwift
+                let rxSwift = RuuviTagRecordSubjectRxSwift(
+                    luid: luid,
+                    macId: nil,
+                    sqlite: sqliteContext,
+                    realm: realmContext
+                )
+                recordRxSwifts[luid.value] = rxSwift
                 recordSubjectRxSwift = rxSwift
             }
             let cancellable = recordSubjectRxSwift.subject.subscribe(onNext: { values in
@@ -90,13 +95,16 @@ class RuuviReactorImpl: RuuviReactor {
         }
         #else
         var recordRxSwift: RuuviTagRecordSubjectRxSwift
-        if let rxSwift = recordRxSwifts[ruuviTagId] {
+        if let rxSwift = recordRxSwifts[luid.value] {
             recordRxSwift = rxSwift
         } else {
-            let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId,
-                                                       sqlite: sqliteContext,
-                                                       realm: realmContext)
-            recordRxSwifts[ruuviTagId] = rxSwift
+            let rxSwift = RuuviTagRecordSubjectRxSwift(
+                luid: luid,
+                macId: nil,
+                sqlite: sqliteContext,
+                realm: realmContext
+            )
+            recordRxSwifts[luid.value] = rxSwift
             recordRxSwift = rxSwift
         }
         let cancellable = recordRxSwift.subject.subscribe(onNext: { values in
@@ -110,7 +118,8 @@ class RuuviReactorImpl: RuuviReactor {
         }
         #endif
     }
-// swiftlint:disable:next function_body_length
+
+    // swiftlint:disable:next function_body_length
     func observe(_ block: @escaping (RuuviReactorChange<AnyRuuviTagSensor>) -> Void) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readAll()
         let realmOperation = realmPersistence.readAll()
@@ -186,9 +195,12 @@ class RuuviReactorImpl: RuuviReactor {
             if let combine = lastRecordCombines[ruuviTag.id] {
                 recordCombine = combine
             } else {
-                let combine = RuuviTagLastRecordSubjectCombine(ruuviTagId: ruuviTag.id,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
+                let combine = RuuviTagLastRecordSubjectCombine(
+                    luid: ruuviTag.luid,
+                    macId: ruuviTag.macId,
+                    sqlite: sqliteContext,
+                    realm: realmContext
+                )
                 lastRecordCombines[ruuviTag.id] = combine
                 recordCombine = combine
             }
@@ -206,9 +218,12 @@ class RuuviReactorImpl: RuuviReactor {
             if let rxSwift = lastRecordRxSwifts[ruuviTag.id] {
                 recordRxSwift = rxSwift
             } else {
-                let rxSwift = RuuviTagLastRecordSubjectRxSwift(ruuviTagId: ruuviTag.id,
-                                                               sqlite: sqliteContext,
-                                                               realm: realmContext)
+                let rxSwift = RuuviTagLastRecordSubjectRxSwift(
+                    luid: ruuviTag.luid,
+                    macId: ruuviTag.macId,
+                    sqlite: sqliteContext,
+                    realm: realmContext
+                )
                 lastRecordRxSwifts[ruuviTag.id] = rxSwift
                 recordRxSwift = rxSwift
             }
@@ -229,9 +244,12 @@ class RuuviReactorImpl: RuuviReactor {
         if let rxSwift = lastRecordRxSwifts[ruuviTag.id] {
             recordRxSwift = rxSwift
         } else {
-            let rxSwift = RuuviTagLastRecordSubjectRxSwift(ruuviTagId: ruuviTag.id,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
+            let rxSwift = RuuviTagLastRecordSubjectRxSwift(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                sqlite: sqliteContext,
+                realm: realmContext
+            )
             lastRecordRxSwifts[ruuviTag.id] = rxSwift
             recordRxSwift = rxSwift
         }
@@ -248,7 +266,8 @@ class RuuviReactorImpl: RuuviReactor {
         }
         #endif
     }
-// swiftlint:disable:next function_body_length
+
+    // swiftlint:disable:next function_body_length
     func observe(_ ruuviTag: RuuviTagSensor,
                  _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void) -> RuuviReactorToken {
         sqlitePersistence.readSensorSettings(ruuviTag).on { sqliteRecord in
@@ -262,9 +281,12 @@ class RuuviReactorImpl: RuuviReactor {
             if let combine = sensorSettingsCombines[ruuviTag.id] {
                 sensorSettingsCombine = combine
             } else {
-                let combine = SensorSettingsCombine(ruuviTagId: ruuviTag.id,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
+                let combine = SensorSettingsCombine(
+                    luid: ruuviTag.luid,
+                    macId: ruuviTag.macId,
+                    sqlite: sqliteContext,
+                    realm: realmContext
+                )
                 sensorSettingsCombines[ruuviTag.id] = combine
                 sensorSettingsCombine = combine
             }
@@ -288,9 +310,12 @@ class RuuviReactorImpl: RuuviReactor {
             if let rxSwift = sensorSettingsRxSwifts[ruuviTag.id] {
                 settingsRxSwift = rxSwift
             } else {
-                let rxSwift = SensorSettingsRxSwift(ruuviTagId: ruuviTag.id,
-                                                               sqlite: sqliteContext,
-                                                               realm: realmContext)
+                let rxSwift = SensorSettingsRxSwift(
+                    luid: ruuviTag.luid,
+                    macId: ruuviTag.macId,
+                    sqlite: sqliteContext,
+                    realm: realmContext
+                )
                 sensorSettingsRxSwifts[ruuviTag.id] = rxSwift
                 settingsRxSwift = rxSwift
             }
@@ -314,9 +339,12 @@ class RuuviReactorImpl: RuuviReactor {
         if let rxSwift = sensorSettingsRxSwifts[ruuviTag.id] {
             sensorSettingsRxSwift = rxSwift
         } else {
-            let rxSwift = SensorSettingsRxSwift(ruuviTagId: ruuviTag.id,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
+            let rxSwift = SensorSettingsRxSwift(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                sqlite: sqliteContext,
+                realm: realmContext
+            )
             sensorSettingsRxSwifts[ruuviTag.id] = rxSwift
             sensorSettingsRxSwift = rxSwift
         }

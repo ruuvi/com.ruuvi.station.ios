@@ -26,7 +26,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var mailComposerPresenter: MailComposerPresenter!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
+    var alertHandler: AlertService!
     var background: BTBackground!
 
     var feedbackEmail: String!
@@ -501,9 +502,9 @@ extension TagChartsPresenter {
 
     private func startListeningToAlertStatus() {
         if let luid = ruuviTag.luid {
-            alertService.subscribe(self, to: luid.value)
+            alertHandler.subscribe(self, to: luid.value)
         } else if let macId = ruuviTag.macId {
-            alertService.subscribe(self, to: macId.value)
+            alertHandler.subscribe(self, to: macId.value)
         } else {
             assertionFailure()
         }
