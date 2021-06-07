@@ -49,7 +49,8 @@ extension RuuviTagDataRealm {
     }
     public var measurement: RuuviMeasurement {
         return RuuviMeasurement(
-            ruuviTagId: ruuviTag!.uuid,
+            luid: ruuviTag?.luid,
+            macId: ruuviTag?.macId,
             measurementSequenceNumber: measurementSequenceNumber.value,
             date: date,
             rssi: rssi.value,

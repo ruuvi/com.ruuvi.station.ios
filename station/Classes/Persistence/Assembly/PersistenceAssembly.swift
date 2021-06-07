@@ -9,12 +9,6 @@ import RuuviPool
 class PersistenceAssembly: Assembly {
 // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
-
-        container.register(AlertPersistence.self) { _ in
-            let persistence = AlertPersistenceUserDefaults()
-            return persistence
-        }
-
         container.register(CalibrationPersistence.self) { _ in
             let persistence = CalibrationPersistenceUserDefaults()
             return persistence

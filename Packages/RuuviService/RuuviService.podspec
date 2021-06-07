@@ -71,6 +71,14 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
   end
 
+  s.subspec 'Alert' do |ss|
+    ss.source_files = 'Sources/RuuviServiceAlert/**/*.{h,m,swift}', 'Sources/RuuviServiceAlert/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviCloud'
+    ss.dependency 'FutureX'
+  end
+
   s.subspec 'OffsetCalibration' do |ss|
     ss.source_files = 'Sources/RuuviServiceOffsetCalibration/**/*.{h,m,swift}', 'Sources/RuuviServiceOffsetCalibration/*.{h,m,swift}'
     ss.dependency 'RuuviService/Contract'
