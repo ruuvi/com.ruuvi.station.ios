@@ -15,7 +15,7 @@ class DfuDevicesScannerPresenter: NSObject, DfuDevicesScannerModuleInput {
     private var ruuviDfuLostToken: RUObservationToken?
 
     private var ruuviTag: RuuviTagSensor!
-    private var dfuDevices: [DfuDevice] = [] {
+    private var dfuDevices = Set<DfuDevice>() {
         didSet {
             syncViewModels()
         }
@@ -93,10 +93,10 @@ extension DfuDevicesScannerPresenter {
     private func startObservingDfuDevices() {
         ruuviDfuScanToken = ruuviDfu.scan(self, closure: { observer, device in
             var devices = observer.dfuDevices
-            if let index = devices.firstIndex(where: {$0.uuid == device.uuid}) {
-                devices[index] = device
+            if devices.contains(device) {
+                devices.update(with: device)
             } else {
-                devices.append(device)
+                devices.insert(device)
             }
             observer.dfuDevices = devices
         })

@@ -10,19 +10,19 @@ protocol DfuFlasherOutputProtocol: AnyObject {
 
 class DfuFlasher: NSObject {
     private let queue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive)
-    private var dfuServiceInitiator: DFUServiceInitiator!
+    private var dfuServiceInitiator: DFUServiceInitiator
     private weak var output: DfuFlasherOutputProtocol?
-    private var firmware: DFUFirmware!
+    private var firmware: DFUFirmware?
     private var partsCompleted: Int = 0
     private var currentFirmwarePartsCompleted: Int = 0
     private var dfuServiceController: DFUServiceController?
 
     override init() {
-        super.init()
         dfuServiceInitiator = DFUServiceInitiator(queue: queue,
                                                   delegateQueue: queue,
                                                   progressQueue: queue,
                                                   loggerQueue: queue)
+        super.init()
     }
 
     func flashFirmware(device: DfuDevice,
@@ -72,8 +72,11 @@ extension DfuFlasher: DFUProgressDelegate {
                               to progress: Int,
                               currentSpeedBytesPerSecond: Double,
                               avgSpeedBytesPerSecond: Double) {
+        guard let parts = firmware?.parts else {
+            return
+        }
         // Update the total progress view
-        let totalProgress = (Float(partsCompleted) + (Float(progress) / 100.0)) / Float(firmware.parts)
+        let totalProgress = (Float(partsCompleted) + (Float(progress) / 100.0)) / Float(parts)
         output?.ruuviDfuDidUpdateProgress(percentage: totalProgress)
         // Increment the parts counter for 2-part uploads
         if progress == 100 && part == 1 && totalParts == 2 || (currentFirmwarePartsCompleted == 0 && part == 2) {

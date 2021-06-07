@@ -1,9 +1,14 @@
 import Foundation
 import UIKit
 
+protocol DfuFlashDismissDelegate: NSObjectProtocol {
+    func canDismissController() -> Bool
+}
+
 class DfuFlashAppleViewController: UIViewController, DfuFlashViewInput {
     var output: DfuFlashViewOutput!
     var viewModel = DfuFlashViewModel()
+    weak var delegate: DfuFlashDismissDelegate?
     var dfuFlashState: DfuFlashState = .packageSelection {
         didSet {
             DispatchQueue.main.async {
@@ -38,10 +43,28 @@ class DfuFlashAppleViewController: UIViewController, DfuFlashViewInput {
         output.viewDidLoad()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.presentationController?.delegate = self
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.presentationController?.delegate = nil
+    }
+
     func localize() {
         title = "DfuFlash.Title.text".localized()
         selectionLabel.text = "DfuFlash.FirmwareSelectionGuide.text".localized()
         successLabel.text = "DfuFlash.FinishGuide.text".localized()
+        documentPickerButton.setTitle("DfuFlash.OpenDocumentPicker.title".localized(),
+                                      for: .normal)
+        cancelButton.setTitle("DfuFlash.Cancel.text".localized(),
+                                      for: .normal)
+        startButton.setTitle("DfuFlash.Start.text".localized(),
+                                      for: .normal)
+        finishButton.setTitle("DfuFlash.Finish.text".localized(),
+                                      for: .normal)
     }
 
     func showCancelFlashDialog() {
@@ -57,7 +80,14 @@ class DfuFlashAppleViewController: UIViewController, DfuFlashViewInput {
     }
 }
 
-// MARK: - IBOutlet
+// MARK: - UIAdaptivePresentationControllerDelegate
+extension DfuFlashAppleViewController: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return delegate!.canDismissController()
+    }
+}
+
+// MARK: - IBAction
 extension DfuFlashAppleViewController {
     @IBAction func documentPickerButtonAction(_ sender: UIButton) {
         output.viewDidOpenDocumentPicker(sourceView: sender)
@@ -119,32 +149,21 @@ extension DfuFlashAppleViewController {
             successView.isHidden = true
             startButton.isEnabled = dfuFlashState == .readyForUpload
             startButton.backgroundColor = dfuFlashState == .readyForUpload
-                ? .normalButton
-                : .disableButton
+                ? .normalButtonBackground
+                : .disableButtonBackground
         default:
             selectionView.isHidden = false
             flashView.isHidden = true
             successView.isHidden = true
         }
+        navigationItem.hidesBackButton = dfuFlashState == .uploading
+        if #available(iOS 13.0, *) {
+            navigationController?.isModalInPresentation = dfuFlashState == .uploading
+        }
         if let index = DfuFlashState.allCases.firstIndex(of: dfuFlashState) {
-            switch dfuFlashState {
-            case .packageSelection:
-                stepLabel.text = "DfuFlash.Step.text".localized()
-                    + " \(index + 1)/\(DfuFlashState.allCases.count): "
-                    + "DfuFlash.Steps.PackageSelection.text".localized()
-            case .readyForUpload:
-                stepLabel.text = "DfuFlash.Step.text".localized()
-                    + " \(index + 1)/\(DfuFlashState.allCases.count): "
-                    + "DfuFlash.Steps.ReadyForUpload.text".localized()
-            case .uploading:
-                stepLabel.text = "DfuFlash.Step.text".localized()
-                    + " \(index + 1)/\(DfuFlashState.allCases.count): "
-                    + "DfuFlash.Steps.Uploading.text".localized()
-            case .completed:
-                stepLabel.text = "DfuFlash.Step.text".localized()
-                    + " \(index + 1)/\(DfuFlashState.allCases.count): "
-                    + "DfuFlash.Steps.Completed.text".localized()
-            }
+            stepLabel.text = "DfuFlash.Step.text".localized()
+                + " \(index + 1)/\(DfuFlashState.allCases.count): "
+                + dfuFlashState.rawValue.localized()
         }
     }
 

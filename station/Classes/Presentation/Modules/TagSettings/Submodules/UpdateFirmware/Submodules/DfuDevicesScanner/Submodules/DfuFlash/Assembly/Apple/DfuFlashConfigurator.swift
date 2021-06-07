@@ -9,6 +9,7 @@ class DfuFlashConfigurator: NSObject {
 
         let presenter = DfuFlashPresenter()
         presenter.view = view
+        view.delegate = presenter
         presenter.router = router
         presenter.filePresener = r.resolve(DfuFilePickerPresenter.self)
         presenter.ruuviDfu = r.resolve(RuuviDfu.self)

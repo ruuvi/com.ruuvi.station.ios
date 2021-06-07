@@ -35,14 +35,15 @@ struct RuuviDfu {
 
 extension DFUFirmware {
     var log: DfuLog {
-        let str = "File Name: \(fileName ?? "")".appending("\r\n")
-            .appending("Parts: \(parts)")
+        let str = "\("DfuFlash.Firmware.FileName.text".localized()): \(fileName ?? "")"
             .appending("\r\n")
-            .appending("Size: \(size.application / 1024) KB")
+            .appending("\("DfuFlash.Firmware.Parts.text".localized()): \(parts)")
             .appending("\r\n")
-            .appending("Soft Device Size: \(size.softdevice / 1024) KB")
+            .appending("\("DfuFlash.Firmware.Size.text".localized()): \(size.application / 1024) KB")
             .appending("\r\n")
-            .appending("Bootloader Size: \(size.bootloader) byte")
+            .appending("\("DfuFlash.Firmware.SoftDeviceSize.text".localized()): \(size.softdevice / 1024) KB")
+            .appending("\r\n")
+            .appending("\("DfuFlash.Firmware.BootloaderSize.text".localized()): \(size.bootloader) byte")
         return DfuLog(message: str, time: Date())
     }
 }
