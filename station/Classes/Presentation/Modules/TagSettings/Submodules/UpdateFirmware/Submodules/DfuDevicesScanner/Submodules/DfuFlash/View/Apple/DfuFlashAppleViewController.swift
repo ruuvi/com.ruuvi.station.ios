@@ -65,6 +65,7 @@ class DfuFlashAppleViewController: UIViewController, DfuFlashViewInput {
                                       for: .normal)
         finishButton.setTitle("DfuFlash.Finish.text".localized(),
                                       for: .normal)
+        progressLabel.text = "DfuFlash.Progress.text".localized()
     }
 
     func showCancelFlashDialog() {
