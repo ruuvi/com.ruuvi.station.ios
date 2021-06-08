@@ -13,7 +13,8 @@ class UpdateFirmwareAppleViewController: UIViewController, UpdateFirmwareViewInp
     }
 
     func localize() {
-        self.title = "UpdateFirmware.Title.text".localized()
+        title = "UpdateFirmware.Title.text".localized()
+        nextButton.setTitle("UpdateFirmware.NextButton.title".localized(), for: .normal)
         configDescriptionContent()
     }
 
