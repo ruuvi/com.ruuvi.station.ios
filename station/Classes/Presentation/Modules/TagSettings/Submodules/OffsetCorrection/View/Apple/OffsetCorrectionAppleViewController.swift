@@ -55,13 +55,10 @@ class OffsetCorrectionAppleViewController: UIViewController {
             if let hasValue = hasValue, hasValue == true {
                 self?.correctedValueView.isHidden = false
                 self?.clearButton.isEnabled = true
-                self?.clearButton.backgroundColor = UIColor(red: 21.0 / 255,
-                                                            green: 141.0 / 255,
-                                                            blue: 165.0 / 255,
-                                                            alpha: 1)
+                self?.clearButton.backgroundColor = .normalButtonBackground
             } else {
                 self?.correctedValueView.isHidden = true
-                self?.clearButton.backgroundColor = UIColor.darkGray
+                self?.clearButton.backgroundColor = .disableButtonBackground
                 self?.clearButton.isEnabled = false
             }
         }
@@ -149,7 +146,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
 
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addTextField { textfield in
-            textfield.keyboardType = .decimalPad
+            textfield.keyboardType = .numbersAndPunctuation
         }
         controller.addAction(UIAlertAction(title: "Confirm".localized(),
             style: .destructive,

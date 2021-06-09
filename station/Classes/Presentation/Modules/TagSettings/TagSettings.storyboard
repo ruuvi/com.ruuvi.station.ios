@@ -180,7 +180,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="2574.5" width="414" height="145"/>
+                            <rect key="frame" x="0.0" y="2668.5" width="414" height="145"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Cy9-GG-Tpy">
@@ -1483,10 +1483,34 @@ IMAGE</string>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="FIRMWARE" id="yfk-Ix-YJB" userLabel="FIRMWARE">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="TwP-jU-68E">
+                                        <rect key="frame" x="0.0" y="2512.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TwP-jU-68E" id="cwg-6y-bwh">
+                                            <rect key="frame" x="0.0" y="0.0" width="384.5" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Update Firmware" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mCx-1Y-l0F">
+                                                    <rect key="frame" x="20" y="11.5" width="130" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="mCx-1Y-l0F" firstAttribute="centerY" secondItem="cwg-6y-bwh" secondAttribute="centerY" id="Y7K-CI-QEf"/>
+                                                <constraint firstItem="mCx-1Y-l0F" firstAttribute="leading" secondItem="cwg-6y-bwh" secondAttribute="leading" constant="20" id="kfv-KV-Frr"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection headerTitle="NETWORK INFO" id="7xY-NH-UvA">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="uaJ-tK-9dE">
-                                        <rect key="frame" x="0.0" y="2512.5" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="2606.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uaJ-tK-9dE" id="jvp-Sm-L2g">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -1593,6 +1617,8 @@ IMAGE</string>
                         <outlet property="txPowerTitleLabel" destination="9z1-8W-BSJ" id="2UL-jA-tVG"/>
                         <outlet property="txPowerValueLabel" destination="fKD-IO-Ovr" id="2gL-vR-F92"/>
                         <outlet property="txPowerValueLabelTrailing" destination="mlt-cl-6Rz" id="wGy-rQ-ZQv"/>
+                        <outlet property="updateFirmwareCell" destination="TwP-jU-68E" id="FpA-jH-MTa"/>
+                        <outlet property="updateFirmwareTitleLabel" destination="mCx-1Y-l0F" id="cyF-By-fIi"/>
                         <outlet property="uploadBackgroundIndicatorView" destination="jx5-RA-Avc" id="DXb-jZ-gzu"/>
                         <outlet property="uploadBackgroundProgressLabel" destination="yWG-EZ-Hp2" id="5Wr-jK-AtY"/>
                         <outlet property="uuidCell" destination="gsA-fe-X4K" id="ejM-Gn-9Ht"/>
