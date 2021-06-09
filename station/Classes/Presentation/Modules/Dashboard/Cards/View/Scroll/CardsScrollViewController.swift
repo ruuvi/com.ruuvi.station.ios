@@ -125,9 +125,7 @@ extension CardsScrollViewController: CardsViewInput {
     func showBluetoothDisabled() {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
+        showAlert(title: title, message: message)
     }
 
     func showSwipeLeftRightHint() {

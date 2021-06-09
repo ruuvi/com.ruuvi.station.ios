@@ -10,7 +10,8 @@ enum TagSettingsTableSection: Int {
     case alerts = 3
     case offsetCorrection = 4
     case moreInfo = 5
-    case networkInfo = 6
+    case firmware = 6
+    case networkInfo = 7
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -27,6 +28,10 @@ enum TagSettingsTableSection: Int {
     static func showNetworkInfo(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isAuthorized.value == true
             && viewModel?.owner.value?.isEmpty == false
+    }
+
+    static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.canShowUpdateFirmware.value ?? false
     }
 }
 
@@ -109,6 +114,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityOffsetValueLabel: UILabel!
     @IBOutlet weak var pressureOffsetTitleLabel: UILabel!
     @IBOutlet weak var pressureOffsetValueLabel: UILabel!
+    @IBOutlet weak var updateFirmwareCell: UITableViewCell!
+    @IBOutlet weak var updateFirmwareTitleLabel: UILabel!
 
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
@@ -171,6 +178,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         temperatureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
         humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
         pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
+
+        updateFirmwareTitleLabel.text = "TagSettings.Firmware.UpdateFirmware".localized()
 
         claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
         shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
@@ -333,6 +342,7 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITableViewDelegate
 extension TagSettingsTableViewController {
+    // swiftlint:disable cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         guard let cell = tableView.cellForRow(at: indexPath) else {
@@ -355,6 +365,8 @@ extension TagSettingsTableViewController {
             output.viewDidTapHumidityOffsetCorrection()
         case pressureOffsetCorrectionCell:
             output.viewDidTapOnPressureOffsetCorrection()
+        case updateFirmwareCell:
+            output.viewDidTapOnUpdateFirmware()
         default:
             break
         }
@@ -374,6 +386,9 @@ extension TagSettingsTableViewController {
         case .networkInfo:
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
+        case .firmware:
+            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
+                ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
         default:
             return nil
         }
@@ -418,6 +433,9 @@ extension TagSettingsTableViewController {
         case .networkInfo:
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? 44 : .leastNormalMagnitude
+        case .firmware:
+            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
+                ? 44 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -449,6 +467,9 @@ extension TagSettingsTableViewController {
 
         case .networkInfo:
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+        case .firmware:
+            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         default:
             return super.tableView(tableView, numberOfRowsInSection: section)
