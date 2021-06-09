@@ -23,6 +23,7 @@ enum RUError: Error {
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
     case userApi(UserApiError)
+    case dfuError(RuuviDfuError)
 }
 
 extension RUError: LocalizedError {
@@ -59,6 +60,8 @@ extension RUError: LocalizedError {
         case .writeToDisk(let error):
             return error.localizedDescription
         case .userApi(let error):
+            return error.localizedDescription
+        case .dfuError(let error):
             return error.localizedDescription
         }
     }
@@ -187,6 +190,16 @@ struct UserApiError: Error {
     let description: String
 }
 extension UserApiError: LocalizedError {
+    public var errorDescription: String? {
+        return description.localized()
+    }
+}
+
+struct RuuviDfuError: Error {
+    static let invalidFirmwareFile = RuuviDfuError(description: "RuuviDfuError.invalidFirmwareFile")
+    let description: String
+}
+extension RuuviDfuError: LocalizedError {
     public var errorDescription: String? {
         return description.localized()
     }

@@ -114,6 +114,8 @@ PODS:
     - GRDB.swift/standard (= 4.14.0)
   - GRDB.swift/standard (4.14.0)
   - Humidity (0.1.5)
+  - iOSDFULibrary (4.10.3):
+    - ZIPFoundation (= 0.9.11)
   - KeychainAccess (4.2.1)
   - LightRoute (2.2.2)
   - Localize-Swift (3.2.0):
@@ -356,6 +358,7 @@ PODS:
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
+  - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
   - BTKit
@@ -371,6 +374,7 @@ DEPENDENCIES:
   - GestureInstructions
   - GRDB.swift
   - Humidity (from `https://github.com/rinat-enikeev/Humidity.git`)
+  - iOSDFULibrary
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -441,6 +445,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - GRDB.swift
+    - iOSDFULibrary
     - KeychainAccess
     - Localize-Swift
     - nanopb
@@ -454,6 +459,7 @@ SPEC REPOS:
     - RxSwift
     - SwiftGen
     - Swinject
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   Charts:
@@ -531,6 +537,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
   Humidity: fb16fe2430b7a8aa979821ede5b5164519fca6d1
+  iOSDFULibrary: 7aade51a907d01ca9a87055003cd232b09efd78f
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 6f4475136bdb0d7b2882ea3d4ea919d70142b232
@@ -559,7 +566,8 @@ SPEC CHECKSUMS:
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: a16d720c3b0c1d2c66b4603c7decbb20ea90c487
+PODFILE CHECKSUM: 9a3f232efb4cef2948e6ce2c3a08df091e898fd5
 
 COCOAPODS: 1.10.1

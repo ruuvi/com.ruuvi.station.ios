@@ -281,7 +281,6 @@
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
 "TagSettings.SectionHeader.Name.title" = "NAME";
-"No" = "No";
 "OK" = "OK";
 "TagSettings.PressureAlert.title" = "Air Pressure (%@)";
 "UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
@@ -314,11 +313,10 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Updated";
 "V" = "V";
-"Yes" = "Yes";
 "LocalNotificationsManager.Mute.button" = "Mute for an hour";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
-"Menu.SignOut.text" = "Sign out";
+"TagsManager.SignOutButton" = "Sign out";
 "SignIn.SignInBenefits" = "After signing in, you will be automatically marked as an owner of your nearby Ruuvi sensors. The claimed sensors will be restored after an app re-install.\n\nWith a Ruuvi Gateway router, you'll be able to monitor the claimed sensors remotely and share them with your friends.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.RequestCode" = "Request a Code";
@@ -330,7 +328,6 @@
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
 "TagSettings.ShareButton" = "Share";
-"Syncing..." = "Syncing…";
 "Synchronized" = "Synchronized";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synchronized: %@";
 "MenuTableViewController.None" = "none";
@@ -340,11 +337,9 @@
 "ShareViewController.addFriend.Title" = "Add friend";
 "ShareViewController.emailTextField.placeholder" = "Type email";
 "ShareViewController.sharedEmails.Title" = "Already shared %d/%d";
-"Share.Send.button" = "Send";
 "SharePresenter.UnshareSensor.Message" = "Do you want to unshare sensor for %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
 "TagSettings.NetworkInfo.Owner" = "Owner";
-"Menu.RuuviNetworkStatus.text" = "Ruuvi Network status";
 "SignIn.TitleLabel.text" = "Login to\nRuuvi\nNetwork";
 "SignIn.SubtitleLabel.text" = "To enjoy all the features, create an account or login to your existing Ruuvi account by entering your email address.";
 "SignIn.VerificationCodePlaceholder" = "verification code in format: CJSM";
@@ -375,12 +370,9 @@
 "OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Enter temperature value expected from sensor in current conditions (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterPressure" = "Enter pressure value expected from sensor in current conditions (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Enter humidity value expected from sensor in current conditions (%@): ";
-"OffsetCorrection.OriginalValue.title" = "Original measured value";
-"OffsetCorrection.CorrectedValue.title" = "Corrected value";
 "OffsetCorrection.Temperature.Title" = "Temperature offset";
 "OffsetCorrection.Humidity.Title" = "Humidity offset";
 "OffsetCorrection.Pressure.Title" = "Pressure offset";
-"OffsetCorrection.Calibrate.button" = "Offset correction";
 "TagSettings.SectionHeader.OffsetCorrection.Title" = "OFFSET CORRECTION";
 "TagSettings.OffsetCorrection.Temperature" = "Temperature";
 "TagSettings.OffsetCorrection.Humidity" = "Humidity";
