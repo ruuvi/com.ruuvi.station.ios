@@ -146,7 +146,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
 
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addTextField { textfield in
-            textfield.keyboardType = .decimalPad
+            textfield.keyboardType = .numbersAndPunctuation
         }
         controller.addAction(UIAlertAction(title: "Confirm".localized(),
             style: .destructive,
