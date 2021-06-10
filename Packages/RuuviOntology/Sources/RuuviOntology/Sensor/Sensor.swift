@@ -48,7 +48,7 @@ public protocol Shareable {
 public protocol ShareableSensor: Sensor, Shareable {
 }
 
-public protocol PhysicalSensor: Sensor, Connectable, Nameable {
+public protocol PhysicalSensor: Sensor {
     var luid: LocalIdentifier? { get }
     var macId: MACIdentifier? { get }
 }

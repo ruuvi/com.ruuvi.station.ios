@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol RuuviTagSensor: PhysicalSensor, Versionable, Claimable {}
+public protocol RuuviTagSensor: PhysicalSensor, Versionable, Claimable, Connectable, Nameable {}
 
 extension RuuviTagSensor {
     public var id: String {
