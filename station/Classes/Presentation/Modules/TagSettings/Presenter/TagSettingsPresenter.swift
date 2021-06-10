@@ -657,20 +657,21 @@ extension TagSettingsPresenter {
                     observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
                 }
             }
-            bindTemperatureAlert(uuid: identifier.value)
-            bindHumidityAlert(uuid: identifier.value)
-            bindDewPoint(uuid: identifier.value)
-            bindPressureAlert(uuid: identifier.value)
-            bindConnectionAlert(uuid: identifier.value)
-            bindMovementAlert(uuid: identifier.value)
             viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
             viewModel.isNetworkConnected.value = ruuviTag.isCloud
         }
 
+        bindTemperatureAlert(for: ruuviTag)
+        bindHumidityAlert(for: ruuviTag)
+        bindDewPoint(for: ruuviTag)
+        bindPressureAlert(for: ruuviTag)
+        bindConnectionAlert(for: ruuviTag)
+        bindMovementAlert(for: ruuviTag)
+
         bindOffsetCorrection()
     }
 
-    private func bindTemperatureAlert(uuid: String) {
+    private func bindTemperatureAlert(for ruuviTag: PhysicalSensor) {
         let temperatureLower = viewModel.temperatureLowerBound
         let temperatureUpper = viewModel.temperatureUpperBound
         bind(viewModel.isTemperatureAlertOn, fire: false) {
@@ -679,33 +680,33 @@ extension TagSettingsPresenter {
             if let l = temperatureLower?.value?.converted(to: .celsius).value,
                let u = temperatureUpper?.value?.converted(to: .celsius).value {
                 let type: AlertType = .temperature(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
+                        observer.alertService.register(type: type, for: ruuviTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: uuid)
+                        observer.alertService.unregister(type: type, for: ruuviTag)
                     }
-                    observer.alertService.unmute(type: type, for: uuid)
+                    observer.alertService.unmute(type: type, for: ruuviTag)
                 }
             }
         }
         bind(viewModel.temperatureLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .celsius).value {
-                observer.alertService.setLower(celsius: l, for: uuid)
+                observer.alertService.setLower(celsius: l, for: ruuviTag)
             }
         }
         bind(viewModel.temperatureUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .celsius).value {
-                observer.alertService.setUpper(celsius: u, for: uuid)
+                observer.alertService.setUpper(celsius: u, for: ruuviTag)
             }
         }
         bind(viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
-            observer.alertService.setTemperature(description: temperatureAlertDescription, for: uuid)
+            observer.alertService.setTemperature(description: temperatureAlertDescription, for: ruuviTag)
         }
     }
 
-    private func bindHumidityAlert(uuid: String) {
+    private func bindHumidityAlert(for ruuviTag: PhysicalSensor) {
         let humidityLower = viewModel.humidityLowerBound
         let humidityUpper = viewModel.humidityUpperBound
         bind(viewModel.isHumidityAlertOn, fire: false) {
@@ -713,29 +714,29 @@ extension TagSettingsPresenter {
             if let l = humidityLower?.value,
                let u = humidityUpper?.value {
                 let type: AlertType = .humidity(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
+                        observer.alertService.register(type: type, for: ruuviTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: uuid)
+                        observer.alertService.unregister(type: type, for: ruuviTag)
                     }
-                    observer.alertService.unmute(type: type, for: uuid)
+                    observer.alertService.unmute(type: type, for: ruuviTag)
                 }
             }
         }
         bind(viewModel.humidityLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(humidity: lower, for: uuid)
+            observer.alertService.setLower(humidity: lower, for: ruuviTag)
         }
         bind(viewModel.humidityUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(humidity: upper, for: uuid)
+            observer.alertService.setUpper(humidity: upper, for: ruuviTag)
         }
         bind(viewModel.humidityAlertDescription, fire: false) { observer, humidityAlertDescription in
-            observer.alertService.setHumidity(description: humidityAlertDescription, for: uuid)
+            observer.alertService.setHumidity(description: humidityAlertDescription, for: ruuviTag)
         }
     }
 
-    private func bindDewPoint(uuid: String) {
+    private func bindDewPoint(for ruuviTag: PhysicalSensor) {
         let dewPointLower = viewModel.dewPointLowerBound
         let dewPointUpper = viewModel.dewPointUpperBound
         bind(viewModel.isDewPointAlertOn, fire: false) {
@@ -743,33 +744,33 @@ extension TagSettingsPresenter {
             if let l = dewPointLower?.value?.converted(to: .celsius).value,
                let u = dewPointUpper?.value?.converted(to: .celsius).value {
                 let type: AlertType = .dewPoint(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
+                        observer.alertService.register(type: type, for: ruuviTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: uuid)
+                        observer.alertService.unregister(type: type, for: ruuviTag)
                     }
-                    observer.alertService.unmute(type: type, for: uuid)
+                    observer.alertService.unmute(type: type, for: ruuviTag)
                 }
             }
         }
         bind(viewModel.dewPointLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .celsius).value {
-                observer.alertService.setLowerDewPoint(celsius: l, for: uuid)
+                observer.alertService.setLowerDewPoint(celsius: l, for: ruuviTag)
             }
         }
         bind(viewModel.dewPointUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .celsius).value {
-                observer.alertService.setUpperDewPoint(celsius: u, for: uuid)
+                observer.alertService.setUpperDewPoint(celsius: u, for: ruuviTag)
             }
         }
         bind(viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: uuid)
+            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: ruuviTag)
         }
     }
 
-    private func bindPressureAlert(uuid: String) {
+    private func bindPressureAlert(for ruuviTag: PhysicalSensor) {
         let pressureLower = viewModel.pressureLowerBound
         let pressureUpper = viewModel.pressureUpperBound
         bind(viewModel.isPressureAlertOn, fire: false) {
@@ -777,55 +778,55 @@ extension TagSettingsPresenter {
             if let l = pressureLower?.value?.converted(to: .hectopascals).value,
                let u = pressureUpper?.value?.converted(to: .hectopascals).value {
                 let type: AlertType = .pressure(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
+                        observer.alertService.register(type: type, for: ruuviTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: uuid)
+                        observer.alertService.unregister(type: type, for: ruuviTag)
                     }
-                    observer.alertService.unmute(type: type, for: uuid)
+                    observer.alertService.unmute(type: type, for: ruuviTag)
                 }
             }
         }
 
         bind(viewModel.pressureLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .hectopascals).value {
-                observer.alertService.setLower(pressure: l, for: uuid)
+                observer.alertService.setLower(pressure: l, for: ruuviTag)
             }
         }
 
         bind(viewModel.pressureUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .hectopascals).value {
-                observer.alertService.setUpper(pressure: u, for: uuid)
+                observer.alertService.setUpper(pressure: u, for: ruuviTag)
             }
         }
 
         bind(viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in
-            observer.alertService.setPressure(description: pressureAlertDescription, for: uuid)
+            observer.alertService.setPressure(description: pressureAlertDescription, for: ruuviTag)
         }
     }
 
-    private func bindConnectionAlert(uuid: String) {
+    private func bindConnectionAlert(for ruuviTag: PhysicalSensor) {
         bind(viewModel.isConnectionAlertOn, fire: false) { observer, isOn in
             let type: AlertType = .connection
-            let currentState = observer.alertService.isOn(type: type, for: uuid)
+            let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
             if currentState != isOn.bound {
                 if isOn.bound {
-                    observer.alertService.register(type: type, for: uuid)
+                    observer.alertService.register(type: type, for: ruuviTag)
                 } else {
-                    observer.alertService.unregister(type: type, for: uuid)
+                    observer.alertService.unregister(type: type, for: ruuviTag)
                 }
-                observer.alertService.unmute(type: type, for: uuid)
+                observer.alertService.unmute(type: type, for: ruuviTag)
             }
         }
 
         bind(viewModel.connectionAlertDescription, fire: false) { observer, connectionAlertDescription in
-            observer.alertService.setConnection(description: connectionAlertDescription, for: uuid)
+            observer.alertService.setConnection(description: connectionAlertDescription, for: ruuviTag)
         }
     }
 
-    private func bindMovementAlert(uuid: String) {
+    private func bindMovementAlert(for ruuviTag: PhysicalSensor) {
         bind(viewModel.isMovementAlertOn, fire: false) {[weak self] observer, isOn in
             guard let strongSelf = self else {
                 return
@@ -833,21 +834,21 @@ extension TagSettingsPresenter {
             observer.ruuviStorage.readLast(strongSelf.ruuviTag).on(success: { record in
                 let last = record?.movementCounter ?? 0
                 let type: AlertType = .movement(last: last)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
+                        observer.alertService.register(type: type, for: ruuviTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: uuid)
+                        observer.alertService.unregister(type: type, for: ruuviTag)
                     }
-                    observer.alertService.unmute(type: type, for: uuid)
+                    observer.alertService.unmute(type: type, for: ruuviTag)
                 }
             }, failure: { error in
                 observer.errorPresenter.present(error: error)
             })
         }
         bind(viewModel.movementAlertDescription, fire: false) { observer, movementAlertDescription in
-            observer.alertService.setMovement(description: movementAlertDescription, for: uuid)
+            observer.alertService.setMovement(description: movementAlertDescription, for: ruuviTag)
         }
     }
 

@@ -331,14 +331,14 @@ extension CardsPresenter {
                 })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-                viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
                 viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
-                viewModel.alertState.value = .empty
             } else {
                 assertionFailure()
             }
+            viewModel.alertState.value = alertService
+                .hasRegistrations(for: ruuviTag) ? .registered : .empty
             ruuviStorage.readLast(ruuviTag).on { record in
                 if let record = record {
                     viewModel.update(record)
@@ -356,7 +356,7 @@ extension CardsPresenter {
                     }, failure: { [weak self] error in
                         self?.errorPresenter.present(error: error)
                     })
-                viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
+                viewModel.alertState.value = alertService.hasRegistrations(for: webTag) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
             }) ?? []

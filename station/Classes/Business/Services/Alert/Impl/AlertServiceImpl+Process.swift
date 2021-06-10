@@ -5,43 +5,42 @@ import RuuviOntology
 
 // MARK: - Process Physical Sensors
 extension AlertServiceImpl {
-    // swiftlint:disable:next function_body_length
-    func process(heartbeat ruuviTag: RuuviTagSensorRecord) {
+    func process(heartbeat record: RuuviTagSensorRecord) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
                 let isTemperature = process(
-                    temperature: ruuviTag.temperature,
+                    temperature: record.temperature,
                     alertType: type,
-                    identifier: ruuviTag.luid
+                    identifier: record.luid
                 )
                 isTriggered = isTriggered || isTemperature
             case .humidity:
                 let isHumidity = process(
-                    humidity: ruuviTag.humidity,
-                    temperature: ruuviTag.temperature,
+                    humidity: record.humidity,
+                    temperature: record.temperature,
                     alertType: type,
-                    identifier: ruuviTag.luid
+                    identifier: record.luid
                 )
                 isTriggered = isTriggered || isHumidity
             case .dewPoint:
                 let isDewPoint = processDewPoint(
-                    humidity: ruuviTag.humidity,
-                    temperature: ruuviTag.temperature,
+                    humidity: record.humidity,
+                    temperature: record.temperature,
                     alertType: type,
-                    identifier: ruuviTag.luid
+                    identifier: record.luid
                 )
                 isTriggered = isTriggered || isDewPoint
             case .pressure:
                 let isPressure = process(
-                    pressure: ruuviTag.pressure,
+                    pressure: record.pressure,
                     alertType: type,
-                    identifier: ruuviTag.luid
+                    identifier: record.luid
                 )
                 isTriggered = isTriggered || isPressure
             case .movement:
-                let isMovement = process(movement: type, ruuviTag: ruuviTag)
+                let isMovement = process(movement: type, record: record)
                 isTriggered = isTriggered || isMovement
             case .connection:
                 // do nothing, see RuuviTagHeartbeatDaemon
@@ -49,56 +48,50 @@ extension AlertServiceImpl {
             }
         }
 
-        let uuid = ruuviTag.id
-        if let movementCounter = ruuviTag.movementCounter {
-            ruuviAlertService.setMovement(counter: movementCounter, for: uuid)
+        if let movementCounter = record.movementCounter {
+            ruuviAlertService.setMovement(counter: movementCounter, for: record)
         }
 
-        if ruuviAlertService.hasRegistrations(for: uuid) {
-            notify(uuid: uuid, isTriggered: isTriggered)
-        }
-
-        if let macId = ruuviTag.macId?.mac, ruuviAlertService.hasRegistrations(for: macId) {
-            notify(uuid: macId, isTriggered: isTriggered)
+        if ruuviAlertService.hasRegistrations(for: record) {
+            notify(uuid: record.id, isTriggered: isTriggered)
         }
     }
 }
 
 // MARK: - Process Virtual Sensors
 extension AlertServiceImpl {
-
-    func process(data: WPSData, for uuid: String) {
+    func process(data: WPSData, for sensor: VirtualSensor) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
                 isTriggered = process(temperature: data.temperature,
                                       alertType: type,
-                                      identifier: uuid.luid)
+                                      identifier: sensor.id.luid)
                     || isTriggered
             case .humidity:
                 isTriggered = process(humidity: data.humidity,
                                       temperature: data.temperature,
                                       alertType: type,
-                                      identifier: uuid.luid)
+                                      identifier: sensor.id.luid)
                     || isTriggered
             case .dewPoint:
                 isTriggered = processDewPoint(humidity: data.humidity,
                                               temperature: data.temperature,
                                               alertType: type,
-                                              identifier: uuid.luid)
+                                              identifier: sensor.id.luid)
                     || isTriggered
             case .pressure:
                 isTriggered = process(pressure: data.pressure,
                                       alertType: type,
-                                      identifier: uuid.luid)
+                                      identifier: sensor.id.luid)
             default:
                 break
             }
         }
 
-        if ruuviAlertService.hasRegistrations(for: uuid) {
-            notify(uuid: uuid, isTriggered: isTriggered)
+        if ruuviAlertService.hasRegistrations(for: sensor) {
+            notify(uuid: sensor.id, isTriggered: isTriggered)
         }
     }
 
@@ -136,7 +129,7 @@ extension AlertServiceImpl {
             }
         }
 
-        if ruuviAlertService.hasRegistrations(for: identifier.value) {
+        if ruuviAlertService.hasRegistrations(for: record) {
             notify(uuid: identifier.value, isTriggered: isTriggered)
         }
     }
@@ -274,15 +267,15 @@ extension AlertServiceImpl {
 
     private func process(
         movement: AlertType,
-        ruuviTag: RuuviTagSensorRecord
+        record: RuuviTagSensorRecord
     ) -> Bool {
-        if case .movement(let last) = ruuviAlertService.alert(for: ruuviTag.id, of: movement),
-            let movementCounter = ruuviTag.movementCounter {
+        if case .movement(let last) = ruuviAlertService.alert(for: record.id, of: movement),
+            let movementCounter = record.movementCounter {
             let isGreater = movementCounter > last
             if isGreater {
                 DispatchQueue.main.async { [weak self] in
                     self?.localNotificationsManager
-                        .notifyDidMove(for: ruuviTag.id, counter: movementCounter)
+                        .notifyDidMove(for: record.id, counter: movementCounter)
                 }
             }
             return isGreater
