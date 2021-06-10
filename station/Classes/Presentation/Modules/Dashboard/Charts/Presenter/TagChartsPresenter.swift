@@ -382,19 +382,16 @@ extension TagChartsPresenter {
         if let luid = ruuviTag.luid {
             viewModel.name.value = ruuviTag.name
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-            viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
-                                                                ? .registered : .empty
-
             // get lastest sensorSettings
             ruuviStorage.readSensorSettings(ruuviTag).on { settings in
                 self.sensorSettings = settings
             }
-        } else if let macId = ruuviTag.macId {
-            viewModel.alertState.value = alertService.hasRegistrations(for: macId.value) ? .registered : .empty
+        } else if ruuviTag.macId != nil {
             viewModel.isConnected.value = false
         } else {
             assertionFailure()
         }
+        viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag) ? .registered : .empty
         self.viewModel = viewModel
     }
     private func restartObservingData() {
