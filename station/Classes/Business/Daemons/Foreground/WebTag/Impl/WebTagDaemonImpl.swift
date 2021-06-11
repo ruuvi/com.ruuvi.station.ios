@@ -2,6 +2,7 @@ import Foundation
 import RealmSwift
 import CoreLocation
 import RuuviLocal
+import RuuviOntology
 
 class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
 
@@ -132,7 +133,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
             let locationWebTags = webTags.filter({ $0.location != nil })
             for webTag in locationWebTags {
                 guard let location = webTag.location else { return }
-                let uuid = webTag.uuid
+                let webTagStruct = webTag.struct
                 let locationLocation = location.location
                 let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
                 wsTokens.append(webTagService.observeData(self,
@@ -143,7 +144,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                                                           closure: { (observer, data, error) in
                     if let data = data {
                         observer.webTagPersistence.persist(location: locationLocation, data: data)
-                        observer.alertService.process(data: data, for: uuid)
+                        observer.alertService.process(data: data, for: webTagStruct)
                     } else if let error = error {
                         observer.post(error: error)
                     }
@@ -157,7 +158,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
             let currentLocationWebTags = webTags.filter({ $0.location == nil })
             for provider in WeatherProvider.allCases {
                 if currentLocationWebTags.contains(where: { $0.provider == provider }) {
-                    let uuids: [String] = currentLocationWebTags.map({ $0.uuid })
+                    let currentLocationWebTagStructs: [VirtualSensor] = currentLocationWebTags.map({ $0.struct })
                     wsTokens.append(webTagService.observeCurrentLocationData(self,
                                                                              provider: provider,
                                                                              interval: pullInterval,
@@ -166,7 +167,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                                                                                 (observer, data, location, error) in
                         if let data = data, let location = location {
                             observer.webTagPersistence.persist(currentLocation: location, data: data)
-                            uuids.forEach({
+                            currentLocationWebTagStructs.forEach({
                                 observer.alertService.process(data: data, for: $0)
                             })
                         } else if let error = error {

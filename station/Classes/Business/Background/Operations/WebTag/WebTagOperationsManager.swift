@@ -13,10 +13,10 @@ class WebTagOperationsManager {
         let realm = try! Realm()
         let webTags = realm.objects(WebTagRealm.self)
         for webTag in webTags {
-            if alertService.hasRegistrations(for: webTag.uuid) {
+            if alertService.hasRegistrations(for: webTag) {
                 if let location = webTag.location?.location {
                     let operation = WebTagRefreshDataOperation(
-                        uuid: webTag.uuid,
+                        sensor: webTag.struct,
                         location: location,
                         provider: webTag.provider,
                         weatherProviderService: weatherProviderService,
@@ -26,7 +26,7 @@ class WebTagOperationsManager {
                     operations.append(operation)
                 } else {
                     let operation = CurrentWebTagRefreshDataOperation(
-                        uuid: webTag.uuid,
+                        sensor: webTag.struct,
                         provider: webTag.provider,
                         weatherProviderService: weatherProviderService,
                         alertService: alertHandler,

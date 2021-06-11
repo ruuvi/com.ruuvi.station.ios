@@ -80,6 +80,21 @@ public protocol RuuviCloud {
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
+
+    @discardableResult
+    // swiftlint:disable:next function_parameter_count
+    func setAlert(
+        type: RuuviCloudAlertType,
+        isEnabled: Bool,
+        min: Double?,
+        max: Double?,
+        counter: Int?,
+        description: String?,
+        for macId: MACIdentifier
+    ) -> Future<Void, RuuviCloudError>
+
+    @discardableResult
+    func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
