@@ -7,6 +7,7 @@ import RuuviLocal
 
 // MARK: - RuuviTag
 extension RuuviServiceAlertImpl {
+    // swiftlint:disable:next function_body_length
     func register(type: AlertType, ruuviTag: RuuviTagSensor) {
         register(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -22,21 +23,46 @@ extension RuuviServiceAlertImpl {
                     for: macId
                 )
             case .relativeHumidity(let lower, let upper):
-                break
+                cloud.setAlert(
+                    type: .humidity,
+                    isEnabled: true,
+                    min: lower * 100.0, // in percent on cloud, fraction locally
+                    max: upper * 100.0, // in percent on cloud, fraction locally
+                    counter: nil,
+                    description: relativeHumidityDescription(for: ruuviTag),
+                    for: macId
+                )
             case .humidity(let lower, let upper):
-                break
+                break // absolute is not on cloud yet (11.06.2021)
             case .dewPoint(let lower, let upper):
-                break
+                break // dew point is not on cloud yet (11.06.2021)
             case .pressure(let lower, let upper):
-                break
+                cloud.setAlert(
+                    type: .pressure,
+                    isEnabled: true,
+                    min: lower * 100, // in Pa on cloud, in hPa locally
+                    max: upper * 100, // in Pa on cloud, in hPa locally
+                    counter: nil,
+                    description: pressureDescription(for: ruuviTag),
+                    for: macId
+                )
             case .connection:
                 break
             case .movement(let last):
-                break
+                cloud.setAlert(
+                    type: .movement,
+                    isEnabled: true,
+                    min: nil,
+                    max: nil,
+                    counter: last,
+                    description: movementDescription(for: ruuviTag),
+                    for: macId
+                )
             }
         }
     }
 
+    // swiftlint:disable:next function_body_length
     func unregister(type: AlertType, ruuviTag: RuuviTagSensor) {
         unregister(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -52,17 +78,41 @@ extension RuuviServiceAlertImpl {
                     for: macId
                 )
             case .relativeHumidity(let lower, let upper):
-                break
+                cloud.setAlert(
+                    type: .humidity,
+                    isEnabled: false,
+                    min: lower * 100, // in percent on cloud, fraction locally
+                    max: upper * 100, // in percent on cloud, fraction locally
+                    counter: nil,
+                    description: relativeHumidityDescription(for: ruuviTag),
+                    for: macId
+                )
             case .humidity(let lower, let upper):
-                break
+                break // absolute is not on cloud yet (11.06.2021)
             case .dewPoint(let lower, let upper):
-                break
+                break // dew point is not on cloud yet (11.06.2021)
             case .pressure(let lower, let upper):
-                break
+                cloud.setAlert(
+                    type: .pressure,
+                    isEnabled: false,
+                    min: lower * 100, // in Pa on cloud, in hPa locally
+                    max: upper * 100, // in Pa on cloud, in hPa locally
+                    counter: nil,
+                    description: pressureDescription(for: ruuviTag),
+                    for: macId
+                )
             case .connection:
                 break
             case .movement(let last):
-                break
+                cloud.setAlert(
+                    type: .movement,
+                    isEnabled: false,
+                    min: nil,
+                    max: nil,
+                    counter: last,
+                    description: movementDescription(for: ruuviTag),
+                    for: macId
+                )
             }
         }
     }
@@ -114,14 +164,47 @@ extension RuuviServiceAlertImpl {
 
     func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(relativeHumidity: relativeHumidity, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .humidity,
+                isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
+                min: relativeHumidity ?? 0 * 100,
+                max: upperRelativeHumidity(for: ruuviTag) ?? 0 * 100,
+                counter: nil,
+                description: relativeHumidityDescription(for: ruuviTag),
+                for: macId
+            )
+        }
     }
 
     func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(relativeHumidity: relativeHumidity, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .humidity,
+                isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
+                min: lowerRelativeHumidity(for: ruuviTag) ?? 0 * 100,
+                max: relativeHumidity ?? 0 * 100,
+                counter: nil,
+                description: relativeHumidityDescription(for: ruuviTag),
+                for: macId
+            )
+        }
     }
 
     func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor) {
         setRelativeHumidity(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .humidity,
+                isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
+                min: lowerRelativeHumidity(for: ruuviTag) ?? 0 * 100,
+                max: upperRelativeHumidity(for: ruuviTag) ?? 0 * 100,
+                counter: nil,
+                description: description,
+                for: macId
+            )
+        }
     }
 
 }
@@ -153,10 +236,18 @@ final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     type = .temperature(lower: cloudAlert.min, upper: cloudAlert.max)
                     setTemperature(description: cloudAlert.description, for: physicalSensor)
                 case .humidity:
-                    type = .relativeHumidity(lower: cloudAlert.min, upper: cloudAlert.max)
+                    // in percent on cloud, in fraction locally
+                    type = .relativeHumidity(
+                        lower: cloudAlert.min / 100.0,
+                        upper: cloudAlert.max / 100.0
+                    )
                     setRelativeHumidity(description: cloudAlert.description, for: physicalSensor)
                 case .pressure:
-                    type = .pressure(lower: cloudAlert.min, upper: cloudAlert.max)
+                    // in Pa on cloud, in hPa locally
+                    type = .pressure(
+                        lower: cloudAlert.min / 100.0,
+                        upper: cloudAlert.max / 100.0
+                    )
                     setPressure(description: cloudAlert.description, for: physicalSensor)
                 case .movement:
                     type = .movement(last: cloudAlert.counter)
