@@ -38,21 +38,12 @@ public protocol Calibratable {
     var offsetPressure: Double? { get } // in hPa
 }
 
-public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable {
-}
+public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable {}
 
 public protocol Shareable {
     var sharedTo: [String] { get } // emails
 }
 
-public protocol ShareableSensor: Sensor, Shareable {
-}
-
-public protocol PhysicalSensor: Sensor {
-    var luid: LocalIdentifier? { get }
-    var macId: MACIdentifier? { get }
-}
-
-public protocol VirtualSensor: Sensor, Nameable {}
+public protocol ShareableSensor: Sensor, Shareable {}
 
 public protocol LocationVirtualSensor: VirtualSensor, Locateable {}

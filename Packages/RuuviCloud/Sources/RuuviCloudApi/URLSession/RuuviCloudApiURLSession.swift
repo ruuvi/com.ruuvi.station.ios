@@ -180,6 +180,18 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
+    func getAlerts(
+        _ requestModel: RuuviCloudApiGetAlertsRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetAlertsResponse, RuuviCloudApiError> {
+        return request(
+            endpoint: Routes.alerts,
+            with: requestModel,
+            method: .get,
+            authorization: authorization
+        )
+    }
+
     func uploadImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         imageData: Data,

@@ -99,7 +99,7 @@ extension MigrationManagerAlertService {
         }
     }
 
-    private func migrateTo1Version(element: (PhysicalSensor, Temperature?), completion: @escaping (() -> Void)) {
+    private func migrateTo1Version(element: (RuuviTagSensor, Temperature?), completion: @escaping (() -> Void)) {
         let id = element.0.id
         if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
            let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
@@ -110,8 +110,10 @@ extension MigrationManagerAlertService {
                                                    unit: .relative(temperature: temperature))
             let upperHumidity: Humidity = Humidity(value: upper / 100,
                                                    unit: .relative(temperature: temperature))
-            ruuviAlertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
-                                  for: id)
+            ruuviAlertService.register(
+                type: .humidity(lower: lowerHumidity, upper: upperHumidity),
+                ruuviTag: element.0
+            )
         } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
                   let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
                   let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
@@ -120,9 +122,10 @@ extension MigrationManagerAlertService {
                                                    unit: .absolute)
             let upperHumidity: Humidity = Humidity(value: upper,
                                                    unit: .absolute)
-            ruuviAlertService.register(type: .humidity(lower: lowerHumidity,
-                                                  upper: upperHumidity),
-                                  for: id)
+            ruuviAlertService.register(
+                type: .humidity(lower: lowerHumidity, upper: upperHumidity),
+                ruuviTag: element.0
+            )
         } else {
             debugPrint("do nothing")
         }
@@ -147,7 +150,7 @@ extension MigrationManagerAlertService {
             let upperHumidity: Humidity = Humidity(value: upper / 100,
                                                    unit: .relative(temperature: temperature))
             ruuviAlertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
-                                  for: id)
+                                  for: element.0)
         } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
                   let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
                   let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
@@ -158,7 +161,7 @@ extension MigrationManagerAlertService {
                                                    unit: .absolute)
             ruuviAlertService.register(type: .humidity(lower: lowerHumidity,
                                                   upper: upperHumidity),
-                                  for: id)
+                                  for: element.0)
         } else {
             debugPrint("do nothing")
         }
