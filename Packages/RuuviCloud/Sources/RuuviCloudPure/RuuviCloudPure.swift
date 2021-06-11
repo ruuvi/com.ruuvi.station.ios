@@ -12,6 +12,57 @@ final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError> {
+        let promise = Promise<[RuuviCloudSensorAlerts], RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiGetAlertsRequest()
+        api.getAlerts(request, authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.sensors)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    // swiftlint:disable:next function_parameter_count
+    func setAlert(
+        type: RuuviCloudAlertType,
+        isEnabled: Bool,
+        min: Double?,
+        max: Double?,
+        counter: Int?,
+        description: String?,
+        for macId: MACIdentifier
+    ) -> Future<Void, RuuviCloudError> {
+        let promise = Promise<Void, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostAlertRequest(
+            sensor: macId.value,
+            enabled: isEnabled,
+            type: type,
+            min: min,
+            max: max,
+            description: description,
+            counter: counter
+        )
+        api.postAlert(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: ())
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
         let promise = Promise<TemperatureUnit, RuuviCloudError>()
         guard let apiKey = apiKey else {

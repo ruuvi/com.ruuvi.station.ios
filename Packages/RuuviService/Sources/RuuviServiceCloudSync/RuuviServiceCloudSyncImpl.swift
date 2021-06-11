@@ -17,6 +17,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviLocalImages: RuuviLocalImages
     private let ruuviRepository: RuuviRepository
     private let ruuviLocalIDs: RuuviLocalIDs
+    private let alertService: RuuviServiceAlert
 
     init(
         ruuviStorage: RuuviStorage,
@@ -26,7 +27,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
-        ruuviLocalIDs: RuuviLocalIDs
+        ruuviLocalIDs: RuuviLocalIDs,
+        ruuviAlertService: RuuviServiceAlert
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
@@ -36,6 +38,20 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviLocalImages = ruuviLocalImages
         self.ruuviRepository = ruuviRepository
         self.ruuviLocalIDs = ruuviLocalIDs
+        self.alertService = ruuviAlertService
+    }
+
+    @discardableResult
+    func syncAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviServiceError> {
+        let promise = Promise<[RuuviCloudSensorAlerts], RuuviServiceError>()
+        ruuviCloud.loadAlerts()
+            .on(success: { cloudSensorAlerts in
+                self.alertService.sync(cloudAlerts: cloudSensorAlerts)
+                promise.succeed(value: cloudSensorAlerts)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
     }
 
     @discardableResult
@@ -100,12 +116,17 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         let sensors = syncSensors()
         let settings = syncSettings()
+        let alerts = syncAlerts()
         sensors.on(success: { [weak self] updatedSensors in
             guard let sSelf = self else { return }
             let syncs = updatedSensors.map({ sSelf.sync(sensor: $0) })
             Future.zip(syncs).on(success: { _ in
                 settings.on(success: { _ in
-                    promise.succeed(value: updatedSensors)
+                    alerts.on(success: { _ in
+                        promise.succeed(value: updatedSensors)
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
                 }, failure: { error in
                     promise.fail(error: error)
                 })
