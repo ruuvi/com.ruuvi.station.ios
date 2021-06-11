@@ -10,7 +10,7 @@ public enum RuuviTagSensorRecordSource: String {
     case weatherProvider
 }
 
-public protocol RuuviTagSensorRecord {
+public protocol RuuviTagSensorRecord: PhysicalSensor {
     var luid: LocalIdentifier? { get }
     var date: Date { get }
     var source: RuuviTagSensorRecordSource { get }
