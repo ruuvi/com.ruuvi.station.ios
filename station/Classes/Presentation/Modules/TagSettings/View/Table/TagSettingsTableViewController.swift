@@ -325,6 +325,7 @@ extension TagSettingsTableViewController {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
         if !keepConnectionSwitch.isOn {
             viewModel?.isTemperatureAlertOn.value = false
+            viewModel?.isRelativeHumidityAlertOn.value = false
             viewModel?.isHumidityAlertOn.value = false
             viewModel?.isDewPointAlertOn.value = false
             viewModel?.isPressureAlertOn.value = false
