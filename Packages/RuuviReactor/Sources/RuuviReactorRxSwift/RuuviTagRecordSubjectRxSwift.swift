@@ -55,7 +55,7 @@ class RuuviTagRecordSubjectRxSwift {
             .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
                     luid?.value ?? "invalid",
                     macId?.value ?? "invalid"
-            ) 
+            )
             .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmCache = results.compactMap({ $0.any })
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in

@@ -233,29 +233,29 @@ extension WebTagSettingsPresenter {
             if let l = temperatureLower?.value?.converted(to: .celsius).value,
                let u = temperatureUpper?.value?.converted(to: .celsius).value {
                 let type: AlertType = .temperature(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
+                let currentState = observer.alertService.isOn(type: type, for: webTag)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
         bind(view.viewModel.temperatureLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .celsius).value {
-                observer.alertService.setLower(celsius: l, for: webTag.uuid)
+                observer.alertService.setLower(celsius: l, for: webTag)
             }
         }
         bind(view.viewModel.temperatureUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .celsius).value {
-                observer.alertService.setUpper(celsius: u, for: webTag.uuid)
+                observer.alertService.setUpper(celsius: u, for: webTag)
             }
         }
         bind(view.viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
-            observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag.uuid)
+            observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag)
         }
     }
 
@@ -270,23 +270,23 @@ extension WebTagSettingsPresenter {
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
         bind(view.viewModel.humidityLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(humidity: lower, for: webTag.uuid)
+            observer.alertService.setLower(humidity: lower, for: webTag)
         }
         bind(view.viewModel.humidityUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(humidity: upper, for: webTag.uuid)
+            observer.alertService.setUpper(humidity: upper, for: webTag)
         }
         bind(view.viewModel.humidityAlertDescription, fire: false) {
             observer, humidityAlertDescription in
-            observer.alertService.setHumidity(description: humidityAlertDescription, for: webTag.uuid)
+            observer.alertService.setHumidity(description: humidityAlertDescription, for: webTag)
         }
     }
 
@@ -301,29 +301,29 @@ extension WebTagSettingsPresenter {
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
 
         bind(view.viewModel.pressureLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .hectopascals).value {
-                observer.alertService.setLower(pressure: l, for: webTag.uuid)
+                observer.alertService.setLower(pressure: l, for: webTag)
             }
         }
 
         bind(view.viewModel.pressureUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .hectopascals).value {
-                observer.alertService.setUpper(pressure: u, for: webTag.uuid)
+                observer.alertService.setUpper(pressure: u, for: webTag)
             }
         }
 
         bind(view.viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in
-            observer.alertService.setPressure(description: pressureAlertDescription, for: webTag.uuid)
+            observer.alertService.setPressure(description: pressureAlertDescription, for: webTag)
         }
     }
 
@@ -338,26 +338,26 @@ extension WebTagSettingsPresenter {
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
         bind(view.viewModel.dewPointLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .celsius).value {
-                observer.alertService.setLowerDewPoint(celsius: l, for: webTag.uuid)
+                observer.alertService.setLowerDewPoint(celsius: l, for: webTag)
             }
         }
         bind(view.viewModel.dewPointUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .celsius).value {
-                observer.alertService.setUpperDewPoint(celsius: u, for: webTag.uuid)
+                observer.alertService.setUpperDewPoint(celsius: u, for: webTag)
             }
         }
         bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
+            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag)
         }
     }
 
@@ -515,11 +515,11 @@ extension WebTagSettingsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
-                uuid == self?.view.viewModel.uuid.value,
+                let virtualSensor = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
+                virtualSensor.id == self?.view.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                self?.updateIsOnState(of: type, for: uuid)
-                self?.updateMutedTill(of: type, for: uuid)
+                self?.updateIsOnState(of: type, for: virtualSensor.id)
+                self?.updateMutedTill(of: type, for: virtualSensor.id)
             }
         })
     }
@@ -529,6 +529,8 @@ extension WebTagSettingsPresenter {
         switch type {
         case .temperature:
             observable = view.viewModel.isTemperatureAlertOn
+        case .relativeHumidity:
+            observable = view.viewModel.isRelativeHumidityAlertOn
         case .humidity:
             observable = view.viewModel.isHumidityAlertOn
         case .dewPoint:
@@ -577,6 +579,8 @@ extension WebTagSettingsPresenter {
         switch type {
         case .temperature:
             observable = view.viewModel.temperatureAlertMutedTill
+        case .relativeHumidity:
+            observable = view.viewModel.relativeHumidityAlertMutedTill
         case .humidity:
             observable = view.viewModel.humidityAlertMutedTill
         case .dewPoint:

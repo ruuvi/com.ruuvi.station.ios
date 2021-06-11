@@ -78,6 +78,11 @@ protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiPostAlertRequest,
         authorization: String
     ) -> Future<RuuviCloudApiPostAlertResponse, RuuviCloudApiError>
+
+    func getAlerts(
+        _ requestModel: RuuviCloudApiGetAlertsRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetAlertsResponse, RuuviCloudApiError>
 }
 
 protocol RuuviCloudApiFactory {

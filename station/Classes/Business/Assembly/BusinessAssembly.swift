@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Swinject
 import BTKit
 import RuuviContext
@@ -228,7 +229,11 @@ class BusinessAssembly: Assembly {
         container.register(RuuviServiceAlert.self) { r in
             let factory = r.resolve(RuuviServiceFactory.self)!
             let cloud = r.resolve(RuuviCloud.self)!
-            return factory.createAlert(ruuviCloud: cloud)
+            let localIDs = r.resolve(RuuviLocalIDs.self)!
+            return factory.createAlert(
+                ruuviCloud: cloud,
+                ruuviLocalIDs: localIDs
+            )
         }
 
         container.register(RuuviServiceOffsetCalibration.self) { r in
@@ -261,6 +266,7 @@ class BusinessAssembly: Assembly {
             let localImages = r.resolve(RuuviLocalImages.self)!
             let repository = r.resolve(RuuviRepository.self)!
             let localIDs = r.resolve(RuuviLocalIDs.self)!
+            let alertService = r.resolve(RuuviServiceAlert.self)!
             return factory.createCloudSync(
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
@@ -269,7 +275,8 @@ class BusinessAssembly: Assembly {
                 ruuviLocalSyncState: localSyncState,
                 ruuviLocalImages: localImages,
                 ruuviRepository: repository,
-                ruuviLocalIDs: localIDs
+                ruuviLocalIDs: localIDs,
+                ruuviAlertService: alertService
             )
         }
 
@@ -397,3 +404,4 @@ class BusinessAssembly: Assembly {
         })
     }
 }
+// swiftlint:enable file_length

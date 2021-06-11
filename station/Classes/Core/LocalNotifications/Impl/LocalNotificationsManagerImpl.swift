@@ -16,6 +16,7 @@ struct LocalAlertCategory {
 
 enum LowHighNotificationType: String {
     case temperature
+    case relativeHumidity
     case humidity
     case dewPoint
     case pressure
@@ -44,6 +45,8 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var highTemperatureAlerts = [String: Date]()
     var lowHumidityAlerts = [String: Date]()
     var highHumidityAlerts = [String: Date]()
+    var lowRelativeHumidityAlerts = [String: Date]()
+    var highRelativeHumidityAlerts = [String: Date]()
     var lowDewPointAlerts = [String: Date]()
     var highDewPointAlerts = [String: Date]()
     var lowPressureAlerts = [String: Date]()
@@ -171,6 +174,8 @@ extension LocalNotificationsManagerImpl {
             switch type {
             case .temperature:
                 cache = lowTemperatureAlerts
+            case .relativeHumidity:
+                cache = lowRelativeHumidityAlerts
             case .humidity:
                 cache = lowHumidityAlerts
             case .dewPoint:
@@ -182,6 +187,8 @@ extension LocalNotificationsManagerImpl {
             switch type {
             case .temperature:
                 cache = highTemperatureAlerts
+            case .relativeHumidity:
+                cache = highRelativeHumidityAlerts
             case .humidity:
                 cache = highHumidityAlerts
             case .dewPoint:
@@ -213,7 +220,7 @@ extension LocalNotificationsManagerImpl {
                 switch type {
                 case .temperature:
                     title = "LocalNotificationsManager.LowTemperature.title".localized()
-                case .humidity:
+                case .humidity, .relativeHumidity:
                     title = "LocalNotificationsManager.LowHumidity.title".localized()
                 case .dewPoint:
                     title = "LocalNotificationsManager.LowDewPoint.title".localized()
@@ -224,7 +231,7 @@ extension LocalNotificationsManagerImpl {
                 switch type {
                 case .temperature:
                     title = "LocalNotificationsManager.HighTemperature.title".localized()
-                case .humidity:
+                case .humidity, .relativeHumidity:
                     title = "LocalNotificationsManager.HighHumidity.title".localized()
                 case .dewPoint:
                     title = "LocalNotificationsManager.HighDewPoint.title".localized()
@@ -240,6 +247,8 @@ extension LocalNotificationsManagerImpl {
             switch type {
             case .temperature:
                 body = ruuviAlertService.temperatureDescription(for: uuid) ?? ""
+            case .relativeHumidity:
+                body = ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
             case .humidity:
                 body = ruuviAlertService.humidityDescription(for: uuid) ?? ""
             case .dewPoint:
@@ -269,6 +278,8 @@ extension LocalNotificationsManagerImpl {
                 switch type {
                 case .temperature:
                     lowTemperatureAlerts[uuid] = Date()
+                case .relativeHumidity:
+                    lowRelativeHumidityAlerts[uuid] = Date()
                 case .humidity:
                     lowHumidityAlerts[uuid] = Date()
                 case .dewPoint:
@@ -280,6 +291,8 @@ extension LocalNotificationsManagerImpl {
                 switch type {
                 case .temperature:
                     highTemperatureAlerts[uuid] = Date()
+                case .relativeHumidity:
+                    highRelativeHumidityAlerts[uuid] = Date()
                 case .humidity:
                     highHumidityAlerts[uuid] = Date()
                 case .dewPoint:
@@ -298,6 +311,8 @@ extension LocalNotificationsManagerImpl {
         switch type {
         case .temperature:
             return .temperature(lower: 0, upper: 0)
+        case .relativeHumidity:
+            return .relativeHumidity(lower: 0, upper: 0)
         case .humidity:
             return .humidity(
                 lower: Humidity(value: 0, unit: .absolute),
@@ -319,7 +334,7 @@ extension LocalNotificationsManagerImpl {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -327,40 +342,58 @@ extension LocalNotificationsManagerImpl {
                          object: nil,
                          queue: .main) { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                let isOn = self?.ruuviAlertService.isOn(type: type, for: uuid) ?? false
-                switch type {
-                case .temperature:
-                    self?.lowTemperatureAlerts[uuid] = nil
-                    self?.highTemperatureAlerts[uuid] = nil
-                    if !isOn {
-                        self?.cancel(.temperature, for: uuid)
+
+                let virtualSensor = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor
+                let physicalSensor = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
+
+                var isOn = false
+                if let virtualSensor = virtualSensor {
+                    isOn = self?.ruuviAlertService.isOn(type: type, for: virtualSensor) ?? false
+                }
+                if let physicalSensor = physicalSensor {
+                    isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
+                }
+
+                if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value ?? virtualSensor?.id {
+                    switch type {
+                    case .temperature:
+                        self?.lowTemperatureAlerts[uuid] = nil
+                        self?.highTemperatureAlerts[uuid] = nil
+                        if !isOn {
+                            self?.cancel(.temperature, for: uuid)
+                        }
+                    case .relativeHumidity:
+                        self?.lowRelativeHumidityAlerts[uuid] = nil
+                        self?.highRelativeHumidityAlerts[uuid] = nil
+                        if !isOn {
+                            self?.cancel(.relativeHumidity, for: uuid)
+                        }
+                    case .humidity:
+                        self?.lowHumidityAlerts[uuid] = nil
+                        self?.highHumidityAlerts[uuid] = nil
+                        if !isOn {
+                            self?.cancel(.humidity, for: uuid)
+                        }
+                    case .dewPoint:
+                        self?.lowDewPointAlerts[uuid] = nil
+                        self?.highDewPointAlerts[uuid] = nil
+                        if !isOn {
+                            self?.cancel(.dewPoint, for: uuid)
+                        }
+                    case .pressure:
+                        self?.lowPressureAlerts[uuid] = nil
+                        self?.highPressureAlerts[uuid] = nil
+                        if !isOn {
+                            self?.cancel(.pressure, for: uuid)
+                        }
+                    case .connection:
+                        // do nothing
+                        break
+                    case .movement:
+                        // do nothing
+                        break
                     }
-                case .humidity:
-                    self?.lowHumidityAlerts[uuid] = nil
-                    self?.highHumidityAlerts[uuid] = nil
-                    if !isOn {
-                        self?.cancel(.humidity, for: uuid)
-                    }
-                case .dewPoint:
-                    self?.lowDewPointAlerts[uuid] = nil
-                    self?.highDewPointAlerts[uuid] = nil
-                    if !isOn {
-                        self?.cancel(.dewPoint, for: uuid)
-                    }
-                case .pressure:
-                    self?.lowPressureAlerts[uuid] = nil
-                    self?.highPressureAlerts[uuid] = nil
-                    if !isOn {
-                        self?.cancel(.pressure, for: uuid)
-                    }
-                case .connection:
-                    // do nothing
-                    break
-                case .movement:
-                    // do nothing
-                    break
                 }
             }
         }
@@ -419,6 +452,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler([.alert, .badge, .sound])
     }
 
+    // swiftlint:disable:next function_body_length
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -428,7 +462,20 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             let type = LowHighNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case lowHigh.disable:
-                ruuviAlertService.unregister(type: Self.alertType(from: type), for: uuid)
+                // TODO: @rinat go with sensors instead of pure uuid
+                let ruuviTag = RuuviTagSensorStruct(
+                    version: 5,
+                    luid: uuid.luid,
+                    macId: uuid.mac,
+                    isConnectable: true,
+                    name: "",
+                    isClaimed: false,
+                    isOwner: false,
+                    owner: nil
+                )
+                ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
+                let virtualSensor = VirtualSensorStruct(id: uuid)
+                ruuviAlertService.unregister(type: Self.alertType(from: type), for: virtualSensor)
             case lowHigh.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -440,7 +487,20 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             let type = BlastNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case blast.disable:
-                ruuviAlertService.unregister(type: Self.alertType(from: type), for: uuid)
+                // TODO: @rinat go with sensors instead of pure uuid
+                let ruuviTag = RuuviTagSensorStruct(
+                    version: 5,
+                    luid: uuid.luid,
+                    macId: uuid.mac,
+                    isConnectable: true,
+                    name: "",
+                    isClaimed: false,
+                    isOwner: false,
+                    owner: nil
+                )
+                ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
+                let virtualSensor = VirtualSensorStruct(id: uuid)
+                ruuviAlertService.unregister(type: Self.alertType(from: type), for: virtualSensor)
             case blast.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -466,9 +526,26 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         guard let date = muteOffset() else {
             assertionFailure(); return
         }
+        // TODO: @rinat go with sensors instead of pure uuid
+        let ruuviTag = RuuviTagSensorStruct(
+            version: 5,
+            luid: uuid.luid,
+            macId: uuid.mac,
+            isConnectable: true,
+            name: "",
+            isClaimed: false,
+            isOwner: false,
+            owner: nil
+        )
         ruuviAlertService.mute(
             type: Self.alertType(from: type),
-            for: uuid,
+            for: ruuviTag,
+            till: date
+        )
+        let virtualSensor = VirtualSensorStruct(id: uuid)
+        ruuviAlertService.mute(
+            type: Self.alertType(from: type),
+            for: virtualSensor,
             till: date
         )
     }
@@ -477,9 +554,27 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         guard let date = muteOffset() else {
             assertionFailure(); return
         }
+        // TODO: @rinat go with sensors instead of pure uuid
+        let ruuviTag = RuuviTagSensorStruct(
+            version: 5,
+            luid: uuid.luid,
+            macId: uuid.mac,
+            isConnectable: true,
+            name: "",
+            isClaimed: false,
+            isOwner: false,
+            owner: nil
+        )
         ruuviAlertService.mute(
             type: Self.alertType(from: type),
-            for: uuid, till: date
+            for: ruuviTag,
+            till: date
+        )
+        let virtualSensor = VirtualSensorStruct(id: uuid)
+        ruuviAlertService.mute(
+            type: Self.alertType(from: type),
+            for: virtualSensor,
+            till: date
         )
     }
 

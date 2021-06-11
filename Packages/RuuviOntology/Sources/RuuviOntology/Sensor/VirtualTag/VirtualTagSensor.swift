@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol VirtualTagSensor: VirtualSensor { }
+public protocol VirtualTagSensor: VirtualSensor, Nameable { }
 
 extension VirtualTagSensor {
     public var any: AnyVirtualTagSensor {
