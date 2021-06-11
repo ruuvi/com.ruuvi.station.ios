@@ -31,6 +31,11 @@ public protocol RuuviServiceAlertRuuviTag {
     func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor)
     func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor)
     func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor)
+
+    // pressure
+    func setLower(pressure: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor)
+    func setPressure(description: String?, ruuviTag: RuuviTagSensor)
 }
 
 public protocol RuuviServiceAlertCloud {
@@ -112,11 +117,8 @@ public protocol RuuviServiceAlertPhysicalSensor {
 
     /// pressure (hPa)
     func lowerPressure(for sensor: PhysicalSensor) -> Double?
-    func setLower(pressure: Double?, for sensor: PhysicalSensor)
     func upperPressure(for sensor: PhysicalSensor) -> Double?
-    func setUpper(pressure: Double?, for sensor: PhysicalSensor)
     func pressureDescription(for sensor: PhysicalSensor) -> String?
-    func setPressure(description: String?, for sensor: PhysicalSensor)
 
     /// connection
     func connectionDescription(for sensor: PhysicalSensor) -> String?

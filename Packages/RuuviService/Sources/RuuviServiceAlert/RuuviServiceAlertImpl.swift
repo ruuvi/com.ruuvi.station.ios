@@ -168,8 +168,8 @@ extension RuuviServiceAlertImpl {
             cloud.setAlert(
                 type: .humidity,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
-                min: relativeHumidity ?? 0 * 100,
-                max: upperRelativeHumidity(for: ruuviTag) ?? 0 * 100,
+                min: (relativeHumidity ?? 0) * 100.0,
+                max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 counter: nil,
                 description: relativeHumidityDescription(for: ruuviTag),
                 for: macId
@@ -183,8 +183,8 @@ extension RuuviServiceAlertImpl {
             cloud.setAlert(
                 type: .humidity,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerRelativeHumidity(for: ruuviTag) ?? 0 * 100,
-                max: relativeHumidity ?? 0 * 100,
+                min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
+                max: (relativeHumidity ?? 0) * 100.0,
                 counter: nil,
                 description: relativeHumidityDescription(for: ruuviTag),
                 for: macId
@@ -198,8 +198,8 @@ extension RuuviServiceAlertImpl {
             cloud.setAlert(
                 type: .humidity,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerRelativeHumidity(for: ruuviTag) ?? 0 * 100,
-                max: upperRelativeHumidity(for: ruuviTag) ?? 0 * 100,
+                min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
+                max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 counter: nil,
                 description: description,
                 for: macId
@@ -207,6 +207,50 @@ extension RuuviServiceAlertImpl {
         }
     }
 
+    func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(pressure: pressure, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pressure,
+                isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
+                min: (pressure ?? 0) * 100.0,
+                max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
+                counter: nil,
+                description: pressureDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(pressure: pressure, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pressure,
+                isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
+                min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
+                max: (pressure ?? 0) * 100.0,
+                counter: nil,
+                description: pressureDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setPressure(description: String?, ruuviTag: RuuviTagSensor) {
+        setPressure(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pressure,
+                isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
+                min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
+                max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
+                counter: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
 }
 
 final class RuuviServiceAlertImpl: RuuviServiceAlert {

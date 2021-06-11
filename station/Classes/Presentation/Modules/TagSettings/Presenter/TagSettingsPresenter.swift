@@ -883,7 +883,7 @@ extension TagSettingsPresenter {
         bind(viewModel.pressureLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .hectopascals).value {
                 lowPressureDebouncer.run {
-                    observer.alertService.setLower(pressure: l, for: ruuviTag)
+                    observer.alertService.setLower(pressure: l, ruuviTag: ruuviTag)
                 }
             }
         }
@@ -892,13 +892,13 @@ extension TagSettingsPresenter {
         bind(viewModel.pressureUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .hectopascals).value {
                 upperPressureDebouncer.run {
-                    observer.alertService.setUpper(pressure: u, for: ruuviTag)
+                    observer.alertService.setUpper(pressure: u, ruuviTag: ruuviTag)
                 }
             }
         }
 
         bind(viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in
-            observer.alertService.setPressure(description: pressureAlertDescription, for: ruuviTag)
+            observer.alertService.setPressure(description: pressureAlertDescription, ruuviTag: ruuviTag)
         }
     }
 
