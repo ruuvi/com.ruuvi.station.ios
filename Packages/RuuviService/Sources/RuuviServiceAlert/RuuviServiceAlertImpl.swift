@@ -112,6 +112,18 @@ extension RuuviServiceAlertImpl {
         }
     }
 
+    func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(relativeHumidity: relativeHumidity, for: ruuviTag)
+    }
+
+    func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(relativeHumidity: relativeHumidity, for: ruuviTag)
+    }
+
+    func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor) {
+        setRelativeHumidity(description: description, for: ruuviTag)
+    }
+
 }
 
 final class RuuviServiceAlertImpl: RuuviServiceAlert {

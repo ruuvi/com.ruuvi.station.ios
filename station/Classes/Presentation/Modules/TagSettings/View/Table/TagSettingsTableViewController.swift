@@ -56,6 +56,9 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var humidityAlertControlsCell: TagSettingsAlertControlsCell!
 
+    @IBOutlet weak var rhAlertHeaderCell: TagSettingsAlertHeaderCell!
+    @IBOutlet weak var rhAlertControlsCell: TagSettingsAlertControlsCell!
+
     @IBOutlet weak var networkOwnerCell: UITableViewCell!
     @IBOutlet weak var networkOwnerLabel: UILabel!
     @IBOutlet weak var networkOwnerValueLabel: UILabel!
@@ -141,6 +144,7 @@ class TagSettingsTableViewController: UITableViewController {
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
 
+    // swiftlint:disable:next function_body_length
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
@@ -162,6 +166,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
         humidityAlertHeaderCell.titleLabel.text
             = "TagSettings.AirHumidityAlert.title".localized()
+        rhAlertHeaderCell.titleLabel.text
+            = "TagSettings.AirHumidityAlert.title".localized()
         pressureAlertHeaderCell.titleLabel.text
             = "TagSettings.PressureAlert.title".localized()
         connectionAlertHeaderCell.titleLabel.text = "TagSettings.ConnectionAlert.title".localized()
@@ -170,6 +176,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
         temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
         humidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        rhAlertControlsCell.textField.placeholder = alertPlaceholder
         dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
         pressureAlertControlsCell.textField.placeholder = alertPlaceholder
         connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
@@ -494,8 +501,12 @@ extension TagSettingsTableViewController {
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
             case humidityAlertHeaderCell:
                 return (hu != .dew) ? headerHeight : 0
+            case rhAlertHeaderCell:
+                return headerHeight // show always
             case humidityAlertControlsCell:
                 return ((hu != .dew) && viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+            case rhAlertControlsCell:
+                return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case dewPointAlertHeaderCell:
                 return (hu == .dew) ? headerHeight : 0
             case dewPointAlertControlsCell:
@@ -514,7 +525,9 @@ extension TagSettingsTableViewController {
             case temperatureAlertHeaderCell,
                  temperatureAlertControlsCell,
                  humidityAlertHeaderCell,
+                 rhAlertHeaderCell,
                  humidityAlertControlsCell,
+                 rhAlertControlsCell,
                  dewPointAlertHeaderCell,
                  dewPointAlertControlsCell,
                  pressureAlertHeaderCell,
@@ -553,6 +566,8 @@ extension TagSettingsTableViewController: TagSettingsAlertHeaderCellDelegate {
             viewModel?.isTemperatureAlertOn.value = isOn
         case humidityAlertHeaderCell:
             viewModel?.isHumidityAlertOn.value = isOn
+        case rhAlertHeaderCell:
+            viewModel?.isRelativeHumidityAlertOn.value = isOn
         case dewPointAlertHeaderCell:
             viewModel?.isDewPointAlertOn.value = isOn
         case pressureAlertHeaderCell:
@@ -589,6 +604,8 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
             viewModel?.temperatureAlertDescription.value = description
         case humidityAlertControlsCell:
             viewModel?.humidityAlertDescription.value = description
+        case rhAlertControlsCell:
+            viewModel?.relativeHumidityAlertDescription.value = description
         case dewPointAlertControlsCell:
             viewModel?.dewPointAlertDescription.value = description
         case pressureAlertControlsCell:
@@ -606,6 +623,9 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
                 viewModel?.temperatureLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
                 viewModel?.temperatureUpperBound.value = Temperature(Double(maxValue), unit: tu.unitTemperature)
             }
+        case rhAlertControlsCell:
+            viewModel?.relativeHumidityLowerBound.value = Double(minValue)
+            viewModel?.relativeHumidityUpperBound.value = Double(maxValue)
         case humidityAlertControlsCell:
             if let hu = viewModel?.humidityUnit.value,
                let t = viewModel?.temperature.value {
@@ -646,7 +666,9 @@ extension TagSettingsTableViewController {
         temperatureAlertHeaderCell.delegate = self
         temperatureAlertControlsCell.delegate = self
         humidityAlertHeaderCell.delegate = self
+        rhAlertHeaderCell.delegate = self
         humidityAlertControlsCell.delegate = self
+        rhAlertControlsCell.delegate = self
         dewPointAlertHeaderCell.delegate = self
         dewPointAlertControlsCell.delegate = self
         pressureAlertHeaderCell.delegate = self
@@ -681,6 +703,10 @@ extension TagSettingsTableViewController {
         humidityAlertControlsCell.slider.minValue = CGFloat(hu.alertRange.lowerBound)
         humidityAlertControlsCell.slider.maxValue = CGFloat(hu.alertRange.upperBound)
 
+        let rhRange = HumidityUnit.percent.alertRange
+        rhAlertControlsCell.slider.minValue = CGFloat(rhRange.lowerBound)
+        rhAlertControlsCell.slider.maxValue = CGFloat(rhRange.upperBound)
+
         let p = viewModel?.pressureUnit.value ?? .hectopascals
         pressureAlertControlsCell.slider.minValue = CGFloat(p.alertRange.lowerBound)
         pressureAlertControlsCell.slider.maxValue = CGFloat(p.alertRange.upperBound)
@@ -699,6 +725,7 @@ extension TagSettingsTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel() {
         bindTemperatureAlertCells()
+        bindRhAlertCells()
         bindHumidityAlertCells()
         bindDewPointAlertCells()
         bindPressureAlertCells()
@@ -1214,6 +1241,111 @@ extension TagSettingsTableViewController {
     }
 
     // swiftlint:disable:next function_body_length
+    private func bindRhAlertCells() {
+        guard isViewLoaded, let viewModel = viewModel  else { return }
+        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isRelativeHumidityAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
+
+        rhAlertHeaderCell.mutedTillLabel.bind(viewModel.relativeHumidityAlertMutedTill) { (label, date) in
+            if let date = date, date > Date() {
+                label.isHidden = false
+                let formatter = DateFormatter()
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                label.text = formatter.string(from: date)
+            } else {
+                label.isHidden = true
+            }
+        }
+        rhAlertHeaderCell.mutedTillImageView.bind(viewModel.relativeHumidityAlertMutedTill) { (imageView, date) in
+            if let date = date, date > Date() {
+                imageView.isHidden = false
+            } else {
+                imageView.isHidden = true
+            }
+        }
+
+        rhAlertControlsCell.slider.bind(viewModel.isRelativeHumidityAlertOn) { (slider, isOn) in
+            slider.isEnabled = isOn.bound
+        }
+
+        rhAlertControlsCell.slider.bind(viewModel.relativeHumidityLowerBound) { [weak self] (_, _) in
+            self?.updateUIRhLowerBound()
+            self?.updateUIRhAlertDescription()
+        }
+
+        rhAlertControlsCell.slider.bind(viewModel.relativeHumidityUpperBound) { [weak self] (_, _) in
+            self?.updateUIRhUpperBound()
+            self?.updateUIRhAlertDescription()
+        }
+
+        rhAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, _) in
+            let title = "TagSettings.AirHumidityAlert.title"
+            let symbol = HumidityUnit.percent.symbol
+            label.text = String(format: title.localized(), symbol)
+        }
+
+        rhAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, _) in
+            let hu = HumidityUnit.percent
+            slider.minValue = CGFloat(hu.alertRange.lowerBound)
+            slider.maxValue = CGFloat(hu.alertRange.upperBound)
+        }
+
+        rhAlertHeaderCell.descriptionLabel.bind(viewModel.isRelativeHumidityAlertOn) {
+            [weak self] (_, _) in
+            self?.updateUIRhAlertDescription()
+        }
+
+        let isPNEnabled = viewModel.isPushNotificationsEnabled
+        let isRhAlertOn = viewModel.isRelativeHumidityAlertOn
+        let isConnected = viewModel.isConnected
+
+        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
+            [weak isPNEnabled] (view, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isEnabled = isPN && isConnected.bound
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
+
+        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isConnected] view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isCo = isConnected?.value ?? false
+            let isEnabled = isPN && isCo
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
+
+        rhAlertControlsCell.slider.bind(viewModel.isConnected) {
+            [weak isRhAlertOn, weak isPNEnabled] (slider, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isOn = isRhAlertOn?.value ?? false
+            slider.isEnabled = isConnected.bound && isOn && isPN
+        }
+
+        rhAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isRhAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+            let isOn = isRhAlertOn?.value ?? false
+            let isCo = isConnected?.value ?? false
+            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+        }
+
+        rhAlertControlsCell.textField.bind(viewModel.relativeHumidityAlertDescription) {
+            (textField, humidityAlertDescription) in
+            textField.text = humidityAlertDescription
+        }
+
+        tableView.bind(viewModel.isRelativeHumidityAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
+            }
+        }
+    }
+
+    // swiftlint:disable:next function_body_length
     private func bindHumidityAlertCells() {
         guard isViewLoaded, let viewModel = viewModel  else { return }
         humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
@@ -1548,6 +1680,43 @@ extension TagSettingsTableViewController {
             temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
         }
     }
+
+    // MARK: - updateRh
+    private func updateUIRhLowerBound() {
+        guard isViewLoaded else { return }
+        let range = HumidityUnit.percent.alertRange
+        if let lower = viewModel?.relativeHumidityLowerBound.value {
+            rhAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+        } else {
+            rhAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
+        }
+    }
+
+    private func updateUIRhUpperBound() {
+        guard isViewLoaded else { return }
+        let range = HumidityUnit.percent.alertRange
+        if let upper = viewModel?.relativeHumidityUpperBound.value {
+            rhAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+        } else {
+            rhAlertControlsCell.slider.selectedMaxValue = CGFloat(range.upperBound)
+        }
+    }
+
+    private func updateUIRhAlertDescription() {
+        guard isViewLoaded else { return }
+        guard viewModel?.isRelativeHumidityAlertOn.value == true else {
+            rhAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+            return
+        }
+        if let l = viewModel?.relativeHumidityLowerBound.value,
+           let u = viewModel?.relativeHumidityUpperBound.value {
+            let format = "TagSettings.Alerts.Humidity.description".localized()
+            rhAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
+        } else {
+            rhAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+        }
+    }
+
     // MARK: - updateUIHumidity
     private func updateUIHumidityLowerBound() {
         guard isViewLoaded else { return }

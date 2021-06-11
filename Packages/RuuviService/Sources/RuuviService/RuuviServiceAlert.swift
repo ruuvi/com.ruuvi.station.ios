@@ -22,10 +22,15 @@ public protocol RuuviServiceAlertRuuviTag {
     func register(type: AlertType, ruuviTag: RuuviTagSensor)
     func unregister(type: AlertType, ruuviTag: RuuviTagSensor)
 
-    // temperature
+    // temperature (celsius)
     func setLower(celsius: Double?, ruuviTag: RuuviTagSensor)
     func setUpper(celsius: Double?, ruuviTag: RuuviTagSensor)
     func setTemperature(description: String?, ruuviTag: RuuviTagSensor)
+
+    // relative humidity (fraction of one)
+    func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor)
+    func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor)
 }
 
 public protocol RuuviServiceAlertCloud {
@@ -86,11 +91,8 @@ public protocol RuuviServiceAlertPhysicalSensor {
 
     /// relative humidity (fraction of one)
     func lowerRelativeHumidity(for sensor: PhysicalSensor) -> Double?
-    func setLower(relativeHumidity: Double?, for sensor: PhysicalSensor)
     func upperRelativeHumidity(for sensor: PhysicalSensor) -> Double?
-    func setUpper(relativeHumidity: Double?, for sensor: PhysicalSensor)
     func relativeHumidityDescription(for sensor: PhysicalSensor) -> String?
-    func setRelativeHumidity(description: String?, for sensor: PhysicalSensor)
 
     /// humidity (unitHumidity)
     func lowerHumidity(for sensor: PhysicalSensor) -> Humidity?
