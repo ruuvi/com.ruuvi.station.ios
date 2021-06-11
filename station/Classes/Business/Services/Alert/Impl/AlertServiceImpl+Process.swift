@@ -5,6 +5,7 @@ import RuuviOntology
 
 // MARK: - Process Physical Sensors
 extension AlertServiceImpl {
+    // swiftlint:disable:next function_body_length
     func process(heartbeat record: RuuviTagSensorRecord) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -16,6 +17,14 @@ extension AlertServiceImpl {
                     identifier: record.luid
                 )
                 isTriggered = isTriggered || isTemperature
+            case .relativeHumidity:
+                let isRelativeHumidity = process(
+                    relativeHumidity: record.humidity,
+                    temperature: record.temperature,
+                    alertType: type,
+                    identifier: record.luid
+                )
+                isTriggered = isTriggered || isRelativeHumidity
             case .humidity:
                 let isHumidity = process(
                     humidity: record.humidity,
@@ -201,6 +210,33 @@ extension AlertServiceImpl {
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
                     self?.localNotificationsManager.notify(.high, .humidity, for: identifier.value)
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(
+        relativeHumidity: Humidity?,
+        temperature: Temperature?,
+        alertType: AlertType,
+        identifier: Identifier?
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
+        if case .relativeHumidity(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
+           let t = temperature,
+           let rh = relativeHumidity?.converted(to: .relative(temperature: t)) {
+            let isLower = rh.value < lower
+            let isUpper = rh.value > upper
+            if isLower {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.low, .relativeHumidity, for: identifier.value)
+                }
+            } else if isUpper {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.high, .relativeHumidity, for: identifier.value)
                 }
             }
             return isLower || isUpper

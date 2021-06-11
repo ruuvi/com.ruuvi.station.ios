@@ -270,11 +270,11 @@ extension WebTagSettingsPresenter {
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
@@ -301,11 +301,11 @@ extension WebTagSettingsPresenter {
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
@@ -338,11 +338,11 @@ extension WebTagSettingsPresenter {
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
+                        observer.alertService.register(type: type, for: webTag)
                     } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                        observer.alertService.unregister(type: type, for: webTag)
                     }
-                    observer.alertService.unmute(type: type, for: webTag.uuid)
+                    observer.alertService.unmute(type: type, for: webTag)
                 }
             }
         }
@@ -515,11 +515,11 @@ extension WebTagSettingsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
-                uuid == self?.view.viewModel.uuid.value,
+                let virtualSensor = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
+                virtualSensor.id == self?.view.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                self?.updateIsOnState(of: type, for: uuid)
-                self?.updateMutedTill(of: type, for: uuid)
+                self?.updateIsOnState(of: type, for: virtualSensor.id)
+                self?.updateMutedTill(of: type, for: virtualSensor.id)
             }
         })
     }
@@ -529,6 +529,8 @@ extension WebTagSettingsPresenter {
         switch type {
         case .temperature:
             observable = view.viewModel.isTemperatureAlertOn
+        case .relativeHumidity:
+            observable = view.viewModel.isRelativeHumidityAlertOn
         case .humidity:
             observable = view.viewModel.isHumidityAlertOn
         case .dewPoint:
@@ -577,6 +579,8 @@ extension WebTagSettingsPresenter {
         switch type {
         case .temperature:
             observable = view.viewModel.temperatureAlertMutedTill
+        case .relativeHumidity:
+            observable = view.viewModel.relativeHumidityAlertMutedTill
         case .humidity:
             observable = view.viewModel.humidityAlertMutedTill
         case .dewPoint:

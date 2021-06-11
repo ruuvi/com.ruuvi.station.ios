@@ -859,16 +859,33 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
                             guard let sSelf = self else { return }
-                            if let userInfo = notification.userInfo,
-                               let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
-                                sSelf.viewModels.filter({ $0.luid.value == uuid.luid.any }).forEach({ (viewModel) in
-                                    if sSelf.alertService.hasRegistrations(for: uuid) {
-                                        viewModel.alertState.value = .registered
-                                    } else {
-                                        viewModel.alertState.value = .empty
-                                    }
-                                })
-                            }
+                            if let userInfo = notification.userInfo {
+                               if let physicalSensor
+                                    = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor {
+                                sSelf.viewModels.filter({
+                                    ($0.luid.value != nil && ($0.luid.value == physicalSensor.luid?.any))
+                                        || ($0.mac.value != nil && ($0.mac.value == physicalSensor.macId?.any))
+                                    }).forEach({ (viewModel) in
+                                        if sSelf.alertService.hasRegistrations(for: physicalSensor) {
+                                            viewModel.alertState.value = .registered
+                                        } else {
+                                            viewModel.alertState.value = .empty
+                                        }
+                                    })
+                                }
+                                if let virtualSensor
+                                    = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor {
+                                 sSelf.viewModels.filter({
+                                    ($0.id.value != nil && ($0.id.value == virtualSensor.id))
+                                 }).forEach({ (viewModel) in
+                                         if sSelf.alertService.hasRegistrations(for: virtualSensor) {
+                                             viewModel.alertState.value = .registered
+                                         } else {
+                                             viewModel.alertState.value = .empty
+                                         }
+                                     })
+                                 }
+                             }
                          })
     }
     private func startObserveMigrationCompletion() {

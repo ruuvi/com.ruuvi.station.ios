@@ -486,9 +486,9 @@ extension TagChartsPresenter {
                          using: { [weak self] (notification) in
             if let sSelf = self,
                 let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
-                self?.viewModel.uuid.value == uuid {
-                if sSelf.alertService.hasRegistrations(for: uuid) {
+                let physicalSensor = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                self?.viewModel.mac.value == physicalSensor.macId?.value {
+                if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                     self?.viewModel.alertState.value = .registered
                 } else {
                     self?.viewModel.alertState.value = .empty
