@@ -500,11 +500,11 @@ extension TagSettingsTableViewController {
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
             case humidityAlertHeaderCell:
-                return (hu != .dew) ? headerHeight : 0
+                return headerHeight
             case rhAlertHeaderCell:
                 return headerHeight // show always
             case humidityAlertControlsCell:
-                return ((hu != .dew) && viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+                return (viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case rhAlertControlsCell:
                 return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case dewPointAlertHeaderCell:
@@ -627,19 +627,8 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
             viewModel?.relativeHumidityLowerBound.value = Double(minValue)
             viewModel?.relativeHumidityUpperBound.value = Double(maxValue)
         case humidityAlertControlsCell:
-            if let hu = viewModel?.humidityUnit.value,
-               let t = viewModel?.temperature.value {
-                switch hu {
-                case .gm3:
-                    viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue), unit: .absolute)
-                    viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue), unit: .absolute)
-                default:
-                    viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue / 100.0),
-                                                                   unit: .relative(temperature: t))
-                    viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue / 100.0),
-                                                                   unit: .relative(temperature: t))
-                }
-            }
+            viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue), unit: .absolute)
+            viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue), unit: .absolute)
         case dewPointAlertControlsCell:
             if let tu = viewModel?.temperatureUnit.value {
                 viewModel?.dewPointLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
@@ -699,7 +688,7 @@ extension TagSettingsTableViewController {
         temperatureAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
         temperatureAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
 
-        let hu = viewModel?.humidityUnit.value ?? .percent
+        let hu = HumidityUnit.gm3
         humidityAlertControlsCell.slider.minValue = CGFloat(hu.alertRange.lowerBound)
         humidityAlertControlsCell.slider.maxValue = CGFloat(hu.alertRange.upperBound)
 
@@ -1385,17 +1374,15 @@ extension TagSettingsTableViewController {
             self?.updateUIHumidityAlertDescription()
         }
 
-        humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
+        humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, _) in
             let title = "TagSettings.AirHumidityAlert.title"
-            let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
-            label.text = String(format: title.localized(), symbol ?? "N/A".localized())
+            label.text = String(format: title.localized(), HumidityUnit.gm3.symbol)
         }
 
         humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
-            if let hu = humidityUnit {
-                slider.minValue = CGFloat(hu.alertRange.lowerBound)
-                slider.maxValue = CGFloat(hu.alertRange.upperBound)
-            }
+            let hu = HumidityUnit.gm3
+            slider.minValue = CGFloat(hu.alertRange.lowerBound)
+            slider.maxValue = CGFloat(hu.alertRange.upperBound)
         }
 
         humidityAlertHeaderCell.descriptionLabel.bind(viewModel.isHumidityAlertOn) {
@@ -1720,29 +1707,10 @@ extension TagSettingsTableViewController {
     // MARK: - updateUIHumidity
     private func updateUIHumidityLowerBound() {
         guard isViewLoaded else { return }
-        guard let hu = viewModel?.humidityUnit.value else {
-            let range = HumidityUnit.gm3.alertRange
-            humidityAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
-            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
-            return
-        }
+        let hu = HumidityUnit.gm3
         if let lower = viewModel?.humidityLowerBound.value {
-            switch hu {
-            case .gm3:
-                let lowerAbsolute: Double = max(lower.converted(to: .absolute).value, hu.alertRange.lowerBound)
-                humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerAbsolute)
-            default:
-                if let t = viewModel?.temperature.value {
-                    let minValue: Double = lower.converted(to: .relative(temperature: t)).value
-                    let lowerRelative: Double = min(
-                        max(minValue * 100, HumidityUnit.percent.alertRange.lowerBound),
-                        HumidityUnit.percent.alertRange.upperBound
-                    )
-                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerRelative)
-                } else {
-                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
-                }
-            }
+            let lowerAbsolute: Double = max(lower.converted(to: .absolute).value, hu.alertRange.lowerBound)
+            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerAbsolute)
         } else {
             humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
         }
@@ -1750,26 +1718,10 @@ extension TagSettingsTableViewController {
 
     private func updateUIHumidityUpperBound() {
         guard isViewLoaded else { return }
-        guard let hu = viewModel?.humidityUnit.value else {
-            let range = HumidityUnit.gm3.alertRange
-            humidityAlertControlsCell.slider.maxValue = CGFloat(range.upperBound)
-            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(range.upperBound)
-            return
-        }
+        let hu = HumidityUnit.gm3
         if let upper = viewModel?.humidityUpperBound.value {
-            switch hu {
-            case .gm3:
-                let upperAbsolute: Double = min(upper.converted(to: .absolute).value, hu.alertRange.upperBound)
-                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upperAbsolute)
-            default:
-                if let t = viewModel?.temperature.value {
-                    let maxValue: Double = upper.converted(to: .relative(temperature: t)).value
-                    let upperRelative: Double = min(maxValue * 100, HumidityUnit.percent.alertRange.upperBound)
-                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upperRelative)
-                } else {
-                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
-                }
-            }
+            let upperAbsolute: Double = min(upper.converted(to: .absolute).value, hu.alertRange.upperBound)
+            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upperAbsolute)
         } else {
             humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
         }
@@ -1782,32 +1734,14 @@ extension TagSettingsTableViewController {
             humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             return
         }
-        if let hu = viewModel?.humidityUnit.value,
-           let l = viewModel?.humidityLowerBound.value,
+        let hu = HumidityUnit.gm3
+        if let l = viewModel?.humidityLowerBound.value,
            let u = viewModel?.humidityUpperBound.value {
             let format = "TagSettings.Alerts.Humidity.description".localized()
             let description: String
-            if hu == .gm3 {
-                let la: Double = max(l.converted(to: .absolute).value, hu.alertRange.lowerBound)
-                let ua: Double = min(u.converted(to: .absolute).value, hu.alertRange.upperBound)
-                description = String(format: format, la, ua)
-            } else {
-                if let t = viewModel?.temperature.value {
-                    let lv: Double = l.converted(to: .relative(temperature: t)).value * 100.0
-                    let lr: Double = min(
-                        max(lv, HumidityUnit.percent.alertRange.lowerBound),
-                        HumidityUnit.percent.alertRange.upperBound
-                    )
-                    let ua: Double = u.converted(to: .relative(temperature: t)).value * 100.0
-                    let ur: Double = max(
-                        min(ua, HumidityUnit.percent.alertRange.upperBound),
-                        HumidityUnit.percent.alertRange.lowerBound
-                    )
-                    description = String(format: format, lr, ur)
-                } else {
-                    description = alertOffString.localized()
-                }
-            }
+            let la: Double = max(l.converted(to: .absolute).value, hu.alertRange.lowerBound)
+            let ua: Double = min(u.converted(to: .absolute).value, hu.alertRange.upperBound)
+            description = String(format: format, la, ua)
             humidityAlertHeaderCell.descriptionLabel.text = description
         } else {
             humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
