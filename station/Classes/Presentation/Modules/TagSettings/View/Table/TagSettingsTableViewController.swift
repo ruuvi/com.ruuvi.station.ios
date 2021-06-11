@@ -508,9 +508,9 @@ extension TagSettingsTableViewController {
             case rhAlertControlsCell:
                 return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case dewPointAlertHeaderCell:
-                return (hu == .dew) ? headerHeight : 0
+                return headerHeight
             case dewPointAlertControlsCell:
-                return ((hu == .dew) && viewModel?.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
+                return (viewModel?.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
             case pressureAlertControlsCell:
                 return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
             case connectionAlertDescriptionCell:
