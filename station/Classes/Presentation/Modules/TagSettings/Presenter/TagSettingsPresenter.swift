@@ -412,8 +412,9 @@ extension TagSettingsPresenter {
         }
 
         // isCloudAlertsAvailable
-        bind(viewModel.owner) { observer, owner in
-            observer.viewModel.isCloudAlertsAvailable.value = owner != nil
+        bind(viewModel.isNetworkConnected) { observer, isNetworkConnected in
+            let isCloud = isNetworkConnected ?? false
+            observer.viewModel.isCloudAlertsAvailable.value = isCloud
         }
 
         // isAlertsEnabled
