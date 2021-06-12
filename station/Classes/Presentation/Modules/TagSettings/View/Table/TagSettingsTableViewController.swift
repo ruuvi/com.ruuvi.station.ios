@@ -481,23 +481,26 @@ extension TagSettingsTableViewController {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
+            let isNonCloudAlertsVisible =  (viewModel?.isNonCloudAlertsVisible.value ?? false)
             switch cell {
             case temperatureAlertHeaderCell,
                  rhAlertHeaderCell,
-                 humidityAlertHeaderCell,
-                 dewPointAlertHeaderCell,
                  pressureAlertHeaderCell,
                  connectionAlertHeaderCell,
                  movementAlertHeaderCell:
                 return headerHeight
+            case humidityAlertHeaderCell:
+                return isNonCloudAlertsVisible ? headerHeight : 0
+            case dewPointAlertHeaderCell:
+                return isNonCloudAlertsVisible ? headerHeight : 0
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
             case humidityAlertControlsCell:
-                return (viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+                return (isNonCloudAlertsVisible && (viewModel?.isHumidityAlertOn.value ?? false)) ? controlsHeight : 0
             case rhAlertControlsCell:
                 return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case dewPointAlertControlsCell:
-                return (viewModel?.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
+                return (isNonCloudAlertsVisible && (viewModel?.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
             case pressureAlertControlsCell:
                 return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
             case connectionAlertDescriptionCell:
