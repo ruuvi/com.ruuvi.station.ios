@@ -18,11 +18,16 @@ final class RuuviUserCoordinator: RuuviUser {
         }
     }
     var isAuthorized: Bool {
-        return !((email ?? "").isEmpty)
-            && !((apiKey ?? "").isEmpty)
+        get {
+            return UserDefaults.standard.bool(forKey: isAuthorizedUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: isAuthorizedUDKey)
+        }
     }
 
     private var keychainService: KeychainService
+    private let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
 
     init(keychainService: KeychainService) {
         self.keychainService = keychainService
@@ -30,10 +35,12 @@ final class RuuviUserCoordinator: RuuviUser {
 
     func login(apiKey: String) {
         self.apiKey = apiKey
+        self.isAuthorized = true
     }
 
     func logout() {
         email = nil
         apiKey = nil
+        isAuthorized = false
     }
 }
