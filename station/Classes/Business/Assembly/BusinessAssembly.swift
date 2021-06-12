@@ -151,6 +151,13 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerToRelativeHumidity.self) { r in
+            let manager = MigrationManagerToRelativeHumidity()
+            manager.alertService = r.resolve(RuuviServiceAlert.self)
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
+            return manager
+
+        }
         container.register(MigrationManagerAlertService.self) { r in
             let manager = MigrationManagerAlertService()
             manager.realmContext = r.resolve(RealmContext.self)
