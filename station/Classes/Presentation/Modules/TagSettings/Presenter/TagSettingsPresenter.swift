@@ -418,20 +418,20 @@ extension TagSettingsPresenter {
             observer.viewModel.isCloudAlertsAvailable.value = isCloud
         }
 
-        // isAlertsEnabled
+        // isAlertsVisible
         let isPNAlertsAvailiable = viewModel.isPNAlertsAvailiable
         let isCloudAlertsAvailable = viewModel.isCloudAlertsAvailable
 
         bind(viewModel.isPNAlertsAvailiable) { [weak isCloudAlertsAvailable] observer, isPNAlertsAvailiable in
             let isPN = isPNAlertsAvailiable ?? false
             let isCl = isCloudAlertsAvailable?.value ?? false
-            observer.viewModel.isAlertsEnabled.value = isPN || isCl
+            observer.viewModel.isAlertsVisible.value = isPN || isCl
         }
 
         bind(viewModel.isCloudAlertsAvailable) { observer, isCloudAlertsAvailable in
             let isPN = isPNAlertsAvailiable.value ?? false
             let isCl = isCloudAlertsAvailable ?? false
-            observer.viewModel.isAlertsEnabled.value = isPN || isCl
+            observer.viewModel.isAlertsVisible.value = isPN || isCl
         }
     }
 
