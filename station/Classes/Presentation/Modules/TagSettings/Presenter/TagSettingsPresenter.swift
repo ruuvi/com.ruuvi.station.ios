@@ -8,6 +8,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviUser
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -30,7 +31,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var activityPresenter: ActivityPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
@@ -41,6 +42,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var ruuviTag: RuuviTagSensor! {
         didSet {
             syncViewModel()
+            bindViewModel()
         }
     }
     private var sensorSettings: SensorSettings? {
@@ -332,7 +334,7 @@ extension TagSettingsPresenter {
             }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -358,7 +360,7 @@ extension TagSettingsPresenter {
         viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag)
         viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag)
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
-        viewModel.isAuthorized.value = keychainService.userIsAuthorized
+        viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
         viewModel.owner.value = ruuviTag.owner
@@ -372,8 +374,8 @@ extension TagSettingsPresenter {
             viewModel.name.value = ruuviTag.name
         }
 
-        viewModel.isConnectable.value = ruuviTag.isConnectable
-        viewModel.isNetworkConnected.value = ruuviTag.any.isCloud
+        viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil
+        viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
@@ -388,7 +390,81 @@ extension TagSettingsPresenter {
         viewModel.version.value = ruuviTag.version
         syncAlerts()
     }
-    // swiftlint:enable function_body_length
+
+    // swiftlint:disable:next function_body_length
+    private func bindViewModel() {
+        // isPNAlertsAvailiable
+        let isPNEnabled = viewModel.isPushNotificationsEnabled
+        let isConnectable = viewModel.isConnectable
+
+        bind(viewModel.isConnectable) { [weak isPNEnabled] observer, isConnectable in
+            let isPN = isPNEnabled?.value ?? false
+            let isCo = isConnectable ?? false
+            let isEnabled = isPN && isCo
+            observer.viewModel.isPNAlertsAvailiable.value = isEnabled
+        }
+
+        bind(viewModel.isPushNotificationsEnabled) {
+            [weak isConnectable] observer, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isCo = isConnectable?.value ?? false
+            let isEnabled = isPN && isCo
+            observer.viewModel.isPNAlertsAvailiable.value = isEnabled
+        }
+
+        // isCloudAlertsAvailable
+        bind(viewModel.isNetworkConnected) { observer, isNetworkConnected in
+            let isCloud = isNetworkConnected ?? false
+            observer.viewModel.isCloudAlertsAvailable.value = isCloud
+        }
+
+        // isAlertsVisible
+        let isPNAlertsAvailiable = viewModel.isPNAlertsAvailiable
+        let isCloudAlertsAvailable = viewModel.isCloudAlertsAvailable
+
+        bind(viewModel.isPNAlertsAvailiable) { [weak isCloudAlertsAvailable] observer, isPNAlertsAvailiable in
+            let isPN = isPNAlertsAvailiable ?? false
+            let isCl = isCloudAlertsAvailable?.value ?? false
+            observer.viewModel.isAlertsVisible.value = isPN || isCl
+        }
+
+        bind(viewModel.isCloudAlertsAvailable) { observer, isCloudAlertsAvailable in
+            let isPN = isPNAlertsAvailiable.value ?? false
+            let isCl = isCloudAlertsAvailable ?? false
+            observer.viewModel.isAlertsVisible.value = isPN || isCl
+        }
+
+        // isAlertsEnabled
+        bind(viewModel.isConnected) { [weak isCloudAlertsAvailable] observer, isConnected in
+            let isCl = isCloudAlertsAvailable?.value ?? false
+            let isCo = isConnected ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        let isConnected = viewModel.isConnected
+        bind(viewModel.isCloudAlertsAvailable) { [weak isConnected] observer, isCloudAlertsAvailable in
+            let isCl = isCloudAlertsAvailable ?? false
+            let isCo = isConnected?.value ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        // isNonCloudAlertsEnabled
+        let isAlertsEnabled = viewModel.isAlertsEnabled
+        bind(viewModel.isPNAlertsAvailiable) {
+            [weak isAlertsEnabled, weak isConnected] observer, isPNAlertsAvailiable in
+            let isCo = isConnected?.value ?? false
+            let isAe = isAlertsEnabled?.value ?? false
+            let isPN = isPNAlertsAvailiable ?? false
+            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
+        }
+
+        bind(viewModel.isAlertsEnabled) { [weak isPNAlertsAvailiable, weak isConnected] observer, isAlertsEnabled in
+            let isCo = isConnected?.value ?? false
+            let isAe = isAlertsEnabled ?? false
+            let isPN = isPNAlertsAvailiable?.value ?? false
+            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
+        }
+    }
 
     private func syncOffsetCorrection() {
         // reload offset correction
@@ -438,15 +514,8 @@ extension TagSettingsPresenter {
     private func sync(humidity: AlertType, ruuviTag: RuuviTagSensor) {
         if case .humidity(let lower, let upper) = alertService.alert(for: ruuviTag, of: humidity) {
             viewModel.isHumidityAlertOn.value = true
-            if settings.humidityUnit == .gm3 {
-                viewModel.humidityLowerBound.value = lower.converted(to: .absolute)
-                viewModel.humidityUpperBound.value = upper.converted(to: .absolute)
-            } else if let temp = viewModel.temperature.value {
-                viewModel.humidityLowerBound.value = lower
-                    .converted(to: .relative(temperature: temp))
-                viewModel.humidityUpperBound.value = upper
-                    .converted(to: .relative(temperature: temp))
-            }
+            viewModel.humidityLowerBound.value = lower.converted(to: .absolute)
+            viewModel.humidityUpperBound.value = upper.converted(to: .absolute)
         } else {
             viewModel.isHumidityAlertOn.value = false
             if let humidityLower = alertService.lowerHumidity(for: ruuviTag) {
@@ -655,7 +724,7 @@ extension TagSettingsPresenter {
             viewModel.version.value = device.version
         }
         if !device.isConnected, viewModel.isConnectable.value != device.isConnectable, device.isConnectable {
-            viewModel.isConnectable.value = device.isConnectable
+            viewModel.isConnectable.value = device.isConnectable && device.luid != nil
         }
         if viewModel.isConnected.value != device.isConnected {
             viewModel.isConnected.value = device.isConnected
@@ -671,14 +740,10 @@ extension TagSettingsPresenter {
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
-        if let identifier = ruuviTag.luid ?? ruuviTag.macId {
-            if let luid = identifier as? LocalIdentifier {
-                bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
-                    observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
-                }
+        if let luid = ruuviTag.luid {
+            bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
+                observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
             }
-            viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
-            viewModel.isNetworkConnected.value = ruuviTag.isCloud
         }
 
         bindTemperatureAlert(for: ruuviTag)

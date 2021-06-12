@@ -353,6 +353,13 @@ PODS:
     - RuuviPersistence/SQLite
     - RuuviStorage/Contract
   - RuuviStorage/Tests (0.0.1)
+  - RuuviUser (0.0.1):
+    - RuuviUser/Contract (= 0.0.1)
+  - RuuviUser/Contract (0.0.1)
+  - RuuviUser/Coordinator (0.0.1):
+    - KeychainAccess
+    - RuuviUser/Contract
+  - RuuviUser/Tests (0.0.1)
   - RxSwift (5.1.1)
   - SwiftGen (6.4.0)
   - Swinject (2.6.2)
@@ -419,6 +426,9 @@ DEPENDENCIES:
   - RuuviStorage (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Coordinator (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Tests (from `Packages/RuuviStorage/RuuviStorage.podspec`)
+  - RuuviUser (from `Packages/RuuviUser/RuuviUser.podspec`)
+  - RuuviUser/Coordinator (from `Packages/RuuviUser/RuuviUser.podspec`)
+  - RuuviUser/Tests (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RxSwift
   - SwiftGen (~> 6.0)
   - Swinject
@@ -495,6 +505,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviService/RuuviService.podspec
   RuuviStorage:
     :path: Packages/RuuviStorage/RuuviStorage.podspec
+  RuuviUser:
+    :path: Packages/RuuviUser/RuuviUser.podspec
   SwinjectPropertyLoader:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
@@ -562,12 +574,13 @@ SPEC CHECKSUMS:
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
   RuuviService: 9b7dd685496bc482c44a3a3b41527798e5dfdb67
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
+  RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 9a3f232efb4cef2948e6ce2c3a08df091e898fd5
+PODFILE CHECKSUM: 64599296a72493efcc808f299ae587e458a4adf3
 
 COCOAPODS: 1.10.1
