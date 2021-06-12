@@ -28,6 +28,10 @@ final class RuuviUserCoordinator: RuuviUser {
         self.keychainService = keychainService
     }
 
+    func login(apiKey: String) {
+        self.apiKey = apiKey
+    }
+
     func logout() {
         email = nil
         apiKey = nil

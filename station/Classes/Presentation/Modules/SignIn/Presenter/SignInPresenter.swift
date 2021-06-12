@@ -165,7 +165,7 @@ extension SignInPresenter {
         ruuviCloud.validateCode(code: code)
             .on(success: { [weak self] apiKey in
                 guard let sSelf = self else { return }
-                sSelf.ruuviUser.apiKey = apiKey
+                sSelf.ruuviUser.login(apiKey: apiKey)
                 sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.activityPresenter.decrement()
