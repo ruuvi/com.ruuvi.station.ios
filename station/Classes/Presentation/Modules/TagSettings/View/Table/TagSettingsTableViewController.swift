@@ -18,7 +18,7 @@ enum TagSettingsTableSection: Int {
     }
 
     static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
-        return viewModel?.isAlertsEnabled.value ?? false
+        return viewModel?.isAlertsVisible.value ?? false
     }
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
@@ -477,7 +477,7 @@ extension TagSettingsTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if viewModel?.isAlertsEnabled.value == true {
+        if viewModel?.isAlertsVisible.value == true {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
@@ -867,7 +867,7 @@ extension TagSettingsTableViewController {
             tableView.reloadData()
         }
 
-        tableView.bind(viewModel.isAlertsEnabled) { tableView, _ in
+        tableView.bind(viewModel.isAlertsVisible) { tableView, _ in
             tableView.reloadData()
         }
 
@@ -959,13 +959,13 @@ extension TagSettingsTableViewController {
 
         let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
 
-        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
+        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) { view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        temperatureAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
+        temperatureAlertControlsCell.slider.bind(viewModel.isAlertsVisible) {
             [weak isTemperatureAlertOn] slider, isAlertsEnabled in
             let isAe = isAlertsEnabled ?? false
             let isOn = isTemperatureAlertOn?.value ?? false
@@ -1064,7 +1064,7 @@ extension TagSettingsTableViewController {
             self?.updateUIMovementAlertDescription()
         }
 
-        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
+        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) { view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
@@ -1141,13 +1141,13 @@ extension TagSettingsTableViewController {
 
         let isPressureAlertOn = viewModel.isPressureAlertOn
 
-        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
+        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) { view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        pressureAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
+        pressureAlertControlsCell.slider.bind(viewModel.isAlertsVisible) {
             [weak isPressureAlertOn] slider, isAlertsEnabled in
             let isAe = isAlertsEnabled ?? false
             let isOn = isPressureAlertOn?.value ?? false
@@ -1226,14 +1226,14 @@ extension TagSettingsTableViewController {
 
         let isRhAlertOn = viewModel.isRelativeHumidityAlertOn
 
-        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) {
+        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) {
             view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        rhAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
+        rhAlertControlsCell.slider.bind(viewModel.isAlertsVisible) {
             [weak isRhAlertOn] slider, isAlertsEnabled in
             let isAe = isAlertsEnabled ?? false
             let isOn = isRhAlertOn?.value ?? false

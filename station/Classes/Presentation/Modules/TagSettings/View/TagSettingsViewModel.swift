@@ -80,7 +80,7 @@ struct TagSettingsViewModel {
 
     let canShowUpdateFirmware: Observable<Bool?> = Observable<Bool?>(false)
 
-    let isAlertsEnabled: Observable<Bool?> = Observable<Bool?>(false)
+    let isAlertsVisible: Observable<Bool?> = Observable<Bool?>(false)
     let isPNAlertsAvailiable: Observable<Bool?> = Observable<Bool?>(false)
     let isCloudAlertsAvailable: Observable<Bool?> = Observable<Bool?>(false)
 
