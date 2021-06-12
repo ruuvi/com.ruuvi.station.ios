@@ -411,7 +411,7 @@ extension TagSettingsTableViewController {
                 as! TagSettingsAlertsHeaderFooterView
             // swiftlint:enable force_cast
             header.delegate = self
-            header.disabledView.isHidden = viewModel?.isPNAlertsAvailiable.value ?? false
+            header.disabledView.isHidden = viewModel?.isAlertsEnabled.value ?? false
             return header
         default:
             return nil
@@ -959,13 +959,13 @@ extension TagSettingsTableViewController {
 
         let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
 
-        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) { view, isAlertsEnabled in
+        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        temperatureAlertControlsCell.slider.bind(viewModel.isAlertsVisible) {
+        temperatureAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
             [weak isTemperatureAlertOn] slider, isAlertsEnabled in
             let isAe = isAlertsEnabled ?? false
             let isOn = isTemperatureAlertOn?.value ?? false
@@ -1064,7 +1064,7 @@ extension TagSettingsTableViewController {
             self?.updateUIMovementAlertDescription()
         }
 
-        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) { view, isAlertsEnabled in
+        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
@@ -1141,13 +1141,13 @@ extension TagSettingsTableViewController {
 
         let isPressureAlertOn = viewModel.isPressureAlertOn
 
-        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) { view, isAlertsEnabled in
+        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        pressureAlertControlsCell.slider.bind(viewModel.isAlertsVisible) {
+        pressureAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
             [weak isPressureAlertOn] slider, isAlertsEnabled in
             let isAe = isAlertsEnabled ?? false
             let isOn = isPressureAlertOn?.value ?? false
@@ -1226,14 +1226,14 @@ extension TagSettingsTableViewController {
 
         let isRhAlertOn = viewModel.isRelativeHumidityAlertOn
 
-        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsVisible) {
+        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) {
             view, isAlertsEnabled in
             let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        rhAlertControlsCell.slider.bind(viewModel.isAlertsVisible) {
+        rhAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
             [weak isRhAlertOn] slider, isAlertsEnabled in
             let isAe = isAlertsEnabled ?? false
             let isOn = isRhAlertOn?.value ?? false
@@ -1311,15 +1311,15 @@ extension TagSettingsTableViewController {
 
         let isHumidityAlertOn = viewModel.isHumidityAlertOn
 
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
-            let isEnabled = isPNAlertsAvailiable ?? false
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isNonCloudAlertsEnabled) { view, isNonCloudAlertsEnabled in
+            let isEnabled = isNonCloudAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        humidityAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
-            [weak isHumidityAlertOn] slider, isPNAlertsAvailiable in
-            let isAe = isPNAlertsAvailiable ?? false
+        humidityAlertControlsCell.slider.bind(viewModel.isNonCloudAlertsEnabled) {
+            [weak isHumidityAlertOn] slider, isNonCloudAlertsEnabled in
+            let isAe = isNonCloudAlertsEnabled ?? false
             let isOn = isHumidityAlertOn?.value ?? false
             slider.isEnabled = isOn && isAe
         }
@@ -1399,15 +1399,15 @@ extension TagSettingsTableViewController {
 
         let isDewPointAlertOn = viewModel.isDewPointAlertOn
 
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
-            let isEnabled = isPNAlertsAvailiable ?? false
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isNonCloudAlertsEnabled) { view, isNonCloudAlertsEnabled in
+            let isEnabled = isNonCloudAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        dewPointAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
-            [weak isDewPointAlertOn] slider, isPNAlertsAvailiable in
-            let isAe = isPNAlertsAvailiable ?? false
+        dewPointAlertControlsCell.slider.bind(viewModel.isNonCloudAlertsEnabled) {
+            [weak isDewPointAlertOn] slider, isNonCloudAlertsEnabled in
+            let isAe = isNonCloudAlertsEnabled ?? false
             let isOn = isDewPointAlertOn?.value ?? false
             slider.isEnabled = isOn && isAe
         }
