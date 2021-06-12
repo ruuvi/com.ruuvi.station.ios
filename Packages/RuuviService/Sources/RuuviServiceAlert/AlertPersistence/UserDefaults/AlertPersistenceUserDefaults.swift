@@ -153,20 +153,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
         case .relativeHumidity(let lower, let upper):
             prefs.set(true, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
         case .humidity(let lower, let upper):
             prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
         case .dewPoint(let lower, let upper):
             prefs.set(true, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
         case .pressure(let lower, let upper):

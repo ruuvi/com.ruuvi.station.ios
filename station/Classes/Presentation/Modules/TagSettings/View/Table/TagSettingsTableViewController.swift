@@ -18,7 +18,7 @@ enum TagSettingsTableSection: Int {
     }
 
     static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
-        return viewModel?.isConnectable.value ?? false
+        return viewModel?.isAlertsEnabled.value ?? false
     }
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
@@ -323,13 +323,6 @@ extension TagSettingsTableViewController {
 
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
-        if !keepConnectionSwitch.isOn {
-            viewModel?.isTemperatureAlertOn.value = false
-            viewModel?.isHumidityAlertOn.value = false
-            viewModel?.isDewPointAlertOn.value = false
-            viewModel?.isPressureAlertOn.value = false
-            viewModel?.isMovementAlertOn.value = false
-        }
     }
 
     @IBAction func didTapClaimButton(_ sender: UIButton) {
@@ -418,9 +411,7 @@ extension TagSettingsTableViewController {
                 as! TagSettingsAlertsHeaderFooterView
             // swiftlint:enable force_cast
             header.delegate = self
-            let isPN = viewModel?.isPushNotificationsEnabled.value ?? false
-            let isCo = viewModel?.isConnected.value ?? false
-            header.disabledView.isHidden = isPN && isCo
+            header.disabledView.isHidden = viewModel?.isAlertsEnabled.value ?? false
             return header
         default:
             return nil
@@ -486,29 +477,25 @@ extension TagSettingsTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if viewModel?.isConnectable.value == true {
+        if viewModel?.isAlertsEnabled.value == true {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
-            let hu = viewModel?.humidityUnit.value
             switch cell {
             case temperatureAlertHeaderCell,
+                 rhAlertHeaderCell,
+                 humidityAlertHeaderCell,
+                 dewPointAlertHeaderCell,
                  pressureAlertHeaderCell,
                  connectionAlertHeaderCell,
                  movementAlertHeaderCell:
                 return headerHeight
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
-            case humidityAlertHeaderCell:
-                return headerHeight
-            case rhAlertHeaderCell:
-                return headerHeight // show always
             case humidityAlertControlsCell:
                 return (viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case rhAlertControlsCell:
                 return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
-            case dewPointAlertHeaderCell:
-                return headerHeight
             case dewPointAlertControlsCell:
                 return (viewModel?.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
             case pressureAlertControlsCell:
@@ -615,7 +602,6 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didSlideTo minValue: CGFloat, maxValue: CGFloat) {
         switch cell {
         case temperatureAlertControlsCell:
@@ -967,39 +953,19 @@ extension TagSettingsTableViewController {
             self?.updateUITemperatureAlertDescription()
         }
 
-        let isPNEnabled = viewModel.isPushNotificationsEnabled
         let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
-        let isConnected = viewModel.isConnected
 
-        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
-            [weak isPNEnabled] (view, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
-            let isEnabled = isPN && isConnected.bound
+        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
+            let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] view, isPushNotificationsEnabled in
-            let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
-            let isEnabled = isPN && isCo
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        temperatureAlertControlsCell.slider.bind(viewModel.isConnected) {
-            [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
+        temperatureAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
+            [weak isTemperatureAlertOn] slider, isAlertsEnabled in
+            let isAe = isAlertsEnabled ?? false
             let isOn = isTemperatureAlertOn?.value ?? false
-            slider.isEnabled = isConnected.bound && isOn && isPN
-        }
-
-        temperatureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-            let isOn = isTemperatureAlertOn?.value ?? false
-            let isCo = isConnected?.value ?? false
-            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            slider.isEnabled = isOn && isAe
         }
 
         temperatureAlertControlsCell.textField.bind(viewModel.temperatureAlertDescription) {
@@ -1094,21 +1060,8 @@ extension TagSettingsTableViewController {
             self?.updateUIMovementAlertDescription()
         }
 
-        let isPNEnabled = viewModel.isPushNotificationsEnabled
-        let isConnected = viewModel.isConnected
-
-        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
-            let isEnabled = isPN && isConnected.bound
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] view, isPushNotificationsEnabled in
-            let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
-            let isEnabled = isPN && isCo
+        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
+            let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
@@ -1182,38 +1135,19 @@ extension TagSettingsTableViewController {
             self?.updateUIPressureAlertDescription()
         }
 
-        let isPNEnabled = viewModel.isPushNotificationsEnabled
         let isPressureAlertOn = viewModel.isPressureAlertOn
-        let isConnected = viewModel.isConnected
 
-        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
-            let isEnabled = isPN && isConnected.bound
+        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
+            let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] view, isPushNotificationsEnabled in
-            let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
-            let isEnabled = isPN && isCo
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        pressureAlertControlsCell.slider.bind(viewModel.isConnected) {
-            [weak isPressureAlertOn, weak isPNEnabled] (slider, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
+        pressureAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
+            [weak isPressureAlertOn] slider, isAlertsEnabled in
+            let isAe = isAlertsEnabled ?? false
             let isOn = isPressureAlertOn?.value ?? false
-            slider.isEnabled = isConnected.bound && isOn && isPN
-        }
-
-        pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isPressureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-            let isOn = isPressureAlertOn?.value ?? false
-            let isCo = isConnected?.value ?? false
-            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            slider.isEnabled = isOn && isAe
         }
 
         pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
@@ -1286,39 +1220,20 @@ extension TagSettingsTableViewController {
             self?.updateUIRhAlertDescription()
         }
 
-        let isPNEnabled = viewModel.isPushNotificationsEnabled
         let isRhAlertOn = viewModel.isRelativeHumidityAlertOn
-        let isConnected = viewModel.isConnected
 
-        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
-            [weak isPNEnabled] (view, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
-            let isEnabled = isPN && isConnected.bound
+        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) {
+            view, isAlertsEnabled in
+            let isEnabled = isAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        rhAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] view, isPushNotificationsEnabled in
-            let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
-            let isEnabled = isPN && isCo
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        rhAlertControlsCell.slider.bind(viewModel.isConnected) {
-            [weak isRhAlertOn, weak isPNEnabled] (slider, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
+        rhAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
+            [weak isRhAlertOn] slider, isAlertsEnabled in
+            let isAe = isAlertsEnabled ?? false
             let isOn = isRhAlertOn?.value ?? false
-            slider.isEnabled = isConnected.bound && isOn && isPN
-        }
-
-        rhAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isRhAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-            let isOn = isRhAlertOn?.value ?? false
-            let isCo = isConnected?.value ?? false
-            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            slider.isEnabled = isOn && isAe
         }
 
         rhAlertControlsCell.textField.bind(viewModel.relativeHumidityAlertDescription) {
@@ -1379,7 +1294,7 @@ extension TagSettingsTableViewController {
             label.text = String(format: title.localized(), HumidityUnit.gm3.symbol)
         }
 
-        humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
+        humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, _) in
             let hu = HumidityUnit.gm3
             slider.minValue = CGFloat(hu.alertRange.lowerBound)
             slider.maxValue = CGFloat(hu.alertRange.upperBound)
@@ -1390,39 +1305,19 @@ extension TagSettingsTableViewController {
             self?.updateUIHumidityAlertDescription()
         }
 
-        let isPNEnabled = viewModel.isPushNotificationsEnabled
         let isHumidityAlertOn = viewModel.isHumidityAlertOn
-        let isConnected = viewModel.isConnected
 
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
-            [weak isPNEnabled] (view, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
-            let isEnabled = isPN && isConnected.bound
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
+            let isEnabled = isPNAlertsAvailiable ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] view, isPushNotificationsEnabled in
-            let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
-            let isEnabled = isPN && isCo
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.isConnected) {
-            [weak isHumidityAlertOn, weak isPNEnabled] (slider, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
+        humidityAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
+            [weak isHumidityAlertOn] slider, isPNAlertsAvailiable in
+            let isAe = isPNAlertsAvailiable ?? false
             let isOn = isHumidityAlertOn?.value ?? false
-            slider.isEnabled = isConnected.bound && isOn && isPN
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isHumidityAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-            let isOn = isHumidityAlertOn?.value ?? false
-            let isCo = isConnected?.value ?? false
-            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            slider.isEnabled = isOn && isAe
         }
 
         humidityAlertControlsCell.textField.bind(viewModel.humidityAlertDescription) {
@@ -1498,38 +1393,19 @@ extension TagSettingsTableViewController {
             self?.updateUIDewPointAlertDescription()
         }
 
-        let isPNEnabled = viewModel.isPushNotificationsEnabled
         let isDewPointAlertOn = viewModel.isDewPointAlertOn
-        let isConnected = viewModel.isConnected
 
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
-            let isEnabled = isPN && isConnected.bound
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
+            let isEnabled = isPNAlertsAvailiable ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] view, isPushNotificationsEnabled in
-            let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
-            let isEnabled = isPN && isCo
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.isConnected) {
-            [weak isDewPointAlertOn, weak isPNEnabled] (slider, isConnected) in
-            let isPN = isPNEnabled?.value ?? false
+        dewPointAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
+            [weak isDewPointAlertOn] slider, isPNAlertsAvailiable in
+            let isAe = isPNAlertsAvailiable ?? false
             let isOn = isDewPointAlertOn?.value ?? false
-            slider.isEnabled = isConnected.bound && isOn && isPN
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-            [weak isDewPointAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-            let isOn = isDewPointAlertOn?.value ?? false
-            let isCo = isConnected?.value ?? false
-            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            slider.isEnabled = isOn && isAe
         }
 
         dewPointAlertControlsCell.textField.bind(viewModel.dewPointAlertDescription) {
