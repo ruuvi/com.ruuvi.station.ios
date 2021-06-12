@@ -464,6 +464,9 @@ extension TagSettingsPresenter {
             let isPN = isPNAlertsAvailiable?.value ?? false
             observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
         }
+
+        // this is done intentionally
+        viewModel.isNonCloudAlertsVisible.value = false
     }
 
     private func syncOffsetCorrection() {
@@ -1008,7 +1011,10 @@ extension TagSettingsPresenter {
             })
         }
         bind(viewModel.movementAlertDescription, fire: false) { observer, movementAlertDescription in
-            observer.alertService.setMovement(description: movementAlertDescription, for: ruuviTag)
+            observer.alertService.setMovement(
+                description: movementAlertDescription,
+                ruuviTag: ruuviTag
+            )
         }
     }
 

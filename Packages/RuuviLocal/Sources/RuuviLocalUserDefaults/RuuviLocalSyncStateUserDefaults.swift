@@ -24,14 +24,18 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
                 self?.setSyncStatus(.none, for: macId)
             })
         case .syncing:
-            if syncingEnqueue.isEmpty {
-                syncStatus = .syncing
+            DispatchQueue.main.async { [weak self] in
+                if self?.syncingEnqueue.isEmpty ?? false {
+                    self?.syncStatus = .syncing
+                }
+                self?.syncingEnqueue.append(macId.any)
             }
-            syncingEnqueue.append(macId.any)
         case .none:
-            syncingEnqueue.removeAll(where: {$0 == macId.any})
-            if syncingEnqueue.isEmpty {
-                syncStatus = .none
+            DispatchQueue.main.async { [weak self] in
+                self?.syncingEnqueue.removeAll(where: {$0 == macId.any})
+                if self?.syncingEnqueue.isEmpty ?? false {
+                    self?.syncStatus = .none
+                }
             }
         }
     }

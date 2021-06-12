@@ -251,6 +251,21 @@ extension RuuviServiceAlertImpl {
             )
         }
     }
+
+    func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
+        setMovement(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .movement,
+                isEnabled: isOn(type: .movement(last: 0), for: ruuviTag),
+                min: nil,
+                max: nil,
+                counter: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
 }
 
 final class RuuviServiceAlertImpl: RuuviServiceAlert {
