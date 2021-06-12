@@ -18,7 +18,7 @@ enum TagSettingsTableSection: Int {
     }
 
     static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
-        return viewModel?.isAlertsEnabled.value ?? false
+        return viewModel?.isAlertsVisible.value ?? false
     }
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
@@ -477,7 +477,7 @@ extension TagSettingsTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if viewModel?.isAlertsEnabled.value == true {
+        if viewModel?.isAlertsVisible.value == true {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
@@ -864,6 +864,10 @@ extension TagSettingsTableViewController {
         }
 
         tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, _) in
+            tableView.reloadData()
+        }
+
+        tableView.bind(viewModel.isAlertsVisible) { tableView, _ in
             tableView.reloadData()
         }
 
@@ -1307,15 +1311,15 @@ extension TagSettingsTableViewController {
 
         let isHumidityAlertOn = viewModel.isHumidityAlertOn
 
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
-            let isEnabled = isPNAlertsAvailiable ?? false
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isNonCloudAlertsEnabled) { view, isNonCloudAlertsEnabled in
+            let isEnabled = isNonCloudAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        humidityAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
-            [weak isHumidityAlertOn] slider, isPNAlertsAvailiable in
-            let isAe = isPNAlertsAvailiable ?? false
+        humidityAlertControlsCell.slider.bind(viewModel.isNonCloudAlertsEnabled) {
+            [weak isHumidityAlertOn] slider, isNonCloudAlertsEnabled in
+            let isAe = isNonCloudAlertsEnabled ?? false
             let isOn = isHumidityAlertOn?.value ?? false
             slider.isEnabled = isOn && isAe
         }
@@ -1395,15 +1399,15 @@ extension TagSettingsTableViewController {
 
         let isDewPointAlertOn = viewModel.isDewPointAlertOn
 
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
-            let isEnabled = isPNAlertsAvailiable ?? false
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isNonCloudAlertsEnabled) { view, isNonCloudAlertsEnabled in
+            let isEnabled = isNonCloudAlertsEnabled ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        dewPointAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
-            [weak isDewPointAlertOn] slider, isPNAlertsAvailiable in
-            let isAe = isPNAlertsAvailiable ?? false
+        dewPointAlertControlsCell.slider.bind(viewModel.isNonCloudAlertsEnabled) {
+            [weak isDewPointAlertOn] slider, isNonCloudAlertsEnabled in
+            let isAe = isNonCloudAlertsEnabled ?? false
             let isOn = isDewPointAlertOn?.value ?? false
             slider.isEnabled = isOn && isAe
         }

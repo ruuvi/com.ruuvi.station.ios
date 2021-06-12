@@ -8,6 +8,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviUser
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -30,7 +31,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var activityPresenter: ActivityPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
@@ -333,7 +334,7 @@ extension TagSettingsPresenter {
             }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -359,7 +360,7 @@ extension TagSettingsPresenter {
         viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag)
         viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag)
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
-        viewModel.isAuthorized.value = keychainService.userIsAuthorized
+        viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
         viewModel.owner.value = ruuviTag.owner
@@ -374,7 +375,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil
-        viewModel.isNetworkConnected.value = ruuviTag.any.isCloud
+        viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
@@ -389,24 +390,24 @@ extension TagSettingsPresenter {
         viewModel.version.value = ruuviTag.version
         syncAlerts()
     }
-    // swiftlint:enable function_body_length
 
+    // swiftlint:disable:next function_body_length
     private func bindViewModel() {
         // isPNAlertsAvailiable
         let isPNEnabled = viewModel.isPushNotificationsEnabled
-        let isConnected = viewModel.isConnected
+        let isConnectable = viewModel.isConnectable
 
-        bind(viewModel.isConnected) { [weak isPNEnabled] observer, isConnected in
+        bind(viewModel.isConnectable) { [weak isPNEnabled] observer, isConnectable in
             let isPN = isPNEnabled?.value ?? false
-            let isCo = isConnected ?? false
+            let isCo = isConnectable ?? false
             let isEnabled = isPN && isCo
             observer.viewModel.isPNAlertsAvailiable.value = isEnabled
         }
 
         bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] observer, isPushNotificationsEnabled in
+            [weak isConnectable] observer, isPushNotificationsEnabled in
             let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
+            let isCo = isConnectable?.value ?? false
             let isEnabled = isPN && isCo
             observer.viewModel.isPNAlertsAvailiable.value = isEnabled
         }
@@ -417,20 +418,51 @@ extension TagSettingsPresenter {
             observer.viewModel.isCloudAlertsAvailable.value = isCloud
         }
 
-        // isAlertsEnabled
+        // isAlertsVisible
         let isPNAlertsAvailiable = viewModel.isPNAlertsAvailiable
         let isCloudAlertsAvailable = viewModel.isCloudAlertsAvailable
 
         bind(viewModel.isPNAlertsAvailiable) { [weak isCloudAlertsAvailable] observer, isPNAlertsAvailiable in
             let isPN = isPNAlertsAvailiable ?? false
             let isCl = isCloudAlertsAvailable?.value ?? false
-            observer.viewModel.isAlertsEnabled.value = isPN || isCl
+            observer.viewModel.isAlertsVisible.value = isPN || isCl
         }
 
         bind(viewModel.isCloudAlertsAvailable) { observer, isCloudAlertsAvailable in
             let isPN = isPNAlertsAvailiable.value ?? false
             let isCl = isCloudAlertsAvailable ?? false
-            observer.viewModel.isAlertsEnabled.value = isPN || isCl
+            observer.viewModel.isAlertsVisible.value = isPN || isCl
+        }
+
+        // isAlertsEnabled
+        bind(viewModel.isConnected) { [weak isCloudAlertsAvailable] observer, isConnected in
+            let isCl = isCloudAlertsAvailable?.value ?? false
+            let isCo = isConnected ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        let isConnected = viewModel.isConnected
+        bind(viewModel.isCloudAlertsAvailable) { [weak isConnected] observer, isCloudAlertsAvailable in
+            let isCl = isCloudAlertsAvailable ?? false
+            let isCo = isConnected?.value ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        // isNonCloudAlertsEnabled
+        let isAlertsEnabled = viewModel.isAlertsEnabled
+        bind(viewModel.isPNAlertsAvailiable) {
+            [weak isAlertsEnabled, weak isConnected] observer, isPNAlertsAvailiable in
+            let isCo = isConnected?.value ?? false
+            let isAe = isAlertsEnabled?.value ?? false
+            let isPN = isPNAlertsAvailiable ?? false
+            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
+        }
+
+        bind(viewModel.isAlertsEnabled) { [weak isPNAlertsAvailiable, weak isConnected] observer, isAlertsEnabled in
+            let isCo = isConnected?.value ?? false
+            let isAe = isAlertsEnabled ?? false
+            let isPN = isPNAlertsAvailiable?.value ?? false
+            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
         }
     }
 

@@ -149,7 +149,7 @@ extension RuuviTagSensor {
     }
 
     public var isCloud: Bool {
-        return owner != nil || isOwner || isClaimed
+        return owner != nil || isClaimed
     }
 }
 

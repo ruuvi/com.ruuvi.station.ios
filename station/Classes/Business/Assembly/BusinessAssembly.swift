@@ -12,6 +12,7 @@ import RuuviCloud
 import RuuviCore
 import RuuviDaemon
 import RuuviRepository
+import RuuviUser
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -37,7 +38,7 @@ class BusinessAssembly: Assembly {
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
             service.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
-            service.keychainService = r.resolve(KeychainService.self)
+            service.ruuviUser = r.resolve(RuuviUser.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
@@ -354,6 +355,15 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
+        container.register(RuuviUserFactory.self) { _ in
+            return RuuviUserFactoryImpl()
+        }
+
+        container.register(RuuviUser.self) { r in
+            let factory = r.resolve(RuuviUserFactory.self)!
+            return factory.createUser()
+        }.inObjectScope(.container)
+
         container.register(WeatherProviderService.self) { r in
             let service = WeatherProviderServiceImpl()
             service.owmApi = r.resolve(OpenWeatherMapAPI.self)
@@ -398,7 +408,7 @@ class BusinessAssembly: Assembly {
         container.register(UniversalLinkCoordinator.self, factory: { r in
             let coordinator = UniversalLinkCoordinatorImpl()
             let router = UniversalLinkRouterImpl()
-            coordinator.keychainService = r.resolve(KeychainService.self)
+            coordinator.ruuviUser = r.resolve(RuuviUser.self)
             coordinator.router = router
             return coordinator
         })
