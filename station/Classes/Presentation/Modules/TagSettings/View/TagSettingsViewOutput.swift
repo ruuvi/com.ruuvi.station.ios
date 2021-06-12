@@ -27,4 +27,7 @@ protocol TagSettingsViewOutput {
     func viewDidTapTemperatureOffsetCorrection()
     func viewDidTapHumidityOffsetCorrection()
     func viewDidTapOnPressureOffsetCorrection()
+
+    // Update firmware
+    func viewDidTapOnUpdateFirmware()
 }

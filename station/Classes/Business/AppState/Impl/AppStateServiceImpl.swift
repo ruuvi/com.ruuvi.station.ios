@@ -1,6 +1,7 @@
 import UIKit
 import RuuviLocal
 import RuuviDaemon
+import RuuviUser
 
 class AppStateServiceImpl: AppStateService {
 
@@ -8,7 +9,7 @@ class AppStateServiceImpl: AppStateService {
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
     var heartbeatDaemon: RuuviTagHeartbeatDaemon!
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var pullWebDaemon: PullWebDaemon!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
@@ -25,11 +26,8 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
         }
-        if keychainService.userIsAuthorized {
+        if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
-        } else if keychainService.ruuviUserApiKey != nil
-                    && keychainService.userApiEmail != nil {
-            keychainService.userApiLogOut()
         }
         heartbeatDaemon.start()
         propertiesDaemon.start()
@@ -56,7 +54,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.stop()
         }
-        if keychainService.userIsAuthorized {
+        if ruuviUser.isAuthorized {
             cloudSyncDaemon.stop()
         }
         propertiesDaemon.stop()
@@ -72,7 +70,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
         }
-        if keychainService.userIsAuthorized {
+        if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
             cloudSyncDaemon.refreshImmediately()
         }
