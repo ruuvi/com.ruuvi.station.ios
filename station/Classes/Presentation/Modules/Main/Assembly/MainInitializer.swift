@@ -16,7 +16,6 @@ class MainInitializer: NSObject {
         r.resolve(MigrationManagerToPrune240.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerToChartDuration240.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerSensorSettings.self)?.migrateIfNeeded()
-        r.resolve(MigrationManagerToRelativeHumidity.self)?.migrateIfNeeded()
         MainConfigurator().configure(navigationController: navigationController)
     }
 }
