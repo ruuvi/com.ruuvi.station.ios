@@ -411,7 +411,7 @@ extension TagSettingsTableViewController {
                 as! TagSettingsAlertsHeaderFooterView
             // swiftlint:enable force_cast
             header.delegate = self
-            header.disabledView.isHidden = viewModel?.isAlertsEnabled.value ?? false
+            header.disabledView.isHidden = viewModel?.isPNAlertsAvailiable.value ?? false
             return header
         default:
             return nil
@@ -864,6 +864,10 @@ extension TagSettingsTableViewController {
         }
 
         tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, _) in
+            tableView.reloadData()
+        }
+
+        tableView.bind(viewModel.isAlertsEnabled) { tableView, _ in
             tableView.reloadData()
         }
 

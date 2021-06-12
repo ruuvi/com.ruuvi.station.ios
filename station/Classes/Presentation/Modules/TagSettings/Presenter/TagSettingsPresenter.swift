@@ -375,7 +375,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil
-        viewModel.isNetworkConnected.value = ruuviTag.any.isCloud
+        viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
@@ -395,19 +395,19 @@ extension TagSettingsPresenter {
     private func bindViewModel() {
         // isPNAlertsAvailiable
         let isPNEnabled = viewModel.isPushNotificationsEnabled
-        let isConnected = viewModel.isConnected
+        let isConnectable = viewModel.isConnectable
 
-        bind(viewModel.isConnected) { [weak isPNEnabled] observer, isConnected in
+        bind(viewModel.isConnectable) { [weak isPNEnabled] observer, isConnectable in
             let isPN = isPNEnabled?.value ?? false
-            let isCo = isConnected ?? false
+            let isCo = isConnectable ?? false
             let isEnabled = isPN && isCo
             observer.viewModel.isPNAlertsAvailiable.value = isEnabled
         }
 
         bind(viewModel.isPushNotificationsEnabled) {
-            [weak isConnected] observer, isPushNotificationsEnabled in
+            [weak isConnectable] observer, isPushNotificationsEnabled in
             let isPN = isPushNotificationsEnabled ?? false
-            let isCo = isConnected?.value ?? false
+            let isCo = isConnectable?.value ?? false
             let isEnabled = isPN && isCo
             observer.viewModel.isPNAlertsAvailiable.value = isEnabled
         }
