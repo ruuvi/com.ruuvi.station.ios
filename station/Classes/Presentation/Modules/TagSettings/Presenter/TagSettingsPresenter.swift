@@ -464,6 +464,9 @@ extension TagSettingsPresenter {
             let isPN = isPNAlertsAvailiable?.value ?? false
             observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
         }
+
+        // this is done intentionally
+        viewModel.isNonCloudAlertsVisible.value = false
     }
 
     private func syncOffsetCorrection() {
