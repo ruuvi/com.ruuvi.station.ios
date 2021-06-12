@@ -466,7 +466,7 @@ extension TagSettingsPresenter {
         }
 
         // this is done intentionally
-        viewModel.isNonCloudAlertsVisible.value = false
+        viewModel.isNonCloudAlertsVisible.value = featureToggleService.isEnabled(.dpahAlerts)
     }
 
     private func syncOffsetCorrection() {
