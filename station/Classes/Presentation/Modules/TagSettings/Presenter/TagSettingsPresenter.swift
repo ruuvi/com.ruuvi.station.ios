@@ -334,7 +334,7 @@ extension TagSettingsPresenter {
             }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -390,8 +390,8 @@ extension TagSettingsPresenter {
         viewModel.version.value = ruuviTag.version
         syncAlerts()
     }
-    // swiftlint:enable function_body_length
 
+    // swiftlint:disable:next function_body_length
     private func bindViewModel() {
         // isPNAlertsAvailiable
         let isPNEnabled = viewModel.isPushNotificationsEnabled
@@ -432,6 +432,37 @@ extension TagSettingsPresenter {
             let isPN = isPNAlertsAvailiable.value ?? false
             let isCl = isCloudAlertsAvailable ?? false
             observer.viewModel.isAlertsVisible.value = isPN || isCl
+        }
+
+        // isAlertsEnabled
+        bind(viewModel.isConnected) { [weak isCloudAlertsAvailable] observer, isConnected in
+            let isCl = isCloudAlertsAvailable?.value ?? false
+            let isCo = isConnected ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        let isConnected = viewModel.isConnected
+        bind(viewModel.isCloudAlertsAvailable) { [weak isConnected] observer, isCloudAlertsAvailable in
+            let isCl = isCloudAlertsAvailable ?? false
+            let isCo = isConnected?.value ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        // isNonCloudAlertsEnabled
+        let isAlertsEnabled = viewModel.isAlertsEnabled
+        bind(viewModel.isPNAlertsAvailiable) {
+            [weak isAlertsEnabled, weak isConnected] observer, isPNAlertsAvailiable in
+            let isCo = isConnected?.value ?? false
+            let isAe = isAlertsEnabled?.value ?? false
+            let isPN = isPNAlertsAvailiable ?? false
+            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
+        }
+
+        bind(viewModel.isAlertsEnabled) { [weak isPNAlertsAvailiable, weak isConnected] observer, isAlertsEnabled in
+            let isCo = isConnected?.value ?? false
+            let isAe = isAlertsEnabled ?? false
+            let isPN = isPNAlertsAvailiable?.value ?? false
+            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
         }
     }
 
