@@ -1,19 +1,19 @@
 import Foundation
+import RuuviOntology
 
 class CurrentWebTagRefreshDataOperation: AsyncOperation {
-
-    private var uuid: String
+    private var sensor: VirtualSensor
     private var provider: WeatherProvider
     private var weatherProviderService: WeatherProviderService
     private var alertService: AlertService
     private var webTagPersistence: WebTagPersistence!
 
-    init(uuid: String,
+    init(sensor: VirtualSensor,
          provider: WeatherProvider,
          weatherProviderService: WeatherProviderService,
          alertService: AlertService,
          webTagPersistence: WebTagPersistence) {
-        self.uuid = uuid
+        self.sensor = sensor
         self.provider = provider
         self.weatherProviderService = weatherProviderService
         self.alertService = alertService
@@ -23,7 +23,7 @@ class CurrentWebTagRefreshDataOperation: AsyncOperation {
     override func main() {
         weatherProviderService.loadCurrentLocationData(from: provider).on(success: { [weak self] response in
             guard let sSelf = self else { return }
-            sSelf.alertService.process(data: response.1, for: sSelf.uuid)
+            sSelf.alertService.process(data: response.1, for: sSelf.sensor)
             let persist = sSelf.webTagPersistence.persist(currentLocation: response.0, data: response.1)
             persist.on(success: { [weak sSelf] _ in
                 sSelf?.state = .finished

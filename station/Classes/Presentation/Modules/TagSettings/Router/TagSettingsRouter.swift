@@ -32,4 +32,14 @@ class TagSettingsRouter: TagSettingsRouterInput {
                 module.configure(type: type, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
             })
     }
+
+    func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
+        let factory = StoryboardFactory(storyboardName: "UpdateFirmware")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: UpdateFirmwareModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(ruuviTag: ruuviTag)
+            })
+    }
 }
