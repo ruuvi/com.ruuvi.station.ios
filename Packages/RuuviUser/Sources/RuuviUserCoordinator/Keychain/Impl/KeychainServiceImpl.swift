@@ -1,15 +1,14 @@
 import Foundation
 import KeychainAccess
-import RuuviLocal
 
-class KeychainServiceImpl {
-    var settings: RuuviLocalSettings!
-
-    private let keychain: Keychain = Keychain(service: "com.ruuvi.station",
-                                              accessGroup: "4MUYJ4YYH4.com.ruuvi.station")
-        .label("Ruuvi Station")
-        .synchronizable(true)
-        .accessibility(.afterFirstUnlock)
+final class KeychainServiceImpl {
+    private let keychain: Keychain = Keychain(
+        service: "com.ruuvi.station",
+        accessGroup: "4MUYJ4YYH4.com.ruuvi.station"
+    )
+    .label("Ruuvi Station")
+    .synchronizable(true)
+    .accessibility(.afterFirstUnlock)
 
     private enum Account: String {
         case ruuviUserApi
