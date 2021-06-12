@@ -1011,7 +1011,10 @@ extension TagSettingsPresenter {
             })
         }
         bind(viewModel.movementAlertDescription, fire: false) { observer, movementAlertDescription in
-            observer.alertService.setMovement(description: movementAlertDescription, for: ruuviTag)
+            observer.alertService.setMovement(
+                description: movementAlertDescription,
+                ruuviTag: ruuviTag
+            )
         }
     }
 
