@@ -229,6 +229,9 @@
 		0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */; };
 		0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */; };
 		0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */; };
+		0E5C202A267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C2029267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift */; };
+		0E5C202B267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C2029267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift */; };
+		0E5C202C267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C2029267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift */; };
 		0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
 		0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
 		0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */; };
@@ -1807,6 +1810,7 @@
 		0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissInteractiveTransition.swift; sourceTree = "<group>"; };
 		0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissNavigationController.swift; sourceTree = "<group>"; };
+		0E5C2029267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToRelativeHumidity.swift; sourceTree = "<group>"; };
 		0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenterSheet.swift; sourceTree = "<group>"; };
 		0E5C300E22CF634300B52E39 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManagerImpl.swift; sourceTree = "<group>"; };
@@ -3249,6 +3253,14 @@
 			path = Temp;
 			sourceTree = "<group>";
 		};
+		0E5C20282675217C00D33649 /* toRelativeHumidity */ = {
+			isa = PBXGroup;
+			children = (
+				0E5C2029267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift */,
+			);
+			path = toRelativeHumidity;
+			sourceTree = "<group>";
+		};
 		0E5C300C22CF632500B52E39 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -4491,6 +4503,7 @@
 				664A5D11265B8BAA0035A11F /* SensorSettings */,
 				0EB48D5E26183B34008E0D2D /* toPrune240 */,
 				0E1069E6265D162600B8F730 /* toChartDuration240 */,
+				0E5C20282675217C00D33649 /* toRelativeHumidity */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 			);
@@ -6499,6 +6512,7 @@
 				0E2AFFA2266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */,
 				A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */,
 				0E6BADBA23856A01003A2D4C /* SettingsRouter.swift in Sources */,
+				0E5C202C267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift in Sources */,
 				0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				660EB28E26692806000FD22B /* DfuDevice.swift in Sources */,
 				0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
@@ -7321,6 +7335,7 @@
 				A907A1D4245F7C6600041F6E /* ProgressBarView.swift in Sources */,
 				318592DB25BB4D000093B8EB /* UserPropertiesService.swift in Sources */,
 				0E8BD3CF238566AB008B31EF /* SettingsViewInput.swift in Sources */,
+				0E5C202B267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift in Sources */,
 				A9C03F8024E708DC00BC046F /* MeasurementsServiceImpl.swift in Sources */,
 				0E45580A23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E8BD3D2238566AB008B31EF /* CardsRouterDelegate.swift in Sources */,
@@ -7502,6 +7517,7 @@
 				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
 				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
+				0E5C202A267521AA00D33649 /* MigrationManagerToRelativeHumidity.swift in Sources */,
 				660EB28C26692806000FD22B /* DfuDevice.swift in Sources */,
 				A9B5743F253B993100DB7353 /* SignInConfigurator.swift in Sources */,
 				660EB25B2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,

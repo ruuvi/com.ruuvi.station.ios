@@ -36,6 +36,9 @@ public protocol RuuviServiceAlertRuuviTag {
     func setLower(pressure: Double?, ruuviTag: RuuviTagSensor)
     func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor)
     func setPressure(description: String?, ruuviTag: RuuviTagSensor)
+
+    // movement
+    func setMovement(description: String?, ruuviTag: RuuviTagSensor)
 }
 
 public protocol RuuviServiceAlertCloud {
@@ -128,7 +131,6 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func movementCounter(for sensor: PhysicalSensor) -> Int?
     func setMovement(counter: Int?, for sensor: PhysicalSensor)
     func movementDescription(for sensor: PhysicalSensor) -> String?
-    func setMovement(description: String?, for sensor: PhysicalSensor)
 }
 
 public protocol RuuviServiceAlertVirtualSensor {
