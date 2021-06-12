@@ -1,13 +1,14 @@
 import UIKit
 import RuuviService
 import RuuviLocal
+import RuuviUser
 
 class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
     var router: MenuRouterInput!
     var alertPresenter: AlertPresenter!
     var cloudSyncService: RuuviServiceCloudSync!
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var localSyncState: RuuviLocalSyncState!
     var featureToggleService: FeatureToggleService!
 
@@ -46,11 +47,11 @@ extension MenuPresenter: MenuViewOutput {
     }
 
     var userIsAuthorized: Bool {
-        return keychainService.userIsAuthorized
+        return ruuviUser.isAuthorized
     }
 
     var userEmail: String? {
-        return keychainService.userApiEmail
+        return ruuviUser.email
     }
 
     func viewDidTapOnDimmingView() {
@@ -138,7 +139,7 @@ extension MenuPresenter {
 
     @objc private func syncViewModel() {
         let viewModel = MenuViewModel()
-        viewModel.username.value = keychainService.userApiEmail
+        viewModel.username.value = ruuviUser.email
         viewModel.isSyncing.value = localSyncState.syncStatus == .syncing
         self.viewModel = viewModel
         guard localSyncState.syncStatus != .syncing else {
@@ -174,7 +175,7 @@ extension MenuPresenter {
         let cancelActionTitle = "Cancel".localized()
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
-            self?.keychainService.userApiLogOut()
+            self?.ruuviUser.logout()
             self?.dismiss()
         }
         let cancleAction = UIAlertAction(title: cancelActionTitle,
