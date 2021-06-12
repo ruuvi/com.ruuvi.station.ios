@@ -1307,15 +1307,15 @@ extension TagSettingsTableViewController {
 
         let isHumidityAlertOn = viewModel.isHumidityAlertOn
 
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
-            let isEnabled = isAlertsEnabled ?? false
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
+            let isEnabled = isPNAlertsAvailiable ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        humidityAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
-            [weak isHumidityAlertOn] slider, isAlertsEnabled in
-            let isAe = isAlertsEnabled ?? false
+        humidityAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
+            [weak isHumidityAlertOn] slider, isPNAlertsAvailiable in
+            let isAe = isPNAlertsAvailiable ?? false
             let isOn = isHumidityAlertOn?.value ?? false
             slider.isEnabled = isOn && isAe
         }
@@ -1395,15 +1395,15 @@ extension TagSettingsTableViewController {
 
         let isDewPointAlertOn = viewModel.isDewPointAlertOn
 
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isAlertsEnabled) { view, isAlertsEnabled in
-            let isEnabled = isAlertsEnabled ?? false
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isPNAlertsAvailiable) { view, isPNAlertsAvailiable in
+            let isEnabled = isPNAlertsAvailiable ?? false
             view.isEnabled = isEnabled
             view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
         }
 
-        dewPointAlertControlsCell.slider.bind(viewModel.isAlertsEnabled) {
-            [weak isDewPointAlertOn] slider, isAlertsEnabled in
-            let isAe = isAlertsEnabled ?? false
+        dewPointAlertControlsCell.slider.bind(viewModel.isPNAlertsAvailiable) {
+            [weak isDewPointAlertOn] slider, isPNAlertsAvailiable in
+            let isAe = isPNAlertsAvailiable ?? false
             let isOn = isDewPointAlertOn?.value ?? false
             slider.isEnabled = isOn && isAe
         }
