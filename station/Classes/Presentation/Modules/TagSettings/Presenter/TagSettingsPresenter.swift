@@ -8,6 +8,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviUser
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -30,7 +31,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var activityPresenter: ActivityPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
@@ -359,7 +360,7 @@ extension TagSettingsPresenter {
         viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag)
         viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag)
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
-        viewModel.isAuthorized.value = keychainService.userIsAuthorized
+        viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
         viewModel.owner.value = ruuviTag.owner

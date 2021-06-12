@@ -4,6 +4,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviUser
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -27,7 +28,7 @@ class TagSettingsTableConfigurator {
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
-        presenter.keychainService = r.resolve(KeychainService.self)
+        presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
