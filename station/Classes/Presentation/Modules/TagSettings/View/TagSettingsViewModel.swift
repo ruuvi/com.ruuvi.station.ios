@@ -32,14 +32,14 @@ struct TagSettingsViewModel {
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let temperatureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let temperatureLowerBound: Observable<Temperature?> = Observable<Temperature?>()
-    let temperatureUpperBound: Observable<Temperature?> = Observable<Temperature?>()
+    let temperatureLowerBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(-40, unit: .celsius))
+    let temperatureUpperBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(85, unit: .celsius))
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
 
     let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let relativeHumidityAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>()
-    let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>()
+    let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
+    let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>(100.0)
     let relativeHumidityAlertDescription: Observable<String?> = Observable<String?>()
 
     let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
@@ -50,14 +50,14 @@ struct TagSettingsViewModel {
 
     let isDewPointAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let dewPointAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let dewPointLowerBound: Observable<Temperature?> = Observable<Temperature?>()
-    let dewPointUpperBound: Observable<Temperature?> = Observable<Temperature?>()
+    let dewPointLowerBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(-40, unit: .celsius))
+    let dewPointUpperBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(85, unit: .celsius))
     let dewPointAlertDescription: Observable<String?> = Observable<String?>()
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>()
-    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>()
+    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(300, unit: .hectopascals))
+    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1100, unit: .hectopascals))
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
 
     let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
