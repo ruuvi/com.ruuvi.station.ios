@@ -491,7 +491,6 @@ extension TagSettingsTableViewController {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
-            let hu = viewModel?.humidityUnit.value
             switch cell {
             case temperatureAlertHeaderCell,
                  pressureAlertHeaderCell,
@@ -616,7 +615,6 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didSlideTo minValue: CGFloat, maxValue: CGFloat) {
         switch cell {
         case temperatureAlertControlsCell:
@@ -1380,7 +1378,7 @@ extension TagSettingsTableViewController {
             label.text = String(format: title.localized(), HumidityUnit.gm3.symbol)
         }
 
-        humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
+        humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, _) in
             let hu = HumidityUnit.gm3
             slider.minValue = CGFloat(hu.alertRange.lowerBound)
             slider.maxValue = CGFloat(hu.alertRange.upperBound)
