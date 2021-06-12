@@ -77,7 +77,12 @@ struct TagSettingsViewModel {
     let temperatureOffsetCorrection: Observable<Double?> = Observable<Double?>()
     let humidityOffsetCorrection: Observable<Double?> = Observable<Double?>()
     let pressureOffsetCorrection: Observable<Double?> = Observable<Double?>()
+
     let canShowUpdateFirmware: Observable<Bool?> = Observable<Bool?>(false)
+
+    let isAlertsEnabled: Observable<Bool?> = Observable<Bool?>(false)
+    let isPNAlertsAvailiable: Observable<Bool?> = Observable<Bool?>(false)
+    let isCloudAlertsAvailable: Observable<Bool?> = Observable<Bool?>(false)
 
     var source: Observable<RuuviTagSensorRecordSource?> = Observable<RuuviTagSensorRecordSource?>()
 
