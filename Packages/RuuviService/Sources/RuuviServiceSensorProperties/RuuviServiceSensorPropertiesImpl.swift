@@ -29,7 +29,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        if sensor.isOwner {
+        if sensor.isCloud {
             let namedSensor = sensor.with(name: name)
             pool.update(namedSensor)
                 .on(success: { [weak self] _ in
@@ -114,7 +114,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         assert(luid != nil || macId != nil)
         var local: Future<URL, RuuviLocalError>?
         var remote: Future<URL, RuuviCloudError>?
-        if sensor.isClaimed {
+        if sensor.isCloud {
             if let mac = macId {
                 let croppedImage = coreImage.cropped(image: image, to: maxSize)
                 remote = cloud.upload(
