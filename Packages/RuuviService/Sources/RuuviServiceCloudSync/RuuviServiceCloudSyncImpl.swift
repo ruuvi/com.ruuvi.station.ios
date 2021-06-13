@@ -93,14 +93,16 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     promise.fail(error: .networking(error))
                 } else if let data = data {
                     if let image = UIImage(data: data) {
-                        self.ruuviLocalImages
-                            .setCustomBackground(image: image, for: sensor.id.mac)
-                            .on(success: { fileUrl in
-                                self.ruuviLocalImages.setPictureIsCached(for: sensor)
-                                promise.succeed(value: fileUrl)
-                            }, failure: { error in
-                                promise.fail(error: .ruuviLocal(error))
-                            })
+                        DispatchQueue.main.async {
+                            self.ruuviLocalImages
+                                .setCustomBackground(image: image, for: sensor.id.mac)
+                                .on(success: { fileUrl in
+                                    self.ruuviLocalImages.setPictureIsCached(for: sensor)
+                                    promise.succeed(value: fileUrl)
+                                }, failure: { error in
+                                    promise.fail(error: .ruuviLocal(error))
+                                })
+                        }
                     } else {
                         promise.fail(error: .failedToParseNetworkResponse)
                     }
