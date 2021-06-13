@@ -47,7 +47,16 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         return UIImage(named: "bg\(id)")
     }
 
-    func background(for identifier: Identifier) -> UIImage? {
+    func getBackground(for identifier: Identifier) -> UIImage? {
+        var id = backgroundId(for: identifier)
+        if id >= bgMinIndex && id <= bgMaxIndex {
+            return UIImage(named: "bg\(id)")
+        } else {
+            return imagePersistence.fetchBg(for: identifier)
+        }
+    }
+
+    func getOrGenerateBackground(for identifier: Identifier) -> UIImage? {
         var id = backgroundId(for: identifier)
         if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
