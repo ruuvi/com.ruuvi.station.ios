@@ -99,7 +99,7 @@ extension RuuviTagSQLite {
                 .defaults(to: false)
             table.column(RuuviTagSQLite.isOwnerColumn.name, .boolean)
                 .notNull()
-                .defaults(to: false)
+                .defaults(to: true)
             table.column(RuuviTagSQLite.owner.name, .text)
         })
     }
