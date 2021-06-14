@@ -934,6 +934,9 @@
 		0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
 		0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
 		0EA92FE12387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
+		0EAB9E8C2677282D002CDB48 /* MigrationManagerToRH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAB9E8B2677282D002CDB48 /* MigrationManagerToRH.swift */; };
+		0EAB9E8D2677282D002CDB48 /* MigrationManagerToRH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAB9E8B2677282D002CDB48 /* MigrationManagerToRH.swift */; };
+		0EAB9E8E2677282D002CDB48 /* MigrationManagerToRH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAB9E8B2677282D002CDB48 /* MigrationManagerToRH.swift */; };
 		0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
 		0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
 		0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E84BF542397F29800A37E1A /* Heartbeat.storyboard */; };
@@ -1922,6 +1925,7 @@
 		0EA7968C2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviStorageError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
 		0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
+		0EAB9E8B2677282D002CDB48 /* MigrationManagerToRH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToRH.swift; sourceTree = "<group>"; };
 		0EB48D5F26183B34008E0D2D /* MigrationManagerToPrune240.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationManagerToPrune240.swift; sourceTree = "<group>"; };
 		0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggle.swift; sourceTree = "<group>"; };
 		0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleService.swift; sourceTree = "<group>"; };
@@ -3879,6 +3883,14 @@
 			path = Errors;
 			sourceTree = "<group>";
 		};
+		0EAB9E8A26772810002CDB48 /* toRH */ = {
+			isa = PBXGroup;
+			children = (
+				0EAB9E8B2677282D002CDB48 /* MigrationManagerToRH.swift */,
+			);
+			path = toRH;
+			sourceTree = "<group>";
+		};
 		0EAD33F3239A571B00EC5BAA /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -4491,6 +4503,7 @@
 				664A5D11265B8BAA0035A11F /* SensorSettings */,
 				0EB48D5E26183B34008E0D2D /* toPrune240 */,
 				0E1069E6265D162600B8F730 /* toChartDuration240 */,
+				0EAB9E8A26772810002CDB48 /* toRH */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 			);
@@ -6465,6 +6478,7 @@
 				A9828E4824792D6C00E7E9D4 /* SectionChanges.swift in Sources */,
 				0E6BADA523856A01003A2D4C /* CalibrationServiceImpl.swift in Sources */,
 				0E6BADA723856A01003A2D4C /* Localizable.swift in Sources */,
+				0EAB9E8E2677282D002CDB48 /* MigrationManagerToRH.swift in Sources */,
 				0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E6BADA823856A01003A2D4C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E6BADA923856A01003A2D4C /* TagChartsPresenter.swift in Sources */,
@@ -7260,6 +7274,7 @@
 				0E8BD3AB238566AB008B31EF /* TagSettingsTableInitializer.swift in Sources */,
 				0E8BD3AC238566AB008B31EF /* MigrationManagerToVIPER.swift in Sources */,
 				A9BD38BB24F6108300904BBE /* Humidity+Offset.swift in Sources */,
+				0EAB9E8D2677282D002CDB48 /* MigrationManagerToRH.swift in Sources */,
 				0E8BD3AD238566AB008B31EF /* RUError.swift in Sources */,
 				0E45580F23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */,
 				0E8BD3AE238566AB008B31EF /* LocationService.swift in Sources */,
@@ -7468,6 +7483,7 @@
 				A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
+				0EAB9E8C2677282D002CDB48 /* MigrationManagerToRH.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
