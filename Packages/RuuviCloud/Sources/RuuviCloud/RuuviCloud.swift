@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import RuuviOntology
+import RuuviUser
 
 public protocol RuuviCloud {
     @discardableResult
@@ -98,11 +99,5 @@ public protocol RuuviCloud {
 }
 
 public protocol RuuviCloudFactory {
-    func create(baseUrl: URL, apiKey: String?) -> RuuviCloud
-}
-
-extension RuuviCloudFactory {
-    public func create(baseUrl: URL) -> RuuviCloud {
-        return create(baseUrl: baseUrl, apiKey: nil)
-    }
+    func create(baseUrl: URL, user: RuuviUser) -> RuuviCloud
 }
