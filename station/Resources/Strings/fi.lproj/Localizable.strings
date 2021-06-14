@@ -327,7 +327,7 @@
 "SignIn.CheckMailbox" = "Tarkasta aktivointikoodi saamastasi sähköpostista.";
 "SignIn.CodeHint" = "Koodi";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Haluatko varmasti kirjautua ulos?";
-"TagSettings.ClaimTagButton.Claim" = "Vaadi";
+"TagSettings.ClaimTagButton.Claim" = "Lukitse";
 "TagSettings.ClaimTagButton.Unclaim" = "Vapauta";
 "TagSettings.ShareButton" = "Jaa";
 "Syncing..." = "Synkronoidaan…";

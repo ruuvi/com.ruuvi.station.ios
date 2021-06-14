@@ -151,11 +151,13 @@ PODS:
   - RuuviCloud/Contract (0.0.1):
     - FutureX
     - RuuviOntology
+    - RuuviUser
   - RuuviCloud/Pure (0.0.1):
     - FutureX
     - RuuviCloud/Api
     - RuuviCloud/Contract
     - RuuviOntology
+    - RuuviUser
   - RuuviCloud/Tests (0.0.1)
   - RuuviContext (0.0.1):
     - RuuviContext/SQLite (= 0.0.1)
@@ -562,7 +564,7 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 06f5c67f87cb8c5f27b122218ce22e9a77314517
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
-  RuuviCloud: f4583874401a5c7c458eaac2842788ca1a348a57
+  RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
   RuuviCore: ed8326e13481473dc92e5a0810b60211dfbb8a75
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
