@@ -34,4 +34,5 @@ public protocol RuuviLocalImages {
 
     func isPictureCached(for cloudSensor: CloudSensor) -> Bool
     func setPictureIsCached(for cloudSensor: CloudSensor)
+    func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor)
 }
