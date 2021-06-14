@@ -160,6 +160,13 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerToRH.self) { r in
+            let manager = MigrationManagerToRH()
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
+            manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
+            return manager
+        }
+
         container.register(MigrationManagerToPrune240.self) { r in
             let manager = MigrationManagerToPrune240()
             manager.settings = r.resolve(RuuviLocalSettings.self)
