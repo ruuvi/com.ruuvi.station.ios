@@ -46,7 +46,10 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
             ruuviStorage.readLast(ruuviTag).on {[weak self] record in
                 if let record = record {
                     self?.lastSensorRecord = record
-                    vm.update(ruuviTagRecord: record)
+                    vm.update(
+                        ruuviTagRecord: record
+                            .with(sensorSettings: sensorSettings)
+                    )
                 }
             }
             vm.temperatureUnit.value = self.settings.temperatureUnit
