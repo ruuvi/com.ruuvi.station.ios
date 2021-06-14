@@ -1683,6 +1683,7 @@ IMAGE</string>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Tag Settings" id="077-3J-vYo">
+                        <barButtonItem key="backBarButtonItem" title=" " id="m00-jr-OJA"/>
                         <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="d8d-Ht-mRS">
                             <connections>
                                 <action selector="dismissBarButtonItemAction:" destination="JXe-xp-HbB" id="onb-BV-tEw"/>
