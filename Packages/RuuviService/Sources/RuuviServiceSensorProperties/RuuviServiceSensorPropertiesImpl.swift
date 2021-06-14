@@ -193,6 +193,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         if let luid = sensor.luid {
             localImages.deleteCustomBackground(for: luid)
         }
+        localImages.setPictureRemovedFromCache(for: sensor)
         if sensor.isCloud {
             resetCloudImage(for: sensor)
         }

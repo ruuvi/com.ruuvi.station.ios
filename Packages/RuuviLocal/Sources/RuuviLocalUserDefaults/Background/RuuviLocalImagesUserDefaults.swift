@@ -199,4 +199,11 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
         )
     }
+
+    func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor) {
+        UserDefaults.standard.set(
+            nil,
+            forKey: cloudSensorPictureUrlPrefix + ruuviTag.id
+        )
+    }
 }
