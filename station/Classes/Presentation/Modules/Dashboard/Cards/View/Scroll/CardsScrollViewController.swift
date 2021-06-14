@@ -481,7 +481,7 @@ extension CardsScrollViewController: UIGestureRecognizerDelegate {
             let velocity = pan.velocity(in: scrollView)
             return abs(velocity.y) > abs(velocity.x) && viewModels[currentPage].isConnectable.value.bound
         } else {
-            return true
+            return false
         }
     }
 

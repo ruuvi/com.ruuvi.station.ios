@@ -16,10 +16,12 @@ class NetworkingAssembly: Assembly {
 
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
-            let apiKey = user.apiKey
             let baseUrlString: String = r.property("Ruuvi Cloud URL")!
             let baseUrl = URL(string: baseUrlString)!
-            let cloud = r.resolve(RuuviCloudFactory.self)!.create(baseUrl: baseUrl, apiKey: apiKey)
+            let cloud = r.resolve(RuuviCloudFactory.self)!.create(
+                baseUrl: baseUrl,
+                user: user
+            )
             return cloud
         }
 
