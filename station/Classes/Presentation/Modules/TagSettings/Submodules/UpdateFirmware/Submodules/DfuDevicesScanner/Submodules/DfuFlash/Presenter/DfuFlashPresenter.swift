@@ -1,6 +1,6 @@
 import Foundation
 import RuuviOntology
-import iOSDFULibrary
+import NordicDFU
 
 class DfuFlashPresenter: NSObject, DfuFlashModuleInput {
     weak var view: DfuFlashViewInput!

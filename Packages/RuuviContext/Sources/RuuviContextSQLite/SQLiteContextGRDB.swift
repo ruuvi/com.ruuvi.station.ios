@@ -12,13 +12,6 @@ public protocol DatabaseService {
     var database: GRDBDatabase { get }
 }
 
-public protocol GRDBDatabase {
-    var dbPool: DatabasePool { get }
-    var dbPath: String { get }
-
-    func migrateIfNeeded()
-}
-
 class SQLiteGRDBDatabase: GRDBDatabase {
 
     static let shared: SQLiteGRDBDatabase = {

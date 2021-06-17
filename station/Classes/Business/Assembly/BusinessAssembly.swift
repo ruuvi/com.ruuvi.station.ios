@@ -363,7 +363,7 @@ class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviUserFactory.self) { _ in
-            return RuuviUserFactoryImpl()
+            return RuuviUserFactoryCoordinator()
         }
 
         container.register(RuuviUser.self) { r in
