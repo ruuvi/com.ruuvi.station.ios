@@ -1,5 +1,5 @@
 import Foundation
-import iOSDFULibrary
+import NordicDFU
 
 struct RuuviDfu {
     static let shared = RuuviDfu()

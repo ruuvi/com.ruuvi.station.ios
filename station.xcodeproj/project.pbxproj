@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,8 +12,6 @@
 		0E02ABBD2375A1CF00ED4629 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABBC2375A1CF00ED4629 /* AlertService.swift */; };
 		0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABBF2375A5D000ED4629 /* AlertServiceImpl.swift */; };
 		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E03B7C623866CDC00949713 /* Nantes in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* Nantes */; };
-		0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwinjectPropertyLoader */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -208,16 +206,6 @@
 		0E45580E23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
 		0E45580F23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
 		0E45581023E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
-		0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* Realm */; };
-		0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* RealmSwift */; };
-		0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* Localize_Swift */; };
-		0E4EAE4823863D4100BBDFBD /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* Future */; };
-		0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* BTKit */; };
-		0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* LightRoute */; };
-		0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* Swinject */; };
-		0E4EAECA238656B100BBDFBD /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* Charts */; };
-		0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* GestureInstructions */; };
-		0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* RangeSeekSlider */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -559,7 +547,6 @@
 		0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
-		0E8BAC4A245C393000D380FB /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 0E8BAC49245C393000D380FB /* GRDB */; };
 		0E8BACA8245C84BE00D380FB /* TankAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACA7245C84BE00D380FB /* TankAssembly.swift */; };
 		0E8BACA9245C84BE00D380FB /* TankAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACA7245C84BE00D380FB /* TankAssembly.swift */; };
 		0E8BACAA245C84BE00D380FB /* TankAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACA7245C84BE00D380FB /* TankAssembly.swift */; };
@@ -1099,7 +1086,6 @@
 		0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */; };
 		0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215F22BA61430015F9E0 /* MigrationManager.swift */; };
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
-		0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3ED32526F148008CE97B /* RxSwift */; };
 		0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */; };
 		0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
 		0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -1608,8 +1594,6 @@
 		A9C03F7F24E708BF00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
 		A9C03F8024E708DC00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
 		A9C03F8124E708DD00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
-		A9DDC7142531169200FA4704 /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = A9DDC7132531169200FA4704 /* Humidity */; };
-		A9DDC7212531191E00FA4704 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A9DDC7202531191E00FA4704 /* KeychainAccess */; };
 		A9E5994025572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
 		A9E5994125572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
 		A9E5994225572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
@@ -2275,22 +2259,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E03B7C623866CDC00949713 /* Nantes in Frameworks */,
-				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
-				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
-				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
-				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
-				0E8BAC4A245C393000D380FB /* GRDB in Frameworks */,
-				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
-				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
-				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
-				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
-				A9DDC7142531169200FA4704 /* Humidity in Frameworks */,
-				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
-				A9DDC7212531191E00FA4704 /* KeychainAccess in Frameworks */,
-				0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */,
-				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
-				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5697,22 +5665,6 @@
 			);
 			name = station_mac;
 			packageProductDependencies = (
-				0E4EAE3F23863BA600BBDFBD /* Realm */,
-				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
-				0E4EAE4423863CBC00BBDFBD /* Localize_Swift */,
-				0E4EAE4723863D4100BBDFBD /* Future */,
-				0E4EAE98238646FF00BBDFBD /* BTKit */,
-				0E4EAEB82386534B00BBDFBD /* LightRoute */,
-				0E4EAEC6238655FA00BBDFBD /* Swinject */,
-				0E4EAEC9238656B100BBDFBD /* Charts */,
-				0E4EAECC2386586C00BBDFBD /* GestureInstructions */,
-				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
-				0E03B7C523866CDC00949713 /* Nantes */,
-				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
-				0E8BAC49245C393000D380FB /* GRDB */,
-				0EEB3ED32526F148008CE97B /* RxSwift */,
-				A9DDC7132531169200FA4704 /* Humidity */,
-				A9DDC7202531191E00FA4704 /* KeychainAccess */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* Ruuvi Station.app */;
@@ -5848,21 +5800,6 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */,
-				0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */,
-				0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */,
-				0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */,
-				0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */,
-				0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */,
-				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
-				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
-				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
-				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
-				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
-				0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */,
-				0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */,
-				A9DDC7122531169200FA4704 /* XCRemoteSwiftPackageReference "Humidity" */,
-				A9DDC71F2531191E00FA4704 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -8463,213 +8400,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/Nantes";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.10;
-			};
-		};
-		0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.2;
-			};
-		};
-		0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-cocoa";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.1.1;
-			};
-		};
-		0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.0;
-			};
-		};
-		0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kean/Future";
-			requirement = {
-				kind = versionRange;
-				maximumVersion = 1.4.0;
-				minimumVersion = 1.3.0;
-			};
-		};
-		0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.0;
-			};
-		};
-		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
-			};
-		};
-		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Swinject/Swinject";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.1;
-			};
-		};
-		0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielgindi/Charts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.4.0;
-			};
-		};
-		0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.2;
-			};
-		};
-		0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.8.2;
-			};
-		};
-		0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.14.0;
-			};
-		};
-		0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.1;
-			};
-		};
-		A9DDC7122531169200FA4704 /* XCRemoteSwiftPackageReference "Humidity" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/Humidity.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.3;
-			};
-		};
-		A9DDC71F2531191E00FA4704 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.2.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		0E03B7C523866CDC00949713 /* Nantes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */;
-			productName = Nantes;
-		};
-		0E03B8042386741B00949713 /* SwinjectPropertyLoader */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
-			productName = SwinjectPropertyLoader;
-		};
-		0E4EAE3F23863BA600BBDFBD /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = Realm;
-		};
-		0E4EAE4123863BA600BBDFBD /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = RealmSwift;
-		};
-		0E4EAE4423863CBC00BBDFBD /* Localize_Swift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */;
-			productName = Localize_Swift;
-		};
-		0E4EAE4723863D4100BBDFBD /* Future */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */;
-			productName = Future;
-		};
-		0E4EAE98238646FF00BBDFBD /* BTKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */;
-			productName = BTKit;
-		};
-		0E4EAEB82386534B00BBDFBD /* LightRoute */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */;
-			productName = LightRoute;
-		};
-		0E4EAEC6238655FA00BBDFBD /* Swinject */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */;
-			productName = Swinject;
-		};
-		0E4EAEC9238656B100BBDFBD /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = Charts;
-		};
-		0E4EAECC2386586C00BBDFBD /* GestureInstructions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */;
-			productName = GestureInstructions;
-		};
-		0E4EAED623865CB500BBDFBD /* RangeSeekSlider */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
-			productName = RangeSeekSlider;
-		};
-		0E8BAC49245C393000D380FB /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
-			productName = GRDB;
-		};
-		0EEB3ED32526F148008CE97B /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		A9DDC7132531169200FA4704 /* Humidity */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9DDC7122531169200FA4704 /* XCRemoteSwiftPackageReference "Humidity" */;
-			productName = Humidity;
-		};
-		A9DDC7202531191E00FA4704 /* KeychainAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9DDC71F2531191E00FA4704 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
-			productName = KeychainAccess;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 64333D1D20B0C45900CDF4B6 /* Project object */;
 }

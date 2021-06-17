@@ -1,6 +1,6 @@
 import Foundation
 
 public enum RuuviCloudError: Error {
-    case api(RuuviCloudApiError)
+    case api(Error)
     case notAuthorized
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public final class RuuviUserFactoryImpl: RuuviUserFactory {
+public final class RuuviUserFactoryCoordinator: RuuviUserFactory {
     public init() {}
 
     public func createUser() -> RuuviUser {

@@ -106,7 +106,7 @@ class PersistenceAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviLocalFactory.self) { _ in
-            let factory = RuuviLocalFactoryImpl()
+            let factory = RuuviLocalFactoryUserDefaults()
             return factory
         }
 
