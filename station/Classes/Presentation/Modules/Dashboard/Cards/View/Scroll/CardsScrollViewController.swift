@@ -125,9 +125,7 @@ extension CardsScrollViewController: CardsViewInput {
     func showBluetoothDisabled() {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
+        showAlert(title: title, message: message)
     }
 
     func showSwipeLeftRightHint() {
@@ -483,7 +481,7 @@ extension CardsScrollViewController: UIGestureRecognizerDelegate {
             let velocity = pan.velocity(in: scrollView)
             return abs(velocity.y) > abs(velocity.x) && viewModels[currentPage].isConnectable.value.bound
         } else {
-            return true
+            return false
         }
     }
 

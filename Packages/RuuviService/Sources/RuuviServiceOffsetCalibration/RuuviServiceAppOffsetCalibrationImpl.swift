@@ -24,7 +24,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
-        if sensor.isOwner {
+        if sensor.isCloud {
             updateOnCloud(offset: offset, of: type, for: sensor).on()
         }
         pool.updateOffsetCorrection(

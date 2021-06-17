@@ -18,7 +18,6 @@ class TagChartsInteractor {
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
     var exportService: ExportService!
-    var keychainService: KeychainService!
     var ruuviSensorRecords: RuuviServiceSensorRecords!
     var featureToggleService: FeatureToggleService!
 

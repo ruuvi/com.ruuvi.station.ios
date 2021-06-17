@@ -1,6 +1,7 @@
 import Swinject
 import SwinjectPropertyLoader
 import RuuviCloud
+import RuuviUser
 
 class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
@@ -14,13 +15,15 @@ class NetworkingAssembly: Assembly {
         }
 
         container.register(RuuviCloud.self) { r in
-            let keychain = r.resolve(KeychainService.self)
-            let apiKey = keychain?.ruuviUserApiKey
+            let user = r.resolve(RuuviUser.self)!
             let baseUrlString: String = r.property("Ruuvi Cloud URL")!
             let baseUrl = URL(string: baseUrlString)!
-            let cloud = r.resolve(RuuviCloudFactory.self)!.create(baseUrl: baseUrl, apiKey: apiKey)
+            let cloud = r.resolve(RuuviCloudFactory.self)!.create(
+                baseUrl: baseUrl,
+                user: user
+            )
             return cloud
-        }.inObjectScope(.container)
+        }
 
         container.register(RuuviCloudFactory.self) { _ in
             return RuuviCloudFactoryPure()

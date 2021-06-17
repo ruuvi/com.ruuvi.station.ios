@@ -1,4 +1,5 @@
 import UIKit
+import RuuviUser
 
 enum UniversalLinkType: String {
     case verify = "/verify"
@@ -12,7 +13,7 @@ enum UniversalLinkType: String {
 }
 
 class UniversalLinkCoordinatorImpl {
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var router: UniversalLinkRouter!
 
     private var urlComponents: URLComponents!
@@ -55,7 +56,7 @@ extension UniversalLinkCoordinatorImpl {
         guard let token = urlComponents.queryItems?
                 .first(where: { $0.name == "token" })?
                 .value,
-              !keychainService.userIsAuthorized else {
+              !ruuviUser.isAuthorized else {
             return
         }
         router.openSignInVerify(with: token, from: topViewController)

@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import RuuviOntology
+import RuuviUser
 
 public protocol RuuviCloud {
     @discardableResult
@@ -80,14 +81,23 @@ public protocol RuuviCloud {
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
+
+    @discardableResult
+    // swiftlint:disable:next function_parameter_count
+    func setAlert(
+        type: RuuviCloudAlertType,
+        isEnabled: Bool,
+        min: Double?,
+        max: Double?,
+        counter: Int?,
+        description: String?,
+        for macId: MACIdentifier
+    ) -> Future<Void, RuuviCloudError>
+
+    @discardableResult
+    func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
-    func create(baseUrl: URL, apiKey: String?) -> RuuviCloud
-}
-
-extension RuuviCloudFactory {
-    public func create(baseUrl: URL) -> RuuviCloud {
-        return create(baseUrl: baseUrl, apiKey: nil)
-    }
+    func create(baseUrl: URL, user: RuuviUser) -> RuuviCloud
 }

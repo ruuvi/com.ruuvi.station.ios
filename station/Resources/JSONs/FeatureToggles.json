@@ -5,7 +5,15 @@
          "enabled":false
       },
       {
+         "feature":"ios_update_firmware",
+         "enabled":false
+      },
+      {
          "feature":"ios_sync_zoom",
+         "enabled":false
+      },
+      {
+         "feature":"ios_dp_ah_alerts",
          "enabled":false
       }
    ]
