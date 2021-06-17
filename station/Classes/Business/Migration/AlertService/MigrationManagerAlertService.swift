@@ -72,27 +72,74 @@ final class MigrationManagerAlertService: MigrationManager {
 extension MigrationManagerAlertService {
 
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
-        var sensors: [(String, Temperature?)] = fetchWebTags()
-        fetchRuuviSensors {
-            sensors.append(contentsOf: $0)
+        let group = DispatchGroup()
+        let virtualSensors = fetchVirtualSensors()
+        self.queue.async {
+            virtualSensors.forEach { virtualSensor in
+                group.enter()
+                self.migrateTo1Version(element: virtualSensor, completion: {
+                    group.leave()
+                })
+            }
+        }
+        fetchRuuviSensors { ruuviTagSensors in
             self.queue.async {
-                let group = DispatchGroup()
-                sensors.forEach({ element in
+                ruuviTagSensors.forEach({ element in
                     group.enter()
                     self.migrateTo1Version(element: element, completion: {
                         group.leave()
                     })
                 })
-                group.wait()
-                group.notify(queue: .main, execute: {
-                    completion(true)
-                })
             }
+        }
+        self.queue.async {
+            group.notify(queue: .main, execute: {
+                completion(true)
+            })
         }
     }
 
-    private func migrateTo1Version(element: (String, Temperature?), completion: @escaping (() -> Void)) {
-        let id = element.0
+    private func migrateTo1Version(element: (RuuviTagSensor, Temperature?), completion: @escaping (() -> Void)) {
+        let id = element.0.id
+        if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
+           let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
+           let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
+           let temperature = element.1 {
+            prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
+            let lowerHumidity: Humidity = Humidity(value: lower / 100,
+                                                   unit: .relative(temperature: temperature))
+            let upperHumidity: Humidity = Humidity(value: upper / 100,
+                                                   unit: .relative(temperature: temperature))
+            ruuviAlertService.register(
+                type: .humidity(lower: lowerHumidity, upper: upperHumidity),
+                ruuviTag: element.0
+            )
+        } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
+                  let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
+                  let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
+            prefs.set(false, forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
+            let lowerHumidity: Humidity = Humidity(value: lower,
+                                                   unit: .absolute)
+            let upperHumidity: Humidity = Humidity(value: upper,
+                                                   unit: .absolute)
+            ruuviAlertService.register(
+                type: .humidity(lower: lowerHumidity, upper: upperHumidity),
+                ruuviTag: element.0
+            )
+        } else {
+            debugPrint("do nothing")
+        }
+
+        // pick one description, relative preffered
+        let humidityDescription = prefs.string(forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + id)
+            ?? prefs.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + id)
+        ruuviAlertService.setHumidity(description: humidityDescription, for: element.0)
+
+        completion()
+    }
+
+    private func migrateTo1Version(element: (VirtualSensor, Temperature?), completion: @escaping (() -> Void)) {
+        let id = element.0.id
         if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
            let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
            let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
@@ -103,7 +150,7 @@ extension MigrationManagerAlertService {
             let upperHumidity: Humidity = Humidity(value: upper / 100,
                                                    unit: .relative(temperature: temperature))
             ruuviAlertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
-                                  for: id)
+                                  for: element.0)
         } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
                   let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
                   let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
@@ -114,7 +161,7 @@ extension MigrationManagerAlertService {
                                                    unit: .absolute)
             ruuviAlertService.register(type: .humidity(lower: lowerHumidity,
                                                   upper: upperHumidity),
-                                  for: id)
+                                  for: element.0)
         } else {
             debugPrint("do nothing")
         }
@@ -122,19 +169,19 @@ extension MigrationManagerAlertService {
         // pick one description, relative preffered
         let humidityDescription = prefs.string(forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + id)
             ?? prefs.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + id)
-        ruuviAlertService.setHumidity(description: humidityDescription, for: id)
+        ruuviAlertService.setHumidity(description: humidityDescription, for: element.0)
 
         completion()
     }
 
-    private func fetchWebTags() -> [(String, Temperature?)] {
+    private func fetchVirtualSensors() -> [(VirtualSensor, Temperature?)] {
         realmContext.main.objects(WebTagRealm.self).map({
-            return ($0.uuid, $0.lastRecord?.temperature)
+            return ($0.struct, $0.lastRecord?.temperature)
         })
     }
 
-    private func fetchRuuviSensors(completion: @escaping ([(String, Temperature?)]) -> Void) {
-        var result: [(String, Temperature?)] = .init()
+    private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
+        var result: [(RuuviTagSensor, Temperature?)] = .init()
         queue.async {
             let group = DispatchGroup()
             group.enter()
@@ -157,13 +204,16 @@ extension MigrationManagerAlertService {
         }
     }
 
-    private func fetchRecord(for sensor: RuuviTagSensor, complete: @escaping (((String, Temperature?)) -> Void)) {
-        let id = sensor.luid?.value ?? sensor.id
-        ruuviStorage.readLast(sensor).on(success: { record in
-            complete((id, record?.temperature))
-        }, failure: { _ in
-            complete((id, nil))
-        })
+    private func fetchRecord(
+        for sensor: RuuviTagSensor,
+        complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
+    ) {
+        ruuviStorage.readLast(sensor)
+            .on(success: { record in
+                complete((sensor, record?.temperature))
+            }, failure: { _ in
+                complete((sensor, nil))
+            })
     }
 
 }

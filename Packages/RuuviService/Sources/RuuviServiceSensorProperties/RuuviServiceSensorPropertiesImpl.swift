@@ -29,7 +29,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        if sensor.isOwner {
+        if sensor.isCloud {
             let namedSensor = sensor.with(name: name)
             pool.update(namedSensor)
                 .on(success: { [weak self] _ in
@@ -114,7 +114,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         assert(luid != nil || macId != nil)
         var local: Future<URL, RuuviLocalError>?
         var remote: Future<URL, RuuviCloudError>?
-        if sensor.isClaimed {
+        if sensor.isCloud {
             if let mac = macId {
                 let croppedImage = coreImage.cropped(image: image, to: maxSize)
                 remote = cloud.upload(
@@ -193,6 +193,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         if let luid = sensor.luid {
             localImages.deleteCustomBackground(for: luid)
         }
+        localImages.setPictureRemovedFromCache(for: sensor)
         if sensor.isCloud {
             resetCloudImage(for: sensor)
         }
@@ -220,15 +221,17 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
     private func getImage(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
         if let macId = macId {
-            if let image = localImages.background(for: macId) {
+            if let image = localImages.getBackground(for: macId) {
                 promise.succeed(value: image)
-            } else if let luid = luid, let image = localImages.background(for: luid) {
+            } else if let luid = luid, let image = localImages.getOrGenerateBackground(for: luid) {
+                promise.succeed(value: image)
+            } else if let image = localImages.getOrGenerateBackground(for: macId) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .failedToFindOrGenerateBackgroundImage)
             }
         } else if let luid = luid {
-            if let image = localImages.background(for: luid) {
+            if let image = localImages.getOrGenerateBackground(for: luid) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .failedToFindOrGenerateBackgroundImage)

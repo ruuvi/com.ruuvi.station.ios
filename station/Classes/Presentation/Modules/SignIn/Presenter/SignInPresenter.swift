@@ -2,6 +2,7 @@ import Foundation
 import Future
 import RuuviCloud
 import RuuviService
+import RuuviUser
 
 class SignInPresenter: NSObject {
     enum State {
@@ -15,7 +16,7 @@ class SignInPresenter: NSObject {
 
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
-    var keychainService: KeychainService!
+    var ruuviUser: RuuviUser!
     var ruuviCloud: RuuviCloud!
     var cloudSyncService: RuuviServiceCloudSync!
 
@@ -99,7 +100,7 @@ extension SignInPresenter {
             viewModel.errorLabelText.value = nil
             viewModel.canPopViewController.value = false
             viewModel.textContentType.value = .emailAddress
-            viewModel.inputText.value = keychainService.userApiEmail
+            viewModel.inputText.value = ruuviUser.email
         case .enterVerificationCode(let code):
             viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
             viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
@@ -150,7 +151,7 @@ extension SignInPresenter {
         ruuviCloud.requestCode(email: email)
             .on(success: { [weak self] email in
                 guard let sSelf = self else { return }
-                sSelf.keychainService.userApiEmail = email
+                sSelf.ruuviUser.email = email
                 sSelf.router.openEmailConfirmation(output: sSelf)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
@@ -164,7 +165,7 @@ extension SignInPresenter {
         ruuviCloud.validateCode(code: code)
             .on(success: { [weak self] apiKey in
                 guard let sSelf = self else { return }
-                sSelf.keychainService.ruuviUserApiKey = apiKey
+                sSelf.ruuviUser.login(apiKey: apiKey)
                 sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.activityPresenter.decrement()

@@ -1,8 +1,9 @@
+// swiftlint:disable file_length
 import Foundation
 import RuuviOntology
 
+// swiftlint:disable:next type_body_length
 class AlertPersistenceUserDefaults: AlertPersistence {
-
     private let prefs = UserDefaults.standard
 
     // temperature
@@ -28,6 +29,18 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
     private let humidityAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.humidityAlertMuteTillDateUDKeyPrefix."
+
+    // Humidity
+    private let relativeHumidityLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
+    private let relativeHumidityUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityUpperBoundUDKeyPrefix."
+    private let relativeHumidityAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertIsOnUDKeyPrefix."
+    private let relativeHumidityAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
+    private let relativeHumidityAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertMuteTillDateUDKeyPrefix."
 
     // dew point
     private let dewPointCelsiusLowerBoundUDKeyPrefix
@@ -82,6 +95,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .relativeHumidity:
+            if prefs.bool(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid),
+                let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid) {
+                return .relativeHumidity(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
         case .humidity:
             if prefs.bool(forKey: humidityAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
@@ -130,13 +151,15 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+        case .relativeHumidity(let lower, let upper):
+            prefs.set(true, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
         case .humidity(let lower, let upper):
             prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
         case .dewPoint(let lower, let upper):
-            prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(true, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
@@ -156,6 +179,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
         case .humidity:
             prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
         case .dewPoint:
@@ -173,6 +198,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             prefs.set(date, forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            prefs.set(date, forKey: relativeHumidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .humidity:
             prefs.set(date, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .dewPoint:
@@ -190,6 +217,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             prefs.set(nil, forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            prefs.set(nil, forKey: relativeHumidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .humidity:
             prefs.set(nil, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .dewPoint:
@@ -207,6 +236,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             return prefs.value(forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .relativeHumidity:
+            return prefs.value(forKey: relativeHumidityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .humidity:
             return prefs.value(forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .dewPoint:
@@ -245,6 +276,33 @@ extension AlertPersistenceUserDefaults {
 
     func setTemperature(description: String?, for uuid: String) {
         prefs.set(description, forKey: temperatureAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Relative Humidity
+extension AlertPersistenceUserDefaults {
+    func lowerRelativeHumidity(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(relativeHumidity: Double?, for uuid: String) {
+        prefs.set(relativeHumidity, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperRelativeHumidity(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(relativeHumidity: Double?, for uuid: String) {
+        prefs.set(relativeHumidity, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func relativeHumidityDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: relativeHumidityAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setRelativeHumidity(description: String?, for uuid: String) {
+        prefs.set(description, forKey: relativeHumidityAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 
@@ -372,3 +430,4 @@ extension AlertPersistenceUserDefaults {
         prefs.set(description, forKey: movementAlertDescriptionUDKeyPrefix + uuid)
     }
 }
+// swiftlint:enable file_length

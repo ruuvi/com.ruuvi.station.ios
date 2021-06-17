@@ -4,7 +4,7 @@ import RuuviOntology
 
 protocol AlertService {
     func process(heartbeat ruuviTag: RuuviTagSensorRecord)
-    func process(data: WPSData, for uuid: String)
+    func process(data: WPSData, for sensor: VirtualSensor)
     func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
 
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)

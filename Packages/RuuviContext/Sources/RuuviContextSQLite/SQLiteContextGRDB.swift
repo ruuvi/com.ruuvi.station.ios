@@ -85,7 +85,7 @@ extension SQLiteGRDBDatabase {
                     .defaults(to: false)
                 t.add(column: RuuviTagSQLite.isOwnerColumn.name, .boolean)
                     .notNull()
-                    .defaults(to: false)
+                    .defaults(to: true)
                 t.add(column: RuuviTagSQLite.owner.name, .text)
             }
         }

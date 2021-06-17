@@ -1,15 +1,12 @@
 import Foundation
-
-enum RuuviCloudApiAlertType: String, Encodable {
-    case temperature
-    case humidity
-    case pressure
-}
+import RuuviOntology
 
 struct RuuviCloudApiPostAlertRequest: Encodable {
     let sensor: String
     let enabled: Bool
-    let type: RuuviCloudApiAlertType
-    let min: Double
-    let max: Double
+    let type: RuuviCloudAlertType
+    let min: Double?
+    let max: Double?
+    let description: String?
+    let counter: Int?
 }

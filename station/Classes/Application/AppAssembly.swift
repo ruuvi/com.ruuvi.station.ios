@@ -14,7 +14,8 @@ class AppAssembly {
                 PresentationAssembly(),
                 ReactorAssembly(),
                 TankAssembly(),
-                TrunkAssembly()
+                TrunkAssembly(),
+                DfuAssembly()
             ])
     }
 }

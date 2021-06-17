@@ -331,14 +331,14 @@ extension CardsPresenter {
                 })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-                viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
                 viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
-                viewModel.alertState.value = .empty
             } else {
                 assertionFailure()
             }
+            viewModel.alertState.value = alertService
+                .hasRegistrations(for: ruuviTag) ? .registered : .empty
             ruuviStorage.readLast(ruuviTag).on { record in
                 if let record = record {
                     viewModel.update(record)
@@ -356,7 +356,7 @@ extension CardsPresenter {
                     }, failure: { [weak self] error in
                         self?.errorPresenter.present(error: error)
                     })
-                viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
+                viewModel.alertState.value = alertService.hasRegistrations(for: webTag) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
             }) ?? []
@@ -627,8 +627,8 @@ extension CardsPresenter {
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
                 if let index = self?.viewModels.firstIndex(where: {
-                    return $0.luid.value == sensor.luid?.any
-                        || $0.mac.value == sensor.macId?.any
+                    return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
+                        || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
                 }) {
                     self?.view.scroll(to: index)
                     self?.restartObservingRuuviTagNetwork(for: sensor)
@@ -859,16 +859,33 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
                             guard let sSelf = self else { return }
-                            if let userInfo = notification.userInfo,
-                               let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
-                                sSelf.viewModels.filter({ $0.luid.value == uuid.luid.any }).forEach({ (viewModel) in
-                                    if sSelf.alertService.hasRegistrations(for: uuid) {
-                                        viewModel.alertState.value = .registered
-                                    } else {
-                                        viewModel.alertState.value = .empty
-                                    }
-                                })
-                            }
+                            if let userInfo = notification.userInfo {
+                               if let physicalSensor
+                                    = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor {
+                                sSelf.viewModels.filter({
+                                    ($0.luid.value != nil && ($0.luid.value == physicalSensor.luid?.any))
+                                        || ($0.mac.value != nil && ($0.mac.value == physicalSensor.macId?.any))
+                                    }).forEach({ (viewModel) in
+                                        if sSelf.alertService.hasRegistrations(for: physicalSensor) {
+                                            viewModel.alertState.value = .registered
+                                        } else {
+                                            viewModel.alertState.value = .empty
+                                        }
+                                    })
+                                }
+                                if let virtualSensor
+                                    = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor {
+                                 sSelf.viewModels.filter({
+                                    ($0.id.value != nil && ($0.id.value == virtualSensor.id))
+                                 }).forEach({ (viewModel) in
+                                         if sSelf.alertService.hasRegistrations(for: virtualSensor) {
+                                             viewModel.alertState.value = .registered
+                                         } else {
+                                             viewModel.alertState.value = .empty
+                                         }
+                                     })
+                                 }
+                             }
                          })
     }
     private func startObserveMigrationCompletion() {

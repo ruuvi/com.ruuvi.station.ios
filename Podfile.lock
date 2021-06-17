@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.1.13)
+  - BTKit (0.2.1)
   - Charts (3.6.0):
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
@@ -114,6 +114,8 @@ PODS:
     - GRDB.swift/standard (= 4.14.0)
   - GRDB.swift/standard (4.14.0)
   - Humidity (0.1.5)
+  - iOSDFULibrary (4.10.3):
+    - ZIPFoundation (= 0.9.11)
   - KeychainAccess (4.2.1)
   - LightRoute (2.2.2)
   - Localize-Swift (3.2.0):
@@ -149,11 +151,13 @@ PODS:
   - RuuviCloud/Contract (0.0.1):
     - FutureX
     - RuuviOntology
+    - RuuviUser
   - RuuviCloud/Pure (0.0.1):
     - FutureX
     - RuuviCloud/Api
     - RuuviCloud/Contract
     - RuuviOntology
+    - RuuviUser
   - RuuviCloud/Tests (0.0.1)
   - RuuviContext (0.0.1):
     - RuuviContext/SQLite (= 0.0.1)
@@ -351,11 +355,19 @@ PODS:
     - RuuviPersistence/SQLite
     - RuuviStorage/Contract
   - RuuviStorage/Tests (0.0.1)
+  - RuuviUser (0.0.1):
+    - RuuviUser/Contract (= 0.0.1)
+  - RuuviUser/Contract (0.0.1)
+  - RuuviUser/Coordinator (0.0.1):
+    - KeychainAccess
+    - RuuviUser/Contract
+  - RuuviUser/Tests (0.0.1)
   - RxSwift (5.1.1)
   - SwiftGen (6.4.0)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
+  - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
   - BTKit
@@ -371,6 +383,7 @@ DEPENDENCIES:
   - GestureInstructions
   - GRDB.swift
   - Humidity (from `https://github.com/rinat-enikeev/Humidity.git`)
+  - iOSDFULibrary
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -415,6 +428,9 @@ DEPENDENCIES:
   - RuuviStorage (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Coordinator (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Tests (from `Packages/RuuviStorage/RuuviStorage.podspec`)
+  - RuuviUser (from `Packages/RuuviUser/RuuviUser.podspec`)
+  - RuuviUser/Coordinator (from `Packages/RuuviUser/RuuviUser.podspec`)
+  - RuuviUser/Tests (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RxSwift
   - SwiftGen (~> 6.0)
   - Swinject
@@ -441,6 +457,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - GRDB.swift
+    - iOSDFULibrary
     - KeychainAccess
     - Localize-Swift
     - nanopb
@@ -454,6 +471,7 @@ SPEC REPOS:
     - RxSwift
     - SwiftGen
     - Swinject
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   Charts:
@@ -489,6 +507,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviService/RuuviService.podspec
   RuuviStorage:
     :path: Packages/RuuviStorage/RuuviStorage.podspec
+  RuuviUser:
+    :path: Packages/RuuviUser/RuuviUser.podspec
   SwinjectPropertyLoader:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
@@ -510,7 +530,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: ea4207739e19fdcfbcbb75ed243fb7800d5a9c16
+  BTKit: 96ae85a9a60820f8f29b0568bfb9ca00697314e7
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
   FirebaseABTesting: 8a9d8df3acc2b43f4a22014ddf9f601bca6af699
@@ -531,6 +551,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
   Humidity: fb16fe2430b7a8aa979821ede5b5164519fca6d1
+  iOSDFULibrary: 7aade51a907d01ca9a87055003cd232b09efd78f
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 6f4475136bdb0d7b2882ea3d4ea919d70142b232
@@ -543,7 +564,7 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 06f5c67f87cb8c5f27b122218ce22e9a77314517
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
-  RuuviCloud: f4583874401a5c7c458eaac2842788ca1a348a57
+  RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
   RuuviCore: ed8326e13481473dc92e5a0810b60211dfbb8a75
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
@@ -555,11 +576,13 @@ SPEC CHECKSUMS:
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
   RuuviService: 9b7dd685496bc482c44a3a3b41527798e5dfdb67
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
+  RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: a16d720c3b0c1d2c66b4603c7decbb20ea90c487
+PODFILE CHECKSUM: 64599296a72493efcc808f299ae587e458a4adf3
 
 COCOAPODS: 1.10.1
