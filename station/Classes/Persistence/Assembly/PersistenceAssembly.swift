@@ -5,8 +5,12 @@ import RuuviPersistence
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+#if canImport(RuuviContextRealm)
 import RuuviContextRealm
+#endif
+#if canImport(RuuviContextSQLite)
 import RuuviContextSQLite
+#endif
 #if canImport(RuuviPersistenceRealm)
 import RuuviPersistenceRealm
 #endif

@@ -43,7 +43,7 @@ let package = Package(
             name: "RuuviOntologySQLite",
             dependencies: [
                 "RuuviOntology",
-                .product(name: "GRDB", package: "GRDB"),
+                .product(name: "GRDB", package: "GRDB")
             ]),
         .testTarget(
             name: "RuuviOntologyTests",

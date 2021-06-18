@@ -209,7 +209,10 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
-    public func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+    public func readLast(
+        _ ruuviTagId: String,
+        from: TimeInterval
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviTagSensorRecord]()
