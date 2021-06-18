@@ -3,7 +3,7 @@ import Foundation
 // Performs submitted work items on a dedicated thread
 public class Worker {
     public init() {}
-    
+
     // the worker thread
     private var thread: Thread?
 
