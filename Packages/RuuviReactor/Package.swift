@@ -9,11 +9,16 @@ let package = Package(
     products: [
         .library(
             name: "RuuviReactor",
-            targets: ["RuuviReactor"])
+            targets: ["RuuviReactor"]),
+        .library(
+            name: "RuuviReactorImpl",
+            targets: ["RuuviReactorImpl"])
     ],
     dependencies: [
+        .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.2.0")),
         .package(path: "../RuuviOntology"),
-        .package(path: "../RuuviPersistence")
+        .package(path: "../RuuviPersistence"),
+        .package(path: "../RuuviContext")
     ],
     targets: [
         .target(
@@ -21,6 +26,17 @@ let package = Package(
             dependencies: [
                 "RuuviOntology",
                 "RuuviPersistence"
+            ]
+        ),
+        .target(
+            name: "RuuviReactorImpl",
+            dependencies: [
+                "RxSwift",
+                "RuuviReactor",
+                "RuuviContext",
+                "RuuviPersistence",
+                .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
+                .product(name: "RuuviOntologySQLite", package: "RuuviOntology")
             ]
         ),
         .testTarget(

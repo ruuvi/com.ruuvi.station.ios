@@ -1,6 +1,7 @@
 import UIKit
 import Future
 import RuuviOntology
+import RuuviLocal
 
 class ImagePersistenceDocuments: ImagePersistence {
 

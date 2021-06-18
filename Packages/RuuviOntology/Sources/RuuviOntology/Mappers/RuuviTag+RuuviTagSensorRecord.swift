@@ -1,7 +1,6 @@
 import Foundation
 import BTKit
 import Humidity
-import RuuviOntology
 
 extension RuuviTag: RuuviTagSensorRecord {
     public var luid: LocalIdentifier? {

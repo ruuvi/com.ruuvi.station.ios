@@ -1,4 +1,5 @@
 import Foundation
 
-struct RuuviCloudApiGetSettingsRequest: Encodable {
+public struct RuuviCloudApiGetSettingsRequest: Encodable {
+    public init() {} 
 }

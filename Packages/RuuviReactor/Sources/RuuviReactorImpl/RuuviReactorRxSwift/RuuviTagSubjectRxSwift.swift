@@ -1,19 +1,23 @@
-#if canImport(Combine)
 import Foundation
 import GRDB
-import Combine
+import RxSwift
 import RealmSwift
 import RuuviOntology
 import RuuviContext
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
+#if canImport(RuuviOntologySQLite)
+import RuuviOntologySQLite
+#endif
 
-@available(iOS 13, *)
-class RuuviTagSubjectCombine {
+class RuuviTagSubjectRxSwift {
     var sqlite: SQLiteContext
     var realm: RealmContext
 
-    let insertSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
-    let updateSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
-    let deleteSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
+    let insertSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
+    let updateSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
+    let deleteSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
     private var ruuviTagsRealmToken: NotificationToken?
@@ -21,6 +25,9 @@ class RuuviTagSubjectCombine {
 
     deinit {
         ruuviTagsRealmToken?.invalidate()
+        insertSubject.onCompleted()
+        updateSubject.onCompleted()
+        deleteSubject.onCompleted()
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -30,17 +37,17 @@ class RuuviTagSubjectCombine {
 
         let request = RuuviTagSQLite.order(RuuviTagSQLite.versionColumn)
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
-        try! self.ruuviTagController.performFetch()
 
+        try! self.ruuviTagController.performFetch()
         self.ruuviTagController.trackChanges(onChange: { [weak self] _, record, event in
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
-                sSelf.insertSubject.send(record.any)
+                sSelf.insertSubject.onNext(record.any)
             case .update:
-                sSelf.updateSubject.send(record.any)
+                sSelf.updateSubject.onNext(record.any)
             case .deletion:
-                sSelf.deleteSubject.send(record.any)
+                sSelf.deleteSubject.onNext(record.any)
             case .move:
                 break
             }
@@ -53,22 +60,21 @@ class RuuviTagSubjectCombine {
             sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
                 guard let sSelf = self else { return }
                 switch change {
-                case .update(let ruuviSensors, let deletions, let insertions, let modifications):
+                case .update(let ruuviTags, let deletions, let insertions, let modifications):
                     for del in deletions {
-                        sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
+                        sSelf.deleteSubject.onNext(sSelf.ruuviTagRealmCache[del].any)
                     }
                     sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
-                                                    .enumerated()
-                                                    .filter { !deletions.contains($0.offset) }
-                                                    .map { $0.element }
+                        .enumerated()
+                        .filter { !deletions.contains($0.offset) }
+                        .map { $0.element }
                     for ins in insertions {
-                        sSelf.insertSubject.send(ruuviSensors[ins].any)
-                        // TODO: test if ok with multiple
-                        sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins)
+                        sSelf.insertSubject.onNext(ruuviTags[ins].any)
+                        sSelf.ruuviTagRealmCache.insert(ruuviTags[ins].any, at: ins) // TODO: test if ok with multiple
                     }
                     for mod in modifications {
-                        sSelf.updateSubject.send(ruuviSensors[mod].any)
-                        sSelf.ruuviTagRealmCache[mod] = ruuviSensors[mod].any
+                        sSelf.updateSubject.onNext(ruuviTags[mod].any)
+                        sSelf.ruuviTagRealmCache[mod] = ruuviTags[mod].any
                     }
                 default:
                     break
@@ -77,4 +83,3 @@ class RuuviTagSubjectCombine {
         }
     }
 }
-#endif

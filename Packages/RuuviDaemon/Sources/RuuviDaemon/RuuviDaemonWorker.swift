@@ -1,8 +1,10 @@
 import Foundation
 
-class RuuviDaemonWorker: NSObject {
-    var thread: Thread!
+open class RuuviDaemonWorker: NSObject {
+    public var thread: Thread!
     private var block: (() -> Void)!
+
+    override public init() {}
 
     @objc internal func runBlock() {
         autoreleasepool {
@@ -10,7 +12,7 @@ class RuuviDaemonWorker: NSObject {
         }
     }
 
-    internal func start(_ block: @escaping () -> Void) {
+    open func start(_ block: @escaping () -> Void) {
         self.block = block
 
         let threadName = String(describing: self)

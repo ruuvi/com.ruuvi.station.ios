@@ -5,19 +5,26 @@ import BTKit
 import Foundation
 import RuuviOntology
 import RuuviContext
+import RuuviPersistence
 #if canImport(FirebaseCrashlytics) // TODO: @rinat eliminate
 import FirebaseCrashlytics
 #endif
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
+#if canImport(RuuviContextRealm)
+import RuuviContextRealm
+#endif
 
 // swiftlint:disable type_body_length
-class RuuviPersistenceRealm: RuuviPersistence {
+public class RuuviPersistenceRealm: RuuviPersistence {
     private let context: RealmContext
 
-    init(context: RealmContext) {
+    public init(context: RealmContext) {
         self.context = context
     }
 
-    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
+    public func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
@@ -36,7 +43,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
+    public func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
@@ -55,7 +62,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
+    public func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
@@ -80,7 +87,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError> {
+    public func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         context.bgWorker.enqueue {
             do {
@@ -98,7 +105,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPersistenceError> {
+    public func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         context.bgWorker.enqueue {
             do {
@@ -116,7 +123,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
+    public func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(record.macId == nil)
         context.bgWorker.enqueue {
@@ -140,7 +147,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {
+    public func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         context.bgWorker.enqueue {
             do {
@@ -173,7 +180,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviPersistenceError> {
+    public func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviPersistenceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviPersistenceError>()
         context.bgWorker.enqueue {
             if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
@@ -195,7 +202,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func readAll() -> Future<[AnyRuuviTagSensor], RuuviPersistenceError> {
+    public func readAll() -> Future<[AnyRuuviTagSensor], RuuviPersistenceError> {
         let promise = Promise<[AnyRuuviTagSensor], RuuviPersistenceError>()
         context.bgWorker.enqueue {
             let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
@@ -216,7 +223,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+    public func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
         context.bgWorker.enqueue {
             let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
@@ -247,7 +254,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func readAll(
+    public func readAll(
         _ ruuviTagId: String,
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
@@ -291,7 +298,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func read(
+    public func read(
         _ ruuviTagId: String,
         after date: Date,
         with interval: TimeInterval
@@ -336,7 +343,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+    public func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
         context.bgWorker.enqueue {
             let realmRecords = self.context.bg
@@ -369,7 +376,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
-    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
+    public func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
         let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
             let luid = ruuviTag.luid else {
@@ -407,7 +414,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
-    func getStoredTagsCount() -> Future<Int, RuuviPersistenceError> {
+    public func getStoredTagsCount() -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
         context.bgWorker.enqueue {
             let tagsCount = self.context.bg.objects(RuuviTagRealm.self).count
@@ -415,7 +422,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
-    func getStoredMeasurementsCount() -> Future<Int, RuuviPersistenceError> {
+    public func getStoredMeasurementsCount() -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
         context.bgWorker.enqueue {
             let tagsCount = self.context.bg.objects(RuuviTagDataRealm.self).count
@@ -424,7 +431,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPersistenceError> {
+    public func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPersistenceError> {
         let promise = Promise<SensorSettings?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
               ruuviTag.luid != nil else {
@@ -444,7 +451,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func updateOffsetCorrection(
+    public func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
@@ -499,7 +506,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
+    public func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)

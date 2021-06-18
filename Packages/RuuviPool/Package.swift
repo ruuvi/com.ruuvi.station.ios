@@ -9,7 +9,10 @@ let package = Package(
     products: [
         .library(
             name: "RuuviPool",
-            targets: ["RuuviPool"])
+            targets: ["RuuviPool"]),
+        .library(
+            name: "RuuviPoolCoordinator",
+            targets: ["RuuviPoolCoordinator"])
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
@@ -21,6 +24,16 @@ let package = Package(
         .target(
             name: "RuuviPool",
             dependencies: [
+                "RuuviOntology",
+                "RuuviPersistence",
+                "RuuviLocal",
+                "Future"
+            ]
+        ),
+        .target(
+            name: "RuuviPoolCoordinator",
+            dependencies: [
+                "RuuviPool",
                 "RuuviOntology",
                 "RuuviPersistence",
                 "RuuviLocal",

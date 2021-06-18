@@ -1,14 +1,14 @@
 import Foundation
 import RuuviOntology
 
-struct RuuviCloudApiGetAlertsResponse: Decodable {
-    var sensors: [RuuviCloudApiGetAlertSensor]
+public struct RuuviCloudApiGetAlertsResponse: Decodable {
+    public var sensors: [RuuviCloudApiGetAlertSensor]
 }
 
-struct RuuviCloudApiGetAlertSensor: Decodable, RuuviCloudSensorAlerts {
-    let sensor: String
+public struct RuuviCloudApiGetAlertSensor: Decodable, RuuviCloudSensorAlerts {
+    public let sensor: String
     let apiAlerts: [RuuviCloudApiGetAlert]
-    var alerts: [RuuviCloudAlert] {
+    public var alerts: [RuuviCloudAlert] {
         return apiAlerts
     }
 
@@ -18,11 +18,11 @@ struct RuuviCloudApiGetAlertSensor: Decodable, RuuviCloudSensorAlerts {
     }
 }
 
-struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
-    let type: RuuviCloudAlertType
-    let enabled: Bool
-    let min: Double
-    let max: Double
-    let counter: Int
-    let description: String
+public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
+    public let type: RuuviCloudAlertType
+    public let enabled: Bool
+    public let min: Double
+    public let max: Double
+    public let counter: Int
+    public let description: String
 }

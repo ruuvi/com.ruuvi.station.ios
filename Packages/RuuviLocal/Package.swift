@@ -12,7 +12,7 @@ let package = Package(
             targets: ["RuuviLocal"]),
         .library(
             name: "RuuviLocalUserDefaults",
-            targets: ["RuuviLocal"])
+            targets: ["RuuviLocalUserDefaults"])
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),

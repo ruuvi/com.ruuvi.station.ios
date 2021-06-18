@@ -9,7 +9,32 @@ let package = Package(
     products: [
         .library(
             name: "RuuviService",
-            targets: ["RuuviService"])
+            targets: ["RuuviService"]),
+        .library(
+            name: "RuuviServiceAlert",
+            targets: ["RuuviServiceAlert"]),
+        .library(
+            name: "RuuviServiceAppSettings",
+            targets: ["RuuviServiceAppSettings"]),
+        .library(
+            name: "RuuviServiceCloudSync",
+            targets: ["RuuviServiceCloudSync"]),
+        .library(
+            name: "RuuviServiceOffsetCalibration",
+            targets: ["RuuviServiceOffsetCalibration"]),
+        .library(
+            name: "RuuviServiceOwnership",
+            targets: ["RuuviServiceOwnership"]),
+        .library(
+            name: "RuuviServiceSensorProperties",
+            targets: ["RuuviServiceSensorProperties"]),
+        .library(
+            name: "RuuviServiceSensorRecords",
+            targets: ["RuuviServiceSensorRecords"]),
+        .library(
+            name: "RuuviServiceFactory",
+            targets: ["RuuviServiceFactory"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
@@ -33,6 +58,61 @@ let package = Package(
                 "RuuviLocal",
                 "RuuviRepository",
                 "RuuviCore"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceAlert",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceAppSettings",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceCloudSync",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceOffsetCalibration",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceOwnership",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceSensorProperties",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceSensorRecords",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceFactory",
+            dependencies: [
+                "RuuviService",
+                "RuuviServiceAlert",
+                "RuuviServiceAppSettings",
+                "RuuviServiceCloudSync",
+                "RuuviServiceOffsetCalibration",
+                "RuuviServiceOwnership",
+                "RuuviServiceSensorProperties",
+                "RuuviServiceSensorRecords"
             ]
         ),
         .testTarget(

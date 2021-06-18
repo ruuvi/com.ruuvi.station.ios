@@ -1,6 +1,7 @@
 import Foundation
 import RuuviPool
 import RuuviStorage
+import RuuviRepository
 
 public final class RuuviRepositoryFactoryCoordinator: RuuviRepositoryFactory {
     public init() {}

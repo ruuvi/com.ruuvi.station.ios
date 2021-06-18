@@ -4,6 +4,14 @@ import Future
 import RuuviOntology
 import RuuviContext
 import RuuviPersistence
+import RuuviReactor
+import RxSwift
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
+#if canImport(RuuviOntologySQLite)
+import RuuviOntologySQLite
+#endif
 
 // swiftlint:disable type_body_length
 class RuuviReactorImpl: RuuviReactor {

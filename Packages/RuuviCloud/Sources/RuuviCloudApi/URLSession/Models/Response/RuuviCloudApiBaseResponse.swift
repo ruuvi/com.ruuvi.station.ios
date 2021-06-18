@@ -1,6 +1,7 @@
 import Foundation
+import RuuviCloud
 
-struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
+public struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
     enum Status: String, Decodable {
         case success
         case error
@@ -21,7 +22,7 @@ struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
 }
 
 extension RuuviCloudApiBaseResponse {
-    var result: Swift.Result<T, RuuviCloudApiError> {
+    public var result: Swift.Result<T, RuuviCloudApiError> {
         switch status {
         case .success:
             guard let data = data else {
@@ -46,7 +47,7 @@ extension RuuviCloudApiBaseResponse {
 }
 
 extension Decodable {
-    static var emptyModel: Self? {
+    public static var emptyModel: Self? {
         let emptyString = "{}"
         if let emptyData = emptyString.data(using: .utf8),
            let emptyModel = try? JSONDecoder().decode(self, from: emptyData) {

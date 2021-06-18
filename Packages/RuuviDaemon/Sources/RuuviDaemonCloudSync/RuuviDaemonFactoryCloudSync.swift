@@ -1,6 +1,7 @@
 import Foundation
 import RuuviLocal
 import RuuviService
+import RuuviDaemon
 
 public final class RuuviDaemonFactoryImpl: RuuviDaemonFactory {
     public init() {}

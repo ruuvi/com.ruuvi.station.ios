@@ -2,6 +2,7 @@ import UIKit
 import CoreGraphics
 import Foundation
 import AVFoundation
+import RuuviCore
 
 final class RuuviCoreImageImpl: RuuviCoreImage {
     func cropped(image: UIImage, to maxSize: CGSize) -> UIImage {
