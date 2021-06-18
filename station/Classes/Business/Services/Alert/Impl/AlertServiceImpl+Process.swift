@@ -61,8 +61,8 @@ extension AlertServiceImpl {
             ruuviAlertService.setMovement(counter: movementCounter, for: record)
         }
 
-        if ruuviAlertService.hasRegistrations(for: record) {
-            notify(uuid: record.id, isTriggered: isTriggered)
+        if let luid = record.luid, ruuviAlertService.hasRegistrations(for: record) {
+            notify(uuid: luid.value, isTriggered: isTriggered)
         }
     }
 }
@@ -305,13 +305,14 @@ extension AlertServiceImpl {
         movement: AlertType,
         record: RuuviTagSensorRecord
     ) -> Bool {
-        if case .movement(let last) = ruuviAlertService.alert(for: record.id, of: movement),
+        guard let luid = record.luid else { return false }
+        if case .movement(let last) = ruuviAlertService.alert(for: luid.value, of: movement),
             let movementCounter = record.movementCounter {
             let isGreater = movementCounter > last
             if isGreater {
                 DispatchQueue.main.async { [weak self] in
                     self?.localNotificationsManager
-                        .notifyDidMove(for: record.id, counter: movementCounter)
+                        .notifyDidMove(for: luid.value, counter: movementCounter)
                 }
             }
             return isGreater
