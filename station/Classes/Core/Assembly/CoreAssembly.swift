@@ -4,6 +4,9 @@ import RuuviStorage
 import RuuviLocal
 import RuuviCore
 import RuuviService
+#if canImport(RuuviCoreImage)
+import RuuviCoreImage
+#endif
 
 class CoreAssembly: Assembly {
     // swiftlint:disable:next function_body_length
@@ -49,7 +52,7 @@ class CoreAssembly: Assembly {
         }
 
         container.register(RuuviCoreFactory.self) { _ in
-            return RuuviCoreFactoryImpl()
+            return RuuviCoreFactoryImage()
         }
 
         container.register(RuuviCoreImage.self) { r in

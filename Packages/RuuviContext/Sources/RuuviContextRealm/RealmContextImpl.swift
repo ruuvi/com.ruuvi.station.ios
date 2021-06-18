@@ -1,3 +1,4 @@
+import RuuviContext
 import RealmSwift
 
 class RealmContextImpl: RealmContext {

@@ -1,6 +1,7 @@
 import Foundation
 import RuuviLocal
 import RuuviService
+import RuuviDaemon
 
 class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSettings: RuuviLocalSettings

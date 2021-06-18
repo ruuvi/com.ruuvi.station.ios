@@ -12,10 +12,7 @@ let package = Package(
             targets: ["RuuviCore"]),
         .library(
             name: "RuuviCoreImage",
-            targets: ["RuuviCore"])
-    ],
-    dependencies: [
-        // .package(url: /* package url */, from: "1.0.0"),
+            targets: ["RuuviCoreImage"])
     ],
     targets: [
         .target(

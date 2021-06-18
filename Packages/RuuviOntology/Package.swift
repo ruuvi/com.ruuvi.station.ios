@@ -5,21 +5,45 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviOntology",
-    platforms: [.macOS(.v10_15), .iOS(.v10)],
+    platforms: [.macOS(.v10_15), .iOS(.v11)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviOntology",
-            targets: ["RuuviOntology"])
+            targets: ["RuuviOntology"]
+        ),
+        .library(
+            name: "RuuviOntologyRealm",
+            targets: ["RuuviOntologyRealm"]
+        ),
+        .library(
+            name: "RuuviOntologySQLite",
+            targets: ["RuuviOntologySQLite"]
+        )
     ],
     dependencies: [
-        .package(url: "https://github.com/rinat-enikeev/Humidity.git", from: "0.1.5")
+        .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
+        .package(path: "../../../BTKit"),
+        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMajor(from: "10.8.0")),
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0"))
     ],
     targets: [
         .target(
             name: "RuuviOntology",
             dependencies: [
-                "Humidity"
+                "Humidity",
+                "BTKit"
+            ]),
+        .target(
+            name: "RuuviOntologyRealm",
+            dependencies: [
+                "RuuviOntology",
+                .product(name: "RealmSwift", package: "Realm")
+            ]),
+        .target(
+            name: "RuuviOntologySQLite",
+            dependencies: [
+                "RuuviOntology",
+                .product(name: "GRDB", package: "GRDB"),
             ]),
         .testTarget(
             name: "RuuviOntologyTests",

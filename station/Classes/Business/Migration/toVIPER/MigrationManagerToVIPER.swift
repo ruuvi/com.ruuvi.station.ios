@@ -2,6 +2,9 @@ import RealmSwift
 import Foundation
 import RuuviOntology
 import RuuviLocal
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
 
 class MigrationManagerToVIPER: MigrationManager {
     var localImages: RuuviLocalImages!

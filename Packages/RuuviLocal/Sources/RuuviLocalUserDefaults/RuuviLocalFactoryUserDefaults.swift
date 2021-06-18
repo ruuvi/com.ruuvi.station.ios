@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 public final class RuuviLocalFactoryUserDefaults: RuuviLocalFactory {
     public init() {}

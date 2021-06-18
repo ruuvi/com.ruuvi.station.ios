@@ -2,9 +2,10 @@ import Foundation
 import Future
 import BTKit
 import RuuviOntology
+import RuuviCloud
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
-protocol RuuviCloudApi {
+public protocol RuuviCloudApi {
     func register(
         _ requestModel: RuuviCloudApiRegisterRequest
     ) -> Future<RuuviCloudApiRegisterResponse, RuuviCloudApiError>
@@ -85,6 +86,6 @@ protocol RuuviCloudApi {
     ) -> Future<RuuviCloudApiGetAlertsResponse, RuuviCloudApiError>
 }
 
-protocol RuuviCloudApiFactory {
+public protocol RuuviCloudApiFactory {
     func create(baseUrl: URL) -> RuuviCloudApi
 }

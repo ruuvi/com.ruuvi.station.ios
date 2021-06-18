@@ -23,15 +23,15 @@ struct TagChartsViewModel {
         self.type = type
     }
 
-    init(_ ruuviTag: RuuviTagRealm) {
-        type = .ruuvi
-        uuid.value = ruuviTag.uuid
-        name.value = ruuviTag.name
-        if let macId = ruuviTag.mac {
-            mac.value = macId
-        }
-        isConnectable.value = ruuviTag.isConnectable
-    }
+//    init(_ ruuviTag: RuuviTagRealm) {
+//        type = .ruuvi
+//        uuid.value = ruuviTag.uuid
+//        if let macId = ruuviTag.mac {
+//            mac.value = macId
+//        }
+//        name.value = ruuviTag.name
+//        isConnectable.value = ruuviTag.isConnectable
+//    }
 
     init(_ webTag: WebTagRealm) {
         type = .web

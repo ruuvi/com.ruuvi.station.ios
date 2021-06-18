@@ -1,7 +1,11 @@
+import Foundation
 import Swinject
 import SwinjectPropertyLoader
 import RuuviCloud
 import RuuviUser
+#if canImport(RuuviCloudPure)
+import RuuviCloudPure
+#endif
 
 class NetworkingAssembly: Assembly {
     func assemble(container: Container) {

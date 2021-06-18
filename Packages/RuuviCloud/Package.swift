@@ -12,14 +12,14 @@ let package = Package(
             targets: ["RuuviCloud"]),
         .library(
             name: "RuuviCloudApi",
-            targets: ["RuuviCloud"]),
+            targets: ["RuuviCloudApi"]),
         .library(
             name: "RuuviCloudPure",
-            targets: ["RuuviCloud"])
+            targets: ["RuuviCloudPure"])
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
-        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.2.1")),
+        .package(path: "../../../BTKit"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser")
     ],

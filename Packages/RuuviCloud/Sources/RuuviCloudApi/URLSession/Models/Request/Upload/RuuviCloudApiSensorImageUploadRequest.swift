@@ -1,11 +1,12 @@
 import Foundation
+import RuuviCloud
 
-struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
-    let sensor: String
-    let action: UploadAction
-    let mimeType: MimeType?
+public struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
+    public let sensor: String
+    public let action: UploadAction
+    public let mimeType: MimeType?
 
-    init(
+    public init(
         sensor: String,
         action: UploadAction
     ) {
@@ -14,7 +15,7 @@ struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
         self.mimeType = nil
     }
 
-    init(
+    public init(
         sensor: String,
         action: UploadAction,
         mimeType: MimeType
@@ -24,7 +25,7 @@ struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
         self.mimeType = mimeType
     }
 
-    enum UploadAction: String, Encodable {
+    public enum UploadAction: String, Encodable {
         case upload
         case reset
     }

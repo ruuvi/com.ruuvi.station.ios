@@ -1,22 +1,22 @@
 import Foundation
 
-struct RuuviCloudApiGetSensorResponse: Decodable {
-    let sensor: String
-    let total: Int
-    let name: String
-    let measurements: [UserApiSensorRecord]
+public struct RuuviCloudApiGetSensorResponse: Decodable {
+    public let sensor: String
+    public let total: Int
+    public let name: String
+    public let measurements: [UserApiSensorRecord]
 }
 
-struct UserApiSensorRecord: Decodable {
-    let gwmac: String
-    let coordinates: String
-    let rssi: Int
-    let timestamp: TimeInterval
-    let data: String
+public struct UserApiSensorRecord: Decodable {
+    public let gwmac: String
+    public let coordinates: String
+    public let rssi: Int
+    public let timestamp: TimeInterval
+    public let data: String
 }
 
 extension UserApiSensorRecord {
-    var date: Date {
+    public var date: Date {
         return Date(timeIntervalSince1970: timestamp)
     }
 }

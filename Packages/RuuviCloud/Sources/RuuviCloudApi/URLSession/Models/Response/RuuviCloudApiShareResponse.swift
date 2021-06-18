@@ -1,5 +1,5 @@
 import Foundation
 
-struct RuuviCloudApiShareResponse: Decodable {
-    let sensor: String
+public struct RuuviCloudApiShareResponse: Decodable {
+    public let sensor: String
 }

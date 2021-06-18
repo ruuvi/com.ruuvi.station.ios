@@ -1,13 +1,18 @@
-#if canImport(Combine)
 import Foundation
 import GRDB
-import Combine
+import RxSwift
 import RealmSwift
 import RuuviOntology
 import RuuviContext
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
+#if canImport(RuuviOntologySQLite)
+import RuuviOntologySQLite
+#endif
 
-@available(iOS 13, *)
-class RuuviTagRecordSubjectCombine {
+class RuuviTagRecordSubjectRxSwift {
+    let subject: PublishSubject<[AnyRuuviTagSensorRecord]> = PublishSubject()
     var isServing: Bool = false
 
     private var sqlite: SQLiteContext
@@ -15,13 +20,13 @@ class RuuviTagRecordSubjectCombine {
     private var luid: LocalIdentifier?
     private var macId: MACIdentifier?
 
-    let subject = PassthroughSubject<[AnyRuuviTagSensorRecord], Never>()
-
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataRealmCache = [AnyRuuviTagSensorRecord]()
     private var ruuviTagDataTransactionObserver: TransactionObserver?
+
     deinit {
         ruuviTagDataRealmToken?.invalidate()
+        subject.onCompleted()
     }
 
     init(
@@ -49,7 +54,7 @@ class RuuviTagRecordSubjectCombine {
 
         self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
             [weak self] records in
-            self?.subject.send(records.map({ $0.any }))
+            self?.subject.onNext(records.map({ $0.any }))
         }
 
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
@@ -64,11 +69,11 @@ class RuuviTagRecordSubjectCombine {
             switch change {
             case .initial(let records):
                 if records.count > 0 {
-                    sSelf.subject.send(records.compactMap({ $0.any }))
+                    sSelf.subject.onNext(records.compactMap({ $0.any }))
                 }
             case .update(let records, _, _, _):
                 if records.count > 0 {
-                    sSelf.subject.send(records.compactMap({ $0.any }))
+                    sSelf.subject.onNext(records.compactMap({ $0.any }))
                 }
             default:
                 break
@@ -76,4 +81,3 @@ class RuuviTagRecordSubjectCombine {
         }
     }
 }
-#endif

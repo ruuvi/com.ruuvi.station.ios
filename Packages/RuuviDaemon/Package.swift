@@ -9,7 +9,10 @@ let package = Package(
     products: [
         .library(
             name: "RuuviDaemon",
-            targets: ["RuuviDaemon"])
+            targets: ["RuuviDaemon"]),
+        .library(
+            name: "RuuviDaemonCloudSync",
+            targets: ["RuuviDaemonCloudSync"])
     ],
     dependencies: [
         .package(path: "../RuuviLocal"),
@@ -19,6 +22,14 @@ let package = Package(
         .target(
             name: "RuuviDaemon",
             dependencies: [
+                "RuuviLocal",
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviDaemonCloudSync",
+            dependencies: [
+                "RuuviDaemon",
                 "RuuviLocal",
                 "RuuviService"
             ]

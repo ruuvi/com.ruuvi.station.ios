@@ -1,5 +1,5 @@
 import Foundation
 
-struct RuuviCloudApiSensorImageUploadResponse: Decodable {
-    let uploadURL: URL
+public struct RuuviCloudApiSensorImageUploadResponse: Decodable {
+    public let uploadURL: URL
 }

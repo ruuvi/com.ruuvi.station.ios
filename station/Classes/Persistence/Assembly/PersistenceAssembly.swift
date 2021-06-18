@@ -5,6 +5,29 @@ import RuuviPersistence
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviContextRealm
+import RuuviContextSQLite
+#if canImport(RuuviPersistenceRealm)
+import RuuviPersistenceRealm
+#endif
+#if canImport(RuuviPersistenceSQLite)
+import RuuviPersistenceSQLite
+#endif
+#if canImport(RuuviStorageCoordinator)
+import RuuviStorageCoordinator
+#endif
+#if canImport(RuuviPoolCoordinator)
+import RuuviPoolCoordinator
+#endif
+#if canImport(RuuviLocalUserDefaults)
+import RuuviLocalUserDefaults
+#endif
+#if canImport(RuuviPoolCoordinator)
+import RuuviPoolCoordinator
+#endif
+#if canImport(RuuviReactorImpl)
+import RuuviReactorImpl
+#endif
 
 class PersistenceAssembly: Assembly {
     // swiftlint:disable:next function_body_length
@@ -38,10 +61,6 @@ class PersistenceAssembly: Assembly {
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalSyncState()
         }.inObjectScope(.container)
-
-        container.register(RuuviPersistenceFactory.self) { _ in
-            return RuuviPersistenceFactoryImpl()
-        }
 
         container.register(RuuviPoolFactory.self) { _ in
             return RuuviPoolFactoryCoordinator()
@@ -88,14 +107,12 @@ class PersistenceAssembly: Assembly {
 
         container.register(RuuviPersistence.self, name: "realm") { r in
             let context = r.resolve(RealmContext.self)!
-            let factory = r.resolve(RuuviPersistenceFactory.self)!
-            return factory.create(realm: context)
+            return RuuviPersistenceRealm(context: context)
         }.inObjectScope(.container)
 
         container.register(RuuviPersistence.self, name: "sqlite") { r in
             let context = r.resolve(SQLiteContext.self)!
-            let factory = r.resolve(RuuviPersistenceFactory.self)!
-            return factory.create(sqlite: context)
+            return RuuviPersistenceSQLite(context: context)
         }.inObjectScope(.container)
 
         container.register(RuuviStorage.self) { r in

@@ -1,6 +1,7 @@
 import UIKit
 import Future
 import RuuviOntology
+import RuuviLocal
 
 final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     init(imagePersistence: ImagePersistence) {
