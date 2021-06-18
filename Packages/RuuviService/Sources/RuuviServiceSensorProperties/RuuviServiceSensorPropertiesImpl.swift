@@ -107,7 +107,8 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         maxSize: CGSize
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
-        guard let jpegData = image.jpegData(compressionQuality: 1.0) else {
+        let croppedImage = coreImage.cropped(image: image, to: maxSize)
+        guard let jpegData = croppedImage.jpegData(compressionQuality: 1.0) else {
             promise.fail(error: .failedToGetJpegRepresentation)
             return promise.future
         }
@@ -118,7 +119,6 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         var remote: Future<URL, RuuviCloudError>?
         if sensor.isCloud {
             if let mac = macId {
-                let croppedImage = coreImage.cropped(image: image, to: maxSize)
                 remote = cloud.upload(
                     imageData: jpegData,
                     mimeType: .jpg,
