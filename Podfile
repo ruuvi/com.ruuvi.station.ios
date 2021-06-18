@@ -1,4 +1,5 @@
 platform :ios, '10.0'
+project 'station.xcodeproj'
 use_frameworks!
 inhibit_all_warnings!
 
