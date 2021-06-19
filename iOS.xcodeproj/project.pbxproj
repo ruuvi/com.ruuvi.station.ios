@@ -142,6 +142,10 @@
 		0E11D20B267E038C002D0686 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D20A267E038C002D0686 /* SwinjectPropertyLoader */; };
 		0E11D20E267E0510002D0686 /* NordicDFU in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D20D267E0510002D0686 /* NordicDFU */; };
 		0E11D210267E051D002D0686 /* NordicDFU in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D20F267E051D002D0686 /* NordicDFU */; };
+		0E11D216267E13D1002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D215267E13D1002D0686 /* FirebaseInAppMessaging-Beta */; };
+		0E11D218267E13D1002D0686 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D217267E13D1002D0686 /* FirebaseMessaging */; };
+		0E11D21A267E13DB002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D219267E13DB002D0686 /* FirebaseInAppMessaging-Beta */; };
+		0E11D21C267E13DB002D0686 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D21B267E13DB002D0686 /* FirebaseMessaging */; };
 		0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
@@ -1827,6 +1831,7 @@
 				0E11D164267DFC95002D0686 /* RuuviLocalUserDefaults in Frameworks */,
 				0E11D18C267DFCBE002D0686 /* RuuviServiceSensorProperties in Frameworks */,
 				0E11D1F3267E0040002D0686 /* FirebaseAnalytics in Frameworks */,
+				0E11D21A267E13DB002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				0E11D174267DFCA8002D0686 /* RuuviPoolCoordinator in Frameworks */,
 				0E11D15A267DFC80002D0686 /* RuuviCore in Frameworks */,
 				0E11D16E267DFCA2002D0686 /* RuuviPersistenceRealm in Frameworks */,
@@ -1836,6 +1841,7 @@
 				0E11D162267DFC95002D0686 /* RuuviLocal in Frameworks */,
 				0E11D178267DFCAE002D0686 /* RuuviReactorImpl in Frameworks */,
 				0E11D1FC267E00AC002D0686 /* Swinject in Frameworks */,
+				0E11D21C267E13DB002D0686 /* FirebaseMessaging in Frameworks */,
 				0E11D186267DFCBE002D0686 /* RuuviServiceFactory in Frameworks */,
 				0E11D196267DFCCD002D0686 /* RuuviUserCoordinator in Frameworks */,
 				0E11D192267DFCC7002D0686 /* RuuviStorageCoordinator in Frameworks */,
@@ -1882,6 +1888,7 @@
 				0E11D1AE267DFCDA002D0686 /* RuuviLocalUserDefaults in Frameworks */,
 				0E11D1D6267DFCDB002D0686 /* RuuviServiceSensorProperties in Frameworks */,
 				0E11D1ED267E0010002D0686 /* FirebaseAnalytics in Frameworks */,
+				0E11D216267E13D1002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				0E11D1BE267DFCDB002D0686 /* RuuviPoolCoordinator in Frameworks */,
 				0E11D1A4267DFCDA002D0686 /* RuuviCore in Frameworks */,
 				0E11D1F1267E0010002D0686 /* FirebaseCrashlytics in Frameworks */,
@@ -1891,6 +1898,7 @@
 				0E11D1A2267DFCDA002D0686 /* RuuviContextSQLite in Frameworks */,
 				0E11D1AC267DFCDA002D0686 /* RuuviLocal in Frameworks */,
 				0E11D1FA267E008D002D0686 /* Swinject in Frameworks */,
+				0E11D218267E13D1002D0686 /* FirebaseMessaging in Frameworks */,
 				0E11D1C2267DFCDB002D0686 /* RuuviReactorImpl in Frameworks */,
 				0E11D1D0267DFCDB002D0686 /* RuuviServiceFactory in Frameworks */,
 				0E11D1E0267DFCDB002D0686 /* RuuviUserCoordinator in Frameworks */,
@@ -5335,6 +5343,8 @@
 				0E11D205267E0346002D0686 /* GestureInstructions */,
 				0E11D20A267E038C002D0686 /* SwinjectPropertyLoader */,
 				0E11D20F267E051D002D0686 /* NordicDFU */,
+				0E11D219267E13DB002D0686 /* FirebaseInAppMessaging-Beta */,
+				0E11D21B267E13DB002D0686 /* FirebaseMessaging */,
 			);
 			productName = station;
 			productReference = 0E8BD404238566AB008B31EF /* station_dev.app */;
@@ -5405,6 +5415,8 @@
 				0E11D203267E0336002D0686 /* GestureInstructions */,
 				0E11D208267E037A002D0686 /* SwinjectPropertyLoader */,
 				0E11D20D267E0510002D0686 /* NordicDFU */,
+				0E11D215267E13D1002D0686 /* FirebaseInAppMessaging-Beta */,
+				0E11D217267E13D1002D0686 /* FirebaseMessaging */,
 			);
 			productName = station;
 			productReference = 64333D2520B0C45900CDF4B6 /* station.app */;
@@ -7729,6 +7741,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E11D20C267E0510002D0686 /* XCRemoteSwiftPackageReference "IOS-Pods-DFU-Library" */;
 			productName = NordicDFU;
+		};
+		0E11D215267E13D1002D0686 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		0E11D217267E13D1002D0686 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		0E11D219267E13DB002D0686 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		0E11D21B267E13DB002D0686 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
