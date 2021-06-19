@@ -270,35 +270,15 @@ PODS:
   - RuuviPool/Tests (0.0.1)
   - RuuviReactor (0.0.1):
     - RuuviReactor/Contract (= 0.0.1)
-  - RuuviReactor/Combine (0.0.1):
-    - GRDB.swift
-    - Realm
-    - RealmSwift
-    - RuuviContext/Realm
-    - RuuviContext/SQLite
-    - RuuviOntology
-    - RuuviPersistence/Realm
-    - RuuviPersistence/SQLite
-    - RuuviReactor/Contract
   - RuuviReactor/Contract (0.0.1):
     - RuuviOntology
+    - RuuviPersistence
   - RuuviReactor/Impl (0.0.1):
     - FutureX
     - GRDB.swift
+    - RealmSwift
     - RuuviContext
     - RuuviOntology
-    - RuuviReactor/Combine
-    - RuuviReactor/RxSwift
-  - RuuviReactor/RxSwift (0.0.1):
-    - GRDB.swift
-    - Realm
-    - RealmSwift
-    - RuuviContext/Realm
-    - RuuviContext/SQLite
-    - RuuviOntology
-    - RuuviPersistence/Realm
-    - RuuviPersistence/SQLite
-    - RuuviReactor/Contract
   - RuuviReactor/Tests (0.0.1)
   - RuuviRepository (0.0.1):
     - RuuviRepository/Contract (= 0.0.1)
@@ -598,7 +578,7 @@ SPEC CHECKSUMS:
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
-  RuuviReactor: db584aad58aecead2ec5e576b13409fa4212f7ef
+  RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
   RuuviService: 2c3ccffdcf8499240a1e031ca8567f5739eb58b7
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
