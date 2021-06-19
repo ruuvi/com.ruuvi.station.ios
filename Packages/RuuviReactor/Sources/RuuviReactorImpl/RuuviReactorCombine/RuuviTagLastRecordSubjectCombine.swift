@@ -1,4 +1,3 @@
-#if canImport(Combine)
 import Foundation
 import GRDB
 import Combine
@@ -12,8 +11,7 @@ import RuuviOntologyRealm
 import RuuviOntologySQLite
 #endif
 
-@available(iOS 13, *)
-class RuuviTagLastRecordSubjectCombine {
+final class RuuviTagLastRecordSubjectCombine {
     var isServing: Bool = false
 
     private var sqlite: SQLiteContext
@@ -76,4 +74,3 @@ class RuuviTagLastRecordSubjectCombine {
         }
     }
 }
-#endif

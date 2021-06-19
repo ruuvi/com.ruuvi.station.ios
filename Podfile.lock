@@ -270,36 +270,15 @@ PODS:
   - RuuviPool/Tests (0.0.1)
   - RuuviReactor (0.0.1):
     - RuuviReactor/Contract (= 0.0.1)
-  - RuuviReactor/Combine (0.0.1):
-    - GRDB.swift
-    - Realm
-    - RealmSwift
-    - RuuviContext/Realm
-    - RuuviContext/SQLite
-    - RuuviOntology
-    - RuuviPersistence/Realm
-    - RuuviPersistence/SQLite
-    - RuuviReactor/Contract
   - RuuviReactor/Contract (0.0.1):
     - RuuviOntology
+    - RuuviPersistence
   - RuuviReactor/Impl (0.0.1):
     - FutureX
     - GRDB.swift
+    - RealmSwift
     - RuuviContext
     - RuuviOntology
-    - RuuviReactor/Combine
-    - RuuviReactor/RxSwift
-  - RuuviReactor/RxSwift (0.0.1):
-    - GRDB.swift
-    - Realm
-    - RealmSwift
-    - RuuviContext/Realm
-    - RuuviContext/SQLite
-    - RuuviOntology
-    - RuuviPersistence/Realm
-    - RuuviPersistence/SQLite
-    - RuuviReactor/Contract
-    - RxSwift
   - RuuviReactor/Tests (0.0.1)
   - RuuviRepository (0.0.1):
     - RuuviRepository/Contract (= 0.0.1)
@@ -395,7 +374,6 @@ PODS:
     - KeychainAccess
     - RuuviUser/Contract
   - RuuviUser/Tests (0.0.1)
-  - RxSwift (6.2.0)
   - SwiftGen (6.4.0)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
@@ -465,7 +443,6 @@ DEPENDENCIES:
   - RuuviUser (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviUser/Coordinator (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviUser/Tests (from `Packages/RuuviUser/RuuviUser.podspec`)
-  - RxSwift
   - SwiftGen (~> 6.0)
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
@@ -500,7 +477,6 @@ SPEC REPOS:
     - Quick
     - Realm
     - RealmSwift
-    - RxSwift
     - SwiftGen
     - Swinject
     - ZIPFoundation
@@ -602,17 +578,16 @@ SPEC CHECKSUMS:
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
-  RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
+  RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
   RuuviService: 2c3ccffdcf8499240a1e031ca8567f5739eb58b7
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
-  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: e18eaf91f038502d145b7d54191c78295b2af0aa
+PODFILE CHECKSUM: 7503cf8f68b2bd5924788a85bf2aba07eefbe3f7
 
 COCOAPODS: 1.10.1

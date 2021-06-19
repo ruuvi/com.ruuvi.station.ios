@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviReactor",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviReactor",
@@ -15,7 +15,6 @@ let package = Package(
             targets: ["RuuviReactorImpl"])
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.2.0")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPersistence"),
         .package(path: "../RuuviContext")
@@ -31,7 +30,6 @@ let package = Package(
         .target(
             name: "RuuviReactorImpl",
             dependencies: [
-                "RxSwift",
                 "RuuviReactor",
                 "RuuviContext",
                 "RuuviPersistence",

@@ -30,7 +30,6 @@
 		0E2864412461B9FD00363DCB /* VirtualTagReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28643E2461B9FD00363DCB /* VirtualTagReactor.swift */; };
 		0E2864482461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864452461BABF00363DCB /* VirtualTagReactorImpl.swift */; };
 		0E28644C2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */; };
-		0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */; };
 		0E290A7C265FCEDD009AAA29 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A78265FCEDC009AAA29 /* WebTagDataRealm.swift */; };
 		0E290A7F265FCEDD009AAA29 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */; };
 		0E290A872660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
@@ -683,7 +682,6 @@
 		0E28643E2461B9FD00363DCB /* VirtualTagReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagReactor.swift; sourceTree = "<group>"; };
 		0E2864452461BABF00363DCB /* VirtualTagReactorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagReactorImpl.swift; sourceTree = "<group>"; };
 		0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagSubjectCombine.swift; sourceTree = "<group>"; };
-		0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagSubjectRxSwift.swift; sourceTree = "<group>"; };
 		0E290A78265FCEDC009AAA29 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
 		0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+AnyRuuviTagSensor.swift"; sourceTree = "<group>"; };
@@ -1953,7 +1951,6 @@
 			isa = PBXGroup;
 			children = (
 				0E2864432461BA3100363DCB /* Combine */,
-				0E2864442461BA3700363DCB /* RxSwift */,
 				0E2864452461BABF00363DCB /* VirtualTagReactorImpl.swift */,
 			);
 			path = Impl;
@@ -1965,14 +1962,6 @@
 				0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */,
 			);
 			path = Combine;
-			sourceTree = "<group>";
-		};
-		0E2864442461BA3700363DCB /* RxSwift */ = {
-			isa = PBXGroup;
-			children = (
-				0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */,
-			);
-			path = RxSwift;
 			sourceTree = "<group>";
 		};
 		0E290A77265FCEDC009AAA29 /* Realm */ = {
@@ -5146,7 +5135,6 @@
 				660EB2692669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E4557FE23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */,
-				0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E6BAE8423856A01003A2D4C /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E6BAE8523856A01003A2D4C /* ErrorPresenter.swift in Sources */,
 				0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */,

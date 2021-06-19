@@ -17,43 +17,16 @@ Pod::Spec.new do |s|
   s.subspec 'Contract' do |ss|
     ss.source_files = 'Sources/RuuviReactor/**/*.{h,m,swift}', 'Sources/RuuviReactor/*.{h,m,swift}'
     ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviPersistence'
   end
 
   s.subspec 'Impl' do |ss|
     ss.source_files = 'Sources/RuuviReactorImpl/**/*.{h,m,swift}', 'Sources/RuuviReactorImpl/*.{h,m,swift}'
     ss.dependency 'RuuviOntology'
     ss.dependency 'RuuviContext'
-    ss.dependency 'RuuviReactor/Combine'
-    ss.dependency 'RuuviReactor/RxSwift'
+    ss.dependency 'RealmSwift'
     ss.dependency 'GRDB.swift'
     ss.dependency 'FutureX'
-  end
-
-  s.subspec 'Combine' do |ss|
-    ss.source_files = 'Sources/RuuviReactorCombine/**/*.{h,m,swift}', 'Sources/RuuviReactorCombine/*.{h,m,swift}'
-    ss.dependency 'RuuviReactor/Contract'
-    ss.dependency 'RuuviPersistence/Realm'
-    ss.dependency 'RuuviPersistence/SQLite'
-    ss.dependency 'RuuviContext/Realm'
-    ss.dependency 'RuuviContext/SQLite'
-    ss.dependency 'RuuviOntology'
-    ss.dependency 'Realm'
-    ss.dependency 'RealmSwift'
-    ss.dependency 'GRDB.swift'
-  end
-
-  s.subspec 'RxSwift' do |ss|
-    ss.source_files = 'Sources/RuuviReactorRxSwift/**/*.{h,m,swift}', 'Sources/RuuviReactorRxSwift/*.{h,m,swift}'
-        ss.dependency 'RuuviReactor/Contract'
-    ss.dependency 'RuuviPersistence/Realm'
-    ss.dependency 'RuuviPersistence/SQLite'
-    ss.dependency 'RuuviContext/Realm'
-    ss.dependency 'RuuviContext/SQLite'
-    ss.dependency 'RuuviOntology'
-    ss.dependency 'Realm'
-    ss.dependency 'RealmSwift'
-    ss.dependency 'GRDB.swift'
-    ss.dependency 'RxSwift'
   end
 
   s.test_spec 'Tests' do |test_spec|

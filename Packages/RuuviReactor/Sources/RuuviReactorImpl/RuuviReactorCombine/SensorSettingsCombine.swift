@@ -1,4 +1,3 @@
-#if canImport(Combine)
 import Foundation
 import GRDB
 import Combine
@@ -12,8 +11,7 @@ import RuuviOntologyRealm
 import RuuviOntologySQLite
 #endif
 
-@available(iOS 13, *)
-class SensorSettingsCombine {
+final class SensorSettingsCombine {
     var luid: LocalIdentifier?
     var macId: MACIdentifier?
     var sqlite: SQLiteContext
@@ -100,4 +98,3 @@ class SensorSettingsCombine {
         }
     }
 }
-#endif
