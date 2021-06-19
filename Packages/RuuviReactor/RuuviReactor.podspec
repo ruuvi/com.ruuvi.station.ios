@@ -53,7 +53,6 @@ Pod::Spec.new do |s|
     ss.dependency 'Realm'
     ss.dependency 'RealmSwift'
     ss.dependency 'GRDB.swift'
-    ss.dependency 'RxSwift'
   end
 
   s.test_spec 'Tests' do |test_spec|

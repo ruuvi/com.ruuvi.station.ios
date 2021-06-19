@@ -1,11 +1,9 @@
-#if canImport(Combine)
 import Foundation
 import Combine
 import RealmSwift
 import RuuviOntology
 import RuuviContext
 
-@available(iOS 13, *)
 class VirtualTagSubjectCombine {
     var realm: RealmContext
 
@@ -52,4 +50,3 @@ class VirtualTagSubjectCombine {
         }
     }
 }
-#endif
