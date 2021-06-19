@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0E0C19C023D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
 		0E1069EA265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */; };
+		0E11D212267E1310002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D211267E1310002D0686 /* FirebaseInAppMessaging-Beta */; };
+		0E11D214267E1317002D0686 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D213267E1317002D0686 /* FirebaseMessaging */; };
 		0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
 		0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */; };
@@ -1169,6 +1171,7 @@
 				0EE1123B267BBDC1008DA8D9 /* RuuviContext in Frameworks */,
 				0EE11278267BC7A3008DA8D9 /* RuuviDaemon in Frameworks */,
 				0EE11253267BBDC1008DA8D9 /* RuuviUser in Frameworks */,
+				0E11D212267E1310002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				0EF00EFF267C6A930082AA8D /* RuuviContextRealm in Frameworks */,
 				0EE1124D267BBDC1008DA8D9 /* RuuviRepository in Frameworks */,
 				0EE1127B267BC7E3008DA8D9 /* RxSwift in Frameworks */,
@@ -1193,6 +1196,7 @@
 				0EB97865267C769E0032CC05 /* RuuviPersistenceRealm in Frameworks */,
 				0EBE42D4267CA889002888EC /* BTKit in Frameworks */,
 				0EBE42C7267C8A97002888EC /* RuuviReactorImpl in Frameworks */,
+				0E11D214267E1317002D0686 /* FirebaseMessaging in Frameworks */,
 				0EE11270267BC5D6008DA8D9 /* FirebaseRemoteConfig in Frameworks */,
 				0EF00F03267C6B160082AA8D /* RuuviServiceFactory in Frameworks */,
 				0EE11251267BBDC1008DA8D9 /* RuuviStorage in Frameworks */,
@@ -4534,6 +4538,8 @@
 				0EBE42CA267C8AA1002888EC /* RuuviUserCoordinator */,
 				0EBE42D0267CA726002888EC /* Localize_Swift */,
 				0EBE42D3267CA889002888EC /* BTKit */,
+				0E11D211267E1310002D0686 /* FirebaseInAppMessaging-Beta */,
+				0E11D213267E1317002D0686 /* FirebaseMessaging */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* Ruuvi Station.app */;
@@ -4673,7 +4679,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
+			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed, download it from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
 		};
 		A9AB575D2414446E006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5258,11 +5264,12 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/MacInfo.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -5304,11 +5311,12 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/MacInfo.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -5389,7 +5397,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -5445,7 +5453,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -5569,6 +5577,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0E11D211267E1310002D0686 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE1126C267BC5D6008DA8D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		0E11D213267E1317002D0686 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE1126C267BC5D6008DA8D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		0E5BF778267BCCB900EBF2D6 /* RuuviCoreImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RuuviCoreImage;

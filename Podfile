@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '13.0'
 project 'station.xcodeproj'
 use_frameworks!
 inhibit_all_warnings!
@@ -16,7 +16,7 @@ def shared_pods
   pod 'Firebase/InAppMessaging'
   pod 'FutureX'
   pod 'GestureInstructions'
-  pod 'GRDB.swift'
+  pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
@@ -79,8 +79,8 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 9.0
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 13.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       end
     end
   end

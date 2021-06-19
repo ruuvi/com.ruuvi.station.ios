@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,6 +46,106 @@
 		0E0C19BF23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
 		0E1069E8265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */; };
 		0E1069E9265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */; };
+		0E11D13D267DFA09002D0686 /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D13C267DFA08002D0686 /* Localize_Swift */; };
+		0E11D13F267DFA13002D0686 /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D13E267DFA13002D0686 /* Localize_Swift */; };
+		0E11D14E267DFC75002D0686 /* RuuviCloud in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D14D267DFC75002D0686 /* RuuviCloud */; };
+		0E11D150267DFC75002D0686 /* RuuviCloudApi in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D14F267DFC75002D0686 /* RuuviCloudApi */; };
+		0E11D152267DFC75002D0686 /* RuuviCloudPure in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D151267DFC75002D0686 /* RuuviCloudPure */; };
+		0E11D154267DFC7B002D0686 /* RuuviContext in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D153267DFC7B002D0686 /* RuuviContext */; };
+		0E11D156267DFC7B002D0686 /* RuuviContextRealm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D155267DFC7B002D0686 /* RuuviContextRealm */; };
+		0E11D158267DFC7B002D0686 /* RuuviContextSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D157267DFC7B002D0686 /* RuuviContextSQLite */; };
+		0E11D15A267DFC80002D0686 /* RuuviCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D159267DFC80002D0686 /* RuuviCore */; };
+		0E11D15C267DFC80002D0686 /* RuuviCoreImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D15B267DFC80002D0686 /* RuuviCoreImage */; };
+		0E11D15E267DFC8C002D0686 /* RuuviDaemon in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D15D267DFC8C002D0686 /* RuuviDaemon */; };
+		0E11D160267DFC8C002D0686 /* RuuviDaemonCloudSync in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D15F267DFC8C002D0686 /* RuuviDaemonCloudSync */; };
+		0E11D162267DFC95002D0686 /* RuuviLocal in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D161267DFC95002D0686 /* RuuviLocal */; };
+		0E11D164267DFC95002D0686 /* RuuviLocalUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D163267DFC95002D0686 /* RuuviLocalUserDefaults */; };
+		0E11D166267DFC9C002D0686 /* RuuviOntology in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D165267DFC9C002D0686 /* RuuviOntology */; };
+		0E11D168267DFC9C002D0686 /* RuuviOntologyRealm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D167267DFC9C002D0686 /* RuuviOntologyRealm */; };
+		0E11D16A267DFC9C002D0686 /* RuuviOntologySQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D169267DFC9C002D0686 /* RuuviOntologySQLite */; };
+		0E11D16C267DFCA2002D0686 /* RuuviPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D16B267DFCA2002D0686 /* RuuviPersistence */; };
+		0E11D16E267DFCA2002D0686 /* RuuviPersistenceRealm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D16D267DFCA2002D0686 /* RuuviPersistenceRealm */; };
+		0E11D170267DFCA2002D0686 /* RuuviPersistenceSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D16F267DFCA2002D0686 /* RuuviPersistenceSQLite */; };
+		0E11D172267DFCA8002D0686 /* RuuviPool in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D171267DFCA8002D0686 /* RuuviPool */; };
+		0E11D174267DFCA8002D0686 /* RuuviPoolCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D173267DFCA8002D0686 /* RuuviPoolCoordinator */; };
+		0E11D176267DFCAE002D0686 /* RuuviReactor in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D175267DFCAE002D0686 /* RuuviReactor */; };
+		0E11D178267DFCAE002D0686 /* RuuviReactorImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D177267DFCAE002D0686 /* RuuviReactorImpl */; };
+		0E11D17A267DFCB6002D0686 /* RuuviRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D179267DFCB6002D0686 /* RuuviRepository */; };
+		0E11D17C267DFCB6002D0686 /* RuuviRepositoryCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D17B267DFCB6002D0686 /* RuuviRepositoryCoordinator */; };
+		0E11D17E267DFCBD002D0686 /* RuuviService in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D17D267DFCBD002D0686 /* RuuviService */; };
+		0E11D180267DFCBD002D0686 /* RuuviServiceAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D17F267DFCBD002D0686 /* RuuviServiceAlert */; };
+		0E11D182267DFCBE002D0686 /* RuuviServiceAppSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D181267DFCBE002D0686 /* RuuviServiceAppSettings */; };
+		0E11D184267DFCBE002D0686 /* RuuviServiceCloudSync in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D183267DFCBE002D0686 /* RuuviServiceCloudSync */; };
+		0E11D186267DFCBE002D0686 /* RuuviServiceFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D185267DFCBE002D0686 /* RuuviServiceFactory */; };
+		0E11D188267DFCBE002D0686 /* RuuviServiceOffsetCalibration in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D187267DFCBE002D0686 /* RuuviServiceOffsetCalibration */; };
+		0E11D18A267DFCBE002D0686 /* RuuviServiceOwnership in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D189267DFCBE002D0686 /* RuuviServiceOwnership */; };
+		0E11D18C267DFCBE002D0686 /* RuuviServiceSensorProperties in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D18B267DFCBE002D0686 /* RuuviServiceSensorProperties */; };
+		0E11D18E267DFCBE002D0686 /* RuuviServiceSensorRecords in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D18D267DFCBE002D0686 /* RuuviServiceSensorRecords */; };
+		0E11D190267DFCC7002D0686 /* RuuviStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D18F267DFCC7002D0686 /* RuuviStorage */; };
+		0E11D192267DFCC7002D0686 /* RuuviStorageCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D191267DFCC7002D0686 /* RuuviStorageCoordinator */; };
+		0E11D194267DFCCD002D0686 /* RuuviUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D193267DFCCD002D0686 /* RuuviUser */; };
+		0E11D196267DFCCD002D0686 /* RuuviUserCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D195267DFCCD002D0686 /* RuuviUserCoordinator */; };
+		0E11D198267DFCDA002D0686 /* RuuviCloud in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D197267DFCDA002D0686 /* RuuviCloud */; };
+		0E11D19A267DFCDA002D0686 /* RuuviCloudApi in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D199267DFCDA002D0686 /* RuuviCloudApi */; };
+		0E11D19C267DFCDA002D0686 /* RuuviCloudPure in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D19B267DFCDA002D0686 /* RuuviCloudPure */; };
+		0E11D19E267DFCDA002D0686 /* RuuviContext in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D19D267DFCDA002D0686 /* RuuviContext */; };
+		0E11D1A0267DFCDA002D0686 /* RuuviContextRealm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D19F267DFCDA002D0686 /* RuuviContextRealm */; };
+		0E11D1A2267DFCDA002D0686 /* RuuviContextSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1A1267DFCDA002D0686 /* RuuviContextSQLite */; };
+		0E11D1A4267DFCDA002D0686 /* RuuviCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1A3267DFCDA002D0686 /* RuuviCore */; };
+		0E11D1A6267DFCDA002D0686 /* RuuviCoreImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1A5267DFCDA002D0686 /* RuuviCoreImage */; };
+		0E11D1A8267DFCDA002D0686 /* RuuviDaemon in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1A7267DFCDA002D0686 /* RuuviDaemon */; };
+		0E11D1AA267DFCDA002D0686 /* RuuviDaemonCloudSync in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1A9267DFCDA002D0686 /* RuuviDaemonCloudSync */; };
+		0E11D1AC267DFCDA002D0686 /* RuuviLocal in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1AB267DFCDA002D0686 /* RuuviLocal */; };
+		0E11D1AE267DFCDA002D0686 /* RuuviLocalUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1AD267DFCDA002D0686 /* RuuviLocalUserDefaults */; };
+		0E11D1B0267DFCDA002D0686 /* RuuviOntology in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1AF267DFCDA002D0686 /* RuuviOntology */; };
+		0E11D1B2267DFCDA002D0686 /* RuuviOntologyRealm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1B1267DFCDA002D0686 /* RuuviOntologyRealm */; };
+		0E11D1B4267DFCDA002D0686 /* RuuviOntologySQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1B3267DFCDA002D0686 /* RuuviOntologySQLite */; };
+		0E11D1B6267DFCDA002D0686 /* RuuviPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1B5267DFCDA002D0686 /* RuuviPersistence */; };
+		0E11D1B8267DFCDA002D0686 /* RuuviPersistenceRealm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1B7267DFCDA002D0686 /* RuuviPersistenceRealm */; };
+		0E11D1BA267DFCDA002D0686 /* RuuviPersistenceSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1B9267DFCDA002D0686 /* RuuviPersistenceSQLite */; };
+		0E11D1BC267DFCDA002D0686 /* RuuviPool in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1BB267DFCDA002D0686 /* RuuviPool */; };
+		0E11D1BE267DFCDB002D0686 /* RuuviPoolCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1BD267DFCDB002D0686 /* RuuviPoolCoordinator */; };
+		0E11D1C0267DFCDB002D0686 /* RuuviReactor in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1BF267DFCDB002D0686 /* RuuviReactor */; };
+		0E11D1C2267DFCDB002D0686 /* RuuviReactorImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1C1267DFCDB002D0686 /* RuuviReactorImpl */; };
+		0E11D1C4267DFCDB002D0686 /* RuuviRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1C3267DFCDB002D0686 /* RuuviRepository */; };
+		0E11D1C6267DFCDB002D0686 /* RuuviRepositoryCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1C5267DFCDB002D0686 /* RuuviRepositoryCoordinator */; };
+		0E11D1C8267DFCDB002D0686 /* RuuviService in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1C7267DFCDB002D0686 /* RuuviService */; };
+		0E11D1CA267DFCDB002D0686 /* RuuviServiceAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1C9267DFCDB002D0686 /* RuuviServiceAlert */; };
+		0E11D1CC267DFCDB002D0686 /* RuuviServiceAppSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1CB267DFCDB002D0686 /* RuuviServiceAppSettings */; };
+		0E11D1CE267DFCDB002D0686 /* RuuviServiceCloudSync in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1CD267DFCDB002D0686 /* RuuviServiceCloudSync */; };
+		0E11D1D0267DFCDB002D0686 /* RuuviServiceFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1CF267DFCDB002D0686 /* RuuviServiceFactory */; };
+		0E11D1D2267DFCDB002D0686 /* RuuviServiceOffsetCalibration in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1D1267DFCDB002D0686 /* RuuviServiceOffsetCalibration */; };
+		0E11D1D4267DFCDB002D0686 /* RuuviServiceOwnership in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1D3267DFCDB002D0686 /* RuuviServiceOwnership */; };
+		0E11D1D6267DFCDB002D0686 /* RuuviServiceSensorProperties in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1D5267DFCDB002D0686 /* RuuviServiceSensorProperties */; };
+		0E11D1D8267DFCDB002D0686 /* RuuviServiceSensorRecords in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1D7267DFCDB002D0686 /* RuuviServiceSensorRecords */; };
+		0E11D1DA267DFCDB002D0686 /* RuuviStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1D9267DFCDB002D0686 /* RuuviStorage */; };
+		0E11D1DC267DFCDB002D0686 /* RuuviStorageCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1DB267DFCDB002D0686 /* RuuviStorageCoordinator */; };
+		0E11D1DE267DFCDB002D0686 /* RuuviUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1DD267DFCDB002D0686 /* RuuviUser */; };
+		0E11D1E0267DFCDB002D0686 /* RuuviUserCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1DF267DFCDB002D0686 /* RuuviUserCoordinator */; };
+		0E11D1E3267DFEEE002D0686 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1E2267DFEEE002D0686 /* Charts */; };
+		0E11D1E5267DFEFD002D0686 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1E4267DFEFD002D0686 /* Charts */; };
+		0E11D1E8267DFF2F002D0686 /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1E7267DFF2F002D0686 /* LightRoute */; };
+		0E11D1EA267DFF38002D0686 /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1E9267DFF38002D0686 /* LightRoute */; };
+		0E11D1ED267E0010002D0686 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1EC267E0010002D0686 /* FirebaseAnalytics */; };
+		0E11D1EF267E0010002D0686 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1EE267E0010002D0686 /* FirebaseRemoteConfig */; };
+		0E11D1F1267E0010002D0686 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1F0267E0010002D0686 /* FirebaseCrashlytics */; };
+		0E11D1F3267E0040002D0686 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1F2267E0040002D0686 /* FirebaseAnalytics */; };
+		0E11D1F5267E0040002D0686 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1F4267E0040002D0686 /* FirebaseCrashlytics */; };
+		0E11D1F7267E0040002D0686 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1F6267E0040002D0686 /* FirebaseRemoteConfig */; };
+		0E11D1FA267E008D002D0686 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1F9267E008D002D0686 /* Swinject */; };
+		0E11D1FC267E00AC002D0686 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1FB267E00AC002D0686 /* Swinject */; };
+		0E11D1FF267E02BC002D0686 /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D1FE267E02BC002D0686 /* RangeSeekSlider */; };
+		0E11D201267E02D2002D0686 /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D200267E02D2002D0686 /* RangeSeekSlider */; };
+		0E11D204267E0336002D0686 /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D203267E0336002D0686 /* GestureInstructions */; };
+		0E11D206267E0346002D0686 /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D205267E0346002D0686 /* GestureInstructions */; };
+		0E11D209267E037A002D0686 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D208267E037A002D0686 /* SwinjectPropertyLoader */; };
+		0E11D20B267E038C002D0686 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D20A267E038C002D0686 /* SwinjectPropertyLoader */; };
+		0E11D20E267E0510002D0686 /* NordicDFU in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D20D267E0510002D0686 /* NordicDFU */; };
+		0E11D210267E051D002D0686 /* NordicDFU in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D20F267E051D002D0686 /* NordicDFU */; };
+		0E11D216267E13D1002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D215267E13D1002D0686 /* FirebaseInAppMessaging-Beta */; };
+		0E11D218267E13D1002D0686 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D217267E13D1002D0686 /* FirebaseMessaging */; };
+		0E11D21A267E13DB002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D219267E13DB002D0686 /* FirebaseInAppMessaging-Beta */; };
+		0E11D21C267E13DB002D0686 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D21B267E13DB002D0686 /* FirebaseMessaging */; };
 		0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
@@ -879,9 +979,7 @@
 		66BC44B42657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44932657AED400A03253 /* OffsetCorrectionRouter.swift */; };
 		66BC44B62657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44942657AED400A03253 /* OffsetCorrectionRouterInput.swift */; };
 		66BC44B72657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44942657AED400A03253 /* OffsetCorrectionRouterInput.swift */; };
-		706E22795B6DE254AF39BB12 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */; };
 		7350803A8D6DD23F1057994F /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B5190CB557178D11AB2CE /* SignInPresenter.swift */; };
-		73949279A33A1BF08159FE0E /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7097B76856D5F01896F963EC /* Pods_station_dev.framework */; };
 		74E67721EFA7BF9397D52B1F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */; };
 		898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
 		8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
@@ -1025,7 +1123,6 @@
 		A9828E4F24792DF300E7E9D4 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF72459F7A7000C38DA /* Array+Extension.swift */; };
 		A98BC875250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
-		A98CCBB3BAF61A33CE4A2D1B /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8018B7836CF8C748718825DD /* Pods_station.framework */; };
 		A98D3F06256CBD410066588B /* ShareModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */; };
 		A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
 		A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
@@ -1152,6 +1249,19 @@
 		0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Optional.swift"; sourceTree = "<group>"; };
 		0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertServiceImpl+Process.swift"; sourceTree = "<group>"; };
 		0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToChartDuration240.swift; sourceTree = "<group>"; };
+		0E11D140267DFA30002D0686 /* RuuviReactor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviReactor; path = Packages/RuuviReactor; sourceTree = "<group>"; };
+		0E11D141267DFA30002D0686 /* RuuviDaemon */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviDaemon; path = Packages/RuuviDaemon; sourceTree = "<group>"; };
+		0E11D142267DFA30002D0686 /* RuuviRepository */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviRepository; path = Packages/RuuviRepository; sourceTree = "<group>"; };
+		0E11D143267DFA30002D0686 /* RuuviContext */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviContext; path = Packages/RuuviContext; sourceTree = "<group>"; };
+		0E11D144267DFA31002D0686 /* RuuviUser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviUser; path = Packages/RuuviUser; sourceTree = "<group>"; };
+		0E11D145267DFA31002D0686 /* RuuviCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviCore; path = Packages/RuuviCore; sourceTree = "<group>"; };
+		0E11D146267DFA31002D0686 /* RuuviCloud */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviCloud; path = Packages/RuuviCloud; sourceTree = "<group>"; };
+		0E11D147267DFA31002D0686 /* RuuviOntology */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviOntology; path = Packages/RuuviOntology; sourceTree = "<group>"; };
+		0E11D148267DFA31002D0686 /* RuuviPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviPersistence; path = Packages/RuuviPersistence; sourceTree = "<group>"; };
+		0E11D149267DFA31002D0686 /* RuuviService */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviService; path = Packages/RuuviService; sourceTree = "<group>"; };
+		0E11D14A267DFA31002D0686 /* RuuviPool */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviPool; path = Packages/RuuviPool; sourceTree = "<group>"; };
+		0E11D14B267DFA31002D0686 /* RuuviStorage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviStorage; path = Packages/RuuviStorage; sourceTree = "<group>"; };
+		0E11D14C267DFA31002D0686 /* RuuviLocal */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviLocal; path = Packages/RuuviLocal; sourceTree = "<group>"; };
 		0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertDescriptionCell.swift; sourceTree = "<group>"; };
 		0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenter.swift; sourceTree = "<group>"; };
 		0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenterMessageUI.swift; sourceTree = "<group>"; };
@@ -1286,7 +1396,6 @@
 		0E84BF6C239802CA00A37E1A /* HeartbeatPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatPresenter.swift; sourceTree = "<group>"; };
 		0E84BF6E2398031B00A37E1A /* HeartbeatInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatInitializer.swift; sourceTree = "<group>"; };
 		0E84BF702398035C00A37E1A /* HeartbeatConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatConfigurator.swift; sourceTree = "<group>"; };
-		0E869E2A265E5399006F4870 /* FirebaseRemoteConfig.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseRemoteConfig.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8A100123845E5100A9CBA6 /* Defaults.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Defaults.storyboard; sourceTree = "<group>"; };
 		0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsViewController.swift; sourceTree = "<group>"; };
 		0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsViewInput.swift; sourceTree = "<group>"; };
@@ -1303,7 +1412,6 @@
 		0E8A10212384637F00A9CBA6 /* DefaultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsList.swift; sourceTree = "<group>"; };
 		0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BAC97245C716B00D380FB /* Combine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Combine.framework; path = System/Library/Frameworks/Combine.framework; sourceTree = SDKROOT; };
-		0E8BAC9A245C718700D380FB /* Combine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Combine.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Combine.framework; sourceTree = DEVELOPER_DIR; };
 		0E8BACA7245C84BE00D380FB /* TankAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TankAssembly.swift; sourceTree = "<group>"; };
 		0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorAssembly.swift; sourceTree = "<group>"; };
 		0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrunkAssembly.swift; sourceTree = "<group>"; };
@@ -1487,7 +1595,6 @@
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
 		167F75FD2FDAD002C10686FA /* ShareViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewInput.swift; sourceTree = "<group>"; };
 		28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInConfigurator.swift; sourceTree = "<group>"; };
-		2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		310159B7264484D700A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		310159B82644864400A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		310159B92644864C00A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1495,11 +1602,9 @@
 		318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesServiceImpl.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
-		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
 		4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewInput.swift; sourceTree = "<group>"; };
 		4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewOutput.swift; sourceTree = "<group>"; };
 		4E816312622E83E3B42001DC /* SignInRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouterInput.swift; sourceTree = "<group>"; };
-		50760BEF3DF7F0DC671A0D42 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareModuleOutput.swift; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1583,13 +1688,8 @@
 		66BC44942657AED400A03253 /* OffsetCorrectionRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffsetCorrectionRouterInput.swift; sourceTree = "<group>"; };
 		6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareModuleInput.swift; sourceTree = "<group>"; };
 		6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouter.swift; sourceTree = "<group>"; };
-		7097B76856D5F01896F963EC /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8018B7836CF8C748718825DD /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85B8587156E1062D613B8960 /* SignInInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInInitializer.swift; sourceTree = "<group>"; };
-		85F06A44D8D006FBFB90ABE0 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
 		87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleInput.swift; sourceTree = "<group>"; };
-		8825D89E1A7CB4BDC6D12038 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
-		9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareRouterInput.swift; sourceTree = "<group>"; };
 		9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleOutput.swift; sourceTree = "<group>"; };
 		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
@@ -1695,7 +1795,6 @@
 		A9FC790D2579676E00F94604 /* UniversalLinkRouterImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalLinkRouterImpl.swift; sourceTree = "<group>"; };
 		A9FC79162579678D00F94604 /* UniversalLinkCoordinatormpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalLinkCoordinatormpl.swift; sourceTree = "<group>"; };
 		AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareConfigurator.swift; sourceTree = "<group>"; };
-		B3426764B50E4E9CA2A27704 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareRouter.swift; sourceTree = "<group>"; };
 		CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharePresenter.swift; sourceTree = "<group>"; };
 		CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewOutput.swift; sourceTree = "<group>"; };
@@ -1710,7 +1809,56 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73949279A33A1BF08159FE0E /* Pods_station_dev.framework in Frameworks */,
+				0E11D18A267DFCBE002D0686 /* RuuviServiceOwnership in Frameworks */,
+				0E11D17C267DFCB6002D0686 /* RuuviRepositoryCoordinator in Frameworks */,
+				0E11D154267DFC7B002D0686 /* RuuviContext in Frameworks */,
+				0E11D1F5267E0040002D0686 /* FirebaseCrashlytics in Frameworks */,
+				0E11D152267DFC75002D0686 /* RuuviCloudPure in Frameworks */,
+				0E11D184267DFCBE002D0686 /* RuuviServiceCloudSync in Frameworks */,
+				0E11D17A267DFCB6002D0686 /* RuuviRepository in Frameworks */,
+				0E11D210267E051D002D0686 /* NordicDFU in Frameworks */,
+				0E11D14E267DFC75002D0686 /* RuuviCloud in Frameworks */,
+				0E11D13F267DFA13002D0686 /* Localize_Swift in Frameworks */,
+				0E11D194267DFCCD002D0686 /* RuuviUser in Frameworks */,
+				0E11D1EA267DFF38002D0686 /* LightRoute in Frameworks */,
+				0E11D206267E0346002D0686 /* GestureInstructions in Frameworks */,
+				0E11D180267DFCBD002D0686 /* RuuviServiceAlert in Frameworks */,
+				0E11D20B267E038C002D0686 /* SwinjectPropertyLoader in Frameworks */,
+				0E11D156267DFC7B002D0686 /* RuuviContextRealm in Frameworks */,
+				0E11D168267DFC9C002D0686 /* RuuviOntologyRealm in Frameworks */,
+				0E11D18E267DFCBE002D0686 /* RuuviServiceSensorRecords in Frameworks */,
+				0E11D1E5267DFEFD002D0686 /* Charts in Frameworks */,
+				0E11D164267DFC95002D0686 /* RuuviLocalUserDefaults in Frameworks */,
+				0E11D18C267DFCBE002D0686 /* RuuviServiceSensorProperties in Frameworks */,
+				0E11D1F3267E0040002D0686 /* FirebaseAnalytics in Frameworks */,
+				0E11D21A267E13DB002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */,
+				0E11D174267DFCA8002D0686 /* RuuviPoolCoordinator in Frameworks */,
+				0E11D15A267DFC80002D0686 /* RuuviCore in Frameworks */,
+				0E11D16E267DFCA2002D0686 /* RuuviPersistenceRealm in Frameworks */,
+				0E11D150267DFC75002D0686 /* RuuviCloudApi in Frameworks */,
+				0E11D170267DFCA2002D0686 /* RuuviPersistenceSQLite in Frameworks */,
+				0E11D158267DFC7B002D0686 /* RuuviContextSQLite in Frameworks */,
+				0E11D162267DFC95002D0686 /* RuuviLocal in Frameworks */,
+				0E11D178267DFCAE002D0686 /* RuuviReactorImpl in Frameworks */,
+				0E11D1FC267E00AC002D0686 /* Swinject in Frameworks */,
+				0E11D21C267E13DB002D0686 /* FirebaseMessaging in Frameworks */,
+				0E11D186267DFCBE002D0686 /* RuuviServiceFactory in Frameworks */,
+				0E11D196267DFCCD002D0686 /* RuuviUserCoordinator in Frameworks */,
+				0E11D192267DFCC7002D0686 /* RuuviStorageCoordinator in Frameworks */,
+				0E11D190267DFCC7002D0686 /* RuuviStorage in Frameworks */,
+				0E11D16A267DFC9C002D0686 /* RuuviOntologySQLite in Frameworks */,
+				0E11D172267DFCA8002D0686 /* RuuviPool in Frameworks */,
+				0E11D160267DFC8C002D0686 /* RuuviDaemonCloudSync in Frameworks */,
+				0E11D188267DFCBE002D0686 /* RuuviServiceOffsetCalibration in Frameworks */,
+				0E11D17E267DFCBD002D0686 /* RuuviService in Frameworks */,
+				0E11D1F7267E0040002D0686 /* FirebaseRemoteConfig in Frameworks */,
+				0E11D16C267DFCA2002D0686 /* RuuviPersistence in Frameworks */,
+				0E11D15E267DFC8C002D0686 /* RuuviDaemon in Frameworks */,
+				0E11D201267E02D2002D0686 /* RangeSeekSlider in Frameworks */,
+				0E11D15C267DFC80002D0686 /* RuuviCoreImage in Frameworks */,
+				0E11D182267DFCBE002D0686 /* RuuviServiceAppSettings in Frameworks */,
+				0E11D166267DFC9C002D0686 /* RuuviOntology in Frameworks */,
+				0E11D176267DFCAE002D0686 /* RuuviReactor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1718,7 +1866,56 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A98CCBB3BAF61A33CE4A2D1B /* Pods_station.framework in Frameworks */,
+				0E11D1D4267DFCDB002D0686 /* RuuviServiceOwnership in Frameworks */,
+				0E11D1C6267DFCDB002D0686 /* RuuviRepositoryCoordinator in Frameworks */,
+				0E11D19E267DFCDA002D0686 /* RuuviContext in Frameworks */,
+				0E11D1EF267E0010002D0686 /* FirebaseRemoteConfig in Frameworks */,
+				0E11D19C267DFCDA002D0686 /* RuuviCloudPure in Frameworks */,
+				0E11D1CE267DFCDB002D0686 /* RuuviServiceCloudSync in Frameworks */,
+				0E11D1C4267DFCDB002D0686 /* RuuviRepository in Frameworks */,
+				0E11D20E267E0510002D0686 /* NordicDFU in Frameworks */,
+				0E11D198267DFCDA002D0686 /* RuuviCloud in Frameworks */,
+				0E11D13D267DFA09002D0686 /* Localize_Swift in Frameworks */,
+				0E11D1DE267DFCDB002D0686 /* RuuviUser in Frameworks */,
+				0E11D1E8267DFF2F002D0686 /* LightRoute in Frameworks */,
+				0E11D204267E0336002D0686 /* GestureInstructions in Frameworks */,
+				0E11D1CA267DFCDB002D0686 /* RuuviServiceAlert in Frameworks */,
+				0E11D209267E037A002D0686 /* SwinjectPropertyLoader in Frameworks */,
+				0E11D1A0267DFCDA002D0686 /* RuuviContextRealm in Frameworks */,
+				0E11D1B2267DFCDA002D0686 /* RuuviOntologyRealm in Frameworks */,
+				0E11D1D8267DFCDB002D0686 /* RuuviServiceSensorRecords in Frameworks */,
+				0E11D1E3267DFEEE002D0686 /* Charts in Frameworks */,
+				0E11D1AE267DFCDA002D0686 /* RuuviLocalUserDefaults in Frameworks */,
+				0E11D1D6267DFCDB002D0686 /* RuuviServiceSensorProperties in Frameworks */,
+				0E11D1ED267E0010002D0686 /* FirebaseAnalytics in Frameworks */,
+				0E11D216267E13D1002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */,
+				0E11D1BE267DFCDB002D0686 /* RuuviPoolCoordinator in Frameworks */,
+				0E11D1A4267DFCDA002D0686 /* RuuviCore in Frameworks */,
+				0E11D1F1267E0010002D0686 /* FirebaseCrashlytics in Frameworks */,
+				0E11D1B8267DFCDA002D0686 /* RuuviPersistenceRealm in Frameworks */,
+				0E11D19A267DFCDA002D0686 /* RuuviCloudApi in Frameworks */,
+				0E11D1BA267DFCDA002D0686 /* RuuviPersistenceSQLite in Frameworks */,
+				0E11D1A2267DFCDA002D0686 /* RuuviContextSQLite in Frameworks */,
+				0E11D1AC267DFCDA002D0686 /* RuuviLocal in Frameworks */,
+				0E11D1FA267E008D002D0686 /* Swinject in Frameworks */,
+				0E11D218267E13D1002D0686 /* FirebaseMessaging in Frameworks */,
+				0E11D1C2267DFCDB002D0686 /* RuuviReactorImpl in Frameworks */,
+				0E11D1D0267DFCDB002D0686 /* RuuviServiceFactory in Frameworks */,
+				0E11D1E0267DFCDB002D0686 /* RuuviUserCoordinator in Frameworks */,
+				0E11D1DC267DFCDB002D0686 /* RuuviStorageCoordinator in Frameworks */,
+				0E11D1DA267DFCDB002D0686 /* RuuviStorage in Frameworks */,
+				0E11D1B4267DFCDA002D0686 /* RuuviOntologySQLite in Frameworks */,
+				0E11D1BC267DFCDA002D0686 /* RuuviPool in Frameworks */,
+				0E11D1AA267DFCDA002D0686 /* RuuviDaemonCloudSync in Frameworks */,
+				0E11D1D2267DFCDB002D0686 /* RuuviServiceOffsetCalibration in Frameworks */,
+				0E11D1C8267DFCDB002D0686 /* RuuviService in Frameworks */,
+				0E11D1B6267DFCDA002D0686 /* RuuviPersistence in Frameworks */,
+				0E11D1A8267DFCDA002D0686 /* RuuviDaemon in Frameworks */,
+				0E11D1FF267E02BC002D0686 /* RangeSeekSlider in Frameworks */,
+				0E11D1A6267DFCDA002D0686 /* RuuviCoreImage in Frameworks */,
+				0E11D1CC267DFCDB002D0686 /* RuuviServiceAppSettings in Frameworks */,
+				0E11D1B0267DFCDA002D0686 /* RuuviOntology in Frameworks */,
+				0E11D1C0267DFCDB002D0686 /* RuuviReactor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1726,7 +1923,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				706E22795B6DE254AF39BB12 /* Pods_stationTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4105,12 +4301,7 @@
 		321CE77F6EB26F685032F835 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0E869E2A265E5399006F4870 /* FirebaseRemoteConfig.framework */,
 				0E8BAC97245C716B00D380FB /* Combine.framework */,
-				0E8BAC9A245C718700D380FB /* Combine.framework */,
-				8018B7836CF8C748718825DD /* Pods_station.framework */,
-				9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */,
-				7097B76856D5F01896F963EC /* Pods_station_dev.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -4124,28 +4315,27 @@
 			path = Assembly;
 			sourceTree = "<group>";
 		};
-		62FD66A56B206724C5DE9CFE /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				50760BEF3DF7F0DC671A0D42 /* Pods-station.debug.xcconfig */,
-				B3426764B50E4E9CA2A27704 /* Pods-station.release.xcconfig */,
-				2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */,
-				8825D89E1A7CB4BDC6D12038 /* Pods-stationTests.release.xcconfig */,
-				3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */,
-				85F06A44D8D006FBFB90ABE0 /* Pods-station_dev.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		64333D1C20B0C45900CDF4B6 = {
 			isa = PBXGroup;
 			children = (
+				0E11D146267DFA31002D0686 /* RuuviCloud */,
+				0E11D143267DFA30002D0686 /* RuuviContext */,
+				0E11D145267DFA31002D0686 /* RuuviCore */,
+				0E11D141267DFA30002D0686 /* RuuviDaemon */,
+				0E11D14C267DFA31002D0686 /* RuuviLocal */,
+				0E11D147267DFA31002D0686 /* RuuviOntology */,
+				0E11D148267DFA31002D0686 /* RuuviPersistence */,
+				0E11D14A267DFA31002D0686 /* RuuviPool */,
+				0E11D140267DFA30002D0686 /* RuuviReactor */,
+				0E11D142267DFA30002D0686 /* RuuviRepository */,
+				0E11D149267DFA31002D0686 /* RuuviService */,
+				0E11D14B267DFA31002D0686 /* RuuviStorage */,
+				0E11D144267DFA31002D0686 /* RuuviUser */,
 				A92C75DD24896B7400E332FE /* Fastlane */,
 				64333D2720B0C45900CDF4B6 /* station */,
 				64333D3C20B0C45A00CDF4B6 /* stationTests */,
 				64333D4720B0C45B00CDF4B6 /* stationUITests */,
 				64333D2620B0C45900CDF4B6 /* Products */,
-				62FD66A56B206724C5DE9CFE /* Pods */,
 				321CE77F6EB26F685032F835 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -5092,20 +5282,70 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0E8BD401238566AB008B31EF /* Build configuration list for PBXNativeTarget "station_dev" */;
 			buildPhases = (
-				E863D26396BB0C54CBE4A62E /* [CP] Check Pods Manifest.lock */,
 				A96B1EF925A7208900D3ED9C /* SwiftGen */,
 				0E8BD2AE238566AB008B31EF /* Sources */,
 				0E8BD3DC238566AB008B31EF /* Frameworks */,
 				0E8BD3DE238566AB008B31EF /* Resources */,
 				A9AB575A2413CCEC006FD3D2 /* Fetch secrets */,
 				0E8301592393FC2B0003F2EF /* Swiftlint */,
-				A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = station_dev;
+			packageProductDependencies = (
+				0E11D13E267DFA13002D0686 /* Localize_Swift */,
+				0E11D14D267DFC75002D0686 /* RuuviCloud */,
+				0E11D14F267DFC75002D0686 /* RuuviCloudApi */,
+				0E11D151267DFC75002D0686 /* RuuviCloudPure */,
+				0E11D153267DFC7B002D0686 /* RuuviContext */,
+				0E11D155267DFC7B002D0686 /* RuuviContextRealm */,
+				0E11D157267DFC7B002D0686 /* RuuviContextSQLite */,
+				0E11D159267DFC80002D0686 /* RuuviCore */,
+				0E11D15B267DFC80002D0686 /* RuuviCoreImage */,
+				0E11D15D267DFC8C002D0686 /* RuuviDaemon */,
+				0E11D15F267DFC8C002D0686 /* RuuviDaemonCloudSync */,
+				0E11D161267DFC95002D0686 /* RuuviLocal */,
+				0E11D163267DFC95002D0686 /* RuuviLocalUserDefaults */,
+				0E11D165267DFC9C002D0686 /* RuuviOntology */,
+				0E11D167267DFC9C002D0686 /* RuuviOntologyRealm */,
+				0E11D169267DFC9C002D0686 /* RuuviOntologySQLite */,
+				0E11D16B267DFCA2002D0686 /* RuuviPersistence */,
+				0E11D16D267DFCA2002D0686 /* RuuviPersistenceRealm */,
+				0E11D16F267DFCA2002D0686 /* RuuviPersistenceSQLite */,
+				0E11D171267DFCA8002D0686 /* RuuviPool */,
+				0E11D173267DFCA8002D0686 /* RuuviPoolCoordinator */,
+				0E11D175267DFCAE002D0686 /* RuuviReactor */,
+				0E11D177267DFCAE002D0686 /* RuuviReactorImpl */,
+				0E11D179267DFCB6002D0686 /* RuuviRepository */,
+				0E11D17B267DFCB6002D0686 /* RuuviRepositoryCoordinator */,
+				0E11D17D267DFCBD002D0686 /* RuuviService */,
+				0E11D17F267DFCBD002D0686 /* RuuviServiceAlert */,
+				0E11D181267DFCBE002D0686 /* RuuviServiceAppSettings */,
+				0E11D183267DFCBE002D0686 /* RuuviServiceCloudSync */,
+				0E11D185267DFCBE002D0686 /* RuuviServiceFactory */,
+				0E11D187267DFCBE002D0686 /* RuuviServiceOffsetCalibration */,
+				0E11D189267DFCBE002D0686 /* RuuviServiceOwnership */,
+				0E11D18B267DFCBE002D0686 /* RuuviServiceSensorProperties */,
+				0E11D18D267DFCBE002D0686 /* RuuviServiceSensorRecords */,
+				0E11D18F267DFCC7002D0686 /* RuuviStorage */,
+				0E11D191267DFCC7002D0686 /* RuuviStorageCoordinator */,
+				0E11D193267DFCCD002D0686 /* RuuviUser */,
+				0E11D195267DFCCD002D0686 /* RuuviUserCoordinator */,
+				0E11D1E4267DFEFD002D0686 /* Charts */,
+				0E11D1E9267DFF38002D0686 /* LightRoute */,
+				0E11D1F2267E0040002D0686 /* FirebaseAnalytics */,
+				0E11D1F4267E0040002D0686 /* FirebaseCrashlytics */,
+				0E11D1F6267E0040002D0686 /* FirebaseRemoteConfig */,
+				0E11D1FB267E00AC002D0686 /* Swinject */,
+				0E11D200267E02D2002D0686 /* RangeSeekSlider */,
+				0E11D205267E0346002D0686 /* GestureInstructions */,
+				0E11D20A267E038C002D0686 /* SwinjectPropertyLoader */,
+				0E11D20F267E051D002D0686 /* NordicDFU */,
+				0E11D219267E13DB002D0686 /* FirebaseInAppMessaging-Beta */,
+				0E11D21B267E13DB002D0686 /* FirebaseMessaging */,
+			);
 			productName = station;
 			productReference = 0E8BD404238566AB008B31EF /* station_dev.app */;
 			productType = "com.apple.product-type.application";
@@ -5114,13 +5354,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D4D20B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "station" */;
 			buildPhases = (
-				3B795AA21A4595A8AEAE7172 /* [CP] Check Pods Manifest.lock */,
 				31884FB625C7442E002BC63F /* SwiftGen */,
 				64333D2120B0C45900CDF4B6 /* Sources */,
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
 				64333D2320B0C45900CDF4B6 /* Resources */,
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
-				60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */,
 				A986147C248CD47A0030F197 /* Crashlytics */,
 			);
 			buildRules = (
@@ -5128,6 +5366,58 @@
 			dependencies = (
 			);
 			name = station;
+			packageProductDependencies = (
+				0E11D13C267DFA08002D0686 /* Localize_Swift */,
+				0E11D197267DFCDA002D0686 /* RuuviCloud */,
+				0E11D199267DFCDA002D0686 /* RuuviCloudApi */,
+				0E11D19B267DFCDA002D0686 /* RuuviCloudPure */,
+				0E11D19D267DFCDA002D0686 /* RuuviContext */,
+				0E11D19F267DFCDA002D0686 /* RuuviContextRealm */,
+				0E11D1A1267DFCDA002D0686 /* RuuviContextSQLite */,
+				0E11D1A3267DFCDA002D0686 /* RuuviCore */,
+				0E11D1A5267DFCDA002D0686 /* RuuviCoreImage */,
+				0E11D1A7267DFCDA002D0686 /* RuuviDaemon */,
+				0E11D1A9267DFCDA002D0686 /* RuuviDaemonCloudSync */,
+				0E11D1AB267DFCDA002D0686 /* RuuviLocal */,
+				0E11D1AD267DFCDA002D0686 /* RuuviLocalUserDefaults */,
+				0E11D1AF267DFCDA002D0686 /* RuuviOntology */,
+				0E11D1B1267DFCDA002D0686 /* RuuviOntologyRealm */,
+				0E11D1B3267DFCDA002D0686 /* RuuviOntologySQLite */,
+				0E11D1B5267DFCDA002D0686 /* RuuviPersistence */,
+				0E11D1B7267DFCDA002D0686 /* RuuviPersistenceRealm */,
+				0E11D1B9267DFCDA002D0686 /* RuuviPersistenceSQLite */,
+				0E11D1BB267DFCDA002D0686 /* RuuviPool */,
+				0E11D1BD267DFCDB002D0686 /* RuuviPoolCoordinator */,
+				0E11D1BF267DFCDB002D0686 /* RuuviReactor */,
+				0E11D1C1267DFCDB002D0686 /* RuuviReactorImpl */,
+				0E11D1C3267DFCDB002D0686 /* RuuviRepository */,
+				0E11D1C5267DFCDB002D0686 /* RuuviRepositoryCoordinator */,
+				0E11D1C7267DFCDB002D0686 /* RuuviService */,
+				0E11D1C9267DFCDB002D0686 /* RuuviServiceAlert */,
+				0E11D1CB267DFCDB002D0686 /* RuuviServiceAppSettings */,
+				0E11D1CD267DFCDB002D0686 /* RuuviServiceCloudSync */,
+				0E11D1CF267DFCDB002D0686 /* RuuviServiceFactory */,
+				0E11D1D1267DFCDB002D0686 /* RuuviServiceOffsetCalibration */,
+				0E11D1D3267DFCDB002D0686 /* RuuviServiceOwnership */,
+				0E11D1D5267DFCDB002D0686 /* RuuviServiceSensorProperties */,
+				0E11D1D7267DFCDB002D0686 /* RuuviServiceSensorRecords */,
+				0E11D1D9267DFCDB002D0686 /* RuuviStorage */,
+				0E11D1DB267DFCDB002D0686 /* RuuviStorageCoordinator */,
+				0E11D1DD267DFCDB002D0686 /* RuuviUser */,
+				0E11D1DF267DFCDB002D0686 /* RuuviUserCoordinator */,
+				0E11D1E2267DFEEE002D0686 /* Charts */,
+				0E11D1E7267DFF2F002D0686 /* LightRoute */,
+				0E11D1EC267E0010002D0686 /* FirebaseAnalytics */,
+				0E11D1EE267E0010002D0686 /* FirebaseRemoteConfig */,
+				0E11D1F0267E0010002D0686 /* FirebaseCrashlytics */,
+				0E11D1F9267E008D002D0686 /* Swinject */,
+				0E11D1FE267E02BC002D0686 /* RangeSeekSlider */,
+				0E11D203267E0336002D0686 /* GestureInstructions */,
+				0E11D208267E037A002D0686 /* SwinjectPropertyLoader */,
+				0E11D20D267E0510002D0686 /* NordicDFU */,
+				0E11D215267E13D1002D0686 /* FirebaseInAppMessaging-Beta */,
+				0E11D217267E13D1002D0686 /* FirebaseMessaging */,
+			);
 			productName = station;
 			productReference = 64333D2520B0C45900CDF4B6 /* station.app */;
 			productType = "com.apple.product-type.application";
@@ -5140,6 +5430,7 @@
 				64333D3520B0C45A00CDF4B6 /* Sources */,
 				64333D3620B0C45A00CDF4B6 /* Frameworks */,
 				64333D3720B0C45A00CDF4B6 /* Resources */,
+				8BBA424823EFFBB654E49320 /* [CP] Copy Pods Resources */,
 				B2718B0350BA2A18235E5F63 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -5199,7 +5490,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 64333D2020B0C45900CDF4B6 /* Build configuration list for PBXProject "station" */;
+			buildConfigurationList = 64333D2020B0C45900CDF4B6 /* Build configuration list for PBXProject "iOS" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -5212,6 +5503,17 @@
 				fr,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
+			packageReferences = (
+				0E11D13B267DFA08002D0686 /* XCRemoteSwiftPackageReference "Localize-Swift" */,
+				0E11D1E1267DFEEE002D0686 /* XCRemoteSwiftPackageReference "Charts" */,
+				0E11D1E6267DFF2F002D0686 /* XCRemoteSwiftPackageReference "LightRoute" */,
+				0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0E11D1F8267E008D002D0686 /* XCRemoteSwiftPackageReference "Swinject" */,
+				0E11D1FD267E02BC002D0686 /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
+				0E11D202267E0336002D0686 /* XCRemoteSwiftPackageReference "GestureInstructions" */,
+				0E11D207267E0379002D0686 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
+				0E11D20C267E0510002D0686 /* XCRemoteSwiftPackageReference "IOS-Pods-DFU-Library" */,
+			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -5378,43 +5680,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
+			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed, download it from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
 		};
-		3B795AA21A4595A8AEAE7172 /* [CP] Check Pods Manifest.lock */ = {
+		8BBA424823EFFBB654E49320 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-station-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A96B1EF925A7208900D3ED9C /* SwiftGen */ = {
@@ -5433,22 +5713,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
-		};
-		A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station_dev/Pods-station_dev-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed, download it from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
 		};
 		A986147C248CD47A0030F197 /* Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5468,7 +5733,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+			shellScript = "\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
 		A9AB57592413CCAB006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5541,28 +5806,6 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-stationTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E863D26396BB0C54CBE4A62E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-station_dev-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -6660,7 +6903,6 @@
 /* Begin XCBuildConfiguration section */
 		0E8BD402238566AB008B31EF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6688,7 +6930,6 @@
 		};
 		0E8BD403238566AB008B31EF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85F06A44D8D006FBFB90ABE0 /* Pods-station_dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6834,7 +7075,6 @@
 		};
 		64333D4E20B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50760BEF3DF7F0DC671A0D42 /* Pods-station.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6843,38 +7083,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/BTKit\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Charts\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FLEX\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FutureX\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GRDB.swift\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GestureInstructions\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransportCCTSupport\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Humidity\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/LightRoute\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Localize-Swift\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Nantes\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Protobuf\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/RangeSeekSlider\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Realm\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/RealmSwift\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/RxSwift\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Swinject\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwinjectPropertyLoader\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
-					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
-					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6894,7 +7103,6 @@
 		};
 		64333D4F20B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B3426764B50E4E9CA2A27704 /* Pods-station.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6921,7 +7129,6 @@
 		};
 		64333D5120B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -6942,7 +7149,6 @@
 		};
 		64333D5220B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8825D89E1A7CB4BDC6D12038 /* Pods-stationTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -7016,7 +7222,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		64333D2020B0C45900CDF4B6 /* Build configuration list for PBXProject "station" */ = {
+		64333D2020B0C45900CDF4B6 /* Build configuration list for PBXProject "iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				64333D4B20B0C45B00CDF4B6 /* Debug */,
@@ -7053,6 +7259,510 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0E11D13B267DFA08002D0686 /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
+			};
+		};
+		0E11D1E1267DFEEE002D0686 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "http://github.com/rinat-enikeev/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.6.0;
+			};
+		};
+		0E11D1E6267DFF2F002D0686 /* XCRemoteSwiftPackageReference "LightRoute" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.2;
+			};
+		};
+		0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "http://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.1;
+			};
+		};
+		0E11D1F8267E008D002D0686 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.1;
+			};
+		};
+		0E11D1FD267E02BC002D0686 /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.2;
+			};
+		};
+		0E11D202267E0336002D0686 /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.2;
+			};
+		};
+		0E11D207267E0379002D0686 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
+		0E11D20C267E0510002D0686 /* XCRemoteSwiftPackageReference "IOS-Pods-DFU-Library" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.10.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0E11D13C267DFA08002D0686 /* Localize_Swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D13B267DFA08002D0686 /* XCRemoteSwiftPackageReference "Localize-Swift" */;
+			productName = Localize_Swift;
+		};
+		0E11D13E267DFA13002D0686 /* Localize_Swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D13B267DFA08002D0686 /* XCRemoteSwiftPackageReference "Localize-Swift" */;
+			productName = Localize_Swift;
+		};
+		0E11D14D267DFC75002D0686 /* RuuviCloud */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCloud;
+		};
+		0E11D14F267DFC75002D0686 /* RuuviCloudApi */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCloudApi;
+		};
+		0E11D151267DFC75002D0686 /* RuuviCloudPure */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCloudPure;
+		};
+		0E11D153267DFC7B002D0686 /* RuuviContext */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviContext;
+		};
+		0E11D155267DFC7B002D0686 /* RuuviContextRealm */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviContextRealm;
+		};
+		0E11D157267DFC7B002D0686 /* RuuviContextSQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviContextSQLite;
+		};
+		0E11D159267DFC80002D0686 /* RuuviCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCore;
+		};
+		0E11D15B267DFC80002D0686 /* RuuviCoreImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCoreImage;
+		};
+		0E11D15D267DFC8C002D0686 /* RuuviDaemon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviDaemon;
+		};
+		0E11D15F267DFC8C002D0686 /* RuuviDaemonCloudSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviDaemonCloudSync;
+		};
+		0E11D161267DFC95002D0686 /* RuuviLocal */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviLocal;
+		};
+		0E11D163267DFC95002D0686 /* RuuviLocalUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviLocalUserDefaults;
+		};
+		0E11D165267DFC9C002D0686 /* RuuviOntology */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviOntology;
+		};
+		0E11D167267DFC9C002D0686 /* RuuviOntologyRealm */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviOntologyRealm;
+		};
+		0E11D169267DFC9C002D0686 /* RuuviOntologySQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviOntologySQLite;
+		};
+		0E11D16B267DFCA2002D0686 /* RuuviPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPersistence;
+		};
+		0E11D16D267DFCA2002D0686 /* RuuviPersistenceRealm */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPersistenceRealm;
+		};
+		0E11D16F267DFCA2002D0686 /* RuuviPersistenceSQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPersistenceSQLite;
+		};
+		0E11D171267DFCA8002D0686 /* RuuviPool */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPool;
+		};
+		0E11D173267DFCA8002D0686 /* RuuviPoolCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPoolCoordinator;
+		};
+		0E11D175267DFCAE002D0686 /* RuuviReactor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviReactor;
+		};
+		0E11D177267DFCAE002D0686 /* RuuviReactorImpl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviReactorImpl;
+		};
+		0E11D179267DFCB6002D0686 /* RuuviRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviRepository;
+		};
+		0E11D17B267DFCB6002D0686 /* RuuviRepositoryCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviRepositoryCoordinator;
+		};
+		0E11D17D267DFCBD002D0686 /* RuuviService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviService;
+		};
+		0E11D17F267DFCBD002D0686 /* RuuviServiceAlert */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceAlert;
+		};
+		0E11D181267DFCBE002D0686 /* RuuviServiceAppSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceAppSettings;
+		};
+		0E11D183267DFCBE002D0686 /* RuuviServiceCloudSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceCloudSync;
+		};
+		0E11D185267DFCBE002D0686 /* RuuviServiceFactory */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceFactory;
+		};
+		0E11D187267DFCBE002D0686 /* RuuviServiceOffsetCalibration */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceOffsetCalibration;
+		};
+		0E11D189267DFCBE002D0686 /* RuuviServiceOwnership */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceOwnership;
+		};
+		0E11D18B267DFCBE002D0686 /* RuuviServiceSensorProperties */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceSensorProperties;
+		};
+		0E11D18D267DFCBE002D0686 /* RuuviServiceSensorRecords */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceSensorRecords;
+		};
+		0E11D18F267DFCC7002D0686 /* RuuviStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviStorage;
+		};
+		0E11D191267DFCC7002D0686 /* RuuviStorageCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviStorageCoordinator;
+		};
+		0E11D193267DFCCD002D0686 /* RuuviUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviUser;
+		};
+		0E11D195267DFCCD002D0686 /* RuuviUserCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviUserCoordinator;
+		};
+		0E11D197267DFCDA002D0686 /* RuuviCloud */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCloud;
+		};
+		0E11D199267DFCDA002D0686 /* RuuviCloudApi */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCloudApi;
+		};
+		0E11D19B267DFCDA002D0686 /* RuuviCloudPure */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCloudPure;
+		};
+		0E11D19D267DFCDA002D0686 /* RuuviContext */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviContext;
+		};
+		0E11D19F267DFCDA002D0686 /* RuuviContextRealm */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviContextRealm;
+		};
+		0E11D1A1267DFCDA002D0686 /* RuuviContextSQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviContextSQLite;
+		};
+		0E11D1A3267DFCDA002D0686 /* RuuviCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCore;
+		};
+		0E11D1A5267DFCDA002D0686 /* RuuviCoreImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviCoreImage;
+		};
+		0E11D1A7267DFCDA002D0686 /* RuuviDaemon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviDaemon;
+		};
+		0E11D1A9267DFCDA002D0686 /* RuuviDaemonCloudSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviDaemonCloudSync;
+		};
+		0E11D1AB267DFCDA002D0686 /* RuuviLocal */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviLocal;
+		};
+		0E11D1AD267DFCDA002D0686 /* RuuviLocalUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviLocalUserDefaults;
+		};
+		0E11D1AF267DFCDA002D0686 /* RuuviOntology */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviOntology;
+		};
+		0E11D1B1267DFCDA002D0686 /* RuuviOntologyRealm */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviOntologyRealm;
+		};
+		0E11D1B3267DFCDA002D0686 /* RuuviOntologySQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviOntologySQLite;
+		};
+		0E11D1B5267DFCDA002D0686 /* RuuviPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPersistence;
+		};
+		0E11D1B7267DFCDA002D0686 /* RuuviPersistenceRealm */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPersistenceRealm;
+		};
+		0E11D1B9267DFCDA002D0686 /* RuuviPersistenceSQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPersistenceSQLite;
+		};
+		0E11D1BB267DFCDA002D0686 /* RuuviPool */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPool;
+		};
+		0E11D1BD267DFCDB002D0686 /* RuuviPoolCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviPoolCoordinator;
+		};
+		0E11D1BF267DFCDB002D0686 /* RuuviReactor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviReactor;
+		};
+		0E11D1C1267DFCDB002D0686 /* RuuviReactorImpl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviReactorImpl;
+		};
+		0E11D1C3267DFCDB002D0686 /* RuuviRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviRepository;
+		};
+		0E11D1C5267DFCDB002D0686 /* RuuviRepositoryCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviRepositoryCoordinator;
+		};
+		0E11D1C7267DFCDB002D0686 /* RuuviService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviService;
+		};
+		0E11D1C9267DFCDB002D0686 /* RuuviServiceAlert */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceAlert;
+		};
+		0E11D1CB267DFCDB002D0686 /* RuuviServiceAppSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceAppSettings;
+		};
+		0E11D1CD267DFCDB002D0686 /* RuuviServiceCloudSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceCloudSync;
+		};
+		0E11D1CF267DFCDB002D0686 /* RuuviServiceFactory */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceFactory;
+		};
+		0E11D1D1267DFCDB002D0686 /* RuuviServiceOffsetCalibration */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceOffsetCalibration;
+		};
+		0E11D1D3267DFCDB002D0686 /* RuuviServiceOwnership */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceOwnership;
+		};
+		0E11D1D5267DFCDB002D0686 /* RuuviServiceSensorProperties */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceSensorProperties;
+		};
+		0E11D1D7267DFCDB002D0686 /* RuuviServiceSensorRecords */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceSensorRecords;
+		};
+		0E11D1D9267DFCDB002D0686 /* RuuviStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviStorage;
+		};
+		0E11D1DB267DFCDB002D0686 /* RuuviStorageCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviStorageCoordinator;
+		};
+		0E11D1DD267DFCDB002D0686 /* RuuviUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviUser;
+		};
+		0E11D1DF267DFCDB002D0686 /* RuuviUserCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviUserCoordinator;
+		};
+		0E11D1E2267DFEEE002D0686 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1E1267DFEEE002D0686 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+		0E11D1E4267DFEFD002D0686 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1E1267DFEEE002D0686 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+		0E11D1E7267DFF2F002D0686 /* LightRoute */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1E6267DFF2F002D0686 /* XCRemoteSwiftPackageReference "LightRoute" */;
+			productName = LightRoute;
+		};
+		0E11D1E9267DFF38002D0686 /* LightRoute */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1E6267DFF2F002D0686 /* XCRemoteSwiftPackageReference "LightRoute" */;
+			productName = LightRoute;
+		};
+		0E11D1EC267E0010002D0686 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		0E11D1EE267E0010002D0686 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		0E11D1F0267E0010002D0686 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		0E11D1F2267E0040002D0686 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		0E11D1F4267E0040002D0686 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		0E11D1F6267E0040002D0686 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		0E11D1F9267E008D002D0686 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1F8267E008D002D0686 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		0E11D1FB267E00AC002D0686 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1F8267E008D002D0686 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		0E11D1FE267E02BC002D0686 /* RangeSeekSlider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1FD267E02BC002D0686 /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
+			productName = RangeSeekSlider;
+		};
+		0E11D200267E02D2002D0686 /* RangeSeekSlider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1FD267E02BC002D0686 /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
+			productName = RangeSeekSlider;
+		};
+		0E11D203267E0336002D0686 /* GestureInstructions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D202267E0336002D0686 /* XCRemoteSwiftPackageReference "GestureInstructions" */;
+			productName = GestureInstructions;
+		};
+		0E11D205267E0346002D0686 /* GestureInstructions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D202267E0336002D0686 /* XCRemoteSwiftPackageReference "GestureInstructions" */;
+			productName = GestureInstructions;
+		};
+		0E11D208267E037A002D0686 /* SwinjectPropertyLoader */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D207267E0379002D0686 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
+			productName = SwinjectPropertyLoader;
+		};
+		0E11D20A267E038C002D0686 /* SwinjectPropertyLoader */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D207267E0379002D0686 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
+			productName = SwinjectPropertyLoader;
+		};
+		0E11D20D267E0510002D0686 /* NordicDFU */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D20C267E0510002D0686 /* XCRemoteSwiftPackageReference "IOS-Pods-DFU-Library" */;
+			productName = NordicDFU;
+		};
+		0E11D20F267E051D002D0686 /* NordicDFU */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D20C267E0510002D0686 /* XCRemoteSwiftPackageReference "IOS-Pods-DFU-Library" */;
+			productName = NordicDFU;
+		};
+		0E11D215267E13D1002D0686 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		0E11D217267E13D1002D0686 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		0E11D219267E13DB002D0686 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		0E11D21B267E13DB002D0686 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E11D1EB267E0010002D0686 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 64333D1D20B0C45900CDF4B6 /* Project object */;
 }
