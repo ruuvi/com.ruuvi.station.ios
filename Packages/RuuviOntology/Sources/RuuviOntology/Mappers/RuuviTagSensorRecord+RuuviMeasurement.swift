@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 
 extension RuuviTagSensorRecord {
-    var measurement: RuuviMeasurement {
+    public var measurement: RuuviMeasurement {
         return RuuviMeasurement(
             luid: luid,
             macId: macId,
