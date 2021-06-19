@@ -69,7 +69,10 @@ class SensorSettingsRxSwift {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             let results = sSelf.realm.main.objects(SensorSettingsRealm.self)
-                .filter("luid == %@ || macId == %@", luid?.value, macId?.value)
+                .filter("luid == %@ || macId == %@",
+                        luid?.value ?? "invalid",
+                        macId?.value ?? "invalid"
+                )
             sSelf.ruuviTagRealmCache = results.map({ $0.sensorSettings })
             sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
                 guard let sSelf = self else { return }
