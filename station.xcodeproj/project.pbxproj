@@ -235,10 +235,6 @@
 		0E8BACAE245C87A300D380FB /* ReactorAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */; };
 		0E8BACD7245EE72500D380FB /* TrunkAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */; };
 		0E8BACD8245EE72500D380FB /* TrunkAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */; };
-		0E8BACE7245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
-		0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
-		0E8BACEF245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
-		0E8BACF0245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
 		0E8BACFE2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */; };
 		0E8BACFF2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */; };
 		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
@@ -1304,8 +1300,6 @@
 		0E8BACA7245C84BE00D380FB /* TankAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TankAssembly.swift; sourceTree = "<group>"; };
 		0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorAssembly.swift; sourceTree = "<group>"; };
 		0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrunkAssembly.swift; sourceTree = "<group>"; };
-		0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagSensorRecord+RuuviMeasurement.swift"; sourceTree = "<group>"; };
-		0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagEnvLogFull+RuuviTagSensorRecord.swift"; sourceTree = "<group>"; };
 		0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToSQLite.swift; sourceTree = "<group>"; };
 		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2988,8 +2982,6 @@
 		0E8BACB5245D5E2100D380FB /* Mappers */ = {
 			isa = PBXGroup;
 			children = (
-				0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */,
-				0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */,
 				0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */,
 			);
 			path = Mappers;
@@ -5735,7 +5727,6 @@
 				0EB48D8C2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
-				0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				0EB48DDD2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
 				A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
@@ -5894,7 +5885,6 @@
 				0E8BD385238566AB008B31EF /* DiscoverTableInitializer.swift in Sources */,
 				66718A6D266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E8BD386238566AB008B31EF /* DiscoverViewOutput.swift in Sources */,
-				0E8BACF0245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */,
 				0E8BD387238566AB008B31EF /* DiscoverRouter.swift in Sources */,
 				A93052B9242BFCF800FB62B1 /* TagChartViewOutput.swift in Sources */,
 				A964647F247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
@@ -6267,7 +6257,6 @@
 				0EA796812664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
 				0EA7968D2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
-				0E8BACE7245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
@@ -6432,7 +6421,6 @@
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
 				66718A68266A6CA700A380F8 /* DfuFilePickerPresenterSheet.swift in Sources */,
 				0EEB215122B8FD070015F9E0 /* WelcomeModuleInput.swift in Sources */,
-				0E8BACEF245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */,
 				0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */,
 				A9828E4E24792DF200E7E9D4 /* Array+Extension.swift in Sources */,
 				0E28644A2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */,

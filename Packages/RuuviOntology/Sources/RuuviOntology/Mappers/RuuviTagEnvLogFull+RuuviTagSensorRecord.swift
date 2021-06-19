@@ -20,7 +20,7 @@ extension RuuviTagEnvLogFull {
         return nil
     }
 
-    func ruuviSensorRecord(uuid: String, mac: String?) -> RuuviTagSensorRecord {
+    public func ruuviSensorRecord(uuid: String, mac: String?) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
             luid: uuid.luid,
             date: date,
