@@ -5,6 +5,12 @@ import Combine
 import RealmSwift
 import RuuviOntology
 import RuuviContext
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
+#if canImport(RuuviOntologySQLite)
+import RuuviOntologySQLite
+#endif
 
 @available(iOS 13, *)
 class SensorSettingsCombine {

@@ -4,6 +4,9 @@ import Humidity
 import Future
 import RuuviOntology
 import RuuviContext
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
 
 class ExportServiceTemp: ExportService {
     var realmContext: RealmContext!

@@ -1,4 +1,5 @@
 import Foundation
+import RuuviUser
 
 final class RuuviUserCoordinator: RuuviUser {
     var apiKey: String? {

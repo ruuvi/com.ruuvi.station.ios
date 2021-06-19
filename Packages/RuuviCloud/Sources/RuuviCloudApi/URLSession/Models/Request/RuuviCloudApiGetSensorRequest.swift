@@ -1,7 +1,7 @@
 import Foundation
 
-struct RuuviCloudApiGetSensorRequest: Encodable {
-    enum Sort: String, Encodable {
+public struct RuuviCloudApiGetSensorRequest: Encodable {
+    public enum Sort: String, Encodable {
         case asc
         case desc
     }
@@ -11,4 +11,18 @@ struct RuuviCloudApiGetSensorRequest: Encodable {
     let since: TimeInterval?
     let limit: Int?
     let sort: Sort?
+
+    public init(
+        sensor: String,
+        until: TimeInterval?,
+        since: TimeInterval?,
+        limit: Int?,
+        sort: Sort?
+    ) {
+        self.sensor = sensor
+        self.until = until
+        self.since = since
+        self.limit = limit
+        self.sort = sort
+    }
 }

@@ -1,6 +1,6 @@
 import Swinject
 
-class AppAssembly {
+final class AppAssembly {
     static let shared = AppAssembly()
     var assembler: Assembler
 

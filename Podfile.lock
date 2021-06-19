@@ -161,11 +161,14 @@ PODS:
   - RuuviCloud/Tests (0.0.1)
   - RuuviContext (0.0.1):
     - RuuviContext/SQLite (= 0.0.1)
+  - RuuviContext/Contract (0.0.1)
   - RuuviContext/Realm (0.0.1):
     - Realm
     - RealmSwift
+    - RuuviContext/Contract
   - RuuviContext/SQLite (0.0.1):
     - GRDB.swift
+    - RuuviContext/Contract
     - RuuviOntology/SQLite
   - RuuviCore (0.0.1):
     - RuuviCore/Contract (= 0.0.1)
@@ -315,6 +318,16 @@ PODS:
   - RuuviService/Contract (0.0.1):
     - FutureX
     - RuuviOntology
+  - RuuviService/Factory (0.0.1):
+    - FutureX
+    - RuuviOntology
+    - RuuviService/Alert
+    - RuuviService/AppSettings
+    - RuuviService/CloudSync
+    - RuuviService/OffsetCalibration
+    - RuuviService/Ownership
+    - RuuviService/SensorProperties
+    - RuuviService/SensorRecords
   - RuuviService/OffsetCalibration (0.0.1):
     - FutureX
     - RuuviCloud
@@ -420,6 +433,7 @@ DEPENDENCIES:
   - RuuviService/Alert (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/AppSettings (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/CloudSync (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/Factory (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/OffsetCalibration (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/Ownership (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/SensorProperties (from `Packages/RuuviService/RuuviService.podspec`)
@@ -565,7 +579,7 @@ SPEC CHECKSUMS:
   Realm: 06f5c67f87cb8c5f27b122218ce22e9a77314517
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
-  RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
+  RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: ed8326e13481473dc92e5a0810b60211dfbb8a75
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
@@ -574,7 +588,7 @@ SPEC CHECKSUMS:
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
-  RuuviService: 9b7dd685496bc482c44a3a3b41527798e5dfdb67
+  RuuviService: 2c3ccffdcf8499240a1e031ca8567f5739eb58b7
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
@@ -583,6 +597,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 9fc5be45da073821795b4d5c5de610a33b95372e
+PODFILE CHECKSUM: a00a0db96d291d0e23c346c89266a11eeddc4775
 
 COCOAPODS: 1.10.1

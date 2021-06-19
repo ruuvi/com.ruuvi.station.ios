@@ -5,22 +5,52 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviCloud",
+    platforms: [.macOS(.v10_15), .iOS(.v10)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviCloud",
-            targets: ["RuuviCloud"])
+            targets: ["RuuviCloud"]),
+        .library(
+            name: "RuuviCloudApi",
+            targets: ["RuuviCloudApi"]),
+        .library(
+            name: "RuuviCloudPure",
+            targets: ["RuuviCloudPure"])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0")),
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviUser")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RuuviCloud",
-            dependencies: []),
+            dependencies: [
+                "Future",
+                "RuuviOntology",
+                "RuuviUser"
+            ]
+        ),
+        .target(
+            name: "RuuviCloudApi",
+            dependencies: [
+                "RuuviCloud",
+                "RuuviOntology",
+                "Future",
+                "BTKit"
+            ]
+        ),
+        .target(
+            name: "RuuviCloudPure",
+            dependencies: [
+                "RuuviCloud",
+                "RuuviCloudApi",
+                "RuuviOntology",
+                "RuuviUser",
+                "Future"
+            ]
+        ),
         .testTarget(
             name: "RuuviCloudTests",
             dependencies: ["RuuviCloud"])
