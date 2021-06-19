@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0E8BD2AC238566AB008B31EF"
-               BuildableName = "station_dev.app"
-               BlueprintName = "station_dev"
-               ReferencedContainer = "container:station.xcodeproj">
+               BlueprintIdentifier = "64333D2420B0C45900CDF4B6"
+               BuildableName = "station.app"
+               BlueprintName = "station"
+               ReferencedContainer = "container:iOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,6 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "64333D3820B0C45A00CDF4B6"
+               BuildableName = "stationTests.xctest"
+               BlueprintName = "stationTests"
+               ReferencedContainer = "container:iOS.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "64333D4320B0C45B00CDF4B6"
+               BuildableName = "stationUITests.xctest"
+               BlueprintName = "stationUITests"
+               ReferencedContainer = "container:iOS.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -44,18 +64,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0E8BD2AC238566AB008B31EF"
-            BuildableName = "station_dev.app"
-            BlueprintName = "station_dev"
-            ReferencedContainer = "container:station.xcodeproj">
+            BlueprintIdentifier = "64333D2420B0C45900CDF4B6"
+            BuildableName = "station.app"
+            BlueprintName = "station"
+            ReferencedContainer = "container:iOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "-FIRDebugEnabled"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -67,10 +81,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0E8BD2AC238566AB008B31EF"
-            BuildableName = "station_dev.app"
-            BlueprintName = "station_dev"
-            ReferencedContainer = "container:station.xcodeproj">
+            BlueprintIdentifier = "64333D2420B0C45900CDF4B6"
+            BuildableName = "station.app"
+            BlueprintName = "station"
+            ReferencedContainer = "container:iOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

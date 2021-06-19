@@ -7,9 +7,9 @@ class WebTagDataRealm: Object {
     @objc dynamic var date: Date = Date()
     @objc dynamic var location: WebTagLocationRealm?
 
-    let celsius = RealmOptional<Double>()
-    let humidity = RealmOptional<Double>()
-    let pressure = RealmOptional<Double>()
+    let celsius = RealmProperty<Double?>()
+    let humidity = RealmProperty<Double?>()
+    let pressure = RealmProperty<Double?>()
 
     convenience init(webTag: WebTagRealm, data: WPSData) {
         self.init()

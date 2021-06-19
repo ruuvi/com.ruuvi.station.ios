@@ -208,6 +208,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         localImages.deleteCustomBackground(for: sensor.id.luid)
     }
 
+    @discardableResult
     private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
         guard let macId = sensor.macId else {
