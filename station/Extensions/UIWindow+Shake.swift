@@ -1,5 +1,5 @@
 import UIKit
-#if DEVELOPMENT
+#if canImport(FLEX)
 import FLEX
 
 extension UIWindow {
