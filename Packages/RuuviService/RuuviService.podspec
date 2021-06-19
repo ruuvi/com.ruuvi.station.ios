@@ -20,6 +20,19 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
   end
 
+  s.subspec 'Factory' do |ss|
+    ss.source_files = 'Sources/RuuviServiceFactory/**/*.{h,m,swift}', 'Sources/RuuviServiceFactory/*.{h,m,swift}'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'FutureX'
+    ss.dependency 'RuuviService/CloudSync'
+    ss.dependency 'RuuviService/Ownership'
+    ss.dependency 'RuuviService/SensorProperties'
+    ss.dependency 'RuuviService/SensorRecords'
+    ss.dependency 'RuuviService/AppSettings'
+    ss.dependency 'RuuviService/Alert'
+    ss.dependency 'RuuviService/OffsetCalibration'
+  end
+
   s.subspec 'CloudSync' do |ss|
     ss.source_files = 'Sources/RuuviServiceCloudSync/**/*.{h,m,swift}', 'Sources/RuuviServiceCloudSync/*.{h,m,swift}'
     ss.dependency 'RuuviService/Contract'

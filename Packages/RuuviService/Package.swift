@@ -5,22 +5,116 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviService",
+    platforms: [.macOS(.v10_15), .iOS(.v11)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviService",
-            targets: ["RuuviService"])
+            targets: ["RuuviService"]),
+        .library(
+            name: "RuuviServiceAlert",
+            targets: ["RuuviServiceAlert"]),
+        .library(
+            name: "RuuviServiceAppSettings",
+            targets: ["RuuviServiceAppSettings"]),
+        .library(
+            name: "RuuviServiceCloudSync",
+            targets: ["RuuviServiceCloudSync"]),
+        .library(
+            name: "RuuviServiceOffsetCalibration",
+            targets: ["RuuviServiceOffsetCalibration"]),
+        .library(
+            name: "RuuviServiceOwnership",
+            targets: ["RuuviServiceOwnership"]),
+        .library(
+            name: "RuuviServiceSensorProperties",
+            targets: ["RuuviServiceSensorProperties"]),
+        .library(
+            name: "RuuviServiceSensorRecords",
+            targets: ["RuuviServiceSensorRecords"]),
+        .library(
+            name: "RuuviServiceFactory",
+            targets: ["RuuviServiceFactory"]
+        )
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviStorage"),
+        .package(path: "../RuuviCloud"),
+        .package(path: "../RuuviPool"),
+        .package(path: "../RuuviLocal"),
+        .package(path: "../RuuviRepository"),
+        .package(path: "../RuuviCore")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RuuviService",
-            dependencies: []),
+            dependencies: [
+                "Future",
+                "RuuviOntology",
+                "RuuviStorage",
+                "RuuviCloud",
+                "RuuviPool",
+                "RuuviLocal",
+                "RuuviRepository",
+                "RuuviCore"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceAlert",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceAppSettings",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceCloudSync",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceOffsetCalibration",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceOwnership",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceSensorProperties",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceSensorRecords",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceFactory",
+            dependencies: [
+                "RuuviService",
+                "RuuviServiceAlert",
+                "RuuviServiceAppSettings",
+                "RuuviServiceCloudSync",
+                "RuuviServiceOffsetCalibration",
+                "RuuviServiceOwnership",
+                "RuuviServiceSensorProperties",
+                "RuuviServiceSensorRecords"
+            ]
+        ),
         .testTarget(
             name: "RuuviServiceTests",
             dependencies: ["RuuviService"])

@@ -1,5 +1,10 @@
 import Foundation
+#if canImport(NordicDFU)
+import NordicDFU
+#endif
+#if canImport(iOSDFULibrary)
 import iOSDFULibrary
+#endif
 
 protocol DfuFlasherOutputProtocol: AnyObject {
     func ruuviDfuDidUpdateProgress(percentage: Float)

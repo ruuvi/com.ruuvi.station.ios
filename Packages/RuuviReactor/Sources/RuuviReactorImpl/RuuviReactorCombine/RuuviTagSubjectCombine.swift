@@ -1,17 +1,25 @@
+#if canImport(Combine)
 import Foundation
 import GRDB
-import RxSwift
+import Combine
 import RealmSwift
 import RuuviOntology
 import RuuviContext
+#if canImport(RuuviOntologyRealm)
+import RuuviOntologyRealm
+#endif
+#if canImport(RuuviOntologySQLite)
+import RuuviOntologySQLite
+#endif
 
-class RuuviTagSubjectRxSwift {
+@available(iOS 13, *)
+class RuuviTagSubjectCombine {
     var sqlite: SQLiteContext
     var realm: RealmContext
 
-    let insertSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
-    let updateSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
-    let deleteSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
+    let insertSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
+    let updateSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
+    let deleteSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
     private var ruuviTagsRealmToken: NotificationToken?
@@ -19,9 +27,6 @@ class RuuviTagSubjectRxSwift {
 
     deinit {
         ruuviTagsRealmToken?.invalidate()
-        insertSubject.onCompleted()
-        updateSubject.onCompleted()
-        deleteSubject.onCompleted()
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -31,17 +36,17 @@ class RuuviTagSubjectRxSwift {
 
         let request = RuuviTagSQLite.order(RuuviTagSQLite.versionColumn)
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
-
         try! self.ruuviTagController.performFetch()
+
         self.ruuviTagController.trackChanges(onChange: { [weak self] _, record, event in
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
-                sSelf.insertSubject.onNext(record.any)
+                sSelf.insertSubject.send(record.any)
             case .update:
-                sSelf.updateSubject.onNext(record.any)
+                sSelf.updateSubject.send(record.any)
             case .deletion:
-                sSelf.deleteSubject.onNext(record.any)
+                sSelf.deleteSubject.send(record.any)
             case .move:
                 break
             }
@@ -54,21 +59,22 @@ class RuuviTagSubjectRxSwift {
             sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
                 guard let sSelf = self else { return }
                 switch change {
-                case .update(let ruuviTags, let deletions, let insertions, let modifications):
+                case .update(let ruuviSensors, let deletions, let insertions, let modifications):
                     for del in deletions {
-                        sSelf.deleteSubject.onNext(sSelf.ruuviTagRealmCache[del].any)
+                        sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
                     }
                     sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
-                        .enumerated()
-                        .filter { !deletions.contains($0.offset) }
-                        .map { $0.element }
+                                                    .enumerated()
+                                                    .filter { !deletions.contains($0.offset) }
+                                                    .map { $0.element }
                     for ins in insertions {
-                        sSelf.insertSubject.onNext(ruuviTags[ins].any)
-                        sSelf.ruuviTagRealmCache.insert(ruuviTags[ins].any, at: ins) // TODO: test if ok with multiple
+                        sSelf.insertSubject.send(ruuviSensors[ins].any)
+                        // TODO: test if ok with multiple
+                        sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins)
                     }
                     for mod in modifications {
-                        sSelf.updateSubject.onNext(ruuviTags[mod].any)
-                        sSelf.ruuviTagRealmCache[mod] = ruuviTags[mod].any
+                        sSelf.updateSubject.send(ruuviSensors[mod].any)
+                        sSelf.ruuviTagRealmCache[mod] = ruuviSensors[mod].any
                     }
                 default:
                     break
@@ -77,3 +83,4 @@ class RuuviTagSubjectRxSwift {
         }
     }
 }
+#endif

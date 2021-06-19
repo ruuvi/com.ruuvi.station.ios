@@ -3,6 +3,7 @@ import RuuviOntology
 import Future
 import RuuviPool
 import RuuviStorage
+import RuuviRepository
 
 final class RuuviRepositoryCoordinator: RuuviRepository {
     private let pool: RuuviPool

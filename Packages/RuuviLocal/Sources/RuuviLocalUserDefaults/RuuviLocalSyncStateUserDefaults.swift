@@ -1,5 +1,6 @@
 import Foundation
 import RuuviOntology
+import RuuviLocal
 
 final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let syncStatusPrefix = "RuuviLocalSyncStateUserDefaults.syncState."

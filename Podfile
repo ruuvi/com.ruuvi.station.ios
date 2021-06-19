@@ -39,6 +39,7 @@ def shared_pods
   pod 'RuuviStorage', :path => 'Packages/RuuviStorage/RuuviStorage.podspec', :testspecs => ['Tests']
   pod 'RuuviStorage/Coordinator', :path => 'Packages/RuuviStorage/RuuviStorage.podspec'
   pod 'RuuviService', :path => 'Packages/RuuviService/RuuviService.podspec', :testspecs => ['Tests']
+  pod 'RuuviService/Factory', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/CloudSync', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/Ownership', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/SensorProperties', :path => 'Packages/RuuviService/RuuviService.podspec'

@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import Future
 import RuuviOntology
 import RuuviStorage
@@ -6,9 +7,10 @@ import RuuviCloud
 import RuuviPool
 import RuuviLocal
 import RuuviRepository
+import RuuviService
 
 // swiftlint:disable:next type_body_length
-final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
+public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviStorage: RuuviStorage
     private let ruuviCloud: RuuviCloud
     private let ruuviPool: RuuviPool
@@ -19,7 +21,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviLocalIDs: RuuviLocalIDs
     private let alertService: RuuviServiceAlert
 
-    init(
+    public init(
         ruuviStorage: RuuviStorage,
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
@@ -42,7 +44,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    func syncAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviServiceError> {
+    public func syncAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviServiceError> {
         let promise = Promise<[RuuviCloudSensorAlerts], RuuviServiceError>()
         ruuviCloud.loadAlerts()
             .on(success: { cloudSensorAlerts in
@@ -55,7 +57,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
+    public func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
             .on(success: { [weak self] cloudSettings in
@@ -80,7 +82,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    func syncImage(sensor: CloudSensor) -> Future<URL, RuuviServiceError> {
+    public func syncImage(sensor: CloudSensor) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         guard let pictureUrl = sensor.picture else {
             promise.fail(error: .pictureUrlIsNil)
@@ -114,7 +116,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+    public func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         let sensors = syncSensors()
         let settings = syncSettings()
@@ -142,7 +144,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    func syncAllRecords() -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
+    public func syncAllRecords() -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
@@ -162,7 +164,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     @discardableResult
     // swiftlint:disable:next function_body_length
-    func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+    public func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         var updatedSensors = Set<AnyRuuviTagSensor>()
         ruuviStorage.readAll().on(success: { localSensors in
@@ -273,7 +275,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
+    public func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)

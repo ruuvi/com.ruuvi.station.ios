@@ -1,6 +1,10 @@
 import Foundation
 import GRDB
+import RuuviContext
 import RuuviOntology
+#if canImport(RuuviOntologySQLite)
+import RuuviOntologySQLite
+#endif
 
 class SQLiteContextGRDB: SQLiteContext {
     let database: GRDBDatabase = SQLiteGRDBDatabase.shared
@@ -10,13 +14,6 @@ public protocol DatabaseService {
     associatedtype Entity: PersistableRecord
 
     var database: GRDBDatabase { get }
-}
-
-public protocol GRDBDatabase {
-    var dbPool: DatabasePool { get }
-    var dbPath: String { get }
-
-    func migrateIfNeeded()
 }
 
 class SQLiteGRDBDatabase: GRDBDatabase {

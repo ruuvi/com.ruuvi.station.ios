@@ -13,6 +13,18 @@ import RuuviCore
 import RuuviDaemon
 import RuuviRepository
 import RuuviUser
+#if canImport(RuuviServiceFactory)
+import RuuviServiceFactory
+#endif
+#if canImport(RuuviDaemonCloudSync)
+import RuuviDaemonCloudSync
+#endif
+#if canImport(RuuviRepositoryCoordinator)
+import RuuviRepositoryCoordinator
+#endif
+#if canImport(RuuviUserCoordinator)
+import RuuviUserCoordinator
+#endif
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -363,7 +375,7 @@ class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviUserFactory.self) { _ in
-            return RuuviUserFactoryImpl()
+            return RuuviUserFactoryCoordinator()
         }
 
         container.register(RuuviUser.self) { r in

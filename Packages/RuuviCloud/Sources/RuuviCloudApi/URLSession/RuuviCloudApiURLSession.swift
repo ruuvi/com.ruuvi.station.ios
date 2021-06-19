@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviCloud
 
 extension RuuviCloudApiURLSession {
     private enum Routes: String {
@@ -19,7 +20,7 @@ extension RuuviCloudApiURLSession {
     }
 }
 
-final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
+public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     private lazy var uploadSession: URLSession = {
         let config = URLSessionConfiguration.default
         if #available(iOS 11.0, *) {
@@ -34,11 +35,11 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     private var progressHandlersByTaskID = [Int: ProgressHandler]()
     private let baseUrl: URL
 
-    init(baseUrl: URL) {
+    public init(baseUrl: URL) {
         self.baseUrl = baseUrl
     }
 
-    func register(
+    public func register(
         _ requestModel: RuuviCloudApiRegisterRequest
     ) -> Future<RuuviCloudApiRegisterResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.register,
@@ -46,14 +47,14 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        method: .post)
     }
 
-    func verify(
+    public func verify(
         _ requestModel: RuuviCloudApiVerifyRequest
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.verify,
                        with: requestModel)
     }
 
-    func claim(
+    public func claim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String
     ) -> Future<RuuviCloudApiClaimResponse, RuuviCloudApiError> {
@@ -63,7 +64,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func unclaim(
+    public func unclaim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String
     ) -> Future<RuuviCloudApiUnclaimResponse, RuuviCloudApiError> {
@@ -73,7 +74,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func share(
+    public func share(
         _ requestModel: RuuviCloudApiShareRequest,
         authorization: String
     ) -> Future<RuuviCloudApiShareResponse, RuuviCloudApiError> {
@@ -83,7 +84,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func unshare(
+    public func unshare(
         _ requestModel: RuuviCloudApiShareRequest,
         authorization: String
     ) -> Future<RuuviCloudApiUnshareResponse, RuuviCloudApiError> {
@@ -93,7 +94,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func sensors(
+    public func sensors(
         _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError> {
@@ -103,14 +104,14 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func user(authorization: String) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError> {
+    public func user(authorization: String) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError> {
         let requestModel = RuuviCloudApiUserRequest()
         return request(endpoint: Routes.user,
                        with: requestModel,
                        authorization: authorization)
     }
 
-    func getSensorData(
+    public func getSensorData(
         _ requestModel: RuuviCloudApiGetSensorRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorResponse, RuuviCloudApiError> {
@@ -120,7 +121,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func update(
+    public func update(
         _ requestModel: RuuviCloudApiSensorUpdateRequest,
         authorization: String
     ) -> Future<RuuviCloudApiSensorUpdateResponse, RuuviCloudApiError> {
@@ -132,7 +133,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
-    func resetImage(
+    public func resetImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         authorization: String
     ) -> Future<RuuviCloudApiSensorImageResetResponse, RuuviCloudApiError> {
@@ -144,7 +145,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
-    func getSettings(
+    public func getSettings(
         _ requestModel: RuuviCloudApiGetSettingsRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSettingsResponse, RuuviCloudApiError> {
@@ -156,7 +157,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
-    func postSetting(
+    public func postSetting(
         _ requestModel: RuuviCloudApiPostSettingRequest,
         authorization: String
     ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError> {
@@ -168,7 +169,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
-    func postAlert(
+    public func postAlert(
         _ requestModel: RuuviCloudApiPostAlertRequest,
         authorization: String
     ) -> Future<RuuviCloudApiPostAlertResponse, RuuviCloudApiError> {
@@ -180,7 +181,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
-    func getAlerts(
+    public func getAlerts(
         _ requestModel: RuuviCloudApiGetAlertsRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetAlertsResponse, RuuviCloudApiError> {
@@ -192,7 +193,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
-    func uploadImage(
+    public func uploadImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         imageData: Data,
         authorization: String,
@@ -331,7 +332,7 @@ extension RuuviCloudApiURLSession {
 }
 
 extension RuuviCloudApiURLSession: URLSessionTaskDelegate {
-    func urlSession(
+    public func urlSession(
         _ session: URLSession,
         task: URLSessionTask,
         didSendBodyData bytesSent: Int64,

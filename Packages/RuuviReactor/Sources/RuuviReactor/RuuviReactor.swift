@@ -33,7 +33,7 @@ public enum RuuviReactorChange<Type> {
 public final class RuuviReactorToken {
     private let cancellationClosure: () -> Void
 
-    init(cancellationClosure: @escaping () -> Void) {
+    public init(cancellationClosure: @escaping () -> Void) {
         self.cancellationClosure = cancellationClosure
     }
 

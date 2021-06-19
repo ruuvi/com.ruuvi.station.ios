@@ -1,5 +1,10 @@
 import Foundation
+#if canImport(NordicDFU)
+import NordicDFU
+#endif
+#if canImport(iOSDFULibrary)
 import iOSDFULibrary
+#endif
 
 struct RuuviDfu {
     static let shared = RuuviDfu()
