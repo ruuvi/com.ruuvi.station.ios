@@ -78,7 +78,6 @@ class RuuviReactorImpl: RuuviReactor {
             block(.error(.ruuviPersistence(error)))
         })
 
-
         let insert = entityCombine.insertSubject.sink { value in
             block(.insert(value))
         }
