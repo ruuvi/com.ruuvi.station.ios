@@ -224,8 +224,6 @@
 		0E2864472461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864452461BABF00363DCB /* VirtualTagReactorImpl.swift */; };
 		0E28644A2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */; };
 		0E28644B2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */; };
-		0E28644E2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */; };
-		0E28644F2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */; };
 		0E290A7A265FCEDD009AAA29 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A78265FCEDC009AAA29 /* WebTagDataRealm.swift */; };
 		0E290A7B265FCEDD009AAA29 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A78265FCEDC009AAA29 /* WebTagDataRealm.swift */; };
 		0E290A7D265FCEDD009AAA29 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */; };
@@ -1321,7 +1319,6 @@
 		0E28643E2461B9FD00363DCB /* VirtualTagReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagReactor.swift; sourceTree = "<group>"; };
 		0E2864452461BABF00363DCB /* VirtualTagReactorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagReactorImpl.swift; sourceTree = "<group>"; };
 		0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagSubjectCombine.swift; sourceTree = "<group>"; };
-		0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagSubjectRxSwift.swift; sourceTree = "<group>"; };
 		0E290A78265FCEDC009AAA29 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
 		0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+AnyRuuviTagSensor.swift"; sourceTree = "<group>"; };
@@ -2675,7 +2672,6 @@
 			isa = PBXGroup;
 			children = (
 				0E2864432461BA3100363DCB /* Combine */,
-				0E2864442461BA3700363DCB /* RxSwift */,
 				0E2864452461BABF00363DCB /* VirtualTagReactorImpl.swift */,
 			);
 			path = Impl;
@@ -2687,14 +2683,6 @@
 				0E2864492461BCA100363DCB /* VirtualTagSubjectCombine.swift */,
 			);
 			path = Combine;
-			sourceTree = "<group>";
-		};
-		0E2864442461BA3700363DCB /* RxSwift */ = {
-			isa = PBXGroup;
-			children = (
-				0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */,
-			);
-			path = RxSwift;
 			sourceTree = "<group>";
 		};
 		0E290A77265FCEDC009AAA29 /* Realm */ = {
@@ -6224,7 +6212,6 @@
 				0E4557FD23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */,
 				0E8BD3B9238566AB008B31EF /* RuuviTagReadLogsOperation.swift in Sources */,
-				0E28644F2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */,
 				660EB2592669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
@@ -6757,7 +6744,6 @@
 				660EB2672669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
 				0E4557FC23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
-				0E28644E2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
