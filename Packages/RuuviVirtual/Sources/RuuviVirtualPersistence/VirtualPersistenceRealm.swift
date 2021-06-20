@@ -5,7 +5,6 @@ import RuuviOntology
 import RuuviContext
 import RuuviLocal
 
-// swiftlint:disable:next type_body_length
 public final class VirtualPersistenceRealm: VirtualPersistence {
     private let context: RealmContext
     private var settings: RuuviLocalSettings
@@ -58,13 +57,14 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
     }
 
     public func clearLocation(
-        of webTag: WebTagRealm,
+        of sensor: VirtualSensor,
         name: String
     ) -> Future<Bool, VirtualPersistenceError> {
         let promise = Promise<Bool, VirtualPersistenceError>()
-        if webTag.realm == context.bg {
-            context.bgWorker.enqueue {
-                do {
+        let webTagId = sensor.id
+        context.bgWorker.enqueue {
+            do {
+                if let webTag = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: webTagId) {
                     try self.context.bg.write {
                         if let oldLocation = webTag.location {
                             self.context.bg.delete(oldLocation)
@@ -73,20 +73,9 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                         webTag.name = name
                     }
                     promise.succeed(value: true)
-                } catch {
-                    promise.fail(error: .persistence(error))
+                } else {
+                    promise.fail(error: .failedToFindVirtualTag)
                 }
-            }
-        } else {
-            do {
-                try context.main.write {
-                    if let oldLocation = webTag.location {
-                        self.context.main.delete(oldLocation)
-                    }
-                    webTag.location = nil
-                    webTag.name = name
-                }
-                promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))
             }
