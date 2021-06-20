@@ -1,5 +1,5 @@
 import Foundation
-import RuuviVirtual
+import RuuviOntology
 
 extension VirtualLocation {
     var title: String {

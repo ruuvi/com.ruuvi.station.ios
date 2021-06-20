@@ -1,5 +1,5 @@
 import UIKit
-import RuuviVirtual
+import RuuviOntology
 
 struct DiscoverWebTagViewModel {
     var provider: VirtualProvider
