@@ -96,39 +96,27 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
 
     public func update(
         location: Location,
-        of webTag: WebTagRealm,
+        of sensor: VirtualSensor,
         name: String
     ) -> Future<Bool, VirtualPersistenceError> {
         let promise = Promise<Bool, VirtualPersistenceError>()
-        if webTag.realm == context.bg {
-            context.bgWorker.enqueue {
-                do {
+        let webTagId = sensor.id
+        context.bgWorker.enqueue {
+            do {
+                if let webTag = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: webTagId) {
                     try self.context.bg.write {
                         if let oldLocation = webTag.location {
                             self.context.bg.delete(oldLocation)
                         }
                         let newLocation = WebTagLocationRealm(location: location)
-                        self.context.bg.add(newLocation)
+                        self.context.bg.add(newLocation, update: .all)
                         webTag.location = newLocation
                         webTag.name = location.city ?? location.country ?? name
                     }
                     promise.succeed(value: true)
-                } catch {
-                    promise.fail(error: .persistence(error))
+                } else {
+                    promise.fail(error: .failedToFindVirtualTag)
                 }
-            }
-        } else {
-            do {
-                try context.main.write {
-                    if let oldLocation = webTag.location {
-                        self.context.main.delete(oldLocation)
-                    }
-                    let newLocation = WebTagLocationRealm(location: location)
-                    self.context.main.add(newLocation, update: .all)
-                    webTag.location = newLocation
-                    webTag.name = location.city ?? location.country ?? name
-                }
-                promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))
             }
