@@ -20,7 +20,7 @@ public protocol VirtualPersistence {
         location: Location,
         name: String
     ) -> Future<VirtualProvider, VirtualPersistenceError>
-    func remove(webTag: WebTagRealm) -> Future<Bool, VirtualPersistenceError>
+    func remove(sensor: VirtualSensor) -> Future<Bool, VirtualPersistenceError>
     func update(
         name: String,
         of webTag: WebTagRealm

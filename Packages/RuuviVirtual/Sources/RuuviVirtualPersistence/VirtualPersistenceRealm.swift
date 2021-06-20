@@ -181,29 +181,23 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
         return promise.future
     }
 
-    public func remove(webTag: WebTagRealm) -> Future<Bool, VirtualPersistenceError> {
+    public func remove(sensor: VirtualSensor) -> Future<Bool, VirtualPersistenceError> {
         let promise = Promise<Bool, VirtualPersistenceError>()
-        if webTag.realm == context.bg {
-            context.bgWorker.enqueue {
-                do {
-                    let webTagId = webTag.id
+        let sensorId = sensor.id
+        context.bgWorker.enqueue {
+            do {
+                if let webTag = self.context.bg.object(
+                    ofType: WebTagRealm.self,
+                    forPrimaryKey: sensorId
+                ) {
                     try self.context.bg.write {
                         self.context.bg.delete(webTag)
                     }
-                    self.settings.tagsSorting.removeAll(where: { $0 == webTagId })
+                    self.settings.tagsSorting.removeAll(where: { $0 == sensorId })
                     promise.succeed(value: true)
-                } catch {
-                    promise.fail(error: .persistence(error))
+                } else {
+                    promise.fail(error: .failedToFindVirtualTag)
                 }
-            }
-        } else {
-            do {
-                let webTagId = webTag.id
-                try context.main.write {
-                    self.context.main.delete(webTag)
-                }
-                self.settings.tagsSorting.removeAll(where: { $0 == webTagId })
-                promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))
             }

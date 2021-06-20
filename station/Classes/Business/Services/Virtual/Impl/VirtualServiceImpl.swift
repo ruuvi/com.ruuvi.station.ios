@@ -7,12 +7,12 @@ import RuuviOntology
 
 class VirtualServiceImpl: VirtualService {
     var ruuviLocalImages: RuuviLocalImages!
-    var webTagPersistence: VirtualPersistence!
+    var virtualPersistence: VirtualPersistence!
     var weatherProviderService: VirtualProviderService!
 
     func add(provider: VirtualProvider, location: Location) -> Future<VirtualProvider, RUError> {
         let promise = Promise<VirtualProvider, RUError>()
-        webTagPersistence.persist(
+        virtualPersistence.persist(
             provider: provider,
             location: location,
             name: VirtualLocation.manual.title
@@ -26,7 +26,7 @@ class VirtualServiceImpl: VirtualService {
 
     func add(provider: VirtualProvider) -> Future<VirtualProvider, RUError> {
         let promise = Promise<VirtualProvider, RUError>()
-        webTagPersistence.persist(
+        virtualPersistence.persist(
             provider: provider,
             name: VirtualLocation.current.title
         ).on(success: { provider in
@@ -40,7 +40,7 @@ class VirtualServiceImpl: VirtualService {
     func remove(webTag: WebTagRealm) -> Future<Bool, RUError> {
         ruuviLocalImages.deleteCustomBackground(for: webTag.id.luid)
         let promise = Promise<Bool, RUError>()
-        webTagPersistence.remove(webTag: webTag)
+        virtualPersistence.remove(sensor: webTag)
             .on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -51,7 +51,7 @@ class VirtualServiceImpl: VirtualService {
 
     func update(name: String, of webTag: WebTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        webTagPersistence.update(name: name, of: webTag)
+        virtualPersistence.update(name: name, of: webTag)
             .on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -62,7 +62,7 @@ class VirtualServiceImpl: VirtualService {
 
     func update(location: Location, of webTag: WebTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        webTagPersistence.update(location: location, of: webTag, name: VirtualLocation.manual.title)
+        virtualPersistence.update(location: location, of: webTag, name: VirtualLocation.manual.title)
             .on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -73,7 +73,7 @@ class VirtualServiceImpl: VirtualService {
 
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        webTagPersistence.clearLocation(of: webTag, name: VirtualLocation.current.title)
+        virtualPersistence.clearLocation(of: webTag, name: VirtualLocation.current.title)
             .on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in

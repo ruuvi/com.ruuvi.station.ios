@@ -6,7 +6,11 @@ public struct VirtualData {
     var relativeHumidity: Double?
     var hPa: Double?
 
-    public init(celsius: Double?, relativeHumidity: Double?, hPa: Double?) {
+    public init(
+        celsius: Double?,
+        relativeHumidity: Double?,
+        hPa: Double?
+    ) {
         self.celsius = celsius
         self.relativeHumidity = relativeHumidity
         self.hPa = hPa
@@ -22,7 +26,10 @@ extension VirtualData {
         guard let relative = relativeHumidity else {
             return nil
         }
-        return Humidity(relative: relative / 100.0, temperature: temperature)
+        return Humidity(
+            relative: relative / 100.0,
+            temperature: temperature
+        )
     }
 
     public var pressure: Pressure? {
