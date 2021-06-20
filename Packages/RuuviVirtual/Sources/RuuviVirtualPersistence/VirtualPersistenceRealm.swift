@@ -205,25 +205,22 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
         return promise.future
     }
 
-    public func update(name: String, of webTag: WebTagRealm) -> Future<Bool, VirtualPersistenceError> {
+    public func update(
+        name: String,
+        of sensor: VirtualSensor
+    ) -> Future<Bool, VirtualPersistenceError> {
         let promise = Promise<Bool, VirtualPersistenceError>()
-        if webTag.realm == context.bg {
-            context.bgWorker.enqueue {
-                do {
+        let webTagId = sensor.id
+        context.bgWorker.enqueue {
+            do {
+                if let webTag = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: webTagId) {
                     try self.context.bg.write {
                         webTag.name = name
                     }
                     promise.succeed(value: true)
-                } catch {
-                    promise.fail(error: .persistence(error))
+                } else {
+                    promise.fail(error: .failedToFindVirtualTag)
                 }
-            }
-        } else {
-            do {
-                try context.main.write {
-                    webTag.name = name
-                }
-                promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))
             }
