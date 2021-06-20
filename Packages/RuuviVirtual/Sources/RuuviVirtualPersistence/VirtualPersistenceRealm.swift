@@ -19,7 +19,11 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
         context.bgWorker.enqueue {
             let realmEntities = self.context.bg.objects(WebTagRealm.self)
             let result: [AnyVirtualTagSensor] = realmEntities.map { webTagRealm in
-                return VirtualTagSensorStruct(id: webTagRealm.uuid, name: webTagRealm.name).any
+                return VirtualTagSensorStruct(
+                    id: webTagRealm.uuid,
+                    name: webTagRealm.name,
+                    loc: webTagRealm.loc
+                ).any
             }
             promise.succeed(value: result)
         }
@@ -30,7 +34,11 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
         let promise = Promise<AnyVirtualTagSensor, VirtualPersistenceError>()
         context.bgWorker.enqueue {
             if let webTagRealm = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: id) {
-                let result = VirtualTagSensorStruct(id: webTagRealm.id, name: webTagRealm.name).any
+                let result = VirtualTagSensorStruct(
+                    id: webTagRealm.id,
+                    name: webTagRealm.name,
+                    loc: webTagRealm.loc
+                ).any
                 promise.succeed(value: result)
             } else {
                 promise.fail(error: .failedToFindVirtualTag)

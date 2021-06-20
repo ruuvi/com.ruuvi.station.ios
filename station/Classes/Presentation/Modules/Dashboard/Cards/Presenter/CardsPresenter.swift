@@ -157,7 +157,7 @@ extension CardsPresenter: CardsViewOutput {
                 output: self)
         } else if viewModel.type == .web,
                   let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
-            router.openWebTagSettings(webTag: webTag, temperature: viewModel.temperature.value)
+            router.openVirtualSensorSettings(webTag: webTag, temperature: viewModel.temperature.value)
         }
     }
     

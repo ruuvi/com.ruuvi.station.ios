@@ -1,6 +1,7 @@
 import Foundation
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 class WebTagSettingsTableConfigurator {
     func configure(view: WebTagSettingsTableViewController) {
@@ -12,6 +13,7 @@ class WebTagSettingsTableConfigurator {
         let presenter = WebTagSettingsPresenter()
         presenter.view = view
         presenter.router = router
+        presenter.virtualReactor = r.resolve(VirtualReactor.self)
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.webTagService = r.resolve(VirtualService.self)
