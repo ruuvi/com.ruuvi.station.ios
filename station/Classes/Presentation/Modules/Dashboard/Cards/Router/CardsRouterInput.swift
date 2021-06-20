@@ -17,7 +17,7 @@ protocol CardsRouterInput {
         output: TagSettingsModuleOutput
     )
     func openVirtualSensorSettings(
-        webTag: WebTagRealm,
+        sensor: VirtualTagSensor,
         temperature: Temperature?
     )
     func openTagCharts()
