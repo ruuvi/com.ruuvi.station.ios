@@ -53,9 +53,11 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         alertDidChangeToken?.invalidate()
     }
 
-    func configure(webTag: WebTagRealm,
-                   temperature: Temperature?) {
-        self.virtualSensor = webTag
+    func configure(
+        sensor: VirtualTagSensor,
+        temperature: Temperature?
+    ) {
+        self.virtualSensor = sensor
         self.temperature = temperature
         startObservingWebTag()
         startObservingSettingsChanges()
