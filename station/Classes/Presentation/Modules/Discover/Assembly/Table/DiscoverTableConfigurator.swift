@@ -4,6 +4,7 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {
@@ -15,6 +16,7 @@ class DiscoverTableConfigurator {
         let presenter = DiscoverPresenter()
         presenter.view = view
         presenter.router = router
+        presenter.virtualReactor = r.resolve(VirtualReactor.self)
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)

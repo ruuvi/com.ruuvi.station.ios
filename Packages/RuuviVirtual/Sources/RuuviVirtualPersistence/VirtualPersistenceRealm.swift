@@ -22,7 +22,8 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                 return VirtualTagSensorStruct(
                     id: webTagRealm.uuid,
                     name: webTagRealm.name,
-                    loc: webTagRealm.loc
+                    loc: webTagRealm.loc,
+                    provider: webTagRealm.provider
                 ).any
             }
             promise.succeed(value: result)
@@ -37,7 +38,8 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                 let result = VirtualTagSensorStruct(
                     id: webTagRealm.id,
                     name: webTagRealm.name,
-                    loc: webTagRealm.loc
+                    loc: webTagRealm.loc,
+                    provider: webTagRealm.provider
                 ).any
                 promise.succeed(value: result)
             } else {

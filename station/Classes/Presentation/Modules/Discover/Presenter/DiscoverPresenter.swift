@@ -13,6 +13,7 @@ import RuuviVirtual
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
     var router: DiscoverRouterInput!
+    var virtualReactor: VirtualReactor!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
@@ -25,9 +26,9 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var ruuviOwnershipService: RuuviServiceOwnership!
 
     private var ruuviTags = Set<RuuviTag>()
-    private var persistedWebTags: Results<WebTagRealm>! {
+    private var persistedVirtualSensors: [VirtualTagSensor]! {
         didSet {
-            view.savedWebTagProviders = persistedWebTags.map({ $0.provider })
+            view.savedWebTagProviders = persistedVirtualSensors.map({ $0.provider })
             updateCloseButtonVisibilityState()
         }
     }
@@ -41,7 +42,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     private var scanToken: ObservationToken?
     private var stateToken: ObservationToken?
     private var lostToken: ObservationToken?
-    private var persistedWebTagsToken: NotificationToken?
+    private var virtualReactorToken: VirtualReactorToken?
     private var persistedReactorToken: RuuviReactorToken?
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
     private var isOpenedFromWelcome: Bool = true
@@ -53,6 +54,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
         scanToken?.invalidate()
         stateToken?.invalidate()
         lostToken?.invalidate()
+        virtualReactorToken?.invalidate()
         persistedReactorToken?.invalidate()
     }
 
@@ -69,12 +71,16 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        let current = DiscoverWebTagViewModel(provider: .openWeatherMap,
-                                              locationType: .current,
-                                              icon: UIImage(named: "icon-webtag-current"))
-        let manual = DiscoverWebTagViewModel(provider: .openWeatherMap,
-                                             locationType: .manual,
-                                             icon: UIImage(named: "icon-webtag-map"))
+        let current = DiscoverWebTagViewModel(
+            provider: .openWeatherMap,
+            locationType: .current,
+            icon: UIImage(named: "icon-webtag-current")
+        )
+        let manual = DiscoverWebTagViewModel(
+            provider: .openWeatherMap,
+            locationType: .manual,
+            icon: UIImage(named: "icon-webtag-map")
+        )
         let isCurrentLocationTagAlreadyAdded = realmContext.main.objects(WebTagRealm.self)
             .filter("location == nil").count > 0
         if isCurrentLocationTagAlreadyAdded {
@@ -187,7 +193,6 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
 
 // MARK: - Private
 extension DiscoverPresenter {
-
     private func persistWebTag(with provider: VirtualProvider) {
         let operation = webTagService.add(provider: provider)
         operation.on(success: { [weak self] _ in
@@ -203,17 +208,21 @@ extension DiscoverPresenter {
     }
 
     private func startObservingPersistedWebTags() {
-        persistedWebTags = realmContext.main.objects(WebTagRealm.self)
-        persistedWebTagsToken = persistedWebTags.observe({ [weak self] (change) in
+        virtualReactorToken?.invalidate()
+        virtualReactorToken = virtualReactor.observe { [weak self] change in
             switch change {
-            case .initial(let persistedWebTags):
-                self?.persistedWebTags = persistedWebTags
-            case .update(let persistedWebTags, _, _, _):
-                self?.persistedWebTags = persistedWebTags
+            case .initial(let persistedVirtualSensors):
+                self?.persistedVirtualSensors = persistedVirtualSensors
+            case .insert(let addedPersistedVirtualSensor):
+                self?.persistedVirtualSensors.append(addedPersistedVirtualSensor)
+            case .delete(let deletedPersistedVirtualSensor):
+                self?.persistedVirtualSensors.removeAll(where: { $0.id == deletedPersistedVirtualSensor.id })
             case .error(let error):
                 self?.errorPresenter.present(error: error)
+            case .update:
+                break
             }
-        })
+        }
     }
 
     private func startObservingPersistedRuuviSensors() {
