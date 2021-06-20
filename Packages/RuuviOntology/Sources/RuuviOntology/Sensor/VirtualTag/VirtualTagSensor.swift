@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol VirtualTagSensor: VirtualSensor, Nameable { }
+public protocol VirtualTagSensor: VirtualSensor, Nameable, Locateable { }
 
 extension VirtualTagSensor {
     public var any: AnyVirtualTagSensor {
@@ -8,7 +8,11 @@ extension VirtualTagSensor {
     }
 
     public var `struct`: VirtualTagSensorStruct {
-        return VirtualTagSensorStruct(id: id, name: name)
+        return VirtualTagSensorStruct(
+            id: id,
+            name: name,
+            loc: loc
+        )
     }
 
 }
@@ -16,13 +20,16 @@ extension VirtualTagSensor {
 public struct VirtualTagSensorStruct: VirtualTagSensor {
     public var id: String
     public var name: String
+    public var loc: Location?
 
     public init(
         id: String,
-        name: String
+        name: String,
+        loc: Location?
     ) {
         self.id = id
         self.name = name
+        self.loc = loc
     }
 }
 
@@ -35,6 +42,10 @@ public struct AnyVirtualTagSensor: VirtualTagSensor, Equatable, Hashable {
 
     public var name: String {
         return object.name
+    }
+
+    public var loc: Location? {
+        return object.loc
     }
 
     public static func == (lhs: AnyVirtualTagSensor, rhs: AnyVirtualTagSensor) -> Bool {

@@ -7,10 +7,10 @@ import RuuviOntology
 protocol VirtualService {
     func add(provider: VirtualProvider) -> Future<VirtualProvider, RUError>
     func add(provider: VirtualProvider, location: Location) -> Future<VirtualProvider, RUError>
-    func remove(webTag: WebTagRealm) -> Future<Bool, RUError>
-    func update(name: String, of webTag: WebTagRealm) -> Future<Bool, RUError>
-    func update(location: Location, of webTag: WebTagRealm) -> Future<Bool, RUError>
-    func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError>
+    func remove(sensor: VirtualSensor) -> Future<Bool, RUError>
+    func update(name: String, of sensor: VirtualSensor) -> Future<Bool, RUError>
+    func update(location: Location, of sensor: VirtualSensor) -> Future<Bool, RUError>
+    func clearLocation(of sensor: VirtualSensor) -> Future<Bool, RUError>
 
     // swiftlint:disable function_parameter_count
     @discardableResult

@@ -70,8 +70,10 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
-    func openWebTagSettings(webTag: WebTagRealm,
-                            temperature: Temperature?) {
+    func openVirtualSensorSettings(
+        webTag: WebTagRealm,
+        temperature: Temperature?
+    ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)

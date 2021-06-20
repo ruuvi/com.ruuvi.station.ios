@@ -23,13 +23,13 @@ class VirtualTagSubjectCombine {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             let results = sSelf.realm.main.objects(WebTagRealm.self)
-            sSelf.webTagRealmCache = results.map({ $0.any })
+            sSelf.webTagRealmCache = results.map({ $0.struct.any })
             sSelf.webTagsRealmToken = results.observe { [weak self] (change) in
                 guard let sSelf = self else { return }
                 switch change {
                 case .update(let webTags, let deletions, let insertions, let modifications):
                     for del in deletions {
-                        sSelf.deleteSubject.send(sSelf.webTagRealmCache[del].any)
+                        sSelf.deleteSubject.send(sSelf.webTagRealmCache[del].struct.any)
                     }
                     sSelf.webTagRealmCache = sSelf.webTagRealmCache
                                                     .enumerated()
@@ -37,11 +37,11 @@ class VirtualTagSubjectCombine {
                                                     .map { $0.element }
                     for ins in insertions {
                         sSelf.insertSubject.send(webTags[ins].any)
-                        sSelf.webTagRealmCache.insert(webTags[ins].any, at: ins)
+                        sSelf.webTagRealmCache.insert(webTags[ins].struct.any, at: ins)
                     }
                     for mod in modifications {
                         sSelf.updateSubject.send(webTags[mod].any)
-                        sSelf.webTagRealmCache[mod] = webTags[mod].any
+                        sSelf.webTagRealmCache[mod] = webTags[mod].struct.any
                     }
                 default:
                     break

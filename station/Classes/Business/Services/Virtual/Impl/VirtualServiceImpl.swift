@@ -37,10 +37,10 @@ class VirtualServiceImpl: VirtualService {
         return promise.future
     }
 
-    func remove(webTag: WebTagRealm) -> Future<Bool, RUError> {
-        ruuviLocalImages.deleteCustomBackground(for: webTag.id.luid)
+    func remove(sensor: VirtualSensor) -> Future<Bool, RUError> {
+        ruuviLocalImages.deleteCustomBackground(for: sensor.id.luid)
         let promise = Promise<Bool, RUError>()
-        virtualPersistence.remove(sensor: webTag)
+        virtualPersistence.remove(sensor: sensor)
             .on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -49,9 +49,9 @@ class VirtualServiceImpl: VirtualService {
         return promise.future
     }
 
-    func update(name: String, of webTag: WebTagRealm) -> Future<Bool, RUError> {
+    func update(name: String, of sensor: VirtualSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        virtualPersistence.update(name: name, of: webTag)
+        virtualPersistence.update(name: name, of: sensor)
             .on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -60,25 +60,30 @@ class VirtualServiceImpl: VirtualService {
         return promise.future
     }
 
-    func update(location: Location, of webTag: WebTagRealm) -> Future<Bool, RUError> {
+    func update(location: Location, of sensor: VirtualSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        virtualPersistence.update(location: location, of: webTag, name: VirtualLocation.manual.title)
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .virtualPersistence(error))
-            })
+        virtualPersistence.update(
+            location: location,
+            of: sensor,
+            name: VirtualLocation.manual.title
+        ).on(success: { success in
+            promise.succeed(value: success)
+        }, failure: { error in
+            promise.fail(error: .virtualPersistence(error))
+        })
         return promise.future
     }
 
-    func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
+    func clearLocation(of sensor: VirtualSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        virtualPersistence.clearLocation(of: webTag, name: VirtualLocation.current.title)
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .virtualPersistence(error))
-            })
+        virtualPersistence.clearLocation(
+            of: sensor,
+            name: VirtualLocation.current.title
+        ).on(success: { success in
+            promise.succeed(value: success)
+        }, failure: { error in
+            promise.fail(error: .virtualPersistence(error))
+        })
         return promise.future
     }
 

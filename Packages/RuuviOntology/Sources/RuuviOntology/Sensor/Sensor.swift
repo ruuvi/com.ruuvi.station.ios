@@ -17,7 +17,7 @@ public protocol Versionable {
 }
 
 public protocol Locateable {
-    var location: Location { get }
+    var loc: Location? { get }
 }
 
 public protocol Claimable {
@@ -45,5 +45,3 @@ public protocol Shareable {
 }
 
 public protocol ShareableSensor: Sensor, Shareable {}
-
-public protocol LocationVirtualSensor: VirtualSensor, Locateable {}
