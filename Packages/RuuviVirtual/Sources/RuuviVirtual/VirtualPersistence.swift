@@ -23,7 +23,7 @@ public protocol VirtualPersistence {
     func remove(sensor: VirtualSensor) -> Future<Bool, VirtualPersistenceError>
     func update(
         name: String,
-        of webTag: WebTagRealm
+        of sensor: VirtualSensor
     ) -> Future<Bool, VirtualPersistenceError>
     func update(
         location: Location,
