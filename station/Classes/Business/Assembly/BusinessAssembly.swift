@@ -411,7 +411,7 @@ class BusinessAssembly: Assembly {
 
         container.register(VirtualService.self) { r in
             let service = VirtualServiceImpl()
-            service.webTagPersistence = r.resolve(VirtualPersistence.self)
+            service.virtualPersistence = r.resolve(VirtualPersistence.self)
             service.weatherProviderService = r.resolve(VirtualProviderService.self)
             service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
             return service
