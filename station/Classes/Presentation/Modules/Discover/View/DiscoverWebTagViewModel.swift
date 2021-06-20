@@ -1,7 +1,8 @@
 import UIKit
+import RuuviVirtual
 
 struct DiscoverWebTagViewModel {
-    var provider: WeatherProvider
-    var locationType: WebTagLocationSource
+    var provider: VirtualProvider
+    var locationType: VirtualLocation
     var icon: UIImage?
 }

@@ -4,6 +4,7 @@ import RuuviStorage
 import RuuviLocal
 import RuuviCore
 import RuuviService
+import RuuviVirtual
 #if canImport(RuuviCoreImage)
 import RuuviCoreImage
 #endif
@@ -28,7 +29,7 @@ class CoreAssembly: Assembly {
             let manager = LocalNotificationsManagerImpl()
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
+            manager.virtualTagTrunk = r.resolve(VirtualStorage.self)
             manager.idPersistence = r.resolve(RuuviLocalIDs.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)

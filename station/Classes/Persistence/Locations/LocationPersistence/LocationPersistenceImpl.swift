@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import RuuviOntology
 
 fileprivate extension Location {
     var asClass: LocationAppleClass {
@@ -21,7 +22,7 @@ class LocationPersistenceImpl: LocationPersistence {
               let locations = KeyedArchiver.unarchive(data, with: [LocationAppleClass].self) else {
             return nil
         }
-        return locations.map({$0.asStruct})
+        return locations.map({ $0.asStruct })
     }
 
     func setLocations(_ locations: [Location], for coordinate: CLLocationCoordinate2D) {

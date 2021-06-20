@@ -9,6 +9,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -18,7 +19,7 @@ class CardsPresenter: CardsModuleInput {
     var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var background: BTBackground!
-    var webTagService: WebTagService!
+    var webTagService: VirtualService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
@@ -32,7 +33,7 @@ class CardsPresenter: CardsModuleInput {
     var calibrationService: CalibrationService!
     var ruuviReactor: RuuviReactor!
     var ruuviStorage: RuuviStorage!
-    var virtualTagReactor: VirtualTagReactor!
+    var virtualTagReactor: VirtualReactor!
     var measurementService: MeasurementsService!
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
@@ -222,7 +223,7 @@ extension CardsPresenter: DiscoverModuleOutput {
         module.dismiss()
     }
     
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
+    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
         module.dismiss()
     }
 }

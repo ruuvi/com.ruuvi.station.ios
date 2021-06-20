@@ -13,6 +13,7 @@ import RuuviCore
 import RuuviDaemon
 import RuuviRepository
 import RuuviUser
+import RuuviVirtual
 #if canImport(RuuviServiceFactory)
 import RuuviServiceFactory
 #endif
@@ -28,7 +29,6 @@ import RuuviUserCoordinator
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
-
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
         container.register(AlertService.self) { r in
@@ -92,8 +92,8 @@ class BusinessAssembly: Assembly {
             let manager = DataPruningOperationsManager()
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
-            manager.virtualTagTank = r.resolve(VirtualTagTank.self)
+            manager.virtualTagTrunk = r.resolve(VirtualStorage.self)
+            manager.virtualTagTank = r.resolve(VirtualRepository.self)
             manager.ruuviPool = r.resolve(RuuviPool.self)
             return manager
         }
@@ -383,8 +383,8 @@ class BusinessAssembly: Assembly {
             return factory.createUser()
         }.inObjectScope(.container)
 
-        container.register(WeatherProviderService.self) { r in
-            let service = WeatherProviderServiceImpl()
+        container.register(VirtualProviderService.self) { r in
+            let service = VirtualProviderServiceImpl()
             service.owmApi = r.resolve(OpenWeatherMapAPI.self)
             service.locationManager = r.resolve(LocationManager.self)
             service.locationService = r.resolve(LocationService.self)
@@ -393,9 +393,9 @@ class BusinessAssembly: Assembly {
 
         container.register(WebTagDaemon.self) { r in
             let daemon = WebTagDaemonImpl()
-            daemon.webTagService = r.resolve(WebTagService.self)
+            daemon.webTagService = r.resolve(VirtualService.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
-            daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
+            daemon.webTagPersistence = r.resolve(VirtualPersistence.self)
             daemon.alertService = r.resolve(AlertService.self)
             return daemon
         }.inObjectScope(.container)
@@ -404,15 +404,15 @@ class BusinessAssembly: Assembly {
             let manager = WebTagOperationsManager()
             manager.alertService = r.resolve(RuuviServiceAlert.self)
             manager.alertHandler = r.resolve(AlertService.self)
-            manager.weatherProviderService = r.resolve(WeatherProviderService.self)
-            manager.webTagPersistence = r.resolve(WebTagPersistence.self)
+            manager.weatherProviderService = r.resolve(VirtualProviderService.self)
+            manager.webTagPersistence = r.resolve(VirtualPersistence.self)
             return manager
         }
 
-        container.register(WebTagService.self) { r in
-            let service = WebTagServiceImpl()
-            service.webTagPersistence = r.resolve(WebTagPersistence.self)
-            service.weatherProviderService = r.resolve(WeatherProviderService.self)
+        container.register(VirtualService.self) { r in
+            let service = VirtualServiceImpl()
+            service.webTagPersistence = r.resolve(VirtualPersistence.self)
+            service.weatherProviderService = r.resolve(VirtualProviderService.self)
             service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
             return service
         }

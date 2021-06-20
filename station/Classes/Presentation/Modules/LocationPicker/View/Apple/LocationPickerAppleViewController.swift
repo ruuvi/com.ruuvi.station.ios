@@ -1,5 +1,6 @@
 import UIKit
 import MapKit
+import RuuviOntology
 
 class LocationPickerAppleViewController: UIViewController {
     var output: LocationPickerViewOutput!

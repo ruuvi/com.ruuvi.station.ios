@@ -6,6 +6,7 @@ import RuuviContext
 import RuuviStorage
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 final class MigrationManagerAlertService: MigrationManager {
     var realmContext: RealmContext!

@@ -3,12 +3,12 @@ import RealmSwift
 import CoreLocation
 import RuuviLocal
 import RuuviOntology
+import RuuviVirtual
 
 class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
-
-    var webTagService: WebTagService!
+    var webTagService: VirtualService!
     var settings: RuuviLocalSettings!
-    var webTagPersistence: WebTagPersistence!
+    var webTagPersistence: VirtualPersistence!
     var alertService: AlertService!
     private var realm: Realm?
     private var token: NotificationToken?
@@ -156,7 +156,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     private func restartPullingCurrentLocation(webTags: Results<WebTagRealm>, fire: Bool) {
         autoreleasepool {
             let currentLocationWebTags = webTags.filter({ $0.location == nil })
-            for provider in WeatherProvider.allCases {
+            for provider in VirtualProvider.allCases {
                 if currentLocationWebTags.contains(where: { $0.provider == provider }) {
                     let currentLocationWebTagStructs: [VirtualSensor] = currentLocationWebTags.map({ $0.struct })
                     wsTokens.append(webTagService.observeCurrentLocationData(self,

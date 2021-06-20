@@ -1,10 +1,11 @@
 import Foundation
 import BTKit
 import RuuviOntology
+import RuuviVirtual
 
 protocol AlertService {
     func process(heartbeat ruuviTag: RuuviTagSensorRecord)
-    func process(data: WPSData, for sensor: VirtualSensor)
+    func process(data: VirtualData, for sensor: VirtualSensor)
     func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
 
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)

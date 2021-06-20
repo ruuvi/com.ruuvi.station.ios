@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import RuuviOntology
 
 class LocationAppleClass: NSObject, NSCoding {
     var city: String?

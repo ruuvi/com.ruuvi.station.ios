@@ -1,0 +1,113 @@
+import Foundation
+import Future
+import CoreLocation
+import RuuviLocal
+import RuuviVirtual
+import RuuviOntology
+
+class VirtualServiceImpl: VirtualService {
+    var ruuviLocalImages: RuuviLocalImages!
+    var webTagPersistence: VirtualPersistence!
+    var weatherProviderService: VirtualProviderService!
+
+    func add(provider: VirtualProvider, location: Location) -> Future<VirtualProvider, RUError> {
+        let promise = Promise<VirtualProvider, RUError>()
+        webTagPersistence.persist(
+            provider: provider,
+            location: location,
+            name: VirtualLocation.manual.title
+        ).on(success: { provider in
+            promise.succeed(value: provider)
+        }, failure: { error in
+            promise.fail(error: .virtualPersistence(error))
+        })
+        return promise.future
+    }
+
+    func add(provider: VirtualProvider) -> Future<VirtualProvider, RUError> {
+        let promise = Promise<VirtualProvider, RUError>()
+        webTagPersistence.persist(
+            provider: provider,
+            name: VirtualLocation.current.title
+        ).on(success: { provider in
+            promise.succeed(value: provider)
+        }, failure: { error in
+            promise.fail(error: .virtualPersistence(error))
+        })
+        return promise.future
+    }
+
+    func remove(webTag: WebTagRealm) -> Future<Bool, RUError> {
+        ruuviLocalImages.deleteCustomBackground(for: webTag.id.luid)
+        let promise = Promise<Bool, RUError>()
+        webTagPersistence.remove(webTag: webTag)
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .virtualPersistence(error))
+            })
+        return promise.future
+    }
+
+    func update(name: String, of webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        webTagPersistence.update(name: name, of: webTag)
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .virtualPersistence(error))
+            })
+        return promise.future
+    }
+
+    func update(location: Location, of webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        webTagPersistence.update(location: location, of: webTag, name: VirtualLocation.manual.title)
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .virtualPersistence(error))
+            })
+        return promise.future
+    }
+
+    func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        webTagPersistence.clearLocation(of: webTag, name: VirtualLocation.current.title)
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .virtualPersistence(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T,
+                                                  provider: VirtualProvider,
+                                                  interval: TimeInterval,
+                                                  fire: Bool = true,
+                                                  closure: @escaping (T, VirtualData?, Location?, RUError?) -> Void)
+        -> RUObservationToken {
+        return weatherProviderService.observeCurrentLocationData(observer,
+                                                                 provider: provider,
+                                                                 interval: interval,
+                                                                 fire: fire,
+                                                                 closure: closure)
+    }
+
+    @discardableResult
+    func observeData<T: AnyObject>(_ observer: T,
+                                   coordinate: CLLocationCoordinate2D,
+                                   provider: VirtualProvider,
+                                   interval: TimeInterval,
+                                   fire: Bool = true,
+                                   closure: @escaping (T, VirtualData?, RUError?) -> Void) -> RUObservationToken {
+        return weatherProviderService.observeData(observer,
+                                                  coordinate: coordinate,
+                                                  provider: provider,
+                                                  interval: interval,
+                                                  fire: fire,
+                                                  closure: closure)
+    }
+}

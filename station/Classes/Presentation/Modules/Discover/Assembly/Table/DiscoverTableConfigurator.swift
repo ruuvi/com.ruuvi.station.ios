@@ -18,7 +18,7 @@ class DiscoverTableConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
-        presenter.webTagService = r.resolve(WebTagService.self)
+        presenter.webTagService = r.resolve(VirtualService.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)

@@ -4,6 +4,7 @@ import Humidity
 import Future
 import RuuviOntology
 import RuuviContext
+import RuuviVirtual
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
 #endif

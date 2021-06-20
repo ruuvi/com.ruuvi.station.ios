@@ -1,6 +1,7 @@
 import UIKit
 import BTKit
 import RuuviOntology
+import RuuviVirtual
 
 enum DiscoverTableSection {
     case webTag
@@ -33,7 +34,7 @@ class DiscoverTableViewController: UITableViewController {
     private var alertVC: UIAlertController?
 
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
-    var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
+    var savedWebTagProviders: [VirtualProvider] = [VirtualProvider]() {
         didSet {
             shownWebTags = webTags
                 .filter({

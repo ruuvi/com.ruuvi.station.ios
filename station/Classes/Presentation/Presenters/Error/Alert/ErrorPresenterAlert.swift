@@ -2,10 +2,14 @@ import UIKit
 import Localize_Swift
 
 class ErrorPresenterAlert: ErrorPresenter {
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func present(error: Error) {
         if let ruError = error as? RUError {
             switch ruError {
+            case .virtualStorage(let error):
+                presentAlert(error: error)
+            case .virtualPersistence(let error):
+                presentAlert(error: error)
             case .ruuviLocal(let error):
                 presentAlert(error: error)
             case .ruuviPool(let error):

@@ -374,6 +374,33 @@ PODS:
     - KeychainAccess
     - RuuviUser/Contract
   - RuuviUser/Tests (0.0.1)
+  - RuuviVirtual (0.0.1):
+    - RuuviVirtual/Contract (= 0.0.1)
+  - RuuviVirtual/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviVirtual/Model (0.0.1):
+    - FutureX
+    - RealmSwift
+    - RuuviOntology
+    - RuuviVirtual/Contract
+  - RuuviVirtual/Persistence (0.0.1):
+    - RealmSwift
+    - RuuviContext/Realm
+    - RuuviLocal
+    - RuuviOntology
+    - RuuviVirtual/Contract
+  - RuuviVirtual/Reactor (0.0.1):
+    - RuuviContext/Realm
+    - RuuviOntology
+    - RuuviVirtual/Contract
+  - RuuviVirtual/Repository (0.0.1):
+    - RuuviOntology
+    - RuuviVirtual/Contract
+  - RuuviVirtual/Storage (0.0.1):
+    - RuuviOntology
+    - RuuviVirtual/Contract
+  - RuuviVirtual/Tests (0.0.1)
   - SwiftGen (6.4.0)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
@@ -443,6 +470,13 @@ DEPENDENCIES:
   - RuuviUser (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviUser/Coordinator (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviUser/Tests (from `Packages/RuuviUser/RuuviUser.podspec`)
+  - RuuviVirtual (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Model (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Persistence (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Reactor (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Repository (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Storage (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Tests (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - SwiftGen (~> 6.0)
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
@@ -517,6 +551,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviStorage/RuuviStorage.podspec
   RuuviUser:
     :path: Packages/RuuviUser/RuuviUser.podspec
+  RuuviVirtual:
+    :path: Packages/RuuviVirtual/RuuviVirtual.podspec
   SwinjectPropertyLoader:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
@@ -583,11 +619,12 @@ SPEC CHECKSUMS:
   RuuviService: 2c3ccffdcf8499240a1e031ca8567f5739eb58b7
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
+  RuuviVirtual: 326dbd7f4158cc459ebba4fcd3d4a2b41c955a8b
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 7503cf8f68b2bd5924788a85bf2aba07eefbe3f7
+PODFILE CHECKSUM: f5c1cbd2b869b08bc1b8306e17e4e356526f28a8
 
 COCOAPODS: 1.10.1

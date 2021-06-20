@@ -14,7 +14,7 @@ class WebTagSettingsTableConfigurator {
         presenter.router = router
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.webTagService = r.resolve(WebTagService.self)
+        presenter.webTagService = r.resolve(VirtualService.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
