@@ -8,6 +8,7 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -15,7 +16,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
-    var webTagService: WebTagService!
+    var webTagService: VirtualService!
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
@@ -187,7 +188,7 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
 // MARK: - Private
 extension DiscoverPresenter {
 
-    private func persistWebTag(with provider: WeatherProvider) {
+    private func persistWebTag(with provider: VirtualProvider) {
         let operation = webTagService.add(provider: provider)
         operation.on(success: { [weak self] _ in
             guard let sSelf = self else { return }

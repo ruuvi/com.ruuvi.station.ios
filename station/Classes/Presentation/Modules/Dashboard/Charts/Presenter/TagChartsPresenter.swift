@@ -10,6 +10,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -269,7 +270,7 @@ extension TagChartsPresenter: DiscoverModuleOutput {
         }
     }
 
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
+    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
         module.dismiss { [weak self] in
             self?.router.dismiss()
         }

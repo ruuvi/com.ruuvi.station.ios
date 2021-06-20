@@ -3,6 +3,7 @@ import BTKit
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviVirtual
 
 enum CardType {
     case ruuvi
@@ -29,7 +30,7 @@ struct CardsViewModel {
     var currentLocation: Observable<Location?> = Observable<Location?>()
     var animateRSSI: Observable<Bool?> = Observable<Bool?>()
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
-    var provider: WeatherProvider?
+    var provider: VirtualProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
@@ -63,7 +64,7 @@ struct CardsViewModel {
         date.value = data.date
     }
 
-    func update(_ wpsData: WPSData, current: Location?) {
+    func update(_ wpsData: VirtualData, current: Location?) {
         isConnectable.value = false
         temperature.value = wpsData.temperature
         humidity.value = wpsData.humidity

@@ -12,10 +12,8 @@ final class AppAssembly {
                 NetworkingAssembly(),
                 PersistenceAssembly(),
                 PresentationAssembly(),
-                ReactorAssembly(),
-                TankAssembly(),
-                TrunkAssembly(),
-                DfuAssembly()
+                DfuAssembly(),
+                VirtualAssembly()
             ])
     }
 }

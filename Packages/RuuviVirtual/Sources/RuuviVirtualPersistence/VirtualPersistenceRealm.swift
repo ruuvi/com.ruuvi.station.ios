@@ -1,0 +1,296 @@
+import RealmSwift
+import Future
+import CoreLocation
+import RuuviOntology
+import RuuviContext
+import RuuviLocal
+
+// swiftlint:disable:next type_body_length
+public final class VirtualPersistenceRealm: VirtualPersistence {
+    private let context: RealmContext
+    private var settings: RuuviLocalSettings
+
+    public init(context: RealmContext, settings: RuuviLocalSettings) {
+        self.context = context
+        self.settings = settings
+    }
+
+    public func readAll() -> Future<[AnyVirtualTagSensor], VirtualPersistenceError> {
+        let promise = Promise<[AnyVirtualTagSensor], VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            let realmEntities = self.context.bg.objects(WebTagRealm.self)
+            let result: [AnyVirtualTagSensor] = realmEntities.map { webTagRealm in
+                return VirtualTagSensorStruct(id: webTagRealm.uuid, name: webTagRealm.name).any
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+
+    public func readOne(_ id: String) -> Future<AnyVirtualTagSensor, VirtualPersistenceError> {
+        let promise = Promise<AnyVirtualTagSensor, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            if let webTagRealm = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: id) {
+                let result = VirtualTagSensorStruct(id: webTagRealm.id, name: webTagRealm.name).any
+                promise.succeed(value: result)
+            } else {
+                promise.fail(error: .failedToFindVirtualTag)
+            }
+        }
+        return promise.future
+    }
+
+    public func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, VirtualPersistenceError> {
+        let promise = Promise<Bool, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            do {
+                let data = self.context.bg.objects(WebTagDataRealm.self)
+                               .filter("webTag.uuid == %@ AND date < %@", ruuviTagId, date)
+                try self.context.bg.write {
+                    self.context.bg.delete(data)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func clearLocation(
+        of webTag: WebTagRealm,
+        name: String
+    ) -> Future<Bool, VirtualPersistenceError> {
+        let promise = Promise<Bool, VirtualPersistenceError>()
+        if webTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        if let oldLocation = webTag.location {
+                            self.context.bg.delete(oldLocation)
+                        }
+                        webTag.location = nil
+                        webTag.name = name
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    if let oldLocation = webTag.location {
+                        self.context.main.delete(oldLocation)
+                    }
+                    webTag.location = nil
+                    webTag.name = name
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func update(
+        location: Location,
+        of webTag: WebTagRealm,
+        name: String
+    ) -> Future<Bool, VirtualPersistenceError> {
+        let promise = Promise<Bool, VirtualPersistenceError>()
+        if webTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        if let oldLocation = webTag.location {
+                            self.context.bg.delete(oldLocation)
+                        }
+                        let newLocation = WebTagLocationRealm(location: location)
+                        self.context.bg.add(newLocation)
+                        webTag.location = newLocation
+                        webTag.name = location.city ?? location.country ?? name
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    if let oldLocation = webTag.location {
+                        self.context.main.delete(oldLocation)
+                    }
+                    let newLocation = WebTagLocationRealm(location: location)
+                    self.context.main.add(newLocation, update: .all)
+                    webTag.location = newLocation
+                    webTag.name = location.city ?? location.country ?? name
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func persist(
+        provider: VirtualProvider,
+        location: Location,
+        name: String
+    ) -> Future<VirtualProvider, VirtualPersistenceError> {
+        let promise = Promise<VirtualProvider, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            let uuid = UUID().uuidString
+            let webTag = WebTagRealm(uuid: uuid, provider: provider)
+            webTag.name = location.city ?? location.country ?? name
+            let webTagLocation = WebTagLocationRealm(location: location)
+            do {
+                try self.context.bg.write {
+                    self.context.bg.add(webTag, update: .all)
+                    self.context.bg.add(webTagLocation, update: .modified)
+                    webTag.location = webTagLocation
+                }
+                self.settings.tagsSorting.append(uuid)
+                promise.succeed(value: provider)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func persist(provider: VirtualProvider, name: String) -> Future<VirtualProvider, VirtualPersistenceError> {
+        let promise = Promise<VirtualProvider, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            let uuid = UUID().uuidString
+            let webTag = WebTagRealm(uuid: uuid, provider: provider)
+            webTag.name = name
+            do {
+                try self.context.bg.write {
+                    self.context.bg.add(webTag, update: .all)
+                }
+                self.settings.tagsSorting.append(uuid)
+                promise.succeed(value: provider)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func remove(webTag: WebTagRealm) -> Future<Bool, VirtualPersistenceError> {
+        let promise = Promise<Bool, VirtualPersistenceError>()
+        if webTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    let webTagId = webTag.id
+                    try self.context.bg.write {
+                        self.context.bg.delete(webTag)
+                    }
+                    self.settings.tagsSorting.removeAll(where: { $0 == webTagId })
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                let webTagId = webTag.id
+                try context.main.write {
+                    self.context.main.delete(webTag)
+                }
+                self.settings.tagsSorting.removeAll(where: { $0 == webTagId })
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func update(name: String, of webTag: WebTagRealm) -> Future<Bool, VirtualPersistenceError> {
+        let promise = Promise<Bool, VirtualPersistenceError>()
+        if webTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        webTag.name = name
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    webTag.name = name
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    @discardableResult
+    public func persist(currentLocation: Location, data: VirtualData) -> Future<VirtualData, VirtualPersistenceError> {
+        let promise = Promise<VirtualData, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            let currentLocationWebTags = self.context.bg.objects(WebTagRealm.self).filter("location == nil")
+            do {
+                try currentLocationWebTags.forEach({ (webTag) in
+                    if !webTag.isInvalidated {
+                        let tagData = WebTagDataRealm(webTag: webTag, data: data)
+                        let location = WebTagLocationRealm(location: currentLocation)
+                        try self.context.bg.write {
+                            if !webTag.isInvalidated {
+                                self.context.bg.add(location, update: .modified)
+                                tagData.location = location
+                                self.context.bg.add(tagData)
+                            }
+                        }
+                    }
+                })
+                promise.succeed(value: data)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    @discardableResult
+    public func persist(location: Location, data: VirtualData) -> Future<VirtualData, VirtualPersistenceError> {
+        let promise = Promise<VirtualData, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            let webTags = self.context.bg.objects(WebTagRealm.self)
+                .filter("location != nil AND location.latitude == %@ AND location.longitude == %@",
+                        location.coordinate.latitude,
+                        location.coordinate.longitude)
+            do {
+                try webTags.forEach({ (webTag) in
+                    if !webTag.isInvalidated {
+                        let tagData = WebTagDataRealm(webTag: webTag, data: data)
+                        let location = WebTagLocationRealm(location: location)
+                        try self.context.bg.write {
+                            if !webTag.isInvalidated {
+                                self.context.bg.add(location, update: .modified)
+                                tagData.location = location
+                                self.context.bg.add(tagData)
+                            }
+                        }
+                    }
+                })
+                promise.succeed(value: data)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+}

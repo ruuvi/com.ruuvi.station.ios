@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviVirtual
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!

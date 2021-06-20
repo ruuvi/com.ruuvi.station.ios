@@ -6,12 +6,13 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
     var router: WebTagSettingsRouterInput!
     var errorPresenter: ErrorPresenter!
-    var webTagService: WebTagService!
+    var webTagService: VirtualService!
     var settings: RuuviLocalSettings!
     var alertService: RuuviServiceAlert!
     var pushNotificationsManager: PushNotificationsManager!
@@ -90,8 +91,8 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
 
     func viewDidChangeTag(name: String) {
         let defaultName = webTag.location == nil
-            ? WebTagLocationSource.current.title
-            : WebTagLocationSource.manual.title
+            ? VirtualLocation.current.title
+            : VirtualLocation.manual.title
         let finalName = name.isEmpty ? defaultName : name
         let operation = webTagService.update(name: finalName, of: webTag)
         operation.on(failure: { [weak self] (error) in
@@ -401,7 +402,7 @@ extension WebTagSettingsPresenter {
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.humidityUnit.value = settings.humidityUnit
         view.viewModel.pressureUnit.value = settings.pressureUnit
-        if webTag.name == WebTagLocationSource.manual.title {
+        if webTag.name == VirtualLocation.manual.title {
             view.viewModel.name.value = nil
         } else {
             view.viewModel.name.value = webTag.name

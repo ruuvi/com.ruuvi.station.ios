@@ -3,12 +3,13 @@ import Future
 import RuuviStorage
 import RuuviLocal
 import RuuviPool
+import RuuviVirtual
 
 class DataPruningOperationsManager {
 
     var settings: RuuviLocalSettings!
-    var virtualTagTrunk: VirtualTagTrunk!
-    var virtualTagTank: VirtualTagTank!
+    var virtualTagTrunk: VirtualStorage!
+    var virtualTagTank: VirtualRepository!
     var ruuviStorage: RuuviStorage!
     var ruuviPool: RuuviPool!
 
@@ -23,7 +24,7 @@ class DataPruningOperationsManager {
             })
             promise.succeed(value: ops)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .virtualStorage(error))
         })
         return promise.future
     }

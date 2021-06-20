@@ -2,6 +2,7 @@ import UIKit
 import Humidity
 import Charts
 import RuuviOntology
+import RuuviVirtual
 
 enum TagChartsType {
     case ruuvi
@@ -22,16 +23,6 @@ struct TagChartsViewModel {
     init(type: TagChartsType) {
         self.type = type
     }
-
-//    init(_ ruuviTag: RuuviTagRealm) {
-//        type = .ruuvi
-//        uuid.value = ruuviTag.uuid
-//        if let macId = ruuviTag.mac {
-//            mac.value = macId
-//        }
-//        name.value = ruuviTag.name
-//        isConnectable.value = ruuviTag.isConnectable
-//    }
 
     init(_ webTag: WebTagRealm) {
         type = .web

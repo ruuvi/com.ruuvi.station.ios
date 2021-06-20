@@ -1,12 +1,13 @@
 import Foundation
 import RealmSwift
 import RuuviService
+import RuuviVirtual
 
 class WebTagOperationsManager {
-    var weatherProviderService: WeatherProviderService!
+    var weatherProviderService: VirtualProviderService!
     var alertService: RuuviServiceAlert!
     var alertHandler: AlertService!
-    var webTagPersistence: WebTagPersistence!
+    var webTagPersistence: VirtualPersistence!
 
     func alertsPullOperations() -> [Operation] {
         var operations = [Operation]()
