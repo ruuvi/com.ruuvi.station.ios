@@ -21,30 +21,20 @@ public final class WebTagDataRealm: Object {
 }
 
 extension WebTagDataRealm {
-    public var record: RuuviTagSensorRecord? {
+    public var record: VirtualTagSensorRecord? {
         guard let id = webTag?.id else {
             return nil
         }
         let t = Temperature(celsius.value)
         let h = Humidity(relative: humidity.value, temperature: t)
         let p = Pressure(pressure.value)
-        return RuuviTagSensorRecordStruct(
-            luid: id.luid,
+        return VirtualTagSensorRecordStruct(
+            sensorId: id,
             date: date,
-            source: .weatherProvider,
-            macId: nil,
-            rssi: nil,
             temperature: t,
             humidity: h,
             pressure: p,
-            acceleration: nil,
-            voltage: nil,
-            movementCounter: nil,
-            measurementSequenceNumber: nil,
-            txPower: nil,
-            temperatureOffset: 0.0,
-            humidityOffset: 0.0,
-            pressureOffset: 0.0
+            location: location?.location
         )
     }
 }

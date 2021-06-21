@@ -36,11 +36,11 @@ class VirtualTagSubjectCombine {
                                                     .filter { !deletions.contains($0.offset) }
                                                     .map { $0.element }
                     for ins in insertions {
-                        sSelf.insertSubject.send(webTags[ins].any)
+                        sSelf.insertSubject.send(webTags[ins].struct.any)
                         sSelf.webTagRealmCache.insert(webTags[ins].struct.any, at: ins)
                     }
                     for mod in modifications {
-                        sSelf.updateSubject.send(webTags[mod].any)
+                        sSelf.updateSubject.send(webTags[mod].struct.any)
                         sSelf.webTagRealmCache[mod] = webTags[mod].struct.any
                     }
                 default:

@@ -68,7 +68,7 @@ private struct LocationWebTag: Location {
 }
 
 extension WebTagRealm {
-    public var lastRecord: RuuviTagSensorRecord? {
+    public var lastRecord: VirtualTagSensorRecord? {
         return data.last?.record
     }
 }

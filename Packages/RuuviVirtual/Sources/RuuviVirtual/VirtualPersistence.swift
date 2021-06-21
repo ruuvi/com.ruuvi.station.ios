@@ -6,7 +6,13 @@ import RuuviOntology
 public protocol VirtualPersistence {
     func readAll() -> Future<[AnyVirtualTagSensor], VirtualPersistenceError>
 
-    func readOne(_ id: String) -> Future<AnyVirtualTagSensor, VirtualPersistenceError>
+    func readLast(
+        _ virtualTag: VirtualTagSensor
+    ) -> Future<VirtualTagSensorRecord?, VirtualPersistenceError>
+
+    func readOne(
+        _ id: String
+    ) -> Future<AnyVirtualTagSensor, VirtualPersistenceError>
 
     func deleteAllRecords(
         _ ruuviTagId: String,

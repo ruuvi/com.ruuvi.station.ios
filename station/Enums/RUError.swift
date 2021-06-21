@@ -8,6 +8,7 @@ import RuuviService
 import RuuviVirtual
 
 enum RUError: Error {
+    case virtualService(VirtualServiceError)
     case virtualStorage(VirtualStorageError)
     case virtualPersistence(VirtualPersistenceError)
     case ruuviLocal(RuuviLocalError)
@@ -32,6 +33,8 @@ enum RUError: Error {
 extension RUError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .virtualService(let error):
+            return error.localizedDescription
         case .virtualPersistence(let error):
             return error.localizedDescription
         case .virtualStorage(let error):

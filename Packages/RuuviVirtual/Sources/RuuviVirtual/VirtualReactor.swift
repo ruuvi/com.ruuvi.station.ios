@@ -5,6 +5,11 @@ public protocol VirtualReactor {
     func observe(
         _ block: @escaping (VirtualReactorChange<AnyVirtualTagSensor>) -> Void
     ) -> VirtualReactorToken
+
+    func observeLast(
+        _ virtualTag: VirtualTagSensor,
+        _ block: @escaping (VirtualReactorChange<AnyVirtualTagSensorRecord?>) -> Void
+    ) -> VirtualReactorToken
 }
 
 public enum VirtualReactorChange<Type> {

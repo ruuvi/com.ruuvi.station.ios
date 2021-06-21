@@ -8,6 +8,7 @@ public final class VirtualReactorImpl: VirtualReactor {
     private let context: RealmContext
     private let persistence: VirtualPersistence
     private lazy var entityCombine = VirtualTagSubjectCombine(realm: context)
+    private lazy var lastRecordCombines = [String: VirtualTagLastRecordSubjectCombine]()
 
     public init(context: RealmContext, persistence: VirtualPersistence) {
         self.context = context
@@ -36,6 +37,36 @@ public final class VirtualReactorImpl: VirtualReactor {
             insert.cancel()
             update.cancel()
             delete.cancel()
+        }
+    }
+
+    public func observeLast(
+        _ virtualTag: VirtualTagSensor,
+        _ block: @escaping (VirtualReactorChange<AnyVirtualTagSensorRecord?>) -> Void
+    ) -> VirtualReactorToken {
+        let realmOperation = persistence.readLast(virtualTag)
+        realmOperation.on(success: { record in
+            block(.update(record?.any))
+        })
+        var recordCombine: VirtualTagLastRecordSubjectCombine
+        if let combine = lastRecordCombines[virtualTag.id] {
+            recordCombine = combine
+        } else {
+            let combine = VirtualTagLastRecordSubjectCombine(
+                id: virtualTag.id,
+                realm: context
+            )
+            lastRecordCombines[virtualTag.id] = combine
+            recordCombine = combine
+        }
+        let cancellable = recordCombine.subject.sink { (record) in
+            block(.update(record))
+        }
+        if !recordCombine.isServing {
+            recordCombine.start()
+        }
+        return VirtualReactorToken {
+            cancellable.cancel()
         }
     }
 
