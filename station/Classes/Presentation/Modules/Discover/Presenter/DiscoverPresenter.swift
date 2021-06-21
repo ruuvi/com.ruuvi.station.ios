@@ -34,7 +34,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     }
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
-            view.savedDevicesIds = persistedSensors.map({ $0.luid?.any })
+            view.savedRuuviTagIds = persistedSensors.map({ $0.luid?.any })
             updateCloseButtonVisibilityState()
         }
     }
@@ -84,9 +84,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
         let isCurrentLocationTagAlreadyAdded = realmContext.main.objects(WebTagRealm.self)
             .filter("location == nil").count > 0
         if isCurrentLocationTagAlreadyAdded {
-            view.webTags = [manual]
+            view.virtualTags = [manual]
         } else {
-            view.webTags = [manual, current]
+            view.virtualTags = [manual, current]
         }
         view.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
         if !view.isBluetoothEnabled
@@ -262,7 +262,7 @@ extension DiscoverPresenter {
             observer.view.isBluetoothEnabled = state == .poweredOn
             if state == .poweredOff {
                 observer.ruuviTags.removeAll()
-                observer.view.devices = []
+                observer.view.ruuviTags = []
                 observer.view.showBluetoothDisabled()
             }
         })
@@ -303,7 +303,7 @@ extension DiscoverPresenter {
     }
 
     private func updateViewDevices() {
-        view.devices = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
+        view.ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
             if let persistedRuuviTag = persistedSensors
                 .first(where: { $0.luid?.any == ruuviTag.luid?.any }) {
                 return DiscoverRuuviTagViewModel(

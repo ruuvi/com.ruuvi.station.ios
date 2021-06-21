@@ -33,10 +33,10 @@ class DiscoverTableViewController: UITableViewController {
 
     private var alertVC: UIAlertController?
 
-    var webTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]()
+    var virtualTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]()
     var savedWebTagProviders: [VirtualProvider] = [VirtualProvider]() {
         didSet {
-            shownWebTags = webTags
+            shownVirtualTags = virtualTags
                 .filter({
                     if hideAlreadyAddedWebProviders {
                         return !savedWebTagProviders.contains($0.provider)
@@ -48,10 +48,10 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
-    var devices: [DiscoverRuuviTagViewModel] = [DiscoverRuuviTagViewModel]() {
+    var ruuviTags: [DiscoverRuuviTagViewModel] = [DiscoverRuuviTagViewModel]() {
         didSet {
-            shownDevices = devices
-                .filter({ !savedDevicesIds.contains( $0.luid )})
+            shownRuuviTags = ruuviTags
+                .filter({ !savedRuuviTagIds.contains( $0.luid )})
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -61,10 +61,10 @@ class DiscoverTableViewController: UITableViewController {
                 })
         }
     }
-    var savedDevicesIds: [AnyLocalIdentifier?] = [AnyLocalIdentifier?]() {
+    var savedRuuviTagIds: [AnyLocalIdentifier?] = [AnyLocalIdentifier?]() {
         didSet {
-            shownDevices = devices
-                .filter({ !savedDevicesIds.contains($0.luid) })
+            shownRuuviTags = ruuviTags
+                .filter({ !savedRuuviTagIds.contains($0.luid) })
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -90,12 +90,12 @@ class DiscoverTableViewController: UITableViewController {
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
-    private var shownDevices: [DiscoverRuuviTagViewModel] =  [DiscoverRuuviTagViewModel]() {
+    private var shownRuuviTags: [DiscoverRuuviTagViewModel] =  [DiscoverRuuviTagViewModel]() {
         didSet {
             updateTableView()
         }
     }
-    private var shownWebTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]() {
+    private var shownVirtualTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]() {
         didSet {
             updateTableView()
         }
@@ -168,28 +168,28 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        let section = DiscoverTableSection.section(for: section, deviceCount: shownRuuviTags.count)
         switch section {
         case .webTag:
-            return shownWebTags.count
+            return shownVirtualTags.count
         case .device:
-            return shownDevices.count
+            return shownRuuviTags.count
         case .noDevices:
             return 1
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
+        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownRuuviTags.count)
         switch section {
         case .webTag:
             let cell = tableView.dequeueReusableCell(with: DiscoverWebTagTableViewCell.self, for: indexPath)
-            let tag = shownWebTags[indexPath.row]
+            let tag = shownVirtualTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .device:
             let cell = tableView.dequeueReusableCell(with: DiscoverDeviceTableViewCell.self, for: indexPath)
-            let tag = shownDevices[indexPath.row]
+            let tag = shownRuuviTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .noDevices:
@@ -206,15 +206,15 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
+        let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownRuuviTags.count)
         switch sectionType {
         case .webTag:
-            if indexPath.row < shownWebTags.count {
-                output.viewDidChoose(webTag: shownWebTags[indexPath.row])
+            if indexPath.row < shownVirtualTags.count {
+                output.viewDidChoose(webTag: shownVirtualTags[indexPath.row])
             }
         case .device:
-            if indexPath.row < shownDevices.count {
-                let device = shownDevices[indexPath.row]
+            if indexPath.row < shownRuuviTags.count {
+                let device = shownRuuviTags[indexPath.row]
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
         default:
@@ -223,7 +223,7 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownRuuviTags.count)
         if sectionType == .webTag {
             return 60
         } else {
@@ -236,7 +236,7 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownRuuviTags.count)
         if sectionType == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
@@ -251,12 +251,12 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownRuuviTags.count)
         switch sectionType {
         case .device:
-            return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+            return shownRuuviTags.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:
-            return shownDevices.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+            return shownRuuviTags.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         default:
             return nil
         }
