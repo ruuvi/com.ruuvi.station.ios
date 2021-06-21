@@ -2,11 +2,10 @@ import UIKit
 import Humidity
 import Charts
 import RuuviOntology
-import RuuviVirtual
 
 enum TagChartsType {
     case ruuvi
-    case web
+    case virtual
 }
 
 struct TagChartsViewModel {
@@ -24,10 +23,10 @@ struct TagChartsViewModel {
         self.type = type
     }
 
-    init(_ webTag: WebTagRealm) {
-        type = .web
-        uuid.value = webTag.uuid
-        name.value = webTag.name
+    init(_ virtualSensor: VirtualTagSensor) {
+        type = .virtual
+        uuid.value = virtualSensor.id
+        name.value = virtualSensor.name
         isConnectable.value = false
     }
 
