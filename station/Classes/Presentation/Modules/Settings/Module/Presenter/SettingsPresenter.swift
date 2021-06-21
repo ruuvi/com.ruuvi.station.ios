@@ -144,7 +144,6 @@ extension SettingsPresenter: SelectionModuleOutput {
             ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
             view.temperatureUnit = temperatureUnit
         case let humidityUnit as HumidityUnit:
-            unregisterHumidityAlertsIfNeeded(humidityUnit)
             ruuviAppSettingsService.set(humidityUnit: humidityUnit)
             view.humidityUnit = humidityUnit
         case let pressureUnit as UnitPressure:
@@ -154,64 +153,5 @@ extension SettingsPresenter: SelectionModuleOutput {
             break
         }
         module.dismiss()
-    }
-
-    private func unregisterHumidityAlertsIfNeeded(_ newValue: HumidityUnit) {
-        sensors.forEach({
-            disableAlertsIfNeeded(newValue, for: $0)
-        })
-        realmContext.main.objects(WebTagRealm.self).forEach({
-            disableAlertsIfNeeded(newValue, for: $0)
-        })
-    }
-
-    private func disableAlertsIfNeeded(_ newValue: HumidityUnit, for sensor: VirtualSensor) {
-        disableHumidityAlertIfNeeded(newValue, for: sensor)
-        disableDewPointAlertIfNeeded(newValue, for: sensor)
-    }
-
-    private func disableAlertsIfNeeded(_ newValue: HumidityUnit, for ruuviTag: RuuviTagSensor) {
-        disableHumidityAlertIfNeeded(newValue, for: ruuviTag)
-        disableDewPointAlertIfNeeded(newValue, for: ruuviTag)
-    }
-
-    private func disableHumidityAlertIfNeeded(_ newValue: HumidityUnit, for sensor: VirtualSensor) {
-        let type: AlertType = .humidity(lower: Humidity.zeroAbsolute, upper: Humidity.zeroAbsolute)
-        guard view.humidityUnit != .dew
-                && newValue == .dew,
-              alertService.isOn(type: type, for: sensor) else {
-            return
-        }
-        alertService.unregister(type: type, for: sensor)
-    }
-
-    private func disableDewPointAlertIfNeeded(_ newValue: HumidityUnit, for sensor: VirtualSensor) {
-        let type: AlertType = .dewPoint(lower: 0, upper: 0)
-        guard view.humidityUnit == .dew
-                && newValue != .dew,
-              alertService.isOn(type: type, for: sensor) else {
-            return
-        }
-        alertService.unregister(type: type, for: sensor)
-    }
-
-    private func disableHumidityAlertIfNeeded(_ newValue: HumidityUnit, for ruuviTag: RuuviTagSensor) {
-        let type: AlertType = .humidity(lower: Humidity.zeroAbsolute, upper: Humidity.zeroAbsolute)
-        guard view.humidityUnit != .dew
-                && newValue == .dew,
-              alertService.isOn(type: type, for: ruuviTag) else {
-            return
-        }
-        alertService.unregister(type: type, ruuviTag: ruuviTag)
-    }
-
-    private func disableDewPointAlertIfNeeded(_ newValue: HumidityUnit, for ruuviTag: RuuviTagSensor) {
-        let type: AlertType = .dewPoint(lower: 0, upper: 0)
-        guard view.humidityUnit == .dew
-                && newValue != .dew,
-              alertService.isOn(type: type, for: ruuviTag) else {
-            return
-        }
-        alertService.unregister(type: type, ruuviTag: ruuviTag)
     }
 }
