@@ -4,6 +4,8 @@ import CoreLocation
 import RuuviOntology
 
 public protocol VirtualPersistence {
+    var isCurrentLocationVirtualTagExists: Bool { get }
+
     func readAll() -> Future<[AnyVirtualTagSensor], VirtualPersistenceError>
 
     func readLast(

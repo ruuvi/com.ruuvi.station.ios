@@ -5,6 +5,8 @@ import RuuviVirtual
 import RuuviOntology
 
 public protocol VirtualService {
+    var isCurrentLocationVirtualTagExists: Bool { get }
+
     func add(
         provider: VirtualProvider,
         name: String

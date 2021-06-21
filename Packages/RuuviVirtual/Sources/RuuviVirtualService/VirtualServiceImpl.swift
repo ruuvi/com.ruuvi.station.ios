@@ -20,6 +20,10 @@ public final class VirtualServiceImpl: VirtualService {
         self.weatherProviderService = virtualProviderService
     }
 
+    public var isCurrentLocationVirtualTagExists: Bool {
+        return virtualPersistence.isCurrentLocationVirtualTagExists
+    }
+
     public func add(provider: VirtualProvider, location: Location) -> Future<VirtualProvider, VirtualServiceError> {
         let promise = Promise<VirtualProvider, VirtualServiceError>()
         virtualPersistence.persist(
