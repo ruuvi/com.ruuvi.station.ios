@@ -83,7 +83,7 @@
 		0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */; };
 		0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */; };
 		0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC322B395C00032F6CA /* ErrorPresenterAlert.swift */; };
-		0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */; };
+		0E1C1DCD22B3A4DC0032F6CA /* DiscoverRuuviTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverRuuviTagViewModel.swift */; };
 		0E1C1DD122B3BDFC0032F6CA /* Cards.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */; };
 		0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD222B3BF180032F6CA /* CardsViewInput.swift */; };
 		0E1C1DD522B3BF3A0032F6CA /* CardsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD422B3BF3A0032F6CA /* CardsViewOutput.swift */; };
@@ -283,7 +283,7 @@
 		0E8BD302238566AB008B31EF /* CardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C522B7915C0015F9E0 /* CardsViewModel.swift */; };
 		0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */; };
 		0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */; };
-		0E8BD305238566AB008B31EF /* DiscoverDeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */; };
+		0E8BD305238566AB008B31EF /* DiscoverRuuviTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverRuuviTagViewModel.swift */; };
 		0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
 		0E8BD30A238566AB008B31EF /* PermissionPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */; };
 		0E8BD30C238566AB008B31EF /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */; };
@@ -302,7 +302,7 @@
 		0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DFB22B3FFD90032F6CA /* MenuRouter.swift */; };
 		0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36723507A1A0061D11B /* ForegroundRouterInput.swift */; };
 		0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
-		0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
+		0E8BD31F238566AB008B31EF /* DiscoverVirtualTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */; };
 		0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101B2384618700A9CBA6 /* DefaultsInitializer.swift */; };
 		0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */; };
 		0E8BD323238566AB008B31EF /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
@@ -500,7 +500,7 @@
 		0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
 		0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
 		0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
-		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
+		0E9F979222EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */; };
 		0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */; };
 		0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
@@ -1110,7 +1110,7 @@
 		0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAssembly.swift; sourceTree = "<group>"; };
 		0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		0E1C1DC322B395C00032F6CA /* ErrorPresenterAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenterAlert.swift; sourceTree = "<group>"; };
-		0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceViewModel.swift; sourceTree = "<group>"; };
+		0E1C1DCC22B3A4DB0032F6CA /* DiscoverRuuviTagViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverRuuviTagViewModel.swift; sourceTree = "<group>"; };
 		0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Cards.storyboard; sourceTree = "<group>"; };
 		0E1C1DD222B3BF180032F6CA /* CardsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsViewInput.swift; sourceTree = "<group>"; };
 		0E1C1DD422B3BF3A0032F6CA /* CardsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsViewOutput.swift; sourceTree = "<group>"; };
@@ -1253,7 +1253,7 @@
 		0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemon.swift; sourceTree = "<group>"; };
 		0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemonImpl.swift; sourceTree = "<group>"; };
 		0E9E7759238CCE5F006D7013 /* String+Replace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Replace.swift"; sourceTree = "<group>"; };
-		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
+		0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverVirtualTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
 		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
 		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
@@ -2539,9 +2539,8 @@
 		0E70A46922AF96B9006CB87C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0E9D02DD2680EC4D00DCD7C8 /* Model */,
 				0E70A46A22AF96C5006CB87C /* Table */,
-				0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */,
-				0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */,
 				0E70A46D22AF9763006CB87C /* DiscoverViewInput.swift */,
 				0E70A46F22AF9790006CB87C /* DiscoverViewOutput.swift */,
 			);
@@ -2841,6 +2840,15 @@
 				0E8FD0D02333679800FFA577 /* TagChartsScrollConfigurator.swift */,
 			);
 			path = Scroll;
+			sourceTree = "<group>";
+		};
+		0E9D02DD2680EC4D00DCD7C8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DCC22B3A4DB0032F6CA /* DiscoverRuuviTagViewModel.swift */,
+				0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		0E9D5F1E2351BCBA0076FFD8 /* Cells */ = {
@@ -5311,7 +5319,7 @@
 				660EB2802669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
-				0E8BD305238566AB008B31EF /* DiscoverDeviceViewModel.swift in Sources */,
+				0E8BD305238566AB008B31EF /* DiscoverRuuviTagViewModel.swift in Sources */,
 				0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
 				0E8BD30A238566AB008B31EF /* PermissionPresenterAlert.swift in Sources */,
@@ -5342,7 +5350,7 @@
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0EB48DDD2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
-				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
+				0E8BD31F238566AB008B31EF /* DiscoverVirtualTagViewModel.swift in Sources */,
 				A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */,
 				0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */,
@@ -5803,7 +5811,7 @@
 				A98D3F13256CBD600066588B /* SharePresenter.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
-				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
+				0E1C1DCD22B3A4DC0032F6CA /* DiscoverRuuviTagViewModel.swift in Sources */,
 				A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A98D3F0E256CBD600066588B /* ShareRouterInput.swift in Sources */,
@@ -5837,7 +5845,7 @@
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0EA796812664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
 				0EA7968D2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift in Sources */,
-				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
+				0E9F979222EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift in Sources */,
 				A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,

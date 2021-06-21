@@ -33,7 +33,7 @@ class DiscoverTableViewController: UITableViewController {
 
     private var alertVC: UIAlertController?
 
-    var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
+    var webTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]()
     var savedWebTagProviders: [VirtualProvider] = [VirtualProvider]() {
         didSet {
             shownWebTags = webTags
@@ -48,7 +48,7 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
-    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() {
+    var devices: [DiscoverRuuviTagViewModel] = [DiscoverRuuviTagViewModel]() {
         didSet {
             shownDevices = devices
                 .filter({ !savedDevicesIds.contains( $0.luid )})
@@ -90,12 +90,12 @@ class DiscoverTableViewController: UITableViewController {
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
-    private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() {
+    private var shownDevices: [DiscoverRuuviTagViewModel] =  [DiscoverRuuviTagViewModel]() {
         didSet {
             updateTableView()
         }
     }
-    private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() {
+    private var shownWebTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]() {
         didSet {
             updateTableView()
         }
@@ -272,12 +272,12 @@ extension DiscoverTableViewController: DiscoverWebTagsInfoHeaderFooterViewDelega
 
 // MARK: - Cell configuration
 extension DiscoverTableViewController {
-    private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverWebTagViewModel) {
+    private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverVirtualTagViewModel) {
         cell.nameLabel.text = tag.locationType.title
         cell.iconImageView.image = tag.icon
     }
 
-    private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverDeviceViewModel) {
+    private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverRuuviTagViewModel) {
 
         cell.identifierLabel.text = displayName(for: device)
         cell.isConnectableImageView.isHidden = !device.isConnectable
@@ -347,7 +347,7 @@ extension DiscoverTableViewController {
         }
     }
 
-    private func displayName(for device: DiscoverDeviceViewModel) -> String {
+    private func displayName(for device: DiscoverRuuviTagViewModel) -> String {
         // identifier
         if let mac = device.mac {
             return "DiscoverTable.RuuviDevice.prefix".localized()
