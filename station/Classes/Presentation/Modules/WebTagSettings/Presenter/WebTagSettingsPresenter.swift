@@ -124,7 +124,10 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidConfirmToClearLocation() {
-        let operation = webTagService.clearLocation(of: virtualSensor)
+        let operation = webTagService.clearLocation(
+            of: virtualSensor,
+            name: VirtualLocation.current.title
+        )
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })

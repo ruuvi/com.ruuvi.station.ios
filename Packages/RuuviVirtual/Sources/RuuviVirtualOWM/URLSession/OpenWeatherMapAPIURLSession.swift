@@ -1,12 +1,18 @@
 import Foundation
 import Future
 
-class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
+public final class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
+    private let apiKey: String
 
-    var apiKey: String = "provide api key in the /Classes/Networking/Assembly/Networking.plist file, NOT HERE!"
+    public init(apiKey: String) {
+        self.apiKey = apiKey
+    }
 
-    func loadCurrent(longitude: Double, latitude: Double) -> Future<OWMData, RUError> {
-        let promise = Promise<OWMData, RUError>()
+    public func loadCurrent(
+        longitude: Double,
+        latitude: Double
+    ) -> Future<OWMData, OWMError> {
+        let promise = Promise<OWMData, OWMError>()
         if let url = currentWeatherUrl(latitude: latitude, longitude: longitude) {
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
@@ -18,19 +24,19 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
                     if let httpResponse = response as? HTTPURLResponse {
                         let status = httpResponse.statusCode
                         if status == 429 {
-                            promise.fail(error: .parse(OWMError.apiLimitExceeded))
+                            promise.fail(error: OWMError.apiLimitExceeded)
                         } else if status == 401 {
-                            promise.fail(error: .parse(OWMError.invalidApiKey))
+                            promise.fail(error: OWMError.invalidApiKey)
                         } else {
                             if let data = data {
                                 do {
                                     guard let json = try JSONSerialization.jsonObject(with:
                                         data, options: []) as? [String: Any] else {
-                                            promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                                            promise.fail(error: OWMError.failedToParseOpenWeatherMapResponse)
                                             return
                                     }
                                     guard let main = json["main"] as? [String: Any] else {
-                                        promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                                        promise.fail(error: OWMError.failedToParseOpenWeatherMapResponse)
                                         return
                                     }
                                     let kelvin = main["temp"] as? Double
@@ -42,17 +48,17 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
                                     promise.fail(error: .networking(error))
                                 }
                             } else {
-                                promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                                promise.fail(error: OWMError.failedToParseOpenWeatherMapResponse)
                             }
                         }
                     } else {
-                        promise.fail(error: .parse(OWMError.notAHttpResponse))
+                        promise.fail(error: OWMError.notAHttpResponse)
                     }
                 }
             }
             task.resume()
         } else {
-            promise.fail(error: .expected(.missingOpenWeatherMapAPIKey))
+            promise.fail(error: .missingOpenWeatherMapAPIKey)
         }
         return promise.future
     }

@@ -95,8 +95,7 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
 
     public func update(
         location: Location,
-        of sensor: VirtualSensor,
-        name: String
+        of sensor: VirtualSensor
     ) -> Future<Bool, VirtualPersistenceError> {
         let promise = Promise<Bool, VirtualPersistenceError>()
         let webTagId = sensor.id
@@ -110,7 +109,7 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                         let newLocation = WebTagLocationRealm(location: location)
                         self.context.bg.add(newLocation, update: .all)
                         webTag.location = newLocation
-                        webTag.name = location.city ?? location.country ?? name
+                        webTag.name = location.city ?? location.country ?? ""
                     }
                     promise.succeed(value: true)
                 } else {
@@ -125,14 +124,13 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
 
     public func persist(
         provider: VirtualProvider,
-        location: Location,
-        name: String
+        location: Location
     ) -> Future<VirtualProvider, VirtualPersistenceError> {
         let promise = Promise<VirtualProvider, VirtualPersistenceError>()
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
-            webTag.name = location.city ?? location.country ?? name
+            webTag.name = location.city ?? location.country ?? ""
             let webTagLocation = WebTagLocationRealm(location: location)
             do {
                 try self.context.bg.write {

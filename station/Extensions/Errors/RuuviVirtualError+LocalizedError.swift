@@ -39,3 +39,41 @@ extension VirtualStorageError: LocalizedError {
         }
     }
 }
+
+extension VirtualServiceError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .virtualPersistence(let error):
+            return error.localizedDescription
+        case .ruuviCore(let error):
+            return error.localizedDescription
+        case .ruuviLocation(let error):
+            return error.localizedDescription
+        case .openWeatherMap(let error):
+            return error.localizedDescription
+        case .failedToReverseGeocodeCoordinate:
+            return "UnexpectedError.failedToReverseGeocodeCoordinate".localized()
+        case .callerDeinitedDuringOperation:
+            return "UnexpectedError.callerDeinitedDuringOperation".localized()
+        }
+    }
+}
+
+extension OWMError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .failedToParseOpenWeatherMapResponse:
+            return "OWMError.failedToParseOpenWeatherMapResponse".localized()
+        case .apiLimitExceeded:
+            return "OWMError.apiLimitExceeded".localized()
+        case .notAHttpResponse:
+            return "OWMError.notAHttpResponse".localized()
+        case .invalidApiKey:
+            return "OWMError.invalidApiKey".localized()
+        case .networking(let error):
+            return error.localizedDescription
+        case .missingOpenWeatherMapAPIKey:
+            return "ExpectedError.missingOpenWeatherMapAPIKey".localized()
+        }
+    }
+}

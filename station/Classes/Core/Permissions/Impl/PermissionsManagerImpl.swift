@@ -1,9 +1,9 @@
 import Foundation
 import Photos
+import RuuviCore
 
 class PermissionsManagerImpl: PermissionsManager {
-
-    var locationManager: LocationManager!
+    var locationManager: RuuviCoreLocation!
 
     var isPhotoLibraryPermissionGranted: Bool {
         return PHPhotoLibrary.authorizationStatus() == .authorized

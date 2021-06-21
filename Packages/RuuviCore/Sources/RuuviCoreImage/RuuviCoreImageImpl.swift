@@ -4,8 +4,10 @@ import Foundation
 import AVFoundation
 import RuuviCore
 
-final class RuuviCoreImageImpl: RuuviCoreImage {
-    func cropped(image: UIImage, to maxSize: CGSize) -> UIImage {
+public final class RuuviCoreImageImpl: RuuviCoreImage {
+    public init() {}
+
+    public func cropped(image: UIImage, to maxSize: CGSize) -> UIImage {
         if image.size.width > maxSize.width || image.size.height > maxSize.height {
             let boundingRect = CGRect(origin: CGPoint(x: 0, y: 0), size: maxSize)
             let croppedRect = AVMakeRect(aspectRatio: image.size, insideRect: boundingRect)

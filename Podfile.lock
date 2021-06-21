@@ -197,6 +197,8 @@ PODS:
   - RuuviCore/Image (0.0.1):
     - FutureX
     - RuuviCore/Contract
+  - RuuviCore/Location (0.0.1):
+    - RuuviCore/Contract
   - RuuviCore/Tests (0.0.1)
   - RuuviDaemon (0.0.1):
     - RuuviDaemon/Contract (= 0.0.1)
@@ -217,6 +219,15 @@ PODS:
     - FutureX
     - RuuviLocal/Contract
     - RuuviOntology
+  - RuuviLocation (0.0.1):
+    - RuuviLocation/Contract (= 0.0.1)
+  - RuuviLocation/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviLocation/Service (0.0.1):
+    - RuuviLocation/Contract
+    - RuuviOntology
+  - RuuviLocation/Tests (0.0.1)
   - RuuviOntology (0.0.1):
     - RuuviOntology/Contract (= 0.0.1)
   - RuuviOntology/Contract (0.0.1):
@@ -384,6 +395,9 @@ PODS:
     - RealmSwift
     - RuuviOntology
     - RuuviVirtual/Contract
+  - RuuviVirtual/OWM (0.0.1):
+    - FutureX
+    - RuuviVirtual/Contract
   - RuuviVirtual/Persistence (0.0.1):
     - RealmSwift
     - RuuviContext/Realm
@@ -397,6 +411,12 @@ PODS:
   - RuuviVirtual/Repository (0.0.1):
     - RuuviOntology
     - RuuviVirtual/Contract
+  - RuuviVirtual/Service (0.0.1):
+    - RuuviCore/Location
+    - RuuviLocation/Service
+    - RuuviOntology
+    - RuuviVirtual/Contract
+    - RuuviVirtual/OWM
   - RuuviVirtual/Storage (0.0.1):
     - RuuviOntology
     - RuuviVirtual/Contract
@@ -437,11 +457,15 @@ DEPENDENCIES:
   - RuuviContext (from `Packages/RuuviContext/RuuviContext.podspec`)
   - RuuviCore (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Image (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Location (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Tests (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviDaemon (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/CloudSync (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/Tests (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
+  - RuuviLocation (from `Packages/RuuviLocation/RuuviLocation.podspec`)
+  - RuuviLocation/Service (from `Packages/RuuviLocation/RuuviLocation.podspec`)
+  - RuuviLocation/Tests (from `Packages/RuuviLocation/RuuviLocation.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
@@ -472,9 +496,11 @@ DEPENDENCIES:
   - RuuviUser/Tests (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviVirtual (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - RuuviVirtual/Model (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/OWM (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - RuuviVirtual/Persistence (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - RuuviVirtual/Reactor (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - RuuviVirtual/Repository (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
+  - RuuviVirtual/Service (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - RuuviVirtual/Storage (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - RuuviVirtual/Tests (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - SwiftGen (~> 6.0)
@@ -535,6 +561,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviDaemon/RuuviDaemon.podspec
   RuuviLocal:
     :path: Packages/RuuviLocal/RuuviLocal.podspec
+  RuuviLocation:
+    :path: Packages/RuuviLocation/RuuviLocation.podspec
   RuuviOntology:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   RuuviPersistence:
@@ -608,9 +636,10 @@ SPEC CHECKSUMS:
   RealmSwift: 316e450478fb01e06ece4438dda42f407c5f51d2
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
-  RuuviCore: ed8326e13481473dc92e5a0810b60211dfbb8a75
+  RuuviCore: 6e01edd2c0d20e550bba680cfb49009918891a06
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
+  RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
@@ -619,12 +648,12 @@ SPEC CHECKSUMS:
   RuuviService: 2c3ccffdcf8499240a1e031ca8567f5739eb58b7
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
-  RuuviVirtual: 326dbd7f4158cc459ebba4fcd3d4a2b41c955a8b
+  RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: f5c1cbd2b869b08bc1b8306e17e4e356526f28a8
+PODFILE CHECKSUM: 9fd27dc2040ef0d6b3b63677de6ac93ee1dd9a4d
 
 COCOAPODS: 1.10.1

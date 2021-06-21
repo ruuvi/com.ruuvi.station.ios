@@ -10,7 +10,6 @@ import RuuviCoreImage
 #endif
 
 class CoreAssembly: Assembly {
-    // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
         container.register(BTForeground.self) { _ in
             return BTKit.foreground
@@ -36,14 +35,14 @@ class CoreAssembly: Assembly {
             return manager
         }.inObjectScope(.container)
 
-        container.register(LocationManager.self) { _ in
-            let manager = LocationManagerImpl()
+        container.register(RuuviCoreLocation.self) { _ in
+            let manager = RuuviCoreLocationImpl()
             return manager
         }
 
         container.register(PermissionsManager.self) { r in
             let manager = PermissionsManagerImpl()
-            manager.locationManager = r.resolve(LocationManager.self)
+            manager.locationManager = r.resolve(RuuviCoreLocation.self)
             return manager
         }.inObjectScope(.container)
 
@@ -52,13 +51,8 @@ class CoreAssembly: Assembly {
             return manager
         }
 
-        container.register(RuuviCoreFactory.self) { _ in
-            return RuuviCoreFactoryImage()
-        }
-
-        container.register(RuuviCoreImage.self) { r in
-            let factory = r.resolve(RuuviCoreFactory.self)!
-            return factory.createImage()
+        container.register(RuuviCoreImage.self) { _ in
+            return RuuviCoreImageImpl()
         }
 
         container.register(DiffCalculator.self) { _ in

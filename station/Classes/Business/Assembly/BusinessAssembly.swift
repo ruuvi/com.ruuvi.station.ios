@@ -14,6 +14,7 @@ import RuuviDaemon
 import RuuviRepository
 import RuuviUser
 import RuuviVirtual
+import RuuviLocation
 #if canImport(RuuviServiceFactory)
 import RuuviServiceFactory
 #endif
@@ -137,9 +138,8 @@ class BusinessAssembly: Assembly {
             return provider
         }.inObjectScope(.container)
 
-        container.register(LocationService.self) { r in
-            let service = LocationServiceApple()
-            service.locationPersistence = r.resolve(LocationPersistence.self)
+        container.register(RuuviLocationService.self) { _ in
+            let service = RuuviLocationServiceApple()
             return service
         }
 
@@ -384,10 +384,14 @@ class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(VirtualProviderService.self) { r in
-            let service = VirtualProviderServiceImpl()
-            service.owmApi = r.resolve(OpenWeatherMapAPI.self)
-            service.locationManager = r.resolve(LocationManager.self)
-            service.locationService = r.resolve(LocationService.self)
+            let owmApi = r.resolve(OpenWeatherMapAPI.self)!
+            let locationManager = r.resolve(RuuviCoreLocation.self)!
+            let locationService = r.resolve(RuuviLocationService.self)!
+            let service = VirtualProviderServiceImpl(
+                owmApi: owmApi,
+                ruuviCoreLocation: locationManager,
+                ruuviLocationService: locationService
+            )
             return service
         }
 
@@ -410,10 +414,14 @@ class BusinessAssembly: Assembly {
         }
 
         container.register(VirtualService.self) { r in
-            let service = VirtualServiceImpl()
-            service.virtualPersistence = r.resolve(VirtualPersistence.self)
-            service.weatherProviderService = r.resolve(VirtualProviderService.self)
-            service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
+            let virtualPersistence = r.resolve(VirtualPersistence.self)!
+            let weatherProviderService = r.resolve(VirtualProviderService.self)!
+            let ruuviLocalImages = r.resolve(RuuviLocalImages.self)!
+            let service = VirtualServiceImpl(
+                ruuviLocalImages: ruuviLocalImages,
+                virtualPersistence: virtualPersistence,
+                virtualProviderService: weatherProviderService
+            )
             return service
         }
 
