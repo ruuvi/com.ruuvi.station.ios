@@ -15,6 +15,11 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
         self.settings = settings
     }
 
+    public var isCurrentLocationVirtualTagExists: Bool {
+        return context.main.objects(WebTagRealm.self)
+            .filter("location == nil").count > 0
+    }
+
     public func readLast(
         _ virtualTag: VirtualTagSensor
     ) -> Future<VirtualTagSensorRecord?, VirtualPersistenceError> {

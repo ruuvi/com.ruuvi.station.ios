@@ -14,7 +14,6 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
     var router: DiscoverRouterInput!
     var virtualReactor: VirtualReactor!
-    var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
     var virtualService: VirtualService!
@@ -81,9 +80,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             locationType: .manual,
             icon: UIImage(named: "icon-webtag-map")
         )
-        let isCurrentLocationTagAlreadyAdded = realmContext.main.objects(WebTagRealm.self)
-            .filter("location == nil").count > 0
-        if isCurrentLocationTagAlreadyAdded {
+        if virtualService.isCurrentLocationVirtualTagExists {
             view.virtualTags = [manual]
         } else {
             view.virtualTags = [manual, current]
