@@ -56,6 +56,21 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviContext/Realm'
   end
 
+  s.subspec 'Service' do |ss|
+    ss.source_files = 'Sources/RuuviVirtualService/**/*.{h,m,swift}', 'Sources/RuuviVirtualService/*.{h,m,swift}'
+    ss.dependency 'RuuviVirtual/Contract'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviVirtual/OWM'
+    ss.dependency 'RuuviLocation/Service'
+    ss.dependency 'RuuviCore/Location'
+  end
+
+  s.subspec 'OWM' do |ss|
+    ss.source_files = 'Sources/RuuviVirtualOWM/**/*.{h,m,swift}', 'Sources/RuuviVirtualOWM/*.{h,m,swift}'
+    ss.dependency 'RuuviVirtual/Contract'
+    ss.dependency 'FutureX'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end

@@ -194,7 +194,10 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
 // MARK: - Private
 extension DiscoverPresenter {
     private func persistWebTag(with provider: VirtualProvider) {
-        let operation = webTagService.add(provider: provider)
+        let operation = webTagService.add(
+            provider: provider,
+            name: VirtualLocation.current.title
+        )
         operation.on(success: { [weak self] _ in
             guard let sSelf = self else { return }
             if sSelf.isOpenedFromWelcome {

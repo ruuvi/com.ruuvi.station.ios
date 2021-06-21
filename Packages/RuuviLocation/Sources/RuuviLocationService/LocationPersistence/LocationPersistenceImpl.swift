@@ -8,8 +8,7 @@ fileprivate extension Location {
     }
 }
 
-class LocationPersistenceImpl: LocationPersistence {
-
+final class LocationPersistenceImpl: LocationPersistence {
     private let regionsKey: String = "LocationPersistence.regions"
     private let regionKey: String = "LocationPersistence.region."
 

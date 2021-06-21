@@ -152,9 +152,5 @@ class PersistenceAssembly: Assembly {
             return factory.create()
         }.inObjectScope(.container)
 
-        container.register(LocationPersistence.self, factory: { _ in
-            let persistence = LocationPersistenceImpl()
-            return persistence
-        })
     }
 }

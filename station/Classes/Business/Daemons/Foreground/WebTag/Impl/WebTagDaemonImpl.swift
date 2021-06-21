@@ -12,7 +12,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     var alertService: AlertService!
     private var realm: Realm?
     private var token: NotificationToken?
-    private var wsTokens = [RUObservationToken]()
+    private var wsTokens = [VirtualToken]()
     private var webTags: Results<WebTagRealm>?
     private var isOnToken: NSObjectProtocol?
     private var intervalToken: NSObjectProtocol?
@@ -136,19 +136,23 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 let webTagStruct = webTag.struct
                 let locationLocation = location.location
                 let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                wsTokens.append(webTagService.observeData(self,
-                                                          coordinate: coordinate,
-                                                          provider: webTag.provider,
-                                                          interval: pullInterval,
-                                                          fire: fire,
-                                                          closure: { (observer, data, error) in
-                    if let data = data {
-                        observer.webTagPersistence.persist(location: locationLocation, data: data)
-                        observer.alertService.process(data: data, for: webTagStruct)
-                    } else if let error = error {
-                        observer.post(error: error)
-                    }
-                }))
+                wsTokens.append(
+                    webTagService.observeData(
+                        self,
+                        coordinate: coordinate,
+                        provider: webTag.provider,
+                        interval: pullInterval,
+                        fire: fire,
+                        closure: { (observer, data, error) in
+                            if let data = data {
+                                observer.webTagPersistence.persist(location: locationLocation, data: data)
+                                observer.alertService.process(data: data, for: webTagStruct)
+                            } else if let error = error {
+                                observer.post(error: error)
+                            }
+                        }
+                    )
+                )
             }
         }
     }

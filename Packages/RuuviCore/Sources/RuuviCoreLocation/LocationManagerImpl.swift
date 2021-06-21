@@ -2,16 +2,15 @@ import Foundation
 import CoreLocation
 import Future
 
-class LocationManagerImpl: NSObject, LocationManager {
-
-    var isLocationPermissionGranted: Bool {
+public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
+    public var isLocationPermissionGranted: Bool {
 
         return CLLocationManager.locationServicesEnabled()
                 && (CLLocationManager.authorizationStatus() == .authorizedWhenInUse
                 || CLLocationManager.authorizationStatus() == .authorizedAlways)
     }
 
-    var locationAuthorizationStatus: CLAuthorizationStatus {
+    public var locationAuthorizationStatus: CLAuthorizationStatus {
         return CLLocationManager.authorizationStatus()
     }
 
@@ -26,9 +25,9 @@ class LocationManagerImpl: NSObject, LocationManager {
 
     private var locationManager: CLLocationManager
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
-    private var getCurrentLocationPromise: Promise<CLLocation, RUError>?
+    private var getCurrentLocationPromise: Promise<CLLocation, RuuviCoreError>?
 
-    override init() {
+    override public init() {
         locationManager = CLLocationManager()
         super.init()
         locationManager.delegate = self
@@ -36,7 +35,7 @@ class LocationManagerImpl: NSObject, LocationManager {
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
 
-    func requestLocationPermission(completion: ((Bool) -> Void)?) {
+    public func requestLocationPermission(completion: ((Bool) -> Void)?) {
         if isLocationPermissionGranted {
             completion?(true)
         } else if isLocationPermissionDenied {
@@ -47,13 +46,13 @@ class LocationManagerImpl: NSObject, LocationManager {
         }
     }
 
-    func getCurrentLocation() -> Future<CLLocation, RUError> {
-        let promise = Promise<CLLocation, RUError>()
+    public func getCurrentLocation() -> Future<CLLocation, RuuviCoreError> {
+        let promise = Promise<CLLocation, RuuviCoreError>()
         if isLocationPermissionDenied {
-            promise.fail(error: .core(.locationPermissionDenied))
+            promise.fail(error: .locationPermissionDenied)
             return promise.future
         } else if isLocationPermissionNotDetermined {
-            promise.fail(error: .core(.locationPermissionNotDetermined))
+            promise.fail(error: .locationPermissionNotDetermined)
             return promise.future
         } else {
             getCurrentLocationPromise = promise
@@ -63,22 +62,21 @@ class LocationManagerImpl: NSObject, LocationManager {
     }
 }
 
-extension LocationManagerImpl: CLLocationManagerDelegate {
-
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+extension RuuviCoreLocationImpl: CLLocationManagerDelegate {
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         requestLocationPermissionCallback?(status == .authorizedWhenInUse || status == .authorizedAlways)
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
         if let location = locations.last {
             getCurrentLocationPromise?.succeed(value: location)
         } else {
-            getCurrentLocationPromise?.fail(error: .core(.failedToGetCurrentLocation))
+            getCurrentLocationPromise?.fail(error: .failedToGetCurrentLocation)
         }
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error.localizedDescription)
     }
 

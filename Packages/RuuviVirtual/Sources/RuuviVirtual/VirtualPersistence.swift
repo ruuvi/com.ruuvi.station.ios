@@ -5,7 +5,9 @@ import RuuviOntology
 
 public protocol VirtualPersistence {
     func readAll() -> Future<[AnyVirtualTagSensor], VirtualPersistenceError>
+
     func readOne(_ id: String) -> Future<AnyVirtualTagSensor, VirtualPersistenceError>
+
     func deleteAllRecords(
         _ ruuviTagId: String,
         before date: Date
@@ -15,21 +17,24 @@ public protocol VirtualPersistence {
         provider: VirtualProvider,
         name: String
     ) -> Future<VirtualProvider, VirtualPersistenceError>
+
     func persist(
         provider: VirtualProvider,
-        location: Location,
-        name: String
+        location: Location
     ) -> Future<VirtualProvider, VirtualPersistenceError>
+
     func remove(sensor: VirtualSensor) -> Future<Bool, VirtualPersistenceError>
+
     func update(
         name: String,
         of sensor: VirtualSensor
     ) -> Future<Bool, VirtualPersistenceError>
+
     func update(
         location: Location,
-        of sensor: VirtualSensor,
-        name: String
+        of sensor: VirtualSensor
     ) -> Future<Bool, VirtualPersistenceError>
+
     func clearLocation(
         of sensor: VirtualSensor,
         name: String
@@ -40,6 +45,7 @@ public protocol VirtualPersistence {
         currentLocation: Location,
         data: VirtualData
     ) -> Future<VirtualData, VirtualPersistenceError>
+
     @discardableResult
     func persist(
         location: Location,
