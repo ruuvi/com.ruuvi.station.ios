@@ -46,7 +46,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     private var persistedReactorToken: RuuviReactorToken?
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
     private var isOpenedFromWelcome: Bool = true
-    private var lastSelectedWebTag: DiscoverWebTagViewModel?
+    private var lastSelectedWebTag: DiscoverVirtualTagViewModel?
     private weak var output: DiscoverModuleOutput?
 
     deinit {
@@ -71,12 +71,12 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        let current = DiscoverWebTagViewModel(
+        let current = DiscoverVirtualTagViewModel(
             provider: .openWeatherMap,
             locationType: .current,
             icon: UIImage(named: "icon-webtag-current")
         )
-        let manual = DiscoverWebTagViewModel(
+        let manual = DiscoverVirtualTagViewModel(
             provider: .openWeatherMap,
             locationType: .manual,
             icon: UIImage(named: "icon-webtag-map")
@@ -113,7 +113,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         stopObservingLost()
     }
 
-    func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
+    func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any == device.luid?.any }) {
             ruuviOwnershipService.add(
                 sensor: ruuviTag.with(name: displayName),
@@ -131,7 +131,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
 
-    func viewDidChoose(webTag: DiscoverWebTagViewModel) {
+    func viewDidChoose(webTag: DiscoverVirtualTagViewModel) {
         switch webTag.locationType {
         case .current:
             if permissionsManager.isLocationPermissionGranted {
@@ -303,10 +303,10 @@ extension DiscoverPresenter {
     }
 
     private func updateViewDevices() {
-        view.devices = ruuviTags.map { (ruuviTag) -> DiscoverDeviceViewModel in
+        view.devices = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
             if let persistedRuuviTag = persistedSensors
                 .first(where: { $0.luid?.any == ruuviTag.luid?.any }) {
-                return DiscoverDeviceViewModel(
+                return DiscoverRuuviTagViewModel(
                     luid: ruuviTag.luid?.any,
                     isConnectable: ruuviTag.isConnectable,
                     rssi: ruuviTag.rssi,
@@ -315,7 +315,7 @@ extension DiscoverPresenter {
                     logo: ruuviLogoImage
                 )
             } else {
-                return DiscoverDeviceViewModel(
+                return DiscoverRuuviTagViewModel(
                     luid: ruuviTag.luid?.any,
                     isConnectable: ruuviTag.isConnectable,
                     rssi: ruuviTag.rssi,
