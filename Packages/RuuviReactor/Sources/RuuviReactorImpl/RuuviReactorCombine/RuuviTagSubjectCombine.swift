@@ -66,12 +66,12 @@ final class RuuviTagSubjectCombine {
                                                     .filter { !deletions.contains($0.offset) }
                                                     .map { $0.element }
                     for ins in insertions {
-                        sSelf.insertSubject.send(ruuviSensors[ins].any)
+                        sSelf.insertSubject.send(ruuviSensors[ins].struct.any)
                         // TODO: test if ok with multiple
                         sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].struct.any, at: ins)
                     }
                     for mod in modifications {
-                        sSelf.updateSubject.send(ruuviSensors[mod].any)
+                        sSelf.updateSubject.send(ruuviSensors[mod].struct.any)
                         sSelf.ruuviTagRealmCache[mod] = ruuviSensors[mod].struct.any
                     }
                 default:

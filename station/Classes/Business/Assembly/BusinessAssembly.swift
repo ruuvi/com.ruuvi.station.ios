@@ -397,9 +397,9 @@ class BusinessAssembly: Assembly {
 
         container.register(WebTagDaemon.self) { r in
             let daemon = WebTagDaemonImpl()
-            daemon.webTagService = r.resolve(VirtualService.self)
+            daemon.virtualService = r.resolve(VirtualService.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
-            daemon.webTagPersistence = r.resolve(VirtualPersistence.self)
+            daemon.virtualPersistence = r.resolve(VirtualPersistence.self)
             daemon.alertService = r.resolve(AlertService.self)
             return daemon
         }.inObjectScope(.container)

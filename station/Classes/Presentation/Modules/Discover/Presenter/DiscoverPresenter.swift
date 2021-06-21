@@ -17,7 +17,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
-    var webTagService: VirtualService!
+    var virtualService: VirtualService!
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
@@ -173,7 +173,7 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
         module.dismiss { [weak self] in
             guard let webTag = self?.lastSelectedWebTag else { return }
-            guard let operation = self?.webTagService
+            guard let operation = self?.virtualService
                 .add(provider: webTag.provider,
                      location: location) else { return }
             operation.on(success: { [weak self] _ in
@@ -194,7 +194,7 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
 // MARK: - Private
 extension DiscoverPresenter {
     private func persistWebTag(with provider: VirtualProvider) {
-        let operation = webTagService.add(
+        let operation = virtualService.add(
             provider: provider,
             name: VirtualLocation.current.title
         )

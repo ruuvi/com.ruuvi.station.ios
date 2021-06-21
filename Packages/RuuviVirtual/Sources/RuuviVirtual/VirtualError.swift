@@ -28,11 +28,28 @@ public enum VirtualServiceError: Error {
     case callerDeinitedDuringOperation
 }
 
-public enum OWMError: Error {
+public enum OWMError: Error, Equatable {
     case networking(Error)
     case missingOpenWeatherMapAPIKey
     case failedToParseOpenWeatherMapResponse
     case apiLimitExceeded
     case invalidApiKey
     case notAHttpResponse
+
+    public static func == (lhs: OWMError, rhs: OWMError) -> Bool {
+        switch (lhs, rhs) {
+        case let (.missingOpenWeatherMapAPIKey, .missingOpenWeatherMapAPIKey):
+            return true
+        case let (.failedToParseOpenWeatherMapResponse, .failedToParseOpenWeatherMapResponse):
+            return true
+        case let (.apiLimitExceeded, .apiLimitExceeded):
+            return true
+        case let (.invalidApiKey, .invalidApiKey):
+            return true
+        case let (.notAHttpResponse, .notAHttpResponse):
+            return true
+        default:
+            return false
+        }
+    }
 }

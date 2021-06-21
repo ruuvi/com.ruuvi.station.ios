@@ -6,6 +6,8 @@ class ErrorPresenterAlert: ErrorPresenter {
     func present(error: Error) {
         if let ruError = error as? RUError {
             switch ruError {
+            case .virtualService(let error):
+                presentAlert(error: error)
             case .virtualStorage(let error):
                 presentAlert(error: error)
             case .virtualPersistence(let error):

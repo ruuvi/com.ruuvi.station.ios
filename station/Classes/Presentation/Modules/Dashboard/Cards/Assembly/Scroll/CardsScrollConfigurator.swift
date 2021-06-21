@@ -38,7 +38,7 @@ class CardsScrollConfigurator {
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
-        presenter.virtualTagReactor = r.resolve(VirtualReactor.self)
+        presenter.virtualReactor = r.resolve(VirtualReactor.self)
         presenter.measurementService = r.resolve(MeasurementsService.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)

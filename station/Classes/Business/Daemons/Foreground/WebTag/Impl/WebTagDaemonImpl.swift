@@ -6,9 +6,9 @@ import RuuviOntology
 import RuuviVirtual
 
 class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
-    var webTagService: VirtualService!
+    var virtualService: VirtualService!
     var settings: RuuviLocalSettings!
-    var webTagPersistence: VirtualPersistence!
+    var virtualPersistence: VirtualPersistence!
     var alertService: AlertService!
     private var realm: Realm?
     private var token: NotificationToken?
@@ -137,7 +137,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 let locationLocation = location.location
                 let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
                 wsTokens.append(
-                    webTagService.observeData(
+                    virtualService.observeData(
                         self,
                         coordinate: coordinate,
                         provider: webTag.provider,
@@ -145,7 +145,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                         fire: fire,
                         closure: { (observer, data, error) in
                             if let data = data {
-                                observer.webTagPersistence.persist(location: locationLocation, data: data)
+                                observer.virtualPersistence.persist(location: locationLocation, data: data)
                                 observer.alertService.process(data: data, for: webTagStruct)
                             } else if let error = error {
                                 observer.post(error: error)
@@ -163,14 +163,14 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
             for provider in VirtualProvider.allCases {
                 if currentLocationWebTags.contains(where: { $0.provider == provider }) {
                     let currentLocationWebTagStructs: [VirtualSensor] = currentLocationWebTags.map({ $0.struct })
-                    wsTokens.append(webTagService.observeCurrentLocationData(self,
+                    wsTokens.append(virtualService.observeCurrentLocationData(self,
                                                                              provider: provider,
                                                                              interval: pullInterval,
                                                                              fire: fire,
                                                                              closure: {
                                                                                 (observer, data, location, error) in
                         if let data = data, let location = location {
-                            observer.webTagPersistence.persist(currentLocation: location, data: data)
+                            observer.virtualPersistence.persist(currentLocation: location, data: data)
                             currentLocationWebTagStructs.forEach({
                                 observer.alertService.process(data: data, for: $0)
                             })

@@ -5,6 +5,7 @@ import RuuviOntology
 import RuuviContext
 import RuuviLocal
 
+// swiftlint:disable:next type_body_length
 public final class VirtualPersistenceRealm: VirtualPersistence {
     private let context: RealmContext
     private var settings: RuuviLocalSettings
@@ -12,6 +13,20 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
     public init(context: RealmContext, settings: RuuviLocalSettings) {
         self.context = context
         self.settings = settings
+    }
+
+    public func readLast(
+        _ virtualTag: VirtualTagSensor
+    ) -> Future<VirtualTagSensorRecord?, VirtualPersistenceError> {
+        let promise = Promise<VirtualTagSensorRecord?, VirtualPersistenceError>()
+        context.bgWorker.enqueue {
+            let lastRecord = self.context.bg.objects(WebTagDataRealm.self)
+                .filter("webTag.uuid == %@", virtualTag.id)
+                .sorted(byKeyPath: "date", ascending: false)
+                .first
+            promise.succeed(value: lastRecord?.record?.any)
+        }
+        return promise.future
     }
 
     public func readAll() -> Future<[AnyVirtualTagSensor], VirtualPersistenceError> {
