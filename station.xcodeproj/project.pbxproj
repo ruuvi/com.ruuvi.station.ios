@@ -264,7 +264,7 @@
 		0E8BD2E7238566AB008B31EF /* LocationPickerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5022F1828900BD4E9C /* LocationPickerRouter.swift */; };
 		0E8BD2E8238566AB008B31EF /* WebTagSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3322F057FC00BD4E9C /* WebTagSettingsModuleInput.swift */; };
 		0E8BD2E9238566AB008B31EF /* MenuTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0422B400890032F6CA /* MenuTableConfigurator.swift */; };
-		0E8BD2EA238566AB008B31EF /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
+		0E8BD2EA238566AB008B31EF /* VirtualTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* VirtualTagDaemonImpl.swift */; };
 		0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20DE22B7C8790015F9E0 /* SettingsRouter.swift */; };
 		0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */; };
@@ -305,7 +305,7 @@
 		0E8BD31F238566AB008B31EF /* DiscoverVirtualTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */; };
 		0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101B2384618700A9CBA6 /* DefaultsInitializer.swift */; };
 		0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */; };
-		0E8BD323238566AB008B31EF /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
+		0E8BD323238566AB008B31EF /* VirtualTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* VirtualTagDaemon.swift */; };
 		0E8BD324238566AB008B31EF /* ForegroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */; };
 		0E8BD326238566AB008B31EF /* MenuTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0222B400590032F6CA /* MenuTableInitializer.swift */; };
 		0E8BD327238566AB008B31EF /* LocationPickerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F4922F1820400BD4E9C /* LocationPickerViewOutput.swift */; };
@@ -496,8 +496,8 @@
 		0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959BA235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E9D5F202351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */; };
-		0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
-		0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
+		0E9D5F262353626B0076FFD8 /* VirtualTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* VirtualTagDaemon.swift */; };
+		0E9D5F28235362AF0076FFD8 /* VirtualTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* VirtualTagDaemonImpl.swift */; };
 		0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
 		0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */; };
@@ -1250,8 +1250,8 @@
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundSwitchTableViewCell.swift; sourceTree = "<group>"; };
-		0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemon.swift; sourceTree = "<group>"; };
-		0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemonImpl.swift; sourceTree = "<group>"; };
+		0E9D5F252353626B0076FFD8 /* VirtualTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagDaemon.swift; sourceTree = "<group>"; };
+		0E9D5F27235362AF0076FFD8 /* VirtualTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagDaemonImpl.swift; sourceTree = "<group>"; };
 		0E9E7759238CCE5F006D7013 /* String+Replace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Replace.swift"; sourceTree = "<group>"; };
 		0E9F979122EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverVirtualTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
@@ -2864,7 +2864,7 @@
 			isa = PBXGroup;
 			children = (
 				0E9D5F242353625C0076FFD8 /* Impl */,
-				0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */,
+				0E9D5F252353626B0076FFD8 /* VirtualTagDaemon.swift */,
 			);
 			path = WebTag;
 			sourceTree = "<group>";
@@ -2872,7 +2872,7 @@
 		0E9D5F242353625C0076FFD8 /* Impl */ = {
 			isa = PBXGroup;
 			children = (
-				0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */,
+				0E9D5F27235362AF0076FFD8 /* VirtualTagDaemonImpl.swift */,
 			);
 			path = Impl;
 			sourceTree = "<group>";
@@ -5289,7 +5289,7 @@
 				0E8BD2E8238566AB008B31EF /* WebTagSettingsModuleInput.swift in Sources */,
 				0E8BD2E9238566AB008B31EF /* MenuTableConfigurator.swift in Sources */,
 				0EAD33E22399273D00EC5BAA /* HeartbeatViewModel.swift in Sources */,
-				0E8BD2EA238566AB008B31EF /* WebTagDaemonImpl.swift in Sources */,
+				0E8BD2EA238566AB008B31EF /* VirtualTagDaemonImpl.swift in Sources */,
 				A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */,
 				0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0EB48D962619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
@@ -5354,7 +5354,7 @@
 				A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */,
 				0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */,
-				0E8BD323238566AB008B31EF /* WebTagDaemon.swift in Sources */,
+				0E8BD323238566AB008B31EF /* VirtualTagDaemon.swift in Sources */,
 				66718A50266A685700A380F8 /* DfuFlashViewModel.swift in Sources */,
 				0E8BD324238566AB008B31EF /* ForegroundSwitchTableViewCell.swift in Sources */,
 				0E2AFFA1266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */,
@@ -5776,7 +5776,7 @@
 				66718A4C266A685700A380F8 /* DfuLogTableViewCell.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0E2AFFA0266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */,
-				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
+				0E9D5F28235362AF0076FFD8 /* VirtualTagDaemonImpl.swift in Sources */,
 				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				660EB28C26692806000FD22B /* DfuDevice.swift in Sources */,
@@ -5850,7 +5850,7 @@
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
-				0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */,
+				0E9D5F262353626B0076FFD8 /* VirtualTagDaemon.swift in Sources */,
 				663155E02667F40C005B90A6 /* UpdateFirmwareConfigurator.swift in Sources */,
 				0E9D5F202351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,

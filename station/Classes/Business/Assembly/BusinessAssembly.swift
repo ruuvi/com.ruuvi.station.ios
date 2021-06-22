@@ -48,7 +48,7 @@ class BusinessAssembly: Assembly {
             service.settings = r.resolve(RuuviLocalSettings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
-            service.webTagDaemon = r.resolve(WebTagDaemon.self)
+            service.webTagDaemon = r.resolve(VirtualTagDaemon.self)
             service.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.ruuviUser = r.resolve(RuuviUser.self)
@@ -395,12 +395,13 @@ class BusinessAssembly: Assembly {
             return service
         }
 
-        container.register(WebTagDaemon.self) { r in
-            let daemon = WebTagDaemonImpl()
+        container.register(VirtualTagDaemon.self) { r in
+            let daemon = VirtualTagDaemonImpl()
             daemon.virtualService = r.resolve(VirtualService.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.virtualPersistence = r.resolve(VirtualPersistence.self)
             daemon.alertService = r.resolve(AlertService.self)
+            daemon.virtualReactor = r.resolve(VirtualReactor.self)
             return daemon
         }.inObjectScope(.container)
 
