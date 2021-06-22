@@ -70,7 +70,6 @@
 		0E1B2F33239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
 		0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */; };
 		0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */; };
-		0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9022B35D6A0032F6CA /* Worker.swift */; };
 		0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9F22B36C100032F6CA /* RUError.swift */; };
 		0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA722B387A00032F6CA /* AppAssembly.swift */; };
 		0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */; };
@@ -443,7 +442,6 @@
 		0E8BD3CD238566AB008B31EF /* WelcomeInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215522B8FD590015F9E0 /* WelcomeInitializer.swift */; };
 		0E8BD3CF238566AB008B31EF /* SettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D522B7C7E70015F9E0 /* SettingsViewInput.swift */; };
 		0E8BD3D2238566AB008B31EF /* CardsRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */; };
-		0E8BD3D4238566AB008B31EF /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9022B35D6A0032F6CA /* Worker.swift */; };
 		0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC322B395C00032F6CA /* ErrorPresenterAlert.swift */; };
 		0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF358235060EF0061D11B /* ForegroundViewController.swift */; };
 		0E8BD3D8238566AB008B31EF /* ForegroundInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36B23507BC00061D11B /* ForegroundInitializer.swift */; };
@@ -1097,7 +1095,6 @@
 		0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSDeviceModelMapping.plist; sourceTree = "<group>"; };
 		0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
 		0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
-		0E1C1D9022B35D6A0032F6CA /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		0E1C1D9F22B36C100032F6CA /* RUError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUError.swift; sourceTree = "<group>"; };
 		0E1C1DA722B387A00032F6CA /* AppAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembly.swift; sourceTree = "<group>"; };
 		0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceAssembly.swift; sourceTree = "<group>"; };
@@ -1828,7 +1825,6 @@
 				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
 				0E3CA70B267365B1000D9B25 /* Debouncer.swift */,
 				0E11D21F267F24F2002D0686 /* VirtualAssembly.swift */,
-				0E1C1D9022B35D6A0032F6CA /* Worker.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -5616,7 +5612,6 @@
 				A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */,
 				66BC44A82657AED400A03253 /* OffsetCorrectionAppleViewController.swift in Sources */,
 				A964648B247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
-				0E8BD3D4238566AB008B31EF /* Worker.swift in Sources */,
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				66BC44B42657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
@@ -6102,7 +6097,6 @@
 				0E45580923E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				A90E169324604FD100631E6C /* TagChartModuleInput.swift in Sources */,
-				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */,
 				A9646475247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
