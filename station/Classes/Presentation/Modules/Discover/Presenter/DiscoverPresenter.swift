@@ -1,6 +1,5 @@
 import Foundation
 import BTKit
-import RealmSwift
 import UIKit
 import Future
 import RuuviOntology
