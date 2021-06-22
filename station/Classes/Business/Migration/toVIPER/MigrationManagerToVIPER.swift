@@ -6,6 +6,9 @@ import RuuviVirtual
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
 #endif
+#if canImport(RuuviVirtualModel)
+import RuuviVirtualModel
+#endif
 
 class MigrationManagerToVIPER: MigrationManager {
     var localImages: RuuviLocalImages!

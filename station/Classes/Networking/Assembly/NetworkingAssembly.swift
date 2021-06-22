@@ -7,6 +7,9 @@ import RuuviVirtual
 #if canImport(RuuviCloudPure)
 import RuuviCloudPure
 #endif
+#if canImport(RuuviVirtualOWM)
+import RuuviVirtualOWM
+#endif
 
 class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
