@@ -30,9 +30,10 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
 
     private func handleWebTagRefresh(task: BGAppRefreshTask) {
         schedule()
-
-        let operations = webTagOperationsManager.alertsPullOperations()
-        enqueueOperations(operations, task: task)
+        webTagOperationsManager.alertsPullOperations()
+            .on(success: { [weak self] operations in
+                self?.enqueueOperations(operations, task: task)
+            })
     }
 
     private func enqueueOperations(_ operations: [Operation], task: BGAppRefreshTask) {
