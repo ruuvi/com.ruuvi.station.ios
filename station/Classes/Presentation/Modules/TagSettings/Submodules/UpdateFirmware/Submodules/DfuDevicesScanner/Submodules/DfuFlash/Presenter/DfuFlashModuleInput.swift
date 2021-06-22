@@ -1,3 +1,5 @@
+import RuuviDFU
+
 protocol DfuFlashModuleInput: AnyObject {
-    func configure(dfuDevice: DfuDevice)
+    func configure(dfuDevice: DFUDevice)
 }

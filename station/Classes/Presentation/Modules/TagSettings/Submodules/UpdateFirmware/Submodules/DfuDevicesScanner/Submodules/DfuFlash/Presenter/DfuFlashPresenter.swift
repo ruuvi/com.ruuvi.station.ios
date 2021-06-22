@@ -7,16 +7,17 @@ import NordicDFU
 #if canImport(iOSDFULibrary)
 import iOSDFULibrary
 #endif
+import RuuviDFU
 
 class DfuFlashPresenter: NSObject, DfuFlashModuleInput {
     weak var view: DfuFlashViewInput!
     var router: DfuFlashRouter!
 
-    var ruuviDfu: RuuviDfu!
+    var ruuviDfu: RuuviDFU!
     var filePresener: DfuFilePickerPresenter!
     var errorPresenter: ErrorPresenter!
 
-    private var dfuDevice: DfuDevice!
+    private var dfuDevice: DFUDevice!
     private var dfuFlashState: DfuFlashState! {
         didSet {
             view.dfuFlashState = dfuFlashState
@@ -24,7 +25,7 @@ class DfuFlashPresenter: NSObject, DfuFlashModuleInput {
     }
     private var selectedFirmware: DFUFirmware?
 
-    func configure(dfuDevice: DfuDevice) {
+    func configure(dfuDevice: DFUDevice) {
         self.dfuDevice = dfuDevice
     }
 }
@@ -85,7 +86,7 @@ extension DfuFlashPresenter: DfuFilePickerPresenterDelegate {
         addNewLog(log: firmware.log)
     }
 
-    private func addNewLog(log: DfuLog) {
+    private func addNewLog(log: DFULog) {
         var logs = view.viewModel.flashLogs.value ?? []
         logs.append(log)
         view.viewModel.flashLogs.value = logs
@@ -97,7 +98,7 @@ extension DfuFlashPresenter: DfuFlasherOutputProtocol {
         view.viewModel.flashProgress.value = percentage
     }
 
-    func ruuviDfuDidUpdateLog(log: DfuLog) {
+    func ruuviDfuDidUpdateLog(log: DFULog) {
         addNewLog(log: log)
     }
 

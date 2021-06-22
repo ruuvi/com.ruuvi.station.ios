@@ -1,10 +1,11 @@
 import Foundation
 import Swinject
+import RuuviDFU
 
 class DfuAssembly: Assembly {
     func assemble(container: Container) {
-        container.register(RuuviDfu.self) { _ in
-            return RuuviDfu.shared
+        container.register(RuuviDFU.self) { _ in
+            return RuuviDFUImpl.shared
         }.inObjectScope(.container)
     }
 }
