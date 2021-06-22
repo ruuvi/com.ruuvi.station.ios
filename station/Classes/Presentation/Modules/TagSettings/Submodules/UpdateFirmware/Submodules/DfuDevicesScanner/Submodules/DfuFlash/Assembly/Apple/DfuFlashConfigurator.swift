@@ -1,4 +1,5 @@
 import Foundation
+import RuuviDFU
 
 class DfuFlashConfigurator: NSObject {
     func configure(view: DfuFlashAppleViewController) {
@@ -12,7 +13,7 @@ class DfuFlashConfigurator: NSObject {
         view.delegate = presenter
         presenter.router = router
         presenter.filePresener = r.resolve(DfuFilePickerPresenter.self)
-        presenter.ruuviDfu = r.resolve(RuuviDfu.self)
+        presenter.ruuviDfu = r.resolve(RuuviDFU.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
 
         view.output = presenter

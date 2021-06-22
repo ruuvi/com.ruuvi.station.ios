@@ -6,13 +6,6 @@ import NordicDFU
 import iOSDFULibrary
 #endif
 
-protocol DfuFlasherOutputProtocol: AnyObject {
-    func ruuviDfuDidUpdateProgress(percentage: Float)
-    func ruuviDfuDidUpdateLog(log: DfuLog)
-    func ruuviDfuDidFinish()
-    func ruuviDfuError(error: Error)
-}
-
 class DfuFlasher: NSObject {
     private let queue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive)
     private var dfuServiceInitiator: DFUServiceInitiator
@@ -30,7 +23,7 @@ class DfuFlasher: NSObject {
         super.init()
     }
 
-    func flashFirmware(device: DfuDevice,
+    func flashFirmware(device: DFUDevice,
                        with firmware: DFUFirmware,
                        output: DfuFlasherOutputProtocol) {
         guard let uuid = UUID(uuidString: device.uuid) else {
@@ -47,7 +40,7 @@ class DfuFlasher: NSObject {
             .start(targetWithIdentifier: uuid)
     }
 
-    func stopFlashFirmware(device: DfuDevice) -> Bool {
+    func stopFlashFirmware(device: DFUDevice) -> Bool {
         guard let serviceController = dfuServiceController else {
             return false
         }
@@ -94,7 +87,7 @@ extension DfuFlasher: DFUProgressDelegate {
 extension DfuFlasher: LoggerDelegate {
     func logWith(_ level: LogLevel, message: String) {
         debugPrint("\(level.name()): \(message)")
-        output?.ruuviDfuDidUpdateLog(log: DfuLog(
+        output?.ruuviDfuDidUpdateLog(log: DFULog(
             message: message,
             time: Date()
         ))
