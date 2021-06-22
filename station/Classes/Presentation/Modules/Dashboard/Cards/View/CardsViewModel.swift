@@ -3,6 +3,7 @@ import BTKit
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviVirtual
 
 enum CardType {
     case ruuvi
@@ -29,7 +30,7 @@ struct CardsViewModel {
     var currentLocation: Observable<Location?> = Observable<Location?>()
     var animateRSSI: Observable<Bool?> = Observable<Bool?>()
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
-    var provider: WeatherProvider?
+    var provider: VirtualProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
@@ -37,33 +38,34 @@ struct CardsViewModel {
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
-    init(_ webTag: WebTagRealm) {
+    init(_ virtualSensor: VirtualTagSensor) {
         type = .web
-        id.value = webTag.uuid
-        luid.value = webTag.uuid.luid.any
-        name.value = webTag.name
-        temperature.value = webTag.lastRecord?.temperature
-        humidity.value = webTag.lastRecord?.humidity
-        pressure.value = webTag.lastRecord?.pressure
+        id.value = virtualSensor.id
+        luid.value = virtualSensor.id.luid.any
+        name.value = virtualSensor.name
+        // TODO: @rinat fetch one
+//        temperature.value = virtualSensor.lastRecord?.temperature
+//        humidity.value = virtualSensor.lastRecord?.humidity
+//        pressure.value = virtualSensor.lastRecord?.pressure
         isConnectable.value = false
         isConnected.value = false
-        date.value = webTag.data.last?.date
-        location.value = webTag.location?.location
-        provider = webTag.provider
+//        date.value = virtualSensor.data.last?.date
+//        location.value = virtualSensor.location?.location
+        provider = virtualSensor.provider
         source.value = .weatherProvider
     }
 
-    func update(_ data: WebTagDataRealm) {
-        temperature.value = data.record?.temperature
-        humidity.value = data.record?.humidity
-        pressure.value = data.record?.pressure
+    func update(_ record: VirtualTagSensorRecord) {
+        temperature.value = record.temperature
+        humidity.value = record.humidity
+        pressure.value = record.pressure
         isConnectable.value = false
         isConnected.value = false
-        currentLocation.value = data.location?.location
-        date.value = data.date
+        currentLocation.value = record.location
+        date.value = record.date
     }
 
-    func update(_ wpsData: WPSData, current: Location?) {
+    func update(_ wpsData: VirtualData, current: Location?) {
         isConnectable.value = false
         temperature.value = wpsData.temperature
         humidity.value = wpsData.humidity

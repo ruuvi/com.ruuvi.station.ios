@@ -11,8 +11,6 @@ struct WebTagSettingsViewModel {
     let isLocationAuthorizedAlways: Observable<Bool?> = Observable<Bool?>(false)
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
 
-    let currentTemperature: Observable<Temperature?> = Observable<Temperature?>()
-
     let temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     let humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
     let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()

@@ -8,7 +8,6 @@ import RuuviOntology
 import RuuviLocal
 
 final class UserPropertiesServiceImpl: UserPropertiesService {
-
     private enum Properties {
         // Quantity of added tags(if greater that 10, then "10+")
         case addedTags(Int)

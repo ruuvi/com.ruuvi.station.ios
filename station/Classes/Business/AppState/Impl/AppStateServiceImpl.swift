@@ -16,7 +16,7 @@ class AppStateServiceImpl: AppStateService {
     var settings: RuuviLocalSettings!
     var userPropertiesService: UserPropertiesService!
     var universalLinkCoordinator: UniversalLinkCoordinator!
-    var webTagDaemon: WebTagDaemon!
+    var webTagDaemon: VirtualTagDaemon!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {

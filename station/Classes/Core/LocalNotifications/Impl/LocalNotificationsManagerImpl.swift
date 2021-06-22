@@ -5,6 +5,7 @@ import RuuviOntology
 import RuuviStorage
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 
 struct LocalAlertCategory {
     var id: String
@@ -35,7 +36,7 @@ enum BlastNotificationType: String {
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
     var ruuviStorage: RuuviStorage!
-    var virtualTagTrunk: VirtualTagTrunk!
+    var virtualTagTrunk: VirtualStorage!
     var idPersistence: RuuviLocalIDs!
     var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
