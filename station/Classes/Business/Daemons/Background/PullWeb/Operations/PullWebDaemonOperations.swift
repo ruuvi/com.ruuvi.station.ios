@@ -2,7 +2,6 @@ import Foundation
 import RuuviLocal
 
 class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
-
     var settings: RuuviLocalSettings!
     var webTagOperationsManager: WebTagOperationsManager!
 
@@ -49,10 +48,12 @@ class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
     }
 
     private func pullWebTagData() {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        let operations = webTagOperationsManager.alertsPullOperations()
-        queue.addOperations(operations, waitUntilFinished: false)
+        webTagOperationsManager.alertsPullOperations()
+            .on(success: { operations in
+                let queue = OperationQueue()
+                queue.maxConcurrentOperationCount = 1
+                queue.addOperations(operations, waitUntilFinished: false)
+            })
     }
 
 }

@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import Humidity
 import RuuviOntology
+import RuuviVirtual
 
 // MARK: - Process Physical Sensors
 extension AlertServiceImpl {
@@ -69,7 +70,7 @@ extension AlertServiceImpl {
 
 // MARK: - Process Virtual Sensors
 extension AlertServiceImpl {
-    func process(data: WPSData, for sensor: VirtualSensor) {
+    func process(data: VirtualData, for sensor: VirtualSensor) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {

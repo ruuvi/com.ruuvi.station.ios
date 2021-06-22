@@ -5,6 +5,7 @@ import RuuviPersistence
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviVirtual
 #if canImport(RuuviContextRealm)
 import RuuviContextRealm
 #endif
@@ -151,22 +152,5 @@ class PersistenceAssembly: Assembly {
             return factory.create()
         }.inObjectScope(.container)
 
-        container.register(WebTagPersistence.self) { r in
-            let persistence = WebTagPersistenceRealm()
-            persistence.context = r.resolve(RealmContext.self)
-            persistence.settings = r.resolve(RuuviLocalSettings.self)
-            return persistence
-        }
-
-        container.register(WebTagPersistenceRealm.self) { r in
-            let persistence = WebTagPersistenceRealm()
-            persistence.context = r.resolve(RealmContext.self)
-            return persistence
-        }
-
-        container.register(LocationPersistence.self, factory: { _ in
-            let persistence = LocationPersistenceImpl()
-            return persistence
-        })
     }
 }

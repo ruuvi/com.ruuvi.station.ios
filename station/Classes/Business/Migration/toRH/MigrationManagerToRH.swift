@@ -41,10 +41,10 @@ final class MigrationManagerToRH: MigrationManager {
     }
 
     private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
-        var result: [(RuuviTagSensor, Temperature?)] = .init()
         queue.async {
             let group = DispatchGroup()
             group.enter()
+            var result = [(RuuviTagSensor, Temperature?)]()
             self.ruuviStorage.readAll().on(success: {sensors in
                 sensors.forEach({ sensor in
                     group.enter()
@@ -57,7 +57,6 @@ final class MigrationManagerToRH: MigrationManager {
             }, failure: { _ in
                 group.leave()
             })
-            group.wait()
             group.notify(queue: .main, execute: {
                 completion(result)
             })

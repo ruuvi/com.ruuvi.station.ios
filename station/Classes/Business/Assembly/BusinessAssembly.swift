@@ -13,6 +13,8 @@ import RuuviCore
 import RuuviDaemon
 import RuuviRepository
 import RuuviUser
+import RuuviVirtual
+import RuuviLocation
 #if canImport(RuuviServiceFactory)
 import RuuviServiceFactory
 #endif
@@ -25,10 +27,21 @@ import RuuviRepositoryCoordinator
 #if canImport(RuuviUserCoordinator)
 import RuuviUserCoordinator
 #endif
+#if canImport(RuuviCoreLocation)
+import RuuviCoreLocation
+#endif
+#if canImport(RuuviLocationService)
+import RuuviLocationService
+#endif
+#if canImport(RuuviVirtualOWM)
+import RuuviVirtualOWM
+#endif
+#if canImport(RuuviVirtualService)
+import RuuviVirtualService
+#endif
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
-
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
         container.register(AlertService.self) { r in
@@ -47,7 +60,7 @@ class BusinessAssembly: Assembly {
             service.settings = r.resolve(RuuviLocalSettings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
-            service.webTagDaemon = r.resolve(WebTagDaemon.self)
+            service.webTagDaemon = r.resolve(VirtualTagDaemon.self)
             service.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.ruuviUser = r.resolve(RuuviUser.self)
@@ -92,8 +105,8 @@ class BusinessAssembly: Assembly {
             let manager = DataPruningOperationsManager()
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
-            manager.virtualTagTank = r.resolve(VirtualTagTank.self)
+            manager.virtualStorage = r.resolve(VirtualStorage.self)
+            manager.virtualRepository = r.resolve(VirtualRepository.self)
             manager.ruuviPool = r.resolve(RuuviPool.self)
             return manager
         }
@@ -137,9 +150,8 @@ class BusinessAssembly: Assembly {
             return provider
         }.inObjectScope(.container)
 
-        container.register(LocationService.self) { r in
-            let service = LocationServiceApple()
-            service.locationPersistence = r.resolve(LocationPersistence.self)
+        container.register(RuuviLocationService.self) { _ in
+            let service = RuuviLocationServiceApple()
             return service
         }
 
@@ -165,7 +177,7 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerAlertService.self) { r in
             let manager = MigrationManagerAlertService()
-            manager.realmContext = r.resolve(RealmContext.self)
+            manager.virtualStorage = r.resolve(VirtualStorage.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
@@ -383,20 +395,25 @@ class BusinessAssembly: Assembly {
             return factory.createUser()
         }.inObjectScope(.container)
 
-        container.register(WeatherProviderService.self) { r in
-            let service = WeatherProviderServiceImpl()
-            service.owmApi = r.resolve(OpenWeatherMapAPI.self)
-            service.locationManager = r.resolve(LocationManager.self)
-            service.locationService = r.resolve(LocationService.self)
+        container.register(VirtualProviderService.self) { r in
+            let owmApi = r.resolve(OpenWeatherMapAPI.self)!
+            let locationManager = r.resolve(RuuviCoreLocation.self)!
+            let locationService = r.resolve(RuuviLocationService.self)!
+            let service = VirtualProviderServiceImpl(
+                owmApi: owmApi,
+                ruuviCoreLocation: locationManager,
+                ruuviLocationService: locationService
+            )
             return service
         }
 
-        container.register(WebTagDaemon.self) { r in
-            let daemon = WebTagDaemonImpl()
-            daemon.webTagService = r.resolve(WebTagService.self)
+        container.register(VirtualTagDaemon.self) { r in
+            let daemon = VirtualTagDaemonImpl()
+            daemon.virtualService = r.resolve(VirtualService.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
-            daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
+            daemon.virtualPersistence = r.resolve(VirtualPersistence.self)
             daemon.alertService = r.resolve(AlertService.self)
+            daemon.virtualReactor = r.resolve(VirtualReactor.self)
             return daemon
         }.inObjectScope(.container)
 
@@ -404,16 +421,21 @@ class BusinessAssembly: Assembly {
             let manager = WebTagOperationsManager()
             manager.alertService = r.resolve(RuuviServiceAlert.self)
             manager.alertHandler = r.resolve(AlertService.self)
-            manager.weatherProviderService = r.resolve(WeatherProviderService.self)
-            manager.webTagPersistence = r.resolve(WebTagPersistence.self)
+            manager.weatherProviderService = r.resolve(VirtualProviderService.self)
+            manager.virtualStorage = r.resolve(VirtualStorage.self)
+            manager.virtualPersistence = r.resolve(VirtualPersistence.self)
             return manager
         }
 
-        container.register(WebTagService.self) { r in
-            let service = WebTagServiceImpl()
-            service.webTagPersistence = r.resolve(WebTagPersistence.self)
-            service.weatherProviderService = r.resolve(WeatherProviderService.self)
-            service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
+        container.register(VirtualService.self) { r in
+            let virtualPersistence = r.resolve(VirtualPersistence.self)!
+            let weatherProviderService = r.resolve(VirtualProviderService.self)!
+            let ruuviLocalImages = r.resolve(RuuviLocalImages.self)!
+            let service = VirtualServiceImpl(
+                ruuviLocalImages: ruuviLocalImages,
+                virtualPersistence: virtualPersistence,
+                virtualProviderService: weatherProviderService
+            )
             return service
         }
 

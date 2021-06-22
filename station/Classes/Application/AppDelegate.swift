@@ -93,8 +93,10 @@ extension AppDelegate {
         if #available(iOS 13, *) {
             completionHandler(.noData)
         } else {
-            let operations = webTagOperationsManager.alertsPullOperations()
-            enqueueOperations(operations, completionHandler: completionHandler)
+            webTagOperationsManager.alertsPullOperations()
+                .on(success: { [weak self] operations in
+                    self?.enqueueOperations(operations, completionHandler: completionHandler)
+                })
         }
     }
 

@@ -1,21 +1,22 @@
 import Foundation
 import CoreLocation
 import RuuviOntology
+import RuuviVirtual
 
 class WebTagRefreshDataOperation: AsyncOperation {
     private var sensor: VirtualSensor
     private var location: Location
-    private var provider: WeatherProvider
-    private var weatherProviderService: WeatherProviderService
+    private var provider: VirtualProvider
+    private var weatherProviderService: VirtualProviderService
     private var alertService: AlertService
-    private var webTagPersistence: WebTagPersistence!
+    private var webTagPersistence: VirtualPersistence!
 
     init(sensor: VirtualSensor,
          location: Location,
-         provider: WeatherProvider,
-         weatherProviderService: WeatherProviderService,
+         provider: VirtualProvider,
+         weatherProviderService: VirtualProviderService,
          alertService: AlertService,
-         webTagPersistence: WebTagPersistence) {
+         webTagPersistence: VirtualPersistence) {
         self.sensor = sensor
         self.location = location
         self.provider = provider

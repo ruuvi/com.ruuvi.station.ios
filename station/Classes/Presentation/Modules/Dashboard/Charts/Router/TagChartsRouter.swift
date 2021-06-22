@@ -1,6 +1,7 @@
 import LightRoute
 import UIKit
 import RuuviOntology
+import RuuviVirtual
 
 class TagChartsRouter: TagChartsRouterInput {
     weak var transitionHandler: UIViewController!
@@ -71,13 +72,15 @@ class TagChartsRouter: TagChartsRouterInput {
             })
     }
 
-    func openWebTagSettings(webTag: WebTagRealm,
-                            temperature: Temperature?) {
+    func openWebTagSettings(
+        sensor: VirtualTagSensor,
+        temperature: Temperature?
+    ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(webTag: webTag, temperature: temperature)
+                module.configure(sensor: sensor, temperature: temperature)
             })
     }
 

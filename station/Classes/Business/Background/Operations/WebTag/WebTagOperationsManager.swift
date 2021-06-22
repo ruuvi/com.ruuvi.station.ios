@@ -1,41 +1,48 @@
 import Foundation
-import RealmSwift
+import Future
 import RuuviService
+import RuuviVirtual
 
 class WebTagOperationsManager {
-    var weatherProviderService: WeatherProviderService!
+    var weatherProviderService: VirtualProviderService!
     var alertService: RuuviServiceAlert!
     var alertHandler: AlertService!
-    var webTagPersistence: WebTagPersistence!
+    var virtualStorage: VirtualStorage!
+    var virtualPersistence: VirtualPersistence!
 
-    func alertsPullOperations() -> [Operation] {
-        var operations = [Operation]()
-        let realm = try! Realm()
-        let webTags = realm.objects(WebTagRealm.self)
-        for webTag in webTags {
-            if alertService.hasRegistrations(for: webTag) {
-                if let location = webTag.location?.location {
-                    let operation = WebTagRefreshDataOperation(
-                        sensor: webTag.struct,
-                        location: location,
-                        provider: webTag.provider,
-                        weatherProviderService: weatherProviderService,
-                        alertService: alertHandler,
-                        webTagPersistence: webTagPersistence
-                    )
-                    operations.append(operation)
-                } else {
-                    let operation = CurrentWebTagRefreshDataOperation(
-                        sensor: webTag.struct,
-                        provider: webTag.provider,
-                        weatherProviderService: weatherProviderService,
-                        alertService: alertHandler,
-                        webTagPersistence: webTagPersistence
-                    )
-                    operations.append(operation)
+    func alertsPullOperations() -> Future<[Operation], RUError> {
+        let promise = Promise<[Operation], RUError>()
+        virtualStorage.readAll().on(success: { [weak self] virtualTags in
+            guard let sSelf = self else { return }
+            var operations = [Operation]()
+            virtualTags.forEach { virtualTag in
+                if sSelf.alertService.hasRegistrations(for: virtualTag) {
+                    if let location = virtualTag.loc {
+                        let operation = WebTagRefreshDataOperation(
+                            sensor: virtualTag,
+                            location: location,
+                            provider: virtualTag.provider,
+                            weatherProviderService: sSelf.weatherProviderService,
+                            alertService: sSelf.alertHandler,
+                            webTagPersistence: sSelf.virtualPersistence
+                        )
+                        operations.append(operation)
+                    } else {
+                        let operation = CurrentWebTagRefreshDataOperation(
+                            sensor: virtualTag,
+                            provider: virtualTag.provider,
+                            weatherProviderService: sSelf.weatherProviderService,
+                            alertService: sSelf.alertHandler,
+                            webTagPersistence: sSelf.virtualPersistence
+                        )
+                        operations.append(operation)
+                    }
                 }
             }
-        }
-        return operations
+            promise.succeed(value: operations)
+        }, failure: { error in
+            promise.fail(error: .virtualStorage(error))
+        })
+        return promise.future
     }
 }

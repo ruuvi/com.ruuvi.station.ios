@@ -3,8 +3,12 @@ import Swinject
 import SwinjectPropertyLoader
 import RuuviCloud
 import RuuviUser
+import RuuviVirtual
 #if canImport(RuuviCloudPure)
 import RuuviCloudPure
+#endif
+#if canImport(RuuviVirtualOWM)
+import RuuviVirtualOWM
 #endif
 
 class NetworkingAssembly: Assembly {
@@ -13,8 +17,8 @@ class NetworkingAssembly: Assembly {
         try! container.applyPropertyLoader(config)
 
         container.register(OpenWeatherMapAPI.self) { r in
-            let api = OpenWeatherMapAPIURLSession()
-            api.apiKey = r.property("Open Weather Map API Key")!
+            let apiKey: String = r.property("Open Weather Map API Key")!
+            let api = OpenWeatherMapAPIURLSession(apiKey: apiKey)
             return api
         }
 
