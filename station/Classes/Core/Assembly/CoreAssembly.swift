@@ -8,6 +8,12 @@ import RuuviVirtual
 #if canImport(RuuviCoreImage)
 import RuuviCoreImage
 #endif
+#if canImport(RuuviCoreLocation)
+import RuuviCoreLocation
+#endif
+#if canImport(RuuviLocationService)
+import RuuviLocationService
+#endif
 
 class CoreAssembly: Assembly {
     func assemble(container: Container) {

@@ -2,6 +2,18 @@ import Swinject
 import RuuviVirtual
 import RuuviContext
 import RuuviLocal
+#if canImport(RuuviVirtualPersistence)
+import RuuviVirtualPersistence
+#endif
+#if canImport(RuuviVirtualReactor)
+import RuuviVirtualReactor
+#endif
+#if canImport(RuuviVirtualRepository)
+import RuuviVirtualRepository
+#endif
+#if canImport(RuuviVirtualStorage)
+import RuuviVirtualStorage
+#endif
 
 class VirtualAssembly: Assembly {
     func assemble(container: Container) {

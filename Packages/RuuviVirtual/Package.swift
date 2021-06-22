@@ -112,6 +112,7 @@ let package = Package(
             dependencies: [
                 "RuuviOntology",
                 "RuuviVirtual",
+                "RuuviVirtualOWM",
                 "RuuviLocation",
                 "RuuviLocal",
                 "RuuviCore",

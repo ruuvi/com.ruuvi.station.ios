@@ -27,6 +27,18 @@ import RuuviRepositoryCoordinator
 #if canImport(RuuviUserCoordinator)
 import RuuviUserCoordinator
 #endif
+#if canImport(RuuviCoreLocation)
+import RuuviCoreLocation
+#endif
+#if canImport(RuuviLocationService)
+import RuuviLocationService
+#endif
+#if canImport(RuuviVirtualOWM)
+import RuuviVirtualOWM
+#endif
+#if canImport(RuuviVirtualService)
+import RuuviVirtualService
+#endif
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
