@@ -8,7 +8,7 @@ enum WebTagDaemonDidFailKey: String {
     case error = "RUError" // RUError
 }
 
-protocol WebTagDaemon {
+protocol VirtualTagDaemon {
     func start()
     func stop()
 }
