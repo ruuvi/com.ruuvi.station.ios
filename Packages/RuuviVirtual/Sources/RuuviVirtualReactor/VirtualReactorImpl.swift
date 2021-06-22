@@ -1,8 +1,8 @@
 import Foundation
-import GRDB
 import Future
 import RuuviOntology
 import RuuviContext
+import RuuviVirtual
 
 public final class VirtualReactorImpl: VirtualReactor {
     private let context: RealmContext

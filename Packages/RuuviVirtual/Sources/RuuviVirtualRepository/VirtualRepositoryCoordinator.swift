@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviVirtual
 
 public final class VirtualRepositoryCoordinator: VirtualRepository {
     private let peristence: VirtualPersistence

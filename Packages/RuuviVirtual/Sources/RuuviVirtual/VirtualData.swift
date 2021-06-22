@@ -2,9 +2,9 @@ import Foundation
 import RuuviOntology
 
 public struct VirtualData {
-    var celsius: Double?
-    var relativeHumidity: Double?
-    var hPa: Double?
+    public var celsius: Double?
+    public var relativeHumidity: Double?
+    public var hPa: Double?
 
     public init(
         celsius: Double?,

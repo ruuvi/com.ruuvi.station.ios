@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import RuuviOntology
+import RuuviVirtual
 
 public final class VirtualStorageCoordinator: VirtualStorage {
     private let persistence: VirtualPersistence

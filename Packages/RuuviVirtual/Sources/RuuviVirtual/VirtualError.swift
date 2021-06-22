@@ -38,15 +38,15 @@ public enum OWMError: Error, Equatable {
 
     public static func == (lhs: OWMError, rhs: OWMError) -> Bool {
         switch (lhs, rhs) {
-        case let (.missingOpenWeatherMapAPIKey, .missingOpenWeatherMapAPIKey):
+        case (.missingOpenWeatherMapAPIKey, .missingOpenWeatherMapAPIKey):
             return true
-        case let (.failedToParseOpenWeatherMapResponse, .failedToParseOpenWeatherMapResponse):
+        case (.failedToParseOpenWeatherMapResponse, .failedToParseOpenWeatherMapResponse):
             return true
-        case let (.apiLimitExceeded, .apiLimitExceeded):
+        case (.apiLimitExceeded, .apiLimitExceeded):
             return true
-        case let (.invalidApiKey, .invalidApiKey):
+        case (.invalidApiKey, .invalidApiKey):
             return true
-        case let (.notAHttpResponse, .notAHttpResponse):
+        case (.notAHttpResponse, .notAHttpResponse):
             return true
         default:
             return false

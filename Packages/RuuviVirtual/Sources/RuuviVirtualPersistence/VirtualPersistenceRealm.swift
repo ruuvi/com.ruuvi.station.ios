@@ -4,6 +4,10 @@ import CoreLocation
 import RuuviOntology
 import RuuviContext
 import RuuviLocal
+import RuuviVirtual
+#if canImport(RuuviVirtualModel)
+import RuuviVirtualModel
+#endif
 
 // swiftlint:disable:next type_body_length
 public final class VirtualPersistenceRealm: VirtualPersistence {

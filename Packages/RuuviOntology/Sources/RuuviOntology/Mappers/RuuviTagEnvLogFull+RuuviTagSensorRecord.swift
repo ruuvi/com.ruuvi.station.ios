@@ -1,6 +1,5 @@
 import BTKit
 import Humidity
-import RuuviOntology
 
 extension RuuviTagEnvLogFull {
 

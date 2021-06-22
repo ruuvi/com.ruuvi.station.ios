@@ -1,7 +1,6 @@
 import Foundation
 import Future
 import CoreLocation
-import RuuviVirtual
 import RuuviOntology
 
 public protocol VirtualService {

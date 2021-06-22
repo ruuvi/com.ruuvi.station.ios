@@ -22,7 +22,7 @@ public final class WebTagRealm: Object {
         return "uuid"
     }
 
-    convenience init(uuid: String, provider: VirtualProvider) {
+    public convenience init(uuid: String, provider: VirtualProvider) {
         self.init()
         self.uuid = uuid
         self.providerString = provider.rawValue
