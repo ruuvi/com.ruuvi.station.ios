@@ -93,8 +93,8 @@ class BusinessAssembly: Assembly {
             let manager = DataPruningOperationsManager()
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.virtualTagTrunk = r.resolve(VirtualStorage.self)
-            manager.virtualTagTank = r.resolve(VirtualRepository.self)
+            manager.virtualStorage = r.resolve(VirtualStorage.self)
+            manager.virtualRepository = r.resolve(VirtualRepository.self)
             manager.ruuviPool = r.resolve(RuuviPool.self)
             return manager
         }
