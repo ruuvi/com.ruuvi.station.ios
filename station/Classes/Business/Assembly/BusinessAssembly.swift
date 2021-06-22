@@ -410,7 +410,8 @@ class BusinessAssembly: Assembly {
             manager.alertService = r.resolve(RuuviServiceAlert.self)
             manager.alertHandler = r.resolve(AlertService.self)
             manager.weatherProviderService = r.resolve(VirtualProviderService.self)
-            manager.webTagPersistence = r.resolve(VirtualPersistence.self)
+            manager.virtualStorage = r.resolve(VirtualStorage.self)
+            manager.virtualPersistence = r.resolve(VirtualPersistence.self)
             return manager
         }
 
