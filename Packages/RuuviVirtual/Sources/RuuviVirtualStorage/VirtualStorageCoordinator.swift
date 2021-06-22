@@ -9,6 +9,19 @@ public final class VirtualStorageCoordinator: VirtualStorage {
         self.persistence = persistence
     }
 
+    public func readLast(
+        _ virtualTag: VirtualTagSensor
+    ) -> Future<VirtualTagSensorRecord?, VirtualStorageError> {
+        let promise = Promise<VirtualTagSensorRecord?, VirtualStorageError>()
+        persistence.readLast(virtualTag)
+            .on(success: { record in
+                promise.succeed(value: record)
+            }, failure: { error in
+                promise.fail(error: .virtualPersistence(error))
+            })
+        return promise.future
+    }
+
     public func readAll() -> Future<[AnyVirtualTagSensor], VirtualStorageError> {
         let promise = Promise<[AnyVirtualTagSensor], VirtualStorageError>()
         persistence.readAll()

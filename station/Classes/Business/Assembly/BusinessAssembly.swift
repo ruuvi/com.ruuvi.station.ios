@@ -165,7 +165,7 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerAlertService.self) { r in
             let manager = MigrationManagerAlertService()
-            manager.realmContext = r.resolve(RealmContext.self)
+            manager.virtualStorage = r.resolve(VirtualStorage.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
