@@ -6,20 +6,19 @@ import RuuviPool
 import RuuviVirtual
 
 class DataPruningOperationsManager {
-
     var settings: RuuviLocalSettings!
-    var virtualTagTrunk: VirtualStorage!
-    var virtualTagTank: VirtualRepository!
+    var virtualStorage: VirtualStorage!
+    var virtualRepository: VirtualRepository!
     var ruuviStorage: RuuviStorage!
     var ruuviPool: RuuviPool!
 
     func webTagPruningOperations() -> Future<[Operation], RUError> {
         let promise = Promise<[Operation], RUError>()
-        virtualTagTrunk.readAll().on(success: { [weak self] virtualTags in
+        virtualStorage.readAll().on(success: { [weak self] virtualTags in
             guard let sSelf = self else { return }
             let ops = virtualTags.map({
                 WebTagDataPruningOperation(id: $0.id,
-                                           virtualTagTank: sSelf.virtualTagTank,
+                                           virtualTagTank: sSelf.virtualRepository,
                                            settings: sSelf.settings)
             })
             promise.succeed(value: ops)
