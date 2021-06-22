@@ -12,7 +12,13 @@ let package = Package(
             targets: ["RuuviCore"]),
         .library(
             name: "RuuviCoreImage",
-            targets: ["RuuviCoreImage"])
+            targets: ["RuuviCoreImage"]),
+        .library(
+            name: "RuuviCoreLocation",
+            targets: ["RuuviCoreLocation"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/kean/Future", .exact("1.3.0"))
     ],
     targets: [
         .target(
@@ -21,6 +27,10 @@ let package = Package(
         .target(
             name: "RuuviCoreImage",
             dependencies: ["RuuviCore"]
+        ),
+        .target(
+            name: "RuuviCoreLocation",
+            dependencies: ["RuuviCore", "Future"]
         ),
         .testTarget(
             name: "RuuviCoreTests",

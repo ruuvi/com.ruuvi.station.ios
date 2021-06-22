@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import Future
+import RuuviCore
 
 public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
     public var isLocationPermissionGranted: Bool {

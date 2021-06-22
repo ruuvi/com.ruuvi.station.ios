@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviVirtual
 
 public protocol OpenWeatherMapAPI {
     func loadCurrent(
@@ -9,7 +10,7 @@ public protocol OpenWeatherMapAPI {
 }
 
 public struct OWMData {
-    var kelvin: Double?
-    var humidity: Double? // in %
-    var pressure: Double? // in hPa
+    public var kelvin: Double?
+    public var humidity: Double? // in %
+    public var pressure: Double? // in hPa
 }

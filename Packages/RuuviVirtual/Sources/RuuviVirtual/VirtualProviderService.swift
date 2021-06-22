@@ -1,7 +1,6 @@
 import Foundation
 import Future
 import CoreLocation
-import RuuviVirtual
 import RuuviOntology
 
 public protocol VirtualProviderService {
@@ -39,7 +38,7 @@ public protocol VirtualProviderService {
 public final class VirtualToken {
     private let cancellationClosure: () -> Void
 
-    init(cancellationClosure: @escaping () -> Void) {
+    public init(cancellationClosure: @escaping () -> Void) {
         self.cancellationClosure = cancellationClosure
     }
 

@@ -2,6 +2,7 @@ import Foundation
 import MapKit
 import Future
 import RuuviOntology
+import RuuviLocation
 
 struct LocationApple: Location {
     var city: String?

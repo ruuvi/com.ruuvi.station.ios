@@ -5,11 +5,14 @@ import RuuviVirtual
 import RuuviOntology
 import RuuviLocation
 import RuuviCore
+#if canImport(RuuviVirtualOWM)
+import RuuviVirtualOWM
+#endif
 
 public final class VirtualProviderServiceImpl: VirtualProviderService {
-    var owmApi: OpenWeatherMapAPI!
-    var locationManager: RuuviCoreLocation!
-    var locationService: RuuviLocationService!
+    private let owmApi: OpenWeatherMapAPI
+    private let locationManager: RuuviCoreLocation
+    private let locationService: RuuviLocationService
 
     public init(
         owmApi: OpenWeatherMapAPI,

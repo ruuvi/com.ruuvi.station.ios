@@ -1,5 +1,4 @@
 import Foundation
-import RuuviOntology
 
 extension RuuviTagSensorRecord {
     public var measurement: RuuviMeasurement {

@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviVirtual
 
 public final class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
     private let apiKey: String
