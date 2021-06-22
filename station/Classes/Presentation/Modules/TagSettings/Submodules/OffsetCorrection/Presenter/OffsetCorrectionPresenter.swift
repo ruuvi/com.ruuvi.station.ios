@@ -16,7 +16,6 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var settings: RuuviLocalSettings!
 
     private var ruuviTagObserveToken: ObservationToken?
-    private var ruuviTagObserveLastRecordToken: RUObservationToken?
 
     private var temperatureUnitSettingToken: NSObjectProtocol?
     private var humidityUnitSettingToken: NSObjectProtocol?
