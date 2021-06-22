@@ -323,7 +323,6 @@
 		0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB5A8D2381807500E78757 /* CardsScrollViewController.swift */; };
 		0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07A232008420025A191 /* LanguagePresenter.swift */; };
 		0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
-		0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
 		0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5222F182AB00BD4E9C /* LocationPickerModuleInput.swift */; };
 		0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */; };
 		0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */; };
@@ -502,7 +501,6 @@
 		0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */; };
 		0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
-		0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
 		0EA511B8261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */; };
 		0EA511B9261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */; };
 		0EA796712664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */; };
@@ -895,8 +893,6 @@
 		A93CDCDF25659BF600018C6C /* AlertPresenterImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCDD25659BF600018C6C /* AlertPresenterImpl.swift */; };
 		A949A83B24707FD0006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
-		A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
-		A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
 		A94FFD48241C34EA00888017 /* MockAlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */; };
 		A94FFD4A241D45C600888017 /* MockRuuviTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD49241D45C600888017 /* MockRuuviTag.swift */; };
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
@@ -1248,7 +1244,6 @@
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
 		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
 		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
-		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
 		0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA796742664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudApiError+LocalizedError.swift"; sourceTree = "<group>"; };
@@ -1529,7 +1524,6 @@
 		A93CDCCE25659BA600018C6C /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		A93CDCDD25659BF600018C6C /* AlertPresenterImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenterImpl.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
-		A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUColor.swift; sourceTree = "<group>"; };
 		A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertServiceSpec.swift; sourceTree = "<group>"; };
 		A94FFD49241D45C600888017 /* MockRuuviTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRuuviTag.swift; sourceTree = "<group>"; };
 		A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationsManager.swift; sourceTree = "<group>"; };
@@ -2904,11 +2898,9 @@
 		0EA31069232B75E700BC8CF5 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */,
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 				0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */,
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
-				A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -5342,7 +5334,6 @@
 				66BC44A52657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
 				A9E5994B2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
 				0E45580623E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
-				A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				A91D0312251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
 				0E8BD32C238566AB008B31EF /* GATTService.swift in Sources */,
@@ -5369,7 +5360,6 @@
 				0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */,
 				66718A56266A685700A380F8 /* DfuFlashViewOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
-				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
 				A90E16982460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A9828E4624792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
@@ -5865,14 +5855,12 @@
 				663155EF2667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
 				660EB2582669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
-				A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */,
 				660EB2612669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */,
 				A9646484247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
-				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				A90E16972460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
