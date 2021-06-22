@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import Foundation
-import RealmSwift
 import BTKit
 import UIKit
 import Charts
