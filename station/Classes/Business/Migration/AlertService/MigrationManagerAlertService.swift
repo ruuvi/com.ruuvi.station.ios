@@ -1,5 +1,4 @@
 import Foundation
-import RealmSwift
 import AVKit
 import RuuviOntology
 import RuuviContext
@@ -9,7 +8,7 @@ import RuuviService
 import RuuviVirtual
 
 final class MigrationManagerAlertService: MigrationManager {
-    var realmContext: RealmContext!
+    var virtualStorage: VirtualStorage!
     var ruuviStorage: RuuviStorage!
     var settings: RuuviLocalSettings!
     var ruuviAlertService: RuuviServiceAlert!
@@ -71,18 +70,21 @@ final class MigrationManagerAlertService: MigrationManager {
 
 // MARK: - V1 migration
 extension MigrationManagerAlertService {
-
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
         let group = DispatchGroup()
-        let virtualSensors = fetchVirtualSensors()
-        self.queue.async {
-            virtualSensors.forEach { virtualSensor in
-                group.enter()
-                self.migrateTo1Version(element: virtualSensor, completion: {
-                    group.leave()
-                })
+        group.enter()
+        fetchVirtualSensors { virtualSensors in
+            self.queue.async {
+                virtualSensors.forEach { virtualSensor in
+                    group.enter()
+                    self.migrateTo1Version(element: virtualSensor, completion: {
+                        group.leave()
+                    })
+                }
+                group.leave()
             }
         }
+        group.enter()
         fetchRuuviSensors { ruuviTagSensors in
             self.queue.async {
                 ruuviTagSensors.forEach({ element in
@@ -91,6 +93,7 @@ extension MigrationManagerAlertService {
                         group.leave()
                     })
                 })
+                group.leave()
             }
         }
         self.queue.async {
@@ -175,17 +178,36 @@ extension MigrationManagerAlertService {
         completion()
     }
 
-    private func fetchVirtualSensors() -> [(VirtualSensor, Temperature?)] {
-        realmContext.main.objects(WebTagRealm.self).map({
-            return ($0.struct, $0.lastRecord?.temperature)
-        })
-    }
+    private func fetchVirtualSensors(completion: @escaping ([(VirtualSensor, Temperature?)]) -> Void) {
 
-    private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
-        var result: [(RuuviTagSensor, Temperature?)] = .init()
         queue.async {
             let group = DispatchGroup()
             group.enter()
+            var result = [(VirtualSensor, Temperature?)]()
+            self.virtualStorage.readAll().on(success: {sensors in
+                sensors.forEach({ sensor in
+                    group.enter()
+                    self.virtualStorage.readLast(sensor)
+                        .on(success: { record in
+                            result.append((sensor, record?.temperature))
+                            group.leave()
+                        })
+                })
+                group.leave()
+            }, failure: { _ in
+                group.leave()
+            })
+            group.notify(queue: .main, execute: {
+                completion(result)
+            })
+        }
+    }
+
+    private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
+        queue.async {
+            let group = DispatchGroup()
+            group.enter()
+            var result = [(RuuviTagSensor, Temperature?)]()
             self.ruuviStorage.readAll().on(success: {sensors in
                 sensors.forEach({ sensor in
                     group.enter()
@@ -198,7 +220,6 @@ extension MigrationManagerAlertService {
             }, failure: { _ in
                 group.leave()
             })
-            group.wait()
             group.notify(queue: .main, execute: {
                 completion(result)
             })
