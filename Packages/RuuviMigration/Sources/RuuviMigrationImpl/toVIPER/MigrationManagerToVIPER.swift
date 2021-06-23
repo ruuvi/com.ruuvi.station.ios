@@ -3,6 +3,7 @@ import Foundation
 import RuuviOntology
 import RuuviLocal
 import RuuviVirtual
+import RuuviMigration
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
 #endif
@@ -10,11 +11,19 @@ import RuuviOntologyRealm
 import RuuviVirtualModel
 #endif
 
-class MigrationManagerToVIPER: MigrationManager {
-    var localImages: RuuviLocalImages!
-    var settings: RuuviLocalSettings!
+public final class MigrationManagerToVIPER: RuuviMigration {
+    private let localImages: RuuviLocalImages
+    private var settings: RuuviLocalSettings
 
-    func migrateIfNeeded() {
+    public init(
+        localImages: RuuviLocalImages,
+        settings: RuuviLocalSettings
+    ) {
+        self.localImages = localImages
+        self.settings = settings
+    }
+
+    public func migrateIfNeeded() {
         let config = Realm.Configuration(
             schemaVersion: 11,
             migrationBlock: { [weak self] migration, oldSchemaVersion in

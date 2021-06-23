@@ -29,7 +29,6 @@ class CardsPresenter: CardsModuleInput {
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
-    var calibrationService: CalibrationService!
     var ruuviReactor: RuuviReactor!
     var ruuviStorage: RuuviStorage!
     var virtualReactor: VirtualReactor!
@@ -60,7 +59,6 @@ class CardsPresenter: CardsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var offsetCorrectionDidChangeToken: NSObjectProtocol?
-    private var didMigrationCompleteToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
@@ -104,7 +102,6 @@ class CardsPresenter: CardsModuleInput {
         readRSSIToken?.invalidate()
         readRSSIIntervalToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
-        didMigrationCompleteToken?.invalidate()
     }
 }
 
@@ -112,7 +109,6 @@ class CardsPresenter: CardsModuleInput {
 extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
-        startObserveMigrationCompletion()
         startObservingWebTags()
         startObservingSettingsChanges()
         startObservingBackgroundChanges()
@@ -890,14 +886,6 @@ extension CardsPresenter {
                                  }
                              }
                          })
-    }
-    private func startObserveMigrationCompletion() {
-        didMigrationCompleteToken?.invalidate()
-        didMigrationCompleteToken = NotificationCenter
-            .default
-            .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
-                self?.startObservingRuuviTags()
-            })
     }
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({

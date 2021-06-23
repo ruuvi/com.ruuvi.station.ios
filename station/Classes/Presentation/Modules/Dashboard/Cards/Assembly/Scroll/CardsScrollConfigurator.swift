@@ -35,7 +35,6 @@ class CardsScrollConfigurator {
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
-        presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.virtualReactor = r.resolve(VirtualReactor.self)

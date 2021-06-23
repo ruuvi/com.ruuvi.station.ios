@@ -23,7 +23,6 @@ class TagChartsInteractor {
 
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
-    private var didMigrationCompleteToken: NSObjectProtocol?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
@@ -46,7 +45,6 @@ class TagChartsInteractor {
     private var sensors: [AnyRuuviTagSensor] = []
 
     deinit {
-        didMigrationCompleteToken?.invalidate()
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
     }
@@ -196,14 +194,6 @@ extension TagChartsInteractor: TagChartModuleOutput {
 }
 // MARK: - Private
 extension TagChartsInteractor {
-    private func startObserveMigrationCompletion() {
-        didMigrationCompleteToken = NotificationCenter
-            .default
-            .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
-                self?.restartObservingTags()
-            })
-    }
-
     private func restartScheduler() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(

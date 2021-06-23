@@ -1,12 +1,22 @@
 import Foundation
 import RuuviStorage
 import RuuviService
+import RuuviMigration
 
-class MigrationManagerSensorSettings: MigrationManager {
-    var calibrationPersistence: CalibrationPersistence!
-    var errorPresenter: ErrorPresenter!
-    var ruuviStorage: RuuviStorage!
-    var ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration!
+class MigrationManagerSensorSettings: RuuviMigration {
+    private let calibrationPersistence: CalibrationPersistence
+    private let ruuviStorage: RuuviStorage
+    private let ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration
+
+    init(
+        calibrationPersistence: CalibrationPersistence,
+        ruuviStorage: RuuviStorage,
+        ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration
+    ) {
+        self.calibrationPersistence = calibrationPersistence
+        self.ruuviStorage = ruuviStorage
+        self.ruuviOffsetCalibrationService = ruuviOffsetCalibrationService
+    }
 
     @UserDefault("MigrationManagerSensorSettings.didMigrateSensorSettings", defaultValue: false)
     private var didMigrateSensorSettings: Bool
@@ -27,8 +37,6 @@ class MigrationManagerSensorSettings: MigrationManager {
                         })
                     }
                 }
-            }, failure: {[weak self] error in
-                self?.errorPresenter.present(error: error)
             })
             didMigrateSensorSettings = true
         }
