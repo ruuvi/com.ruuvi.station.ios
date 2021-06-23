@@ -37,11 +37,6 @@ import RuuviReactorImpl
 class PersistenceAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
-        container.register(CalibrationPersistence.self) { _ in
-            let persistence = CalibrationPersistenceUserDefaults()
-            return persistence
-        }
-
         container.register(RealmContextFactory.self) { _ in
             let factory = RealmContextFactoryImpl()
             return factory

@@ -22,7 +22,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     }
     var foreground: BTForeground!
     var background: BTBackground!
-    var calibrationService: CalibrationService!
     var alertService: RuuviServiceAlert!
     var settings: RuuviLocalSettings!
     var ruuviLocalImages: RuuviLocalImages!
@@ -226,16 +225,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnNoValuesView() {
         view.showUpdateFirmwareDialog()
-    }
-
-    func viewDidTapOnHumidityAccessoryButton() {
-        view.showHumidityIsClippedDialog()
-    }
-
-    func viewDidAskToFixHumidityAdjustment() {
-        if let humidity = humidity {
-            calibrationService.calibrateHumidityTo100Percent(currentValue: humidity.value, for: ruuviTag)
-        }
     }
 
     func viewDidTapOnAlertsDisabledView() {
