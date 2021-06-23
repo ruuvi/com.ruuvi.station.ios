@@ -5,6 +5,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviUser
+import RuuviCore
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -23,7 +24,7 @@ class TagSettingsTableConfigurator {
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)

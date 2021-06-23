@@ -9,6 +9,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviCore
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -20,7 +21,7 @@ class CardsPresenter: CardsModuleInput {
     var background: BTBackground!
     var webTagService: VirtualService!
     var permissionPresenter: PermissionPresenter!
-    var pushNotificationsManager: PushNotificationsManager!
+    var pushNotificationsManager: RuuviCorePN!
     var permissionsManager: PermissionsManager!
     var connectionPersistence: RuuviLocalConnections!
     var alertService: RuuviServiceAlert!

@@ -7,6 +7,7 @@ import FLEX
 #endif
 import UserNotifications
 import RuuviLocal
+import RuuviCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -76,7 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let r = AppAssembly.shared.assembler.resolver
-        if var pnManager = r.resolve(PushNotificationsManager.self) {
+        if var pnManager = r.resolve(RuuviCorePN.self) {
             pnManager.pnTokenData = deviceToken
         }
     }

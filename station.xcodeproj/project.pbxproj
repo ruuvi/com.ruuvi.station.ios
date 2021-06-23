@@ -327,7 +327,6 @@
 		0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DDC22B3C2160032F6CA /* CardsModuleInput.swift */; };
 		0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */; };
 		0E8BD357238566AB008B31EF /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47E2351865300D5ED32 /* UserDefault.swift */; };
-		0E8BD358238566AB008B31EF /* PushNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */; };
 		0E8BD359238566AB008B31EF /* ForegroundViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35D23506BC40061D11B /* ForegroundViewOutput.swift */; };
 		0E8BD35A238566AB008B31EF /* LanguageModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF078232008140025A191 /* LanguageModuleInput.swift */; };
 		0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */; };
@@ -339,7 +338,6 @@
 		0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */; };
 		0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF922B3FFBF0032F6CA /* MenuRouterInput.swift */; };
 		0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF076232007D80025A191 /* LanguageRouter.swift */; };
-		0E8BD366238566AB008B31EF /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */; };
 		0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
 		0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
@@ -561,8 +559,6 @@
 		0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */; };
 		0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB5A8D2381807500E78757 /* CardsScrollViewController.swift */; };
 		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
-		0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
-		0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */; };
 		0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF354235056DC0061D11B /* ForegroundList.swift */; };
 		0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECFF35623505F8D0061D11B /* Foreground.storyboard */; };
 		0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF358235060EF0061D11B /* ForegroundViewController.swift */; };
@@ -1232,8 +1228,6 @@
 		0ECB5A8D2381807500E78757 /* CardsScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardsScrollViewController.swift; sourceTree = "<group>"; };
 		0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
-		0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManager.swift; sourceTree = "<group>"; };
-		0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManagerImpl.swift; sourceTree = "<group>"; };
 		0ECFF354235056DC0061D11B /* ForegroundList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundList.swift; sourceTree = "<group>"; };
 		0ECFF35623505F8D0061D11B /* Foreground.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Foreground.storyboard; sourceTree = "<group>"; };
 		0ECFF358235060EF0061D11B /* ForegroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundViewController.swift; sourceTree = "<group>"; };
@@ -2329,7 +2323,6 @@
 				0E390FE0236021BC00D600DB /* LocalNotifications */,
 				A904833224E30D9100EAE76F /* MeasurementsService */,
 				0E5C300D22CF633600B52E39 /* Permissions */,
-				0ECDF1B72313E04500A09ACA /* PushNotifications */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2991,23 +2984,6 @@
 				0E1C1E1022B756B40032F6CA /* CardView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		0ECDF1B72313E04500A09ACA /* PushNotifications */ = {
-			isa = PBXGroup;
-			children = (
-				0ECDF1BA2313E07E00A09ACA /* Impl */,
-				0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */,
-			);
-			path = PushNotifications;
-			sourceTree = "<group>";
-		};
-		0ECDF1BA2313E07E00A09ACA /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */,
-			);
-			path = Impl;
 			sourceTree = "<group>";
 		};
 		0ECFF34F235056770061D11B /* Foreground */ = {
@@ -5133,7 +5109,6 @@
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,
 				0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */,
 				0E8BD357238566AB008B31EF /* UserDefault.swift in Sources */,
-				0E8BD358238566AB008B31EF /* PushNotificationsManagerImpl.swift in Sources */,
 				0E8BD359238566AB008B31EF /* ForegroundViewOutput.swift in Sources */,
 				0EE49BC123B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
@@ -5153,7 +5128,6 @@
 				0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */,
 				0EA796822664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
 				0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */,
-				0E8BD366238566AB008B31EF /* PushNotificationsManager.swift in Sources */,
 				0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
@@ -5599,7 +5573,6 @@
 				A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */,
 				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
 				0EE5B47F2351865300D5ED32 /* UserDefault.swift in Sources */,
-				0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */,
 				0ECFF35E23506BC40061D11B /* ForegroundViewOutput.swift in Sources */,
 				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
 				0EA7AB7A2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
@@ -5619,7 +5592,6 @@
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
-				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,

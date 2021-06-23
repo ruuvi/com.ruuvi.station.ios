@@ -1,9 +1,12 @@
 import UIKit
 import UserNotifications
 
-class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
+public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
+    override public init() {
+        super.init()
+    }
 
-    var pnTokenData: Data? {
+    public var pnTokenData: Data? {
         get {
             return UserDefaults.standard.data(forKey: pnTokenDataUDKey)
         }
@@ -12,7 +15,7 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
         }
     }
 
-    func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
+    public func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
                 DispatchQueue.main.async {
@@ -43,7 +46,7 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
         }
     }
 
-    func registerForRemoteNotifications() {
+    public func registerForRemoteNotifications() {
         if #available(iOS 10.0, *) {
             let center  = UNUserNotificationCenter.current()
             center.requestAuthorization(options: [.sound, .alert, .badge]) { (_, error) in
