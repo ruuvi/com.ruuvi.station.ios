@@ -868,7 +868,6 @@
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
 		A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4D241D57E700888017 /* MockCalibrationService.swift */; };
 		A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */; };
-		A9627BF424802FA5004BBF22 /* ReloadableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3197245CBEB800041559 /* ReloadableCell.swift */; };
 		A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
 		A9646467247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
 		A964646C247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */; };
@@ -900,23 +899,6 @@
 		A976CA7F24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7D24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift */; };
 		A980573825807118000D03AB /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980573725807118000D03AB /* AboutViewModel.swift */; };
 		A980573925807118000D03AB /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980573725807118000D03AB /* AboutViewModel.swift */; };
-		A9828E0D24792CAC00E7E9D4 /* DiffCalculatorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */; };
-		A9828E0E24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */; };
-		A9828E1124792CB200E7E9D4 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3186245CBDB700041559 /* DiffCalculator.swift */; };
-		A9828E1224792CB300E7E9D4 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3186245CBDB700041559 /* DiffCalculator.swift */; };
-		A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318B245CBE3F00041559 /* SectionChanges.swift */; };
-		A9828E3D24792D6B00E7E9D4 /* CellChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318F245CBE6500041559 /* CellChanges.swift */; };
-		A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3193245CBEA200041559 /* ReloadableSection.swift */; };
-		A9828E4024792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA319B245CBEDA00041559 /* ReloadableSectionData.swift */; };
-		A9828E4124792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA319F245CBEF200041559 /* ReloadableCellData.swift */; };
-		A9828E4224792D6B00E7E9D4 /* SectionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318B245CBE3F00041559 /* SectionChanges.swift */; };
-		A9828E4324792D6B00E7E9D4 /* CellChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318F245CBE6500041559 /* CellChanges.swift */; };
-		A9828E4424792D6B00E7E9D4 /* ReloadableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3193245CBEA200041559 /* ReloadableSection.swift */; };
-		A9828E4524792D6B00E7E9D4 /* ReloadableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3197245CBEB800041559 /* ReloadableCell.swift */; };
-		A9828E4624792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA319B245CBEDA00041559 /* ReloadableSectionData.swift */; };
-		A9828E4724792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA319F245CBEF200041559 /* ReloadableCellData.swift */; };
-		A9828E4E24792DF200E7E9D4 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF72459F7A7000C38DA /* Array+Extension.swift */; };
-		A9828E4F24792DF300E7E9D4 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF72459F7A7000C38DA /* Array+Extension.swift */; };
 		A98BC875250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98CCBB3BAF61A33CE4A2D1B /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8018B7836CF8C748718825DD /* Pods_station.framework */; };
@@ -1507,15 +1489,6 @@
 		A9BB94CB2540AB610042B190 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		A9BD38B924F6108300904BBE /* Humidity+Offset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Humidity+Offset.swift"; sourceTree = "<group>"; };
 		A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceImpl.swift; sourceTree = "<group>"; };
-		A9DA3186245CBDB700041559 /* DiffCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculator.swift; sourceTree = "<group>"; };
-		A9DA318B245CBE3F00041559 /* SectionChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionChanges.swift; sourceTree = "<group>"; };
-		A9DA318F245CBE6500041559 /* CellChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellChanges.swift; sourceTree = "<group>"; };
-		A9DA3193245CBEA200041559 /* ReloadableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableSection.swift; sourceTree = "<group>"; };
-		A9DA3197245CBEB800041559 /* ReloadableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableCell.swift; sourceTree = "<group>"; };
-		A9DA319B245CBEDA00041559 /* ReloadableSectionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableSectionData.swift; sourceTree = "<group>"; };
-		A9DA319F245CBEF200041559 /* ReloadableCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableCellData.swift; sourceTree = "<group>"; };
-		A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculatorImpl.swift; sourceTree = "<group>"; };
-		A9E58CF72459F7A7000C38DA /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		A9E5993F25572CF700F9E5CC /* Share.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Share.storyboard; sourceTree = "<group>"; };
 		A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareEmailInputTableViewCell.swift; sourceTree = "<group>"; };
@@ -1878,7 +1851,6 @@
 			isa = PBXGroup;
 			children = (
 				0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */,
-				A9E58CF72459F7A7000C38DA /* Array+Extension.swift */,
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
 				66718A6B266BD0E800A380F8 /* Color+Ruuvi.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
@@ -2353,7 +2325,6 @@
 			isa = PBXGroup;
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
-				A9DA3184245CBD7800041559 /* DiffCalculator */,
 				0E197C7223C5C7770074015B /* Info */,
 				0E390FE0236021BC00D600DB /* LocalNotifications */,
 				A904833224E30D9100EAE76F /* MeasurementsService */,
@@ -4366,37 +4337,6 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
-		A9DA3184245CBD7800041559 /* DiffCalculator */ = {
-			isa = PBXGroup;
-			children = (
-				A9DA3185245CBD9F00041559 /* Impl */,
-				A9DA3186245CBDB700041559 /* DiffCalculator.swift */,
-			);
-			path = DiffCalculator;
-			sourceTree = "<group>";
-		};
-		A9DA3185245CBD9F00041559 /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				A9DA318A245CBE2300041559 /* Models */,
-				A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */,
-			);
-			path = Impl;
-			sourceTree = "<group>";
-		};
-		A9DA318A245CBE2300041559 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A9DA318B245CBE3F00041559 /* SectionChanges.swift */,
-				A9DA318F245CBE6500041559 /* CellChanges.swift */,
-				A9DA3193245CBEA200041559 /* ReloadableSection.swift */,
-				A9DA3197245CBEB800041559 /* ReloadableCell.swift */,
-				A9DA319B245CBEDA00041559 /* ReloadableSectionData.swift */,
-				A9DA319F245CBEF200041559 /* ReloadableCellData.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		A9E599482557340200F9E5CC /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -4982,7 +4922,6 @@
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
 				A9646473247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
-				A9828E4224792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
 				0EB48DFD261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */,
 				0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */,
@@ -5027,8 +4966,6 @@
 				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */,
 				A9FC79002579675100F94604 /* UniversalLinkRouter.swift in Sources */,
-				A9828E4424792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
-				A9828E1124792CB200E7E9D4 /* DiffCalculator.swift in Sources */,
 				0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E8BD2D7238566AB008B31EF /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03E23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
@@ -5098,7 +5035,6 @@
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
 				0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */,
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
-				A9828E0E24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */,
 				A9646470247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				0E8BD314238566AB008B31EF /* DefaultsViewController.swift in Sources */,
@@ -5164,7 +5100,6 @@
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
 				A90E16982460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
-				A9828E4624792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
 				0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
@@ -5236,7 +5171,6 @@
 				A9E6774925A33081000B75A3 /* String+Characters.swift in Sources */,
 				A91D030A2511207300694733 /* SelectionRouterInput.swift in Sources */,
 				0E8BD376238566AB008B31EF /* ActivityPresenterRuuviLogo.swift in Sources */,
-				A9828E4F24792DF300E7E9D4 /* Array+Extension.swift in Sources */,
 				0EAD33E42399273D00EC5BAA /* HeartbeatViewController.swift in Sources */,
 				0E8BD377238566AB008B31EF /* AboutViewController.swift in Sources */,
 				663155E12667F40C005B90A6 /* UpdateFirmwareConfigurator.swift in Sources */,
@@ -5298,7 +5232,6 @@
 				660EB27D2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
-				A9828E4724792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */,
 				0E8BD3A3238566AB008B31EF /* AlertServiceImpl.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
 				660EB25C2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
@@ -5317,7 +5250,6 @@
 				0E8BD3AD238566AB008B31EF /* RUError.swift in Sources */,
 				0E45580F23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */,
 				A964647C247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
-				A9828E4324792D6B00E7E9D4 /* CellChanges.swift in Sources */,
 				0E8BD3B1238566AB008B31EF /* WebTagSettingsViewModel.swift in Sources */,
 				0E8BD3B2238566AB008B31EF /* MainConfigurator.swift in Sources */,
 				A90E16AA24609B9B00631E6C /* TagChartAssembler.swift in Sources */,
@@ -5360,7 +5292,6 @@
 				0E8BD3CD238566AB008B31EF /* WelcomeInitializer.swift in Sources */,
 				A9E599622557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				A9646479247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
-				A9828E4524792D6B00E7E9D4 /* ReloadableCell.swift in Sources */,
 				A92E3C64242644B800D981D5 /* TagChartViewInput.swift in Sources */,
 				0E1B2F33239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */,
 				A90E169024604F7400631E6C /* TagChartPresenter.swift in Sources */,
@@ -5487,15 +5418,12 @@
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				663155E92667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
-				A9828E1224792CB300E7E9D4 /* DiffCalculator.swift in Sources */,
 				66718A55266A685700A380F8 /* DfuFlashViewOutput.swift in Sources */,
-				A9828E3D24792D6B00E7E9D4 /* CellChanges.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
-				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				66BC44B02657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
@@ -5515,7 +5443,6 @@
 				0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */,
 				66718A6C266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
-				A9828E4024792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				660EB29C266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
 				66718A4C266A685700A380F8 /* DfuLogTableViewCell.swift in Sources */,
@@ -5568,7 +5495,6 @@
 				A964646C247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
-				A9828E0D24792CAC00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E79F28B244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
 				66718A40266A685700A380F8 /* DfuFlashModuleInput.swift in Sources */,
 				A91D02EE2511207200694733 /* SelectionTableConfigurator.swift in Sources */,
@@ -5588,7 +5514,6 @@
 				0EA796812664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
 				0EA7968D2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverVirtualTagViewModel.swift in Sources */,
-				A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
@@ -5737,13 +5662,11 @@
 				66718A68266A6CA700A380F8 /* DfuFilePickerPresenterSheet.swift in Sources */,
 				0EEB215122B8FD070015F9E0 /* WelcomeModuleInput.swift in Sources */,
 				0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */,
-				A9828E4E24792DF200E7E9D4 /* Array+Extension.swift in Sources */,
 				A93052B8242BFCC000FB62B1 /* TagChartViewOutput.swift in Sources */,
 				0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */,
 				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
 				0E8A10182384613E00A9CBA6 /* DefaultsModuleInput.swift in Sources */,
 				0EEB210622B7D7C30015F9E0 /* RuuviTagAdvertisementDaemon.swift in Sources */,
-				A9828E4124792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */,
 				66BC449E2657AED400A03253 /* OffsetCorrectionModuleOutput.swift in Sources */,
 				0EE49BC423B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
@@ -5773,7 +5696,6 @@
 				0E31B04B23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */,
-				A9627BF424802FA5004BBF22 /* ReloadableCell.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
