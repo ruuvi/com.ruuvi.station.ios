@@ -5,6 +5,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviCore
 
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {
@@ -20,7 +21,7 @@ class DiscoverTableConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.virtualService = r.resolve(VirtualService.self)
-        presenter.permissionsManager = r.resolve(PermissionsManager.self)
+        presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)

@@ -154,8 +154,6 @@
 		0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */; };
 		0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */; };
 		0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
-		0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
-		0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */; };
 		0E5C301622CF640000B52E39 /* CoreAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301522CF640000B52E39 /* CoreAssembly.swift */; };
 		0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301922CF644900B52E39 /* PermissionPresenter.swift */; };
 		0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */; };
@@ -334,7 +332,6 @@
 		0E8BD35D238566AB008B31EF /* AboutModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FC22B7D2C90015F9E0 /* AboutModuleInput.swift */; };
 		0E8BD35E238566AB008B31EF /* WelcomeViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214822B8FC570015F9E0 /* WelcomeViewOutput.swift */; };
 		0E8BD35F238566AB008B31EF /* MainNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */; };
-		0E8BD362238566AB008B31EF /* PermissionsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */; };
 		0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */; };
 		0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF922B3FFBF0032F6CA /* MenuRouterInput.swift */; };
 		0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF076232007D80025A191 /* LanguageRouter.swift */; };
@@ -409,7 +406,6 @@
 		0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */; };
 		0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */; };
 		0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
-		0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
 		0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* ForegroundRow.swift */; };
 		0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D722B7C8060015F9E0 /* SettingsViewOutput.swift */; };
 		0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF365235079F50061D11B /* ForegroundPresenter.swift */; };
@@ -1103,8 +1099,6 @@
 		0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissInteractiveTransition.swift; sourceTree = "<group>"; };
 		0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissNavigationController.swift; sourceTree = "<group>"; };
 		0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenterSheet.swift; sourceTree = "<group>"; };
-		0E5C300E22CF634300B52E39 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
-		0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManagerImpl.swift; sourceTree = "<group>"; };
 		0E5C301522CF640000B52E39 /* CoreAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAssembly.swift; sourceTree = "<group>"; };
 		0E5C301922CF644900B52E39 /* PermissionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPresenter.swift; sourceTree = "<group>"; };
 		0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPresenterAlert.swift; sourceTree = "<group>"; };
@@ -2322,26 +2316,8 @@
 				0E197C7223C5C7770074015B /* Info */,
 				0E390FE0236021BC00D600DB /* LocalNotifications */,
 				A904833224E30D9100EAE76F /* MeasurementsService */,
-				0E5C300D22CF633600B52E39 /* Permissions */,
 			);
 			path = Core;
-			sourceTree = "<group>";
-		};
-		0E5C300D22CF633600B52E39 /* Permissions */ = {
-			isa = PBXGroup;
-			children = (
-				0E5C301022CF635200B52E39 /* Impl */,
-				0E5C300E22CF634300B52E39 /* PermissionsManager.swift */,
-			);
-			path = Permissions;
-			sourceTree = "<group>";
-		};
-		0E5C301022CF635200B52E39 /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */,
-			);
-			path = Impl;
 			sourceTree = "<group>";
 		};
 		0E5C301422CF63E700B52E39 /* Assembly */ = {
@@ -5123,7 +5099,6 @@
 				0EAD33DA2399273D00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				A91D03012511207300694733 /* SelectionTableViewController.swift in Sources */,
 				0E8BD35F238566AB008B31EF /* MainNavigationDelegate.swift in Sources */,
-				0E8BD362238566AB008B31EF /* PermissionsManagerImpl.swift in Sources */,
 				0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */,
 				0EA796822664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
@@ -5240,7 +5215,6 @@
 				66718A69266A6CA700A380F8 /* DfuFilePickerPresenterSheet.swift in Sources */,
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
-				0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */,
 				0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
@@ -5588,7 +5562,6 @@
 				A9B57443253B994700DB7353 /* SignInViewInput.swift in Sources */,
 				0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */,
 				A9B57449253B994700DB7353 /* SignInInitializer.swift in Sources */,
-				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
@@ -5695,7 +5668,6 @@
 				0E11D226267F3100002D0686 /* RuuviVirtualError+LocalizedError.swift in Sources */,
 				0E4557FC23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
-				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,

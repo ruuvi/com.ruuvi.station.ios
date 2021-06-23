@@ -17,7 +17,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var settings: RuuviLocalSettings!
     var alertService: RuuviServiceAlert!
     var pushNotificationsManager: RuuviCorePN!
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var photoPickerPresenter: PhotoPickerPresenter! {

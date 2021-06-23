@@ -200,6 +200,8 @@ PODS:
     - RuuviCore/Contract
   - RuuviCore/Location (0.0.1):
     - RuuviCore/Contract
+  - RuuviCore/Permission (0.0.1):
+    - RuuviCore/Contract
   - RuuviCore/PN (0.0.1):
     - RuuviCore/Contract
   - RuuviCore/Tests (0.0.1)
@@ -479,6 +481,7 @@ DEPENDENCIES:
   - RuuviCore/Diff (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Image (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Location (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Permission (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/PN (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Tests (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviDaemon (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
@@ -668,7 +671,7 @@ SPEC CHECKSUMS:
   RealmSwift: 316e450478fb01e06ece4438dda42f407c5f51d2
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
-  RuuviCore: a4a0684bd18492bdbf3826a5806c73b8ea37f173
+  RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
@@ -688,6 +691,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 9f25063a119a470c62399070b42b090612c5f429
+PODFILE CHECKSUM: 52f307a1fe2b8db51f3cc12569343d4d37ffd2ae
 
 COCOAPODS: 1.10.1
