@@ -8,7 +8,6 @@ final class TagChartAssembler {
         view.settings = r.resolve(RuuviLocalSettings.self)
         let presenter = TagChartPresenter()
         presenter.settings = r.resolve(RuuviLocalSettings.self)
-        presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.view = view
         presenter.measurementService = r.resolve(MeasurementsService.self)
 

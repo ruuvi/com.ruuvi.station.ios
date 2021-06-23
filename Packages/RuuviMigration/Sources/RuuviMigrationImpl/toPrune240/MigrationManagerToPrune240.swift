@@ -1,8 +1,13 @@
 import Foundation
 import RuuviLocal
+import RuuviMigration
 
-final class MigrationManagerToPrune240: MigrationManager {
-    var settings: RuuviLocalSettings!
+final class MigrationManagerToPrune240: RuuviMigration {
+    private var settings: RuuviLocalSettings
+
+    init(settings: RuuviLocalSettings) {
+        self.settings = settings
+    }
 
     func migrateIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }

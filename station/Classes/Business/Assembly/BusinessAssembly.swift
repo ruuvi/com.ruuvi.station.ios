@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import Swinject
 import BTKit
 import RuuviContext
@@ -95,12 +94,6 @@ class BusinessAssembly: Assembly {
             }
         }.inObjectScope(.container)
 
-        container.register(CalibrationService.self) { r in
-            let service = CalibrationServiceImpl()
-            service.calibrationPersistence = r.resolve(CalibrationPersistence.self)
-            return service
-        }
-
         container.register(DataPruningOperationsManager.self) { r in
             let manager = DataPruningOperationsManager()
             manager.settings = r.resolve(RuuviLocalSettings.self)
@@ -115,7 +108,6 @@ class BusinessAssembly: Assembly {
             let service = ExportServiceTrunk()
             service.ruuviStorage = r.resolve(RuuviStorage.self)
             service.measurementService = r.resolve(MeasurementsService.self)
-            service.calibrationService = r.resolve(CalibrationService.self)
             return service
         }
 
@@ -153,63 +145,6 @@ class BusinessAssembly: Assembly {
         container.register(RuuviLocationService.self) { _ in
             let service = RuuviLocationServiceApple()
             return service
-        }
-
-        container.register(MigrationManagerToVIPER.self) { r in
-            let manager = MigrationManagerToVIPER()
-            manager.localImages = r.resolve(RuuviLocalImages.self)
-            manager.settings = r.resolve(RuuviLocalSettings.self)
-            return manager
-        }
-
-        container.register(MigrationManagerToSQLite.self) { r in
-            let manager = MigrationManagerToSQLite()
-            manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
-            manager.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-            manager.idPersistence = r.resolve(RuuviLocalIDs.self)
-            manager.settingsPersistence = r.resolve(RuuviLocalSettings.self)
-            manager.realmContext = r.resolve(RealmContext.self)
-            manager.sqliteContext = r.resolve(SQLiteContext.self)
-            manager.errorPresenter = r.resolve(ErrorPresenter.self)
-            manager.ruuviPool = r.resolve(RuuviPool.self)
-            return manager
-        }
-
-        container.register(MigrationManagerAlertService.self) { r in
-            let manager = MigrationManagerAlertService()
-            manager.virtualStorage = r.resolve(VirtualStorage.self)
-            manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.settings = r.resolve(RuuviLocalSettings.self)
-            manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
-            return manager
-        }
-
-        container.register(MigrationManagerToRH.self) { r in
-            let manager = MigrationManagerToRH()
-            manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
-            return manager
-        }
-
-        container.register(MigrationManagerToPrune240.self) { r in
-            let manager = MigrationManagerToPrune240()
-            manager.settings = r.resolve(RuuviLocalSettings.self)
-            return manager
-        }
-
-        container.register(MigrationManagerToChartDuration240.self) { r in
-            let manager = MigrationManagerToChartDuration240()
-            manager.settings = r.resolve(RuuviLocalSettings.self)
-            return manager
-        }
-
-        container.register(MigrationManagerSensorSettings.self) { r in
-            let manager = MigrationManagerSensorSettings()
-            manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
-            manager.ruuviOffsetCalibrationService = r.resolve(RuuviServiceOffsetCalibration.self)
-            manager.errorPresenter = r.resolve(ErrorPresenter.self)
-            return manager
         }
 
         container.register(PullWebDaemon.self) { r in
@@ -455,4 +390,3 @@ class BusinessAssembly: Assembly {
         })
     }
 }
-// swiftlint:enable file_length

@@ -2,10 +2,19 @@ import Foundation
 import RuuviStorage
 import RuuviOntology
 import RuuviService
+import RuuviMigration
 
-final class MigrationManagerToRH: MigrationManager {
-    var ruuviStorage: RuuviStorage!
-    var ruuviAlertService: RuuviServiceAlert!
+final class MigrationManagerToRH: RuuviMigration {
+    private let ruuviStorage: RuuviStorage
+    private let ruuviAlertService: RuuviServiceAlert
+
+    init(
+        ruuviStorage: RuuviStorage,
+        ruuviAlertService: RuuviServiceAlert
+    ) {
+        self.ruuviStorage = ruuviStorage
+        self.ruuviAlertService = ruuviAlertService
+    }
 
     private let queue: DispatchQueue = DispatchQueue(label: "MigrationManagerToRH", qos: .utility)
     private let migratedUdKey = "MigrationManagerToRH.migrated"

@@ -4,31 +4,29 @@ import RuuviOntology
 import RuuviContext
 import RuuviLocal
 import RuuviPool
+import RuuviMigration
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
 #endif
 
 extension Notification.Name {
-    static let DidMigrationComplete = Notification.Name("MigrationManagerToSQLite.DidMigrationComplete")
+    static let MigrationManagerToSQLiteDidFinish = Notification.Name("MigrationManagerToSQLite.DidFinish")
 }
 
-class MigrationManagerToSQLite: MigrationManager {
+class MigrationManagerToSQLite: RuuviMigration {
+    private let idPersistence: RuuviLocalIDs
+    private let realmContext: RealmContext
+    private let ruuviPool: RuuviPool
 
-    // persistence
-    var calibrationPersistence: CalibrationPersistence!
-    var connectionPersistence: RuuviLocalConnections!
-    var idPersistence: RuuviLocalIDs!
-    var settingsPersistence: RuuviLocalSettings!
-
-    // context
-    var realmContext: RealmContext!
-    var sqliteContext: SQLiteContext!
-
-    // presenter
-    var errorPresenter: ErrorPresenter!
-
-    // car
-    var ruuviPool: RuuviPool!
+    init(
+        idPersistence: RuuviLocalIDs,
+        realmContext: RealmContext,
+        ruuviPool: RuuviPool
+    ) {
+        self.idPersistence = idPersistence
+        self.realmContext = realmContext
+        self.ruuviPool = ruuviPool
+    }
 
     @UserDefault("MigrationManagerToSQLite.didMigrateRuuviTagRealmWithMAC", defaultValue: false)
     private var didMigrateRuuviTagRealmWithMAC: Bool
@@ -44,7 +42,7 @@ class MigrationManagerToSQLite: MigrationManager {
             dispatchGroup.notify(queue: .main) {
                 NotificationCenter
                     .default
-                    .post(name: .DidMigrationComplete,
+                    .post(name: .MigrationManagerToSQLiteDidFinish,
                           object: self,
                           userInfo: nil)
             }
@@ -55,10 +53,7 @@ class MigrationManagerToSQLite: MigrationManager {
     private func migrate(realmTag: RuuviTagRealm, group: DispatchGroup) {
         if let mac = realmTag.mac, !mac.isEmpty {
             idPersistence.set(mac: mac.mac, for: realmTag.uuid.luid)
-            ruuviPool.create(realmTag)
-                .on(failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
+            ruuviPool.create(realmTag).on()
             var records: [RuuviTagSensorRecord] = []
             for record in realmTag.data {
                 autoreleasepool {
@@ -67,10 +62,8 @@ class MigrationManagerToSQLite: MigrationManager {
                     }
                 }
             }
-            ruuviPool?.create(records)
-                .on(failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                }, completion: {
+            ruuviPool.create(records)
+                .on(completion: {
                     group.leave()
                 })
             do {
@@ -79,7 +72,7 @@ class MigrationManagerToSQLite: MigrationManager {
                     realmContext.main.delete(realmTag)
                 }
             } catch {
-                errorPresenter.present(error: error)
+                print(error.localizedDescription)
             }
         } else {
             group.leave()

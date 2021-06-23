@@ -7,7 +7,6 @@ import RuuviStorage
 class ExportServiceTrunk: ExportService {
     var ruuviStorage: RuuviStorage!
     var measurementService: MeasurementsService!
-    var calibrationService: CalibrationService!
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTrunk.queue", qos: .userInitiated)
 
