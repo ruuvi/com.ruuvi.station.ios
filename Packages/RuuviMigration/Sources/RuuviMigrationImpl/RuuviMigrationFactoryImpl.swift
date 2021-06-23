@@ -4,6 +4,7 @@ import RuuviContext
 import RuuviVirtual
 import RuuviStorage
 import RuuviService
+import RuuviMigration
 
 public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let settings: RuuviLocalSettings

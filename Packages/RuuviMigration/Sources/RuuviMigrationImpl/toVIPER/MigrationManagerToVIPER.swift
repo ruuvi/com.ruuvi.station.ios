@@ -3,6 +3,7 @@ import Foundation
 import RuuviOntology
 import RuuviLocal
 import RuuviVirtual
+import RuuviMigration
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
 #endif
