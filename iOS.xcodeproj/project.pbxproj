@@ -164,7 +164,6 @@
 		0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */; };
 		0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9F22B36C100032F6CA /* RUError.swift */; };
 		0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA722B387A00032F6CA /* AppAssembly.swift */; };
-		0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */; };
 		0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */; };
 		0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB222B390080032F6CA /* ActivityPresenterRuuviLogo.swift */; };
 		0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB422B3903B0032F6CA /* ActivityRuuviLogo.storyboard */; };
@@ -223,8 +222,6 @@
 		0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */; };
 		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
-		0E3CA70C267365B1000D9B25 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3CA70B267365B1000D9B25 /* Debouncer.swift */; };
-		0E3CA70D267365B1000D9B25 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3CA70B267365B1000D9B25 /* Debouncer.swift */; };
 		0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */; };
 		0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
 		0E4557F723E820920025AEBF /* BackgroundProcessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4557F623E820920025AEBF /* BackgroundProcessService.swift */; };
@@ -303,7 +300,6 @@
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
 		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
-		0E8BD2AF238566AB008B31EF /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
 		0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
@@ -342,7 +338,6 @@
 		0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8BD2E1238566AB008B31EF /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E8BD2E2238566AB008B31EF /* WelcomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215222B8FD1F0015F9E0 /* WelcomePresenter.swift */; };
-		0E8BD2E3238566AB008B31EF /* PersistenceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */; };
 		0E8BD2E4238566AB008B31EF /* CardsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD422B3BF3A0032F6CA /* CardsViewOutput.swift */; };
 		0E8BD2E5238566AB008B31EF /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
 		0E8BD2E6238566AB008B31EF /* DefaultsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */; };
@@ -505,7 +500,6 @@
 		0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */; };
 		0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
 		0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
-		0E8BD3BF238566AB008B31EF /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* ForegroundRow.swift */; };
 		0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D722B7C8060015F9E0 /* SettingsViewOutput.swift */; };
 		0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF365235079F50061D11B /* ForegroundPresenter.swift */; };
@@ -527,7 +521,6 @@
 		0E8BD3E0238566AB008B31EF /* About.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20EE22B7D1580015F9E0 /* About.storyboard */; };
 		0E8BD3E1238566AB008B31EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0E8BD3E2238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */; };
-		0E8BD3E3238566AB008B31EF /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
 		0E8BD3E4238566AB008B31EF /* Foreground.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECFF35623505F8D0061D11B /* Foreground.storyboard */; };
 		0E8BD3E5238566AB008B31EF /* LocationPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F4522F17EF400BD4E9C /* LocationPicker.storyboard */; };
 		0E8BD3E6238566AB008B31EF /* Defaults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8A100123845E5100A9CBA6 /* Defaults.storyboard */; };
@@ -557,8 +550,6 @@
 		0E8E3D61268227530082EC29 /* RuuviCoreError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D5E268227530082EC29 /* RuuviCoreError+LocalizedError.swift */; };
 		0E8E3D62268227530082EC29 /* RuuviVirtualError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D5F268227530082EC29 /* RuuviVirtualError+LocalizedError.swift */; };
 		0E8E3D63268227530082EC29 /* RuuviVirtualError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D5F268227530082EC29 /* RuuviVirtualError+LocalizedError.swift */; };
-		0E8E3D652682279C0082EC29 /* VirtualAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D642682279C0082EC29 /* VirtualAssembly.swift */; };
-		0E8E3D662682279C0082EC29 /* VirtualAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D642682279C0082EC29 /* VirtualAssembly.swift */; };
 		0E8E3D6A268228130082EC29 /* DiscoverRuuviTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D68268228130082EC29 /* DiscoverRuuviTagViewModel.swift */; };
 		0E8E3D6B268228130082EC29 /* DiscoverRuuviTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D68268228130082EC29 /* DiscoverRuuviTagViewModel.swift */; };
 		0E8E3D6C268228130082EC29 /* DiscoverVirtualTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8E3D69268228130082EC29 /* DiscoverVirtualTagViewModel.swift */; };
@@ -613,8 +604,6 @@
 		0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
 		0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
 		0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */; };
-		0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
-		0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
 		0EA511B8261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */; };
 		0EA511B9261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */; };
 		0EA796712664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */; };
@@ -672,6 +661,12 @@
 		0EB8B9162683519200FE130E /* RuuviMigrationImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0EB8B9152683519200FE130E /* RuuviMigrationImpl */; };
 		0EB8B9182683519900FE130E /* RuuviMigration in Frameworks */ = {isa = PBXBuildFile; productRef = 0EB8B9172683519900FE130E /* RuuviMigration */; };
 		0EB8B91A2683519900FE130E /* RuuviMigrationImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0EB8B9192683519900FE130E /* RuuviMigrationImpl */; };
+		0EB8B921268358F700FE130E /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8B920268358F700FE130E /* BackgroundWorker.swift */; };
+		0EB8B922268358F700FE130E /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8B920268358F700FE130E /* BackgroundWorker.swift */; };
+		0EB8B9242683591B00FE130E /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8B9232683591B00FE130E /* Debouncer.swift */; };
+		0EB8B9252683591B00FE130E /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8B9232683591B00FE130E /* Debouncer.swift */; };
+		0EB8B9272683592700FE130E /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8B9262683592700FE130E /* Networking.plist */; };
+		0EB8B9282683592700FE130E /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8B9262683592700FE130E /* Networking.plist */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -751,7 +746,6 @@
 		0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
 		0EEB210622B7D7C30015F9E0 /* RuuviTagAdvertisementDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210522B7D7C30015F9E0 /* RuuviTagAdvertisementDaemon.swift */; };
 		0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */; };
-		0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0EEB211222B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */; };
 		0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */; };
 		0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */; };
@@ -1195,7 +1189,6 @@
 		0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0E1C1D9F22B36C100032F6CA /* RUError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUError.swift; sourceTree = "<group>"; };
 		0E1C1DA722B387A00032F6CA /* AppAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembly.swift; sourceTree = "<group>"; };
-		0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceAssembly.swift; sourceTree = "<group>"; };
 		0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPresenter.swift; sourceTree = "<group>"; };
 		0E1C1DB222B390080032F6CA /* ActivityPresenterRuuviLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPresenterRuuviLogo.swift; sourceTree = "<group>"; };
 		0E1C1DB422B3903B0032F6CA /* ActivityRuuviLogo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ActivityRuuviLogo.storyboard; sourceTree = "<group>"; };
@@ -1245,7 +1238,6 @@
 		0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitionManager.swift; sourceTree = "<group>"; };
 		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
-		0E3CA70B267365B1000D9B25 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DiscoverWebTagsInfoHeaderFooterView.xib; sourceTree = "<group>"; };
 		0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagsInfoHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E4557F623E820920025AEBF /* BackgroundProcessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundProcessService.swift; sourceTree = "<group>"; };
@@ -1323,7 +1315,6 @@
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8E3D5E268227530082EC29 /* RuuviCoreError+LocalizedError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RuuviCoreError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0E8E3D5F268227530082EC29 /* RuuviVirtualError+LocalizedError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RuuviVirtualError+LocalizedError.swift"; sourceTree = "<group>"; };
-		0E8E3D642682279C0082EC29 /* VirtualAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualAssembly.swift; sourceTree = "<group>"; };
 		0E8E3D68268228130082EC29 /* DiscoverRuuviTagViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverRuuviTagViewModel.swift; sourceTree = "<group>"; };
 		0E8E3D69268228130082EC29 /* DiscoverVirtualTagViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverVirtualTagViewModel.swift; sourceTree = "<group>"; };
 		0E8E3D6E2682284D0082EC29 /* RuuviVirtual */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviVirtual; path = Packages/RuuviVirtual; sourceTree = "<group>"; };
@@ -1353,8 +1344,6 @@
 		0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E9E7759238CCE5F006D7013 /* String+Replace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Replace.swift"; sourceTree = "<group>"; };
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
-		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
-		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
 		0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA796742664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudApiError+LocalizedError.swift"; sourceTree = "<group>"; };
@@ -1375,6 +1364,9 @@
 		0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigService.swift; sourceTree = "<group>"; };
 		0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRemoteConfigService.swift; sourceTree = "<group>"; };
 		0EB8B9122683517100FE130E /* RuuviMigration */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviMigration; path = Packages/RuuviMigration; sourceTree = "<group>"; };
+		0EB8B920268358F700FE130E /* BackgroundWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
+		0EB8B9232683591B00FE130E /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
+		0EB8B9262683592700FE130E /* Networking.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -1451,7 +1443,6 @@
 		0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutConfigurator.swift; sourceTree = "<group>"; };
 		0EEB210522B7D7C30015F9E0 /* RuuviTagAdvertisementDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagAdvertisementDaemon.swift; sourceTree = "<group>"; };
 		0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessAssembly.swift; sourceTree = "<group>"; };
-		0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagAdvertisementDaemonBTKit.swift; sourceTree = "<group>"; };
 		0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
 		0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationDelegate.swift; sourceTree = "<group>"; };
@@ -2025,9 +2016,6 @@
 			children = (
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
-				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
-				0E3CA70B267365B1000D9B25 /* Debouncer.swift */,
-				0E8E3D642682279C0082EC29 /* VirtualAssembly.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -2038,8 +2026,6 @@
 				0E09671522AE74CB00E85F48 /* Application */,
 				0EEB210722B7D8020015F9E0 /* Business */,
 				0E5C300C22CF632500B52E39 /* Core */,
-				0E9F97A322EB1B290015ADE2 /* Networking */,
-				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E09671922AE764200E85F48 /* Presentation */,
 				0EA31069232B75E700BC8CF5 /* Util */,
 			);
@@ -2085,6 +2071,7 @@
 		0E09671A22AE769F00E85F48 /* Plists */ = {
 			isa = PBXGroup;
 			children = (
+				0EB8B9262683592700FE130E /* Networking.plist */,
 				0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */,
 				0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */,
 				64333D3420B0C45A00CDF4B6 /* Info.plist */,
@@ -2233,22 +2220,6 @@
 				0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */,
 			);
 			path = Impl;
-			sourceTree = "<group>";
-		};
-		0E1C1D9222B360160032F6CA /* Persistence */ = {
-			isa = PBXGroup;
-			children = (
-				0E1C1DA922B387BE0032F6CA /* Assembly */,
-			);
-			path = Persistence;
-			sourceTree = "<group>";
-		};
-		0E1C1DA922B387BE0032F6CA /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */,
-			);
-			path = Assembly;
 			sourceTree = "<group>";
 		};
 		0E1C1DAC22B38F220032F6CA /* Presenters */ = {
@@ -3078,26 +3049,10 @@
 			path = Background;
 			sourceTree = "<group>";
 		};
-		0E9F97A322EB1B290015ADE2 /* Networking */ = {
-			isa = PBXGroup;
-			children = (
-				0E9F97A422EB1B320015ADE2 /* Assembly */,
-			);
-			path = Networking;
-			sourceTree = "<group>";
-		};
-		0E9F97A422EB1B320015ADE2 /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */,
-				0E9F97B422EC44930015ADE2 /* Networking.plist */,
-			);
-			path = Assembly;
-			sourceTree = "<group>";
-		};
 		0EA31069232B75E700BC8CF5 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				0EB8B9232683591B00FE130E /* Debouncer.swift */,
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 				0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */,
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
@@ -3624,6 +3579,7 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
+				0EB8B920268358F700FE130E /* BackgroundWorker.swift */,
 				0E9D5F2A2355799E0076FFD8 /* Background */,
 				0E9D5F29235574330076FFD8 /* Foreground */,
 			);
@@ -5064,7 +5020,6 @@
 				0E31B04723BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3E2238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				66BC44962657AED400A03253 /* OffsetCorrection.storyboard in Resources */,
-				0E8BD3E3238566AB008B31EF /* Networking.plist in Resources */,
 				0E8BD3E4238566AB008B31EF /* Foreground.storyboard in Resources */,
 				0E8BD3E5238566AB008B31EF /* LocationPicker.storyboard in Resources */,
 				0E8BD3E6238566AB008B31EF /* Defaults.storyboard in Resources */,
@@ -5092,6 +5047,7 @@
 				0E8BD3F8238566AB008B31EF /* Menu.storyboard in Resources */,
 				A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				0E8BD3F9238566AB008B31EF /* Main.storyboard in Resources */,
+				0EB8B9282683592700FE130E /* Networking.plist in Resources */,
 				0E8BD3FA238566AB008B31EF /* Settings.storyboard in Resources */,
 				0EB48DE7261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */,
@@ -5115,7 +5071,6 @@
 				0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				66BC44952657AED400A03253 /* OffsetCorrection.storyboard in Resources */,
-				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
 				0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
 				0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */,
@@ -5143,6 +5098,7 @@
 				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
 				A964648E247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
+				0EB8B9272683592700FE130E /* Networking.plist in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				0EB48DE6261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
@@ -5345,7 +5301,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E8BD2AF238566AB008B31EF /* BackgroundWorker.swift in Sources */,
 				0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */,
 				A92E3C5B2426428D00D981D5 /* TagChartView.swift in Sources */,
 				0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */,
@@ -5365,7 +5320,6 @@
 				A9646473247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				A9828E4224792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
 				0EB48DFD261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
-				0E8E3D662682279C0082EC29 /* VirtualAssembly.swift in Sources */,
 				0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */,
 				0E8E3D63268227530082EC29 /* RuuviVirtualError+LocalizedError.swift in Sources */,
 				0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */,
@@ -5421,7 +5375,6 @@
 				A907A1D82460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0E8BD2D8238566AB008B31EF /* WelcomeRouterInput.swift in Sources */,
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
-				0E3CA70D267365B1000D9B25 /* Debouncer.swift in Sources */,
 				0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				66BC449C2657AED400A03253 /* OffsetCorrectionConfigurator.swift in Sources */,
 				66718A3B266A685700A380F8 /* DfuFlashAppleInitializer.swift in Sources */,
@@ -5436,7 +5389,6 @@
 				0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */,
 				0E8BD2E1238566AB008B31EF /* LocalNotificationsManager.swift in Sources */,
 				0E8BD2E2238566AB008B31EF /* WelcomePresenter.swift in Sources */,
-				0E8BD2E3238566AB008B31EF /* PersistenceAssembly.swift in Sources */,
 				66718A47266A685700A380F8 /* DfuFlashPresenter.swift in Sources */,
 				0E8BD2E4238566AB008B31EF /* CardsViewOutput.swift in Sources */,
 				0E8BD2E5238566AB008B31EF /* DefaultsSwitchTableViewCell.swift in Sources */,
@@ -5478,6 +5430,7 @@
 				0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
 				0E8BD30A238566AB008B31EF /* PermissionPresenterAlert.swift in Sources */,
+				0EB8B922268358F700FE130E /* BackgroundWorker.swift in Sources */,
 				0E8BD30C238566AB008B31EF /* MainRouter.swift in Sources */,
 				0E8BD30D238566AB008B31EF /* TagChartsScrollViewController.swift in Sources */,
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
@@ -5718,7 +5671,6 @@
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */,
-				0E8BD3BF238566AB008B31EF /* NetworkingAssembly.swift in Sources */,
 				0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
@@ -5731,6 +5683,7 @@
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
 				0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */,
 				0E8BD3C8238566AB008B31EF /* RuuviTagHeartbeatDaemon.swift in Sources */,
+				0EB8B9252683591B00FE130E /* Debouncer.swift in Sources */,
 				0EB48DA42619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift in Sources */,
 				0E8BD3C9238566AB008B31EF /* WebTagSettingsViewOutput.swift in Sources */,
 				663155EA2667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
@@ -5792,7 +5745,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */,
 				0E1C1E1122B756B40032F6CA /* CardView.swift in Sources */,
 				A9B57445253B994700DB7353 /* SignInPresenter.swift in Sources */,
 				0EA796792664B37F002BA25D /* RuuviLocalError+LocalizedError.swift in Sources */,
@@ -5805,7 +5757,6 @@
 				660EB2732669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				66BC44A42657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
-				0E3CA70C267365B1000D9B25 /* Debouncer.swift in Sources */,
 				660EB2702669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
 				A92A66BD2450C640002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				A93CDCDE25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
@@ -5875,6 +5826,7 @@
 				A9828E3D24792D6B00E7E9D4 /* CellChanges.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
+				0EB8B9242683591B00FE130E /* Debouncer.swift in Sources */,
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				0E8E3D6C268228130082EC29 /* DiscoverVirtualTagViewModel.swift in Sources */,
 				A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */,
@@ -5893,7 +5845,6 @@
 				0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */,
 				0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */,
 				0EEB215322B8FD1F0015F9E0 /* WelcomePresenter.swift in Sources */,
-				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* CardsViewOutput.swift in Sources */,
 				66718A46266A685700A380F8 /* DfuFlashPresenter.swift in Sources */,
 				0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */,
@@ -6091,6 +6042,7 @@
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
 				0E046F4D22F1823C00BD4E9C /* LocationPickerAppleViewController.swift in Sources */,
 				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
+				0EB8B921268358F700FE130E /* BackgroundWorker.swift in Sources */,
 				66718A4F266A685700A380F8 /* DfuFlashViewModel.swift in Sources */,
 				0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
@@ -6185,7 +6137,6 @@
 				0E4557FC23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
-				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
@@ -6229,7 +6180,6 @@
 				A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
 				A91D02F42511207300694733 /* SelectionPresenter.swift in Sources */,
-				0E8E3D652682279C0082EC29 /* VirtualAssembly.swift in Sources */,
 				0E290A852660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,4 +1,5 @@
 import Swinject
+import Foundation
 import RuuviLocal
 import RuuviPool
 import RuuviContext
