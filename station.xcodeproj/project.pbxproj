@@ -1935,6 +1935,7 @@
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
 				66718A6B266BD0E800A380F8 /* Color+Ruuvi.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
+				0EF4E33F26824EF500D83CC7 /* DfuFirmware+Log.swift */,
 				A98BC874250E4265001CEFDC /* Double+Round.swift */,
 				0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */,
 				A9BD38B924F6108300904BBE /* Humidity+Offset.swift */,
@@ -1950,7 +1951,6 @@
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
 				0EA7966F2664A7B3002BA25D /* Errors */,
-				0EF4E33F26824EF500D83CC7 /* DfuFirmware+Log.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
