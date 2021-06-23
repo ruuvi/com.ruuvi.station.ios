@@ -61,11 +61,6 @@ class CoreAssembly: Assembly {
             return RuuviCoreImageImpl()
         }
 
-        container.register(DiffCalculator.self) { _ in
-            let diffCalculator = DiffCalculatorImpl()
-            return diffCalculator
-        }
-
         container.register(MeasurementsService.self, factory: { r in
             let settings = r.resolve(RuuviLocalSettings.self)
             let service = MeasurementsServiceImpl()

@@ -29,6 +29,7 @@ def shared_pods
   pod 'RuuviCore', :path => 'Packages/RuuviCore/RuuviCore.podspec', :testspecs => ['Tests']
   pod 'RuuviCore/Image', :path => 'Packages/RuuviCore/RuuviCore.podspec'
   pod 'RuuviCore/Location', :path => 'Packages/RuuviCore/RuuviCore.podspec'
+  pod 'RuuviCore/Diff', :path => 'Packages/RuuviCore/RuuviCore.podspec'
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
   pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
   pod 'RuuviDFU', :path => 'Packages/RuuviDFU/RuuviDFU.podspec', :testspecs => ['Tests']
