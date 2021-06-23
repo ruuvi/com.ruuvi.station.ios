@@ -1,6 +1,9 @@
 import Foundation
 import Swinject
 import RuuviDFU
+#if canImport(RuuviDFUImpl)
+import RuuviDFUImpl
+#endif
 
 class DfuAssembly: Assembly {
     func assemble(container: Container) {
