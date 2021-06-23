@@ -210,6 +210,12 @@ PODS:
   - RuuviDaemon/Contract (0.0.1)
   - RuuviDaemon/Tests (0.0.1)
   - RuuviDaemon/Worker (0.0.1)
+  - RuuviDFU (0.0.1):
+    - RuuviDFU/Contract (= 0.0.1)
+  - RuuviDFU/Contract (0.0.1)
+  - RuuviDFU/Impl (0.0.1):
+    - iOSDFULibrary
+  - RuuviDFU/Tests (0.0.1)
   - RuuviLocal (0.0.1):
     - RuuviLocal/Contract (= 0.0.1)
   - RuuviLocal/Contract (0.0.1):
@@ -462,6 +468,9 @@ DEPENDENCIES:
   - RuuviDaemon (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/CloudSync (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/Tests (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDFU (from `Packages/RuuviDFU/RuuviDFU.podspec`)
+  - RuuviDFU/Impl (from `Packages/RuuviDFU/RuuviDFU.podspec`)
+  - RuuviDFU/Tests (from `Packages/RuuviDFU/RuuviDFU.podspec`)
   - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
   - RuuviLocation (from `Packages/RuuviLocation/RuuviLocation.podspec`)
   - RuuviLocation/Service (from `Packages/RuuviLocation/RuuviLocation.podspec`)
@@ -559,6 +568,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviCore/RuuviCore.podspec
   RuuviDaemon:
     :path: Packages/RuuviDaemon/RuuviDaemon.podspec
+  RuuviDFU:
+    :path: Packages/RuuviDFU/RuuviDFU.podspec
   RuuviLocal:
     :path: Packages/RuuviLocal/RuuviLocal.podspec
   RuuviLocation:
@@ -638,6 +649,7 @@ SPEC CHECKSUMS:
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: 6e01edd2c0d20e550bba680cfb49009918891a06
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
+  RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
@@ -654,6 +666,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 9fd27dc2040ef0d6b3b63677de6ac93ee1dd9a4d
+PODFILE CHECKSUM: b93d9e87a1ab84dcb45c8fb3f2ed1713b08ad86d
 
 COCOAPODS: 1.10.1

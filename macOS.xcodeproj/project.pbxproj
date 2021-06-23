@@ -142,7 +142,6 @@
 		0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB5A8D2381807500E78757 /* CardsScrollViewController.swift */; };
 		0E6BAE0423856A01003A2D4C /* LanguagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07A232008420025A191 /* LanguagePresenter.swift */; };
 		0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
-		0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
 		0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5222F182AB00BD4E9C /* LocationPickerModuleInput.swift */; };
 		0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */; };
 		0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */; };
@@ -398,6 +397,10 @@
 		0EF4E32D2682403500D83CC7 /* RuuviVirtualRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E32C2682403500D83CC7 /* RuuviVirtualRepository */; };
 		0EF4E32F2682403500D83CC7 /* RuuviVirtualService in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E32E2682403500D83CC7 /* RuuviVirtualService */; };
 		0EF4E3312682403500D83CC7 /* RuuviVirtualStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E3302682403500D83CC7 /* RuuviVirtualStorage */; };
+		0EF4E35226831A0C00D83CC7 /* DfuFirmware+Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF4E35126831A0B00D83CC7 /* DfuFirmware+Log.swift */; };
+		0EF4E35426831A1E00D83CC7 /* DfuAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF4E35326831A1E00D83CC7 /* DfuAssembly.swift */; };
+		0EF4E35726831B1100D83CC7 /* RuuviDFU in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E35626831B1100D83CC7 /* RuuviDFU */; };
+		0EF4E35926831B1100D83CC7 /* RuuviDFUImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E35826831B1100D83CC7 /* RuuviDFUImpl */; };
 		318592DC25BB4D000093B8EB /* UserPropertiesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318592D925BB4D000093B8EB /* UserPropertiesService.swift */; };
 		318592E525BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */; };
 		660EB25A2669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */; };
@@ -414,12 +417,6 @@
 		660EB27B2669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */; };
 		660EB27E2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */; };
 		660EB2812669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */; };
-		660EB28B26692806000FD22B /* RuuviDfu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28326692806000FD22B /* RuuviDfu.swift */; };
-		660EB28E26692806000FD22B /* DfuDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28426692806000FD22B /* DfuDevice.swift */; };
-		660EB29126692806000FD22B /* DfuAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28526692806000FD22B /* DfuAssembly.swift */; };
-		660EB29426692806000FD22B /* DfuScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28626692806000FD22B /* DfuScanner.swift */; };
-		660EB29726692806000FD22B /* DfuFlasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28726692806000FD22B /* DfuFlasher.swift */; };
-		660EB29A26692806000FD22B /* DfuLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28826692806000FD22B /* DfuLog.swift */; };
 		660EB29E266928E6000FD22B /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB29B266928E6000FD22B /* UIViewController+Alert.swift */; };
 		663155DF2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663155CD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift */; };
 		663155E22667F40C005B90A6 /* UpdateFirmwareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663155CE2667F40C005B90A6 /* UpdateFirmwareConfigurator.swift */; };
@@ -496,7 +493,6 @@
 		A93CDCD125659BA600018C6C /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCCE25659BA600018C6C /* AlertPresenter.swift */; };
 		A93CDCE025659BF600018C6C /* AlertPresenterImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCDD25659BF600018C6C /* AlertPresenterImpl.swift */; };
 		A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
-		A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
 		A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		A9646468247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
 		A964646E247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */; };
@@ -764,7 +760,6 @@
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
 		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
 		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
-		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
 		0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA796742664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudApiError+LocalizedError.swift"; sourceTree = "<group>"; };
@@ -909,6 +904,9 @@
 		0EF4E31726823F6100D83CC7 /* DiscoverVirtualTagViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverVirtualTagViewModel.swift; sourceTree = "<group>"; };
 		0EF4E31A2682400C00D83CC7 /* RuuviLocation */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviLocation; path = Packages/RuuviLocation; sourceTree = "<group>"; };
 		0EF4E31B2682401200D83CC7 /* RuuviVirtual */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviVirtual; path = Packages/RuuviVirtual; sourceTree = "<group>"; };
+		0EF4E35126831A0B00D83CC7 /* DfuFirmware+Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DfuFirmware+Log.swift"; sourceTree = "<group>"; };
+		0EF4E35326831A1E00D83CC7 /* DfuAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuAssembly.swift; sourceTree = "<group>"; };
+		0EF4E35526831AFF00D83CC7 /* RuuviDFU */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviDFU; path = Packages/RuuviDFU; sourceTree = "<group>"; };
 		0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ruuvi.swift"; sourceTree = "<group>"; };
 		0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityUnit.swift; sourceTree = "<group>"; };
 		0EF6F5BD235E01170052BA25 /* ForegroundRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForegroundRouter.swift; sourceTree = "<group>"; };
@@ -958,12 +956,6 @@
 		660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DfuDevicesScanner.storyboard; sourceTree = "<group>"; };
 		660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerRouterInput.swift; sourceTree = "<group>"; };
 		660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerRouter.swift; sourceTree = "<group>"; };
-		660EB28326692806000FD22B /* RuuviDfu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviDfu.swift; sourceTree = "<group>"; };
-		660EB28426692806000FD22B /* DfuDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevice.swift; sourceTree = "<group>"; };
-		660EB28526692806000FD22B /* DfuAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuAssembly.swift; sourceTree = "<group>"; };
-		660EB28626692806000FD22B /* DfuScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuScanner.swift; sourceTree = "<group>"; };
-		660EB28726692806000FD22B /* DfuFlasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuFlasher.swift; sourceTree = "<group>"; };
-		660EB28826692806000FD22B /* DfuLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuLog.swift; sourceTree = "<group>"; };
 		660EB29B266928E6000FD22B /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		663155CD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateFirmwareAppleInitializer.swift; sourceTree = "<group>"; };
 		663155CE2667F40C005B90A6 /* UpdateFirmwareConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateFirmwareConfigurator.swift; sourceTree = "<group>"; };
@@ -1050,7 +1042,6 @@
 		A93CDCCE25659BA600018C6C /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		A93CDCDD25659BF600018C6C /* AlertPresenterImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenterImpl.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
-		A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUColor.swift; sourceTree = "<group>"; };
 		A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedViewInput.swift; sourceTree = "<group>"; };
 		A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedStepperTableViewCell.swift; sourceTree = "<group>"; };
 		A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedSwitchTableViewCell.swift; sourceTree = "<group>"; };
@@ -1129,6 +1120,7 @@
 				0EE1125F267BC34A008DA8D9 /* RuuviReactor in Frameworks */,
 				0EE11265267BC3CC008DA8D9 /* NordicDFU in Frameworks */,
 				0EE11272267BC5D6008DA8D9 /* FirebaseCrashlytics in Frameworks */,
+				0EF4E35726831B1100D83CC7 /* RuuviDFU in Frameworks */,
 				0EB9786D267C85BE0032CC05 /* RuuviPoolCoordinator in Frameworks */,
 				0EF4E3252682403500D83CC7 /* RuuviVirtualModel in Frameworks */,
 				0EE11239267BBDC1008DA8D9 /* RuuviCloudPure in Frameworks */,
@@ -1158,6 +1150,7 @@
 				0EE11237267BBDC1008DA8D9 /* RuuviCloudApi in Frameworks */,
 				0EE11249267BBDC1008DA8D9 /* RuuviPool in Frameworks */,
 				0EB9786B267C7B6C0032CC05 /* RuuviStorageCoordinator in Frameworks */,
+				0EF4E35926831B1100D83CC7 /* RuuviDFUImpl in Frameworks */,
 				0EE11275267BC751008DA8D9 /* SwinjectPropertyLoader in Frameworks */,
 				0EF4E3312682403500D83CC7 /* RuuviVirtualStorage in Frameworks */,
 				0EB97869267C7B640032CC05 /* RuuviDaemonCloudSync in Frameworks */,
@@ -1355,6 +1348,7 @@
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
 				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
+				0EF4E35326831A1E00D83CC7 /* DfuAssembly.swift */,
 				0E3CA70B267365B1000D9B25 /* Debouncer.swift */,
 				0E8E3DA726822C580082EC29 /* VirtualAssembly.swift */,
 			);
@@ -1367,7 +1361,6 @@
 				0E09671522AE74CB00E85F48 /* Application */,
 				0EEB210722B7D8020015F9E0 /* Business */,
 				0E5C300C22CF632500B52E39 /* Core */,
-				660EB28226692806000FD22B /* Dfu */,
 				0E9F97A322EB1B290015ADE2 /* Networking */,
 				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E09671922AE764200E85F48 /* Presentation */,
@@ -1482,6 +1475,7 @@
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
 				66718A6B266BD0E800A380F8 /* Color+Ruuvi.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
+				0EF4E35126831A0B00D83CC7 /* DfuFirmware+Log.swift */,
 				A98BC874250E4265001CEFDC /* Double+Round.swift */,
 				0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */,
 				A9BD38B924F6108300904BBE /* Humidity+Offset.swift */,
@@ -2435,11 +2429,9 @@
 		0EA31069232B75E700BC8CF5 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */,
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 				0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */,
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
-				A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -3280,6 +3272,7 @@
 		64333D1C20B0C45900CDF4B6 = {
 			isa = PBXGroup;
 			children = (
+				0EF4E35526831AFF00D83CC7 /* RuuviDFU */,
 				0EF4E31B2682401200D83CC7 /* RuuviVirtual */,
 				0EF4E31A2682400C00D83CC7 /* RuuviLocation */,
 				0EE1127D267BC968008DA8D9 /* RuuviCore */,
@@ -3403,19 +3396,6 @@
 				660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */,
 			);
 			path = Router;
-			sourceTree = "<group>";
-		};
-		660EB28226692806000FD22B /* Dfu */ = {
-			isa = PBXGroup;
-			children = (
-				660EB28326692806000FD22B /* RuuviDfu.swift */,
-				660EB28426692806000FD22B /* DfuDevice.swift */,
-				660EB28526692806000FD22B /* DfuAssembly.swift */,
-				660EB28626692806000FD22B /* DfuScanner.swift */,
-				660EB28726692806000FD22B /* DfuFlasher.swift */,
-				660EB28826692806000FD22B /* DfuLog.swift */,
-			);
-			path = Dfu;
 			sourceTree = "<group>";
 		};
 		663155CA2667F40C005B90A6 /* UpdateFirmware */ = {
@@ -4219,6 +4199,8 @@
 				0EF4E32C2682403500D83CC7 /* RuuviVirtualRepository */,
 				0EF4E32E2682403500D83CC7 /* RuuviVirtualService */,
 				0EF4E3302682403500D83CC7 /* RuuviVirtualStorage */,
+				0EF4E35626831B1100D83CC7 /* RuuviDFU */,
+				0EF4E35826831B1100D83CC7 /* RuuviDFUImpl */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* Ruuvi Station.app */;
@@ -4490,16 +4472,13 @@
 				A91D02F32511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
 				0E6BADAC23856A01003A2D4C /* WelcomePresenter.swift in Sources */,
-				660EB29726692806000FD22B /* DfuFlasher.swift in Sources */,
 				0E6BADAD23856A01003A2D4C /* PersistenceAssembly.swift in Sources */,
 				0E6BADAE23856A01003A2D4C /* CardsViewOutput.swift in Sources */,
 				0E6BADAF23856A01003A2D4C /* DefaultsSwitchTableViewCell.swift in Sources */,
 				0E6BADB023856A01003A2D4C /* DefaultsViewInput.swift in Sources */,
 				0E6BADB123856A01003A2D4C /* LocationPickerRouter.swift in Sources */,
 				66718A48266A685700A380F8 /* DfuFlashPresenter.swift in Sources */,
-				660EB29126692806000FD22B /* DfuAssembly.swift in Sources */,
 				A9828E4C24792D6C00E7E9D4 /* ReloadableSectionData.swift in Sources */,
-				660EB29426692806000FD22B /* DfuScanner.swift in Sources */,
 				0E6BADB223856A01003A2D4C /* WebTagSettingsModuleInput.swift in Sources */,
 				66718A6E266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E6BADB323856A01003A2D4C /* MenuTableConfigurator.swift in Sources */,
@@ -4511,7 +4490,6 @@
 				A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */,
 				0E6BADBA23856A01003A2D4C /* SettingsRouter.swift in Sources */,
 				0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
-				660EB28E26692806000FD22B /* DfuDevice.swift in Sources */,
 				0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				660EB25D2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
 				0E8E3DA826822C580082EC29 /* VirtualAssembly.swift in Sources */,
@@ -4534,7 +4512,6 @@
 				A9BD38BC24F6108300904BBE /* Humidity+Offset.swift in Sources */,
 				0E6BADC623856A01003A2D4C /* Observable.swift in Sources */,
 				0E6BADC723856A01003A2D4C /* ForegroundTableViewController.swift in Sources */,
-				660EB29A26692806000FD22B /* DfuLog.swift in Sources */,
 				0E6BADC923856A01003A2D4C /* CalibrationPersistence.swift in Sources */,
 				0E6BADCA23856A01003A2D4C /* TagSettingsViewOutput.swift in Sources */,
 				0E6BADCB23856A01003A2D4C /* ForegroundViewModel.swift in Sources */,
@@ -4618,7 +4595,6 @@
 				66718A60266A685700A380F8 /* DfuFlashRouterInput.swift in Sources */,
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
 				A98D3F19256CBD610066588B /* ShareViewInput.swift in Sources */,
-				A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A980573A25807118000D03AB /* AboutViewModel.swift in Sources */,
 				663155F12667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
@@ -4630,7 +4606,6 @@
 				0EF4E31426823F4400D83CC7 /* VirtualLocation.swift in Sources */,
 				A9646486247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
-				0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */,
 				0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */,
 				A9B5744B253B994900DB7353 /* SignInRouterInput.swift in Sources */,
 				A976CA8024A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
@@ -4690,7 +4665,6 @@
 				66BC44AF2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
 				0E6BAE2E23856A01003A2D4C /* MenuRouterInput.swift in Sources */,
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
-				660EB28B26692806000FD22B /* RuuviDfu.swift in Sources */,
 				0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */,
 				66718A4B266A685700A380F8 /* DfuFlashAppleViewController.swift in Sources */,
 				0EB48D8D2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
@@ -4821,6 +4795,7 @@
 				0E6BAE9423856A01003A2D4C /* CardsRouter.swift in Sources */,
 				0E8BAD002460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */,
 				0E6BAE9523856A01003A2D4C /* WelcomeViewController.swift in Sources */,
+				0EF4E35226831A0C00D83CC7 /* DfuFirmware+Log.swift in Sources */,
 				A9646468247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				0E6BAE9623856A01003A2D4C /* CardsRouterInput.swift in Sources */,
 				0E6BAE9723856A01003A2D4C /* WelcomeInitializer.swift in Sources */,
@@ -4829,6 +4804,7 @@
 				A9F4471824B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */,
 				A90E169124604F7400631E6C /* TagChartPresenter.swift in Sources */,
 				A907A1D5245F7C6600041F6E /* ProgressBarView.swift in Sources */,
+				0EF4E35426831A1E00D83CC7 /* DfuAssembly.swift in Sources */,
 				318592E525BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift in Sources */,
 				0E6BAE9923856A01003A2D4C /* SettingsViewInput.swift in Sources */,
 				0E45580B23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
@@ -5447,6 +5423,14 @@
 		0EF4E3302682403500D83CC7 /* RuuviVirtualStorage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RuuviVirtualStorage;
+		};
+		0EF4E35626831B1100D83CC7 /* RuuviDFU */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviDFU;
+		};
+		0EF4E35826831B1100D83CC7 /* RuuviDFUImpl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviDFUImpl;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

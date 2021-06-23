@@ -1,13 +1,14 @@
 import Foundation
-import UIKit
 import CoreBluetooth
+import RuuviDFU
+import UIKit
 
 class DfuScanner: NSObject {
     private class LostObservation {
-        var block: (DfuDevice) -> Void
+        var block: (DFUDevice) -> Void
         var lostDeviceDelay: TimeInterval
 
-        init(block: @escaping ((DfuDevice) -> Void), lostDeviceDelay: TimeInterval) {
+        init(block: @escaping ((DFUDevice) -> Void), lostDeviceDelay: TimeInterval) {
             self.block = block
             self.lostDeviceDelay = lostDeviceDelay
         }
@@ -17,11 +18,11 @@ class DfuScanner: NSObject {
     private lazy var manager: CBCentralManager = {
         return CBCentralManager(delegate: self, queue: queue)
     }()
-    private var lastSeen = [DfuDevice: Date]()
+    private var lastSeen = [DFUDevice: Date]()
     private var lostTimer: DispatchSourceTimer?
 
     private var observations = (
-        device: [UUID: (DfuDevice) -> Void](),
+        device: [UUID: (DFUDevice) -> Void](),
         lost: [UUID: LostObservation]()
     )
 
@@ -76,7 +77,7 @@ class DfuScanner: NSObject {
 
     private func notifyLostDevices() {
         observations.lost.values.forEach { (observation) in
-            var lostDevices = [DfuDevice]()
+            var lostDevices = [DFUDevice]()
             for (device, seen) in lastSeen {
                 let elapsed = Date().timeIntervalSince(seen)
                 if elapsed > observation.lostDeviceDelay {
@@ -112,7 +113,7 @@ class DfuScanner: NSObject {
     }
 
     @discardableResult
-    func scan<T: AnyObject>(_ observer: T, closure: @escaping (T, DfuDevice) -> Void) -> RUObservationToken {
+    func scan<T: AnyObject>(_ observer: T, closure: @escaping (T, DFUDevice) -> Void) -> RuuviDFUToken {
         let id = UUID()
         queue.async { [weak self] in
             self?.observations.device[id] = { [weak self, weak observer] device in
@@ -128,7 +129,7 @@ class DfuScanner: NSObject {
             self?.startIfNeeded()
         }
 
-        return RUObservationToken { [weak self] in
+        return RuuviDFUToken { [weak self] in
             self?.queue.async { [weak self] in
                 self?.observations.device.removeValue(forKey: id)
                 self?.stopIfNeeded()
@@ -137,7 +138,7 @@ class DfuScanner: NSObject {
     }
 
     @discardableResult
-    func lost<T: AnyObject>(_ observer: T, closure: @escaping (T, DfuDevice) -> Void) -> RUObservationToken {
+    func lost<T: AnyObject>(_ observer: T, closure: @escaping (T, DFUDevice) -> Void) -> RuuviDFUToken {
         let id = UUID()
         queue.async { [weak self] in
             self?.observations.lost[id] = LostObservation(block: { [weak self, weak observer] (device) in
@@ -153,7 +154,7 @@ class DfuScanner: NSObject {
             self?.startIfNeeded()
         }
 
-        return RUObservationToken { [weak self] in
+        return RuuviDFUToken { [weak self] in
             self?.queue.async { [weak self] in
                 self?.observations.lost.removeValue(forKey: id)
                 self?.stopIfNeeded()
@@ -177,7 +178,7 @@ extension DfuScanner: CBCentralManagerDelegate {
         let uuid = peripheral.identifier.uuidString
         let isConnectable = (advertisementData[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue ?? false
         let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        let dfuDevice = DfuDevice(uuid: uuid, rssi: RSSI.intValue, isConnectable: isConnectable, name: name)
+        let dfuDevice = DFUDevice(uuid: uuid, rssi: RSSI.intValue, isConnectable: isConnectable, name: name)
         lastSeen[dfuDevice] = Date()
         observations.device.values.forEach { (closure) in
             closure(dfuDevice)
