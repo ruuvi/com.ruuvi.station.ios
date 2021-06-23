@@ -1759,7 +1759,6 @@
 			children = (
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
-				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -3324,6 +3323,7 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
+				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
 				0E9D5F2A2355799E0076FFD8 /* Background */,
 				0E9D5F29235574330076FFD8 /* Foreground */,
 			);
