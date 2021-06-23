@@ -32,6 +32,10 @@ Pod::Spec.new do |s|
 
   s.subspec 'Diff' do |ss|
     ss.source_files = 'Sources/RuuviCoreDiff/**/*.{h,m,swift}', 'Sources/RuuviCoreDiff/*.{h,m,swift}'
+  end
+
+  s.subspec 'PN' do |ss|
+    ss.source_files = 'Sources/RuuviCorePN/**/*.{h,m,swift}', 'Sources/RuuviCorePN/*.{h,m,swift}'
     ss.dependency 'RuuviCore/Contract'
   end
 

@@ -2,6 +2,7 @@ import Foundation
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviCore
 
 class WebTagSettingsTableConfigurator {
     func configure(view: WebTagSettingsTableViewController) {
@@ -19,7 +20,7 @@ class WebTagSettingsTableConfigurator {
         presenter.webTagService = r.resolve(VirtualService.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
-        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)

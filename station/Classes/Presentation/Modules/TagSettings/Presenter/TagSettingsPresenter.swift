@@ -9,6 +9,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviUser
+import RuuviCore
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -26,7 +27,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var settings: RuuviLocalSettings!
     var ruuviLocalImages: RuuviLocalImages!
     var connectionPersistence: RuuviLocalConnections!
-    var pushNotificationsManager: PushNotificationsManager!
+    var pushNotificationsManager: RuuviCorePN!
     var permissionPresenter: PermissionPresenter!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!

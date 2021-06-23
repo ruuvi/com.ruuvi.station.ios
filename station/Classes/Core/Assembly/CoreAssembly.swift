@@ -52,8 +52,8 @@ class CoreAssembly: Assembly {
             return manager
         }.inObjectScope(.container)
 
-        container.register(PushNotificationsManager.self) { _ in
-            let manager = PushNotificationsManagerImpl()
+        container.register(RuuviCorePN.self) { _ in
+            let manager = RuuviCorePNImpl()
             return manager
         }
 
