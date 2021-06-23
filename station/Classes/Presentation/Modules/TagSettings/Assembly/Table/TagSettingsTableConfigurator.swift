@@ -20,7 +20,6 @@ class TagSettingsTableConfigurator {
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
-        presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)

@@ -3,23 +3,28 @@ import AVKit
 import RuuviOntology
 import RuuviContext
 import RuuviStorage
-import RuuviLocal
 import RuuviService
 import RuuviVirtual
 
-final class MigrationManagerAlertService: MigrationManager {
-    var virtualStorage: VirtualStorage!
-    var ruuviStorage: RuuviStorage!
-    var settings: RuuviLocalSettings!
-    var ruuviAlertService: RuuviServiceAlert!
+final class MigrationManagerAlertService: RuuviMigration {
+    private let virtualStorage: VirtualStorage
+    private let ruuviStorage: RuuviStorage
+    private let ruuviAlertService: RuuviServiceAlert
+
+    init(
+        virtualStorage: VirtualStorage,
+        ruuviStorage: RuuviStorage,
+        ruuviAlertService: RuuviServiceAlert
+    ) {
+        self.virtualStorage = virtualStorage
+        self.ruuviStorage = ruuviStorage
+        self.ruuviAlertService = ruuviAlertService
+    }
 
     private let prefs = UserDefaults.standard
-
     @UserDefault("MigrationManagerAlertService.persistanceVersion", defaultValue: 0)
     private var persistanceVersion: UInt
-
     private let actualServiceVersion: UInt = 1
-
     private let queue: DispatchQueue = DispatchQueue(label: "MigrationManagerAlertService", qos: .utility)
 
     func migrateIfNeeded() {

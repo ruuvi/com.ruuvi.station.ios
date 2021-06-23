@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import Foundation
 import Charts
 import UIKit
@@ -14,7 +13,6 @@ class TagChartPresenter: NSObject {
         }
     }
     weak var ouptut: TagChartModuleOutput!
-    var calibrationService: CalibrationService!
     var measurementService: MeasurementsService! {
         didSet {
             measurementService.add(self)
@@ -22,14 +20,7 @@ class TagChartPresenter: NSObject {
     }
 
     private var humidityOffset: Double = 0.0
-    private var luid: LocalIdentifier? {
-        didSet {
-            if let luid = luid {
-                getHumityCalibration(for: luid)
-            }
-        }
-    }
-
+    private var luid: LocalIdentifier?
     private let threshold: Int = 100
     private lazy var queue: OperationQueue = {
         let queue = OperationQueue()
@@ -41,11 +32,6 @@ class TagChartPresenter: NSObject {
 
     private var chartData: LineChartData? {
         return viewModel.chartData.value
-    }
-    private var calibrationHumidityDidChangeToken: NSObjectProtocol?
-
-    deinit {
-        calibrationHumidityDidChangeToken?.invalidate()
     }
 }
 // MARK: - TagChartModuleInput
@@ -84,7 +70,6 @@ extension TagChartPresenter: TagChartModuleInput {
         configureViewModel(viewModel)
         self.ouptut = output
         self.luid = luid
-        startObservingCalibrationHumidityChanges()
     }
 
     func localize() {
@@ -130,29 +115,6 @@ extension TagChartPresenter: MeasurementsServiceDelegate {
     }
 }
 extension TagChartPresenter {
-    private func getHumityCalibration(for luid: LocalIdentifier?) {
-        guard let luid = luid else {
-            return
-        }
-        humidityOffset = calibrationService.humidityOffset(for: luid).0
-    }
-
-    private func startObservingCalibrationHumidityChanges() {
-        calibrationHumidityDidChangeToken = NotificationCenter
-            .default
-            .addObserver(forName: .CalibrationServiceHumidityDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo,
-                let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier,
-                self?.luid?.any == luid.any {
-                self?.getHumityCalibration(for: luid)
-                self?.reloadChart()
-            }
-        })
-    }
-
     private func newDataSet() -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet()
         lineChartDataSet.axisDependency = .left
@@ -429,4 +391,3 @@ extension TagChartPresenter {
         addEntry(for: chartData, data: dataSet[dataSet.count - 1])
     }
 }
-// swiftlint:enable file_length
