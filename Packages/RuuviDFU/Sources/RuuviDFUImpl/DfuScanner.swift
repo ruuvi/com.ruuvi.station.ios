@@ -1,6 +1,7 @@
 import Foundation
-import UIKit
 import CoreBluetooth
+import RuuviDFU
+import UIKit
 
 class DfuScanner: NSObject {
     private class LostObservation {

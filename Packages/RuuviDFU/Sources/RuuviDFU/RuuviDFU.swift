@@ -1,3 +1,4 @@
+import Foundation
 #if canImport(NordicDFU)
 import NordicDFU
 #endif
@@ -35,7 +36,7 @@ public protocol DfuFlasherOutputProtocol: AnyObject {
 public final class RuuviDFUToken {
     private let cancellationClosure: () -> Void
 
-    init(cancellationClosure: @escaping () -> Void) {
+    public init(cancellationClosure: @escaping () -> Void) {
         self.cancellationClosure = cancellationClosure
     }
 

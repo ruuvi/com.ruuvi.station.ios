@@ -1,4 +1,5 @@
 import Foundation
+import RuuviDFU
 #if canImport(NordicDFU)
 import NordicDFU
 #endif
