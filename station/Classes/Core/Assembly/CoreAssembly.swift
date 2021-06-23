@@ -14,6 +14,12 @@ import RuuviCoreLocation
 #if canImport(RuuviLocationService)
 import RuuviLocationService
 #endif
+#if canImport(RuuviCorePN)
+import RuuviCorePN
+#endif
+#if canImport(RuuviCorePermission)
+import RuuviCorePermission
+#endif
 
 class CoreAssembly: Assembly {
     func assemble(container: Container) {

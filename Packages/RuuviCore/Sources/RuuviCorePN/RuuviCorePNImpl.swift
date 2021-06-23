@@ -1,4 +1,5 @@
 import UIKit
+import RuuviCore
 import UserNotifications
 
 public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
