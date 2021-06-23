@@ -46,9 +46,9 @@ class CoreAssembly: Assembly {
             return manager
         }
 
-        container.register(PermissionsManager.self) { r in
-            let manager = PermissionsManagerImpl()
-            manager.locationManager = r.resolve(RuuviCoreLocation.self)
+        container.register(RuuviCorePermission.self) { r in
+            let locationManager = r.resolve(RuuviCoreLocation.self)!
+            let manager = RuuviCorePermissionImpl(locationManager: locationManager)
             return manager
         }.inObjectScope(.container)
 

@@ -22,7 +22,7 @@ class CardsPresenter: CardsModuleInput {
     var webTagService: VirtualService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: RuuviCorePN!
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var connectionPersistence: RuuviLocalConnections!
     var alertService: RuuviServiceAlert!
     var alertHandler: AlertService!

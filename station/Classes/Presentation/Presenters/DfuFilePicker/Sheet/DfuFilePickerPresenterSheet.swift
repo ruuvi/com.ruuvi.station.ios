@@ -1,9 +1,10 @@
 import Foundation
 import UIKit
+import RuuviCore
 
 class DfuFilePickerPresenterSheet: NSObject, DfuFilePickerPresenter {
     weak var delegate: DfuFilePickerPresenterDelegate?
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var sourceView: UIView?
 
