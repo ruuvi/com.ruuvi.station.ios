@@ -5,6 +5,7 @@ import RuuviContext
 import RuuviStorage
 import RuuviService
 import RuuviVirtual
+import RuuviMigration
 
 final class MigrationManagerAlertService: RuuviMigration {
     private let virtualStorage: VirtualStorage

@@ -5,18 +5,41 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviMigration",
+    platforms: [.macOS(.v10_15), .iOS(.v11)],
     products: [
         .library(
             name: "RuuviMigration",
-            targets: ["RuuviMigration"])
+            targets: ["RuuviMigration"]),
+        .library(
+            name: "RuuviMigrationImpl",
+            targets: ["RuuviMigrationImpl"])
     ],
     dependencies: [
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviLocal"),
+        .package(path: "../RuuviPool"),
+        .package(path: "../RuuviContext"),
+        .package(path: "../RuuviVirtual"),
+        .package(path: "../RuuviStorage"),
+        .package(path: "../RuuviService")
     ],
     targets: [
         .target(
             name: "RuuviMigration",
             dependencies: []),
+        .target(
+            name: "RuuviMigrationImpl",
+            dependencies: [
+                "RuuviOntology",
+                "RuuviLocal",
+                "RuuviPool",
+                "RuuviContext",
+                "RuuviVirtual",
+                "RuuviStorage",
+                "RuuviService",
+                .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
+                .product(name: "RuuviVirtualModel", package: "RuuviVirtual")
+            ]),
         .testTarget(
             name: "RuuviMigrationTests",
             dependencies: ["RuuviMigration"])

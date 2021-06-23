@@ -1,5 +1,6 @@
 import Foundation
 import RuuviLocal
+import RuuviMigration
 
 final class MigrationManagerToChartDuration240: RuuviMigration {
     private var settings: RuuviLocalSettings

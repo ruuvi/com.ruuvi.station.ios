@@ -2,6 +2,7 @@ import Foundation
 import RuuviStorage
 import RuuviOntology
 import RuuviService
+import RuuviMigration
 
 final class MigrationManagerToRH: RuuviMigration {
     private let ruuviStorage: RuuviStorage

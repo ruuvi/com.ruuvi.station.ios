@@ -4,6 +4,7 @@ import RuuviOntology
 import RuuviContext
 import RuuviLocal
 import RuuviPool
+import RuuviMigration
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
 #endif
