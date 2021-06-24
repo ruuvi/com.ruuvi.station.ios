@@ -7,15 +7,15 @@ public protocol RuuviNotifier {
     func process(data: VirtualData, for sensor: VirtualSensor)
     func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
 
-    func subscribe<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String)
-    func isSubscribed<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) -> Bool
+    func subscribe<T: RuuviNotifierObserver>(_ observer: T, to uuid: String)
+    func isSubscribed<T: RuuviNotifierObserver>(_ observer: T, to uuid: String) -> Bool
 }
 
-public protocol RuuviServiceNotifierObserver: AnyObject {
-    func ruuviNotifier(service: RuuviNotifier, isTriggered: Bool, for uuid: String)
+public protocol RuuviNotifierObserver: AnyObject {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String)
 }
 
-public protocol RuuviServiceNotifierTitles {
+public protocol RuuviNotifierTitles {
     var lowTemperature: String { get }
     var highTemperature: String { get }
     var lowHumidity: String { get }

@@ -3,7 +3,7 @@ import RuuviOntology
 import RuuviVirtual
 
 // MARK: - Process Physical Sensors
-extension RuuviServiceNotifierImpl {
+extension RuuviNotifierImpl {
     // swiftlint:disable:next function_body_length
     public func process(heartbeat record: RuuviTagSensorRecord) {
         var isTriggered = false
@@ -67,7 +67,7 @@ extension RuuviServiceNotifierImpl {
 }
 
 // MARK: - Process Virtual Sensors
-extension RuuviServiceNotifierImpl {
+extension RuuviNotifierImpl {
     public func process(data: VirtualData, for sensor: VirtualSensor) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -105,7 +105,7 @@ extension RuuviServiceNotifierImpl {
 
 }
 // MARK: - Process Network Sensors
-extension RuuviServiceNotifierImpl {
+extension RuuviNotifierImpl {
     public func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -143,7 +143,7 @@ extension RuuviServiceNotifierImpl {
     }
 }
 // MARK: - Notify
-extension RuuviServiceNotifierImpl {
+extension RuuviNotifierImpl {
     private func notify(uuid: String, isTriggered: Bool) {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
@@ -151,9 +151,9 @@ extension RuuviServiceNotifierImpl {
                 for i in 0..<observers.count {
                     if let pointer = observers.pointer(at: i),
                         let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                            as? RuuviServiceNotifierObserver {
-                        observer.ruuviNotifier(
-                            service: sSelf,
+                            as? RuuviNotifierObserver {
+                        observer.ruuvi(
+                            notifier: sSelf,
                             isTriggered: isTriggered,
                             for: uuid
                         )
@@ -164,7 +164,7 @@ extension RuuviServiceNotifierImpl {
     }
 }
 // MARK: - Private
-extension RuuviServiceNotifierImpl {
+extension RuuviNotifierImpl {
     private func process(
         temperature: Temperature?,
         alertType: AlertType,

@@ -51,8 +51,8 @@ class BusinessAssembly: Assembly {
         container.register(RuuviNotifier.self) { r in
             let notificationLocal = r.resolve(RuuviNotificationLocal.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
-            let titles = RuuviServiceNotifierTitlesImpl()
-            let service = RuuviServiceNotifierImpl(
+            let titles = RuuviNotifierTitlesImpl()
+            let service = RuuviNotifierImpl(
                 ruuviAlertService: ruuviAlertService,
                 ruuviNotificationLocal: notificationLocal,
                 titles: titles

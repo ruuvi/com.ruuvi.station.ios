@@ -100,8 +100,8 @@
 		0E1C1E1122B756B40032F6CA /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
 		0E1C1E1322B756D30032F6CA /* CardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* CardView.xib */; };
 		0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */; };
-		0E25135F2684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25135E2684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift */; };
-		0E2513602684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25135E2684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift */; };
+		0E25135F2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25135E2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift */; };
+		0E2513602684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25135E2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift */; };
 		0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
 		0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
 		0E290A852660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
@@ -1048,7 +1048,7 @@
 		0E1C1E1022B756B40032F6CA /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0E1C1E1222B756D30032F6CA /* CardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardView.xib; sourceTree = "<group>"; };
 		0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsRouterDelegate.swift; sourceTree = "<group>"; };
-		0E25135E2684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviServiceNotifierTitlesImpl.swift; sourceTree = "<group>"; };
+		0E25135E2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNotifierTitlesImpl.swift; sourceTree = "<group>"; };
 		0E2864342460741500363DCB /* ExportServiceTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportServiceTrunk.swift; sourceTree = "<group>"; };
 		0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+AnyRuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
@@ -2217,7 +2217,7 @@
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
 				A92E3C4B24261CF900D981D5 /* MeasurementType.swift */,
 				0E11D222267F2EC0002D0686 /* VirtualLocation.swift */,
-				0E25135E2684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift */,
+				0E25135E2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -5000,7 +5000,7 @@
 				663155F32667F40C005B90A6 /* UpdateFirmwareViewInput.swift in Sources */,
 				0E8BD34D238566AB008B31EF /* ForegroundViewInput.swift in Sources */,
 				0E197C7523C5C7A20074015B /* InfoProvider.swift in Sources */,
-				0E2513602684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift in Sources */,
+				0E2513602684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */,
 				0E8BD34E238566AB008B31EF /* WebTagSettingsRouterInput.swift in Sources */,
 				66718A44266A685700A380F8 /* DfuFlashModuleOutput.swift in Sources */,
 				A91D03072511207300694733 /* SelectionRouter.swift in Sources */,
@@ -5460,7 +5460,7 @@
 				660EB27C2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* CardsModuleInput.swift in Sources */,
 				A91D02FA2511207300694733 /* SelectionViewInput.swift in Sources */,
-				0E25135F2684AEAD004A522A /* RuuviServiceNotifierTitlesImpl.swift in Sources */,
+				0E25135F2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */,
 				663155E32667F40C005B90A6 /* UpdateFirmwarePresenter.swift in Sources */,
 				A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */,
 				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
