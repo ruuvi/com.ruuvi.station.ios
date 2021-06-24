@@ -99,10 +99,10 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
-        container.register(ExportService.self) { r in
+        container.register(RuuviServiceExport.self) { r in
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let measurementService = r.resolve(RuuviServiceMeasurement.self)!
-            let service = ExportServiceTrunk(
+            let service = RuuviServiceExportImpl(
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
                 headersProvider: ExportHeadersProvider(),

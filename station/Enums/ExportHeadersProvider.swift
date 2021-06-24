@@ -1,7 +1,7 @@
 import Foundation
 import RuuviService
 
-struct ExportHeadersProvider: ExportServiceHeadersProvider {
+struct ExportHeadersProvider: RuuviServiceExportHeaders {
     func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String] {
         let tempFormat = "ExportService.Temperature".localized()
         let pressureFormat = "ExportService.Pressure".localized()

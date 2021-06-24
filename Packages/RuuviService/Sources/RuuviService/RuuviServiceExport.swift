@@ -1,10 +1,10 @@
 import Foundation
 import Future
 
-public protocol ExportService {
+public protocol RuuviServiceExport {
     func csvLog(for uuid: String) -> Future<URL, RuuviServiceError>
 }
 
-public protocol ExportServiceHeadersProvider {
+public protocol RuuviServiceExportHeaders {
     func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String]
 }
