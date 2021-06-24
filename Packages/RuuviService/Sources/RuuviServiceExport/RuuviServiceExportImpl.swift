@@ -5,16 +5,16 @@ import RuuviOntology
 import RuuviStorage
 import RuuviService
 
-public final class ExportServiceTrunk: ExportService {
+public final class RuuviServiceExportImpl: RuuviServiceExport {
     private let ruuviStorage: RuuviStorage
     private let measurementService: RuuviServiceMeasurement
     private let emptyValueString: String
-    private let headersProvider: ExportServiceHeadersProvider
+    private let headersProvider: RuuviServiceExportHeaders
 
     public init(
         ruuviStorage: RuuviStorage,
         measurementService: RuuviServiceMeasurement,
-        headersProvider: ExportServiceHeadersProvider,
+        headersProvider: RuuviServiceExportHeaders,
         emptyValueString: String
     ) {
         self.ruuviStorage = ruuviStorage
@@ -23,7 +23,7 @@ public final class ExportServiceTrunk: ExportService {
         self.emptyValueString = emptyValueString
     }
 
-    private var queue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTrunk.queue", qos: .userInitiated)
+    private var queue = DispatchQueue(label: "com.ruuvi.station.RuuviServiceExportImpl.queue", qos: .userInitiated)
 
     private let iso8601: DateFormatter = {
         let formatter = DateFormatter()
@@ -57,7 +57,7 @@ public final class ExportServiceTrunk: ExportService {
 }
 
 // MARK: - Ruuvi Tag
-extension ExportServiceTrunk {
+extension RuuviServiceExportImpl {
     // swiftlint:disable:next function_body_length
     private func csvLog(
         for ruuviTag: RuuviTagSensor,

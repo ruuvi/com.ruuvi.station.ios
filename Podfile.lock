@@ -371,7 +371,11 @@ PODS:
     - FutureX
     - RuuviOntology
   - RuuviService/Export (0.0.1):
+    - FutureX
+    - Humidity
+    - RuuviOntology
     - RuuviService/Contract
+    - RuuviStorage
   - RuuviService/Factory (0.0.1):
     - FutureX
     - RuuviOntology
@@ -722,7 +726,7 @@ SPEC CHECKSUMS:
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
-  RuuviService: 434b009287ee4dc3bfd650e9a87114bcf96819ca
+  RuuviService: 5a0f771148b8dc4bc3b82fdc3c2734b80d3f6428
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6

@@ -111,6 +111,10 @@ Pod::Spec.new do |s|
   s.subspec 'Export' do |ss|
     ss.source_files = 'Sources/RuuviServiceExport/**/*.{h,m,swift}', 'Sources/RuuviServiceExport/*.{h,m,swift}'
     ss.dependency 'RuuviService/Contract'
+    ss.dependency 'Humidity'
+    ss.dependency 'FutureX'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviStorage'
   end
 
   s.test_spec 'Tests' do |test_spec|
