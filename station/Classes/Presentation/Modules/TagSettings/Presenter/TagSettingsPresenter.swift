@@ -1101,22 +1101,22 @@ extension TagSettingsPresenter {
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
                             if let userInfo = notification.userInfo {
                                if let physicalSensor
-                                    = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                                    = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
                                   physicalSensor.id == self?.viewModel.uuid.value,
-                                   let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                                   let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
                                     self?.updateIsOnState(of: type, for: physicalSensor.id)
                                     self?.updateMutedTill(of: type, for: physicalSensor.id)
                                 }
                                 if let virtualSensor
-                                    = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
+                                    = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
                                    virtualSensor.id == self?.viewModel.uuid.value,
-                                    let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                                    let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
                                     self?.updateIsOnState(of: type, for: virtualSensor.id)
                                      self?.updateMutedTill(of: type, for: virtualSensor.id)
                                  }
