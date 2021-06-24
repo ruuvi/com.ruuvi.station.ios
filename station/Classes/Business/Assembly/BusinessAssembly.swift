@@ -100,9 +100,14 @@ class BusinessAssembly: Assembly {
         }
 
         container.register(ExportService.self) { r in
-            let service = ExportServiceTrunk()
-            service.ruuviStorage = r.resolve(RuuviStorage.self)
-            service.measurementService = r.resolve(RuuviServiceMeasurement.self)
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let measurementService = r.resolve(RuuviServiceMeasurement.self)!
+            let service = ExportServiceTrunk(
+                ruuviStorage: ruuviStorage,
+                measurementService: measurementService,
+                headersProvider: ExportHeadersProvider(),
+                emptyValueString: "N/A".localized()
+            )
             return service
         }
 

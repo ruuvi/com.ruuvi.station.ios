@@ -5,9 +5,23 @@ import RuuviOntology
 import RuuviStorage
 import RuuviService
 
-class ExportServiceTrunk: ExportService {
-    var ruuviStorage: RuuviStorage!
-    var measurementService: RuuviServiceMeasurement!
+public final class ExportServiceTrunk: ExportService {
+    private let ruuviStorage: RuuviStorage
+    private let measurementService: RuuviServiceMeasurement
+    private let emptyValueString: String
+    private let headersProvider: ExportServiceHeadersProvider
+
+    public init(
+        ruuviStorage: RuuviStorage,
+        measurementService: RuuviServiceMeasurement,
+        headersProvider: ExportServiceHeadersProvider,
+        emptyValueString: String
+    ) {
+        self.ruuviStorage = ruuviStorage
+        self.measurementService = measurementService
+        self.headersProvider = headersProvider
+        self.emptyValueString = emptyValueString
+    }
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTrunk.queue", qos: .userInitiated)
 
@@ -20,8 +34,8 @@ class ExportServiceTrunk: ExportService {
         return formatter
     }()
 
-    func csvLog(for uuid: String) -> Future<URL, RUError> {
-        let promise = Promise<URL, RUError>()
+    public func csvLog(for uuid: String) -> Future<URL, RuuviServiceError> {
+        let promise = Promise<URL, RuuviServiceError>()
         let ruuviTag = ruuviStorage.readOne(uuid)
         ruuviTag.on(success: { [weak self] ruuviTag in
             let recordsOperation = self?.ruuviStorage.readAll(uuid)
@@ -44,33 +58,12 @@ class ExportServiceTrunk: ExportService {
 
 // MARK: - Ruuvi Tag
 extension ExportServiceTrunk {
-
-    private func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String] {
-        let tempFormat = "ExportService.Temperature".localized()
-        let pressureFormat = "ExportService.Pressure".localized()
-        let dewPointFormat = "ExportService.DewPoint".localized()
-        let humidityFormat = "ExportService.Humidity".localized()
-        return [
-            "ExportService.Date".localized(),
-            "ExportService.ISO8601".localized(),
-            String(format: tempFormat, units.temperatureUnit.symbol),
-            units.humidityUnit == .dew
-                ? String(format: dewPointFormat, units.temperatureUnit.symbol)
-                : String(format: humidityFormat, units.humidityUnit.symbol),
-            String(format: pressureFormat, units.pressureUnit.symbol),
-            "ExportService.AccelerationX".localized(),
-            "ExportService.AccelerationY".localized(),
-            "ExportService.AccelerationZ".localized(),
-            "ExportService.Voltage".localized(),
-            "ExportService.MovementCounter".localized(),
-            "ExportService.MeasurementSequenceNumber".localized(),
-            "ExportService.TXPower".localized()
-        ]
-    }
-
     // swiftlint:disable:next function_body_length
-    private func csvLog(for ruuviTag: RuuviTagSensor, with records: [RuuviTagSensorRecord]) -> Future<URL, RUError> {
-        let promise = Promise<URL, RUError>()
+    private func csvLog(
+        for ruuviTag: RuuviTagSensor,
+        with records: [RuuviTagSensorRecord]
+    ) -> Future<URL, RuuviServiceError> {
+        let promise = Promise<URL, RuuviServiceError>()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd-HHmm"
         let date = dateFormatter.string(from: Date())
@@ -84,14 +77,14 @@ extension ExportServiceTrunk {
                 let fileName = ruuviTag.name + "-" + date + ".csv"
                 let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
                 let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
-                let headersString = self.getHeaders(units)
+                let headersString = self.headersProvider.getHeaders(units)
                     .joined(separator: ",")
 
                 var csvText = "\(ruuviTag.name)\n" + headersString + "\n"
 
                 func toString(_ value: Double?, format: String) -> String {
                     guard let v = value else {
-                        return "N/A".localized()
+                        return self.emptyValueString
                     }
                     return String(format: format, v)
                 }
@@ -122,21 +115,21 @@ extension ExportServiceTrunk {
                         if let mc = log.movementCounter {
                             movementCounter = "\(mc)"
                         } else {
-                            movementCounter = "N/A".localized()
+                            movementCounter = self.emptyValueString
                         }
 
                         var measurementSequenceNumber: String
                         if let msn = log.measurementSequenceNumber {
                             measurementSequenceNumber = "\(msn)"
                         } else {
-                            measurementSequenceNumber = "N/A".localized()
+                            measurementSequenceNumber = self.emptyValueString
                         }
 
                         var txPower: String
                         if let tx = log.txPower {
                             txPower = "\(tx)"
                         } else {
-                            txPower = "N/A".localized()
+                            txPower = self.emptyValueString
                         }
                         let newLine = "\(date)" + ","
                             + "\(iso)" + ","
