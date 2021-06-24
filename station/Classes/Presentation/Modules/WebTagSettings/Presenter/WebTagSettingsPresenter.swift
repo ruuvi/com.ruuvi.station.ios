@@ -541,14 +541,14 @@ extension WebTagSettingsPresenter {
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let virtualSensor = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
+                let virtualSensor = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
                 virtualSensor.id == self?.view.viewModel.uuid.value,
-                let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
                 self?.updateIsOnState(of: type, for: virtualSensor.id)
                 self?.updateMutedTill(of: type, for: virtualSensor.id)
             }

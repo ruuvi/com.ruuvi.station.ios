@@ -481,13 +481,13 @@ extension TagChartsPresenter {
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
             if let sSelf = self,
                 let userInfo = notification.userInfo,
-                let physicalSensor = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
                 self?.viewModel.mac.value == physicalSensor.macId?.value {
                 if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                     self?.viewModel.alertState.value = .registered
