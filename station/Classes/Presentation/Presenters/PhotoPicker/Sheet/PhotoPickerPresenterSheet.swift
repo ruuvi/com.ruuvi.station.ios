@@ -1,9 +1,10 @@
 import UIKit
 import MobileCoreServices
+import RuuviCore
 
 class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     weak var delegate: PhotoPickerPresenterDelegate?
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var sourceView: UIView?
 

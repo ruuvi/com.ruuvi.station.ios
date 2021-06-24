@@ -1,9 +1,9 @@
 import Foundation
 import CoreLocation
-import Photos
 import AVFoundation
+import Photos
 
-protocol PermissionsManager {
+public protocol RuuviCorePermission {
     var isPhotoLibraryPermissionGranted: Bool { get }
     var photoLibraryAuthorizationStatus: PHAuthorizationStatus { get }
 

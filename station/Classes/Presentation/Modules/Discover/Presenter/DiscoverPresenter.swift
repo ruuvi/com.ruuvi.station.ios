@@ -8,6 +8,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviCore
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -17,7 +18,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var activityPresenter: ActivityPresenter!
     var virtualService: VirtualService!
     var foreground: BTForeground!
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var ruuviReactor: RuuviReactor!
     var settings: RuuviLocalSettings!

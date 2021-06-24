@@ -2,10 +2,11 @@ import Foundation
 import BTKit
 import RuuviOntology
 import RuuviService
+import RuuviNotification
 
 class AlertServiceImpl: AlertService {
     var ruuviAlertService: RuuviServiceAlert!
-    weak var localNotificationsManager: LocalNotificationsManager!
+    weak var localNotificationsManager: RuuviNotificationLocal!
 
     var observations = [String: NSPointerArray]()
 

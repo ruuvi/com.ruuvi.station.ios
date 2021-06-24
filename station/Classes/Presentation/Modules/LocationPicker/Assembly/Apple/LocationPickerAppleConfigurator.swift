@@ -15,7 +15,7 @@ class LocationPickerAppleConfigurator {
         presenter.locationService = r.resolve(RuuviLocationService.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.permissionsManager = r.resolve(PermissionsManager.self)
+        presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.locationManager = r.resolve(RuuviCoreLocation.self)
 

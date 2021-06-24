@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 class DiffCalculatorImpl: DiffCalculator {
     func calculate<N>(oldItems: [ReloadableSection<N>], newItems: [ReloadableSection<N>]) -> SectionChanges {

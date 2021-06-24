@@ -6,6 +6,7 @@ import RuuviOntology
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviCore
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
@@ -15,8 +16,8 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var webTagService: VirtualService!
     var settings: RuuviLocalSettings!
     var alertService: RuuviServiceAlert!
-    var pushNotificationsManager: PushNotificationsManager!
-    var permissionsManager: PermissionsManager!
+    var pushNotificationsManager: RuuviCorePN!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var photoPickerPresenter: PhotoPickerPresenter! {
