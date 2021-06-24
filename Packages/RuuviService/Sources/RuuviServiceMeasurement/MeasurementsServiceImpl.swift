@@ -3,24 +3,41 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 
-struct MeasurementsServiceSettigsUnit {
-    let temperatureUnit: UnitTemperature
-    let humidityUnit: HumidityUnit
-    let pressureUnit: UnitPressure
-}
-
-class MeasurementsServiceImpl: NSObject {
-    var settings: RuuviLocalSettings! {
+public final class MeasurementsServiceImpl: NSObject {
+    var settings: RuuviLocalSettings {
         didSet {
-            units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
-                                                   humidityUnit: settings.humidityUnit,
-                                                   pressureUnit: settings.pressureUnit)
+            units = MeasurementsServiceSettingsUnit(
+                temperatureUnit: settings.temperatureUnit.unitTemperature,
+                humidityUnit: settings.humidityUnit,
+                pressureUnit: settings.pressureUnit
+            )
         }
     }
-    var units: MeasurementsServiceSettigsUnit! {
+
+    public var units: MeasurementsServiceSettingsUnit {
         didSet {
             notifyListeners()
         }
+    }
+
+    private let emptyValueString: String
+    private let percentString: String
+
+    public init(
+        settings: RuuviLocalSettings,
+        emptyValueString: String,
+        percentString: String
+    ) {
+        self.settings = settings
+        self.emptyValueString = emptyValueString
+        self.percentString = percentString
+        self.units = MeasurementsServiceSettingsUnit(
+            temperatureUnit: settings.temperatureUnit.unitTemperature,
+            humidityUnit: settings.humidityUnit,
+            pressureUnit: settings.pressureUnit
+        )
+        super.init()
+        startSettingsObserving()
     }
 
     private let notificationsNamesToObserve: [Notification.Name] = [
@@ -57,29 +74,24 @@ class MeasurementsServiceImpl: NSObject {
 
     private var listeners = NSHashTable<AnyObject>.weakObjects()
 
-    override init() {
-        super.init()
-        startSettingsObserving()
-    }
-
-    func add(_ listener: MeasurementsServiceDelegate) {
+    public func add(_ listener: MeasurementsServiceDelegate) {
         guard !listeners.contains(listener) else { return }
         listeners.add(listener)
     }
 }
 // MARK: - MeasurementsService
-extension MeasurementsServiceImpl: MeasurementsService {
+extension MeasurementsServiceImpl: RuuviServiceMeasurement {
 
-    func double(for temperature: Temperature) -> Double {
+    public func double(for temperature: Temperature) -> Double {
         return temperature
             .converted(to: units.temperatureUnit)
             .value
             .round(to: numberFormatter.maximumFractionDigits)
     }
 
-    func string(for temperature: Temperature?) -> String {
+    public func string(for temperature: Temperature?) -> String {
         guard let temperature = temperature else {
-            return "N/A".localized()
+            return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
         let number = NSNumber(value: value)
@@ -95,18 +107,18 @@ extension MeasurementsServiceImpl: MeasurementsService {
         }
     }
 
-    func stringWithoutSign(for temperature: Temperature?) -> String {
+    public func stringWithoutSign(for temperature: Temperature?) -> String {
         guard let temperature = temperature else {
-            return "N/A".localized()
+            return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
         let number = NSNumber(value: value)
         numberFormatter.numberStyle = .decimal
         numberFormatter.locale = settings.language.locale
-        return numberFormatter.string(from: number) ?? "N/A".localized()
+        return numberFormatter.string(from: number) ?? emptyValueString
     }
 
-    func double(for pressure: Pressure) -> Double {
+    public func double(for pressure: Pressure) -> Double {
         let pressureValue = pressure
             .converted(to: units.pressureUnit)
             .value
@@ -117,30 +129,30 @@ extension MeasurementsServiceImpl: MeasurementsService {
         }
     }
 
-    func string(for pressure: Pressure?) -> String {
+    public func string(for pressure: Pressure?) -> String {
         guard let pressure = pressure else {
-            return "N/A".localized()
+            return emptyValueString
         }
         return formatter.string(from: pressure.converted(to: units.pressureUnit))
     }
 
-    func double(for voltage: Voltage) -> Double {
+    public func double(for voltage: Voltage) -> Double {
         return voltage
             .converted(to: .volts)
             .value
             .round(to: numberFormatter.maximumFractionDigits)
     }
 
-    func string(for voltage: Voltage?) -> String {
+    public func string(for voltage: Voltage?) -> String {
         guard let voltage = voltage else {
-            return "N/A".localized()
+            return emptyValueString
         }
         return formatter.string(from: voltage.converted(to: .volts))
     }
 
-    func double(for humidity: Humidity,
-                temperature: Temperature,
-                isDecimal: Bool) -> Double? {
+    public func double(for humidity: Humidity,
+                       temperature: Temperature,
+                       isDecimal: Bool) -> Double? {
         let humidityWithTemperature = Humidity(
             value: humidity.value,
             unit: .relative(temperature: temperature)
@@ -165,11 +177,11 @@ extension MeasurementsServiceImpl: MeasurementsService {
         }
     }
 
-    func string(for humidity: Humidity?,
-                temperature: Temperature?) -> String {
+    public func string(for humidity: Humidity?,
+                       temperature: Temperature?) -> String {
         guard let humidity = humidity,
             let temperature = temperature else {
-                return "N/A".localized()
+                return emptyValueString
         }
 
         let humidityWithTemperature = Humidity(
@@ -204,8 +216,8 @@ extension MeasurementsServiceImpl {
         notifyListeners()
     }
 
-    func updateUnits() {
-        units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
+    public func updateUnits() {
+        units = MeasurementsServiceSettingsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
                                                humidityUnit: settings.humidityUnit,
                                                pressureUnit: settings.pressureUnit)
     }
@@ -225,7 +237,7 @@ extension MeasurementsServiceImpl {
 }
 
 extension MeasurementsServiceImpl {
-    func temperatureOffsetCorrection(for temperature: Double) -> Double {
+    public func temperatureOffsetCorrection(for temperature: Double) -> Double {
         switch units.temperatureUnit {
         case .fahrenheit:
             return temperature * 1.8
@@ -234,29 +246,40 @@ extension MeasurementsServiceImpl {
         }
     }
 
-    func temperatureOffsetCorrectionString(for temperature: Double) -> String {
+    public func temperatureOffsetCorrectionString(for temperature: Double) -> String {
         return string(for: Temperature(
             temperatureOffsetCorrection(for: temperature),
             unit: units.temperatureUnit
         ))
     }
 
-    func humidityOffsetCorrection(for humidity: Double) -> Double {
+    public func humidityOffsetCorrection(for humidity: Double) -> Double {
         return humidity
     }
 
-    func humidityOffsetCorrectionString(for humidity: Double) -> String {
-        return "\((humidityOffsetCorrection(for: humidity) * 100).round(to: 2)) \("%".localized())"
+    public func humidityOffsetCorrectionString(for humidity: Double) -> String {
+        return "\((humidityOffsetCorrection(for: humidity) * 100).round(to: 2)) \(percentString)"
     }
 
-    func pressureOffsetCorrection(for pressure: Double) -> Double {
+    public func pressureOffsetCorrection(for pressure: Double) -> Double {
         return double(for: Pressure.init(value: pressure, unit: .hectopascals))
     }
 
-    func pressureOffsetCorrectionString(for pressure: Double) -> String {
+    public func pressureOffsetCorrectionString(for pressure: Double) -> String {
         return string(for: Pressure(
             pressureOffsetCorrection(for: pressure),
             unit: units.pressureUnit
         ))
+    }
+}
+
+extension String {
+    static let nbsp = "\u{00a0}"
+}
+
+extension Double {
+    func round(to places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
     }
 }

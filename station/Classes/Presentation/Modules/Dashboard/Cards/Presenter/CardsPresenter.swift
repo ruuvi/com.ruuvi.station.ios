@@ -35,7 +35,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviReactor: RuuviReactor!
     var ruuviStorage: RuuviStorage!
     var virtualReactor: VirtualReactor!
-    var measurementService: MeasurementsService!
+    var measurementService: RuuviServiceMeasurement!
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     weak var tagCharts: TagChartsModuleInput?

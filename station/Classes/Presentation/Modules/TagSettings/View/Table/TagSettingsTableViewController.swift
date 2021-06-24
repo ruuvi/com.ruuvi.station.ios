@@ -2,6 +2,7 @@
 import UIKit
 import RangeSeekSlider
 import RuuviOntology
+import RuuviService
 
 enum TagSettingsTableSection: Int {
     case image = 0
@@ -129,7 +130,7 @@ class TagSettingsTableViewController: UITableViewController {
         }
     }
 
-    var measurementService: MeasurementsService!
+    var measurementService: RuuviServiceMeasurement!
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default

@@ -77,10 +77,13 @@ class CoreAssembly: Assembly {
             return RuuviCoreImageImpl()
         }
 
-        container.register(MeasurementsService.self, factory: { r in
-            let settings = r.resolve(RuuviLocalSettings.self)
-            let service = MeasurementsServiceImpl()
-            service.settings = settings
+        container.register(RuuviServiceMeasurement.self, factory: { r in
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let service = MeasurementsServiceImpl(
+                settings: settings,
+                emptyValueString: "N/A".localized(),
+                percentString: "%".localized()
+            )
             return service
         })
     }

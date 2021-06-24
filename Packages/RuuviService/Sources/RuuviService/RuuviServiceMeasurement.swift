@@ -2,12 +2,18 @@ import Foundation
 import Humidity
 import RuuviOntology
 
-protocol MeasurementsServiceDelegate: AnyObject {
+public struct MeasurementsServiceSettingsUnit {
+    public let temperatureUnit: UnitTemperature
+    public let humidityUnit: HumidityUnit
+    public let pressureUnit: UnitPressure
+}
+
+public protocol MeasurementsServiceDelegate: AnyObject {
     func measurementServiceDidUpdateUnit()
 }
 
-protocol MeasurementsService {
-    var units: MeasurementsServiceSettigsUnit! { get set }
+public protocol RuuviServiceMeasurement {
+    var units: MeasurementsServiceSettingsUnit { get set }
     func add(_ listener: MeasurementsServiceDelegate)
     /// update units cache without notify listeners
     func updateUnits()
@@ -36,17 +42,18 @@ protocol MeasurementsService {
     func pressureOffsetCorrection(for temperature: Double) -> Double
     func pressureOffsetCorrectionString(for temperature: Double) -> String
 }
-extension MeasurementsService {
-    func double(for temperature: Temperature?) -> Double? {
+
+extension RuuviServiceMeasurement {
+    public func double(for temperature: Temperature?) -> Double? {
         guard let temperature = temperature else {
             return nil
         }
         return double(for: temperature)
     }
 
-    func double(for humidity: Humidity?,
-                temperature: Temperature?,
-                isDecimal: Bool) -> Double? {
+    public func double(for humidity: Humidity?,
+                       temperature: Temperature?,
+                       isDecimal: Bool) -> Double? {
         guard let temperature = temperature,
             let humidity = humidity else {
             return nil
@@ -56,17 +63,49 @@ extension MeasurementsService {
                       isDecimal: isDecimal)
     }
 
-    func double(for pressure: Pressure?) -> Double? {
+    public func double(for pressure: Pressure?) -> Double? {
         guard let pressure = pressure else {
             return nil
         }
         return double(for: pressure)
     }
 
-    func double(for voltage: Voltage?) -> Double? {
+    public func double(for voltage: Voltage?) -> Double? {
         guard let voltage = voltage else {
             return nil
         }
         return double(for: voltage)
+    }
+}
+
+extension Language {
+    public var locale: Locale {
+        switch self {
+        case .english:
+            return Locale(identifier: "en_US")
+        case .russian:
+            return Locale(identifier: "ru_RU")
+        case .finnish:
+            return Locale(identifier: "fi")
+        case .french:
+            return Locale(identifier: "fr")
+        case .swedish:
+            return Locale(identifier: "sv")
+        }
+    }
+
+    public var humidityLanguage: HumiditySettings.Language {
+        switch self {
+        case .russian:
+            return .ru
+        case .finnish:
+            return .fi
+        case .french:
+            return .en
+        case .swedish:
+            return .sv
+        case .english:
+            return .en
+        }
     }
 }
