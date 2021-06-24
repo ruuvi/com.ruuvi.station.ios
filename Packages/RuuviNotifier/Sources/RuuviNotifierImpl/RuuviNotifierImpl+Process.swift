@@ -1,6 +1,7 @@
 import Foundation
 import RuuviOntology
 import RuuviVirtual
+import RuuviNotifier
 
 // MARK: - Process Physical Sensors
 extension RuuviNotifierImpl {

@@ -2,6 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviService
 import RuuviNotification
+import RuuviNotifier
 
 public final class RuuviNotifierImpl: RuuviNotifier {
     var observations = [String: NSPointerArray]()
