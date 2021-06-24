@@ -8,14 +8,14 @@ class WebTagRefreshDataOperation: AsyncOperation {
     private var location: Location
     private var provider: VirtualProvider
     private var weatherProviderService: VirtualProviderService
-    private var alertService: AlertService
+    private var alertService: RuuviServiceNotifier
     private var webTagPersistence: VirtualPersistence!
 
     init(sensor: VirtualSensor,
          location: Location,
          provider: VirtualProvider,
          weatherProviderService: VirtualProviderService,
-         alertService: AlertService,
+         alertService: RuuviServiceNotifier,
          webTagPersistence: VirtualPersistence) {
         self.sensor = sensor
         self.location = location

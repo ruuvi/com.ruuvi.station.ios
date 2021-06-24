@@ -5,7 +5,7 @@ import RuuviOntology
 import RuuviVirtual
 
 // MARK: - Process Physical Sensors
-extension AlertServiceImpl {
+extension RuuviServiceNotifierImpl {
     // swiftlint:disable:next function_body_length
     func process(heartbeat record: RuuviTagSensorRecord) {
         var isTriggered = false
@@ -69,7 +69,7 @@ extension AlertServiceImpl {
 }
 
 // MARK: - Process Virtual Sensors
-extension AlertServiceImpl {
+extension RuuviServiceNotifierImpl {
     func process(data: VirtualData, for sensor: VirtualSensor) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -107,7 +107,7 @@ extension AlertServiceImpl {
 
 }
 // MARK: - Process Network Sensors
-extension AlertServiceImpl {
+extension RuuviServiceNotifierImpl {
     func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -145,7 +145,7 @@ extension AlertServiceImpl {
     }
 }
 // MARK: - Notify
-extension AlertServiceImpl {
+extension RuuviServiceNotifierImpl {
     private func notify(uuid: String, isTriggered: Bool) {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
@@ -153,8 +153,8 @@ extension AlertServiceImpl {
                 for i in 0..<observers.count {
                     if let pointer = observers.pointer(at: i),
                         let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                            as? AlertServiceObserver {
-                        observer.alert(service: sSelf,
+                            as? RuuviServiceNotifierObserver {
+                        observer.ruuviNotifier(service: sSelf,
                                        isTriggered: isTriggered,
                                        for: uuid)
                     }
@@ -164,7 +164,7 @@ extension AlertServiceImpl {
     }
 }
 // MARK: - Private
-extension AlertServiceImpl {
+extension RuuviServiceNotifierImpl {
     private func process(
         temperature: Temperature?,
         alertType: AlertType,

@@ -44,13 +44,13 @@ import RuuviVirtualService
 class BusinessAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
-        container.register(AlertService.self) { r in
-            let service = AlertServiceImpl()
+        container.register(RuuviServiceNotifier.self) { r in
+            let service = RuuviServiceNotifierImpl()
             service.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
             return service
         }.inObjectScope(.container).initCompleted { (r, service) in
             // swiftlint:disable force_cast
-            let s = service as! AlertServiceImpl
+            let s = service as! RuuviServiceNotifierImpl
             // swiftlint:enable force_cast
             s.localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
         }
@@ -293,7 +293,7 @@ class BusinessAssembly: Assembly {
             daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
-            daemon.alertHandler = r.resolve(AlertService.self)
+            daemon.alertHandler = r.resolve(RuuviServiceNotifier.self)
             daemon.alertService = r.resolve(RuuviServiceAlert.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
@@ -337,7 +337,7 @@ class BusinessAssembly: Assembly {
             daemon.virtualService = r.resolve(VirtualService.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.virtualPersistence = r.resolve(VirtualPersistence.self)
-            daemon.alertService = r.resolve(AlertService.self)
+            daemon.alertService = r.resolve(RuuviServiceNotifier.self)
             daemon.virtualReactor = r.resolve(VirtualReactor.self)
             return daemon
         }.inObjectScope(.container)
@@ -345,7 +345,7 @@ class BusinessAssembly: Assembly {
         container.register(WebTagOperationsManager.self) { r in
             let manager = WebTagOperationsManager()
             manager.alertService = r.resolve(RuuviServiceAlert.self)
-            manager.alertHandler = r.resolve(AlertService.self)
+            manager.alertHandler = r.resolve(RuuviServiceNotifier.self)
             manager.weatherProviderService = r.resolve(VirtualProviderService.self)
             manager.virtualStorage = r.resolve(VirtualStorage.self)
             manager.virtualPersistence = r.resolve(VirtualPersistence.self)
