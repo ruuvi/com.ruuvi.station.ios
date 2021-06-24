@@ -79,7 +79,7 @@ class CoreAssembly: Assembly {
 
         container.register(RuuviServiceMeasurement.self, factory: { r in
             let settings = r.resolve(RuuviLocalSettings.self)!
-            let service = MeasurementsServiceImpl(
+            let service = RuuviServiceMeasurementImpl(
                 settings: settings,
                 emptyValueString: "N/A".localized(),
                 percentString: "%".localized()

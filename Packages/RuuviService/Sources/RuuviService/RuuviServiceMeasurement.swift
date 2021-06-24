@@ -2,19 +2,19 @@ import Foundation
 import Humidity
 import RuuviOntology
 
-public struct MeasurementsServiceSettingsUnit {
+public struct RuuviServiceMeasurementSettingsUnit {
     public let temperatureUnit: UnitTemperature
     public let humidityUnit: HumidityUnit
     public let pressureUnit: UnitPressure
 }
 
-public protocol MeasurementsServiceDelegate: AnyObject {
+public protocol RuuviServiceMeasurementDelegate: AnyObject {
     func measurementServiceDidUpdateUnit()
 }
 
 public protocol RuuviServiceMeasurement {
-    var units: MeasurementsServiceSettingsUnit { get set }
-    func add(_ listener: MeasurementsServiceDelegate)
+    var units: RuuviServiceMeasurementSettingsUnit { get set }
+    func add(_ listener: RuuviServiceMeasurementDelegate)
     /// update units cache without notify listeners
     func updateUnits()
 

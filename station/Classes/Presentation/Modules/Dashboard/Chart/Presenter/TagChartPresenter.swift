@@ -110,7 +110,7 @@ extension TagChartPresenter: TagChartViewOutput {
         ouptut?.chartViewDidChangeViewPort(chartView)
     }
 }
-extension TagChartPresenter: MeasurementsServiceDelegate {
+extension TagChartPresenter: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
         self.updateUnits(viewModel)
     }

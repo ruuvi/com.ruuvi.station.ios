@@ -3,10 +3,10 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 
-public final class MeasurementsServiceImpl: NSObject {
+public final class RuuviServiceMeasurementImpl: NSObject {
     var settings: RuuviLocalSettings {
         didSet {
-            units = MeasurementsServiceSettingsUnit(
+            units = RuuviServiceMeasurementSettingsUnit(
                 temperatureUnit: settings.temperatureUnit.unitTemperature,
                 humidityUnit: settings.humidityUnit,
                 pressureUnit: settings.pressureUnit
@@ -14,7 +14,7 @@ public final class MeasurementsServiceImpl: NSObject {
         }
     }
 
-    public var units: MeasurementsServiceSettingsUnit {
+    public var units: RuuviServiceMeasurementSettingsUnit {
         didSet {
             notifyListeners()
         }
@@ -31,7 +31,7 @@ public final class MeasurementsServiceImpl: NSObject {
         self.settings = settings
         self.emptyValueString = emptyValueString
         self.percentString = percentString
-        self.units = MeasurementsServiceSettingsUnit(
+        self.units = RuuviServiceMeasurementSettingsUnit(
             temperatureUnit: settings.temperatureUnit.unitTemperature,
             humidityUnit: settings.humidityUnit,
             pressureUnit: settings.pressureUnit
@@ -74,13 +74,13 @@ public final class MeasurementsServiceImpl: NSObject {
 
     private var listeners = NSHashTable<AnyObject>.weakObjects()
 
-    public func add(_ listener: MeasurementsServiceDelegate) {
+    public func add(_ listener: RuuviServiceMeasurementDelegate) {
         guard !listeners.contains(listener) else { return }
         listeners.add(listener)
     }
 }
 // MARK: - MeasurementsService
-extension MeasurementsServiceImpl: RuuviServiceMeasurement {
+extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
 
     public func double(for temperature: Temperature) -> Double {
         return temperature
@@ -200,12 +200,12 @@ extension MeasurementsServiceImpl: RuuviServiceMeasurement {
     }
 }
 // MARK: - Private
-extension MeasurementsServiceImpl {
+extension RuuviServiceMeasurementImpl {
     private func notifyListeners() {
         listeners
             .allObjects
             .compactMap({
-                $0 as? MeasurementsServiceDelegate
+                $0 as? RuuviServiceMeasurementDelegate
             }).forEach({
                 $0.measurementServiceDidUpdateUnit()
             })
@@ -217,7 +217,7 @@ extension MeasurementsServiceImpl {
     }
 
     public func updateUnits() {
-        units = MeasurementsServiceSettingsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
+        units = RuuviServiceMeasurementSettingsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
                                                humidityUnit: settings.humidityUnit,
                                                pressureUnit: settings.pressureUnit)
     }
@@ -236,7 +236,7 @@ extension MeasurementsServiceImpl {
     }
 }
 
-extension MeasurementsServiceImpl {
+extension RuuviServiceMeasurementImpl {
     public func temperatureOffsetCorrection(for temperature: Double) -> Double {
         switch units.temperatureUnit {
         case .fahrenheit:
