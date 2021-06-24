@@ -40,7 +40,7 @@ class CardsScrollConfigurator {
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.virtualReactor = r.resolve(VirtualReactor.self)
-        presenter.measurementService = r.resolve(MeasurementsService.self)
+        presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         router.delegate = presenter
@@ -84,7 +84,7 @@ class CardsScrollConfigurator {
 
         view.tagChartsPresentInteractiveTransition = chartsTransition.present
         view.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
-        view.measurementService = r.resolve(MeasurementsService.self)
+        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
     }

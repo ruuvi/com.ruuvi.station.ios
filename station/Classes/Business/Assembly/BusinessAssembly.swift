@@ -102,7 +102,7 @@ class BusinessAssembly: Assembly {
         container.register(ExportService.self) { r in
             let service = ExportServiceTrunk()
             service.ruuviStorage = r.resolve(RuuviStorage.self)
-            service.measurementService = r.resolve(MeasurementsService.self)
+            service.measurementService = r.resolve(RuuviServiceMeasurement.self)
             return service
         }
 

@@ -5,6 +5,7 @@ import GestureInstructions
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviService
 
 class CardsScrollViewController: UIViewController {
     var output: CardsViewOutput!
@@ -12,7 +13,8 @@ class CardsScrollViewController: UIViewController {
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
-    var measurementService: MeasurementsService! {
+
+    var measurementService: RuuviServiceMeasurement! {
         didSet {
             measurementService?.add(self)
         }

@@ -3,10 +3,11 @@ import Humidity
 import Future
 import RuuviOntology
 import RuuviStorage
+import RuuviService
 
 class ExportServiceTrunk: ExportService {
     var ruuviStorage: RuuviStorage!
-    var measurementService: MeasurementsService!
+    var measurementService: RuuviServiceMeasurement!
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTrunk.queue", qos: .userInitiated)
 
@@ -44,7 +45,7 @@ class ExportServiceTrunk: ExportService {
 // MARK: - Ruuvi Tag
 extension ExportServiceTrunk {
 
-    private func getHeaders(_ units: MeasurementsServiceSettigsUnit) -> [String] {
+    private func getHeaders(_ units: MeasurementsServiceSettingsUnit) -> [String] {
         let tempFormat = "ExportService.Temperature".localized()
         let pressureFormat = "ExportService.Pressure".localized()
         let dewPointFormat = "ExportService.DewPoint".localized()
@@ -79,10 +80,7 @@ extension ExportServiceTrunk {
         queue.async {
             autoreleasepool {
                 group.enter()
-                guard let units = units else {
-                    group.leave()
-                    return
-                }
+
                 let fileName = ruuviTag.name + "-" + date + ".csv"
                 let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
                 let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
