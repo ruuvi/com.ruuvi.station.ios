@@ -45,7 +45,7 @@ class ExportServiceTrunk: ExportService {
 // MARK: - Ruuvi Tag
 extension ExportServiceTrunk {
 
-    private func getHeaders(_ units: MeasurementsServiceSettingsUnit) -> [String] {
+    private func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String] {
         let tempFormat = "ExportService.Temperature".localized()
         let pressureFormat = "ExportService.Pressure".localized()
         let dewPointFormat = "ExportService.DewPoint".localized()

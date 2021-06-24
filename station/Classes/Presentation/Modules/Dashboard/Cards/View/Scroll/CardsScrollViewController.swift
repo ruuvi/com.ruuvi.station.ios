@@ -652,7 +652,7 @@ extension CardsScrollViewController {
             && viewModels[currentPage].id.value == viewModel.id.value
     }
 }
-extension CardsScrollViewController: MeasurementsServiceDelegate {
+extension CardsScrollViewController: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
         guard isViewLoaded else {
             return
