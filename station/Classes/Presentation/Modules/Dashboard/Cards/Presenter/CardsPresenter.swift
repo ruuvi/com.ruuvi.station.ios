@@ -297,9 +297,9 @@ extension CardsPresenter: CardsRouterDelegate {
     }
 }
 
-// MARK: - RuuviServiceNotifierObserver
-extension CardsPresenter: RuuviServiceNotifierObserver {
-    func ruuviNotifier(service: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+// MARK: - RuuviNotifierObserver
+extension CardsPresenter: RuuviNotifierObserver {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter({ $0.luid.value?.value == uuid })
             .forEach({
