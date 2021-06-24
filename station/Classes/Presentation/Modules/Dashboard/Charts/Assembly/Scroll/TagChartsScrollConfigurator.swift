@@ -5,6 +5,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviPool
 import RuuviService
+import RuuviNotifier
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {

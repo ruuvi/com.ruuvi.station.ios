@@ -11,6 +11,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviNotification
+import RuuviNotifier
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!

@@ -1,13 +1,11 @@
 import Foundation
-import BTKit
-import Humidity
 import RuuviOntology
 import RuuviVirtual
 
 // MARK: - Process Physical Sensors
 extension RuuviServiceNotifierImpl {
     // swiftlint:disable:next function_body_length
-    func process(heartbeat record: RuuviTagSensorRecord) {
+    public func process(heartbeat record: RuuviTagSensorRecord) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -70,7 +68,7 @@ extension RuuviServiceNotifierImpl {
 
 // MARK: - Process Virtual Sensors
 extension RuuviServiceNotifierImpl {
-    func process(data: VirtualData, for sensor: VirtualSensor) {
+    public func process(data: VirtualData, for sensor: VirtualSensor) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -108,7 +106,7 @@ extension RuuviServiceNotifierImpl {
 }
 // MARK: - Process Network Sensors
 extension RuuviServiceNotifierImpl {
-    func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier) {
+    public func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -154,9 +152,11 @@ extension RuuviServiceNotifierImpl {
                     if let pointer = observers.pointer(at: i),
                         let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
                             as? RuuviServiceNotifierObserver {
-                        observer.ruuviNotifier(service: sSelf,
-                                       isTriggered: isTriggered,
-                                       for: uuid)
+                        observer.ruuviNotifier(
+                            service: sSelf,
+                            isTriggered: isTriggered,
+                            for: uuid
+                        )
                     }
                 }
             }
@@ -179,20 +179,22 @@ extension RuuviServiceNotifierImpl {
             let isUpper = t > u
             if isLower {
                 DispatchQueue.main.async { [weak self] in
+                    guard let sSelf = self else { return }
                     self?.localNotificationsManager.notify(
                         .low,
                         .temperature,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.LowTemperature.title".localized()
+                        title: sSelf.titles.lowTemperature
                     )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .high,
                         .temperature,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.HighTemperature.title".localized()
+                        title: sSelf.titles.highTemperature
                     )
                 }
             }
@@ -216,20 +218,22 @@ extension RuuviServiceNotifierImpl {
             let isUpper = sh > upper
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .low,
                         .humidity,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.LowHumidity.title".localized()
+                        title: sSelf.titles.lowHumidity
                     )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .high,
                         .humidity,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.HighHumidity.title".localized()
+                        title: sSelf.titles.highHumidity
                     )
                 }
             }
@@ -253,20 +257,22 @@ extension RuuviServiceNotifierImpl {
             let isUpper = rh.value > upper
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .low,
                         .relativeHumidity,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.LowHumidity.title".localized()
+                        title: sSelf.titles.lowHumidity
                     )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .high,
                         .relativeHumidity,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.HighHumidity.title".localized()
+                        title: sSelf.titles.highHumidity
                     )
                 }
             }
@@ -292,20 +298,22 @@ extension RuuviServiceNotifierImpl {
             let isUpper = dp > Temperature(value: upper, unit: .celsius)
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .low,
                         .dewPoint,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.LowDewPoint.title".localized()
+                        title: sSelf.titles.lowDewPoint
                     )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .high,
                         .dewPoint,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.HighDewPoint.title".localized()
+                        title: sSelf.titles.highDewPoint
                     )
                 }
             }
@@ -329,20 +337,22 @@ extension RuuviServiceNotifierImpl {
             let isUpper = pressure > u
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .low,
                         .pressure,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.LowPressure.title".localized()
+                        title: sSelf.titles.lowPressure
                     )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager.notify(
                         .high,
                         .pressure,
                         for: identifier.value,
-                        title: "LocalNotificationsManager.HighPressure.title".localized()
+                        title: sSelf.titles.highPressure
                     )
                 }
             }
@@ -362,11 +372,12 @@ extension RuuviServiceNotifierImpl {
             let isGreater = movementCounter > last
             if isGreater {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager
                         .notifyDidMove(
                             for: luid.value,
                             counter: movementCounter,
-                            title: "LocalNotificationsManager.DidMove.title".localized()
+                            title: sSelf.titles.didMove
                         )
                 }
             }

@@ -3,6 +3,7 @@ import CoreLocation
 import RuuviLocal
 import RuuviOntology
 import RuuviVirtual
+import RuuviNotifier
 
 class VirtualTagDaemonImpl: BackgroundWorker, VirtualTagDaemon {
     var virtualService: VirtualService!

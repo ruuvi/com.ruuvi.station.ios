@@ -15,6 +15,10 @@ import RuuviUser
 import RuuviVirtual
 import RuuviLocation
 import RuuviNotification
+import RuuviNotifier
+#if canImport(RuuviNotifierImpl)
+import RuuviNotifierImpl
+#endif
 #if canImport(RuuviServiceFactory)
 import RuuviServiceFactory
 #endif
@@ -45,15 +49,16 @@ class BusinessAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
         container.register(RuuviServiceNotifier.self) { r in
-            let service = RuuviServiceNotifierImpl()
-            service.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
+            let notificationLocal = r.resolve(RuuviNotificationLocal.self)!
+            let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
+            let titles = RuuviServiceNotifierTitlesImpl()
+            let service = RuuviServiceNotifierImpl(
+                ruuviAlertService: ruuviAlertService,
+                ruuviNotificationLocal: notificationLocal,
+                titles: titles
+            )
             return service
-        }.inObjectScope(.container).initCompleted { (r, service) in
-            // swiftlint:disable force_cast
-            let s = service as! RuuviServiceNotifierImpl
-            // swiftlint:enable force_cast
-            s.localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
-        }
+        }.inObjectScope(.container)
 
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()

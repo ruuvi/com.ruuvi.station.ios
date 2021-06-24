@@ -1,16 +1,25 @@
 import Foundation
-import BTKit
 import RuuviOntology
 import RuuviService
 import RuuviNotification
 
-class RuuviServiceNotifierImpl: RuuviServiceNotifier {
-    var ruuviAlertService: RuuviServiceAlert!
-    weak var localNotificationsManager: RuuviNotificationLocal!
-
+public final class RuuviServiceNotifierImpl: RuuviServiceNotifier {
     var observations = [String: NSPointerArray]()
+    let titles: RuuviServiceNotifierTitles
+    let ruuviAlertService: RuuviServiceAlert
+    let localNotificationsManager: RuuviNotificationLocal
 
-    func subscribe<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) {
+    public init(
+        ruuviAlertService: RuuviServiceAlert,
+        ruuviNotificationLocal: RuuviNotificationLocal,
+        titles: RuuviServiceNotifierTitles
+    ) {
+        self.ruuviAlertService = ruuviAlertService
+        self.localNotificationsManager = ruuviNotificationLocal
+        self.titles = titles
+    }
+
+    public func subscribe<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) {
         guard !isSubscribed(observer, to: uuid) else { return }
         let pointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
@@ -24,7 +33,7 @@ class RuuviServiceNotifierImpl: RuuviServiceNotifier {
         }
     }
 
-    func isSubscribed<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) -> Bool {
+    public func isSubscribed<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) -> Bool {
         let observerPointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
             for i in 0..<array.count {

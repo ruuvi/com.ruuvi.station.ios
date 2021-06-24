@@ -2,6 +2,7 @@ import Foundation
 import Future
 import RuuviService
 import RuuviVirtual
+import RuuviNotifier
 
 class WebTagOperationsManager {
     var weatherProviderService: VirtualProviderService!

@@ -7,6 +7,7 @@ import RuuviLocal
 import RuuviPool
 import RuuviService
 import RuuviNotification
+import RuuviNotifier
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
