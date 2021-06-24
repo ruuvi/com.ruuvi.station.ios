@@ -5,22 +5,37 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviNotifier",
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviNotifier",
-            targets: ["RuuviNotifier"])
+            targets: ["RuuviNotifier"]),
+        .library(
+            name: "RuuviNotifierImpl",
+            targets: ["RuuviNotifierImpl"])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviVirtual"),
+        .package(path: "../RuuviService"),
+        .package(path: "../RuuviNotification")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RuuviNotifier",
-            dependencies: []),
+            dependencies: [
+                "RuuviOntology",
+                "RuuviVirtual"
+            ]),
+        .target(
+            name: "RuuviNotifierImpl",
+            dependencies: [
+                "RuuviNotifier",
+                "RuuviOntology",
+                "RuuviVirtual",
+                "RuuviService",
+                "RuuviNotification"
+            ]),
         .testTarget(
             name: "RuuviNotifierTests",
             dependencies: ["RuuviNotifier"])
