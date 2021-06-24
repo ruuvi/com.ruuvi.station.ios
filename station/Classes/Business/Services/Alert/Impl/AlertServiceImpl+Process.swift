@@ -179,11 +179,21 @@ extension AlertServiceImpl {
             let isUpper = t > u
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .temperature, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .low,
+                        .temperature,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.LowTemperature.title".localized()
+                    )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .temperature, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .high,
+                        .temperature,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.HighTemperature.title".localized()
+                    )
                 }
             }
             return isLower || isUpper
@@ -206,11 +216,21 @@ extension AlertServiceImpl {
             let isUpper = sh > upper
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .humidity, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .low,
+                        .humidity,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.LowHumidity.title".localized()
+                    )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .humidity, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .high,
+                        .humidity,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.HighHumidity.title".localized()
+                    )
                 }
             }
             return isLower || isUpper
@@ -233,11 +253,21 @@ extension AlertServiceImpl {
             let isUpper = rh.value > upper
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .relativeHumidity, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .low,
+                        .relativeHumidity,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.LowHumidity.title".localized()
+                    )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .relativeHumidity, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .high,
+                        .relativeHumidity,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.HighHumidity.title".localized()
+                    )
                 }
             }
             return isLower || isUpper
@@ -262,11 +292,21 @@ extension AlertServiceImpl {
             let isUpper = dp > Temperature(value: upper, unit: .celsius)
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .dewPoint, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .low,
+                        .dewPoint,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.LowDewPoint.title".localized()
+                    )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .dewPoint, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .high,
+                        .dewPoint,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.HighDewPoint.title".localized()
+                    )
                 }
             }
             return isLower || isUpper
@@ -289,11 +329,21 @@ extension AlertServiceImpl {
             let isUpper = pressure > u
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .pressure, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .low,
+                        .pressure,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.LowPressure.title".localized()
+                    )
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .pressure, for: identifier.value)
+                    self?.localNotificationsManager.notify(
+                        .high,
+                        .pressure,
+                        for: identifier.value,
+                        title: "LocalNotificationsManager.HighPressure.title".localized()
+                    )
                 }
             }
             return isLower || isUpper
@@ -313,7 +363,11 @@ extension AlertServiceImpl {
             if isGreater {
                 DispatchQueue.main.async { [weak self] in
                     self?.localNotificationsManager
-                        .notifyDidMove(for: luid.value, counter: movementCounter)
+                        .notifyDidMove(
+                            for: luid.value,
+                            counter: movementCounter,
+                            title: "LocalNotificationsManager.DidMove.title".localized()
+                        )
                 }
             }
             return isGreater
