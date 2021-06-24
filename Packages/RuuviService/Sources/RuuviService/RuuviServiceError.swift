@@ -12,6 +12,7 @@ public enum RuuviServiceError: Error {
     case ruuviPool(RuuviPoolError)
     case ruuviLocal(RuuviLocalError)
     case networking(Error)
+    case writeToDisk(Error)
     case macIdIsNil
     case pictureUrlIsNil
     case failedToParseNetworkResponse

@@ -131,7 +131,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(success: { (url) in
             promise.succeed(value: url)
         }, failure: { (error) in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviService(error))
         })
         return promise.future
     }

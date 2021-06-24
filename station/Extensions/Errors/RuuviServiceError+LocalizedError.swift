@@ -5,6 +5,8 @@ import Localize_Swift
 extension RuuviServiceError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .writeToDisk(let error):
+            return error.localizedDescription
         case .ruuviRepository(let error):
             return error.errorDescription
         case .ruuviStorage(let error):

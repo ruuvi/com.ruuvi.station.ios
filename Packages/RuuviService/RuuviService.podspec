@@ -108,6 +108,11 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviLocal'
   end
 
+  s.subspec 'Export' do |ss|
+    ss.source_files = 'Sources/RuuviServiceExport/**/*.{h,m,swift}', 'Sources/RuuviServiceExport/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end
