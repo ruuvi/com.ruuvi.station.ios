@@ -76,7 +76,6 @@ class AppStateServiceImpl: AppStateService {
         }
         propertiesDaemon.start()
         pullWebDaemon.start()
-        backgroundProcessService.launch()
     }
 
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {

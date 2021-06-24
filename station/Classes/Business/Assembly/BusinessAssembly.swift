@@ -73,26 +73,15 @@ class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(BackgroundProcessService.self) { r in
-            if #available(iOS 13, *) {
-                let service = BackgroundProcessServiceiOS13()
-                service.dataPruningOperationsManager = r.resolve(DataPruningOperationsManager.self)
-                return service
-            } else {
-                let service = BackgroundProcessServiceiOS12()
-                service.dataPruningOperationsManager = r.resolve(DataPruningOperationsManager.self)
-                return service
-            }
+            let service = BackgroundProcessServiceiOS13()
+            service.dataPruningOperationsManager = r.resolve(DataPruningOperationsManager.self)
+            return service
         }.inObjectScope(.container)
 
         container.register(BackgroundTaskService.self) { r in
-            if #available(iOS 13, *) {
-                let service = BackgroundTaskServiceiOS13()
-                service.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
-                return service
-            } else {
-                let service = BackgroundTaskServiceiOS12()
-                return service
-            }
+            let service = BackgroundTaskServiceiOS13()
+            service.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
+            return service
         }.inObjectScope(.container)
 
         container.register(DataPruningOperationsManager.self) { r in
