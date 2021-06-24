@@ -29,6 +29,9 @@ def shared_pods
   pod 'RuuviCore', :path => 'Packages/RuuviCore/RuuviCore.podspec', :testspecs => ['Tests']
   pod 'RuuviCore/Image', :path => 'Packages/RuuviCore/RuuviCore.podspec'
   pod 'RuuviCore/Location', :path => 'Packages/RuuviCore/RuuviCore.podspec'
+  pod 'RuuviCore/Diff', :path => 'Packages/RuuviCore/RuuviCore.podspec'
+  pod 'RuuviCore/PN', :path => 'Packages/RuuviCore/RuuviCore.podspec'
+  pod 'RuuviCore/Permission', :path => 'Packages/RuuviCore/RuuviCore.podspec'
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
   pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
   pod 'RuuviDFU', :path => 'Packages/RuuviDFU/RuuviDFU.podspec', :testspecs => ['Tests']
@@ -38,6 +41,8 @@ def shared_pods
   pod 'RuuviLocal/UserDefaults', :path => 'Packages/RuuviLocal/RuuviLocal.podspec'
   pod 'RuuviLocation', :path => 'Packages/RuuviLocation/RuuviLocation.podspec', :testspecs => ['Tests']
   pod 'RuuviLocation/Service', :path => 'Packages/RuuviLocation/RuuviLocation.podspec'
+  pod 'RuuviNotification', :path => 'Packages/RuuviNotification/RuuviNotification.podspec', :testspecs => ['Tests']
+  pod 'RuuviNotification/Local', :path => 'Packages/RuuviNotification/RuuviNotification.podspec'
   pod 'RuuviMigration', :path => 'Packages/RuuviMigration/RuuviMigration.podspec', :testspecs => ['Tests']
   pod 'RuuviMigration/Impl', :path => 'Packages/RuuviMigration/RuuviMigration.podspec'
   pod 'RuuviPersistence', :path => 'Packages/RuuviPersistence/RuuviPersistence.podspec', :testspecs => ['Tests']

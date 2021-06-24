@@ -4,7 +4,6 @@ import CoreLocation
 import UserNotifications
 
 class InfoProviderImpl: InfoProvider {
-
     var deviceModel: String {
         return UIDevice.current.readableModel
     }

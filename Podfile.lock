@@ -194,10 +194,15 @@ PODS:
     - RuuviCore/Contract (= 0.0.1)
   - RuuviCore/Contract (0.0.1):
     - FutureX
+  - RuuviCore/Diff (0.0.1)
   - RuuviCore/Image (0.0.1):
     - FutureX
     - RuuviCore/Contract
   - RuuviCore/Location (0.0.1):
+    - RuuviCore/Contract
+  - RuuviCore/Permission (0.0.1):
+    - RuuviCore/Contract
+  - RuuviCore/PN (0.0.1):
     - RuuviCore/Contract
   - RuuviCore/Tests (0.0.1)
   - RuuviDaemon (0.0.1):
@@ -245,6 +250,17 @@ PODS:
     - RuuviStorage
     - RuuviVirtual
   - RuuviMigration/Tests (0.0.1)
+  - RuuviNotification (0.0.1):
+    - RuuviNotification/Contract (= 0.0.1)
+  - RuuviNotification/Contract (0.0.1)
+  - RuuviNotification/Local (0.0.1):
+    - RuuviLocal
+    - RuuviNotification/Contract
+    - RuuviOntology
+    - RuuviService
+    - RuuviStorage
+    - RuuviVirtual
+  - RuuviNotification/Tests (0.0.1)
   - RuuviOntology (0.0.1):
     - RuuviOntology/Contract (= 0.0.1)
   - RuuviOntology/Contract (0.0.1):
@@ -473,8 +489,11 @@ DEPENDENCIES:
   - RuuviCloud/Tests (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviContext (from `Packages/RuuviContext/RuuviContext.podspec`)
   - RuuviCore (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Diff (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Image (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Location (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Permission (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/PN (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Tests (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviDaemon (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/CloudSync (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
@@ -489,6 +508,9 @@ DEPENDENCIES:
   - RuuviMigration (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Impl (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Tests (from `Packages/RuuviMigration/RuuviMigration.podspec`)
+  - RuuviNotification (from `Packages/RuuviNotification/RuuviNotification.podspec`)
+  - RuuviNotification/Local (from `Packages/RuuviNotification/RuuviNotification.podspec`)
+  - RuuviNotification/Tests (from `Packages/RuuviNotification/RuuviNotification.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
@@ -590,6 +612,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviLocation/RuuviLocation.podspec
   RuuviMigration:
     :path: Packages/RuuviMigration/RuuviMigration.podspec
+  RuuviNotification:
+    :path: Packages/RuuviNotification/RuuviNotification.podspec
   RuuviOntology:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   RuuviPersistence:
@@ -663,12 +687,13 @@ SPEC CHECKSUMS:
   RealmSwift: 316e450478fb01e06ece4438dda42f407c5f51d2
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
-  RuuviCore: 6e01edd2c0d20e550bba680cfb49009918891a06
+  RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
+  RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
@@ -683,6 +708,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: e5c021ce9e5daaeb62392e7d550eed36f710fe88
+PODFILE CHECKSUM: 8b5e3212039173c822d1417119a87673f2afae6a
 
 COCOAPODS: 1.10.1

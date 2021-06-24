@@ -9,7 +9,7 @@ class LocationPickerPresenter: LocationPickerModuleInput {
     var locationService: RuuviLocationService!
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var locationManager: RuuviCoreLocation!
 

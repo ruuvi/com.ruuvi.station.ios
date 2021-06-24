@@ -1,5 +1,6 @@
 import Swinject
 import SwinjectPropertyLoader
+import RuuviCore
 
 class PresentationAssembly: Assembly {
     func assemble(container: Container) {
@@ -41,14 +42,14 @@ class PresentationAssembly: Assembly {
 
         container.register(PhotoPickerPresenter.self) { r in
             let presenter = PhotoPickerPresenterSheet()
-            presenter.permissionsManager = r.resolve(PermissionsManager.self)
+            presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
             presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
             return presenter
         }
 
         container.register(DfuFilePickerPresenter.self) { r in
             let presenter = DfuFilePickerPresenterSheet()
-            presenter.permissionsManager = r.resolve(PermissionsManager.self)
+            presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
             presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
             return presenter
         }

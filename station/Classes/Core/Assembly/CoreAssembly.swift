@@ -5,6 +5,10 @@ import RuuviLocal
 import RuuviCore
 import RuuviService
 import RuuviVirtual
+import RuuviNotification
+#if canImport(RuuviNotificationLocal)
+import RuuviNotificationLocal
+#endif
 #if canImport(RuuviCoreImage)
 import RuuviCoreImage
 #endif
@@ -14,8 +18,15 @@ import RuuviCoreLocation
 #if canImport(RuuviLocationService)
 import RuuviLocationService
 #endif
+#if canImport(RuuviCorePN)
+import RuuviCorePN
+#endif
+#if canImport(RuuviCorePermission)
+import RuuviCorePermission
+#endif
 
 class CoreAssembly: Assembly {
+    // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
         container.register(BTForeground.self) { _ in
             return BTKit.foreground
@@ -30,14 +41,19 @@ class CoreAssembly: Assembly {
             return provider
         }
 
-        container.register(LocalNotificationsManager.self) { r in
-            let manager = LocalNotificationsManagerImpl()
-            manager.settings = r.resolve(RuuviLocalSettings.self)
-            manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.virtualTagTrunk = r.resolve(VirtualStorage.self)
-            manager.idPersistence = r.resolve(RuuviLocalIDs.self)
-            manager.errorPresenter = r.resolve(ErrorPresenter.self)
-            manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
+        container.register(RuuviNotificationLocal.self) { r in
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let virtualTagTrunk = r.resolve(VirtualStorage.self)!
+            let idPersistence = r.resolve(RuuviLocalIDs.self)!
+            let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
+            let manager = RuuviNotificationLocalImpl(
+                ruuviStorage: ruuviStorage,
+                virtualTagTrunk: virtualTagTrunk,
+                idPersistence: idPersistence,
+                settings: settings,
+                ruuviAlertService: ruuviAlertService
+            )
             return manager
         }.inObjectScope(.container)
 
@@ -46,24 +62,19 @@ class CoreAssembly: Assembly {
             return manager
         }
 
-        container.register(PermissionsManager.self) { r in
-            let manager = PermissionsManagerImpl()
-            manager.locationManager = r.resolve(RuuviCoreLocation.self)
+        container.register(RuuviCorePermission.self) { r in
+            let locationManager = r.resolve(RuuviCoreLocation.self)!
+            let manager = RuuviCorePermissionImpl(locationManager: locationManager)
             return manager
         }.inObjectScope(.container)
 
-        container.register(PushNotificationsManager.self) { _ in
-            let manager = PushNotificationsManagerImpl()
+        container.register(RuuviCorePN.self) { _ in
+            let manager = RuuviCorePNImpl()
             return manager
         }
 
         container.register(RuuviCoreImage.self) { _ in
             return RuuviCoreImageImpl()
-        }
-
-        container.register(DiffCalculator.self) { _ in
-            let diffCalculator = DiffCalculatorImpl()
-            return diffCalculator
         }
 
         container.register(MeasurementsService.self, factory: { r in

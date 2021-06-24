@@ -6,6 +6,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviCore
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -26,8 +27,8 @@ class CardsScrollConfigurator {
         presenter.background = r.resolve(BTBackground.self)
         presenter.webTagService = r.resolve(VirtualService.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
-        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
-        presenter.permissionsManager = r.resolve(PermissionsManager.self)
+        presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)
+        presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.alertHandler = r.resolve(AlertService.self)

@@ -2,18 +2,22 @@ import Foundation
 import Photos
 import RuuviCore
 
-class PermissionsManagerImpl: PermissionsManager {
-    var locationManager: RuuviCoreLocation!
+public final class RuuviCorePermissionImpl: RuuviCorePermission {
+    private let locationManager: RuuviCoreLocation
 
-    var isPhotoLibraryPermissionGranted: Bool {
+    public init(locationManager: RuuviCoreLocation) {
+        self.locationManager = locationManager
+    }
+
+    public var isPhotoLibraryPermissionGranted: Bool {
         return PHPhotoLibrary.authorizationStatus() == .authorized
     }
 
-    var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
+    public var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
         return PHPhotoLibrary.authorizationStatus()
     }
 
-    var isCameraPermissionGranted: Bool {
+    public var isCameraPermissionGranted: Bool {
         #if targetEnvironment(macCatalyst)
         return false
         #else
@@ -23,20 +27,20 @@ class PermissionsManagerImpl: PermissionsManager {
 
     #if targetEnvironment(macCatalyst)
     #else
-    var cameraAuthorizationStatus: AVAuthorizationStatus {
+    public var cameraAuthorizationStatus: AVAuthorizationStatus {
         return AVCaptureDevice.authorizationStatus(for: .video)
     }
     #endif
 
-    var isLocationPermissionGranted: Bool {
+    public var isLocationPermissionGranted: Bool {
         return locationManager.isLocationPermissionGranted
     }
 
-    var locationAuthorizationStatus: CLAuthorizationStatus {
+    public var locationAuthorizationStatus: CLAuthorizationStatus {
         return locationManager.locationAuthorizationStatus
     }
 
-    func requestPhotoLibraryPermission(completion: ((Bool) -> Void)?) {
+    public func requestPhotoLibraryPermission(completion: ((Bool) -> Void)?) {
         PHPhotoLibrary.requestAuthorization({ (status) in
             DispatchQueue.main.async {
                 completion?(status == .authorized)
@@ -44,7 +48,7 @@ class PermissionsManagerImpl: PermissionsManager {
         })
     }
 
-    func requestCameraPermission(completion: ((Bool) -> Void)?) {
+    public func requestCameraPermission(completion: ((Bool) -> Void)?) {
         #if targetEnvironment(macCatalyst)
         completion?(false)
         #else
@@ -56,12 +60,11 @@ class PermissionsManagerImpl: PermissionsManager {
         #endif
     }
 
-    func requestLocationPermission(completion: ((Bool) -> Void)?) {
+    public func requestLocationPermission(completion: ((Bool) -> Void)?) {
         locationManager.requestLocationPermission { (granted) in
             DispatchQueue.main.async {
                 completion?(granted)
             }
         }
     }
-
 }

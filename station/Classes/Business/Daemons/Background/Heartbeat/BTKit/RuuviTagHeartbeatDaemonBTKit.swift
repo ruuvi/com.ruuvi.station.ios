@@ -6,11 +6,12 @@ import RuuviReactor
 import RuuviLocal
 import RuuviPool
 import RuuviService
+import RuuviNotification
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     var background: BTBackground!
-    var localNotificationsManager: LocalNotificationsManager!
+    var localNotificationsManager: RuuviNotificationLocal!
     var connectionPersistence: RuuviLocalConnections!
     var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
@@ -275,13 +276,19 @@ extension RuuviTagHeartbeatDaemonBTKit {
 
     private func notifyDidDisconnect(uuid: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.localNotificationsManager.showDidDisconnect(uuid: uuid)
+            self?.localNotificationsManager.showDidDisconnect(
+                uuid: uuid,
+                title: "LocalNotificationsManager.DidDisconnect.title".localized()
+            )
         }
     }
 
     private func notifyDidConnect(uuid: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.localNotificationsManager.showDidConnect(uuid: uuid)
+            self?.localNotificationsManager.showDidConnect(
+                uuid: uuid,
+                title: "LocalNotificationsManager.DidConnect.title".localized()
+            )
         }
     }
 }

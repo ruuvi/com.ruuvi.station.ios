@@ -7,13 +7,15 @@ import FLEX
 #endif
 import UserNotifications
 import RuuviLocal
+import RuuviCore
+import RuuviNotification
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var appStateService: AppStateService!
-    var localNotificationsManager: LocalNotificationsManager!
+    var localNotificationsManager: RuuviNotificationLocal!
     var webTagOperationsManager: WebTagOperationsManager!
     var featureToggleService: FeatureToggleService!
 
@@ -41,8 +43,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
-        localNotificationsManager = r.resolve(LocalNotificationsManager.self)
-        localNotificationsManager.application(application, didFinishLaunchingWithOptions: launchOptions)
+        localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
+        let disableTitle = "LocalNotificationsManager.Disable.button".localized()
+        let muteTitle = "LocalNotificationsManager.Mute.button".localized()
+        localNotificationsManager.setup(
+            disableTitle: disableTitle,
+            muteTitle: muteTitle
+        )
 
         #if canImport(FLEX)
         FLEXManager.shared.registerGlobalEntry(
@@ -76,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let r = AppAssembly.shared.assembler.resolver
-        if var pnManager = r.resolve(PushNotificationsManager.self) {
+        if var pnManager = r.resolve(RuuviCorePN.self) {
             pnManager.pnTokenData = deviceToken
         }
     }
