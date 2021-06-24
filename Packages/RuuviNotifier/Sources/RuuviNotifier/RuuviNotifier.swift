@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviVirtual
 
-public protocol RuuviServiceNotifier {
+public protocol RuuviNotifier {
     func process(heartbeat ruuviTag: RuuviTagSensorRecord)
     func process(data: VirtualData, for sensor: VirtualSensor)
     func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
@@ -12,7 +12,7 @@ public protocol RuuviServiceNotifier {
 }
 
 public protocol RuuviServiceNotifierObserver: AnyObject {
-    func ruuviNotifier(service: RuuviServiceNotifier, isTriggered: Bool, for uuid: String)
+    func ruuviNotifier(service: RuuviNotifier, isTriggered: Bool, for uuid: String)
 }
 
 public protocol RuuviServiceNotifierTitles {

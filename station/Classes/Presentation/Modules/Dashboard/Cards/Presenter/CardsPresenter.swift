@@ -27,7 +27,7 @@ class CardsPresenter: CardsModuleInput {
     var permissionsManager: RuuviCorePermission!
     var connectionPersistence: RuuviLocalConnections!
     var alertService: RuuviServiceAlert!
-    var alertHandler: RuuviServiceNotifier!
+    var alertHandler: RuuviNotifier!
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
@@ -299,7 +299,7 @@ extension CardsPresenter: CardsRouterDelegate {
 
 // MARK: - RuuviServiceNotifierObserver
 extension CardsPresenter: RuuviServiceNotifierObserver {
-    func ruuviNotifier(service: RuuviServiceNotifier, isTriggered: Bool, for uuid: String) {
+    func ruuviNotifier(service: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter({ $0.luid.value?.value == uuid })
             .forEach({

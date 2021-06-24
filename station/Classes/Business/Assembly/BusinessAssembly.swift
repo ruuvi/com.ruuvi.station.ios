@@ -48,7 +48,7 @@ import RuuviVirtualService
 class BusinessAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
-        container.register(RuuviServiceNotifier.self) { r in
+        container.register(RuuviNotifier.self) { r in
             let notificationLocal = r.resolve(RuuviNotificationLocal.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
             let titles = RuuviServiceNotifierTitlesImpl()
@@ -298,7 +298,7 @@ class BusinessAssembly: Assembly {
             daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
-            daemon.alertHandler = r.resolve(RuuviServiceNotifier.self)
+            daemon.alertHandler = r.resolve(RuuviNotifier.self)
             daemon.alertService = r.resolve(RuuviServiceAlert.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
@@ -342,7 +342,7 @@ class BusinessAssembly: Assembly {
             daemon.virtualService = r.resolve(VirtualService.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.virtualPersistence = r.resolve(VirtualPersistence.self)
-            daemon.alertService = r.resolve(RuuviServiceNotifier.self)
+            daemon.alertService = r.resolve(RuuviNotifier.self)
             daemon.virtualReactor = r.resolve(VirtualReactor.self)
             return daemon
         }.inObjectScope(.container)
@@ -350,7 +350,7 @@ class BusinessAssembly: Assembly {
         container.register(WebTagOperationsManager.self) { r in
             let manager = WebTagOperationsManager()
             manager.alertService = r.resolve(RuuviServiceAlert.self)
-            manager.alertHandler = r.resolve(RuuviServiceNotifier.self)
+            manager.alertHandler = r.resolve(RuuviNotifier.self)
             manager.weatherProviderService = r.resolve(VirtualProviderService.self)
             manager.virtualStorage = r.resolve(VirtualStorage.self)
             manager.virtualPersistence = r.resolve(VirtualPersistence.self)
