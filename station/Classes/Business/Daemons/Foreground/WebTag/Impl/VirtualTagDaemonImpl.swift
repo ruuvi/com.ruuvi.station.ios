@@ -9,7 +9,7 @@ class VirtualTagDaemonImpl: BackgroundWorker, VirtualTagDaemon {
     var virtualService: VirtualService!
     var settings: RuuviLocalSettings!
     var virtualPersistence: VirtualPersistence!
-    var alertService: RuuviServiceNotifier!
+    var alertService: RuuviNotifier!
     var virtualReactor: VirtualReactor!
     private var token: VirtualReactorToken?
     private var wsTokens = [VirtualToken]()

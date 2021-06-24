@@ -3,7 +3,7 @@ import RuuviOntology
 import RuuviService
 import RuuviNotification
 
-public final class RuuviServiceNotifierImpl: RuuviServiceNotifier {
+public final class RuuviServiceNotifierImpl: RuuviNotifier {
     var observations = [String: NSPointerArray]()
     let titles: RuuviServiceNotifierTitles
     let ruuviAlertService: RuuviServiceAlert
