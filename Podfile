@@ -43,6 +43,8 @@ def shared_pods
   pod 'RuuviLocation/Service', :path => 'Packages/RuuviLocation/RuuviLocation.podspec'
   pod 'RuuviNotification', :path => 'Packages/RuuviNotification/RuuviNotification.podspec', :testspecs => ['Tests']
   pod 'RuuviNotification/Local', :path => 'Packages/RuuviNotification/RuuviNotification.podspec'
+  pod 'RuuviNotifier', :path => 'Packages/RuuviNotifier/RuuviNotifier.podspec', :testspecs => ['Tests']
+  pod 'RuuviNotifier/Impl', :path => 'Packages/RuuviNotifier/RuuviNotifier.podspec'
   pod 'RuuviMigration', :path => 'Packages/RuuviMigration/RuuviMigration.podspec', :testspecs => ['Tests']
   pod 'RuuviMigration/Impl', :path => 'Packages/RuuviMigration/RuuviMigration.podspec'
   pod 'RuuviPersistence', :path => 'Packages/RuuviPersistence/RuuviPersistence.podspec', :testspecs => ['Tests']

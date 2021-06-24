@@ -1,6 +1,7 @@
 import Foundation
 import RuuviOntology
 import RuuviVirtual
+import RuuviNotifier
 
 class CurrentWebTagRefreshDataOperation: AsyncOperation {
     private var sensor: VirtualSensor

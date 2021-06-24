@@ -261,6 +261,15 @@ PODS:
     - RuuviStorage
     - RuuviVirtual
   - RuuviNotification/Tests (0.0.1)
+  - RuuviNotifier (0.0.1):
+    - RuuviNotifier/Contract (= 0.0.1)
+  - RuuviNotifier/Contract (0.0.1)
+  - RuuviNotifier/Impl (0.0.1):
+    - RuuviNotification
+    - RuuviNotifier/Contract
+    - RuuviOntology
+    - RuuviVirtual
+  - RuuviNotifier/Tests (0.0.1)
   - RuuviOntology (0.0.1):
     - RuuviOntology/Contract (= 0.0.1)
   - RuuviOntology/Contract (0.0.1):
@@ -511,6 +520,9 @@ DEPENDENCIES:
   - RuuviNotification (from `Packages/RuuviNotification/RuuviNotification.podspec`)
   - RuuviNotification/Local (from `Packages/RuuviNotification/RuuviNotification.podspec`)
   - RuuviNotification/Tests (from `Packages/RuuviNotification/RuuviNotification.podspec`)
+  - RuuviNotifier (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
+  - RuuviNotifier/Impl (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
+  - RuuviNotifier/Tests (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
@@ -614,6 +626,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviMigration/RuuviMigration.podspec
   RuuviNotification:
     :path: Packages/RuuviNotification/RuuviNotification.podspec
+  RuuviNotifier:
+    :path: Packages/RuuviNotifier/RuuviNotifier.podspec
   RuuviOntology:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   RuuviPersistence:
@@ -694,6 +708,7 @@ SPEC CHECKSUMS:
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
+  RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
@@ -708,6 +723,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 8b5e3212039173c822d1417119a87673f2afae6a
+PODFILE CHECKSUM: 5bddd5c441ec4195f8d6a030f1a973047107bba8
 
 COCOAPODS: 1.10.1
