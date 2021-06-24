@@ -28,7 +28,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     var alertService: RuuviServiceAlert!
-    var alertHandler: AlertService!
+    var alertHandler: RuuviServiceNotifier!
     var background: BTBackground!
 
     var feedbackEmail: String!
@@ -338,9 +338,9 @@ extension TagChartsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - AlertServiceObserver
-extension TagChartsPresenter: AlertServiceObserver {
-    func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
+// MARK: - RuuviServiceNotifierObserver
+extension TagChartsPresenter: RuuviServiceNotifierObserver {
+    func ruuviNotifier(service: RuuviServiceNotifier, isTriggered: Bool, for uuid: String) {
         let newValue: AlertState = isTriggered ? .firing : .registered
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue

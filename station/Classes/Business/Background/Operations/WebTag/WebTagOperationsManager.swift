@@ -6,7 +6,7 @@ import RuuviVirtual
 class WebTagOperationsManager {
     var weatherProviderService: VirtualProviderService!
     var alertService: RuuviServiceAlert!
-    var alertHandler: AlertService!
+    var alertHandler: RuuviServiceNotifier!
     var virtualStorage: VirtualStorage!
     var virtualPersistence: VirtualPersistence!
 

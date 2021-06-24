@@ -31,7 +31,7 @@ class CardsScrollConfigurator {
         presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
-        presenter.alertHandler = r.resolve(AlertService.self)
+        presenter.alertHandler = r.resolve(RuuviServiceNotifier.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!

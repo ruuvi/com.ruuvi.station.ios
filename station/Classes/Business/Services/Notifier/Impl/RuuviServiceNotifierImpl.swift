@@ -4,13 +4,13 @@ import RuuviOntology
 import RuuviService
 import RuuviNotification
 
-class AlertServiceImpl: AlertService {
+class RuuviServiceNotifierImpl: RuuviServiceNotifier {
     var ruuviAlertService: RuuviServiceAlert!
     weak var localNotificationsManager: RuuviNotificationLocal!
 
     var observations = [String: NSPointerArray]()
 
-    func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String) {
+    func subscribe<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) {
         guard !isSubscribed(observer, to: uuid) else { return }
         let pointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
@@ -24,7 +24,7 @@ class AlertServiceImpl: AlertService {
         }
     }
 
-    func isSubscribed<T: AlertServiceObserver>(_ observer: T, to uuid: String) -> Bool {
+    func isSubscribed<T: RuuviServiceNotifierObserver>(_ observer: T, to uuid: String) -> Bool {
         let observerPointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
             for i in 0..<array.count {

@@ -17,7 +17,7 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var alertService: RuuviServiceAlert!
-    var alertHandler: AlertService!
+    var alertHandler: RuuviServiceNotifier!
     var settings: RuuviLocalSettings!
     var pullWebDaemon: PullWebDaemon!
 
