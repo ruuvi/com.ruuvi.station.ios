@@ -14,6 +14,7 @@ import RuuviRepository
 import RuuviUser
 import RuuviVirtual
 import RuuviLocation
+import RuuviNotification
 #if canImport(RuuviServiceFactory)
 import RuuviServiceFactory
 #endif
@@ -51,7 +52,7 @@ class BusinessAssembly: Assembly {
             // swiftlint:disable force_cast
             let s = service as! AlertServiceImpl
             // swiftlint:enable force_cast
-            s.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+            s.localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
         }
 
         container.register(AppStateService.self) { r in
@@ -298,7 +299,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviTagHeartbeatDaemon.self) { r in
             let daemon = RuuviTagHeartbeatDaemonBTKit()
             daemon.background = r.resolve(BTBackground.self)
-            daemon.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+            daemon.localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
             daemon.connectionPersistence = r.resolve(RuuviLocalConnections.self)
             daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
