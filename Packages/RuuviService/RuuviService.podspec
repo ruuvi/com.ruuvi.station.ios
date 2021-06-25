@@ -101,6 +101,31 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
   end
 
+  s.subspec 'Measurement' do |ss|
+    ss.source_files = 'Sources/RuuviServiceMeasurement/**/*.{h,m,swift}', 'Sources/RuuviServiceMeasurement/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviLocal'
+  end
+
+  s.subspec 'Export' do |ss|
+    ss.source_files = 'Sources/RuuviServiceExport/**/*.{h,m,swift}', 'Sources/RuuviServiceExport/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'Humidity'
+    ss.dependency 'FutureX'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviStorage'
+  end
+
+  s.subspec 'GATT' do |ss|
+    ss.source_files = 'Sources/RuuviServiceGATT/**/*.{h,m,swift}', 'Sources/RuuviServiceGATT/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'BTKit'
+    ss.dependency 'FutureX'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviPool'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end

@@ -11,6 +11,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviNotification
+import RuuviNotifier
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -28,7 +29,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     var alertService: RuuviServiceAlert!
-    var alertHandler: AlertService!
+    var alertHandler: RuuviNotifier!
     var background: BTBackground!
 
     var feedbackEmail: String!
@@ -338,9 +339,9 @@ extension TagChartsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - AlertServiceObserver
-extension TagChartsPresenter: AlertServiceObserver {
-    func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
+// MARK: - RuuviNotifierObserver
+extension TagChartsPresenter: RuuviNotifierObserver {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         let newValue: AlertState = isTriggered ? .firing : .registered
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue
@@ -481,13 +482,13 @@ extension TagChartsPresenter {
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
             if let sSelf = self,
                 let userInfo = notification.userInfo,
-                let physicalSensor = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
                 self?.viewModel.mac.value == physicalSensor.macId?.value {
                 if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                     self?.viewModel.alertState.value = .registered

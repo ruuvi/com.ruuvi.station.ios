@@ -22,7 +22,7 @@ class OffsetCorrectionConfigurator {
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
 
-        view.measurementService = r.resolve(MeasurementsService.self)
+        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
         view.output = presenter
     }
 }

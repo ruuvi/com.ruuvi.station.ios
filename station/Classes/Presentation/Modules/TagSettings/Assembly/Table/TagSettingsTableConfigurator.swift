@@ -35,7 +35,7 @@ class TagSettingsTableConfigurator {
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
 
-        view.measurementService = r.resolve(MeasurementsService.self)
+        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
     }
