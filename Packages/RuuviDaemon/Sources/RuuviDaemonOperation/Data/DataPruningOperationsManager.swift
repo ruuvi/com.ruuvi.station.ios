@@ -4,6 +4,7 @@ import RuuviStorage
 import RuuviLocal
 import RuuviPool
 import RuuviVirtual
+import RuuviDaemon
 
 public final class DataPruningOperationsManager {
     private let settings: RuuviLocalSettings

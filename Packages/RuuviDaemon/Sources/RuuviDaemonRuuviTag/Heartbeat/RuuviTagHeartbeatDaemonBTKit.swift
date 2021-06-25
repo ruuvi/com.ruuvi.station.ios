@@ -8,6 +8,7 @@ import RuuviPool
 import RuuviService
 import RuuviNotification
 import RuuviNotifier
+import RuuviDaemon
 
 public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHeartbeatDaemon {
     private let background: BTBackground
