@@ -30,8 +30,6 @@
 		0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
 		0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */; };
 		0E197C7123C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
-		0E197C7623C5C7A20074015B /* InfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7323C5C7A20074015B /* InfoProvider.swift */; };
-		0E197C7B23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */; };
 		0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */; };
 		0E197C8323C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */; };
 		0E1B2F34239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
@@ -276,7 +274,6 @@
 		0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E79F28D244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */; };
 		0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9E7759238CCE5F006D7013 /* String+Replace.swift */; };
-		0EA511BA261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */; };
 		0EA796732664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */; };
 		0EA796772664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA796742664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift */; };
 		0EA7967B2664B37F002BA25D /* RuuviLocalError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA796782664B37F002BA25D /* RuuviLocalError+LocalizedError.swift */; };
@@ -302,14 +299,17 @@
 		0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF582397F3C600A37E1A /* HeartbeatViewModel.swift */; };
 		0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5A2397F3DF00A37E1A /* HeartbeatViewOutput.swift */; };
 		0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5E2397F6BE00A37E1A /* HeartbeatViewController.swift */; };
-		0EB48D712619D50A008E0D2D /* FeatureToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */; };
-		0EB48D8D2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */; };
-		0EB48D972619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */; };
-		0EB48DA52619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DA22619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift */; };
-		0EB48DDE2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DDB2619E306008E0D2D /* FallbackFeatureToggleProvider.swift */; };
 		0EB48DE8261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
-		0EB48DFE261B105D008E0D2D /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */; };
-		0EB48E08261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */; };
+		0EB66B3C2686058F00375BCC /* FeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B2E2686058F00375BCC /* FeatureToggleProvider.swift */; };
+		0EB66B3D2686058F00375BCC /* FallbackFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B2F2686058F00375BCC /* FallbackFeatureToggleProvider.swift */; };
+		0EB66B3E2686058F00375BCC /* FirebaseFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B302686058F00375BCC /* FirebaseFeatureToggleProvider.swift */; };
+		0EB66B3F2686058F00375BCC /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B312686058F00375BCC /* LocalFeatureToggleProvider.swift */; };
+		0EB66B402686058F00375BCC /* FirebaseRemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B342686058F00375BCC /* FirebaseRemoteConfigService.swift */; };
+		0EB66B412686058F00375BCC /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B352686058F00375BCC /* RemoteConfigService.swift */; };
+		0EB66B422686058F00375BCC /* FeatureToggleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B362686058F00375BCC /* FeatureToggleService.swift */; };
+		0EB66B432686058F00375BCC /* FeatureToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B372686058F00375BCC /* FeatureToggle.swift */; };
+		0EB66B442686058F00375BCC /* InfoProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B3A2686058F00375BCC /* InfoProviderImpl.swift */; };
+		0EB66B452686058F00375BCC /* InfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB66B3B2686058F00375BCC /* InfoProvider.swift */; };
 		0EB8B91D2683525900FE130E /* RuuviMigration in Frameworks */ = {isa = PBXBuildFile; productRef = 0EB8B91C2683525900FE130E /* RuuviMigration */; };
 		0EB8B91F2683525900FE130E /* RuuviMigrationImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0EB8B91E2683525900FE130E /* RuuviMigrationImpl */; };
 		0EB8B92C2683598300FE130E /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8B92B2683598300FE130E /* Debouncer.swift */; };
@@ -564,8 +564,6 @@
 		0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenter.swift; sourceTree = "<group>"; };
 		0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenterMessageUI.swift; sourceTree = "<group>"; };
 		0E197C6E23C4A7D00074015B /* Presentation.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Presentation.plist; sourceTree = "<group>"; };
-		0E197C7323C5C7A20074015B /* InfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProvider.swift; sourceTree = "<group>"; };
-		0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProviderImpl.swift; sourceTree = "<group>"; };
 		0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+ReadableModel.swift"; sourceTree = "<group>"; };
 		0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSDeviceModelMapping.plist; sourceTree = "<group>"; };
 		0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
@@ -700,7 +698,6 @@
 		0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E9E7759238CCE5F006D7013 /* String+Replace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Replace.swift"; sourceTree = "<group>"; };
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
-		0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EA796702664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA796742664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviCloudApiError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA796782664B37F002BA25D /* RuuviLocalError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviLocalError+LocalizedError.swift"; sourceTree = "<group>"; };
@@ -711,14 +708,17 @@
 		0EA7968C2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviStorageError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
 		0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
-		0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggle.swift; sourceTree = "<group>"; };
-		0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleService.swift; sourceTree = "<group>"; };
-		0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleProvider.swift; sourceTree = "<group>"; };
-		0EB48DA22619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFeatureToggleProvider.swift; sourceTree = "<group>"; };
-		0EB48DDB2619E306008E0D2D /* FallbackFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallbackFeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EB48DE5261A1816008E0D2D /* FeatureToggles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FeatureToggles.json; sourceTree = "<group>"; };
-		0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigService.swift; sourceTree = "<group>"; };
-		0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRemoteConfigService.swift; sourceTree = "<group>"; };
+		0EB66B2E2686058F00375BCC /* FeatureToggleProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeatureToggleProvider.swift; sourceTree = "<group>"; };
+		0EB66B2F2686058F00375BCC /* FallbackFeatureToggleProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FallbackFeatureToggleProvider.swift; sourceTree = "<group>"; };
+		0EB66B302686058F00375BCC /* FirebaseFeatureToggleProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseFeatureToggleProvider.swift; sourceTree = "<group>"; };
+		0EB66B312686058F00375BCC /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
+		0EB66B342686058F00375BCC /* FirebaseRemoteConfigService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseRemoteConfigService.swift; sourceTree = "<group>"; };
+		0EB66B352686058F00375BCC /* RemoteConfigService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteConfigService.swift; sourceTree = "<group>"; };
+		0EB66B362686058F00375BCC /* FeatureToggleService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeatureToggleService.swift; sourceTree = "<group>"; };
+		0EB66B372686058F00375BCC /* FeatureToggle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeatureToggle.swift; sourceTree = "<group>"; };
+		0EB66B3A2686058F00375BCC /* InfoProviderImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoProviderImpl.swift; sourceTree = "<group>"; };
+		0EB66B3B2686058F00375BCC /* InfoProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoProvider.swift; sourceTree = "<group>"; };
 		0EB8B91B2683523200FE130E /* RuuviMigration */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviMigration; path = Packages/RuuviMigration; sourceTree = "<group>"; };
 		0EB8B92B2683598300FE130E /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		0EB8B92D2683599100FE130E /* Networking.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
@@ -1307,6 +1307,8 @@
 			isa = PBXGroup;
 			children = (
 				0E05014A26860375007060C4 /* AppState */,
+				0EB66B2C2686058F00375BCC /* Features */,
+				0EB66B382686058F00375BCC /* Info */,
 				0E05014E26860375007060C4 /* UniversalLinks */,
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
@@ -1479,23 +1481,6 @@
 				0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */,
 			);
 			path = MessageUI;
-			sourceTree = "<group>";
-		};
-		0E197C7223C5C7770074015B /* Info */ = {
-			isa = PBXGroup;
-			children = (
-				0E197C7723C5CCA60074015B /* Impl */,
-				0E197C7323C5C7A20074015B /* InfoProvider.swift */,
-			);
-			path = Info;
-			sourceTree = "<group>";
-		};
-		0E197C7723C5CCA60074015B /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */,
-			);
-			path = Impl;
 			sourceTree = "<group>";
 		};
 		0E1C1DAC22B38F220032F6CA /* Presenters */ = {
@@ -1794,7 +1779,6 @@
 			isa = PBXGroup;
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
-				0E197C7223C5C7770074015B /* Info */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2189,27 +2173,6 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		0EB48D6D2619D4D4008E0D2D /* Features */ = {
-			isa = PBXGroup;
-			children = (
-				0EB48D932619D5D5008E0D2D /* Providers */,
-				0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */,
-				0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */,
-			);
-			path = Features;
-			sourceTree = "<group>";
-		};
-		0EB48D932619D5D5008E0D2D /* Providers */ = {
-			isa = PBXGroup;
-			children = (
-				0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */,
-				0EB48DA22619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift */,
-				0EB48DDB2619E306008E0D2D /* FallbackFeatureToggleProvider.swift */,
-				0EA511B7261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift */,
-			);
-			path = Providers;
-			sourceTree = "<group>";
-		};
 		0EB48DE4261A17F4008E0D2D /* JSONs */ = {
 			isa = PBXGroup;
 			children = (
@@ -2218,21 +2181,60 @@
 			path = JSONs;
 			sourceTree = "<group>";
 		};
-		0EB48DFA261B1046008E0D2D /* RemoteConfig */ = {
+		0EB66B2C2686058F00375BCC /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				0EB48E04261B1085008E0D2D /* Firebase */,
-				0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */,
+				0EB66B2D2686058F00375BCC /* Providers */,
+				0EB66B322686058F00375BCC /* RemoteConfig */,
+				0EB66B362686058F00375BCC /* FeatureToggleService.swift */,
+				0EB66B372686058F00375BCC /* FeatureToggle.swift */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		0EB66B2D2686058F00375BCC /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				0EB66B2E2686058F00375BCC /* FeatureToggleProvider.swift */,
+				0EB66B2F2686058F00375BCC /* FallbackFeatureToggleProvider.swift */,
+				0EB66B302686058F00375BCC /* FirebaseFeatureToggleProvider.swift */,
+				0EB66B312686058F00375BCC /* LocalFeatureToggleProvider.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		0EB66B322686058F00375BCC /* RemoteConfig */ = {
+			isa = PBXGroup;
+			children = (
+				0EB66B332686058F00375BCC /* Firebase */,
+				0EB66B352686058F00375BCC /* RemoteConfigService.swift */,
 			);
 			path = RemoteConfig;
 			sourceTree = "<group>";
 		};
-		0EB48E04261B1085008E0D2D /* Firebase */ = {
+		0EB66B332686058F00375BCC /* Firebase */ = {
 			isa = PBXGroup;
 			children = (
-				0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */,
+				0EB66B342686058F00375BCC /* FirebaseRemoteConfigService.swift */,
 			);
 			path = Firebase;
+			sourceTree = "<group>";
+		};
+		0EB66B382686058F00375BCC /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				0EB66B392686058F00375BCC /* Impl */,
+				0EB66B3B2686058F00375BCC /* InfoProvider.swift */,
+			);
+			path = Info;
+			sourceTree = "<group>";
+		};
+		0EB66B392686058F00375BCC /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0EB66B3A2686058F00375BCC /* InfoProviderImpl.swift */,
+			);
+			path = Impl;
 			sourceTree = "<group>";
 		};
 		0EBAF062232000F50025A191 /* Module */ = {
@@ -2566,9 +2568,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
-				0EB48D6D2619D4D4008E0D2D /* Features */,
 				0E75661C2361C18C00FCA977 /* GATT */,
-				0EB48DFA261B1046008E0D2D /* RemoteConfig */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 			);
 			path = Business;
@@ -3834,7 +3834,6 @@
 				A91D0318251124F900694733 /* SelectionItem.swift in Sources */,
 				0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */,
 				A98D3F1F256CBD610066588B /* ShareViewOutput.swift in Sources */,
-				0EB48D972619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				663155DF2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift in Sources */,
 				0E6BAD9223856A01003A2D4C /* AsyncOperation.swift in Sources */,
 				A9E5994C2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
@@ -3882,7 +3881,6 @@
 				0E6BADA923856A01003A2D4C /* TagChartsPresenter.swift in Sources */,
 				66BC44B22657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
 				0E6BADAA23856A01003A2D4C /* DefaultsList.swift in Sources */,
-				0EA511BA261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				A90E16A624606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
 				A9E5995A2557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
 				A91D02F32511207200694733 /* SelectionTableInitializer.swift in Sources */,
@@ -3909,6 +3907,7 @@
 				0E6BADBE23856A01003A2D4C /* DefaultsRouterInput.swift in Sources */,
 				0E6BADBF23856A01003A2D4C /* AboutPresenter.swift in Sources */,
 				A9B57452253B994900DB7353 /* SignInViewModel.swift in Sources */,
+				0EB66B432686058F00375BCC /* FeatureToggle.swift in Sources */,
 				A964648C247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
 				0E25136E2684D06B004A522A /* RuuviNotifierTitlesImpl.swift in Sources */,
 				0EA796732664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */,
@@ -3929,6 +3928,7 @@
 				0E05014026860099007060C4 /* RuuviDaemonError+LocalizedError.swift in Sources */,
 				0E6BADCE23856A01003A2D4C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A98D3F1D256CBD610066588B /* SharePresenter.swift in Sources */,
+				0EB66B3D2686058F00375BCC /* FallbackFeatureToggleProvider.swift in Sources */,
 				A9E599632557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0E6BADD223856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A92E3C6D2426767F00D981D5 /* MeasurementType.swift in Sources */,
@@ -3973,6 +3973,7 @@
 				0E6BADF323856A01003A2D4C /* WelcomeRouter.swift in Sources */,
 				0E00C4FF2685B9F7009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				A93CDCD125659BA600018C6C /* AlertPresenter.swift in Sources */,
+				0EB66B442686058F00375BCC /* InfoProviderImpl.swift in Sources */,
 				A9646489247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				66718A45266A685700A380F8 /* DfuFlashModuleOutput.swift in Sources */,
 				663155EE2667F40C005B90A6 /* UpdateFirmwareAppleViewController.swift in Sources */,
@@ -3980,6 +3981,7 @@
 				0E6BADF623856A01003A2D4C /* GATTService.swift in Sources */,
 				A93CDCAD25657C1D00018C6C /* MenuViewModel.swift in Sources */,
 				0E6BADF823856A01003A2D4C /* TagSettingsRouter.swift in Sources */,
+				0EB66B422686058F00375BCC /* FeatureToggleService.swift in Sources */,
 				0E6BADF923856A01003A2D4C /* DiscoverDeviceTableViewCell.swift in Sources */,
 				66718A67266A6CA700A380F8 /* DfuFilePickerPresenter.swift in Sources */,
 				660EB2662669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */,
@@ -3987,12 +3989,13 @@
 				0E6BADFB23856A01003A2D4C /* ForegroundEnvironmentObject.swift in Sources */,
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
 				663155E82667F40C005B90A6 /* UpdateFirmwareModuleOutput.swift in Sources */,
+				0EB66B3F2686058F00375BCC /* LocalFeatureToggleProvider.swift in Sources */,
 				A98D3F00256CBD400066588B /* ShareModuleInput.swift in Sources */,
 				A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */,
+				0EB66B412686058F00375BCC /* RemoteConfigService.swift in Sources */,
 				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E6BADFE23856A01003A2D4C /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E6BADFF23856A01003A2D4C /* Date+Ruuvi.swift in Sources */,
-				0EB48DDE2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
 				66718A60266A685700A380F8 /* DfuFlashRouterInput.swift in Sources */,
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
 				A98D3F19256CBD610066588B /* ShareViewInput.swift in Sources */,
@@ -4006,6 +4009,7 @@
 				660EB2632669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */,
 				A964647A247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				0EF4E31426823F4400D83CC7 /* VirtualLocation.swift in Sources */,
+				0EB66B3E2686058F00375BCC /* FirebaseFeatureToggleProvider.swift in Sources */,
 				A9646486247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
 				0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */,
@@ -4013,7 +4017,6 @@
 				A976CA8024A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
 				A90E16992460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031C25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
-				0EB48E08261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */,
 				0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */,
 				0EF4E31826823F6100D83CC7 /* DiscoverRuuviTagViewModel.swift in Sources */,
 				0EAD33EA2399273E00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
@@ -4027,12 +4030,12 @@
 				0E6BAE1223856A01003A2D4C /* SettingsRouterInput.swift in Sources */,
 				0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				A91D02FF2511207300694733 /* SelectionTableViewCell.swift in Sources */,
+				0EB66B452686058F00375BCC /* InfoProvider.swift in Sources */,
 				0E6BAE1323856A01003A2D4C /* ForegroundStepperTableViewCell.swift in Sources */,
 				0E6BAE1423856A01003A2D4C /* MenuTableTransitionManager.swift in Sources */,
 				0E6BAE1523856A01003A2D4C /* TagChartsViewOutput.swift in Sources */,
 				0E6BAE1623856A01003A2D4C /* DefaultsRouter.swift in Sources */,
 				0E6BAE1723856A01003A2D4C /* ForegroundViewInput.swift in Sources */,
-				0E197C7623C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E6BAE1823856A01003A2D4C /* WebTagSettingsRouterInput.swift in Sources */,
 				0EA7968B2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				660EB27E2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
@@ -4060,7 +4063,6 @@
 				0E6BAE2E23856A01003A2D4C /* MenuRouterInput.swift in Sources */,
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
 				66718A4B266A685700A380F8 /* DfuFlashAppleViewController.swift in Sources */,
-				0EB48D8D2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE98A7B26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				0E6BAE3123856A01003A2D4C /* TagChartsModuleInput.swift in Sources */,
 				0E6BAE3223856A01003A2D4C /* Double+Temperature.swift in Sources */,
@@ -4072,7 +4074,6 @@
 				66718A51266A685700A380F8 /* DfuFlashViewModel.swift in Sources */,
 				0E6BAE3923856A01003A2D4C /* LocationPickerAppleViewController.swift in Sources */,
 				0E6BAE3A23856A01003A2D4C /* TagSettingsTableConfigurator.swift in Sources */,
-				0EB48DFE261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				66BC44A32657AED400A03253 /* OffsetCorrectionPresenter.swift in Sources */,
 				0E6BAE3C23856A01003A2D4C /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E6BAE3D23856A01003A2D4C /* MenuViewInput.swift in Sources */,
@@ -4106,7 +4107,6 @@
 				66BC44A02657AED400A03253 /* OffsetCorrectionModuleOutput.swift in Sources */,
 				0E6BAE5723856A01003A2D4C /* DefaultsModuleInput.swift in Sources */,
 				0E6BAE5A23856A01003A2D4C /* TagSettingsPresenter.swift in Sources */,
-				0EB48DA52619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift in Sources */,
 				0E6BAE5B23856A01003A2D4C /* TagChartsModuleOutput.swift in Sources */,
 				318592DC25BB4D000093B8EB /* UserPropertiesService.swift in Sources */,
 				A91D03052511207300694733 /* SelectionViewOutput.swift in Sources */,
@@ -4136,6 +4136,7 @@
 				0EAD33EF2399273E00EC5BAA /* HeartbeatViewInput.swift in Sources */,
 				0E6BAE7323856A01003A2D4C /* ForegroundConfigurator.swift in Sources */,
 				0E6BAE7423856A01003A2D4C /* AppDelegate.swift in Sources */,
+				0EB66B3C2686058F00375BCC /* FeatureToggleProvider.swift in Sources */,
 				0EA796772664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift in Sources */,
 				0E6BAE7523856A01003A2D4C /* TagSettingsTableInitializer.swift in Sources */,
 				0E6BAE7723856A01003A2D4C /* RUError.swift in Sources */,
@@ -4165,10 +4166,9 @@
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E6BAE8F23856A01003A2D4C /* SettingsModuleInput.swift in Sources */,
-				0EB48D712619D50A008E0D2D /* FeatureToggle.swift in Sources */,
+				0EB66B402686058F00375BCC /* FirebaseRemoteConfigService.swift in Sources */,
 				0E6BAE9023856A01003A2D4C /* CardsScrollConfigurator.swift in Sources */,
 				0E6BAE9323856A01003A2D4C /* WebTagSettingsViewOutput.swift in Sources */,
-				0E197C7B23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E05015726860375007060C4 /* AppStateServiceImpl.swift in Sources */,
 				0E6BAE9423856A01003A2D4C /* CardsRouter.swift in Sources */,
 				0E6BAE9523856A01003A2D4C /* WelcomeViewController.swift in Sources */,
