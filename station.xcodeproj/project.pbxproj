@@ -1614,6 +1614,8 @@
 			isa = PBXGroup;
 			children = (
 				0E5C302322D0B16300B52E39 /* AppState */,
+				0EB48D6D2619D4D4008E0D2D /* Features */,
+				0E197C7223C5C7770074015B /* Info */,
 				A9FC78E7257966EF00F94604 /* UniversalLinks */,
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
@@ -2101,7 +2103,6 @@
 			isa = PBXGroup;
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
-				0E197C7223C5C7770074015B /* Info */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2525,6 +2526,7 @@
 		0EB48D6D2619D4D4008E0D2D /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				0EB48DFA261B1046008E0D2D /* RemoteConfig */,
 				0EB48D932619D5D5008E0D2D /* Providers */,
 				0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */,
 				0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */,
@@ -2899,9 +2901,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
-				0EB48D6D2619D4D4008E0D2D /* Features */,
 				0E75661C2361C18C00FCA977 /* GATT */,
-				0EB48DFA261B1046008E0D2D /* RemoteConfig */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 			);
 			path = Business;
