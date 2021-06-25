@@ -79,6 +79,7 @@ final class AppAssembly {
             [
                 BusinessAssembly(),
                 CoreAssembly(),
+                DaemonAssembly(),
                 MigrationAssembly(),
                 NetworkingAssembly(),
                 PersistenceAssembly(),
