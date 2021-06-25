@@ -1,5 +1,7 @@
+// swiftlint:disable file_length
 import Swinject
 import Foundation
+import BTKit
 import RuuviLocal
 import RuuviPool
 import RuuviContext
@@ -13,6 +15,9 @@ import RuuviReactor
 import SwinjectPropertyLoader
 import RuuviCloud
 import RuuviUser
+import RuuviDaemon
+import RuuviNotifier
+import RuuviNotification
 #if canImport(RuuviCloudPure)
 import RuuviCloudPure
 #endif
@@ -292,3 +297,144 @@ private final class VirtualAssembly: Assembly {
         }
     }
 }
+
+private final class DaemonAssembly: Assembly {
+    // swiftlint:disable:next function_body_length
+    func assemble(container: Container) {
+        container.register(BackgroundProcessService.self) { r in
+            let dataPruningOperationsManager = r.resolve(DataPruningOperationsManager.self)!
+            let service = BackgroundProcessServiceiOS13(
+                dataPruningOperationsManager: dataPruningOperationsManager
+            )
+            return service
+        }.inObjectScope(.container)
+
+        container.register(BackgroundTaskService.self) { r in
+            let webTagOperationsManager = r.resolve(WebTagOperationsManager.self)!
+            let service = BackgroundTaskServiceiOS13(
+                webTagOperationsManager: webTagOperationsManager
+            )
+            return service
+        }.inObjectScope(.container)
+
+        container.register(DataPruningOperationsManager.self) { r in
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let virtualStorage = r.resolve(VirtualStorage.self)!
+            let virtualRepository = r.resolve(VirtualRepository.self)!
+            let ruuviPool = r.resolve(RuuviPool.self)!
+            let manager = DataPruningOperationsManager(
+                settings: settings,
+                virtualStorage: virtualStorage,
+                virtualRepository: virtualRepository,
+                ruuviStorage: ruuviStorage,
+                ruuviPool: ruuviPool
+            )
+            return manager
+        }
+
+        container.register(PullWebDaemon.self) { r in
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let webTagOperationsManager = r.resolve(WebTagOperationsManager.self)!
+            let daemon = PullWebDaemonOperations(
+                settings: settings,
+                webTagOperationsManager: webTagOperationsManager
+            )
+            return daemon
+        }.inObjectScope(.container)
+
+        container.register(RuuviTagAdvertisementDaemon.self) { r in
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let foreground = r.resolve(BTForeground.self)!
+            let ruuviPool = r.resolve(RuuviPool.self)!
+            let ruuviReactor = r.resolve(RuuviReactor.self)!
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let daemon = RuuviTagAdvertisementDaemonBTKit(
+                ruuviPool: ruuviPool,
+                ruuviStorage: ruuviStorage,
+                ruuviReactor: ruuviReactor,
+                foreground: foreground,
+                settings: settings
+            )
+            return daemon
+        }.inObjectScope(.container)
+
+        container.register(RuuviTagHeartbeatDaemon.self) { r in
+            let background = r.resolve(BTBackground.self)!
+            let localNotificationsManager = r.resolve(RuuviNotificationLocal.self)!
+            let connectionPersistence = r.resolve(RuuviLocalConnections.self)!
+            let ruuviPool = r.resolve(RuuviPool.self)!
+            let ruuviReactor = r.resolve(RuuviReactor.self)!
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let alertHandler = r.resolve(RuuviNotifier.self)!
+            let alertService = r.resolve(RuuviServiceAlert.self)!
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let pullWebDaemon = r.resolve(PullWebDaemon.self)!
+            let daemon = RuuviTagHeartbeatDaemonBTKit(
+                background: background,
+                localNotificationsManager: localNotificationsManager,
+                connectionPersistence: connectionPersistence,
+                ruuviPool: ruuviPool,
+                ruuviStorage: ruuviStorage,
+                ruuviReactor: ruuviReactor,
+                alertService: alertService,
+                alertHandler: alertHandler,
+                settings: settings,
+                pullWebDaemon: pullWebDaemon,
+                titles: HeartbeatDaemonTitles()
+            )
+            return daemon
+        }.inObjectScope(.container)
+
+        container.register(RuuviTagPropertiesDaemon.self) { r in
+            let ruuviReactor = r.resolve(RuuviReactor.self)!
+            let ruuviPool = r.resolve(RuuviPool.self)!
+            let foreground = r.resolve(BTForeground.self)!
+            let idPersistence = r.resolve(RuuviLocalIDs.self)!
+            let realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")!
+            let sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
+            let daemon = RuuviTagPropertiesDaemonBTKit(
+                ruuviPool: ruuviPool,
+                ruuviReactor: ruuviReactor,
+                foreground: foreground,
+                idPersistence: idPersistence,
+                realmPersistence: realmPersistence,
+                sqiltePersistence: sqiltePersistence
+            )
+            return daemon
+        }.inObjectScope(.container)
+
+        container.register(VirtualTagDaemon.self) { r in
+            let virtualService = r.resolve(VirtualService.self)!
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let virtualPersistence = r.resolve(VirtualPersistence.self)!
+            let alertService = r.resolve(RuuviNotifier.self)!
+            let virtualReactor = r.resolve(VirtualReactor.self)!
+            let daemon = VirtualTagDaemonImpl(
+                virtualService: virtualService,
+                settings: settings,
+                virtualPersistence: virtualPersistence,
+                alertService: alertService,
+                virtualReactor: virtualReactor
+            )
+            return daemon
+        }.inObjectScope(.container)
+
+        container.register(WebTagOperationsManager.self) { r in
+            let alertService = r.resolve(RuuviServiceAlert.self)!
+            let ruuviNotifier = r.resolve(RuuviNotifier.self)!
+            let virtualProviderService = r.resolve(VirtualProviderService.self)!
+            let virtualStorage = r.resolve(VirtualStorage.self)!
+            let virtualPersistence = r.resolve(VirtualPersistence.self)!
+            let manager = WebTagOperationsManager(
+                virtualProviderService: virtualProviderService,
+                alertService: alertService,
+                alertHandler: ruuviNotifier,
+                virtualStorage: virtualStorage,
+                virtualPersistence: virtualPersistence
+            )
+            return manager
+        }
+    }
+}
+// swiftlint:enable file_length

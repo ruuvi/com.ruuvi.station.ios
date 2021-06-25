@@ -38,6 +38,10 @@ def shared_pods
   pod 'RuuviDFU/Impl', :path => 'Packages/RuuviDFU/RuuviDFU.podspec'
   pod 'RuuviDaemon', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec', :testspecs => ['Tests']
   pod 'RuuviDaemon/CloudSync', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
+  pod 'RuuviDaemon/Operation', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
+  pod 'RuuviDaemon/RuuviTag', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
+  pod 'RuuviDaemon/VirtualTag', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
+  pod 'RuuviDaemon/Background', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
   pod 'RuuviLocal/UserDefaults', :path => 'Packages/RuuviLocal/RuuviLocal.podspec'
   pod 'RuuviLocation', :path => 'Packages/RuuviLocation/RuuviLocation.podspec', :testspecs => ['Tests']
   pod 'RuuviLocation/Service', :path => 'Packages/RuuviLocation/RuuviLocation.podspec'
