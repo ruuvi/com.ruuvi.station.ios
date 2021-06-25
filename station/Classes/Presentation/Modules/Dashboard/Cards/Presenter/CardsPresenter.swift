@@ -12,6 +12,7 @@ import RuuviVirtual
 import RuuviCore
 import RuuviNotification
 import RuuviNotifier
+import RuuviDaemon
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!

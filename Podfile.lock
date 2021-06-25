@@ -207,13 +207,44 @@ PODS:
   - RuuviCore/Tests (0.0.1)
   - RuuviDaemon (0.0.1):
     - RuuviDaemon/Contract (= 0.0.1)
+  - RuuviDaemon/Background (0.0.1):
+    - RuuviDaemon/Contract
+    - RuuviDaemon/Operation
   - RuuviDaemon/CloudSync (0.0.1):
     - RuuviDaemon/Contract
     - RuuviDaemon/Worker
     - RuuviLocal
     - RuuviService
   - RuuviDaemon/Contract (0.0.1)
+  - RuuviDaemon/Operation (0.0.1):
+    - FutureX
+    - RuuviDaemon/Contract
+    - RuuviLocal
+    - RuuviNotifier
+    - RuuviOntology
+    - RuuviPool
+    - RuuviStorage
+    - RuuviVirtual
+  - RuuviDaemon/RuuviTag (0.0.1):
+    - BTKit
+    - RuuviDaemon/Contract
+    - RuuviLocal
+    - RuuviNotification
+    - RuuviNotifier
+    - RuuviOntology
+    - RuuviPersistence
+    - RuuviPool
+    - RuuviReactor
+    - RuuviService
+    - RuuviStorage
   - RuuviDaemon/Tests (0.0.1)
+  - RuuviDaemon/VirtualTag (0.0.1):
+    - BTKit
+    - RuuviDaemon/Contract
+    - RuuviLocal
+    - RuuviNotifier
+    - RuuviOntology
+    - RuuviVirtual
   - RuuviDaemon/Worker (0.0.1)
   - RuuviDFU (0.0.1):
     - RuuviDFU/Contract (= 0.0.1)
@@ -515,8 +546,12 @@ DEPENDENCIES:
   - RuuviCore/PN (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviCore/Tests (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviDaemon (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDaemon/Background (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/CloudSync (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDaemon/Operation (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDaemon/RuuviTag (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDaemon/Tests (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDaemon/VirtualTag (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
   - RuuviDFU (from `Packages/RuuviDFU/RuuviDFU.podspec`)
   - RuuviDFU/Impl (from `Packages/RuuviDFU/RuuviDFU.podspec`)
   - RuuviDFU/Tests (from `Packages/RuuviDFU/RuuviDFU.podspec`)
@@ -714,7 +749,7 @@ SPEC CHECKSUMS:
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
-  RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
+  RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
@@ -735,6 +770,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 22b0ea014460c708b25a6e0a143a038ebf602ea2
+PODFILE CHECKSUM: 6ea19bbe87d8d8ae569f4923f5916ff2a6089ca8
 
 COCOAPODS: 1.10.1
