@@ -3,6 +3,7 @@ import BTKit
 import Future
 import RuuviOntology
 import RuuviPool
+import RuuviService
 
 public final class GATTServiceQueue: GATTService {
     private let ruuviPool: RuuviPool
