@@ -1,8 +1,8 @@
 import Foundation
 
-class AsyncOperation: Operation {
+open class AsyncOperation: Operation {
 
-    enum State: String {
+  public enum State: String {
       case ready, executing, finished
 
     fileprivate var keyPath: String {
@@ -10,7 +10,7 @@ class AsyncOperation: Operation {
     }
   }
 
-  var state = State.ready {
+  open var state = State.ready {
     willSet {
       willChangeValue(forKey: newValue.keyPath)
       willChangeValue(forKey: state.keyPath)
@@ -23,23 +23,23 @@ class AsyncOperation: Operation {
 }
 
 extension AsyncOperation {
-  override var isReady: Bool {
+  override open var isReady: Bool {
     return super.isReady && state == .ready
   }
 
-  override var isExecuting: Bool {
+  override open var isExecuting: Bool {
     return state == .executing
   }
 
-  override var isFinished: Bool {
+  override open var isFinished: Bool {
     return state == .finished
   }
 
-  override var isAsynchronous: Bool {
+  override open var isAsynchronous: Bool {
     return true
   }
 
-  override func start() {
+  override open func start() {
     if isCancelled {
       state = .finished
       return
@@ -48,7 +48,7 @@ extension AsyncOperation {
     state = .executing
   }
 
-  override func cancel() {
+  override open func cancel() {
     state = .finished
   }
 
