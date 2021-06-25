@@ -153,7 +153,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviService(error))
         })
         return promise.future
     }
@@ -315,7 +315,7 @@ extension TagChartsInteractor {
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviService(error))
         })
         return promise.future
     }

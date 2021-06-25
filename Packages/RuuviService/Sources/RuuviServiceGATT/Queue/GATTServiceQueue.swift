@@ -4,9 +4,17 @@ import Future
 import RuuviOntology
 import RuuviPool
 
-class GATTServiceQueue: GATTService {
-    var ruuviPool: RuuviPool!
-    var background: BTBackground!
+public final class GATTServiceQueue: GATTService {
+    private let ruuviPool: RuuviPool
+    private let background: BTBackground
+
+    public init(
+        ruuviPool: RuuviPool,
+        background: BTBackground
+    ) {
+        self.ruuviPool = ruuviPool
+        self.background = background
+    }
 
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -14,17 +22,19 @@ class GATTServiceQueue: GATTService {
         return queue
     }()
 
-    // swiftlint:disable function_parameter_count
     @discardableResult
-    func syncLogs(uuid: String,
-                  mac: String?,
-                  settings: SensorSettings?,
-                  progress: ((BTServiceProgress) -> Void)?,
-                  connectionTimeout: TimeInterval?,
-                  serviceTimeout: TimeInterval?) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    // swiftlint:disable function_parameter_count
+    public func syncLogs(
+        uuid: String,
+        mac: String?,
+        settings: SensorSettings?,
+        progress: ((BTServiceProgress) -> Void)?,
+        connectionTimeout: TimeInterval?,
+        serviceTimeout: TimeInterval?
+    ) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
         if isSyncingLogs(with: uuid) {
-            promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
+            promise.fail(error: .isAlreadySyncingLogsWithThisTag)
         } else {
             let operation = RuuviTagReadLogsOperation(
                 uuid: uuid,
@@ -49,7 +59,7 @@ class GATTServiceQueue: GATTService {
     }
     // swiftlint:enable function_parameter_count
 
-    func isSyncingLogs(with uuid: String) -> Bool {
+    public func isSyncingLogs(with uuid: String) -> Bool {
         return queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
     }
 }

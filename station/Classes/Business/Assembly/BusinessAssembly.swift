@@ -16,6 +16,9 @@ import RuuviVirtual
 import RuuviLocation
 import RuuviNotification
 import RuuviNotifier
+#if canImport(RuuviServiceGATT)
+import RuuviServiceGATT
+#endif
 #if canImport(RuuviAnalytics)
 import RuuviAnalytics
 #endif
@@ -120,9 +123,12 @@ class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(GATTService.self) { r in
-            let service = GATTServiceQueue()
-            service.ruuviPool = r.resolve(RuuviPool.self)
-            service.background = r.resolve(BTBackground.self)
+            let ruuviPool = r.resolve(RuuviPool.self)!
+            let background = r.resolve(BTBackground.self)!
+            let service = GATTServiceQueue(
+                ruuviPool: ruuviPool,
+                background: background
+            )
             return service
         }.inObjectScope(.container)
 
