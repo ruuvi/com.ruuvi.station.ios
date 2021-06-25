@@ -7,7 +7,7 @@ import RuuviStorage
 import RuuviOntology
 import RuuviLocal
 
-final class UserPropertiesServiceImpl: UserPropertiesService {
+public final class RuuviAnalyticsImpl: RuuviAnalytics {
     private enum Properties {
         // Quantity of added tags(if greater that 10, then "10+")
         case addedTags(Int)
@@ -68,10 +68,18 @@ final class UserPropertiesServiceImpl: UserPropertiesService {
         }
     }
 
-    var ruuviStorage: RuuviStorage!
-    var settings: RuuviLocalSettings!
+    private let ruuviStorage: RuuviStorage
+    private let settings: RuuviLocalSettings
 
-    func update() {
+    public init(
+        ruuviStorage: RuuviStorage,
+        settings: RuuviLocalSettings
+    ) {
+        self.ruuviStorage = ruuviStorage
+        self.settings = settings
+    }
+
+    public func update() {
         guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,
               bundleName != "station_dev" else {
             return

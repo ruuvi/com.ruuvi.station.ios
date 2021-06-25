@@ -1,5 +1,5 @@
 import Foundation
 
-protocol UserPropertiesService {
+public protocol RuuviAnalytics {
     func update()
 }
