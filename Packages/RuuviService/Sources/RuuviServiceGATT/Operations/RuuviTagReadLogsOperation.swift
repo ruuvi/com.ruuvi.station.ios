@@ -3,33 +3,11 @@ import BTKit
 import RuuviOntology
 import RuuviPool
 
-extension Notification.Name {
-    static let RuuviTagReadLogsOperationDidStart = Notification.Name("RuuviTagReadLogsOperationDidStart")
-    static let RuuviTagReadLogsOperationDidFail = Notification.Name("RuuviTagReadLogsOperationDidFail")
-    static let RuuviTagReadLogsOperationDidFinish = Notification.Name("RuuviTagReadLogsOperationDidFinish")
-}
-
-enum RuuviTagReadLogsOperationDidStartKey: String {
-    case uuid
-    case fromDate
-}
-
-enum RuuviTagReadLogsOperationDidFailKey: String {
-    case uuid
-    case error
-}
-
-enum RuuviTagReadLogsOperationDidFinishKey: String {
-    case uuid
-    case logs
-}
-
-class RuuviTagReadLogsOperation: AsyncOperation {
-
+final class RuuviTagReadLogsOperation: AsyncOperation {
     var uuid: String
     var mac: String?
     var sensorSettings: SensorSettings?
-    var error: RUError?
+    var error: RuuviServiceError?
 
     private var background: BTBackground
     private var ruuviPool: RuuviPool
@@ -37,14 +15,16 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
 
-    init(uuid: String,
-         mac: String?,
-         settings: SensorSettings?,
-         ruuviPool: RuuviPool,
-         background: BTBackground,
-         progress: ((BTServiceProgress) -> Void)? = nil,
-         connectionTimeout: TimeInterval? = 0,
-         serviceTimeout: TimeInterval? = 0) {
+    init(
+        uuid: String,
+        mac: String?,
+        settings: SensorSettings?,
+        ruuviPool: RuuviPool,
+        background: BTBackground,
+        progress: ((BTServiceProgress) -> Void)? = nil,
+        connectionTimeout: TimeInterval? = 0,
+        serviceTimeout: TimeInterval? = 0
+    ) {
         self.uuid = uuid
         self.mac = mac
         self.sensorSettings = settings

@@ -5,6 +5,8 @@ import Localize_Swift
 extension RuuviServiceError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .btkit(let error):
+            return error.localizedDescription
         case .writeToDisk(let error):
             return error.localizedDescription
         case .ruuviRepository(let error):
@@ -31,6 +33,8 @@ extension RuuviServiceError: LocalizedError {
             return "RuuviServiceError.failedToFindOrGenerateBackgroundImage".localized()
         case .failedToGetJpegRepresentation:
             return "RuuviServiceError.failedToGetJpegRepresentation".localized()
+        case .isAlreadySyncingLogsWithThisTag:
+            return "ExpectedError.isAlreadySyncingLogsWithThisTag".localized()
         }
     }
 }
