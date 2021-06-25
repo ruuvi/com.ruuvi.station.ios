@@ -1613,6 +1613,8 @@
 		0E09671522AE74CB00E85F48 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				0E5C302322D0B16300B52E39 /* AppState */,
+				A9FC78E7257966EF00F94604 /* UniversalLinks */,
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
 			);
@@ -2897,13 +2899,10 @@
 			isa = PBXGroup;
 			children = (
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
-				0E5C302322D0B16300B52E39 /* AppState */,
-				A902003A244E1304001882C3 /* Charts */,
 				0EB48D6D2619D4D4008E0D2D /* Features */,
 				0E75661C2361C18C00FCA977 /* GATT */,
 				0EB48DFA261B1046008E0D2D /* RemoteConfig */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
-				A9FC78E7257966EF00F94604 /* UniversalLinks */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -3602,22 +3601,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		A902003A244E1304001882C3 /* Charts */ = {
-			isa = PBXGroup;
-			children = (
-				A902003B244E130F001882C3 /* Operations */,
-			);
-			path = Charts;
-			sourceTree = "<group>";
-		};
-		A902003B244E130F001882C3 /* Operations */ = {
-			isa = PBXGroup;
-			children = (
-				A9020041244E14F8001882C3 /* ChartFilterOperation.swift */,
-			);
-			path = Operations;
-			sourceTree = "<group>";
-		};
 		A907A1D1245F7C4400041F6E /* ProgressBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -3639,6 +3622,7 @@
 		A90E168D24604F4600631E6C /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				A9020041244E14F8001882C3 /* ChartFilterOperation.swift */,
 				A90E168E24604F7400631E6C /* TagChartPresenter.swift */,
 				A90E169224604FD100631E6C /* TagChartModuleInput.swift */,
 				A90E16962460504C00631E6C /* TagChartModuleOutput.swift */,
