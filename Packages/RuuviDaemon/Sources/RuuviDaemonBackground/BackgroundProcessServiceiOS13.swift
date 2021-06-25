@@ -1,6 +1,10 @@
 import Foundation
 import BackgroundTasks
 import Future
+import RuuviDaemon
+#if canImport(RuuviDaemonOperation)
+import RuuviDaemonOperation
+#endif
 
 @available(iOS 13, *)
 public final class BackgroundProcessServiceiOS13: BackgroundProcessService {

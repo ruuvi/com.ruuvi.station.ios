@@ -6,6 +6,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviPool
 import RuuviPersistence
+import RuuviDaemon
 
 public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTagAdvertisementDaemon {
     private let ruuviPool: RuuviPool

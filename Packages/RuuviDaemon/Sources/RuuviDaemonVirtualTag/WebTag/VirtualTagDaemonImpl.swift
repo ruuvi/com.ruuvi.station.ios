@@ -4,6 +4,10 @@ import RuuviLocal
 import RuuviOntology
 import RuuviVirtual
 import RuuviNotifier
+import RuuviDaemon
+#if canImport(RuuviDaemonOperation)
+import RuuviDaemonOperation
+#endif
 
 public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
     private let virtualService: VirtualService
@@ -205,5 +209,12 @@ public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
                       userInfo: [WebTagDaemonDidFailKey.error: error])
         }
     }
+}
 
+extension NSObjectProtocol {
+    func invalidate() {
+        NotificationCenter
+            .default
+            .removeObserver(self)
+    }
 }

@@ -69,6 +69,18 @@ import RuuviVirtualRepository
 #if canImport(RuuviVirtualStorage)
 import RuuviVirtualStorage
 #endif
+#if canImport(RuuviDaemonOperation)
+import RuuviDaemonOperation
+#endif
+#if canImport(RuuviDaemonBackground)
+import RuuviDaemonBackground
+#endif
+#if canImport(RuuviDaemonRuuviTag)
+import RuuviDaemonRuuviTag
+#endif
+#if canImport(RuuviDaemonVirtualTag)
+import RuuviDaemonVirtualTag
+#endif
 
 final class AppAssembly {
     static let shared = AppAssembly()

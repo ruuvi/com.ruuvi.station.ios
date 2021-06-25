@@ -3,6 +3,7 @@ import Future
 import RuuviService
 import RuuviVirtual
 import RuuviNotifier
+import RuuviDaemon
 
 public final class WebTagOperationsManager {
     private let virtualProviderService: VirtualProviderService
