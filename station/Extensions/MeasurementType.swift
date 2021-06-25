@@ -10,6 +10,7 @@ enum MeasurementType: String {
     case movementCounter
     case txPower
 }
+
 extension MeasurementType {
     static var chartsCases: [MeasurementType] {
         return [
