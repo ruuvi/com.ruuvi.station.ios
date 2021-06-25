@@ -24,6 +24,9 @@ import RuuviCorePN
 #if canImport(RuuviCorePermission)
 import RuuviCorePermission
 #endif
+#if canImport(RuuviServiceMeasurement)
+import RuuviServiceMeasurement
+#endif
 
 class CoreAssembly: Assembly {
     // swiftlint:disable:next function_body_length

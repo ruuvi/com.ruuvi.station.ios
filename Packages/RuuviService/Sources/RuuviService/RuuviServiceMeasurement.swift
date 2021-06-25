@@ -6,6 +6,16 @@ public struct RuuviServiceMeasurementSettingsUnit {
     public let temperatureUnit: UnitTemperature
     public let humidityUnit: HumidityUnit
     public let pressureUnit: UnitPressure
+
+    public init(
+        temperatureUnit: UnitTemperature,
+        humidityUnit: HumidityUnit,
+        pressureUnit: UnitPressure
+    ) {
+        self.temperatureUnit = temperatureUnit
+        self.humidityUnit = humidityUnit
+        self.pressureUnit = pressureUnit
+    }
 }
 
 public protocol RuuviServiceMeasurementDelegate: AnyObject {
