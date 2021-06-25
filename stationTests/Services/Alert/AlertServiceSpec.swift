@@ -660,7 +660,7 @@ class AlertServiceSpec: QuickSpec {
                     guard let userInfo = notification.userInfo else {
                         return false
                     }
-                    return userInfo[AlertServiceAlertDidChangeKey.uuid] as? String == uuid
+                    return userInfo[RuuviServiceAlertDidChangeKey.uuid] as? String == uuid
                 }
                 .compactMap { $0.name }
             let matches = actualNames.contains(expectedName)

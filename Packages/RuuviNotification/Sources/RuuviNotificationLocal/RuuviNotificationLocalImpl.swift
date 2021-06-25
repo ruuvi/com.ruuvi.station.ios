@@ -313,14 +313,14 @@ extension RuuviNotificationLocalImpl {
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main) { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
 
-                let virtualSensor = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor
-                let physicalSensor = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
+                let virtualSensor = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor
+                let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
 
                 var isOn = false
                 if let virtualSensor = virtualSensor {

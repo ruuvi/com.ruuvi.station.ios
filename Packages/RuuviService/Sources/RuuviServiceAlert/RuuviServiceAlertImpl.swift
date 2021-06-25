@@ -477,11 +477,11 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         NotificationCenter
             .default
             .post(
-                name: .AlertServiceAlertDidChange,
+                name: .RuuviServiceAlertDidChange,
                 object: nil,
                 userInfo: [
-                    AlertServiceAlertDidChangeKey.physicalSensor: sensor,
-                    AlertServiceAlertDidChangeKey.type: type
+                    RuuviServiceAlertDidChangeKey.physicalSensor: sensor,
+                    RuuviServiceAlertDidChangeKey.type: type
                 ]
             )
     }
@@ -490,11 +490,11 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         NotificationCenter
             .default
             .post(
-                name: .AlertServiceAlertDidChange,
+                name: .RuuviServiceAlertDidChange,
                 object: nil,
                 userInfo: [
-                    AlertServiceAlertDidChangeKey.virtualSensor: sensor,
-                    AlertServiceAlertDidChangeKey.type: type
+                    RuuviServiceAlertDidChangeKey.virtualSensor: sensor,
+                    RuuviServiceAlertDidChangeKey.type: type
                 ]
             )
     }

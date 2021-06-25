@@ -7,6 +7,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviCore
+import RuuviNotifier
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -31,7 +32,7 @@ class CardsScrollConfigurator {
         presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
-        presenter.alertHandler = r.resolve(AlertService.self)
+        presenter.alertHandler = r.resolve(RuuviNotifier.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!
@@ -39,7 +40,7 @@ class CardsScrollConfigurator {
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.virtualReactor = r.resolve(VirtualReactor.self)
-        presenter.measurementService = r.resolve(MeasurementsService.self)
+        presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         router.delegate = presenter
@@ -83,7 +84,7 @@ class CardsScrollConfigurator {
 
         view.tagChartsPresentInteractiveTransition = chartsTransition.present
         view.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
-        view.measurementService = r.resolve(MeasurementsService.self)
+        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
     }

@@ -3,6 +3,7 @@ import Charts
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviService
 
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
@@ -13,7 +14,7 @@ class TagChartPresenter: NSObject {
         }
     }
     weak var ouptut: TagChartModuleOutput!
-    var measurementService: MeasurementsService! {
+    var measurementService: RuuviServiceMeasurement! {
         didSet {
             measurementService.add(self)
         }
@@ -109,7 +110,7 @@ extension TagChartPresenter: TagChartViewOutput {
         ouptut?.chartViewDidChangeViewPort(chartView)
     }
 }
-extension TagChartPresenter: MeasurementsServiceDelegate {
+extension TagChartPresenter: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
         self.updateUnits(viewModel)
     }

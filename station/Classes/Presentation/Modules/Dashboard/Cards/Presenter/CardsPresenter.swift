@@ -11,6 +11,8 @@ import RuuviService
 import RuuviVirtual
 import RuuviCore
 import RuuviNotification
+import RuuviNotifier
+import RuuviDaemon
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -26,7 +28,7 @@ class CardsPresenter: CardsModuleInput {
     var permissionsManager: RuuviCorePermission!
     var connectionPersistence: RuuviLocalConnections!
     var alertService: RuuviServiceAlert!
-    var alertHandler: AlertService!
+    var alertHandler: RuuviNotifier!
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
@@ -34,7 +36,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviReactor: RuuviReactor!
     var ruuviStorage: RuuviStorage!
     var virtualReactor: VirtualReactor!
-    var measurementService: MeasurementsService!
+    var measurementService: RuuviServiceMeasurement!
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     weak var tagCharts: TagChartsModuleInput?
@@ -296,9 +298,9 @@ extension CardsPresenter: CardsRouterDelegate {
     }
 }
 
-// MARK: - AlertServiceObserver
-extension CardsPresenter: AlertServiceObserver {
-    func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
+// MARK: - RuuviNotifierObserver
+extension CardsPresenter: RuuviNotifierObserver {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter({ $0.luid.value?.value == uuid })
             .forEach({
@@ -855,14 +857,14 @@ extension CardsPresenter {
         alertDidChangeToken?.invalidate()
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
                             guard let sSelf = self else { return }
                             if let userInfo = notification.userInfo {
                                if let physicalSensor
-                                    = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor {
+                                    = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor {
                                 sSelf.viewModels.filter({
                                     ($0.luid.value != nil && ($0.luid.value == physicalSensor.luid?.any))
                                         || ($0.mac.value != nil && ($0.mac.value == physicalSensor.macId?.any))
@@ -875,7 +877,7 @@ extension CardsPresenter {
                                     })
                                 }
                                 if let virtualSensor
-                                    = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor {
+                                    = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor {
                                  sSelf.viewModels.filter({
                                     ($0.id.value != nil && ($0.id.value == virtualSensor.id))
                                  }).forEach({ (viewModel) in

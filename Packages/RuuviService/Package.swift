@@ -32,12 +32,23 @@ let package = Package(
             name: "RuuviServiceSensorRecords",
             targets: ["RuuviServiceSensorRecords"]),
         .library(
+            name: "RuuviServiceMeasurement",
+            targets: ["RuuviServiceMeasurement"]),
+        .library(
+            name: "RuuviServiceExport",
+            targets: ["RuuviServiceExport"]),
+        .library(
+            name: "RuuviServiceGATT",
+            targets: ["RuuviServiceGATT"]),
+        .library(
             name: "RuuviServiceFactory",
             targets: ["RuuviServiceFactory"]
         )
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
+        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviCloud"),
@@ -100,6 +111,28 @@ let package = Package(
             name: "RuuviServiceSensorRecords",
             dependencies: [
                 "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceExport",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceGATT",
+            dependencies: [
+                "RuuviService",
+                "BTKit"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceMeasurement",
+            dependencies: [
+                "RuuviService",
+                "RuuviLocal",
+                "RuuviOntology",
+                "Humidity"
             ]
         ),
         .target(
