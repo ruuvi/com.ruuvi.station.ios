@@ -378,8 +378,6 @@
 		0EF4E35226831A0C00D83CC7 /* DfuFirmware+Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF4E35126831A0B00D83CC7 /* DfuFirmware+Log.swift */; };
 		0EF4E35726831B1100D83CC7 /* RuuviDFU in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E35626831B1100D83CC7 /* RuuviDFU */; };
 		0EF4E35926831B1100D83CC7 /* RuuviDFUImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF4E35826831B1100D83CC7 /* RuuviDFUImpl */; };
-		318592DC25BB4D000093B8EB /* UserPropertiesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318592D925BB4D000093B8EB /* UserPropertiesService.swift */; };
-		318592E525BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */; };
 		660EB25A2669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */; };
 		660EB25D2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2472669278E000FD22B /* DfuDevicesScannerInitializer.swift */; };
 		660EB2602669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2492669278E000FD22B /* DfuDevicesScannerPresenter.swift */; };
@@ -843,8 +841,6 @@
 		310159B7264484D700A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		310159B82644864400A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		310159B92644864C00A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		318592D925BB4D000093B8EB /* UserPropertiesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesService.swift; sourceTree = "<group>"; };
-		318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesServiceImpl.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
 		4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewInput.swift; sourceTree = "<group>"; };
@@ -2569,7 +2565,6 @@
 			children = (
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
 				0E75661C2361C18C00FCA977 /* GATT */,
-				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -2746,14 +2741,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		0EFDD6D122BBD9AB00EADFC6 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				318592D725BB4CBE0093B8EB /* UserProperties */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
 		11629D6C45208918E104E77F /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
@@ -2769,23 +2756,6 @@
 				E6DB40883B83C652584EBB9A /* SignInViewController.swift */,
 			);
 			path = ViewController;
-			sourceTree = "<group>";
-		};
-		318592D725BB4CBE0093B8EB /* UserProperties */ = {
-			isa = PBXGroup;
-			children = (
-				318592D825BB4CCF0093B8EB /* Impl */,
-				318592D925BB4D000093B8EB /* UserPropertiesService.swift */,
-			);
-			path = UserProperties;
-			sourceTree = "<group>";
-		};
-		318592D825BB4CCF0093B8EB /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */,
-			);
-			path = Impl;
 			sourceTree = "<group>";
 		};
 		321CE77F6EB26F685032F835 /* Frameworks */ = {
@@ -4108,7 +4078,6 @@
 				0E6BAE5723856A01003A2D4C /* DefaultsModuleInput.swift in Sources */,
 				0E6BAE5A23856A01003A2D4C /* TagSettingsPresenter.swift in Sources */,
 				0E6BAE5B23856A01003A2D4C /* TagChartsModuleOutput.swift in Sources */,
-				318592DC25BB4D000093B8EB /* UserPropertiesService.swift in Sources */,
 				A91D03052511207300694733 /* SelectionViewOutput.swift in Sources */,
 				0E6BAE5C23856A01003A2D4C /* HumidityUnit.swift in Sources */,
 				0E6BAE5D23856A01003A2D4C /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
@@ -4182,7 +4151,6 @@
 				A9F4471824B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */,
 				A90E169124604F7400631E6C /* TagChartPresenter.swift in Sources */,
 				A907A1D5245F7C6600041F6E /* ProgressBarView.swift in Sources */,
-				318592E525BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift in Sources */,
 				0E6BAE9923856A01003A2D4C /* SettingsViewInput.swift in Sources */,
 				0E6BAE9C23856A01003A2D4C /* CardsRouterDelegate.swift in Sources */,
 				A90E169524604FD100631E6C /* TagChartModuleInput.swift in Sources */,

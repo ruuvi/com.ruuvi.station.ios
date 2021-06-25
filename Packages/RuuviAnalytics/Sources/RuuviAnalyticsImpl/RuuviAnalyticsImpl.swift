@@ -1,10 +1,10 @@
 import Foundation
-import Future
 #if canImport(FirebaseAnalytics)
 import FirebaseAnalytics
 #endif
-import RuuviStorage
+import RuuviAnalytics
 import RuuviOntology
+import RuuviStorage
 import RuuviLocal
 
 public final class RuuviAnalyticsImpl: RuuviAnalytics {

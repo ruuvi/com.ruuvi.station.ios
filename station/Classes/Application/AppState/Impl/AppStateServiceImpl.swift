@@ -2,9 +2,11 @@ import UIKit
 import RuuviLocal
 import RuuviDaemon
 import RuuviUser
+#if canImport(RuuviAnalytics)
+import RuuviAnalytics
+#endif
 
 class AppStateServiceImpl: AppStateService {
-
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
@@ -14,7 +16,9 @@ class AppStateServiceImpl: AppStateService {
     var pullWebDaemon: PullWebDaemon!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var settings: RuuviLocalSettings!
-    var userPropertiesService: UserPropertiesService!
+    #if canImport(RuuviAnalytics)
+    var userPropertiesService: RuuviAnalytics!
+    #endif
     var universalLinkCoordinator: UniversalLinkCoordinator!
     var webTagDaemon: VirtualTagDaemon!
 
@@ -34,9 +38,11 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.start()
         backgroundTaskService.register()
         backgroundProcessService.register()
+        #if canImport(RuuviAnalytics)
         DispatchQueue.main.async {
             self.userPropertiesService.update()
         }
+        #endif
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

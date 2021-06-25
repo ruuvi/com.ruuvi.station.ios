@@ -5,18 +5,34 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviAnalytics",
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviAnalytics",
-            targets: ["RuuviAnalytics"])
+            targets: ["RuuviAnalytics"]),
+        .library(
+            name: "RuuviAnalyticsImpl",
+            targets: ["RuuviAnalyticsImpl"])
     ],
     dependencies: [
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "8.1.1")),
+        .package(path: "../RuuviStorage"),
+        .package(path: "../RuuviLocal"),
+        .package(path: "../RuuviOntology")
     ],
     targets: [
         .target(
             name: "RuuviAnalytics",
             dependencies: []),
+        .target(
+            name: "RuuviAnalyticsImpl",
+            dependencies: [
+                "RuuviAnalytics",
+                .product(name: "FirebaseAnalytics", package: "Firebase"),
+                "RuuviLocal",
+                "RuuviStorage",
+                "RuuviOntology"
+            ]),
         .testTarget(
             name: "RuuviAnalyticsTests",
             dependencies: ["RuuviAnalytics"])

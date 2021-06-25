@@ -37,7 +37,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         ruuviTagsToken?.invalidate()
-        isOnToken?.invalidate()
+        if let isOnToken = isOnToken {
+            NotificationCenter.default.removeObserver(isOnToken)
+        }
         sensorSettingsTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.removeAll()
     }
@@ -213,13 +215,5 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
             self?.post(error: .ruuviPool(error))
         })
         savedDate[uuid] = Date()
-    }
-}
-
-extension NSObjectProtocol {
-    func invalidate() {
-        NotificationCenter
-            .default
-            .removeObserver(self)
     }
 }

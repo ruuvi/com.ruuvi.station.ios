@@ -24,6 +24,8 @@ def shared_pods
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'Realm'
   pod 'RealmSwift'
+  pod 'RuuviAnalytics', :path => 'Packages/RuuviAnalytics/RuuviAnalytics.podspec', :testspecs => ['Tests']
+  pod 'RuuviAnalytics/Impl', :path => 'Packages/RuuviAnalytics/RuuviAnalytics.podspec'
   pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
   pod 'RuuviContext', :path => 'Packages/RuuviContext/RuuviContext.podspec'
   pod 'RuuviCore', :path => 'Packages/RuuviCore/RuuviCore.podspec', :testspecs => ['Tests']

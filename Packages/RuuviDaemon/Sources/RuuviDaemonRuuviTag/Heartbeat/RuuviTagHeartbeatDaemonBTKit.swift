@@ -95,8 +95,12 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
 
     deinit {
         invalidateTokens()
-        connectionAddedToken?.invalidate()
-        connectionRemovedToken?.invalidate()
+        if let connectionAddedToken = connectionAddedToken {
+            NotificationCenter.default.removeObserver(connectionAddedToken)
+        }
+        if let connectionRemovedToken = connectionRemovedToken {
+            NotificationCenter.default.removeObserver(connectionRemovedToken)
+        }
     }
 
     public func start() {
