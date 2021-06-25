@@ -16,6 +16,12 @@ import RuuviVirtual
 import RuuviLocation
 import RuuviNotification
 import RuuviNotifier
+#if canImport(RuuviAnalytics)
+import RuuviAnalytics
+#endif
+#if canImport(RuuviAnalyticsImpl)
+import RuuviAnalyticsImpl
+#endif
 #if canImport(RuuviServiceExport)
 import RuuviServiceExport
 #endif
@@ -47,6 +53,7 @@ import RuuviVirtualOWM
 import RuuviVirtualService
 #endif
 
+// swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
@@ -74,7 +81,9 @@ class BusinessAssembly: Assembly {
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
-            service.userPropertiesService = r.resolve(UserPropertiesService.self)
+            #if canImport(RuuviAnalytics)
+            service.userPropertiesService = r.resolve(RuuviAnalytics.self)
+            #endif
             service.universalLinkCoordinator = r.resolve(UniversalLinkCoordinator.self)
             return service
         }.inObjectScope(.container)
@@ -290,14 +299,17 @@ class BusinessAssembly: Assembly {
             )
             return service
         }
-
-        container.register(UserPropertiesService.self) { r in
-            let service = UserPropertiesServiceImpl()
-            service.ruuviStorage = r.resolve(RuuviStorage.self)
-            service.settings = r.resolve(RuuviLocalSettings.self)
+        #if canImport(RuuviAnalytics)
+        container.register(RuuviAnalytics.self) { r in
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let service = RuuviAnalyticsImpl(
+                ruuviStorage: ruuviStorage,
+                settings: settings
+            )
             return service
         }
-
+        #endif
         container.register(UniversalLinkCoordinator.self, factory: { r in
             let coordinator = UniversalLinkCoordinatorImpl()
             let router = UniversalLinkRouterImpl()

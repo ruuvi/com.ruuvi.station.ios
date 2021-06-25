@@ -31,8 +31,12 @@ public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
             wsTokens.forEach({ $0.invalidate() })
             wsTokens.removeAll()
             token?.invalidate()
-            isOnToken?.invalidate()
-            intervalToken?.invalidate()
+            if let isOnToken = isOnToken {
+                NotificationCenter.default.removeObserver(isOnToken)
+            }
+            if let intervalToken = intervalToken {
+                NotificationCenter.default.removeObserver(intervalToken)
+            }
         }
     }
 
@@ -120,7 +124,9 @@ public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
             wsTokens.removeAll()
             token?.invalidate()
             token = nil
-            intervalToken?.invalidate()
+            if let intervalToken = intervalToken {
+                NotificationCenter.default.removeObserver(intervalToken)
+            }
         }
     }
 
@@ -208,13 +214,5 @@ public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
                       object: nil,
                       userInfo: [WebTagDaemonDidFailKey.error: error])
         }
-    }
-}
-
-extension NSObjectProtocol {
-    func invalidate() {
-        NotificationCenter
-            .default
-            .removeObserver(self)
     }
 }

@@ -160,6 +160,14 @@ PODS:
   - Realm/Headers (10.8.0)
   - RealmSwift (10.8.0):
     - Realm (= 10.8.0)
+  - RuuviAnalytics (0.0.1):
+    - RuuviAnalytics/Contract (= 0.0.1)
+  - RuuviAnalytics/Contract (0.0.1)
+  - RuuviAnalytics/Impl (0.0.1):
+    - RuuviAnalytics/Contract
+    - RuuviLocal
+    - RuuviStorage
+  - RuuviAnalytics/Tests (0.0.1)
   - RuuviCloud (0.0.1):
     - RuuviCloud/Contract (= 0.0.1)
   - RuuviCloud/Api (0.0.1):
@@ -534,6 +542,9 @@ DEPENDENCIES:
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - Realm
   - RealmSwift
+  - RuuviAnalytics (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
+  - RuuviAnalytics/Impl (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
+  - RuuviAnalytics/Tests (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviCloud (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Pure (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Tests (from `Packages/RuuviCloud/RuuviCloud.podspec`)
@@ -655,6 +666,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/LightRoute.git
   RangeSeekSlider:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
+  RuuviAnalytics:
+    :path: Packages/RuuviAnalytics/RuuviAnalytics.podspec
   RuuviCloud:
     :path: Packages/RuuviCloud/RuuviCloud.podspec
   RuuviContext:
@@ -746,6 +759,7 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: ad3c5cd762e5a5bc02080fc55aa04a0e43f98575
   RealmSwift: 316e450478fb01e06ece4438dda42f407c5f51d2
+  RuuviAnalytics: f332b19b2554f52d11fb517cca34084c83b1463e
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
@@ -770,6 +784,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 6ea19bbe87d8d8ae569f4923f5916ff2a6089ca8
+PODFILE CHECKSUM: fddc7ec4ca466af91aa8b574a351757ba994c868
 
 COCOAPODS: 1.10.1
