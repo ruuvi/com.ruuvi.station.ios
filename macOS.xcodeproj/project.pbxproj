@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E00C4FF2685B9F7009B3C24 /* ExportHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E00C4FE2685B9F7009B3C24 /* ExportHeadersProvider.swift */; };
+		0E00C5012685BA1D009B3C24 /* RuuviServiceExport in Frameworks */ = {isa = PBXBuildFile; productRef = 0E00C5002685BA1D009B3C24 /* RuuviServiceExport */; };
+		0E00C5032685BA1D009B3C24 /* RuuviServiceMeasurement in Frameworks */ = {isa = PBXBuildFile; productRef = 0E00C5022685BA1D009B3C24 /* RuuviServiceMeasurement */; };
 		0E11D212267E1310002D0686 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D211267E1310002D0686 /* FirebaseInAppMessaging-Beta */; };
 		0E11D214267E1317002D0686 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E11D213267E1317002D0686 /* FirebaseMessaging */; };
 		0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
@@ -24,7 +27,6 @@
 		0E25136E2684D06B004A522A /* RuuviNotifierTitlesImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E25136D2684D06B004A522A /* RuuviNotifierTitlesImpl.swift */; };
 		0E2513712684D09B004A522A /* RuuviNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 0E2513702684D09B004A522A /* RuuviNotifier */; };
 		0E2513732684D09B004A522A /* RuuviNotifierImpl in Frameworks */ = {isa = PBXBuildFile; productRef = 0E2513722684D09B004A522A /* RuuviNotifierImpl */; };
-		0E2864372460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
 		0E290A872660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
 		0E2AFFA2266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2AFF9F266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift */; };
 		0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */; };
@@ -174,7 +176,6 @@
 		0E6BAE4023856A01003A2D4C /* ActivityPresenterRuuviLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB222B390080032F6CA /* ActivityPresenterRuuviLogo.swift */; };
 		0E6BAE4123856A01003A2D4C /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F622B7D2090015F9E0 /* AboutViewController.swift */; };
 		0E6BAE4223856A01003A2D4C /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
-		0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E538363236AE6BA0007956D /* ExportService.swift */; };
 		0E6BAE4423856A01003A2D4C /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E6BAE4623856A01003A2D4C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E6BAE4723856A01003A2D4C /* UserDefaults+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */; };
@@ -444,7 +445,6 @@
 		66BC44B52657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44932657AED400A03253 /* OffsetCorrectionRouter.swift */; };
 		66BC44B82657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44942657AED400A03253 /* OffsetCorrectionRouterInput.swift */; };
 		A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
-		A904833624E30DF200EAE76F /* MeasurementsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A904833324E30DF200EAE76F /* MeasurementsService.swift */; };
 		A907A1D5245F7C6600041F6E /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907A1D2245F7C6600041F6E /* ProgressBarView.swift */; };
 		A907A1D92460376600041F6E /* TagChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907A1D62460376600041F6E /* TagChartViewModel.swift */; };
 		A907BB1324AE620E009DA3DB /* UIWindow+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */; };
@@ -520,7 +520,6 @@
 		A9B57454253B994900DB7353 /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
 		A9BB94CE2540AB610042B190 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* AlertViewModel.swift */; };
 		A9BD38BC24F6108300904BBE /* Humidity+Offset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BD38B924F6108300904BBE /* Humidity+Offset.swift */; };
-		A9C03F8124E708DD00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
 		A9E5994225572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
 		A9E5994C2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */; };
 		A9E5995A2557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */; };
@@ -535,6 +534,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E00C4FE2685B9F7009B3C24 /* ExportHeadersProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportHeadersProvider.swift; sourceTree = "<group>"; };
 		0E02ABB9237598C600ED4629 /* RURangeSeekSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RURangeSeekSlider.swift; sourceTree = "<group>"; };
 		0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Temperature.swift"; sourceTree = "<group>"; };
 		0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WebTagSettings.storyboard; sourceTree = "<group>"; };
@@ -615,7 +615,6 @@
 		0E2513592684A1D3004A522A /* RuuviNotification */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviNotification; path = Packages/RuuviNotification; sourceTree = "<group>"; };
 		0E25136D2684D06B004A522A /* RuuviNotifierTitlesImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviNotifierTitlesImpl.swift; sourceTree = "<group>"; };
 		0E25136F2684D074004A522A /* RuuviNotifier */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RuuviNotifier; path = Packages/RuuviNotifier; sourceTree = "<group>"; };
-		0E2864342460741500363DCB /* ExportServiceTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportServiceTrunk.swift; sourceTree = "<group>"; };
 		0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+AnyRuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
@@ -636,7 +635,6 @@
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
-		0E538363236AE6BA0007956D /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		0E53A3F2232DFC6200ACED49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53A3F4232DFC6400ACED49 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53A3F5232DFC6500ACED49 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -956,7 +954,6 @@
 		9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareRouterInput.swift; sourceTree = "<group>"; };
 		9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleOutput.swift; sourceTree = "<group>"; };
 		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
-		A904833324E30DF200EAE76F /* MeasurementsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsService.swift; sourceTree = "<group>"; };
 		A907A1D2245F7C6600041F6E /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		A907A1D62460376600041F6E /* TagChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewModel.swift; sourceTree = "<group>"; };
 		A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Orientation.swift"; sourceTree = "<group>"; };
@@ -1017,7 +1014,6 @@
 		A9B5742C253B978D00DB7353 /* SignIn.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SignIn.storyboard; sourceTree = "<group>"; };
 		A9BB94CB2540AB610042B190 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		A9BD38B924F6108300904BBE /* Humidity+Offset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Humidity+Offset.swift"; sourceTree = "<group>"; };
-		A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceImpl.swift; sourceTree = "<group>"; };
 		A9E5993F25572CF700F9E5CC /* Share.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Share.storyboard; sourceTree = "<group>"; };
 		A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareEmailInputTableViewCell.swift; sourceTree = "<group>"; };
@@ -1057,6 +1053,7 @@
 				0EE1127B267BC7E3008DA8D9 /* RxSwift in Frameworks */,
 				0EF4E31F2682403500D83CC7 /* RuuviLocation in Frameworks */,
 				0EB97867267C769E0032CC05 /* RuuviPersistenceSQLite in Frameworks */,
+				0E00C5032685BA1D009B3C24 /* RuuviServiceMeasurement in Frameworks */,
 				0EF4E32D2682403500D83CC7 /* RuuviVirtualRepository in Frameworks */,
 				0EE1123D267BBDC1008DA8D9 /* RuuviCore in Frameworks */,
 				0EF00F01267C6A960082AA8D /* RuuviContextSQLite in Frameworks */,
@@ -1089,6 +1086,7 @@
 				0EBE42C7267C8A97002888EC /* RuuviReactorImpl in Frameworks */,
 				0E25135B2684A1FD004A522A /* RuuviNotification in Frameworks */,
 				0E11D214267E1317002D0686 /* FirebaseMessaging in Frameworks */,
+				0E00C5012685BA1D009B3C24 /* RuuviServiceExport in Frameworks */,
 				0EE11270267BC5D6008DA8D9 /* FirebaseRemoteConfig in Frameworks */,
 				0EF4E3272682403500D83CC7 /* RuuviVirtualOWM in Frameworks */,
 				0EF00F03267C6B160082AA8D /* RuuviServiceFactory in Frameworks */,
@@ -1718,14 +1716,6 @@
 			path = Table;
 			sourceTree = "<group>";
 		};
-		0E286433246073F900363DCB /* Trunk */ = {
-			isa = PBXGroup;
-			children = (
-				0E2864342460741500363DCB /* ExportServiceTrunk.swift */,
-			);
-			path = Trunk;
-			sourceTree = "<group>";
-		};
 		0E2A2CA32369479C004993C5 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -1807,6 +1797,7 @@
 		0E502FB822B27D3100E8A6CC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
+				0E00C4FE2685B9F7009B3C24 /* ExportHeadersProvider.swift */,
 				0E25136D2684D06B004A522A /* RuuviNotifierTitlesImpl.swift */,
 				0EF4E31326823F4400D83CC7 /* VirtualLocation.swift */,
 				0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */,
@@ -1827,21 +1818,11 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
-		0E538362236ADC040007956D /* Export */ = {
-			isa = PBXGroup;
-			children = (
-				0E286433246073F900363DCB /* Trunk */,
-				0E538363236AE6BA0007956D /* ExportService.swift */,
-			);
-			path = Export;
-			sourceTree = "<group>";
-		};
 		0E5C300C22CF632500B52E39 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
 				0E197C7223C5C7770074015B /* Info */,
-				A904833224E30D9100EAE76F /* MeasurementsService */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2943,7 +2924,6 @@
 		0EFDD6D122BBD9AB00EADFC6 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				0E538362236ADC040007956D /* Export */,
 				318592D725BB4CBE0093B8EB /* UserProperties */,
 			);
 			path = Services;
@@ -3463,15 +3443,6 @@
 			path = Operations;
 			sourceTree = "<group>";
 		};
-		A904833224E30D9100EAE76F /* MeasurementsService */ = {
-			isa = PBXGroup;
-			children = (
-				A9C03F7D24E708A800BC046F /* Impl */,
-				A904833324E30DF200EAE76F /* MeasurementsService.swift */,
-			);
-			path = MeasurementsService;
-			sourceTree = "<group>";
-		};
 		A907A1D1245F7C4400041F6E /* ProgressBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -3729,14 +3700,6 @@
 			path = Advanced;
 			sourceTree = "<group>";
 		};
-		A9C03F7D24E708A800BC046F /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */,
-			);
-			path = Impl;
-			sourceTree = "<group>";
-		};
 		A9E599482557340200F9E5CC /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -3897,6 +3860,8 @@
 				0E25135C2684A1FD004A522A /* RuuviNotificationLocal */,
 				0E2513702684D09B004A522A /* RuuviNotifier */,
 				0E2513722684D09B004A522A /* RuuviNotifierImpl */,
+				0E00C5002685BA1D009B3C24 /* RuuviServiceExport */,
+				0E00C5022685BA1D009B3C24 /* RuuviServiceMeasurement */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* Ruuvi Station.app */;
@@ -4133,7 +4098,6 @@
 				0E6BAD9E23856A01003A2D4C /* SettingsPresenter.swift in Sources */,
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
-				0E2864372460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0EF4E31126823F3D00D83CC7 /* RuuviCoreError+LocalizedError.swift in Sources */,
@@ -4243,6 +4207,7 @@
 				0E6BADF223856A01003A2D4C /* WebTagSettingsTableViewController.swift in Sources */,
 				0E6BADF323856A01003A2D4C /* WelcomeRouter.swift in Sources */,
 				A9FC78EB2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
+				0E00C4FF2685B9F7009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				A93CDCD125659BA600018C6C /* AlertPresenter.swift in Sources */,
 				A9646489247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				66718A45266A685700A380F8 /* DfuFlashModuleOutput.swift in Sources */,
@@ -4285,7 +4250,6 @@
 				A90E16992460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031C25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
 				0EB48E08261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */,
-				A9C03F8124E708DD00BC046F /* MeasurementsServiceImpl.swift in Sources */,
 				0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */,
 				0EF4E31826823F6100D83CC7 /* DiscoverRuuviTagViewModel.swift in Sources */,
@@ -4361,7 +4325,6 @@
 				A98D3F1E256CBD610066588B /* ShareModuleOutput.swift in Sources */,
 				A98D3F1A256CBD610066588B /* ShareViewModel.swift in Sources */,
 				0E6BAE4223856A01003A2D4C /* DiscoverRouterInput.swift in Sources */,
-				0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */,
 				0E6BAE4423856A01003A2D4C /* DefaultsEnvironmentObject.swift in Sources */,
 				0E6BAE4623856A01003A2D4C /* ViewInput.swift in Sources */,
 				0E6BAE4723856A01003A2D4C /* UserDefaults+Optional.swift in Sources */,
@@ -4387,7 +4350,6 @@
 				0E6BAE5923856A01003A2D4C /* RuuviTagAdvertisementDaemon.swift in Sources */,
 				0E6BAE5A23856A01003A2D4C /* TagSettingsPresenter.swift in Sources */,
 				0EB48DA52619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift in Sources */,
-				A904833624E30DF200EAE76F /* MeasurementsService.swift in Sources */,
 				0E6BAE5B23856A01003A2D4C /* TagChartsModuleOutput.swift in Sources */,
 				318592DC25BB4D000093B8EB /* UserPropertiesService.swift in Sources */,
 				0E8E3DAE26822C9F0082EC29 /* VirtualTagDaemon.swift in Sources */,
@@ -4859,6 +4821,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0E00C5002685BA1D009B3C24 /* RuuviServiceExport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceExport;
+		};
+		0E00C5022685BA1D009B3C24 /* RuuviServiceMeasurement */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RuuviServiceMeasurement;
+		};
 		0E11D211267E1310002D0686 /* FirebaseInAppMessaging-Beta */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0EE1126C267BC5D6008DA8D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

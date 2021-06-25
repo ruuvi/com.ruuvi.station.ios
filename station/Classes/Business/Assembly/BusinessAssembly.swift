@@ -16,6 +16,9 @@ import RuuviVirtual
 import RuuviLocation
 import RuuviNotification
 import RuuviNotifier
+#if canImport(RuuviServiceExport)
+import RuuviServiceExport
+#endif
 #if canImport(RuuviNotifierImpl)
 import RuuviNotifierImpl
 #endif

@@ -2,6 +2,7 @@ import Foundation
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviService
 
 public final class RuuviServiceMeasurementImpl: NSObject {
     var settings: RuuviLocalSettings {
