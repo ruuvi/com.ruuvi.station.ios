@@ -20,6 +20,7 @@ protocol TagSettingsViewOutput {
     func viewDidTapClaimButton()
     func viewDidTapShareButton()
     func viewDidTapOnBackgroundIndicator()
+    func viewDidTapOnExport()
 
     // Offset Correction
     func viewDidTapTemperatureOffsetCorrection()
