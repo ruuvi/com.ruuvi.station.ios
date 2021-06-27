@@ -36,6 +36,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var featureToggleService: FeatureToggleService!
+    var exportService: RuuviServiceExport!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -80,6 +81,16 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var backgroundUploadProgressToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
+    private var exportFileUrl: URL?
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                activityPresenter.increment()
+            } else {
+                activityPresenter.decrement()
+            }
+        }
+    }
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -291,6 +302,26 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let macId = ruuviTag.macId {
             ruuviLocalImages.deleteBackgroundUploadProgress(for: macId)
         }
+    }
+
+    func viewDidTapOnExport() {
+        isLoading = true
+        exportService.csvLog(for: ruuviTag.id)
+            .on(success: { [weak self] url in
+                #if targetEnvironment(macCatalyst)
+                guard let sSelf = self else {
+                    fatalError()
+                }
+                sSelf.exportFileUrl = url
+                sSelf.router.macCatalystExportFile(with: url, delegate: sSelf)
+                #else
+                self?.view.showExportSheet(with: url)
+                #endif
+            }, failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.isLoading = false
+            })
     }
 }
 
@@ -1203,6 +1234,14 @@ extension TagSettingsPresenter {
         let isOn = alertService.isOn(type: type, for: uuid)
         if isOn != observable.value {
             observable.value = isOn
+        }
+    }
+}
+
+extension TagSettingsPresenter: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let url = exportFileUrl {
+            try? FileManager.default.removeItem(at: url)
         }
     }
 }

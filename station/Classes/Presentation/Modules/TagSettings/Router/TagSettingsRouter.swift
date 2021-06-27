@@ -1,8 +1,9 @@
+import UIKit
 import LightRoute
 import RuuviOntology
 
 class TagSettingsRouter: TagSettingsRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
 
     func dismiss(completion: (() -> Void)?) {
         try! transitionHandler.closeCurrentModule().perform()
@@ -41,5 +42,11 @@ class TagSettingsRouter: TagSettingsRouterInput {
             .then({ (module) -> Any? in
                 module.configure(ruuviTag: ruuviTag)
             })
+    }
+
+    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
+        let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
+        controller.delegate = delegate
+        transitionHandler.present(controller, animated: true)
     }
 }
