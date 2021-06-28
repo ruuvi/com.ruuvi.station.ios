@@ -12,7 +12,6 @@ class TagChartsScrollViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var syncButton: UIButton!
-    @IBOutlet weak var exportButton: UIButton!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var bacgroundImageViewOverlay: UIImageView!
@@ -55,10 +54,6 @@ class TagChartsScrollViewController: UIViewController {
     @IBAction func didTriggerSync(_ sender: Any) {
         output.viewDidTriggerSync(for: viewModel)
     }
-
-    @IBAction func didTriggerExport(_ sender: Any) {
-        output.viewDidTriggerExport(for: viewModel)
-    }
 }
 
 // MARK: - TagChartsViewInput
@@ -74,7 +69,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
         syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
-        exportButton.setTitle("TagCharts.Export.title".localized(), for: .normal)
         output.viewDidLocalized()
     }
 
@@ -109,29 +103,11 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         present(alertVC, animated: true)
     }
 
-    func showExportSheet(with path: URL) {
-        let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
-        vc.excludedActivityTypes = [
-            UIActivity.ActivityType.assignToContact,
-            UIActivity.ActivityType.saveToCameraRoll,
-            UIActivity.ActivityType.postToFlickr,
-            UIActivity.ActivityType.postToVimeo,
-            UIActivity.ActivityType.postToTencentWeibo,
-            UIActivity.ActivityType.postToTwitter,
-            UIActivity.ActivityType.postToFacebook,
-            UIActivity.ActivityType.openInIBooks
-        ]
-        vc.popoverPresentationController?.sourceView = exportButton
-        vc.popoverPresentationController?.sourceRect = exportButton.bounds
-        present(vc, animated: true)
-    }
-
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
         if let progress = progress {
             syncStatusLabel.isHidden = false
             syncButton.isHidden = true
             clearButton.isHidden = true
-            exportButton.isHidden = true
             switch progress {
             case .connecting:
                 syncStatusLabel.text = "TagCharts.Status.Connecting".localized()
@@ -148,7 +124,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             syncStatusLabel.isHidden = true
             syncButton.isHidden = false
             clearButton.isHidden = false
-            exportButton.isHidden = false
         }
     }
 

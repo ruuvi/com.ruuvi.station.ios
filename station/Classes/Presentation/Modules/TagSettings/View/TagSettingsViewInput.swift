@@ -9,4 +9,5 @@ protocol TagSettingsViewInput: ViewInput {
     func showUpdateFirmwareDialog()
     func showBothNotConnectedAndNoPNPermissionDialog()
     func showNotConnectedDialog()
+    func showExportSheet(with path: URL)
 }

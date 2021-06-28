@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +16,7 @@
         <!--Ruuvi Station-->
         <scene sceneID="5Ri-Gw-eZL">
             <objects>
-                <viewController storyboardIdentifier="TagChartsScrollViewController" id="Zl9-xI-Y92" customClass="TagChartsScrollViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TagChartsScrollViewController" id="Zl9-xI-Y92" customClass="TagChartsScrollViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ceB-eX-jxA">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
                                 </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbe-Ju-Xdg">
-                                <rect key="frame" x="0.0" y="89.5" width="320" height="418.5"/>
+                                <rect key="frame" x="0.0" y="90.5" width="320" height="417.5"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -110,7 +110,7 @@
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hho-MY-BeM">
-                                <rect key="frame" x="8" y="58" width="304" height="23.5"/>
+                                <rect key="frame" x="8" y="58" width="304" height="24.5"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -118,57 +118,55 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Acs-0n-bAk">
                                 <rect key="frame" x="0.0" y="508" width="320" height="60"/>
                                 <subviews>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTf-aB-Wg1">
-                                        <rect key="frame" x="132.5" y="9.5" width="55" height="41"/>
-                                        <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
-                                        <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
-                                        <state key="normal" title="SYNC">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="21"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="didTriggerSync:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="CSk-zR-pDS"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLP-G9-4YF">
-                                        <rect key="frame" x="62.5" y="9.5" width="62" height="41"/>
-                                        <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
-                                        <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
-                                        <state key="normal" title="CLEAR">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="21"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="didTriggerClear:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="9I9-83-xuT"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Thd-OX-VMR">
-                                        <rect key="frame" x="195.5" y="9.5" width="71" height="41"/>
-                                        <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
-                                        <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
-                                        <state key="normal" title="EXPORT">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="21"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="didTriggerExport:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="Qbk-Vy-7cG"/>
-                                        </connections>
-                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="urM-g0-YzX">
+                                        <rect key="frame" x="95" y="9" width="130" height="42"/>
+                                        <subviews>
+                                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTf-aB-Wg1">
+                                                <rect key="frame" x="74" y="0.0" width="56" height="42"/>
+                                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
+                                                <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
+                                                <state key="normal" title="SYNC">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="21"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="didTriggerSync:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="CSk-zR-pDS"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLP-G9-4YF">
+                                                <rect key="frame" x="0.0" y="0.0" width="66" height="42"/>
+                                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
+                                                <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
+                                                <state key="normal" title="CLEAR">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="21"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="didTriggerClear:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="9I9-83-xuT"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="ZTf-aB-Wg1" firstAttribute="top" secondItem="urM-g0-YzX" secondAttribute="top" id="LzX-Y5-vSf"/>
+                                            <constraint firstAttribute="trailing" secondItem="ZTf-aB-Wg1" secondAttribute="trailing" id="QEK-2A-xby"/>
+                                            <constraint firstAttribute="bottom" secondItem="ZTf-aB-Wg1" secondAttribute="bottom" id="QJa-Qw-TbP"/>
+                                            <constraint firstItem="ZTf-aB-Wg1" firstAttribute="leading" secondItem="yLP-G9-4YF" secondAttribute="trailing" constant="8" id="bga-aF-jvT"/>
+                                            <constraint firstAttribute="bottom" secondItem="yLP-G9-4YF" secondAttribute="bottom" id="hLe-tq-N7z"/>
+                                            <constraint firstItem="yLP-G9-4YF" firstAttribute="leading" secondItem="urM-g0-YzX" secondAttribute="leading" id="hST-Bi-PoE"/>
+                                            <constraint firstItem="yLP-G9-4YF" firstAttribute="top" secondItem="urM-g0-YzX" secondAttribute="top" id="vd3-VX-D3j"/>
+                                        </constraints>
+                                    </view>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y7c-rI-TRU">
                                         <rect key="frame" x="128.5" y="19.5" width="63" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -178,17 +176,11 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="yLP-G9-4YF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Acs-0n-bAk" secondAttribute="leading" constant="4" id="3f8-oA-8Yc"/>
-                                    <constraint firstItem="Thd-OX-VMR" firstAttribute="leading" secondItem="ZTf-aB-Wg1" secondAttribute="trailing" constant="8" id="5aq-6S-Thk"/>
+                                    <constraint firstItem="urM-g0-YzX" firstAttribute="centerY" secondItem="Acs-0n-bAk" secondAttribute="centerY" id="64O-z5-eQ8"/>
                                     <constraint firstItem="Y7c-rI-TRU" firstAttribute="centerY" secondItem="Acs-0n-bAk" secondAttribute="centerY" id="8eg-kC-BcQ"/>
                                     <constraint firstAttribute="height" constant="60" id="90Q-cq-5hT"/>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Thd-OX-VMR" secondAttribute="trailing" constant="4" id="Cmd-Ur-h2Q"/>
-                                    <constraint firstItem="ZTf-aB-Wg1" firstAttribute="centerY" secondItem="Acs-0n-bAk" secondAttribute="centerY" id="Cvq-Rb-cif"/>
                                     <constraint firstItem="Y7c-rI-TRU" firstAttribute="centerX" secondItem="Acs-0n-bAk" secondAttribute="centerX" id="MSs-o4-DsM"/>
-                                    <constraint firstItem="ZTf-aB-Wg1" firstAttribute="leading" secondItem="yLP-G9-4YF" secondAttribute="trailing" constant="8" id="NQp-1r-lFf"/>
-                                    <constraint firstItem="yLP-G9-4YF" firstAttribute="centerY" secondItem="Acs-0n-bAk" secondAttribute="centerY" id="O9f-EJ-9Dr"/>
-                                    <constraint firstItem="Thd-OX-VMR" firstAttribute="centerY" secondItem="Acs-0n-bAk" secondAttribute="centerY" id="PTe-ba-unf"/>
-                                    <constraint firstItem="ZTf-aB-Wg1" firstAttribute="centerX" secondItem="Acs-0n-bAk" secondAttribute="centerX" id="PXU-VJ-vvW"/>
+                                    <constraint firstItem="urM-g0-YzX" firstAttribute="centerX" secondItem="Acs-0n-bAk" secondAttribute="centerX" id="Sh0-wg-MDf"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -252,7 +244,6 @@
                         <outlet property="bacgroundImageViewOverlay" destination="BaO-7f-YjR" id="xg8-P5-0i4"/>
                         <outlet property="backgroundImageView" destination="HDU-IT-z0E" id="x8n-1M-Nhd"/>
                         <outlet property="clearButton" destination="yLP-G9-4YF" id="bKW-qG-xxo"/>
-                        <outlet property="exportButton" destination="Thd-OX-VMR" id="9cc-ah-Qv9"/>
                         <outlet property="nameLabel" destination="Hho-MY-BeM" id="UDi-ke-HZL"/>
                         <outlet property="scrollView" destination="Hbe-Ju-Xdg" id="JIE-45-X1C"/>
                         <outlet property="syncButton" destination="ZTf-aB-Wg1" id="YLa-RF-b9g"/>
@@ -260,7 +251,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lM4-Y1-4JR" sceneMemberID="firstResponder"/>
-                <customObject id="vzF-KX-20C" customClass="TagChartsScrollInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                <customObject id="vzF-KX-20C" customClass="TagChartsScrollInitializer" customModule="station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="Zl9-xI-Y92" id="P7n-9U-kKD"/>
                     </connections>

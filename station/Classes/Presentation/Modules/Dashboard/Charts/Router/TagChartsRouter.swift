@@ -92,10 +92,4 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(with: .enterEmail, output: output)
             })
     }
-
-    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
-        let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
-        controller.delegate = delegate
-        transitionHandler.present(controller, animated: true)
-    }
 }

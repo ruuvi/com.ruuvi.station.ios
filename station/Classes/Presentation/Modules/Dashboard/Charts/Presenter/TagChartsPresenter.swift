@@ -62,7 +62,6 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
-    private var exportFileUrl: URL?
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -164,25 +163,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
         view.showSyncConfirmationDialog(for: viewModel)
-    }
-
-    func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
-        isLoading = true
-        interactor.export().on(success: { [weak self] url in
-            #if targetEnvironment(macCatalyst)
-            guard let sSelf = self else {
-                fatalError()
-            }
-            sSelf.exportFileUrl = url
-            sSelf.router.macCatalystExportFile(with: url, delegate: sSelf)
-            #else
-            self?.view.showExportSheet(with: url)
-            #endif
-        }, failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.isLoading = false
-        })
     }
 
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
@@ -364,7 +344,6 @@ extension TagChartsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension TagChartsPresenter {
-
     private func tryToShowSwipeUpHint() {
         if UIWindow.isLandscape
             && !settings.tagChartsLandscapeSwipeInstructionWasShown {
@@ -578,14 +557,6 @@ extension TagChartsPresenter {
             }
             self?.interactor.restartObservingData()
         })
-    }
-}
-
-extension TagChartsPresenter: UIDocumentPickerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        if let url = exportFileUrl {
-            try? FileManager.default.removeItem(at: url)
-        }
     }
 }
 // swiftlint:enable file_length
