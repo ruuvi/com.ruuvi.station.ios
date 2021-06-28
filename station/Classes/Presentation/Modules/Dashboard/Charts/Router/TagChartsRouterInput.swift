@@ -21,7 +21,6 @@ protocol TagChartsRouterInput {
         sensor: VirtualTagSensor,
         temperature: Temperature?
     )
-    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?)
 }
 extension TagChartsRouterInput {
     func dismiss() {
