@@ -2,18 +2,18 @@ import Foundation
 import RuuviOntology
 import Humidity
 
-struct RuuviCloudApiGetSettingsResponse: Decodable {
-    let settings: RuuviCloudApiSettings
+public struct RuuviCloudApiGetSettingsResponse: Decodable {
+    public let settings: RuuviCloudApiSettings
 }
 
-struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
-    var unitTemperature: TemperatureUnit? {
+public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
+    public var unitTemperature: TemperatureUnit? {
         return unitTemperatureString?.ruuviCloudApiSettingUnitTemperature
     }
-    var unitHumidity: HumidityUnit? {
+    public var unitHumidity: HumidityUnit? {
         return unitHumidityString?.ruuviCloudApiSettingUnitHumidity
     }
-    var unitPressure: UnitPressure? {
+    public var unitPressure: UnitPressure? {
         return unitPressureString?.ruuviCloudApiSettingUnitPressure
     }
 

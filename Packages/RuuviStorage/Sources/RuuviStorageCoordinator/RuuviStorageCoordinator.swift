@@ -2,6 +2,7 @@ import Foundation
 import RuuviOntology
 import Future
 import RuuviPersistence
+import RuuviStorage
 
 final class RuuviStorageCoordinator: RuuviStorage {
     private let sqlite: RuuviPersistence

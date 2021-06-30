@@ -25,6 +25,25 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
   end
 
+  s.subspec 'Location' do |ss|
+    ss.source_files = 'Sources/RuuviCoreLocation/**/*.{h,m,swift}', 'Sources/RuuviCoreLocation/*.{h,m,swift}'
+    ss.dependency 'RuuviCore/Contract'
+  end
+
+  s.subspec 'Diff' do |ss|
+    ss.source_files = 'Sources/RuuviCoreDiff/**/*.{h,m,swift}', 'Sources/RuuviCoreDiff/*.{h,m,swift}'
+  end
+
+  s.subspec 'PN' do |ss|
+    ss.source_files = 'Sources/RuuviCorePN/**/*.{h,m,swift}', 'Sources/RuuviCorePN/*.{h,m,swift}'
+    ss.dependency 'RuuviCore/Contract'
+  end
+
+  s.subspec 'Permission' do |ss|
+    ss.source_files = 'Sources/RuuviCorePermission/**/*.{h,m,swift}', 'Sources/RuuviCorePermission/*.{h,m,swift}'
+    ss.dependency 'RuuviCore/Contract'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end

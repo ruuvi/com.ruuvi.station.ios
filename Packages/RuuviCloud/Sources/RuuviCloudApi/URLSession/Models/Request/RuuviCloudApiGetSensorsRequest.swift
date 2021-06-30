@@ -1,5 +1,9 @@
 import Foundation
 
-struct RuuviCloudApiGetSensorsRequest: Encodable {
+public struct RuuviCloudApiGetSensorsRequest: Encodable {
     let sensor: String
+
+    public init(sensor: String) {
+        self.sensor = sensor
+    }
 }

@@ -2,20 +2,21 @@ import Foundation
 import BTKit
 import UIKit
 import RuuviOntology
+import RuuviDFU
 
 class DfuDevicesScannerPresenter: NSObject, DfuDevicesScannerModuleInput {
     weak var view: DfuDevicesScannerViewInput!
     var router: DfuDevicesScannerRouter!
 
     var foreground: BTForeground!
-    var ruuviDfu: RuuviDfu!
+    var ruuviDfu: RuuviDFU!
 
     private var bluetoothStateToken: ObservationToken?
-    private var ruuviDfuScanToken: RUObservationToken?
-    private var ruuviDfuLostToken: RUObservationToken?
+    private var ruuviDfuScanToken: RuuviDFUToken?
+    private var ruuviDfuLostToken: RuuviDFUToken?
 
     private var ruuviTag: RuuviTagSensor!
-    private var dfuDevices = Set<DfuDevice>() {
+    private var dfuDevices = Set<DFUDevice>() {
         didSet {
             syncViewModels()
         }

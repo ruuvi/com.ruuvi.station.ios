@@ -5,7 +5,7 @@ import RuuviOntology
 
 enum TagChartsType {
     case ruuvi
-    case web
+    case virtual
 }
 
 struct TagChartsViewModel {
@@ -23,20 +23,10 @@ struct TagChartsViewModel {
         self.type = type
     }
 
-    init(_ ruuviTag: RuuviTagRealm) {
-        type = .ruuvi
-        uuid.value = ruuviTag.uuid
-        name.value = ruuviTag.name
-        if let macId = ruuviTag.mac {
-            mac.value = macId
-        }
-        isConnectable.value = ruuviTag.isConnectable
-    }
-
-    init(_ webTag: WebTagRealm) {
-        type = .web
-        uuid.value = webTag.uuid
-        name.value = webTag.name
+    init(_ virtualSensor: VirtualTagSensor) {
+        type = .virtual
+        uuid.value = virtualSensor.id
+        name.value = virtualSensor.name
         isConnectable.value = false
     }
 

@@ -7,26 +7,20 @@ import FLEX
 #endif
 import UserNotifications
 import RuuviLocal
+import RuuviCore
+import RuuviNotification
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var appStateService: AppStateService!
-    var localNotificationsManager: LocalNotificationsManager!
-    var webTagOperationsManager: WebTagOperationsManager!
+    var localNotificationsManager: RuuviNotificationLocal!
     var featureToggleService: FeatureToggleService!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
-        webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
-        if #available(iOS 13, *) {
-            // no need to setup background fetch, @see BackgroundTaskServiceiOS13
-        } else {
-            UIApplication.shared.setMinimumBackgroundFetchInterval(
-                   UIApplication.backgroundFetchIntervalMinimum)
-        }
 
         #if canImport(Firebase)
         FirebaseApp.configure()
@@ -41,8 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
-        localNotificationsManager = r.resolve(LocalNotificationsManager.self)
-        localNotificationsManager.application(application, didFinishLaunchingWithOptions: launchOptions)
+        localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
+        let disableTitle = "LocalNotificationsManager.Disable.button".localized()
+        let muteTitle = "LocalNotificationsManager.Mute.button".localized()
+        localNotificationsManager.setup(
+            disableTitle: disableTitle,
+            muteTitle: muteTitle
+        )
 
         #if canImport(FLEX)
         FLEXManager.shared.registerGlobalEntry(
@@ -76,41 +75,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let r = AppAssembly.shared.assembler.resolver
-        if var pnManager = r.resolve(PushNotificationsManager.self) {
+        if var pnManager = r.resolve(RuuviCorePN.self) {
             pnManager.pnTokenData = deviceToken
         }
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print(error.localizedDescription)
-    }
-}
-
-// MARK: - Background Fetch
-extension AppDelegate {
-    func application(_ application: UIApplication,
-                     performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if #available(iOS 13, *) {
-            completionHandler(.noData)
-        } else {
-            let operations = webTagOperationsManager.alertsPullOperations()
-            enqueueOperations(operations, completionHandler: completionHandler)
-        }
-    }
-
-    private func enqueueOperations(_ operations: [Operation],
-                                   completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if operations.count > 0 {
-            let queue = OperationQueue()
-            queue.maxConcurrentOperationCount = 1
-            let lastOperation = operations.last!
-            lastOperation.completionBlock = {
-                completionHandler(.newData)
-            }
-            queue.addOperations(operations, waitUntilFinished: false)
-        } else {
-            completionHandler(.noData)
-        }
     }
 }
 

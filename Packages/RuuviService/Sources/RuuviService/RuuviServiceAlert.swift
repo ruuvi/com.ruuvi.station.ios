@@ -3,10 +3,10 @@ import Future
 import RuuviOntology
 
 extension Notification.Name {
-    public static let AlertServiceAlertDidChange = Notification.Name("AlertServiceAlertDidChange")
+    public static let RuuviServiceAlertDidChange = Notification.Name("RuuviServiceAlertDidChange")
 }
 
-public enum AlertServiceAlertDidChangeKey: String {
+public enum RuuviServiceAlertDidChangeKey: String {
     case physicalSensor
     case virtualSensor
     case type

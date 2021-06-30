@@ -101,3 +101,9 @@ public protocol RuuviCloud {
 public protocol RuuviCloudFactory {
     func create(baseUrl: URL, user: RuuviUser) -> RuuviCloud
 }
+
+public enum MimeType: String, Encodable {
+    case png = "image/png"
+    case gif = "image/gif"
+    case jpg = "image/jpeg"
+}

@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 extension RuuviTagSensorRecord {
     public var sqlite: RuuviTagDataSQLite {

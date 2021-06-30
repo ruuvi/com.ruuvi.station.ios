@@ -5,22 +5,58 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviPersistence",
+    platforms: [.macOS(.v10_15), .iOS(.v11)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviPersistence",
-            targets: ["RuuviPersistence"])
+            targets: ["RuuviPersistence"]),
+        .library(
+            name: "RuuviPersistenceRealm",
+            targets: ["RuuviPersistenceRealm"]),
+        .library(
+            name: "RuuviPersistenceSQLite",
+            targets: ["RuuviPersistenceSQLite"])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMajor(from: "10.8.0")),
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviContext")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RuuviPersistence",
-            dependencies: []),
+            dependencies: [
+                "RuuviOntology",
+                "RuuviContext",
+                "Future"
+            ]
+        ),
+        .target(
+            name: "RuuviPersistenceRealm",
+            dependencies: [
+                .product(name: "RuuviContextRealm", package: "RuuviContext"),
+                .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
+                .product(name: "RealmSwift", package: "Realm"),
+                "RuuviPersistence",
+                "RuuviOntology",
+                "RuuviContext",
+                "Future"
+            ]
+        ),
+        .target(
+            name: "RuuviPersistenceSQLite",
+            dependencies: [
+                .product(name: "GRDB", package: "GRDB"),
+                .product(name: "RuuviContextSQLite", package: "RuuviContext"),
+                .product(name: "RuuviOntologySQLite", package: "RuuviOntology"),
+                "RuuviPersistence",
+                "RuuviOntology",
+                "RuuviContext",
+                "Future"
+            ]
+        ),
         .testTarget(
             name: "RuuviPersistenceTests",
             dependencies: ["RuuviPersistence"])
