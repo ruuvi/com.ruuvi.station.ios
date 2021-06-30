@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import RuuviDFU
 
 protocol DfuFlashDismissDelegate: NSObjectProtocol {
     func canDismissController() -> Bool
@@ -32,7 +33,7 @@ class DfuFlashAppleViewController: UIViewController, DfuFlashViewInput {
     @IBOutlet weak var successLabel: UILabel!
     @IBOutlet weak var finishButton: UIButton!
 
-    private var flashLogs: [DfuLog] = []
+    private var flashLogs: [DFULog] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()

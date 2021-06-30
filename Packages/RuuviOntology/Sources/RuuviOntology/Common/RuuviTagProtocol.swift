@@ -1,5 +1,4 @@
 import Foundation
-import RuuviOntology
 
 public protocol RuuviTagProtocol {
     var uuid: String { get }

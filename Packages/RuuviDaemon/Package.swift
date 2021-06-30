@@ -5,22 +5,94 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviDaemon",
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviDaemon",
-            targets: ["RuuviDaemon"])
+            targets: ["RuuviDaemon"]),
+        .library(
+            name: "RuuviDaemonCloudSync",
+            targets: ["RuuviDaemonCloudSync"]),
+        .library(
+            name: "RuuviDaemonOperation",
+            targets: ["RuuviDaemonOperation"]),
+        .library(
+            name: "RuuviDaemonBackground",
+            targets: ["RuuviDaemonBackground"]),
+        .library(
+            name: "RuuviDaemonRuuviTag",
+            targets: ["RuuviDaemonRuuviTag"]),
+        .library(
+            name: "RuuviDaemonVirtualTag",
+            targets: ["RuuviDaemonVirtualTag"])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviLocal"),
+        .package(path: "../RuuviService"),
+        .package(path: "../RuuviVirtual"),
+        .package(path: "../RuuviStorage"),
+        .package(path: "../RuuviReactor"),
+        .package(path: "../RuuviPool"),
+        .package(path: "../RuuviPersistence"),
+        .package(path: "../RuuviNotifier"),
+        .package(path: "../RuuviNotification"),
+        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0"))
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RuuviDaemon",
-            dependencies: []),
+            dependencies: [
+                "RuuviLocal",
+                "RuuviService",
+                "RuuviVirtual",
+                "RuuviStorage",
+                "RuuviReactor",
+                "RuuviPool",
+                "RuuviPersistence",
+                "RuuviNotifier",
+                "BTKit"
+            ]
+        ),
+        .target(
+            name: "RuuviDaemonCloudSync",
+            dependencies: [
+                "RuuviDaemon",
+                "RuuviLocal",
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviDaemonOperation",
+            dependencies: [
+                "RuuviDaemon",
+                "RuuviNotifier",
+                "RuuviOntology",
+                "RuuviVirtual"
+            ]
+        ),
+        .target(
+            name: "RuuviDaemonBackground",
+            dependencies: [
+                "RuuviDaemon",
+                "RuuviDaemonOperation"
+            ]
+        ),
+        .target(
+            name: "RuuviDaemonVirtualTag",
+            dependencies: [
+                "RuuviDaemon",
+                "RuuviDaemonOperation"
+            ]
+        ),
+        .target(
+            name: "RuuviDaemonRuuviTag",
+            dependencies: [
+                "RuuviDaemon",
+                "RuuviDaemonOperation",
+                "RuuviNotification"
+            ]
+        ),
         .testTarget(
             name: "RuuviDaemonTests",
             dependencies: ["RuuviDaemon"])

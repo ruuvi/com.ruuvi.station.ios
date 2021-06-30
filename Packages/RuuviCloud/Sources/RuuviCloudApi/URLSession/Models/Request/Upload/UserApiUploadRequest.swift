@@ -1,6 +1,7 @@
 import Foundation
+import RuuviCloud
 
-protocol UserApiUploadRequest: Encodable {
+public protocol UserApiUploadRequest: Encodable {
     var sensor: String { get }
     var mimeType: MimeType? { get }
 }

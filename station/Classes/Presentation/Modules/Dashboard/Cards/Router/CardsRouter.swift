@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviVirtual
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!
@@ -69,13 +70,15 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
-    func openWebTagSettings(webTag: WebTagRealm,
-                            temperature: Temperature?) {
+    func openVirtualSensorSettings(
+        sensor: VirtualTagSensor,
+        temperature: Temperature?
+    ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(webTag: webTag, temperature: temperature)
+                module.configure(sensor: sensor, temperature: temperature)
             })
     }
 

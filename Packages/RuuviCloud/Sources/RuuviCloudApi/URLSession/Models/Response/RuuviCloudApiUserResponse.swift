@@ -1,21 +1,21 @@
 import Foundation
 import RuuviOntology
 
-struct RuuviCloudApiUserResponse: Decodable {
-    let email: String
-    var sensors: [RuuviCloudApiSensor]
+public struct RuuviCloudApiUserResponse: Decodable {
+    public let email: String
+    public var sensors: [RuuviCloudApiSensor]
 }
 
-struct RuuviCloudApiSensor: Decodable {
-    let sensorId: String
-    let sensorOwner: String
-    let pictureUrl: String
-    let name: String
-    let isPublic: Bool
-    var isOwner: Bool = false
-    let temperatureOffset: Double? // in degrees
-    let humidityOffset: Double? // in percents
-    let pressureOffset: Double? // in Pa
+public struct RuuviCloudApiSensor: Decodable {
+    public let sensorId: String
+    public let sensorOwner: String
+    public let pictureUrl: String
+    public let name: String
+    public let isPublic: Bool
+    public var isOwner: Bool = false
+    public let temperatureOffset: Double? // in degrees
+    public let humidityOffset: Double? // in percents
+    public let pressureOffset: Double? // in Pa
 
     enum CodingKeys: String, CodingKey {
         case sensorId = "sensor"
@@ -30,12 +30,12 @@ struct RuuviCloudApiSensor: Decodable {
 }
 
 extension RuuviCloudApiSensor: CloudSensor {
-    var offsetTemperature: Double? {
+    public var offsetTemperature: Double? {
         return temperatureOffset
     }
 
     // on cloud in percent, locally in fraction of one
-    var offsetHumidity: Double? {
+    public var offsetHumidity: Double? {
         if let humidityOffset = humidityOffset {
             return humidityOffset / 100.0
         } else {
@@ -44,7 +44,7 @@ extension RuuviCloudApiSensor: CloudSensor {
     }
 
     // on cloud in Pa, locally in hPa
-    var offsetPressure: Double? {
+    public var offsetPressure: Double? {
         if let pressureOffset = pressureOffset {
             return pressureOffset / 100.0
         } else {
@@ -52,19 +52,19 @@ extension RuuviCloudApiSensor: CloudSensor {
         }
     }
 
-    var picture: URL? {
+    public var picture: URL? {
         return URL(string: pictureUrl)
     }
 
-    var owner: String? {
+    public var owner: String? {
         return sensorOwner
     }
 
-    var isClaimed: Bool {
+    public var isClaimed: Bool {
         return isOwner
     }
 
-    var id: String {
+    public var id: String {
         return sensorId
     }
 }

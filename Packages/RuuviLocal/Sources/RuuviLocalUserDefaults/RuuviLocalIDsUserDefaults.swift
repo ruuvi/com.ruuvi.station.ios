@@ -1,5 +1,6 @@
 import Foundation
 import RuuviOntology
+import RuuviLocal
 
 class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
     func mac(for luid: LocalIdentifier) -> MACIdentifier? {

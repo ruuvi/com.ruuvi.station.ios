@@ -2,6 +2,7 @@
 import UIKit
 import RangeSeekSlider
 import RuuviOntology
+import RuuviService
 
 enum TagSettingsTableSection: Int {
     case image = 0
@@ -122,6 +123,7 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
+    @IBOutlet weak var exportBarButtonItem: UIBarButtonItem!
 
     var viewModel: TagSettingsViewModel? {
         didSet {
@@ -129,7 +131,7 @@ class TagSettingsTableViewController: UITableViewController {
         }
     }
 
-    var measurementService: MeasurementsService!
+    var measurementService: RuuviServiceMeasurement!
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
@@ -143,7 +145,6 @@ class TagSettingsTableViewController: UITableViewController {
 
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
-
     // swiftlint:disable:next function_body_length
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
@@ -244,18 +245,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         present(controller, animated: true)
     }
 
-    func showHumidityIsClippedDialog() {
-        let title = "TagSettings.HumidityIsClipped.Alert.title".localized()
-        let message = "TagSettings.HumidityIsClipped.Alert.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let actionTitle = "TagSettings.HumidityIsClipped.Alert.Fix.button".localized()
-        controller.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
-            self?.output.viewDidAskToFixHumidityAdjustment()
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
     func showBothNotConnectedAndNoPNPermissionDialog() {
         let message = "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -276,6 +265,23 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
+    }
+
+    func showExportSheet(with path: URL) {
+        let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
+        vc.excludedActivityTypes = [
+            UIActivity.ActivityType.assignToContact,
+            UIActivity.ActivityType.saveToCameraRoll,
+            UIActivity.ActivityType.postToFlickr,
+            UIActivity.ActivityType.postToVimeo,
+            UIActivity.ActivityType.postToTencentWeibo,
+            UIActivity.ActivityType.postToTwitter,
+            UIActivity.ActivityType.postToFacebook,
+            UIActivity.ActivityType.openInIBooks
+        ]
+        vc.popoverPresentationController?.barButtonItem = exportBarButtonItem
+        vc.popoverPresentationController?.permittedArrowDirections = .up
+        present(vc, animated: true)
     }
 }
 
@@ -333,6 +339,10 @@ extension TagSettingsTableViewController {
     @IBAction func didTapShareButton(_ sender: UIButton) {
         playImpact()
         output.viewDidTapShareButton()
+    }
+
+    @IBAction func exportBarButtonItemAction(_ sender: Any) {
+        output.viewDidTapOnExport()
     }
 
     private func playImpact() {
