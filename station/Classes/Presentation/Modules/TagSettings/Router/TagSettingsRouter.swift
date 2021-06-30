@@ -35,13 +35,20 @@ class TagSettingsRouter: TagSettingsRouterInput {
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
-        let factory = StoryboardFactory(storyboardName: "UpdateFirmware")
+        let factory = StoryboardFactory(storyboardName: "DFU")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: UpdateFirmwareModuleInput.self)
+            .forStoryboard(factory: factory, to: DFUModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
+            .then({ module in
                 module.configure(ruuviTag: ruuviTag)
             })
+//        let factory = StoryboardFactory(storyboardName: "UpdateFirmware")
+//        try! transitionHandler
+//            .forStoryboard(factory: factory, to: UpdateFirmwareModuleInput.self)
+//            .to(preferred: .navigation(style: .push))
+//            .then({ (module) -> Any? in
+//                module.configure(ruuviTag: ruuviTag)
+//            })
     }
 
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
