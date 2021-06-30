@@ -181,7 +181,6 @@ extension TagChartsInteractor: TagChartModuleOutput {
     }
 
     func chartViewDidChangeViewPort(_ chartView: TagChartView) {
-        guard featureToggleService.isEnabled(.syncZoom) else { return }
         chartViews.filter({ $0 != chartView }).forEach { otherChart in
             let matrix = chartView.viewPortHandler.touchMatrix
             otherChart.viewPortHandler.refresh(
