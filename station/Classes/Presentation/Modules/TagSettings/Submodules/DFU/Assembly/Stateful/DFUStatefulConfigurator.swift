@@ -5,11 +5,11 @@ class DFUStatefulConfigurator: NSObject {
         let r = AppAssembly.shared.assembler.resolver
         let interactor = DFUInteractor()
 
-        let presenter = DFUPresenter()
-        presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.view = view
-        presenter.interactor = interactor
-
-        view.output = presenter
+//        let presenter = DFUPresenter()
+//        presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+//        presenter.view = view
+//        presenter.interactor = interactor
+//
+//        view.output = presenter
     }
 }

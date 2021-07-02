@@ -1,60 +1,68 @@
 import Foundation
 import Combine
+import BTKit
+import RuuviOntology
 
 protocol DFUInteractorInput {
-    @discardableResult
-    func fetchLatestRuuviTagFirmwareVersion() -> Future<String, DFUError>
+    func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
+    func readCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
 }
 
 final class DFUInteractor {
 }
 
 enum DFUError: Error {
-    case networking(Error)
-    case parsing(Error)
     case failedToConstructUrl
-    case failedToParseGithubResponse
+    case failedToGetLuid
+}
+
+struct LatestRelease: Codable {
+    var version: String
+
+    enum CodingKeys: String, CodingKey {
+        case version = "tag_name"
+    }
+}
+
+struct CurrentRelease {
+    var version: String
 }
 
 extension DFUInteractor: DFUInteractorInput {
-    @discardableResult
-    func fetchLatestRuuviTagFirmwareVersion() -> Future<String, DFUError> {
-        return Future { promise in
-            guard let latestReleaseUrl = URL(
-                    string: "https://api.github.com/repos/ruuvi/ruuvi.firmware.c/releases/latest"
-            ) else {
-                promise(.failure(.failedToConstructUrl))
+    func loadLatestRelease() -> AnyPublisher<LatestRelease, Error> {
+        let urlString = "https://api.github.com/repos/ruuvi/ruuvi.firmware.c/releases/latest"
+        guard let url = URL(string: urlString) else {
+            return Fail<LatestRelease, Error>(error: DFUError.failedToConstructUrl).eraseToAnyPublisher()
+        }
+        return
+            URLSession.shared.dataTaskPublisher(for: url)
+                .map { $0.data }
+                .decode(type: LatestRelease.self, decoder: JSONDecoder())
+                .catch { error in Fail<LatestRelease, Error>(error: error)}
+                .receive(on: RunLoop.main)
+                .eraseToAnyPublisher()
+    }
+
+    func readCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
+        return Future { [weak self] promise in
+            guard let sSelf = self else { return }
+            guard let uuid = ruuviTag.luid?.value else {
+                promise(.failure(DFUError.failedToGetLuid))
                 return
             }
-            var request = URLRequest(url: latestReleaseUrl)
-            request.httpMethod = "GET"
-            let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
-                if let error = error {
-                    promise(.failure(.networking(error)))
-                } else {
-                    if let data = data {
-                        do {
-                            guard let json = try JSONSerialization.jsonObject(with:
-                                data, options: []) as? [String: Any] else {
-                                promise(.failure(.failedToParseGithubResponse))
-                                return
-                            }
-                            guard let tagName = json["tag_name"] as? String else {
-                                promise(.failure(.failedToParseGithubResponse))
-                                return
-                            }
-                            promise(.success(tagName))
-                        } catch let error {
-                            promise(.failure(.parsing(error)))
-                            return
-                        }
-                    } else {
-                        promise(.failure(.failedToParseGithubResponse))
-                        return
-                    }
+            BTKit.background.services.gatt.firmwareRevision(
+                for: sSelf,
+                uuid: uuid,
+                options: [.connectionTimeout(15)]
+            ) { _, result in
+                switch result {
+                case .success(let version):
+                    let currentRelease = CurrentRelease(version: version)
+                    promise(.success(currentRelease))
+                case .failure(let error):
+                    promise(.failure(error))
                 }
             }
-            task.resume()
         }
     }
 }
