@@ -75,6 +75,14 @@ struct DFUUIView: View {
                 )
 
             }.eraseToAnyView()
+        case .downloading:
+            return VStack {
+                ProgressBar(value: $viewModel.downloadProgress).frame(height: 20)
+            }.eraseToAnyView()
+        case let .downloaded(_, fileUrl):
+            return VStack {
+                Text(fileUrl.absoluteString)
+            }.eraseToAnyView()
         }
     }
 }

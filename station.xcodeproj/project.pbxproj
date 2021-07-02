@@ -516,6 +516,12 @@
 		0EB8ED2D268F111B00C6B0FA /* View+Any.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED2B268F111B00C6B0FA /* View+Any.swift */; };
 		0EB8ED2F268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED2E268F12FA00C6B0FA /* DFUModuleFactory.swift */; };
 		0EB8ED30268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED2E268F12FA00C6B0FA /* DFUModuleFactory.swift */; };
+		0EB8ED36268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED35268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift */; };
+		0EB8ED37268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED35268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift */; };
+		0EB8ED39268F6A6900C6B0FA /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */; };
+		0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */; };
+		0EB8ED3C268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */; };
+		0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */; };
 		0EBAF065232002A00025A191 /* Language+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language+Localization.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -1152,6 +1158,9 @@
 		0EB8ED28268F10E900C6B0FA /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		0EB8ED2B268F111B00C6B0FA /* View+Any.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Any.swift"; sourceTree = "<group>"; };
 		0EB8ED2E268F12FA00C6B0FA /* DFUModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUModuleFactory.swift; sourceTree = "<group>"; };
+		0EB8ED35268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+downloadTaskPublisher.swift"; sourceTree = "<group>"; };
+		0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareRepository.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Language+Localization.swift"; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -2509,6 +2518,7 @@
 			isa = PBXGroup;
 			children = (
 				0E97D7A7268C922C00FE9D5B /* DFUInteractor.swift */,
+				0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */,
 			);
 			path = Interactor;
 			sourceTree = "<group>";
@@ -2614,6 +2624,7 @@
 			children = (
 				0EB8ED1D268EFF4200C6B0FA /* Publishers+System.swift */,
 				0EB8ED2B268F111B00C6B0FA /* View+Any.swift */,
+				0EB8ED35268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2631,6 +2642,7 @@
 			children = (
 				0EB8ED28268F10E900C6B0FA /* Spinner.swift */,
 				0EB8ED20268EFF6400C6B0FA /* Feedback.swift */,
+				0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -4666,6 +4678,7 @@
 				660EB2682669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E8BD32E238566AB008B31EF /* TagSettingsRouter.swift in Sources */,
 				0E8BD32F238566AB008B31EF /* DiscoverDeviceTableViewCell.swift in Sources */,
+				0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
 				0E8BD330238566AB008B31EF /* AboutInitializer.swift in Sources */,
 				0E8BD331238566AB008B31EF /* ForegroundEnvironmentObject.swift in Sources */,
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
@@ -4682,6 +4695,7 @@
 				0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */,
 				66718A56266A685700A380F8 /* DfuFlashViewOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
+				0EB8ED37268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
 				A90E16982460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
@@ -4739,6 +4753,7 @@
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E97D792268C84EC00FE9D5B /* DFUStatefulViewController.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
+				0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */,
 				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
@@ -5125,6 +5140,7 @@
 				663155EF2667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
 				660EB2582669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
+				0EB8ED3C268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
 				660EB2612669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
@@ -5194,6 +5210,7 @@
 				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
 				66718A4F266A685700A380F8 /* DfuFlashViewModel.swift in Sources */,
 				0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
+				0EB8ED39268F6A6900C6B0FA /* ProgressBar.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0EB48DFC261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
@@ -5294,6 +5311,7 @@
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				0E97D7A4268C888800FE9D5B /* DFUViewOutput.swift in Sources */,
+				0EB8ED36268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0E1B2F32239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */,

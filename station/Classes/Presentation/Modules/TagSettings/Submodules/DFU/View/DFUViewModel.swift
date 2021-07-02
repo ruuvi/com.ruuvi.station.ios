@@ -4,6 +4,7 @@ import RuuviOntology
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
+    @Published var downloadProgress: Double = 0
 
     private var bag = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event, Never>()
@@ -23,6 +24,7 @@ final class DFUViewModel: ObservableObject {
             feedbacks: [
                 self.whenLoading(),
                 self.whenReading(),
+                self.whenDownloading(),
                 self.userInput(input: input.eraseToAnyPublisher())
             ]
         )
@@ -48,6 +50,8 @@ extension DFUViewModel {
         case ready(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
+        case downloading(LatestRelease)
+        case downloaded(LatestRelease, URL)
         case error(Error)
     }
 
@@ -57,11 +61,15 @@ extension DFUViewModel {
         case onRead(CurrentRelease?)
         case onReady(LatestRelease, CurrentRelease?)
         case onStartUpgrade(LatestRelease)
+        case onDownloading(LatestRelease, Double)
+        case onDownloaded(LatestRelease, URL)
         case onDidFailLoading(Error)
+        case onDidFailDownloading(Error)
     }
 }
 
 extension DFUViewModel {
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     static func reduce(_ state: State, _ event: Event) -> State {
         switch state {
         case .idle:
@@ -101,6 +109,20 @@ extension DFUViewModel {
         case .noNeedToUpgrade:
             return state
         case .isAbleToUpgrade:
+            switch event {
+            case .onStartUpgrade(let latestRelease):
+                return .downloading(latestRelease)
+            default:
+                return state
+            }
+        case .downloading:
+            switch event {
+            case let .onDownloaded(latestRelease, fileUrl):
+                return .downloaded(latestRelease, fileUrl)
+            default:
+                return state
+            }
+        case .downloaded:
             return state
         case .error:
             return state
@@ -135,6 +157,26 @@ extension DFUViewModel {
             return sSelf.interactor.loadLatestRelease()
                 .map(Event.onLoaded)
                 .catch { Just(Event.onDidFailLoading($0)) }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func whenDownloading() -> Feedback<State, Event> {
+        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
+            guard case let .downloading(latestRelease) = state, let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            return sSelf.interactor.download(release: latestRelease)
+                .compactMap({ [weak sSelf] response in
+                    switch response {
+                    case .response(let fileUrl):
+                        return Event.onDownloaded(latestRelease, fileUrl)
+                    case .progress(let percentage):
+                        sSelf?.downloadProgress = percentage
+                        return nil
+                    }
+                })
+                .catch { Just(Event.onDidFailDownloading($0)) }
                 .eraseToAnyPublisher()
         }
     }
