@@ -5,20 +5,21 @@ enum FirmwareRepositoryError: Error {
 }
 
 protocol FirmwareRepository {
-    func save(name: String, fileUrl: URL) throws
+    func save(name: String, fileUrl: URL) throws -> URL 
 }
 
 final class FirmwareRepositoryImpl: FirmwareRepository {
     private let fwDir = "fw"
     private var isFwDirCreated = false
 
-    func save(name: String, fileUrl: URL) throws {
+    func save(name: String, fileUrl: URL) throws -> URL {
         let dstUrl = try self.getFirmwareDirectory().appendingPathComponent(name)
         if FileManager.default.fileExists(atPath: dstUrl.path) {
             try FileManager.default.removeItem(at: dstUrl)
         }
         try FileManager.default.copyItem(at: fileUrl, to: dstUrl)
         try FileManager.default.removeItem(at: fileUrl)
+        return dstUrl
     }
 
     private func getFirmwareDirectory() throws -> URL {
