@@ -1,5 +1,6 @@
 import UIKit
 import LightRoute
+import SwiftUI
 import RuuviOntology
 
 class TagSettingsRouter: TagSettingsRouterInput {
@@ -35,20 +36,14 @@ class TagSettingsRouter: TagSettingsRouterInput {
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
-        let factory = StoryboardFactory(storyboardName: "DFU")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: DFUModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ module in
-                module.configure(ruuviTag: ruuviTag)
-            })
-//        let factory = StoryboardFactory(storyboardName: "UpdateFirmware")
-//        try! transitionHandler
-//            .forStoryboard(factory: factory, to: UpdateFirmwareModuleInput.self)
-//            .to(preferred: .navigation(style: .push))
-//            .then({ (module) -> Any? in
-//                module.configure(ruuviTag: ruuviTag)
-//            })
+        let factory = DFUModuleFactoryImpl()
+        let module = factory.create(for: ruuviTag)
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
     }
 
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
