@@ -76,14 +76,18 @@ extension DFUInteractor: DFUInteractorInput {
                 guard let sSelf = self else { return response }
                 switch response {
                 case .response(let fileUrl):
-                    try? sSelf.firmwareRepository.save(
+                    if let movedUrl = try? sSelf.firmwareRepository.save(
                         name: name,
                         fileUrl: fileUrl
-                    )
-                case .progress(let percentage):
-                    print(percentage)
+                    ) {
+                        return .response(fileUrl: movedUrl)
+                    } else {
+                        return response
+                    }
+                case .progress:
+                    return response
                 }
-                return response
+
             })
             .eraseToAnyPublisher()
     }
