@@ -23,6 +23,7 @@ final class DFUViewModel: ObservableObject {
             scheduler: RunLoop.main,
             feedbacks: [
                 self.whenLoading(),
+                self.whenServing(),
                 self.whenReading(),
                 self.whenDownloading(),
                 self.userInput(input: input.eraseToAnyPublisher())
@@ -46,10 +47,11 @@ extension DFUViewModel {
         case idle
         case loading
         case loaded(LatestRelease)
-        case reading(LatestRelease)
+        case serving(LatestRelease)
         case ready(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
+        case reading(LatestRelease)
         case downloading(LatestRelease)
         case downloaded(LatestRelease, URL)
         case error(Error)
@@ -58,12 +60,14 @@ extension DFUViewModel {
     enum Event {
         case onAppear
         case onLoaded(LatestRelease)
-        case onRead(CurrentRelease?)
-        case onReady(LatestRelease, CurrentRelease?)
-        case onStartUpgrade(LatestRelease)
-        case onDownloading(LatestRelease, Double)
-        case onDownloaded(LatestRelease, URL)
         case onDidFailLoading(Error)
+        case onServed(CurrentRelease?)
+        case onLoadedAndServed(LatestRelease, CurrentRelease?)
+        case onStartUpgrade(LatestRelease)
+        case onRead(LatestRelease, URL)
+        case onDidFailReading(LatestRelease, Error)
+        case onDownloading(LatestRelease, Double)
+        case onListeningToBootDevice(LatestRelease, URL)
         case onDidFailDownloading(Error)
     }
 }
@@ -89,10 +93,10 @@ extension DFUViewModel {
                 return state
             }
         case let .loaded(latestRelease):
-            return .reading(latestRelease)
-        case let .reading(latestRelease):
+            return .serving(latestRelease)
+        case let .serving(latestRelease):
             switch event {
-            case let .onRead(currentRelease):
+            case let .onServed(currentRelease):
                 return .ready(latestRelease, currentRelease)
             default:
                 return state
@@ -111,13 +115,22 @@ extension DFUViewModel {
         case .isAbleToUpgrade:
             switch event {
             case .onStartUpgrade(let latestRelease):
+                return .reading(latestRelease)
+            default:
+                return state
+            }
+        case .reading:
+            switch event {
+            case let .onRead(latestRelease, fileUrl):
+                return .downloaded(latestRelease, fileUrl)
+            case let .onDidFailReading(latestRelease, _):
                 return .downloading(latestRelease)
             default:
                 return state
             }
         case .downloading:
             switch event {
-            case let .onDownloaded(latestRelease, fileUrl):
+            case let .onListeningToBootDevice(latestRelease, fileUrl):
                 return .downloaded(latestRelease, fileUrl)
             default:
                 return state
@@ -139,12 +152,28 @@ extension DFUViewModel {
 
     func whenReading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .reading = state, let sSelf = self else {
+            guard case let .reading(latestRelease) = state, let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.readCurrentRelease(for: sSelf.ruuviTag)
-                .map(Event.onRead)
-                .catch { _ in Just(Event.onRead(nil)) }
+            return sSelf.interactor.read(release: latestRelease)
+                .map { fileUrl in
+                    return Event.onRead(latestRelease, fileUrl)
+                }
+                .catch { error in Just(Event.onDidFailReading(latestRelease, error)) }
+                .receive(on: RunLoop.main)
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func whenServing() -> Feedback<State, Event> {
+        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
+            guard case .serving = state, let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+                .map(Event.onServed)
+                .catch { _ in Just(Event.onServed(nil)) }
+                .receive(on: RunLoop.main)
                 .eraseToAnyPublisher()
         }
     }
@@ -157,6 +186,7 @@ extension DFUViewModel {
             return sSelf.interactor.loadLatestRelease()
                 .map(Event.onLoaded)
                 .catch { Just(Event.onDidFailLoading($0)) }
+                .receive(on: RunLoop.main)
                 .eraseToAnyPublisher()
         }
     }
@@ -170,13 +200,14 @@ extension DFUViewModel {
                 .compactMap({ [weak sSelf] response in
                     switch response {
                     case .response(let fileUrl):
-                        return Event.onDownloaded(latestRelease, fileUrl)
+                        return Event.onListeningToBootDevice(latestRelease, fileUrl)
                     case .progress(let percentage):
                         sSelf?.downloadProgress = percentage
                         return nil
                     }
                 })
                 .catch { Just(Event.onDidFailDownloading($0)) }
+                .receive(on: RunLoop.main)
                 .eraseToAnyPublisher()
         }
     }
