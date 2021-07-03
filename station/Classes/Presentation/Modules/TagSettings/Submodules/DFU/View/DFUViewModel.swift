@@ -25,6 +25,7 @@ final class DFUViewModel: ObservableObject {
                 self.whenLoading(),
                 self.whenServing(),
                 self.whenReading(),
+                self.whenListening(),
                 self.whenDownloading(),
                 self.userInput(input: input.eraseToAnyPublisher())
             ]
@@ -53,7 +54,8 @@ extension DFUViewModel {
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
         case reading(LatestRelease)
         case downloading(LatestRelease)
-        case listening(LatestRelease, URL)
+        case listening(LatestRelease, fileUrl: URL)
+        case readyToUpdate(uuid: String, fileUrl: URL)
         case error(Error)
     }
 
@@ -64,11 +66,13 @@ extension DFUViewModel {
         case onServed(CurrentRelease?)
         case onLoadedAndServed(LatestRelease, CurrentRelease?)
         case onStartUpgrade(LatestRelease)
-        case onRead(LatestRelease, URL)
+        case onRead(LatestRelease, fileUrl: URL)
         case onDidFailReading(LatestRelease, Error)
         case onDownloading(LatestRelease, Double)
-        case onListeningToBootDevice(LatestRelease, URL)
+        case onDownloaded(LatestRelease, fileUrl: URL)
         case onDidFailDownloading(Error)
+        case onHeardRuuviBootDevice(uuid: String, fileUrl: URL)
+        case onUserDidConfirmToFlash(uuid: String, fileUrl: URL)
     }
 }
 
@@ -122,7 +126,7 @@ extension DFUViewModel {
         case .reading:
             switch event {
             case let .onRead(latestRelease, fileUrl):
-                return .listening(latestRelease, fileUrl)
+                return .listening(latestRelease, fileUrl: fileUrl)
             case let .onDidFailReading(latestRelease, _):
                 return .downloading(latestRelease)
             default:
@@ -130,12 +134,19 @@ extension DFUViewModel {
             }
         case .downloading:
             switch event {
-            case let .onListeningToBootDevice(latestRelease, fileUrl):
-                return .listening(latestRelease, fileUrl)
+            case let .onDownloaded(latestRelease, fileUrl):
+                return .listening(latestRelease, fileUrl: fileUrl)
             default:
                 return state
             }
         case .listening:
+            switch event {
+            case let .onHeardRuuviBootDevice(uuid, fileUrl):
+                return .readyToUpdate(uuid: uuid, fileUrl: fileUrl)
+            default:
+                return state
+            }
+        case .readyToUpdate:
             return state
         case .error:
             return state
@@ -150,6 +161,20 @@ extension DFUViewModel {
         return !currentRelease.version.contains(latestRelease.version)
     }
 
+    func whenListening() -> Feedback<State, Event> {
+        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
+            guard case let .listening(_, fileUrl) = state, let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            return sSelf.interactor.listen()
+                .map { uuid in
+                    return Event.onHeardRuuviBootDevice(uuid: uuid, fileUrl: fileUrl)
+                }
+                .receive(on: RunLoop.main)
+                .eraseToAnyPublisher()
+        }
+    }
+
     func whenReading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .reading(latestRelease) = state, let sSelf = self else {
@@ -157,7 +182,7 @@ extension DFUViewModel {
             }
             return sSelf.interactor.read(release: latestRelease)
                 .map { fileUrl in
-                    return Event.onRead(latestRelease, fileUrl)
+                    return Event.onRead(latestRelease, fileUrl: fileUrl)
                 }
                 .catch { error in Just(Event.onDidFailReading(latestRelease, error)) }
                 .receive(on: RunLoop.main)
@@ -200,7 +225,7 @@ extension DFUViewModel {
                 .compactMap({ [weak sSelf] response in
                     switch response {
                     case .response(let fileUrl):
-                        return Event.onListeningToBootDevice(latestRelease, fileUrl)
+                        return Event.onDownloaded(latestRelease, fileUrl: fileUrl)
                     case .progress(let percentage):
                         sSelf?.downloadProgress = percentage
                         return nil
