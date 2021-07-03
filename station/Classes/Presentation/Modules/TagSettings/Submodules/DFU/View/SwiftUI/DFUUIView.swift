@@ -40,7 +40,7 @@ struct DFUUIView: View {
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .eraseToAnyView()
-        case let .ready(latestRelease, currentRelease):
+        case let .checking(latestRelease, currentRelease):
             return VStack {
                 Text("Latest available Ruuvi Firmware version:")
                 Text(latestRelease.version)
@@ -75,17 +75,23 @@ struct DFUUIView: View {
                 )
 
             }.eraseToAnyView()
+        case .reading:
+            return VStack {
+                Spinner(isAnimating: true, style: .medium).eraseToAnyView()
+            }.eraseToAnyView()
         case .downloading:
             return VStack {
                 ProgressBar(value: $viewModel.downloadProgress).frame(height: 20)
             }.eraseToAnyView()
-        case let .downloaded(_, fileUrl):
+        case .listening:
             return VStack {
-                Text(fileUrl.absoluteString)
-            }.eraseToAnyView()
-        case .reading(let latestRelease):
-            return VStack {
-                Spinner(isAnimating: true, style: .medium).eraseToAnyView()
+                Text("Prepare your sensor")
+                Text("1. Open the cover of your Ruuvi sensor")
+                Text("2. Set the sensor to updating mode")
+                Text("If your sensor has two buttons, press the R button while keeping pressed the B buttom")
+                Text("If your sensor has one button, keep the button pressed for ten seconds")
+                Text("3. When successful you will see a continuous red light")
+                Button("Searching for a sensor", action: {}).disabled(true)
             }.eraseToAnyView()
         }
     }

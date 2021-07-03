@@ -48,12 +48,12 @@ extension DFUViewModel {
         case loading
         case loaded(LatestRelease)
         case serving(LatestRelease)
-        case ready(LatestRelease, CurrentRelease?)
+        case checking(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
         case reading(LatestRelease)
         case downloading(LatestRelease)
-        case downloaded(LatestRelease, URL)
+        case listening(LatestRelease, URL)
         case error(Error)
     }
 
@@ -97,11 +97,11 @@ extension DFUViewModel {
         case let .serving(latestRelease):
             switch event {
             case let .onServed(currentRelease):
-                return .ready(latestRelease, currentRelease)
+                return .checking(latestRelease, currentRelease)
             default:
                 return state
             }
-        case let .ready(latestRelease, currentRelease):
+        case let .checking(latestRelease, currentRelease):
             if isRecommendedToUpdate(
                 latestRelease: latestRelease,
                 currentRelease: currentRelease
@@ -122,7 +122,7 @@ extension DFUViewModel {
         case .reading:
             switch event {
             case let .onRead(latestRelease, fileUrl):
-                return .downloaded(latestRelease, fileUrl)
+                return .listening(latestRelease, fileUrl)
             case let .onDidFailReading(latestRelease, _):
                 return .downloading(latestRelease)
             default:
@@ -131,11 +131,11 @@ extension DFUViewModel {
         case .downloading:
             switch event {
             case let .onListeningToBootDevice(latestRelease, fileUrl):
-                return .downloaded(latestRelease, fileUrl)
+                return .listening(latestRelease, fileUrl)
             default:
                 return state
             }
-        case .downloaded:
+        case .listening:
             return state
         case .error:
             return state
