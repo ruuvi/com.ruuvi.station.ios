@@ -107,6 +107,12 @@ struct DFUUIView: View {
                     )
                 }).disabled(false)
             }.eraseToAnyView()
+        case .flashing:
+            return VStack {
+                ProgressBar(value: $viewModel.flashProgress).frame(height: 20)
+            }.eraseToAnyView()
+        case .successfulyFlashed:
+            return Text("Update successful").eraseToAnyView()
         }
     }
 }

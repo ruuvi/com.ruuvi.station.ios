@@ -1,10 +1,17 @@
 import Foundation
+import Combine
 #if canImport(NordicDFU)
 import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
 import iOSDFULibrary
 #endif
+
+public enum FlashResponse {
+    case done
+    case progress(Double)
+    case log(DFULog)
+}
 
 public protocol RuuviDFU {
     @discardableResult
@@ -18,10 +25,9 @@ public protocol RuuviDFU {
     ) -> RuuviDFUToken
     func firmwareFromUrl(url: URL) -> DFUFirmware?
     func flashFirmware(
-        device: DFUDevice,
-        with firmware: DFUFirmware,
-        output: DfuFlasherOutputProtocol
-    )
+        uuid: String,
+        with firmware: DFUFirmware
+    ) -> AnyPublisher<FlashResponse, Error>
 
     func stopFlashFirmware(device: DFUDevice) -> Bool
 }
