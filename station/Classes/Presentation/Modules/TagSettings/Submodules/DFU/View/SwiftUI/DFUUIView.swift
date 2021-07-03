@@ -32,7 +32,7 @@ struct DFUUIView: View {
             }
             .onAppear { self.viewModel.send(event: .onLoaded(latestRelease)) }
             .eraseToAnyView()
-        case let .reading(latestRelease):
+        case let .serving(latestRelease):
             return VStack {
                 Text("Latest available Ruuvi Firmware version:")
                 Text(latestRelease.version)
@@ -52,7 +52,7 @@ struct DFUUIView: View {
                 }
 
             }
-            .onAppear { self.viewModel.send(event: .onReady(latestRelease, currentRelease)) }
+            .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
         case let .noNeedToUpgrade(latestRelease, _):
             return Text("You are running the latest firmware version \(latestRelease.version), no need to upgrade")
@@ -82,6 +82,10 @@ struct DFUUIView: View {
         case let .downloaded(_, fileUrl):
             return VStack {
                 Text(fileUrl.absoluteString)
+            }.eraseToAnyView()
+        case .reading(let latestRelease):
+            return VStack {
+                Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }.eraseToAnyView()
         }
     }

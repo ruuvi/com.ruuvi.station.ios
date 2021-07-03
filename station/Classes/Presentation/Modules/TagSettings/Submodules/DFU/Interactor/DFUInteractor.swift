@@ -4,9 +4,10 @@ import BTKit
 import RuuviOntology
 
 protocol DFUInteractorInput {
+    func read(release: LatestRelease) -> AnyPublisher<URL, Error>
     func download(release: LatestRelease) -> AnyPublisher<DownloadResponse, Error>
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
-    func readCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
 }
 
 final class DFUInteractor {
@@ -16,6 +17,7 @@ final class DFUInteractor {
 enum DFUError: Error {
     case failedToConstructUrl
     case failedToGetLuid
+    case failedToGetFirmwareName
 }
 
 struct LatestRelease: Codable {
@@ -63,6 +65,13 @@ struct CurrentRelease {
 }
 
 extension DFUInteractor: DFUInteractorInput {
+    func read(release: LatestRelease) -> AnyPublisher<URL, Error> {
+        guard let name = release.defaultFullZipName else {
+            return Fail<URL, Error>(error: DFUError.failedToGetFirmwareName).eraseToAnyPublisher()
+        }
+        return firmwareRepository.read(name: name).eraseToAnyPublisher()
+    }
+
     func download(release: LatestRelease) -> AnyPublisher<DownloadResponse, Error> {
         guard let name = release.defaultFullZipName,
               let url = release.defaultFullZipUrl else {
@@ -71,7 +80,6 @@ extension DFUInteractor: DFUInteractorInput {
         return URLSession.shared
             .downloadTaskPublisher(for: url)
             .catch { error in Fail<DownloadResponse, Error>(error: error) }
-            .receive(on: RunLoop.main)
             .map({ [weak self] response in
                 guard let sSelf = self else { return response }
                 switch response {
@@ -89,6 +97,7 @@ extension DFUInteractor: DFUInteractorInput {
                 }
 
             })
+            .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }
 
@@ -106,7 +115,7 @@ extension DFUInteractor: DFUInteractorInput {
                 .eraseToAnyPublisher()
     }
 
-    func readCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
         return Future { [weak self] promise in
             guard let sSelf = self else { return }
             guard let uuid = ruuviTag.luid?.value else {
