@@ -93,6 +93,20 @@ struct DFUUIView: View {
                 Text("3. When successful you will see a continuous red light")
                 Button("Searching for a sensor", action: {}).disabled(true)
             }.eraseToAnyView()
+        case let .readyToUpdate(uuid, fileUrl):
+            return VStack {
+                Text("Prepare your sensor")
+                Text("1. Open the cover of your Ruuvi sensor")
+                Text("2. Set the sensor to updating mode")
+                Text("If your sensor has two buttons, press the R button while keeping pressed the B buttom")
+                Text("If your sensor has one button, keep the button pressed for ten seconds")
+                Text("3. When successful you will see a continuous red light")
+                Button("Start the update", action: {
+                    self.viewModel.send(
+                        event: .onUserDidConfirmToFlash(uuid: uuid, fileUrl: fileUrl)
+                    )
+                }).disabled(false)
+            }.eraseToAnyView()
         }
     }
 }

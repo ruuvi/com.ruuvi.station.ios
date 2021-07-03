@@ -2,8 +2,10 @@ import Foundation
 import Combine
 import BTKit
 import RuuviOntology
+import RuuviDFU
 
 protocol DFUInteractorInput {
+    func listen() -> Future<String, Never> 
     func read(release: LatestRelease) -> AnyPublisher<URL, Error>
     func download(release: LatestRelease) -> AnyPublisher<DownloadResponse, Error>
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
@@ -11,6 +13,8 @@ protocol DFUInteractorInput {
 }
 
 final class DFUInteractor {
+    var ruuviDFU: RuuviDFU!
+    var background: BTBackground!
     private let firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
 }
 
@@ -122,7 +126,7 @@ extension DFUInteractor: DFUInteractorInput {
                 promise(.failure(DFUError.failedToGetLuid))
                 return
             }
-            BTKit.background.services.gatt.firmwareRevision(
+            sSelf.background.services.gatt.firmwareRevision(
                 for: sSelf,
                 uuid: uuid,
                 options: [.connectionTimeout(15)]
@@ -134,6 +138,15 @@ extension DFUInteractor: DFUInteractorInput {
                 case .failure(let error):
                     promise(.failure(error))
                 }
+            }
+        }
+    }
+
+    func listen() -> Future<String, Never> {
+        return Future { [weak self] promise in
+            guard let sSelf = self else { return }
+            sSelf.ruuviDFU.scan(sSelf) { observer, device in
+                promise(.success(device.uuid))
             }
         }
     }
