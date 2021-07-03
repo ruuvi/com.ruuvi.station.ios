@@ -5,7 +5,7 @@ enum FirmwareRepositoryError: Error {
 }
 
 protocol FirmwareRepository {
-    func save(name: String, fileUrl: URL) throws -> URL 
+    func save(name: String, fileUrl: URL) throws -> URL
 }
 
 final class FirmwareRepositoryImpl: FirmwareRepository {
