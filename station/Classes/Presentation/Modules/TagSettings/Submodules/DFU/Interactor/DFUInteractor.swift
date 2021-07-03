@@ -5,11 +5,12 @@ import RuuviOntology
 import RuuviDFU
 
 protocol DFUInteractorInput {
-    func listen() -> Future<String, Never> 
+    func listen() -> Future<String, Never>
     func read(release: LatestRelease) -> AnyPublisher<URL, Error>
     func download(release: LatestRelease) -> AnyPublisher<DownloadResponse, Error>
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
     func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
+    func flash(uuid: String, fileUrl: URL) -> AnyPublisher<FlashResponse, Error>
 }
 
 final class DFUInteractor {
@@ -22,6 +23,7 @@ enum DFUError: Error {
     case failedToConstructUrl
     case failedToGetLuid
     case failedToGetFirmwareName
+    case failedToConstructFirmwareFromFile
 }
 
 struct LatestRelease: Codable {
@@ -69,6 +71,13 @@ struct CurrentRelease {
 }
 
 extension DFUInteractor: DFUInteractorInput {
+    func flash(uuid: String, fileUrl: URL) -> AnyPublisher<FlashResponse, Error> {
+        guard let firmware = ruuviDFU.firmwareFromUrl(url: fileUrl) else {
+            return Fail<FlashResponse, Error>(error: DFUError.failedToConstructFirmwareFromFile).eraseToAnyPublisher()
+        }
+        return ruuviDFU.flashFirmware(uuid: uuid, with: firmware).eraseToAnyPublisher()
+    }
+
     func read(release: LatestRelease) -> AnyPublisher<URL, Error> {
         guard let name = release.defaultFullZipName else {
             return Fail<URL, Error>(error: DFUError.failedToGetFirmwareName).eraseToAnyPublisher()

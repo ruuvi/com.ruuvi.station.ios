@@ -59,7 +59,7 @@ extension DfuFlashPresenter: DfuFlashViewOutput {
             return
         }
         dfuFlashState = .uploading
-        ruuviDfu.flashFirmware(device: dfuDevice, with: firmware, output: self)
+        ruuviDfu.flashFirmware(uuid: dfuDevice.uuid, with: firmware)
     }
 
     func viewDidFinishFlash() {
