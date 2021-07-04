@@ -524,6 +524,12 @@
 		0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */; };
 		0EB8ED3F26916D1700C6B0FA /* LargeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */; };
 		0EB8ED4026916D1700C6B0FA /* LargeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */; };
+		0EB8ED432692005900C6B0FA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8ED422692005900C6B0FA /* Colors.xcassets */; };
+		0EB8ED442692005900C6B0FA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8ED422692005900C6B0FA /* Colors.xcassets */; };
+		0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
+		0EB8ED482692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
+		0EB8ED4A2692093500C6B0FA /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED492692093500C6B0FA /* Collapsible.swift */; };
+		0EB8ED4B2692093500C6B0FA /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED492692093500C6B0FA /* Collapsible.swift */; };
 		0EBAF065232002A00025A191 /* Language+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language+Localization.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -1164,6 +1170,9 @@
 		0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareRepository.swift; sourceTree = "<group>"; };
 		0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButton.swift; sourceTree = "<group>"; };
+		0EB8ED422692005900C6B0FA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		0EB8ED462692018000C6B0FA /* RuuviColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviColor.swift; sourceTree = "<group>"; };
+		0EB8ED492692093500C6B0FA /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Language+Localization.swift"; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -1671,6 +1680,7 @@
 		0E09671722AE762900E85F48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0EB8ED412692004300C6B0FA /* Colors */,
 				0EB48DE4261A17F4008E0D2D /* JSONs */,
 				0E1C1DC722B396180032F6CA /* Strings */,
 				0E09671A22AE769F00E85F48 /* Plists */,
@@ -1693,6 +1703,7 @@
 			children = (
 				0E1C1DBC22B3920C0032F6CA /* Assembly */,
 				0EC50F4E22CCB91000172EEB /* Binding */,
+				0EB8ED452692017100C6B0FA /* Colors */,
 				0E70A45E22AF9558006CB87C /* Contract */,
 				0EE98A772649386000AAB3ED /* FLEX */,
 				0E09671B22AE76B700E85F48 /* Launch */,
@@ -2647,8 +2658,25 @@
 				0EB8ED20268EFF6400C6B0FA /* Feedback.swift */,
 				0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */,
 				0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */,
+				0EB8ED492692093500C6B0FA /* Collapsible.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		0EB8ED412692004300C6B0FA /* Colors */ = {
+			isa = PBXGroup;
+			children = (
+				0EB8ED422692005900C6B0FA /* Colors.xcassets */,
+			);
+			path = Colors;
+			sourceTree = "<group>";
+		};
+		0EB8ED452692017100C6B0FA /* Colors */ = {
+			isa = PBXGroup;
+			children = (
+				0EB8ED462692018000C6B0FA /* RuuviColor.swift */,
+			);
+			path = Colors;
 			sourceTree = "<group>";
 		};
 		0EBAF062232000F50025A191 /* Module */ = {
@@ -4206,6 +4234,7 @@
 				A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				0E8BD3F9238566AB008B31EF /* Main.storyboard in Resources */,
 				0E8BD3FA238566AB008B31EF /* Settings.storyboard in Resources */,
+				0EB8ED442692005900C6B0FA /* Colors.xcassets in Resources */,
 				0EB48DE7261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */,
 				663155F92667F40C005B90A6 /* UpdateFirmware.storyboard in Resources */,
@@ -4258,6 +4287,7 @@
 				A964648E247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
+				0EB8ED432692005900C6B0FA /* Colors.xcassets in Resources */,
 				0EB48DE6261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				663155F82667F40C005B90A6 /* UpdateFirmware.storyboard in Resources */,
@@ -4655,6 +4685,7 @@
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				A9E599592557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
+				0EB8ED482692018000C6B0FA /* RuuviColor.swift in Sources */,
 				660EB2652669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */,
 				0EB48D8C2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EB48DDD2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
@@ -4878,6 +4909,7 @@
 				0E8BD3C9238566AB008B31EF /* WebTagSettingsViewOutput.swift in Sources */,
 				663155EA2667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
 				0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
+				0EB8ED4B2692093500C6B0FA /* Collapsible.swift in Sources */,
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
 				0E8BD3CB238566AB008B31EF /* WelcomeViewController.swift in Sources */,
 				A9646488247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
@@ -4994,6 +5026,7 @@
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				66718A3A266A685700A380F8 /* DfuFlashAppleInitializer.swift in Sources */,
+				0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
 				A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */,
 				A91D02F72511207300694733 /* SelectionModuleInput.swift in Sources */,
@@ -5017,6 +5050,7 @@
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				66BC44B02657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
+				0EB8ED4A2692093500C6B0FA /* Collapsible.swift in Sources */,
 				0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0EA511B8261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,

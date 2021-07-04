@@ -79,10 +79,10 @@ struct DFUUIView: View {
                 }.padding(16)
                 LargeButton(
                     title: "Start updating process",
-                    backgroundColor: Color.purple
+                    backgroundColor: RuuviColor.purple
                 ) {
                     self.viewModel.send(event: .onStartUpgrade(latestRelease))
-                }
+                }.padding(16)
             }.eraseToAnyView()
         case .reading:
             return VStack {
@@ -97,17 +97,27 @@ struct DFUUIView: View {
         case .listening:
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Prepare your sensor")
+                    Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
-                    Text("2. Set the sensor to updating mode")
+                    Collapsible(
+                        label: { Text("2. Set the sensor to updating mode") },
+                        content: {
+                            Image("ruuvi-tag-firmware-update")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .allowsHitTesting(false)
+                        }
+                    )
                     Text("If your sensor has two buttons, press the R button while keeping pressed the B buttom")
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
                 }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 LargeButton(
                     title: "Searching for a sensor",
                     disabled: true,
-                    backgroundColor: Color.purple,
+                    backgroundColor: RuuviColor.purple,
                     action: {}
                 )
             }
@@ -116,16 +126,24 @@ struct DFUUIView: View {
         case let .readyToUpdate(uuid, fileUrl):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Prepare your sensor")
+                    Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
-                    Text("2. Set the sensor to updating mode")
+                    Collapsible(
+                        label: { Text("2. Set the sensor to updating mode") },
+                        content: {
+                            Image("ruuvi-tag-firmware-update")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .allowsHitTesting(false)
+                        }
+                    )
                     Text("If your sensor has two buttons, press the R button while keeping pressed the B buttom")
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
                 }
                 LargeButton(
                     title: "Start the update",
-                    backgroundColor: Color.purple,
+                    backgroundColor: RuuviColor.purple,
                     action: {
                         self.viewModel.send(
                             event: .onUserDidConfirmToFlash(uuid: uuid, fileUrl: fileUrl)
