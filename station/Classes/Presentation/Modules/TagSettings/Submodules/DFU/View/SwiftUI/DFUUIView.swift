@@ -110,7 +110,7 @@ struct DFUUIView: View {
                                 .allowsHitTesting(false)
                         }
                     )
-                    Text("If your sensor has two buttons, press the R button while keeping pressed the B buttom")
+                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
                 }
@@ -139,7 +139,7 @@ struct DFUUIView: View {
                                 .allowsHitTesting(false)
                         }
                     )
-                    Text("If your sensor has two buttons, press the R button while keeping pressed the B buttom")
+                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
                 }
