@@ -89,10 +89,12 @@ struct DFUUIView: View {
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }.eraseToAnyView()
         case .downloading:
-            return VStack {
+            return VStack(alignment: .center, spacing: 16) {
+                Text("Downloading the latest firmware to be updated...")
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 20)
                     .padding(16)
+                Text("\(Int(viewModel.downloadProgress * 100))%")
             }.eraseToAnyView()
         case .listening:
             return VStack {
@@ -154,10 +156,14 @@ struct DFUUIView: View {
             .padding(16)
             .eraseToAnyView()
         case .flashing:
-            return VStack {
+            return VStack(alignment: .center, spacing: 16) {
+                Text("Updating...")
                 ProgressBar(value: $viewModel.flashProgress)
                     .frame(height: 20)
                     .padding(16)
+                Text("\(Int(viewModel.flashProgress * 100))%")
+                Text("Do not close or power off the sensor during the update.")
+
             }.eraseToAnyView()
         case .successfulyFlashed:
             return Text("Update successful").eraseToAnyView()
