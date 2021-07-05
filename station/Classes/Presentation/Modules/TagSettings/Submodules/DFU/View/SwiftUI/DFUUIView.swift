@@ -113,7 +113,7 @@ struct DFUUIView: View {
                     .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
             }.eraseToAnyView()
-        case let .listening(latestRelease, currentRelease, _):
+        case let .listening(latestRelease, currentRelease, _, _):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Prepare your sensor").bold()
@@ -153,7 +153,7 @@ struct DFUUIView: View {
             }
             .padding()
             .eraseToAnyView()
-        case let .readyToUpdate(latestRelease, currentRelease, uuid, fileUrl):
+        case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Prepare your sensor").bold()
@@ -178,7 +178,8 @@ struct DFUUIView: View {
                                 latestRelease,
                                 currentRelease,
                                 uuid: uuid,
-                                fileUrl: fileUrl
+                                appUrl: appUrl,
+                                fullUrl: fullUrl
                             )
                         )
                     },
@@ -198,7 +199,7 @@ struct DFUUIView: View {
             }
             .padding()
             .eraseToAnyView()
-        case let .flashing(latestRelease, currentRelease, _, _):
+        case let .flashing(latestRelease, currentRelease, _, _, _):
             return VStack(alignment: .center, spacing: 24) {
                 Text("Updating...")
                 ProgressBar(value: $viewModel.flashProgress)

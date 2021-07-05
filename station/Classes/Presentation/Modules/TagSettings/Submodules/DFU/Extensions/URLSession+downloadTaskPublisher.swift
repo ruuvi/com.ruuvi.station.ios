@@ -2,17 +2,17 @@ import Foundation
 import Combine
 
 public enum DownloadResponse {
-    case progress(percentage: Double)
+    case progress(Progress)
     case response(fileUrl: URL)
 }
 
 extension URLSession {
-    public func downloadTaskPublisher(for url: URL) -> URLSession.DownloadTaskPublisher {
-        self.downloadTaskPublisher(for: .init(url: url))
+    public func downloadTaskPublisher(for url: URL, progress: Progress) -> URLSession.DownloadTaskPublisher {
+        self.downloadTaskPublisher(for: .init(url: url), progress: progress)
     }
 
-    public func downloadTaskPublisher(for request: URLRequest) -> URLSession.DownloadTaskPublisher {
-        .init(request: request, session: self)
+    public func downloadTaskPublisher(for request: URLRequest, progress: Progress) -> URLSession.DownloadTaskPublisher {
+        .init(request: request, session: self, progress: progress)
     }
 
     public struct DownloadTaskPublisher: Publisher {
@@ -21,10 +21,12 @@ extension URLSession {
 
         public let request: URLRequest
         public let session: URLSession
+        public let progress: Progress
 
-        public init(request: URLRequest, session: URLSession) {
+        public init(request: URLRequest, session: URLSession, progress: Progress) {
             self.request = request
             self.session = session
+            self.progress = progress
         }
 
         public func receive<S>(subscriber: S) where S: Subscriber,
@@ -33,7 +35,8 @@ extension URLSession {
             let subscription = DownloadTaskSubscription(
                 subscriber: subscriber,
                 session: self.session,
-                request: self.request
+                request: self.request,
+                progress: self.progress
             )
             subscriber.receive(subscription: subscription)
         }
@@ -47,6 +50,7 @@ extension URLSession {
         private var subscriber: SubscriberType?
         private weak var session: URLSession?
         private var request: URLRequest
+        private var progress: Progress
         private var task: URLSessionDownloadTask?
         private var observation: NSKeyValueObservation?
 
@@ -54,10 +58,16 @@ extension URLSession {
             observation?.invalidate()
         }
 
-        init(subscriber: SubscriberType, session: URLSession, request: URLRequest) {
+        init(
+            subscriber: SubscriberType,
+            session: URLSession,
+            request: URLRequest,
+            progress: Progress
+        ) {
             self.subscriber = subscriber
             self.session = session
             self.request = request
+            self.progress = progress
         }
 
         func request(_ demand: Subscribers.Demand) {
@@ -90,12 +100,14 @@ extension URLSession {
                     self?.subscriber?.receive(completion: .failure(URLError(.cannotCreateFile)))
                 }
             }
+            guard let task = self.task else { return }
+            progress.addChild(task.progress, withPendingUnitCount: 1)
 
-            observation = task?.progress.observe(\.fractionCompleted) { [weak self] progress, _ in
-                _ = self?.subscriber?.receive(.progress(percentage: progress.fractionCompleted))
+            observation = progress.observe(\.fractionCompleted) { [weak self] progress, _ in
+                _ = self?.subscriber?.receive(.progress(progress))
             }
 
-            self.task?.resume()
+            task.resume()
         }
 
         func cancel() {
