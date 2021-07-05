@@ -24,7 +24,7 @@ struct DFUUIView: View {
                 Text("Latest available Ruuvi Firmware version:").bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
-            .padding(16)
+            .padding()
             .eraseToAnyView()
         case .error(let error):
             return Text(error.localizedDescription).eraseToAnyView()
@@ -35,7 +35,7 @@ struct DFUUIView: View {
                 Text("Current version:").bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
-            .padding(16)
+            .padding()
             .onAppear { self.viewModel.send(event: .onLoaded(latestRelease)) }
             .eraseToAnyView()
         case let .serving(latestRelease):
@@ -45,7 +45,7 @@ struct DFUUIView: View {
                 Text("Current version:").bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
-            .padding(16)
+            .padding()
             .eraseToAnyView()
         case let .checking(latestRelease, currentRelease):
             return VStack(alignment: .leading, spacing: 16) {
@@ -58,12 +58,13 @@ struct DFUUIView: View {
                     Text("Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended")
                 }
             }
-            .padding(16)
+            .padding()
             .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
         case let .noNeedToUpgrade(latestRelease, _):
             return Text("You are running the latest firmware version \(latestRelease.version), no need to upgrade")
-                .padding(16)
+                .multilineTextAlignment(.center)
+                .padding()
                 .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {
@@ -76,14 +77,12 @@ struct DFUUIView: View {
                     } else {
                         Text("Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended")
                     }
-                }.padding(16)
-                LargeButton(
-                    title: "Start updating process",
-                    backgroundColor: RuuviColor.purple
-                ) {
-                    self.viewModel.send(event: .onStartUpgrade(latestRelease))
-                }.padding(16)
-            }.eraseToAnyView()
+                }
+            }.onAppear(perform: { self.viewModel.send(
+                event: .onStartUpgrade(latestRelease, currentRelease)
+            ) })
+            .padding()
+            .eraseToAnyView()
         case .reading:
             return VStack {
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
@@ -93,12 +92,18 @@ struct DFUUIView: View {
                 Text("Downloading the latest firmware to be updated...")
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 20)
-                    .padding(16)
+                    .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
             }.eraseToAnyView()
-        case .listening:
+        case let .listening(latestRelease, currentRelease, _):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
+                    Text("Latest available Ruuvi Firmware version:").bold().opacity(0.5)
+                    Text(latestRelease.version).opacity(0.5)
+                    Text("Current version:").bold().opacity(0.5)
+                    Text(currentRelease?.version ??
+                            "Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended"
+                    ).opacity(0.5)
                     Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
                     Collapsible(
@@ -114,57 +119,132 @@ struct DFUUIView: View {
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
                 }
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                LargeButton(
-                    title: "Searching for a sensor",
-                    disabled: true,
-                    backgroundColor: RuuviColor.purple,
-                    action: {}
-                )
-            }
-            .padding(16)
-            .eraseToAnyView()
-        case let .readyToUpdate(uuid, fileUrl):
-            return VStack {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Prepare your sensor").bold()
-                    Text("1. Open the cover of your Ruuvi sensor")
-                    Collapsible(
-                        label: { Text("2. Set the sensor to updating mode") },
-                        content: {
-                            Image("ruuvi-tag-firmware-update")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .allowsHitTesting(false)
-                        }
-                    )
-                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
-                    Text("If your sensor has one button, keep the button pressed for ten seconds")
-                    Text("3. When successful you will see a continuous red light")
-                }
-                LargeButton(
-                    title: "Start the update",
-                    backgroundColor: RuuviColor.purple,
-                    action: {
-                        self.viewModel.send(
-                            event: .onUserDidConfirmToFlash(uuid: uuid, fileUrl: fileUrl)
-                        )
+
+                Button(
+                    action: {},
+                    label: {
+                        HStack {
+                            Text("Searching for a sensor")
+                            Spinner(isAnimating: true, style: .medium).eraseToAnyView()
+                        }.frame(maxWidth: .infinity)
                     }
                 )
+                .buttonStyle(
+                    LargeButtonStyle(
+                        backgroundColor: RuuviColor.purple,
+                        foregroundColor: Color.white,
+                        isDisabled: true
+                    )
+                )
+                .disabled(true)
+                .frame(maxWidth: .infinity)
             }
-            .padding(16)
+            .padding()
             .eraseToAnyView()
-        case .flashing:
-            return VStack(alignment: .center, spacing: 16) {
-                Text("Updating...")
-                ProgressBar(value: $viewModel.flashProgress)
-                    .frame(height: 20)
-                    .padding(16)
-                Text("\(Int(viewModel.flashProgress * 100))%")
-                Text("Do not close or power off the sensor during the update.")
+        case let .readyToUpdate(latestRelease, currentRelease, uuid, fileUrl):
+            return VStack {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Latest available Ruuvi Firmware version:").bold().opacity(0.5)
+                    Text(latestRelease.version).opacity(0.5)
+                    Text("Current version:").bold().opacity(0.5)
+                    Text(currentRelease?.version ??
+                            "Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended"
+                    ).opacity(0.5)
+                    Text("Prepare your sensor").bold()
+                    Text("1. Open the cover of your Ruuvi sensor")
+                    Collapsible(
+                        label: { Text("2. Set the sensor to updating mode") },
+                        content: {
+                            Image("ruuvi-tag-firmware-update")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .allowsHitTesting(false)
+                        }
+                    )
+                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
+                    Text("If your sensor has one button, keep the button pressed for ten seconds")
+                    Text("3. When successful you will see a continuous red light")
+                }
+                Button(
+                    action: {
+                        self.viewModel.send(
+                            event: .onUserDidConfirmToFlash(
+                                latestRelease,
+                                currentRelease,
+                                uuid: uuid,
+                                fileUrl: fileUrl
+                            )
+                        )
+                    },
+                    label: {
+                        Text("Start the update")
+                            .frame(maxWidth: .infinity)
+                    }
+                )
+                .buttonStyle(
+                    LargeButtonStyle(
+                        backgroundColor: RuuviColor.purple,
+                        foregroundColor: Color.white,
+                        isDisabled: false
+                    )
+                )
+                .frame(maxWidth: .infinity)
+            }
+            .padding()
+            .eraseToAnyView()
+        case let .flashing(latestRelease, currentRelease, _, _):
+            return VStack {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Latest available Ruuvi Firmware version:").bold()
+                    Text(latestRelease.version)
+                    Text("Current version:").bold()
+                    Text(currentRelease?.version ??
+                            "Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended"
+                    )
+                    Text("Prepare your sensor").bold()
+                    Text("1. Open the cover of your Ruuvi sensor")
+                    Collapsible(
+                        label: { Text("2. Set the sensor to updating mode") },
+                        content: {
+                            Image("ruuvi-tag-firmware-update")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .allowsHitTesting(false)
+                        }
+                    )
+                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
+                    Text("If your sensor has one button, keep the button pressed for ten seconds")
+                    Text("3. When successful you will see a continuous red light")
+                }
+                .opacity(0.5)
 
-            }.eraseToAnyView()
+                ZStack {
+                    ProgressBar(value: $viewModel.flashProgress)
+                    Button(
+                        action: {},
+                        label: {
+                            Text("Updating...")
+                        }
+                    )
+                    .buttonStyle(
+                        LargeButtonStyle(
+                            backgroundColor: Color.clear,
+                            foregroundColor: Color.white,
+                            isDisabled: false
+                        )
+                    )
+                    .disabled(true)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, maxHeight: 56)
+
+                Text("Do not close or power off the sensor during the update.")
+                    .bold()
+                    .multilineTextAlignment(.center)
+
+            }
+            .padding()
+            .eraseToAnyView()
         case .successfulyFlashed:
             return Text("Update successful").eraseToAnyView()
         }

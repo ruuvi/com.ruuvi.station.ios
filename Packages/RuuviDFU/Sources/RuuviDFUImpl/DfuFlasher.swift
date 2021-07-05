@@ -59,8 +59,9 @@ extension DfuFlasher: DFUServiceDelegate {
             subject?.send(.done)
             subject?.send(completion: .finished)
         case .connecting:
-            subject?.send(.progress(0))
-        default: break
+            break
+        default:
+            break
         }
     }
 
