@@ -522,8 +522,8 @@
 		0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */; };
 		0EB8ED3C268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */; };
 		0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */; };
-		0EB8ED3F26916D1700C6B0FA /* LargeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */; };
-		0EB8ED4026916D1700C6B0FA /* LargeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */; };
+		0EB8ED3F26916D1700C6B0FA /* LargeButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3E26916D1700C6B0FA /* LargeButtonStyle.swift */; };
+		0EB8ED4026916D1700C6B0FA /* LargeButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED3E26916D1700C6B0FA /* LargeButtonStyle.swift */; };
 		0EB8ED432692005900C6B0FA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8ED422692005900C6B0FA /* Colors.xcassets */; };
 		0EB8ED442692005900C6B0FA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8ED422692005900C6B0FA /* Colors.xcassets */; };
 		0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
@@ -1169,7 +1169,7 @@
 		0EB8ED35268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+downloadTaskPublisher.swift"; sourceTree = "<group>"; };
 		0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareRepository.swift; sourceTree = "<group>"; };
-		0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButton.swift; sourceTree = "<group>"; };
+		0EB8ED3E26916D1700C6B0FA /* LargeButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButtonStyle.swift; sourceTree = "<group>"; };
 		0EB8ED422692005900C6B0FA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		0EB8ED462692018000C6B0FA /* RuuviColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviColor.swift; sourceTree = "<group>"; };
 		0EB8ED492692093500C6B0FA /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
@@ -2657,7 +2657,7 @@
 				0EB8ED28268F10E900C6B0FA /* Spinner.swift */,
 				0EB8ED20268EFF6400C6B0FA /* Feedback.swift */,
 				0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */,
-				0EB8ED3E26916D1700C6B0FA /* LargeButton.swift */,
+				0EB8ED3E26916D1700C6B0FA /* LargeButtonStyle.swift */,
 				0EB8ED492692093500C6B0FA /* Collapsible.swift */,
 			);
 			path = Common;
@@ -4858,7 +4858,7 @@
 				660EB27D2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
-				0EB8ED4026916D1700C6B0FA /* LargeButton.swift in Sources */,
+				0EB8ED4026916D1700C6B0FA /* LargeButtonStyle.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
 				660EB25C2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
 				0E8BD3A5238566AB008B31EF /* SettingsTableInitializer.swift in Sources */,
@@ -5173,7 +5173,7 @@
 				A98D3F0F256CBD600066588B /* ShareViewInput.swift in Sources */,
 				0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */,
 				0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */,
-				0EB8ED3F26916D1700C6B0FA /* LargeButton.swift in Sources */,
+				0EB8ED3F26916D1700C6B0FA /* LargeButtonStyle.swift in Sources */,
 				0EB8ED25268F083700C6B0FA /* DFUUIView.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,

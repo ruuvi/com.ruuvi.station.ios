@@ -54,11 +54,11 @@ extension DFUViewModel {
         case checking(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
-        case reading(LatestRelease)
-        case downloading(LatestRelease)
-        case listening(LatestRelease, fileUrl: URL)
-        case readyToUpdate(uuid: String, fileUrl: URL)
-        case flashing(uuid: String, fileUrl: URL)
+        case reading(LatestRelease, CurrentRelease?)
+        case downloading(LatestRelease, CurrentRelease?)
+        case listening(LatestRelease, CurrentRelease?, fileUrl: URL)
+        case readyToUpdate(LatestRelease, CurrentRelease?, uuid: String, fileUrl: URL)
+        case flashing(LatestRelease, CurrentRelease?, uuid: String, fileUrl: URL)
         case successfulyFlashed
         case error(Error)
     }
@@ -69,14 +69,24 @@ extension DFUViewModel {
         case onDidFailLoading(Error)
         case onServed(CurrentRelease?)
         case onLoadedAndServed(LatestRelease, CurrentRelease?)
-        case onStartUpgrade(LatestRelease)
-        case onRead(LatestRelease, fileUrl: URL)
-        case onDidFailReading(LatestRelease, Error)
-        case onDownloading(LatestRelease, Double)
-        case onDownloaded(LatestRelease, fileUrl: URL)
+        case onStartUpgrade(LatestRelease,  CurrentRelease?)
+        case onRead(LatestRelease,  CurrentRelease?, fileUrl: URL)
+        case onDidFailReading(LatestRelease, CurrentRelease?, Error)
+        case onDownloading(LatestRelease, CurrentRelease?, Double)
+        case onDownloaded(LatestRelease, CurrentRelease?, fileUrl: URL)
         case onDidFailDownloading(Error)
-        case onHeardRuuviBootDevice(uuid: String, fileUrl: URL)
-        case onUserDidConfirmToFlash(uuid: String, fileUrl: URL)
+        case onHeardRuuviBootDevice(
+                LatestRelease,
+                CurrentRelease?,
+                uuid: String,
+                fileUrl: URL
+             )
+        case onUserDidConfirmToFlash(
+                LatestRelease,
+                CurrentRelease?,
+                uuid: String,
+                fileUrl: URL
+             )
         case onSuccessfullyFlashedFirmware
         case onDidFailFlashingFirmware(Error)
     }
@@ -122,40 +132,35 @@ extension DFUViewModel {
             }
         case .noNeedToUpgrade:
             return state
-        case .isAbleToUpgrade:
-            switch event {
-            case .onStartUpgrade(let latestRelease):
-                return .reading(latestRelease)
-            default:
-                return state
-            }
+        case let .isAbleToUpgrade(latestRelease, currentRelease):
+            return .reading(latestRelease, currentRelease)
         case .reading:
             switch event {
-            case let .onRead(latestRelease, fileUrl):
-                return .listening(latestRelease, fileUrl: fileUrl)
-            case let .onDidFailReading(latestRelease, _):
-                return .downloading(latestRelease)
+            case let .onRead(latestRelease, currentRelease, fileUrl):
+                return .listening(latestRelease, currentRelease, fileUrl: fileUrl)
+            case let .onDidFailReading(latestRelease, currentRelease, _):
+                return .downloading(latestRelease, currentRelease)
             default:
                 return state
             }
         case .downloading:
             switch event {
-            case let .onDownloaded(latestRelease, fileUrl):
-                return .listening(latestRelease, fileUrl: fileUrl)
+            case let .onDownloaded(latestRelease, currentRelease, fileUrl):
+                return .listening(latestRelease, currentRelease, fileUrl: fileUrl)
             default:
                 return state
             }
         case .listening:
             switch event {
-            case let .onHeardRuuviBootDevice(uuid, fileUrl):
-                return .readyToUpdate(uuid: uuid, fileUrl: fileUrl)
+            case let .onHeardRuuviBootDevice(latestRelease, currentRelease, uuid, fileUrl):
+                return .readyToUpdate(latestRelease, currentRelease, uuid: uuid, fileUrl: fileUrl)
             default:
                 return state
             }
         case .readyToUpdate:
             switch event {
-            case let .onUserDidConfirmToFlash(uuid, fileUrl):
-                return .flashing(uuid: uuid, fileUrl: fileUrl)
+            case let .onUserDidConfirmToFlash(latestRelease, currentRelease, uuid, fileUrl):
+                return .flashing(latestRelease, currentRelease, uuid: uuid, fileUrl: fileUrl)
             default:
                 return state
             }
@@ -185,7 +190,7 @@ extension DFUViewModel {
 
     func whenFlashing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .flashing(uuid, fileUrl) = state, let sSelf = self else {
+            guard case let .flashing(_, _, uuid, fileUrl) = state, let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(uuid: uuid, fileUrl: fileUrl)
@@ -208,13 +213,19 @@ extension DFUViewModel {
 
     func whenListening() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .listening(_, fileUrl) = state, let sSelf = self else {
+            guard case let .listening(latestRelease, currentRelease, fileUrl) = state,
+                  let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.listen()
                 .receive(on: RunLoop.main)
                 .map { uuid in
-                    return Event.onHeardRuuviBootDevice(uuid: uuid, fileUrl: fileUrl)
+                    return Event.onHeardRuuviBootDevice(
+                        latestRelease,
+                        currentRelease,
+                        uuid: uuid,
+                        fileUrl: fileUrl
+                    )
                 }
                 .eraseToAnyPublisher()
         }
@@ -222,15 +233,20 @@ extension DFUViewModel {
 
     func whenReading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .reading(latestRelease) = state, let sSelf = self else {
+            guard case let .reading(latestRelease, currentRelease) = state,
+                  let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.read(release: latestRelease)
                 .receive(on: RunLoop.main)
                 .map { fileUrl in
-                    return Event.onRead(latestRelease, fileUrl: fileUrl)
+                    return Event.onRead(
+                        latestRelease,
+                        currentRelease,
+                        fileUrl: fileUrl
+                    )
                 }
-                .catch { error in Just(Event.onDidFailReading(latestRelease, error)) }
+                .catch { error in Just(Event.onDidFailReading(latestRelease, currentRelease, error)) }
                 .eraseToAnyPublisher()
         }
     }
@@ -263,7 +279,7 @@ extension DFUViewModel {
 
     func whenDownloading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .downloading(latestRelease) = state, let sSelf = self else {
+            guard case let .downloading(latestRelease, currentRelease) = state, let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.download(release: latestRelease)
@@ -271,7 +287,7 @@ extension DFUViewModel {
                 .compactMap({ [weak sSelf] response in
                     switch response {
                     case .response(let fileUrl):
-                        return Event.onDownloaded(latestRelease, fileUrl: fileUrl)
+                        return Event.onDownloaded(latestRelease, currentRelease, fileUrl: fileUrl)
                     case .progress(let percentage):
                         sSelf?.downloadProgress = percentage
                         return nil
