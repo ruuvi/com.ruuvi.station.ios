@@ -77,10 +77,28 @@ struct DFUUIView: View {
                     } else {
                         Text("Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended")
                     }
+                    Button(
+                        action: {
+                            self.viewModel.send(
+                                event: .onStartUpgrade(latestRelease, currentRelease)
+                            )
+                        },
+                        label: {
+                            HStack {
+                                Text("Start updating process")
+                            }.frame(maxWidth: .infinity)
+                        }
+                    )
+                    .buttonStyle(
+                        LargeButtonStyle(
+                            backgroundColor: RuuviColor.purple,
+                            foregroundColor: Color.white,
+                            isDisabled: false
+                        )
+                    )
+                    .frame(maxWidth: .infinity)
                 }
-            }.onAppear(perform: { self.viewModel.send(
-                event: .onStartUpgrade(latestRelease, currentRelease)
-            ) })
+            }
             .padding()
             .eraseToAnyView()
         case .reading:
@@ -98,12 +116,6 @@ struct DFUUIView: View {
         case let .listening(latestRelease, currentRelease, _):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Latest available Ruuvi Firmware version:").bold().opacity(0.5)
-                    Text(latestRelease.version).opacity(0.5)
-                    Text("Current version:").bold().opacity(0.5)
-                    Text(currentRelease?.version ??
-                            "Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended"
-                    ).opacity(0.5)
                     Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
                     Collapsible(
@@ -144,12 +156,6 @@ struct DFUUIView: View {
         case let .readyToUpdate(latestRelease, currentRelease, uuid, fileUrl):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Latest available Ruuvi Firmware version:").bold().opacity(0.5)
-                    Text(latestRelease.version).opacity(0.5)
-                    Text("Current version:").bold().opacity(0.5)
-                    Text(currentRelease?.version ??
-                            "Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended"
-                    ).opacity(0.5)
                     Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
                     Collapsible(
@@ -193,51 +199,11 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case let .flashing(latestRelease, currentRelease, _, _):
-            return VStack {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Latest available Ruuvi Firmware version:").bold()
-                    Text(latestRelease.version)
-                    Text("Current version:").bold()
-                    Text(currentRelease?.version ??
-                            "Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended"
-                    )
-                    Text("Prepare your sensor").bold()
-                    Text("1. Open the cover of your Ruuvi sensor")
-                    Collapsible(
-                        label: { Text("2. Set the sensor to updating mode") },
-                        content: {
-                            Image("ruuvi-tag-firmware-update")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .allowsHitTesting(false)
-                        }
-                    )
-                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
-                    Text("If your sensor has one button, keep the button pressed for ten seconds")
-                    Text("3. When successful you will see a continuous red light")
-                }
-                .opacity(0.5)
-
-                ZStack {
-                    ProgressBar(value: $viewModel.flashProgress)
-                    Button(
-                        action: {},
-                        label: {
-                            Text("Updating...")
-                        }
-                    )
-                    .buttonStyle(
-                        LargeButtonStyle(
-                            backgroundColor: Color.clear,
-                            foregroundColor: Color.white,
-                            isDisabled: false
-                        )
-                    )
-                    .disabled(true)
-                }
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, maxHeight: 56)
-
+            return VStack(alignment: .center, spacing: 24) {
+                Text("Updating...")
+                ProgressBar(value: $viewModel.flashProgress)
+                    .frame(height: 12)
+                Text("\(Int(viewModel.flashProgress * 100))%")
                 Text("Do not close or power off the sensor during the update.")
                     .bold()
                     .multilineTextAlignment(.center)
