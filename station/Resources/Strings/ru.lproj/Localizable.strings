@@ -446,7 +446,7 @@
 "DFUUIView.startUpdateProcess" = "Начать процесс обновления";
 "DFUUIView.downloadingTitle" = "Идет скачивание обновления прошивки...";
 "DFUUIView.prepareTitle" = "Подготовьте ваш сенсор";
-"DFUUIView.openCoverTitle" = "1. Откройте крышку ваше сенсора Ruuvi";
+"DFUUIView.openCoverTitle" = "1. Откройте крышку вашего сенсора Ruuvi";
 "DFUUIView.setUpdatingModeTitle" = "2. Переведите сенсор в режим обновления";
 "DFUUIView.toBootModeTwoButtonsDescription" = "Если вы видите две кнопки на сенсоре, зажмите кнопку B и после коротко нажмите кнопку R";
 "DFUUIView.toBootModeOneButtonDescription" = "Если вы видите только одну кнопку на сенсоре, зажмите кнопку на десять секунд";
