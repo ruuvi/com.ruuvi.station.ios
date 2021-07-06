@@ -131,10 +131,14 @@ extension DFUInteractor: DFUInteractorInput {
 
     func read(release: LatestRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error> {
         guard let fullName = release.defaultFullZipName else {
-            return Fail<(appUrl: URL, fullUrl: URL), Error>(error: DFUError.failedToGetFirmwareName).eraseToAnyPublisher()
+            return Fail<(appUrl: URL, fullUrl: URL), Error>(
+                error: DFUError.failedToGetFirmwareName
+            ).eraseToAnyPublisher()
         }
         guard let appName = release.defaultAppZipName else {
-            return Fail<(appUrl: URL, fullUrl: URL), Error>(error: DFUError.failedToGetFirmwareName).eraseToAnyPublisher()
+            return Fail<(appUrl: URL, fullUrl: URL), Error>(
+                error: DFUError.failedToGetFirmwareName
+            ).eraseToAnyPublisher()
         }
         let app = firmwareRepository.read(name: appName)
         let full = firmwareRepository.read(name: fullName)
@@ -159,14 +163,16 @@ extension DFUInteractor: DFUInteractorInput {
         let app = download(url: appUrl, name: appName, progress: progress)
         return app
             .combineLatest(full)
-            .compactMap({ app, full in
+            .map({ app, full in
                 switch (app, full) {
                 case let (.progress(appProgress), .progress):
                     return .progress(appProgress)
+                case let (.progress(appProgress), .response):
+                    return .progress(appProgress)
+                case let (.response, .progress(fullProgress)):
+                    return .progress(fullProgress)
                 case let (.response(appUrl), .response(fullUrl)):
                     return .response(appUrl: appUrl, fullUrl: fullUrl)
-                default:
-                    return nil
                 }
             }).eraseToAnyPublisher()
     }
@@ -236,7 +242,7 @@ extension DFUInteractor: DFUInteractorInput {
     func listen() -> Future<String, Never> {
         return Future { [weak self] promise in
             guard let sSelf = self else { return }
-            sSelf.ruuviDFU.scan(sSelf) { observer, device in
+            sSelf.ruuviDFU.scan(sSelf) { _, device in
                 promise(.success(device.uuid))
             }
         }
