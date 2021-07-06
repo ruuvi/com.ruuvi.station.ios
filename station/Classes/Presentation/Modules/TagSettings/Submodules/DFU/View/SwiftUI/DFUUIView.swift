@@ -24,6 +24,11 @@ struct DFUUIView: View {
                 Text("Latest available Ruuvi Firmware version:").bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .eraseToAnyView()
         case .error(let error):
@@ -35,6 +40,11 @@ struct DFUUIView: View {
                 Text("Current version:").bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .onAppear { self.viewModel.send(event: .onLoaded(latestRelease)) }
             .eraseToAnyView()
@@ -45,6 +55,11 @@ struct DFUUIView: View {
                 Text("Current version:").bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .eraseToAnyView()
         case let .checking(latestRelease, currentRelease):
@@ -58,6 +73,11 @@ struct DFUUIView: View {
                     Text("Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended")
                 }
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
@@ -99,6 +119,11 @@ struct DFUUIView: View {
                     .frame(maxWidth: .infinity)
                 }
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .eraseToAnyView()
         case .reading:
@@ -112,21 +137,19 @@ struct DFUUIView: View {
                     .frame(height: 20)
                     .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
-            }.eraseToAnyView()
-        case let .listening(latestRelease, currentRelease, _, _):
+            }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
+            .eraseToAnyView()
+        case .listening:
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
-                    Collapsible(
-                        label: { Text("2. Set the sensor to updating mode") },
-                        content: {
-                            Image("ruuvi-tag-firmware-update")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .allowsHitTesting(false)
-                        }
-                    )
+                    Text("2. Set the sensor to updating mode")
                     Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
@@ -151,6 +174,11 @@ struct DFUUIView: View {
                 .disabled(true)
                 .frame(maxWidth: .infinity)
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .eraseToAnyView()
         case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
@@ -158,15 +186,7 @@ struct DFUUIView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Prepare your sensor").bold()
                     Text("1. Open the cover of your Ruuvi sensor")
-                    Collapsible(
-                        label: { Text("2. Set the sensor to updating mode") },
-                        content: {
-                            Image("ruuvi-tag-firmware-update")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .allowsHitTesting(false)
-                        }
-                    )
+                    Text("2. Set the sensor to updating mode")
                     Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
                     Text("If your sensor has one button, keep the button pressed for ten seconds")
                     Text("3. When successful you will see a continuous red light")
@@ -197,9 +217,14 @@ struct DFUUIView: View {
                 )
                 .frame(maxWidth: .infinity)
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .eraseToAnyView()
-        case let .flashing(latestRelease, currentRelease, _, _, _):
+        case .flashing:
             return VStack(alignment: .center, spacing: 24) {
                 Text("Updating...")
                 ProgressBar(value: $viewModel.flashProgress)
@@ -210,10 +235,22 @@ struct DFUUIView: View {
                     .multilineTextAlignment(.center)
 
             }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
             .padding()
             .eraseToAnyView()
         case .successfulyFlashed:
-            return Text("Update successful").eraseToAnyView()
+            return Text("Update successful")
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .topLeading
+                )
+                .padding()
+                .eraseToAnyView()
         }
     }
 }
