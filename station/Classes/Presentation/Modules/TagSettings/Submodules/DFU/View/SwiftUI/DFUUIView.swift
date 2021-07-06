@@ -82,8 +82,13 @@ struct DFUUIView: View {
             .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
         case let .noNeedToUpgrade(latestRelease, _):
-            return Text("You are running the latest firmware version \(latestRelease.version), no need to upgrade")
-                .multilineTextAlignment(.center)
+            return Text("You are running the latest firmware \(latestRelease.version), no need to update")
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .topLeading
+                )
+                .padding()
                 .padding()
                 .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
