@@ -86,7 +86,7 @@ extension DFUViewModel {
         case onDidFailLoading(Error)
         case onServed(CurrentRelease?)
         case onLoadedAndServed(LatestRelease, CurrentRelease?)
-        case onStartUpgrade(LatestRelease,  CurrentRelease?)
+        case onStartUpgrade(LatestRelease, CurrentRelease?)
         case onRead(
                 LatestRelease,
                 CurrentRelease?,
@@ -234,7 +234,13 @@ extension DFUViewModel {
 
     func whenFlashing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .flashing(latestRelease, currentRelease, uuid, appUrl, fullUrl) = state, let sSelf = self else {
+            guard case let .flashing(
+                    latestRelease,
+                    currentRelease,
+                    uuid,
+                    appUrl,
+                    fullUrl
+            ) = state, let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(

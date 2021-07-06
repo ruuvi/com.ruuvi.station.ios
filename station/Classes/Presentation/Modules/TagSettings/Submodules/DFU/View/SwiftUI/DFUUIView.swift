@@ -1,15 +1,38 @@
 import SwiftUI
 import Localize_Swift
 
+// swiftlint:disable:next type_body_length
 struct DFUUIView: View {
     @ObservedObject var viewModel: DFUViewModel
+
+    private struct Texts {
+        let navigationTitle = "DFUUIView.navigationTitle".localized()
+        let latestTitle = "DFUUIView.latestTitle".localized()
+        let currentTitle = "DFUUIView.currentTitle".localized()
+        let notReportingDescription = "DFUUIView.notReportingDescription".localized()
+        let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized()
+        let startUpdateProcess = "DFUUIView.startUpdateProcess".localized()
+        let downloadingTitle = "DFUUIView.downloadingTitle".localized()
+        let prepareTitle = "DFUUIView.prepareTitle".localized()
+        let openCoverTitle = "DFUUIView.openCoverTitle".localized()
+        let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized()
+        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized()
+        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized()
+        let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized()
+        let updatingTitle = "DFUUIView.updatingTitle".localized()
+        let searchingTitle = "DFUUIView.searchingTitle".localized()
+        let startTitle = "DFUUIView.startTitle".localized()
+        let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized()
+        let successfulTitle = "DFUUIView.successfulTitle".localized()
+    }
+
+    private let texts = Texts()
 
     var body: some View {
         VStack {
             content
                 .navigationBarTitle(
-                    "Firmware Update",
-                    displayMode: .inline
+                    texts.navigationTitle
                 )
         }
         .onAppear { self.viewModel.send(event: .onAppear) }
@@ -21,7 +44,7 @@ struct DFUUIView: View {
             return Color.clear.eraseToAnyView()
         case .loading:
             return VStack(alignment: .leading, spacing: 16) {
-                Text("Latest available Ruuvi Firmware version:").bold()
+                Text(texts.latestTitle).bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -35,9 +58,9 @@ struct DFUUIView: View {
             return Text(error.localizedDescription).eraseToAnyView()
         case let .loaded(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
-                Text("Latest available Ruuvi Firmware version:").bold()
+                Text(texts.latestTitle).bold()
                 Text(latestRelease.version)
-                Text("Current version:").bold()
+                Text(texts.currentTitle).bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -50,9 +73,9 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case let .serving(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
-                Text("Latest available Ruuvi Firmware version:").bold()
+                Text(texts.latestTitle).bold()
                 Text(latestRelease.version)
-                Text("Current version:").bold()
+                Text(texts.currentTitle).bold()
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -64,13 +87,13 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case let .checking(latestRelease, currentRelease):
             return VStack(alignment: .leading, spacing: 16) {
-                Text("Latest available Ruuvi Firmware version:").bold()
+                Text(texts.latestTitle).bold()
                 Text(latestRelease.version)
-                Text("Current version:").bold()
+                Text(texts.currentTitle).bold()
                 if let currentVersion = currentRelease?.version {
                     Text(currentVersion)
                 } else {
-                    Text("Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended")
+                    Text(texts.notReportingDescription)
                 }
             }
             .frame(
@@ -81,26 +104,25 @@ struct DFUUIView: View {
             .padding()
             .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
-        case let .noNeedToUpgrade(latestRelease, _):
-            return Text("You are running the latest firmware \(latestRelease.version), no need to update")
+        case .noNeedToUpgrade:
+            return Text(texts.alreadyOnLatest)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
                     alignment: .topLeading
                 )
                 .padding()
-                .padding()
                 .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Latest available Ruuvi Firmware version:").bold()
+                    Text(texts.latestTitle).bold()
                     Text(latestRelease.version)
-                    Text("Current version:").bold()
+                    Text(texts.currentTitle).bold()
                     if let currentVersion = currentRelease?.version {
                         Text(currentVersion)
                     } else {
-                        Text("Your sensor doesn't report it's current firmware version. That means that it's probably running an old firmware version and updating is recommended")
+                        Text(texts.notReportingDescription)
                     }
                     Button(
                         action: {
@@ -110,7 +132,7 @@ struct DFUUIView: View {
                         },
                         label: {
                             HStack {
-                                Text("Start updating process")
+                                Text(texts.startUpdateProcess)
                             }.frame(maxWidth: .infinity)
                         }
                     )
@@ -121,6 +143,7 @@ struct DFUUIView: View {
                             isDisabled: false
                         )
                     )
+                    .padding()
                     .frame(maxWidth: .infinity)
                 }
             }
@@ -137,7 +160,7 @@ struct DFUUIView: View {
             }.eraseToAnyView()
         case .downloading:
             return VStack(alignment: .center, spacing: 16) {
-                Text("Downloading the latest firmware to be updated...")
+                Text(texts.downloadingTitle)
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 16)
                     .padding()
@@ -153,19 +176,19 @@ struct DFUUIView: View {
         case .listening:
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Prepare your sensor").bold()
-                    Text("1. Open the cover of your Ruuvi sensor")
-                    Text("2. Set the sensor to updating mode")
-                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
-                    Text("If your sensor has one button, keep the button pressed for ten seconds")
-                    Text("3. When successful you will see a continuous red light")
+                    Text(texts.prepareTitle).bold()
+                    Text(texts.openCoverTitle)
+                    Text(texts.setUpdatingModeTitle)
+                    Text(texts.toBootModeTwoButtonsDescription)
+                    Text(texts.toBootModeOneButtonDescription)
+                    Text(texts.toBootModeSuccessTitle)
                 }
 
                 Button(
                     action: {},
                     label: {
                         HStack {
-                            Text("Searching for a sensor")
+                            Text(texts.searchingTitle)
                             Spinner(isAnimating: true, style: .medium).eraseToAnyView()
                         }.frame(maxWidth: .infinity)
                     }
@@ -177,6 +200,7 @@ struct DFUUIView: View {
                         isDisabled: true
                     )
                 )
+                .padding()
                 .disabled(true)
                 .frame(maxWidth: .infinity)
             }
@@ -190,12 +214,12 @@ struct DFUUIView: View {
         case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Prepare your sensor").bold()
-                    Text("1. Open the cover of your Ruuvi sensor")
-                    Text("2. Set the sensor to updating mode")
-                    Text("If your sensor has two buttons, press the R button while keeping pressed the B button")
-                    Text("If your sensor has one button, keep the button pressed for ten seconds")
-                    Text("3. When successful you will see a continuous red light")
+                    Text(texts.prepareTitle).bold()
+                    Text(texts.openCoverTitle)
+                    Text(texts.setUpdatingModeTitle)
+                    Text(texts.toBootModeTwoButtonsDescription)
+                    Text(texts.toBootModeOneButtonDescription)
+                    Text(texts.toBootModeSuccessTitle)
                 }
                 Button(
                     action: {
@@ -210,7 +234,7 @@ struct DFUUIView: View {
                         )
                     },
                     label: {
-                        Text("Start the update")
+                        Text(texts.startTitle)
                             .frame(maxWidth: .infinity)
                     }
                 )
@@ -221,6 +245,7 @@ struct DFUUIView: View {
                         isDisabled: false
                     )
                 )
+                .padding()
                 .frame(maxWidth: .infinity)
             }
             .frame(
@@ -232,11 +257,11 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case .flashing:
             return VStack(alignment: .center, spacing: 24) {
-                Text("Updating...")
+                Text(texts.updatingTitle)
                 ProgressBar(value: $viewModel.flashProgress)
                     .frame(height: 16)
                 Text("\(Int(viewModel.flashProgress * 100))%")
-                Text("Do not close or power off the sensor during the update.")
+                Text(texts.doNotCloseTitle)
                     .bold()
                     .multilineTextAlignment(.center)
 
@@ -249,7 +274,7 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case .successfulyFlashed:
-            return Text("Update successful")
+            return Text(texts.successfulTitle)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
