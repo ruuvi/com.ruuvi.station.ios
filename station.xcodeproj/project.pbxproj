@@ -422,22 +422,10 @@
 		0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */; };
 		0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */; };
 		0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */; };
-		0E97D78A268C837200FE9D5B /* DFU.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E97D789268C837200FE9D5B /* DFU.storyboard */; };
-		0E97D78B268C837200FE9D5B /* DFU.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E97D789268C837200FE9D5B /* DFU.storyboard */; };
-		0E97D791268C84EC00FE9D5B /* DFUStatefulViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D790268C84EC00FE9D5B /* DFUStatefulViewController.swift */; };
-		0E97D792268C84EC00FE9D5B /* DFUStatefulViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D790268C84EC00FE9D5B /* DFUStatefulViewController.swift */; };
-		0E97D795268C877500FE9D5B /* DFUStatefulInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D794268C877500FE9D5B /* DFUStatefulInitializer.swift */; };
-		0E97D796268C877500FE9D5B /* DFUStatefulInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D794268C877500FE9D5B /* DFUStatefulInitializer.swift */; };
-		0E97D798268C878600FE9D5B /* DFUStatefulConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D797268C878600FE9D5B /* DFUStatefulConfigurator.swift */; };
-		0E97D799268C878600FE9D5B /* DFUStatefulConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D797268C878600FE9D5B /* DFUStatefulConfigurator.swift */; };
 		0E97D79B268C881300FE9D5B /* DFUModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D79A268C881300FE9D5B /* DFUModuleInput.swift */; };
 		0E97D79C268C881300FE9D5B /* DFUModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D79A268C881300FE9D5B /* DFUModuleInput.swift */; };
 		0E97D79E268C884500FE9D5B /* DFUPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D79D268C884500FE9D5B /* DFUPresenter.swift */; };
 		0E97D79F268C884500FE9D5B /* DFUPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D79D268C884500FE9D5B /* DFUPresenter.swift */; };
-		0E97D7A1268C886800FE9D5B /* DFUViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D7A0268C886700FE9D5B /* DFUViewInput.swift */; };
-		0E97D7A2268C886800FE9D5B /* DFUViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D7A0268C886700FE9D5B /* DFUViewInput.swift */; };
-		0E97D7A4268C888800FE9D5B /* DFUViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D7A3268C888800FE9D5B /* DFUViewOutput.swift */; };
-		0E97D7A5268C888800FE9D5B /* DFUViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D7A3268C888800FE9D5B /* DFUViewOutput.swift */; };
 		0E97D7A8268C922C00FE9D5B /* DFUInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D7A7268C922C00FE9D5B /* DFUInteractor.swift */; };
 		0E97D7A9268C922C00FE9D5B /* DFUInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D7A7268C922C00FE9D5B /* DFUInteractor.swift */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
@@ -528,8 +516,6 @@
 		0EB8ED442692005900C6B0FA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EB8ED422692005900C6B0FA /* Colors.xcassets */; };
 		0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
 		0EB8ED482692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
-		0EB8ED4A2692093500C6B0FA /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED492692093500C6B0FA /* Collapsible.swift */; };
-		0EB8ED4B2692093500C6B0FA /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED492692093500C6B0FA /* Collapsible.swift */; };
 		0EBAF065232002A00025A191 /* Language+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language+Localization.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -562,6 +548,10 @@
 		0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36D23507BF00061D11B /* ForegroundConfigurator.swift */; };
 		0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36F23507CE80061D11B /* ForegroundViewModel.swift */; };
 		0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */; };
+		0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */; };
+		0EE36E4026957E010021B746 /* DFUInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */; };
+		0EE36E4226957E200021B746 /* LatestRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E4126957E200021B746 /* LatestRelease.swift */; };
+		0EE36E4326957E200021B746 /* LatestRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E4126957E200021B746 /* LatestRelease.swift */; };
 		0EE49B9523B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
 		0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
 		0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
@@ -1123,14 +1113,8 @@
 		0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewModel.swift; sourceTree = "<group>"; };
 		0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsModuleOutput.swift; sourceTree = "<group>"; };
-		0E97D789268C837200FE9D5B /* DFU.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DFU.storyboard; sourceTree = "<group>"; };
-		0E97D790268C84EC00FE9D5B /* DFUStatefulViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUStatefulViewController.swift; sourceTree = "<group>"; };
-		0E97D794268C877500FE9D5B /* DFUStatefulInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUStatefulInitializer.swift; sourceTree = "<group>"; };
-		0E97D797268C878600FE9D5B /* DFUStatefulConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUStatefulConfigurator.swift; sourceTree = "<group>"; };
 		0E97D79A268C881300FE9D5B /* DFUModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUModuleInput.swift; sourceTree = "<group>"; };
 		0E97D79D268C884500FE9D5B /* DFUPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUPresenter.swift; sourceTree = "<group>"; };
-		0E97D7A0268C886700FE9D5B /* DFUViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUViewInput.swift; sourceTree = "<group>"; };
-		0E97D7A3268C888800FE9D5B /* DFUViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUViewOutput.swift; sourceTree = "<group>"; };
 		0E97D7A7268C922C00FE9D5B /* DFUInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUInteractor.swift; sourceTree = "<group>"; };
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
@@ -1172,7 +1156,6 @@
 		0EB8ED3E26916D1700C6B0FA /* LargeButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButtonStyle.swift; sourceTree = "<group>"; };
 		0EB8ED422692005900C6B0FA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		0EB8ED462692018000C6B0FA /* RuuviColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviColor.swift; sourceTree = "<group>"; };
-		0EB8ED492692093500C6B0FA /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Language+Localization.swift"; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -1207,6 +1190,8 @@
 		0ECFF36D23507BF00061D11B /* ForegroundConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundConfigurator.swift; sourceTree = "<group>"; };
 		0ECFF36F23507CE80061D11B /* ForegroundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundViewModel.swift; sourceTree = "<group>"; };
 		0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
+		0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUInteractorInput.swift; sourceTree = "<group>"; };
+		0EE36E4126957E200021B746 /* LatestRelease.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestRelease.swift; sourceTree = "<group>"; };
 		0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
 		0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0EE49BB123B8C40D003012C2 /* MacInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = "<group>"; };
@@ -2470,10 +2455,10 @@
 		0E97D782268C826400FE9D5B /* DFU */ = {
 			isa = PBXGroup;
 			children = (
-				0E97D789268C837200FE9D5B /* DFU.storyboard */,
-				0E97D78C268C845900FE9D5B /* Assembly */,
+				0EB8ED2E268F12FA00C6B0FA /* DFUModuleFactory.swift */,
 				0EB8ED27268F10DB00C6B0FA /* Common */,
 				0EB8ED1C268EFF1E00C6B0FA /* Extensions */,
+				0EE36E3D26957DD90021B746 /* FirmwareRepository */,
 				0E97D78D268C846200FE9D5B /* Presenter */,
 				0E97D7A6268C921900FE9D5B /* Interactor */,
 				0E97D78E268C84A300FE9D5B /* View */,
@@ -2481,20 +2466,11 @@
 			path = DFU;
 			sourceTree = "<group>";
 		};
-		0E97D78C268C845900FE9D5B /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				0E97D793268C876500FE9D5B /* Stateful */,
-			);
-			path = Assembly;
-			sourceTree = "<group>";
-		};
 		0E97D78D268C846200FE9D5B /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
 				0E97D79A268C881300FE9D5B /* DFUModuleInput.swift */,
 				0E97D79D268C884500FE9D5B /* DFUPresenter.swift */,
-				0EB8ED2E268F12FA00C6B0FA /* DFUModuleFactory.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -2503,36 +2479,17 @@
 			isa = PBXGroup;
 			children = (
 				0EB8ED23268F081800C6B0FA /* SwiftUI */,
-				0E97D78F268C84B700FE9D5B /* Stateful */,
-				0E97D7A0268C886700FE9D5B /* DFUViewInput.swift */,
-				0E97D7A3268C888800FE9D5B /* DFUViewOutput.swift */,
 				0EB8ED19268EF36200C6B0FA /* DFUViewModel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		0E97D78F268C84B700FE9D5B /* Stateful */ = {
-			isa = PBXGroup;
-			children = (
-				0E97D790268C84EC00FE9D5B /* DFUStatefulViewController.swift */,
-			);
-			path = Stateful;
-			sourceTree = "<group>";
-		};
-		0E97D793268C876500FE9D5B /* Stateful */ = {
-			isa = PBXGroup;
-			children = (
-				0E97D794268C877500FE9D5B /* DFUStatefulInitializer.swift */,
-				0E97D797268C878600FE9D5B /* DFUStatefulConfigurator.swift */,
-			);
-			path = Stateful;
-			sourceTree = "<group>";
-		};
 		0E97D7A6268C921900FE9D5B /* Interactor */ = {
 			isa = PBXGroup;
 			children = (
+				0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */,
 				0E97D7A7268C922C00FE9D5B /* DFUInteractor.swift */,
-				0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */,
+				0EE36E4126957E200021B746 /* LatestRelease.swift */,
 			);
 			path = Interactor;
 			sourceTree = "<group>";
@@ -2658,7 +2615,6 @@
 				0EB8ED20268EFF6400C6B0FA /* Feedback.swift */,
 				0EB8ED38268F6A6900C6B0FA /* ProgressBar.swift */,
 				0EB8ED3E26916D1700C6B0FA /* LargeButtonStyle.swift */,
-				0EB8ED492692093500C6B0FA /* Collapsible.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2866,6 +2822,14 @@
 				0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */,
 			);
 			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		0EE36E3D26957DD90021B746 /* FirmwareRepository */ = {
+			isa = PBXGroup;
+			children = (
+				0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */,
+			);
+			path = FirmwareRepository;
 			sourceTree = "<group>";
 		};
 		0EE49B9323B74704003012C2 /* Cells */ = {
@@ -4208,7 +4172,6 @@
 				0E8BD3E4238566AB008B31EF /* Foreground.storyboard in Resources */,
 				0E8BD3E5238566AB008B31EF /* LocationPicker.storyboard in Resources */,
 				0E8BD3E6238566AB008B31EF /* Defaults.storyboard in Resources */,
-				0E97D78B268C837200FE9D5B /* DFU.storyboard in Resources */,
 				0E8BD3E7238566AB008B31EF /* Cards.storyboard in Resources */,
 				0E8BD3E8238566AB008B31EF /* LaunchScreen.storyboard in Resources */,
 				0E8BD3EA238566AB008B31EF /* Oswald-Bold.ttf in Resources */,
@@ -4261,7 +4224,6 @@
 				0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
 				0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */,
-				0E97D78A268C837200FE9D5B /* DFU.storyboard in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Cards.storyboard in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
@@ -4548,6 +4510,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE36E4326957E200021B746 /* LatestRelease.swift in Sources */,
 				0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */,
 				A92E3C5B2426428D00D981D5 /* TagChartView.swift in Sources */,
 				0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */,
@@ -4613,6 +4576,7 @@
 				0E8BD2DD238566AB008B31EF /* Localizable.swift in Sources */,
 				0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E97D7A9268C922C00FE9D5B /* DFUInteractor.swift in Sources */,
+				0EE36E4026957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E8BD2DE238566AB008B31EF /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8BD2DF238566AB008B31EF /* TagChartsPresenter.swift in Sources */,
 				66718A53266A685700A380F8 /* DfuFlashViewInput.swift in Sources */,
@@ -4624,7 +4588,6 @@
 				66718A47266A685700A380F8 /* DfuFlashPresenter.swift in Sources */,
 				0E8BD2E4238566AB008B31EF /* CardsViewOutput.swift in Sources */,
 				0E8BD2E5238566AB008B31EF /* DefaultsSwitchTableViewCell.swift in Sources */,
-				0E97D799268C878600FE9D5B /* DFUStatefulConfigurator.swift in Sources */,
 				66718A66266A6CA700A380F8 /* DfuFilePickerPresenter.swift in Sources */,
 				A9FC79182579678D00F94604 /* UniversalLinkCoordinatormpl.swift in Sources */,
 				0E8BD2E6238566AB008B31EF /* DefaultsViewInput.swift in Sources */,
@@ -4644,7 +4607,6 @@
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8BD2F4238566AB008B31EF /* DefaultsRouterInput.swift in Sources */,
 				0E8BD2F5238566AB008B31EF /* AboutPresenter.swift in Sources */,
-				0E97D7A5268C888800FE9D5B /* DFUViewOutput.swift in Sources */,
 				0E8BD2F6238566AB008B31EF /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0E8BD2F7238566AB008B31EF /* TagSettingsViewModel.swift in Sources */,
 				0E8BD2F8238566AB008B31EF /* CardsPresenter.swift in Sources */,
@@ -4672,7 +4634,6 @@
 				0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */,
 				A9646470247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				0E8BD314238566AB008B31EF /* DefaultsViewController.swift in Sources */,
-				0E97D7A2268C886800FE9D5B /* DFUViewInput.swift in Sources */,
 				0E79F28C244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
 				66BC44AB2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */,
@@ -4786,7 +4747,6 @@
 				0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */,
 				0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
-				0E97D792268C84EC00FE9D5B /* DFUStatefulViewController.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
 				0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
@@ -4897,7 +4857,6 @@
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
 				0E290A862660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 				0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */,
-				0E97D796268C877500FE9D5B /* DFUStatefulInitializer.swift in Sources */,
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				A9646476247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
@@ -4909,7 +4868,6 @@
 				0E8BD3C9238566AB008B31EF /* WebTagSettingsViewOutput.swift in Sources */,
 				663155EA2667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
 				0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
-				0EB8ED4B2692093500C6B0FA /* Collapsible.swift in Sources */,
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
 				0E8BD3CB238566AB008B31EF /* WelcomeViewController.swift in Sources */,
 				A9646488247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
@@ -4976,7 +4934,6 @@
 				660EB2732669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				66BC44A42657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
-				0E97D791268C84EC00FE9D5B /* DFUStatefulViewController.swift in Sources */,
 				0E3CA70C267365B1000D9B25 /* Debouncer.swift in Sources */,
 				660EB2702669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
 				A92A66BD2450C640002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
@@ -4994,7 +4951,6 @@
 				A91D03062511207300694733 /* SelectionRouter.swift in Sources */,
 				660EB26D2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
-				0E97D798268C878600FE9D5B /* DFUStatefulConfigurator.swift in Sources */,
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
@@ -5037,6 +4993,7 @@
 				0E97D79E268C884500FE9D5B /* DFUPresenter.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
+				0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				663155E92667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
@@ -5050,7 +5007,6 @@
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				66BC44B02657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
-				0EB8ED4A2692093500C6B0FA /* Collapsible.swift in Sources */,
 				0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0EA511B8261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
@@ -5207,7 +5163,6 @@
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
-				0E97D795268C877500FE9D5B /* DFUStatefulInitializer.swift in Sources */,
 				0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */,
 				0EA796892664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				660EB27C2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
@@ -5235,6 +5190,7 @@
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
+				0EE36E4226957E200021B746 /* LatestRelease.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
 				66718A49266A685700A380F8 /* DfuFlashAppleViewController.swift in Sources */,
@@ -5312,7 +5268,6 @@
 				A90E169C24606ABF00631E6C /* TagChartsInteractor.swift in Sources */,
 				A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
-				0E97D7A1268C886800FE9D5B /* DFUViewInput.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EA796752664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
@@ -5350,7 +5305,6 @@
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
-				0E97D7A4268C888800FE9D5B /* DFUViewOutput.swift in Sources */,
 				0EB8ED36268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,

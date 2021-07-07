@@ -4,101 +4,10 @@ import BTKit
 import RuuviOntology
 import RuuviDFU
 
-protocol DFUInteractorInput {
-    func listen() -> Future<String, Never>
-    func read(release: LatestRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error>
-    func download(release: LatestRelease) -> AnyPublisher<FirmwareDownloadResponse, Error>
-    func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
-    func flash(
-        uuid: String,
-        latestRelease: LatestRelease,
-        currentRelease: CurrentRelease?,
-        appUrl: URL,
-        fullUrl: URL
-    ) -> AnyPublisher<FlashResponse, Error>
-}
-
 final class DFUInteractor {
     var ruuviDFU: RuuviDFU!
     var background: BTBackground!
     private let firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
-}
-
-enum DFUError: Error {
-    case failedToConstructUrl
-    case failedToGetLuid
-    case failedToGetFirmwareName
-    case failedToConstructFirmwareFromFile
-}
-
-struct LatestRelease: Codable {
-    var version: String
-    var assets: [LatestReleaseAsset]
-
-    enum CodingKeys: String, CodingKey {
-        case version = "tag_name"
-        case assets = "assets"
-    }
-
-    private var defaultFullZipAsset: LatestReleaseAsset? {
-        return assets.first(where: {
-            $0.name.hasSuffix("zip")
-                && $0.name.contains("default")
-                && !$0.name.contains("app")
-        })
-    }
-
-    private var defaultAppZipAsset: LatestReleaseAsset? {
-        return assets.first(where: {
-            $0.name.hasSuffix("zip")
-                && $0.name.contains("default")
-                && $0.name.contains("app")
-        })
-    }
-
-    var defaultFullZipName: String? {
-        return defaultFullZipAsset?.name
-    }
-
-    var defaultFullZipUrl: URL? {
-        if let downloadUrlString = defaultFullZipAsset?.downloadUrlString {
-            return URL(string: downloadUrlString)
-        } else {
-            return nil
-        }
-    }
-
-    var defaultAppZipName: String? {
-        return defaultAppZipAsset?.name
-    }
-
-    var defaultAppZipUrl: URL? {
-        if let downloadUrlString = defaultAppZipAsset?.downloadUrlString {
-            return URL(string: downloadUrlString)
-        } else {
-            return nil
-        }
-    }
-}
-
-struct LatestReleaseAsset: Codable {
-    var name: String
-    var downloadUrlString: String
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case downloadUrlString = "browser_download_url"
-    }
-}
-
-struct CurrentRelease {
-    var version: String
-}
-
-enum FirmwareDownloadResponse {
-    case progress(Progress)
-    case response(appUrl: URL, fullUrl: URL)
 }
 
 extension DFUInteractor: DFUInteractorInput {
