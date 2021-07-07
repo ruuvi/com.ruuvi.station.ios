@@ -14,7 +14,7 @@ struct LargeButtonStyle: ButtonStyle {
             .padding()
             .foregroundColor(currentForegroundColor)
             .background(isDisabled || configuration.isPressed ? backgroundColor.opacity(0.3) : backgroundColor)
-            .cornerRadius(24)
             .font(Font.system(size: 19, weight: .semibold))
+            .clipShape(Capsule())
     }
 }
