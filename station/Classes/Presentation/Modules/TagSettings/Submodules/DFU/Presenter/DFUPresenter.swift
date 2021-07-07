@@ -4,7 +4,6 @@ import Combine
 import RuuviOntology
 
 final class DFUPresenter: DFUModuleInput {
-    // SwiftUI
     var viewController: UIViewController {
         if let view = self.weakView {
             return view
@@ -15,18 +14,12 @@ final class DFUPresenter: DFUModuleInput {
         }
 
     }
-    lazy var viewModel: DFUViewModel = {
+    private lazy var viewModel: DFUViewModel = {
         return DFUViewModel(interactor: interactor, ruuviTag: ruuviTag)
     }()
     private weak var weakView: UIViewController?
-    private var interactor: DFUInteractorInput
-    private var ruuviTag: RuuviTagSensor
-
-    // VIP
-    weak var view: DFUViewInput?
-    var errorPresenter: ErrorPresenter!
-
-    private var disposeBag: Set<AnyCancellable> = []
+    private let interactor: DFUInteractorInput
+    private let ruuviTag: RuuviTagSensor
 
     init(
         interactor: DFUInteractorInput,
@@ -34,26 +27,5 @@ final class DFUPresenter: DFUModuleInput {
     ) {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
-    }
-
-    func configure(ruuviTag: RuuviTagSensor) {
-        self.ruuviTag = ruuviTag
-    }
-}
-
-extension DFUPresenter: DFUViewOutput {
-    func viewDidLoad() {
-        interactor.loadLatestRelease()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    self?.errorPresenter.present(error: error)
-                case .finished:
-                    break
-                }
-            }, receiveValue: { firmwareVersion in
-                print(firmwareVersion)
-            }).store(in: &disposeBag)
     }
 }
