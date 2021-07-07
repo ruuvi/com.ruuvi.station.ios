@@ -138,7 +138,7 @@ struct DFUUIView: View {
                     )
                     .buttonStyle(
                         LargeButtonStyle(
-                            backgroundColor: RuuviColor.purple,
+                            backgroundColor: RuuviColor.dustyBlue,
                             foregroundColor: Color.white,
                             isDisabled: false
                         )
@@ -195,7 +195,7 @@ struct DFUUIView: View {
                 )
                 .buttonStyle(
                     LargeButtonStyle(
-                        backgroundColor: RuuviColor.purple,
+                        backgroundColor: RuuviColor.dustyBlue,
                         foregroundColor: Color.white,
                         isDisabled: true
                     )
@@ -240,7 +240,7 @@ struct DFUUIView: View {
                 )
                 .buttonStyle(
                     LargeButtonStyle(
-                        backgroundColor: RuuviColor.purple,
+                        backgroundColor: RuuviColor.dustyBlue,
                         foregroundColor: Color.white,
                         isDisabled: false
                     )
