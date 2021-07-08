@@ -1,5 +1,6 @@
 import Foundation
 import RuuviDFU
+import Combine
 #if canImport(NordicDFU)
 import NordicDFU
 #endif
@@ -34,11 +35,10 @@ public struct RuuviDFUImpl: RuuviDFU {
     }
 
     public func flashFirmware(
-        device: DFUDevice,
-        with firmware: DFUFirmware,
-        output: DfuFlasherOutputProtocol
-    ) {
-        flasher.flashFirmware(device: device, with: firmware, output: output)
+        uuid: String,
+        with firmware: DFUFirmware
+    ) -> AnyPublisher<FlashResponse, Error> {
+        return flasher.flashFirmware(uuid: uuid, with: firmware)
     }
 
     public func stopFlashFirmware(device: DFUDevice) -> Bool {
