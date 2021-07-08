@@ -268,7 +268,7 @@
 "About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset:  ruuvi.com/troubles";
 "About.Troubleshooting.header" = "VIANETSINTÄ";
 "TagSettings.AirHumidityAlert.title" = "Ilmankosteus (%@)";
-"HumidityUnit.gm3.title" = "Absoluuttinen (gr/m³)";
+"HumidityUnit.gm3.title" = "Absoluuttinen (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Suhteellinen (%)";
 "%" = "%";

@@ -268,7 +268,7 @@
 "About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "TROUBLESHOOTING";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity (%@)";
-"HumidityUnit.gm3.title" = "Absolute (gr/m³)";
+"HumidityUnit.gm3.title" = "Absolute (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relative (%)";
 "%" = "%";
