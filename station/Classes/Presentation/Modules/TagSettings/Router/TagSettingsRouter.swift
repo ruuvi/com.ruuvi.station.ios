@@ -1,9 +1,11 @@
 import UIKit
 import LightRoute
+import SwiftUI
 import RuuviOntology
 
-class TagSettingsRouter: TagSettingsRouterInput {
+class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     weak var transitionHandler: UIViewController!
+    private var dfuModule: DFUModuleInput?
 
     func dismiss(completion: (() -> Void)?) {
         try! transitionHandler.closeCurrentModule().perform()
@@ -35,18 +37,30 @@ class TagSettingsRouter: TagSettingsRouterInput {
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
-        let factory = StoryboardFactory(storyboardName: "UpdateFirmware")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: UpdateFirmwareModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag)
-            })
+        let factory: DFUModuleFactory = DFUModuleFactoryImpl()
+        let module = factory.create(for: ruuviTag)
+        self.dfuModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
+        transitionHandler
+            .navigationController?
+            .presentationController?
+            .delegate = self
     }
 
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
         let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
         controller.delegate = delegate
         transitionHandler.present(controller, animated: true)
+    }
+}
+
+extension TagSettingsRouter: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return dfuModule?.isSafeToDismiss() ?? false
     }
 }
