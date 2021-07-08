@@ -268,7 +268,7 @@
 "About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "FELSÖKNING";
 "TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
-"HumidityUnit.gm3.title" = "Absolut (gr/m³)";
+"HumidityUnit.gm3.title" = "Absolut (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relativ (%)";
 "%" = "%";

@@ -268,7 +268,7 @@
 "About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
 "TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
-"HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
+"HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
 "g/m³" = "г/м³";
 "HumidityUnit.Percent.title" = "Относительная влажность (%)";
 "%" = "%";
