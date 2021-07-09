@@ -468,7 +468,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             do {
                 if let record = self.context.bg.objects(SensorSettingsRealm.self)
                     .first(where: {
-                        $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                        ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
+                            || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
                     }) {
                     try self.context.bg.write {
                         switch type {
@@ -518,7 +519,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             do {
                 if let sensorSettingRealm = self.context.bg.objects(SensorSettingsRealm.self)
                     .first(where: {
-                        $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                        ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
+                            || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
                     }) {
                     try self.context.bg.write {
                         self.context.bg.delete(sensorSettingRealm)

@@ -173,11 +173,13 @@ extension RuuviTagHeartbeatDaemonBTKit {
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings?
                 if let ruuviTagSensor = observer.ruuviTags
-                    .first(where: { $0.macId?.value == ruuviTag.mac || $0.luid?.any == ruuviTag.luid?.any }),
+                    .first(where: {
+                            ($0.macId?.value != nil && $0.macId?.value == ruuviTag.mac)
+                                || ($0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any) }),
                    let settings = observer.sensorSettingsList
                     .first(where: {
-                            ($0.luid?.any == ruuviTagSensor.luid?.any)
-                                || ($0.macId?.any == ruuviTagSensor.macId?.any)
+                            ($0.luid?.any != nil && $0.luid?.any == ruuviTagSensor.luid?.any)
+                                || ($0.macId?.any != nil && $0.macId?.any == ruuviTagSensor.macId?.any)
                     }) {
                     sensorSettings = settings
                 }
@@ -239,12 +241,12 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func handleRuuviTagsChange() {
         connectionPersistence.keepConnectionUUIDs
             .filter { (luid) -> Bool in
-                ruuviTags.contains(where: { $0.luid?.any == luid }) && !connectTokens.keys.contains(luid.value)
+                ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid }) && !connectTokens.keys.contains(luid.value)
             }.forEach({ connect(uuid: $0.value) })
 
         connectionPersistence.keepConnectionUUIDs
             .filter { (luid) -> Bool in
-                !ruuviTags.contains(where: { $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
+                !ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
             }.forEach({ disconnect(uuid: $0.value) })
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in

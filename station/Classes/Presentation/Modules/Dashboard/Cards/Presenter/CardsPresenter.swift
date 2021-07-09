@@ -420,7 +420,7 @@ extension CardsPresenter {
         rssiTimers.values.forEach({ $0.invalidate() })
         connectionPersistence.keepConnectionUUIDs
             .filter({ (luid) -> Bool in
-                ruuviTags.contains(where: { $0.luid?.any == luid })
+                ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
             }).forEach { (luid) in
                 if settings.readRSSI {
                     let interval = settings.readRSSIIntervalSeconds
@@ -457,7 +457,7 @@ extension CardsPresenter {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
-            ruuviTags.contains(where: { $0.luid?.any == luid })
+            ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
         }.forEach { (luid) in
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,

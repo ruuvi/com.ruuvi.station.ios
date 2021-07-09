@@ -634,8 +634,8 @@ extension TagSettingsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier
-                    if sSelf.ruuviTag.luid?.value == luid?.value
-                        || sSelf.ruuviTag.macId?.value == macId?.value {
+                    if (sSelf.ruuviTag.luid?.value != nil && sSelf.ruuviTag.luid?.value == luid?.value)
+                        || (sSelf.ruuviTag.macId?.value != nil && sSelf.ruuviTag.macId?.value == macId?.value) {
                         if let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double {
                             sSelf.viewModel.uploadingBackgroundPercentage.value = percentage
                             sSelf.viewModel.isUploadingBackground.value = percentage < 1.0
@@ -656,8 +656,8 @@ extension TagSettingsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    if sSelf.ruuviTag.luid?.value == luid?.value
-                        || sSelf.ruuviTag.macId?.value == macId?.value {
+                    if (sSelf.ruuviTag.luid?.value != nil && sSelf.ruuviTag.luid?.value == luid?.value)
+                        || (sSelf.ruuviTag.macId?.value != nil && sSelf.ruuviTag.macId?.value == macId?.value) {
                         sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
                             .on(success: { [weak sSelf] image in
                                 sSelf?.viewModel.background.value = image
@@ -674,13 +674,13 @@ extension TagSettingsPresenter {
         ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
             case .insert(let sensor):
-                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
-                    sensor.macId?.any == self?.ruuviTag.macId?.any {
+                if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
+                    || (sensor.macId?.any != nil && sensor.macId?.any == self?.ruuviTag.macId?.any) {
                     self?.ruuviTag = sensor
                 }
             case .update(let sensor):
-                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
-                    sensor.macId?.any == self?.ruuviTag.macId?.any {
+                if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
+                    || (sensor.macId?.any != nil && sensor.macId?.any == self?.ruuviTag.macId?.any) {
                     self?.ruuviTag = sensor
                 }
             case .error(let error):

@@ -111,7 +111,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
-        if let ruuviTag = ruuviTags.first(where: { $0.luid?.any == device.luid?.any }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.luid?.any != nil && $0.luid?.any == device.luid?.any }) {
             ruuviOwnershipService.add(
                 sensor: ruuviTag.with(name: displayName),
                 record: ruuviTag.with(source: .advertisement))
@@ -302,7 +302,7 @@ extension DiscoverPresenter {
     private func updateViewDevices() {
         view.ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
             if let persistedRuuviTag = persistedSensors
-                .first(where: { $0.luid?.any == ruuviTag.luid?.any }) {
+                .first(where: { $0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any }) {
                 return DiscoverRuuviTagViewModel(
                     luid: ruuviTag.luid?.any,
                     isConnectable: ruuviTag.isConnectable,
