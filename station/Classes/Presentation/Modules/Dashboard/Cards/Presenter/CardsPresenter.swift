@@ -464,8 +464,8 @@ extension CardsPresenter {
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                     let sensorSettings = self?.sensorSettingsList
                         .first(where: {
-                                ($0.luid?.any == viewModel.luid.value)
-                                    || ($0.macId?.any == viewModel.mac.value)
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                         })
                     viewModel.update(
                         ruuviTag
@@ -487,8 +487,8 @@ extension CardsPresenter {
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
-                                    ($0.luid?.any == viewModel.luid.value)
-                                        || ($0.macId?.any == viewModel.mac.value)
+                                    ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                        || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                             })
                         viewModel.update(
                             ruuviTag
