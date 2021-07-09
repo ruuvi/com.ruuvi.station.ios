@@ -444,11 +444,30 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         context.bgWorker.enqueue {
             if let record = self.context.bg.objects(SensorSettingsRealm.self)
                 .first(where: {
-                    $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                    ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
+                        || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
                 }) {
                 promise.succeed(value: record.sensorSettings)
             } else {
                 promise.succeed(value: nil)
+            }
+        }
+        return promise.future
+    }
+
+    public func save(
+        sensorSettings: SensorSettings
+    ) -> Future<SensorSettings, RuuviPersistenceError> {
+        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+        context.bgWorker.enqueue {
+            do {
+                let sensorSettingsRealm = SensorSettingsRealm(settings: sensorSettings)
+                try self.context.bg.write {
+                    self.context.bg.add(sensorSettingsRealm, update: .all)
+                }
+                promise.succeed(value: sensorSettings)
+            } catch {
+                promise.fail(error: .grdb(error))
             }
         }
         return promise.future
@@ -467,7 +486,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             do {
                 if let record = self.context.bg.objects(SensorSettingsRealm.self)
                     .first(where: {
-                        $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                        ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
+                            || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
                     }) {
                     try self.context.bg.write {
                         switch type {
@@ -517,7 +537,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             do {
                 if let sensorSettingRealm = self.context.bg.objects(SensorSettingsRealm.self)
                     .first(where: {
-                        $0.luid == ruuviTag.luid?.value || $0.macId == ruuviTag.macId?.value
+                        ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
+                            || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
                     }) {
                     try self.context.bg.write {
                         self.context.bg.delete(sensorSettingRealm)

@@ -42,4 +42,8 @@ public protocol RuuviPersistence {
     func deleteOffsetCorrection(
         ruuviTag: RuuviTagSensor
     ) -> Future<Bool, RuuviPersistenceError>
+
+    func save(
+        sensorSettings: SensorSettings
+    ) -> Future<SensorSettings, RuuviPersistenceError>
 }
