@@ -197,7 +197,10 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
         let sensorSettings = self.sensorSettingsList
-            .first(where: { ($0.luid?.any == record.luid?.any) || ($0.macId?.any == record.macId?.any) })
+            .first(where: {
+                    ($0.luid?.any != nil && $0.luid?.any == record.luid?.any)
+                        || ($0.macId?.any != nil && $0.macId?.any == record.macId?.any)
+            })
         ruuviPool.create(
             record
                 .with(source: .advertisement)
