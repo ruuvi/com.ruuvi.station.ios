@@ -445,7 +445,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             if let record = self.context.bg.objects(SensorSettingsRealm.self)
                 .first(where: {
                     ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
-                        || ($0.macId != nil || $0.macId == ruuviTag.macId?.value)
+                        || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
                 }) {
                 promise.succeed(value: record.sensorSettings)
             } else {
