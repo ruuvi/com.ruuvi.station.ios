@@ -241,12 +241,16 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func handleRuuviTagsChange() {
         connectionPersistence.keepConnectionUUIDs
             .filter { (luid) -> Bool in
-                ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid }) && !connectTokens.keys.contains(luid.value)
+                ruuviTags.contains(where: { $0.luid?.any != nil
+                                    && $0.luid?.any == luid })
+                    && !connectTokens.keys.contains(luid.value)
             }.forEach({ connect(uuid: $0.value) })
 
         connectionPersistence.keepConnectionUUIDs
             .filter { (luid) -> Bool in
-                !ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
+                !ruuviTags.contains(where: { $0.luid?.any != nil
+                                        && $0.luid?.any == luid })
+                    && connectTokens.keys.contains(luid.value)
             }.forEach({ disconnect(uuid: $0.value) })
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in

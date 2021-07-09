@@ -391,6 +391,21 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func save(
+        sensorSettings: SensorSettings
+    ) -> Future<SensorSettings, RuuviPersistenceError> {
+        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+        do {
+            try database.dbPool.write { db in
+                try sensorSettings.sqlite.save(db)
+            }
+            promise.succeed(value: sensorSettings)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
     // swiftlint:disable:next function_body_length
     public func updateOffsetCorrection(
         type: OffsetCorrectionType,

@@ -455,6 +455,24 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
+    public func save(
+        sensorSettings: SensorSettings
+    ) -> Future<SensorSettings, RuuviPersistenceError> {
+        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+        context.bgWorker.enqueue {
+            do {
+                let sensorSettingsRealm = SensorSettingsRealm(settings: sensorSettings)
+                try self.context.bg.write {
+                    self.context.bg.add(sensorSettingsRealm, update: .all)
+                }
+                promise.succeed(value: sensorSettings)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
     public func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,
