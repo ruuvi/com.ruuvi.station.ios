@@ -20,6 +20,18 @@ public class SensorSettingsRealm: Object {
         luid = ruuviTag.luid?.value
         macId = ruuviTag.macId?.value
     }
+
+    public convenience init(settings: SensorSettings) {
+        self.init()
+        luid = settings.luid?.value
+        macId = settings.macId?.value
+        temperatureOffset.value = settings.temperatureOffset
+        temperatureOffsetDate = settings.temperatureOffsetDate
+        humidityOffset.value = settings.humidityOffset
+        humidityOffsetDate = settings.humidityOffsetDate
+        pressureOffset.value = settings.pressureOffset
+        pressureOffsetDate = settings.pressureOffsetDate
+    }
 }
 
 extension SensorSettingsRealm {

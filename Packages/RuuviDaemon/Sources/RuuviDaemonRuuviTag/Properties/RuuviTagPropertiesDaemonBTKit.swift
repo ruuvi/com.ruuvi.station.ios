@@ -159,7 +159,23 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
                         self?.realmPersistence.delete(pair.ruuviTag.withoutMac())
                             .on(success: { [weak self] _ in
-                                self?.isTransitioningFromRealmToSQLite = false
+                                self?.realmPersistence.readSensorSettings(pair.ruuviTag.withoutMac())
+                                    .on(success: { [weak self] sensorSettings in
+                                        if let withMacSettings = sensorSettings?.with(macId: mac.mac) {
+                                            self?.sqiltePersistence.save(sensorSettings: withMacSettings)
+                                                .on(success: { _ in
+                                                    self?.isTransitioningFromRealmToSQLite = false
+                                                }, failure: { error in
+                                                    self?.post(error: .ruuviPersistence(error))
+                                                    self?.isTransitioningFromRealmToSQLite = false
+                                                })
+                                        } else {
+                                            self?.isTransitioningFromRealmToSQLite = false
+                                        }
+                                    }, failure: { error in
+                                        self?.post(error: .ruuviPersistence(error))
+                                        self?.isTransitioningFromRealmToSQLite = false
+                                    })
                             }, failure: { error in
                                 self?.post(error: .ruuviPersistence(error))
                                 self?.isTransitioningFromRealmToSQLite = false
