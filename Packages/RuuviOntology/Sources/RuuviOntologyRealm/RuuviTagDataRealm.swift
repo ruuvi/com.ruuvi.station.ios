@@ -91,10 +91,7 @@ public final class RuuviTagDataRealm: Object {
         self.sourceString = record.source.rawValue
         self.rssi.value = record.rssi
         self.celsius.value = record.temperature?.converted(to: .celsius).value
-        if let temperature = record.temperature {
-            let humidity = record.humidity?.converted(to: .relative(temperature: temperature))
-            self.humidity.value = humidity?.value
-        }
+        self.humidity.value = record.humidity?.value
         self.pressure.value = record.pressure?.converted(to: .hectopascals).value
         self.accelerationX.value = record.acceleration?.x.value
         self.accelerationY.value = record.acceleration?.y.value
