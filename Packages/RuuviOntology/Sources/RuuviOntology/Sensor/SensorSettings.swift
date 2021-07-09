@@ -22,6 +22,19 @@ extension SensorSettings {
             fatalError()
         }
     }
+
+    public func with(macId: MACIdentifier) -> SensorSettings {
+        return SensorSettingsStruct(
+            luid: luid,
+            macId: macId,
+            temperatureOffset: temperatureOffset,
+            temperatureOffsetDate: temperatureOffsetDate,
+            humidityOffset: humidityOffset,
+            humidityOffsetDate: humidityOffsetDate,
+            pressureOffset: pressureOffset,
+            pressureOffsetDate: pressureOffsetDate
+        )
+    }
 }
 
 public enum OffsetCorrectionType: Int {

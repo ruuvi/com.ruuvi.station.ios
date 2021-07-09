@@ -62,7 +62,6 @@ class CardsPresenter: CardsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
-    private var offsetCorrectionDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
@@ -421,7 +420,7 @@ extension CardsPresenter {
         rssiTimers.values.forEach({ $0.invalidate() })
         connectionPersistence.keepConnectionUUIDs
             .filter({ (luid) -> Bool in
-                ruuviTags.contains(where: { $0.luid?.any == luid })
+                ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
             }).forEach { (luid) in
                 if settings.readRSSI {
                     let interval = settings.readRSSIIntervalSeconds
@@ -458,15 +457,15 @@ extension CardsPresenter {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
-            ruuviTags.contains(where: { $0.luid?.any == luid })
+            ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
         }.forEach { (luid) in
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                     let sensorSettings = self?.sensorSettingsList
                         .first(where: {
-                                ($0.luid?.any == viewModel.luid.value)
-                                    || ($0.macId?.any == viewModel.mac.value)
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                         })
                     viewModel.update(
                         ruuviTag
@@ -488,8 +487,8 @@ extension CardsPresenter {
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
-                                    ($0.luid?.any == viewModel.luid.value)
-                                        || ($0.macId?.any == viewModel.mac.value)
+                                    ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                        || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                             })
                         viewModel.update(
                             ruuviTag
