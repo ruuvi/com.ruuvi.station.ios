@@ -62,7 +62,6 @@ class CardsPresenter: CardsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
-    private var offsetCorrectionDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
