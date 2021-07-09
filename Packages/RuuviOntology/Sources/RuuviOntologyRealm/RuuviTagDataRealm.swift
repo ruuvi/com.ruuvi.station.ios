@@ -68,10 +68,6 @@ public final class RuuviTagDataRealm: Object {
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
-        // TODO: fixthis
-        // self.temperatureOffset = data.temperatureOffset
-        // self.humidityOffset = data.humidityOffset
-        // self.pressureOffset = data.pressureOffset
     }
 
     public convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
