@@ -127,9 +127,15 @@ class RuuviReactorImpl: RuuviReactor {
 
     func observe(_ ruuviTag: RuuviTagSensor,
                  _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void) -> RuuviReactorToken {
-        sqlitePersistence.readSensorSettings(ruuviTag).on { sqliteRecord in
+        sqlitePersistence.readSensorSettings(ruuviTag).on { [weak self] sqliteRecord in
             if let sensorSettings = sqliteRecord {
                 block(.update(sensorSettings))
+            } else {
+                self?.realmPersistence.readSensorSettings(ruuviTag).on(success: { realmRecord in
+                    if let sensorSettings = realmRecord {
+                        block(.update(sensorSettings))
+                    }
+                })
             }
         }
         var sensorSettingsCombine: SensorSettingsCombine
