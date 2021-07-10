@@ -457,3 +457,5 @@ RuuviTag-sensorn är redo att användas!";
 "DFUUIView.doNotCloseTitle" = "Do not close or power off the sensor during the update.";
 "DFUUIView.successfulTitle" = "Update successful";
 "RuuviDfuError.failedToConstructUUID" = "Failed to construct UUID";
+"SignIn.EmailMismatch.Alert.message" = "Ooops, you've requested the code for %@, but used the code for %@. Please double check that you are using the code for %@";
+"SignIn.EmailMissing.Alert.message" = "Ooops, the email you've used to get the code was not saved. Please try to sign in again";
