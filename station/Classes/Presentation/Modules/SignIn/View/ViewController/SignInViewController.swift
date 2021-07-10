@@ -56,6 +56,21 @@ extension SignInViewController: SignInViewInput {
     func localize() {
         title = "SignIn.Title.text".localized()
     }
+
+    func showEmailsAreDifferent(requestedEmail: String, validatedEmail: String) {
+        let format = "SignIn.EmailMismatch.Alert.message".localized()
+        let message = String(format: format, requestedEmail, validatedEmail, requestedEmail)
+        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
+
+    func showFailedToGetRequestedEmail() {
+        let message = "SignIn.EmailMissing.Alert.message".localized()
+        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - Keyboard

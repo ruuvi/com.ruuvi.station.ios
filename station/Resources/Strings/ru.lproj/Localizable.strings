@@ -457,3 +457,5 @@
 "DFUUIView.doNotCloseTitle" = "Не закрывайте приложение и не отключайте сенсор во время обновления.";
 "DFUUIView.successfulTitle" = "Обновление успешно завершено";
 "RuuviDfuError.failedToConstructUUID" = "Не удалось создать UUID";
+"SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
+"SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
