@@ -3,12 +3,17 @@ import Future
 import RuuviOntology
 import RuuviUser
 
+public struct ValidateCodeResponse {
+    public var email: String
+    public var apiKey: String
+}
+
 public protocol RuuviCloud {
     @discardableResult
     func requestCode(email: String) -> Future<String, RuuviCloudError>
 
     @discardableResult
-    func validateCode(code: String) -> Future<String, RuuviCloudError>
+    func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError>
 
     @discardableResult
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>

@@ -347,12 +347,16 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    public func validateCode(code: String) -> Future<String, RuuviCloudError> {
-        let promise = Promise<String, RuuviCloudError>()
+    public func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError> {
+        let promise = Promise<ValidateCodeResponse, RuuviCloudError>()
         let request = RuuviCloudApiVerifyRequest(token: code)
         api.verify(request)
             .on(success: { response in
-                promise.succeed(value: response.accessToken)
+                let result = ValidateCodeResponse(
+                    email: response.email,
+                    apiKey: response.accessToken
+                )
+                promise.succeed(value: result)
             }, failure: { error in
                 promise.fail(error: .api(error))
             })
