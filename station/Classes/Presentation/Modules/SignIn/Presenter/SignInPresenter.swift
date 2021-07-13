@@ -163,17 +163,28 @@ extension SignInPresenter {
     private func verify(_ code: String) {
         activityPresenter.increment()
         ruuviCloud.validateCode(code: code)
-            .on(success: { [weak self] apiKey in
+            .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
-                sSelf.ruuviUser.login(apiKey: apiKey)
-                sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
-                    guard let ssSelf = sSelf else { return }
-                    ssSelf.activityPresenter.decrement()
-                    ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)
-                }, failure: { [weak self] error in
-                    self?.activityPresenter.decrement()
-                    self?.errorPresenter.present(error: error)
-                })
+                if sSelf.ruuviUser.email == result.email {
+                    sSelf.ruuviUser.login(apiKey: result.apiKey)
+                    sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
+                        guard let ssSelf = sSelf else { return }
+                        ssSelf.activityPresenter.decrement()
+                        ssSelf.signIn(module: ssSelf, didSuccessfulyLogin: nil)
+                    }, failure: { [weak self] error in
+                        self?.activityPresenter.decrement()
+                        self?.errorPresenter.present(error: error)
+                    })
+                } else if let requestedEmail = sSelf.ruuviUser.email {
+                    sSelf.activityPresenter.decrement()
+                    sSelf.view.showEmailsAreDifferent(
+                        requestedEmail: requestedEmail,
+                        validatedEmail: result.email
+                    )
+                } else {
+                    sSelf.view.showFailedToGetRequestedEmail()
+                    sSelf.activityPresenter.decrement()
+                }
             }, failure: { [weak self] (error) in
                 self?.activityPresenter.decrement()
                 self?.errorPresenter.present(error: error)

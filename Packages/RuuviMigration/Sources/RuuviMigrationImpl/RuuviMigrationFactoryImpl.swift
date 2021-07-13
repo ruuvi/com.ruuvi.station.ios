@@ -59,12 +59,17 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             ruuviAlertService: ruuviAlertService
         )
         let toTimeouts = MigrationManagerToTimeouts(settings: settings)
+        let fixRHAlerts = RuuviMigrationFixRHAlerts(
+            ruuviStorage: ruuviStorage,
+            ruuviAlertService: ruuviAlertService
+        )
         return [toSQLite,
                 toAlertService,
                 toPrune240,
                 toChartDuration240,
                 toSensorSettings,
                 toRH,
-                toTimeouts]
+                toTimeouts,
+                fixRHAlerts]
     }
 }

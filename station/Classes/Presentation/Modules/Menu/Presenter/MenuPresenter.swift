@@ -139,7 +139,9 @@ extension MenuPresenter {
 
     @objc private func syncViewModel() {
         let viewModel = MenuViewModel()
-        viewModel.username.value = ruuviUser.email
+        if ruuviUser.isAuthorized {
+            viewModel.username.value = ruuviUser.email
+        }
         viewModel.isSyncing.value = localSyncState.syncStatus == .syncing
         self.viewModel = viewModel
         guard localSyncState.syncStatus != .syncing else {
