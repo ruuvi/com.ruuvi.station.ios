@@ -116,7 +116,7 @@ class TagChartView: LineChartView {
     }
 // MARK: - Private
     private func configure() {
-        chartDescription?.enabled = false
+        chartDescription.enabled = false
         dragEnabled = true
         setScaleEnabled(true)
         pinchZoomEnabled = false
