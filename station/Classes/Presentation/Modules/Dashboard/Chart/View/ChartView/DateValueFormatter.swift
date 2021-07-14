@@ -2,7 +2,7 @@ import Foundation
 import Charts
 import RuuviOntology
 
-public class DateValueFormatter: NSObject, IAxisValueFormatter {
+public class DateValueFormatter: NSObject, AxisValueFormatter {
     private let dateFormatter = DateFormatter()
 
     init(with locale: Locale) {

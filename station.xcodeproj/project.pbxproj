@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -552,6 +552,10 @@
 		0EE36E4026957E010021B746 /* DFUInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */; };
 		0EE36E4226957E200021B746 /* LatestRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E4126957E200021B746 /* LatestRelease.swift */; };
 		0EE36E4326957E200021B746 /* LatestRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E4126957E200021B746 /* LatestRelease.swift */; };
+		0EE36EAF269DC70E0021B746 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EAE269DC70E0021B746 /* Algorithms */; };
+		0EE36EB1269DC71B0021B746 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB0269DC71B0021B746 /* Algorithms */; };
+		0EE36EB4269DC7D90021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB3269DC7D90021B746 /* Charts */; };
+		0EE36EB6269DC7E40021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB5269DC7E40021B746 /* Charts */; };
 		0EE49B9523B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
 		0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
 		0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
@@ -1449,6 +1453,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE36EB1269DC71B0021B746 /* Algorithms in Frameworks */,
+				0EE36EB6269DC7E40021B746 /* Charts in Frameworks */,
 				73949279A33A1BF08159FE0E /* Pods_station_dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1457,6 +1463,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE36EAF269DC70E0021B746 /* Algorithms in Frameworks */,
+				0EE36EB4269DC7D90021B746 /* Charts in Frameworks */,
 				A98CCBB3BAF61A33CE4A2D1B /* Pods_station.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4038,6 +4046,10 @@
 			dependencies = (
 			);
 			name = station_dev;
+			packageProductDependencies = (
+				0EE36EB0269DC71B0021B746 /* Algorithms */,
+				0EE36EB5269DC7E40021B746 /* Charts */,
+			);
 			productName = station;
 			productReference = 0E8BD404238566AB008B31EF /* station_dev.app */;
 			productType = "com.apple.product-type.application";
@@ -4060,6 +4072,10 @@
 			dependencies = (
 			);
 			name = station;
+			packageProductDependencies = (
+				0EE36EAE269DC70E0021B746 /* Algorithms */,
+				0EE36EB3269DC7D90021B746 /* Charts */,
+			);
 			productName = station;
 			productReference = 64333D2520B0C45900CDF4B6 /* station.app */;
 			productType = "com.apple.product-type.application";
@@ -4144,6 +4160,10 @@
 				fr,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
+			packageReferences = (
+				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
+			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -5811,6 +5831,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0EE36EAE269DC70E0021B746 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		0EE36EB0269DC71B0021B746 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		0EE36EB3269DC7D90021B746 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+		0EE36EB5269DC7E40021B746 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 64333D1D20B0C45900CDF4B6 /* Project object */;
 }
