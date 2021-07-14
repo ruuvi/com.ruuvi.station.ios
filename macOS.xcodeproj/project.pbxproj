@@ -338,7 +338,6 @@
 		0EE1124F267BBDC1008DA8D9 /* RuuviService in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE1124E267BBDC1008DA8D9 /* RuuviService */; };
 		0EE11251267BBDC1008DA8D9 /* RuuviStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE11250267BBDC1008DA8D9 /* RuuviStorage */; };
 		0EE11253267BBDC1008DA8D9 /* RuuviUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE11252267BBDC1008DA8D9 /* RuuviUser */; };
-		0EE11256267BC273008DA8D9 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE11255267BC273008DA8D9 /* Charts */; };
 		0EE1125C267BC327008DA8D9 /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE1125B267BC327008DA8D9 /* LightRoute */; };
 		0EE1125F267BC34A008DA8D9 /* RuuviReactor in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE1125E267BC34A008DA8D9 /* RuuviReactor */; };
 		0EE11262267BC395008DA8D9 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE11261267BC395008DA8D9 /* Swinject */; };
@@ -367,6 +366,7 @@
 		0EE36EA6269749DF0021B746 /* LatestRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E96269749DE0021B746 /* LatestRelease.swift */; };
 		0EE36EA7269749DF0021B746 /* DFUModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E97269749DE0021B746 /* DFUModuleFactory.swift */; };
 		0EE36EAA269749F20021B746 /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36EA9269749F10021B746 /* RuuviColor.swift */; };
+		0EE36EBE269F06CA0021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EBD269F06CA0021B746 /* Charts */; };
 		0EE49B9723B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
 		0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
 		0EE98A7B26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */; };
@@ -1059,11 +1059,11 @@
 				0EF4E32F2682403500D83CC7 /* RuuviVirtualService in Frameworks */,
 				0EE11247267BBDC1008DA8D9 /* RuuviPersistence in Frameworks */,
 				0E5BF779267BCCB900EBF2D6 /* RuuviCoreImage in Frameworks */,
+				0EE36EBE269F06CA0021B746 /* Charts in Frameworks */,
 				0EE1126B267BC4A7008DA8D9 /* GestureInstructions in Frameworks */,
 				0EE11235267BBDC1008DA8D9 /* RuuviCloud in Frameworks */,
 				0EE11262267BC395008DA8D9 /* Swinject in Frameworks */,
 				0EF4E31D2682403500D83CC7 /* RuuviCoreLocation in Frameworks */,
-				0EE11256267BC273008DA8D9 /* Charts in Frameworks */,
 				0EB8B94026837B6A00FE130E /* RuuviCorePN in Frameworks */,
 				0EF4E3292682403500D83CC7 /* RuuviVirtualPersistence in Frameworks */,
 				0EE1125C267BC327008DA8D9 /* LightRoute in Frameworks */,
@@ -3590,7 +3590,6 @@
 				0EE1124E267BBDC1008DA8D9 /* RuuviService */,
 				0EE11250267BBDC1008DA8D9 /* RuuviStorage */,
 				0EE11252267BBDC1008DA8D9 /* RuuviUser */,
-				0EE11255267BC273008DA8D9 /* Charts */,
 				0EE1125B267BC327008DA8D9 /* LightRoute */,
 				0EE1125E267BC34A008DA8D9 /* RuuviReactor */,
 				0EE11261267BC395008DA8D9 /* Swinject */,
@@ -3647,6 +3646,7 @@
 				0E050146268601F6007060C4 /* RuuviDaemonRuuviTag */,
 				0E050148268601F6007060C4 /* RuuviDaemonVirtualTag */,
 				0E92A9892686373900187E4F /* RuuviServiceGATT */,
+				0EE36EBD269F06CA0021B746 /* Charts */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* Ruuvi Station.app */;
@@ -3676,7 +3676,6 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0EE11254267BC273008DA8D9 /* XCRemoteSwiftPackageReference "Charts" */,
 				0EE1125A267BC327008DA8D9 /* XCRemoteSwiftPackageReference "LightRoute" */,
 				0EE11260267BC395008DA8D9 /* XCRemoteSwiftPackageReference "Swinject" */,
 				0EE11263267BC3CC008DA8D9 /* XCRemoteSwiftPackageReference "IOS-Pods-DFU-Library" */,
@@ -3687,6 +3686,7 @@
 				0EE11279267BC7E2008DA8D9 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				0EBE42CF267CA725002888EC /* XCRemoteSwiftPackageReference "Localize-Swift" */,
 				0EBE42D2267CA889002888EC /* XCRemoteSwiftPackageReference "BTKit" */,
+				0EE36EBC269F06CA0021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -4521,14 +4521,6 @@
 				minimumVersion = 0.3.0;
 			};
 		};
-		0EE11254267BC273008DA8D9 /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/Charts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.6.0;
-			};
-		};
 		0EE1125A267BC327008DA8D9 /* XCRemoteSwiftPackageReference "LightRoute" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
@@ -4591,6 +4583,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.2.0;
+			};
+		};
+		0EE36EBC269F06CA0021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -4772,11 +4772,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RuuviUser;
 		};
-		0EE11255267BC273008DA8D9 /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0EE11254267BC273008DA8D9 /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = Charts;
-		};
 		0EE1125B267BC327008DA8D9 /* LightRoute */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0EE1125A267BC327008DA8D9 /* XCRemoteSwiftPackageReference "LightRoute" */;
@@ -4829,6 +4824,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0EE11279267BC7E2008DA8D9 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
+		};
+		0EE36EBD269F06CA0021B746 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE36EBC269F06CA0021B746 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
 		};
 		0EF00EFE267C6A930082AA8D /* RuuviContextRealm */ = {
 			isa = XCSwiftPackageProductDependency;
