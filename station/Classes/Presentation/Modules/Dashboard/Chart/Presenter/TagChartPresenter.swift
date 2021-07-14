@@ -287,7 +287,7 @@ extension TagChartPresenter {
 
     private func addEntry(for chartData: ChartData, data: RuuviMeasurement, dataSetIndex: Int = 0) {
         if let entity = chartEntry(for: data) {
-            chartData.addEntry(entity, dataSetIndex: dataSetIndex)
+            chartData.appendEntry(entity, toDataSet: dataSetIndex)
         }
     }
 
@@ -305,7 +305,7 @@ extension TagChartPresenter {
         } else {
             let chartDataSet = newDataSet()
             chartDataSet.drawCirclesEnabled = false
-            chartData.addDataSet(chartDataSet)
+            chartData.append(chartDataSet)
         }
         let data_length = dataSet.count
         if data_length <= threshold {
@@ -385,7 +385,7 @@ extension TagChartPresenter {
             }
             let rounded = Double(round(10 * max_area_point.1)/10)
             let entry = ChartDataEntry(x: max_area_point.0, y: rounded)
-            chartData.addEntry(entry, dataSetIndex: 0)
+            chartData.appendEntry(entry, toDataSet: 0)
             a = next_a // This a is the next a (chosen b)
         }
         addEntry(for: chartData, data: dataSet[dataSet.count - 2])
