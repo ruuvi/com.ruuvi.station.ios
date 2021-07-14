@@ -1,8 +1,5 @@
 PODS:
   - BTKit (0.3.0)
-  - Charts (3.6.0):
-    - Charts/Core (= 3.6.0)
-  - Charts/Core (3.6.0)
   - Firebase (8.2.0):
     - Firebase/Core (= 8.2.0)
   - Firebase/Analytics (8.2.0):
@@ -517,7 +514,6 @@ PODS:
 
 DEPENDENCIES:
   - BTKit
-  - Charts (from `https://github.com/rinat-enikeev/Charts.git`, tag `v3.6.1`)
   - Firebase
   - Firebase/Analytics
   - Firebase/Crashlytics
@@ -655,9 +651,6 @@ SPEC REPOS:
     - ZIPFoundation
 
 EXTERNAL SOURCES:
-  Charts:
-    :git: https://github.com/rinat-enikeev/Charts.git
-    :tag: v3.6.1
   Humidity:
     :git: https://github.com/rinat-enikeev/Humidity.git
   LightRoute:
@@ -708,9 +701,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 CHECKOUT OPTIONS:
-  Charts:
-    :git: https://github.com/rinat-enikeev/Charts.git
-    :tag: v3.6.1
   Humidity:
     :commit: fb909b332a1f17a6453587dbeaebcfe7c6712a72
     :git: https://github.com/rinat-enikeev/Humidity.git
@@ -726,7 +716,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BTKit: 7335dc432b6747a92b83481461970a226fbda20d
-  Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   Firebase: 12c568897b807321964e89d2b263ef4c6cff3db6
   FirebaseABTesting: 5f37131c5eceea579c471c915f7a0f8cad484d1f
   FirebaseAnalytics: 7a744b1e7dc50125cb37714c6bdaea167e412082
@@ -782,6 +771,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 7a1aa91f4cc621fda4bcca73fd055ec0cad8538b
+PODFILE CHECKSUM: 9fb04f037a3a78978f8ccf3505e171fa47027cf0
 
 COCOAPODS: 1.10.1
