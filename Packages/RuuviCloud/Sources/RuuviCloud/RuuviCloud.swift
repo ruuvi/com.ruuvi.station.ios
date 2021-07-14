@@ -6,6 +6,11 @@ import RuuviUser
 public struct ValidateCodeResponse {
     public var email: String
     public var apiKey: String
+
+    public init(email: String, apiKey: String) {
+        self.email = email
+        self.apiKey = apiKey
+    }
 }
 
 public protocol RuuviCloud {
