@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QhR-AC-xhG">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QhR-AC-xhG">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +16,7 @@
         </array>
     </customFonts>
     <scenes>
-        <!--View Controller-->
+        <!--Welcome View Controller-->
         <scene sceneID="Nr4-nX-sRo">
             <objects>
                 <viewController id="QhR-AC-xhG" customClass="WelcomeViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
@@ -51,7 +49,7 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lZQ-4e-haS">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lZQ-4e-haS">
                                         <rect key="frame" x="107" y="306.5" width="200" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="9Hw-oO-Svh"/>
@@ -91,6 +89,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="D5t-O8-5iS"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="P4C-5V-fq8" firstAttribute="centerY" secondItem="Woj-KN-lxP" secondAttribute="centerY" id="0qs-E7-Smc"/>
@@ -105,7 +104,6 @@
                             <constraint firstItem="lJz-8P-29j" firstAttribute="bottom" secondItem="Woj-KN-lxP" secondAttribute="bottom" id="ubd-aK-wkm"/>
                             <constraint firstItem="qMq-jx-e1G" firstAttribute="leading" secondItem="Woj-KN-lxP" secondAttribute="leading" id="xru-ob-2hd"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="D5t-O8-5iS"/>
                     </view>
                     <navigationItem key="navigationItem" id="Ih4-as-gq9">
                         <barButtonItem key="backBarButtonItem" title=" " id="oH5-OL-Oqi"/>

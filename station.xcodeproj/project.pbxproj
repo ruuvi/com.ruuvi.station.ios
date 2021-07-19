@@ -112,6 +112,10 @@
 		0E290A862660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
 		0E2AFFA0266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2AFF9F266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift */; };
 		0E2AFFA1266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2AFF9F266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift */; };
+		0E2B339B26A2BC3F00366B01 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339A26A2BC3F00366B01 /* AppRouter.swift */; };
+		0E2B339C26A2BC3F00366B01 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339A26A2BC3F00366B01 /* AppRouter.swift */; };
+		0E2B339E26A2BCBE00366B01 /* OnboardRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */; };
+		0E2B339F26A2BCBE00366B01 /* OnboardRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */; };
 		0E31B04223BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */; };
 		0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */; };
 		0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */; };
@@ -1032,6 +1036,8 @@
 		0E25135E2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNotifierTitlesImpl.swift; sourceTree = "<group>"; };
 		0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+AnyRuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E2AFF9F266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviRepositoryError+LocalizedError.swift"; sourceTree = "<group>"; };
+		0E2B339A26A2BC3F00366B01 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardRouter.swift; sourceTree = "<group>"; };
 		0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebTagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
 		0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitionManager.swift; sourceTree = "<group>"; };
@@ -1666,6 +1672,7 @@
 			children = (
 				0E09671522AE74CB00E85F48 /* Application */,
 				0E09671922AE764200E85F48 /* Presentation */,
+				0E2B339926A2BC2500366B01 /* Routers */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2081,6 +2088,15 @@
 				0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */,
 			);
 			path = Table;
+			sourceTree = "<group>";
+		};
+		0E2B339926A2BC2500366B01 /* Routers */ = {
+			isa = PBXGroup;
+			children = (
+				0E2B339A26A2BC3F00366B01 /* AppRouter.swift */,
+				0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */,
+			);
+			path = Routers;
 			sourceTree = "<group>";
 		};
 		0E31B04023BBA34C00660412 /* SectionHeader */ = {
@@ -4702,6 +4718,7 @@
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				66718A41266A685700A380F8 /* DfuFlashModuleInput.swift in Sources */,
+				0E2B339C26A2BC3F00366B01 /* AppRouter.swift in Sources */,
 				660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0EA796862664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
@@ -4862,6 +4879,7 @@
 				0E0501222685E895007060C4 /* HeartbeatDaemonTitles.swift in Sources */,
 				A90E16AA24609B9B00631E6C /* TagChartAssembler.swift in Sources */,
 				0E8BD3B3238566AB008B31EF /* WebTagSettingsPresenter.swift in Sources */,
+				0E2B339F26A2BCBE00366B01 /* OnboardRouter.swift in Sources */,
 				0E8BD3B4238566AB008B31EF /* MenuModuleInput.swift in Sources */,
 				0E8BD3B6238566AB008B31EF /* CardsScrollInitializer.swift in Sources */,
 				0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */,
@@ -5106,6 +5124,7 @@
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
 				66BC449B2657AED400A03253 /* OffsetCorrectionConfigurator.swift in Sources */,
+				0E2B339E26A2BCBE00366B01 /* OnboardRouter.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
 				0EA796812664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
@@ -5325,6 +5344,7 @@
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
+				0E2B339B26A2BC3F00366B01 /* AppRouter.swift in Sources */,
 				0EB8ED36268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
