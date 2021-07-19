@@ -20,6 +20,8 @@ def shared_pods
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'Nantes'
+  pod 'RuuviOnboard', :path => 'Modules/RuuviOnboard/RuuviOnboard.podspec', :testspecs => ['Tests']
+  pod 'RuuviOnboard/Pages', :path => 'Modules/RuuviOnboard/RuuviOnboard.podspec'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'Realm'
   pod 'RealmSwift'

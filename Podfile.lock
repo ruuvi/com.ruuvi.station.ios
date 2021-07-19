@@ -297,6 +297,11 @@ PODS:
     - RuuviOntology
     - RuuviVirtual
   - RuuviNotifier/Tests (0.0.1)
+  - RuuviOnboard (0.0.1):
+    - RuuviOnboard/RuuviOnboard (= 0.0.1)
+  - RuuviOnboard/Pages (0.0.1)
+  - RuuviOnboard/RuuviOnboard (0.0.1)
+  - RuuviOnboard/Tests (0.0.1)
   - RuuviOntology (0.0.1):
     - RuuviOntology/Contract (= 0.0.1)
   - RuuviOntology/Contract (0.0.1):
@@ -572,6 +577,9 @@ DEPENDENCIES:
   - RuuviNotifier (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
   - RuuviNotifier/Impl (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
   - RuuviNotifier/Tests (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
+  - RuuviOnboard (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
+  - RuuviOnboard/Pages (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
+  - RuuviOnboard/Tests (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
@@ -679,6 +687,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviNotification/RuuviNotification.podspec
   RuuviNotifier:
     :path: Packages/RuuviNotifier/RuuviNotifier.podspec
+  RuuviOnboard:
+    :path: Modules/RuuviOnboard/RuuviOnboard.podspec
   RuuviOntology:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   RuuviPersistence:
@@ -757,6 +767,7 @@ SPEC CHECKSUMS:
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
+  RuuviOnboard: 48a35f867830a63d733f16c7e0f48b0142a72760
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
@@ -771,6 +782,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 9fb04f037a3a78978f8ccf3505e171fa47027cf0
+PODFILE CHECKSUM: 60df781f8d3e537f3b718af03ab251f6b26a0348
 
 COCOAPODS: 1.10.1

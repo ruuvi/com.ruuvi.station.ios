@@ -9,14 +9,16 @@ import UserNotifications
 import RuuviLocal
 import RuuviCore
 import RuuviNotification
+import RuuviMigration
+import RuuviContext
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
     var appStateService: AppStateService!
     var localNotificationsManager: RuuviNotificationLocal!
     var featureToggleService: FeatureToggleService!
+    private var appRouter: AppRouter?
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -28,11 +30,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         featureToggleService.fetchFeatureToggles()
         #endif
 
-        if let settings = r.resolve(RuuviLocalSettings.self),
-            settings.welcomeShown {
-            let mainRouter = MainRouter.shared
-            mainRouter.openCards()
-        }
+        // the order is important
+        r.resolve(RuuviMigration.self, name: "realm")?
+            .migrateIfNeeded()
+        r.resolve(SQLiteContext.self)?
+            .database
+            .migrateIfNeeded()
+        r.resolve(RuuviMigrationFactory.self)?
+            .createAllOrdered()
+            .forEach({ $0.migrateIfNeeded() })
+
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
         localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
@@ -50,6 +57,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         )
         #endif
+
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let appRouter = AppRouter()
+        appRouter.settings = r.resolve(RuuviLocalSettings.self)
+        self.window?.rootViewController = appRouter.viewController
+        self.window?.makeKeyAndVisible()
+        self.appRouter = appRouter
 
         return true
     }
