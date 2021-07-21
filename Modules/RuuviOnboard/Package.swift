@@ -5,6 +5,8 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviOnboard",
+    defaultLocalization: "en",
+    platforms: [.iOS(.v11), .macOS(.v10_15)],
     products: [
         .library(
             name: "RuuviOnboard",

@@ -299,7 +299,6 @@ PODS:
   - RuuviNotifier/Tests (0.0.1)
   - RuuviOnboard (0.0.1):
     - RuuviOnboard/RuuviOnboard (= 0.0.1)
-  - RuuviOnboard/Pages (0.0.1)
   - RuuviOnboard/RuuviOnboard (0.0.1)
   - RuuviOnboard/Tests (0.0.1)
   - RuuviOntology (0.0.1):
@@ -578,7 +577,6 @@ DEPENDENCIES:
   - RuuviNotifier/Impl (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
   - RuuviNotifier/Tests (from `Packages/RuuviNotifier/RuuviNotifier.podspec`)
   - RuuviOnboard (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
-  - RuuviOnboard/Pages (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
   - RuuviOnboard/Tests (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
@@ -782,6 +780,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 60df781f8d3e537f3b718af03ab251f6b26a0348
+PODFILE CHECKSUM: ce1e638f0a48868548be2c27961d6b7fecc4b7e4
 
 COCOAPODS: 1.10.1
