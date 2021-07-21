@@ -149,7 +149,7 @@ class DfuScanner: NSObject {
                 }
 
                 closure(observer, device)
-            }, lostDeviceDelay: 10)
+            }, lostDeviceDelay: 5)
 
             self?.startIfNeeded()
         }

@@ -19,6 +19,7 @@ public protocol RuuviDFU {
         _ observer: T,
         closure: @escaping (T, DFUDevice) -> Void
     ) -> RuuviDFUToken
+    @discardableResult
     func lost<T: AnyObject>(
         _ observer: T,
         closure: @escaping (T, DFUDevice) -> Void
