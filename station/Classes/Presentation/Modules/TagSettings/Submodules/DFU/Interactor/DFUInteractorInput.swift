@@ -6,6 +6,7 @@ import RuuviDFU
 
 protocol DFUInteractorInput {
     func listen() -> Future<String, Never>
+    func observeLost(uuid: String) -> Future<String, Never>
     func read(release: LatestRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error>
     func download(release: LatestRelease) -> AnyPublisher<FirmwareDownloadResponse, Error>
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
