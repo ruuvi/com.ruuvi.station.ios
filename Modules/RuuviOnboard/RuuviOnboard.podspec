@@ -21,10 +21,6 @@ Pod::Spec.new do |s|
     }
   end
 
-  s.subspec 'Pages' do |ss|
-    ss.source_files = 'Sources/RuuviOnboardPages/**/*.{h,m,swift}', 'Sources/RuuviOnboardPages/*.{h,m,swift}'
-  end
-
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end
