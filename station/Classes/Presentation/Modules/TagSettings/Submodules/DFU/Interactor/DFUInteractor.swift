@@ -156,4 +156,15 @@ extension DFUInteractor: DFUInteractorInput {
             }
         }
     }
+
+    func observeLost(uuid: String) -> Future<String, Never> {
+        return Future { [weak self] promise in
+            guard let sSelf = self else { return }
+            sSelf.ruuviDFU.lost(sSelf, closure: { _, device in
+                if device.uuid == uuid {
+                    promise(.success(uuid))
+                }
+            })
+        }
+    }
 }
