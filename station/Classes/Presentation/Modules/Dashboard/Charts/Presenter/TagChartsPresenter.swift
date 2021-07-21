@@ -322,6 +322,7 @@ extension TagChartsPresenter: SignInModuleOutput {
 // MARK: - RuuviNotifierObserver
 extension TagChartsPresenter: RuuviNotifierObserver {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+        guard uuid == viewModel.uuid.value else { return }
         let newValue: AlertState = isTriggered ? .firing : .registered
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue
