@@ -248,6 +248,10 @@ PODS:
   - RuuviDFU/Impl (0.0.1):
     - iOSDFULibrary
   - RuuviDFU/Tests (0.0.1)
+  - RuuviDiscover (0.0.1):
+    - RuuviDiscover/RuuviDiscover (= 0.0.1)
+  - RuuviDiscover/RuuviDiscover (0.0.1)
+  - RuuviDiscover/Tests (0.0.1)
   - RuuviLocal (0.0.1):
     - RuuviLocal/Contract (= 0.0.1)
   - RuuviLocal/Contract (0.0.1):
@@ -563,6 +567,8 @@ DEPENDENCIES:
   - RuuviDFU (from `Packages/RuuviDFU/RuuviDFU.podspec`)
   - RuuviDFU/Impl (from `Packages/RuuviDFU/RuuviDFU.podspec`)
   - RuuviDFU/Tests (from `Packages/RuuviDFU/RuuviDFU.podspec`)
+  - RuuviDiscover (from `Modules/RuuviDiscover/RuuviDiscover.podspec`)
+  - RuuviDiscover/Tests (from `Modules/RuuviDiscover/RuuviDiscover.podspec`)
   - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
   - RuuviLocation (from `Packages/RuuviLocation/RuuviLocation.podspec`)
   - RuuviLocation/Service (from `Packages/RuuviLocation/RuuviLocation.podspec`)
@@ -675,6 +681,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviDaemon/RuuviDaemon.podspec
   RuuviDFU:
     :path: Packages/RuuviDFU/RuuviDFU.podspec
+  RuuviDiscover:
+    :path: Modules/RuuviDiscover/RuuviDiscover.podspec
   RuuviLocal:
     :path: Packages/RuuviLocal/RuuviLocal.podspec
   RuuviLocation:
@@ -760,12 +768,13 @@ SPEC CHECKSUMS:
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
+  RuuviDiscover: 7e4a4ebae1dda24e88cdf952320cef996ef82a82
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
-  RuuviOnboard: 48a35f867830a63d733f16c7e0f48b0142a72760
+  RuuviOnboard: 9ea0c7432a5e2bb21b8b0ca331cf4d51137da871
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
@@ -780,6 +789,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: ce1e638f0a48868548be2c27961d6b7fecc4b7e4
+PODFILE CHECKSUM: 41976c67fd04af4c12a7c137c7efc12e2d8ac508
 
 COCOAPODS: 1.10.1
