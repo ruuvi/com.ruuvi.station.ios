@@ -767,6 +767,10 @@ extension TagSettingsTableViewController {
             tableView.reloadData()
         }
 
+        tableView.bind(viewModel.canShowUpdateFirmware) { tableView, _ in
+            tableView.reloadData()
+        }
+
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         uploadBackgroundIndicatorView.bind(viewModel.isUploadingBackground) { v, isUploading in
             if let isUploading = isUploading {
