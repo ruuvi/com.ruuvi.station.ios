@@ -182,7 +182,7 @@
 "TagSettings.Alerts.Connection.description" = "Notifier lorsque l'appareil est connecté/déconnecté";
 "TagSettings.ConnectionAlert.title" = "Connexion";
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
-"TagSettings.Firmware.UpdateFirmware" = "Update Firmware";
+"TagSettings.Firmware.UpdateFirmware" = "Mettre à jour le firmware";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Le résultat est nul";
 "UnexpectedError.callerDeinitedDuringOperation" = "Les invitations ont été délocalisées";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Echec de l'annulation de la géolocalisation";
@@ -438,7 +438,7 @@
 RuuviTag est prêt à être utilisé !";
 "DfuFlash.CancelAlert.text" = "Voulez-vous annuler la mise à jour ?";
 "RuuviDfuError.invalidFirmwareFile" = "Fichier de mise à jour invalide";
-"DFUUIView.navigationTitle" = "Firmware Update";
+"DFUUIView.navigationTitle" = "Mise à jour du firmware";
 "DFUUIView.latestTitle" = "Dernière version du Ruuvi Firmware :";
 "DFUUIView.currentTitle" = "Version actuelle :";
 "DFUUIView.notReportingDescription" = "Impossible d'obtenir la version actuelle de l'appareil. La version est probablement trop ancienne et il est recommandé d'effectuer une mise à jour";
