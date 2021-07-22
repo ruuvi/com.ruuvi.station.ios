@@ -134,7 +134,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                 pressureOffsetDate: nil
             )
         }
-        self.viewModel.canShowUpdateFirmware.value = featureToggleService.isEnabled(.updateFirmware)
 
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
@@ -761,6 +760,12 @@ extension TagSettingsPresenter {
         }
         viewModel.updateRecord(record)
         reloadMutedTill()
+
+        if viewModel.canShowUpdateFirmware.value == false
+            && featureToggleService.isEnabled(.updateFirmware)
+            && (source == .advertisement || source == .heartbeat) {
+            viewModel.canShowUpdateFirmware.value = true
+        }
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
