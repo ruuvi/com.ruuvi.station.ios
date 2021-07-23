@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KUd-sO-HYy">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="pYs-eY-Rb3">
+            <objects>
+                <navigationController id="KUd-sO-HYy" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0dB-gC-7z6">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="OPB-2U-HF7" kind="relationship" relationship="rootViewController" id="FAy-9K-csI"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DKi-d7-aes" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-396" y="-190"/>
+        </scene>
+        <!--Location Picker Apple View Controller-->
+        <scene sceneID="741-cx-xC3">
+            <objects>
+                <viewController storyboardIdentifier="LocationPickerAppleViewController" id="OPB-2U-HF7" customClass="LocationPickerAppleViewController" customModule="RuuviLocationPicker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Jbn-7H-AKQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qJv-cN-I5g">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <connections>
+                                    <outlet property="delegate" destination="OPB-2U-HF7" id="GWE-jk-ZGU"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="HEg-0T-EEb"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="qJv-cN-I5g" secondAttribute="bottom" id="1jV-3f-NLZ"/>
+                            <constraint firstItem="qJv-cN-I5g" firstAttribute="trailing" secondItem="HEg-0T-EEb" secondAttribute="trailing" id="Brd-gq-ePD"/>
+                            <constraint firstItem="qJv-cN-I5g" firstAttribute="top" secondItem="HEg-0T-EEb" secondAttribute="top" id="rKF-8B-QxI"/>
+                            <constraint firstItem="qJv-cN-I5g" firstAttribute="leading" secondItem="HEg-0T-EEb" secondAttribute="leading" id="ykL-ey-Co2"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="W5P-a6-meh">
+                        <leftBarButtonItems>
+                            <barButtonItem image="dismiss-modal-icon" id="Al3-SL-ppI">
+                                <connections>
+                                    <action selector="dismissBarButtonItemAction:" destination="OPB-2U-HF7" id="uXb-h8-bKC"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="location-picker-pin-icon" id="pxn-fh-ZoR">
+                                <connections>
+                                    <action selector="pinBarButtonItemAction:" destination="OPB-2U-HF7" id="edP-gp-esz"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Done" style="done" id="Ljc-6U-rzS">
+                                <connections>
+                                    <action selector="doneBarButtonItemAction:" destination="OPB-2U-HF7" id="Xj8-1V-zD2"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Cancel" id="cj0-Kv-aTM">
+                                <connections>
+                                    <action selector="cancelBarButtonItemAction:" destination="OPB-2U-HF7" id="vZJ-El-UJK"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="cancelBarButtonItem" destination="cj0-Kv-aTM" id="aAF-3p-55l"/>
+                        <outlet property="doneBarButtonItem" destination="Ljc-6U-rzS" id="1bJ-hQ-YV7"/>
+                        <outlet property="mapView" destination="qJv-cN-I5g" id="DEF-LZ-7cQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="juk-60-qeH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="383" y="-189"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
+        <image name="location-picker-pin-icon" width="25" height="25"/>
+    </resources>
+</document>

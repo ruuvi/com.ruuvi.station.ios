@@ -28,7 +28,6 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var router: AnyObject?
     weak var output: RuuviDiscoverOutput?
 
-    weak var view: DiscoverViewInput?
     var virtualReactor: VirtualReactor!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
@@ -39,6 +38,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviReactor: RuuviReactor!
     var ruuviOwnershipService: RuuviServiceOwnership!
 
+    private weak var view: DiscoverViewInput?
     private var ruuviTags = Set<RuuviTag>()
     private var persistedVirtualSensors: [VirtualTagSensor]! {
         didSet {
@@ -143,8 +143,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             }
         case .manual:
             lastSelectedWebTag = webTag
-            #warning("uncomment it")
-//            router.openLocationPicker(output: self)
+            output?.ruuviDiscoverWantsPickLocation(self)
         }
     }
 
@@ -161,29 +160,19 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 }
 
-#warning("uncomment")
-// MARK: - LocationPickerModuleOutput
-// extension DiscoverPresenter: LocationPickerModuleOutput {
-//    func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
-//        module.dismiss { [weak self] in
-//            guard let webTag = self?.lastSelectedWebTag else { return }
-//            guard let operation = self?.virtualService
-//                .add(provider: webTag.provider,
-//                     location: location) else { return }
-//            operation.on(success: { [weak self] _ in
-//                guard let sSelf = self else { return }
-//                if sSelf.isOpenedFromWelcome {
-//                    sSelf.router.openCards()
-//                } else {
-//                    sSelf.output?.discover(module: sSelf, didAddWebTag: location)
-//                }
-//            }, failure: { [weak self] error in
-//                self?.errorPresenter.present(error: error)
-//            })
-//            self?.lastSelectedWebTag = nil
-//        }
-//    }
-// }
+ extension DiscoverPresenter {
+    func onDidPick(location: Location) {
+        guard let webTag = lastSelectedWebTag else { return }
+        virtualService.add(provider: webTag.provider, location: location)
+            .on(success: { [weak self] virtualSensor in
+                guard let sSelf = self else { return }
+                sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+        lastSelectedWebTag = nil
+    }
+ }
 
 // MARK: - Private
 extension DiscoverPresenter {

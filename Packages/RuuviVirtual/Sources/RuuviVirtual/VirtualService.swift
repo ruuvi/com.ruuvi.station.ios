@@ -14,7 +14,7 @@ public protocol VirtualService {
     func add(
         provider: VirtualProvider,
         location: Location
-    ) -> Future<VirtualProvider, VirtualServiceError>
+    ) -> Future<AnyVirtualTagSensor, VirtualServiceError>
 
     func remove(
         sensor: VirtualSensor
