@@ -288,6 +288,14 @@ PODS:
     - RuuviLocation/Contract
     - RuuviOntology
   - RuuviLocation/Tests (0.0.1)
+  - RuuviLocationPicker (0.0.1):
+    - RuuviLocationPicker/RuuviLocationPicker (= 0.0.1)
+  - RuuviLocationPicker/RuuviLocationPicker (0.0.1):
+    - RuuviCore
+    - RuuviLocalization
+    - RuuviLocation
+    - RuuviPresenters
+  - RuuviLocationPicker/Tests (0.0.1)
   - RuuviMigration (0.0.1):
     - RuuviMigration/Contract (= 0.0.1)
   - RuuviMigration/Contract (0.0.1)
@@ -601,6 +609,8 @@ DEPENDENCIES:
   - RuuviLocation (from `Packages/RuuviLocation/RuuviLocation.podspec`)
   - RuuviLocation/Service (from `Packages/RuuviLocation/RuuviLocation.podspec`)
   - RuuviLocation/Tests (from `Packages/RuuviLocation/RuuviLocation.podspec`)
+  - RuuviLocationPicker (from `Modules/RuuviLocationPicker/RuuviLocationPicker.podspec`)
+  - RuuviLocationPicker/Tests (from `Modules/RuuviLocationPicker/RuuviLocationPicker.podspec`)
   - RuuviMigration (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Impl (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Tests (from `Packages/RuuviMigration/RuuviMigration.podspec`)
@@ -721,6 +731,8 @@ EXTERNAL SOURCES:
     :path: Common/RuuviLocalization/RuuviLocalization.podspec
   RuuviLocation:
     :path: Packages/RuuviLocation/RuuviLocation.podspec
+  RuuviLocationPicker:
+    :path: Modules/RuuviLocationPicker/RuuviLocationPicker.podspec
   RuuviMigration:
     :path: Packages/RuuviMigration/RuuviMigration.podspec
   RuuviNotification:
@@ -809,6 +821,7 @@ SPEC CHECKSUMS:
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviLocalization: 17e59877c53b8578b73498aa016c81cac61cfe16
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
+  RuuviLocationPicker: ec6fb89f5b0a5ff85d00036a2847e0ffac3b9076
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
@@ -828,6 +841,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 0fafebaeaa59afb8b8c919effeb6783cf6abe2fd
+PODFILE CHECKSUM: ab30f42be832f4fc63d7ca96d19c0f4c2d88693a
 
 COCOAPODS: 1.10.1

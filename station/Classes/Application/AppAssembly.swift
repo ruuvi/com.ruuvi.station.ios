@@ -23,6 +23,7 @@ import RuuviLocation
 import RuuviCore
 import RuuviDiscover
 import RuuviPresenters
+import RuuviLocationPicker
 #if canImport(RuuviCloudPure)
 import RuuviCloudPure
 #endif
@@ -876,6 +877,25 @@ private final class ModulesAssembly: Assembly {
                 ruuviReactor: ruuviReactor,
                 ruuviOwnershipService: ruuviOwnershipService
             )
+            return factory.create(dependencies: dependencies)
+        }
+
+        container.register(RuuviLocationPicker.self) { r in
+            let locationService = r.resolve(RuuviLocationService.self)!
+            let activityPresenter = r.resolve(ActivityPresenter.self)!
+            let errorPresenter = r.resolve(ErrorPresenter.self)!
+            let permissionsManager = r.resolve(RuuviCorePermission.self)!
+            let permissionPresenter = r.resolve(PermissionPresenter.self)!
+            let locationManager = r.resolve(RuuviCoreLocation.self)!
+            let dependencies = RuuviLocationPickerDependencies(
+                locationService: locationService,
+                activityPresenter: activityPresenter,
+                errorPresenter: errorPresenter,
+                permissionsManager: permissionsManager,
+                permissionPresenter: permissionPresenter,
+                locationManager: locationManager
+            )
+            let factory = RuuviLocationPickerFactory()
             return factory.create(dependencies: dependencies)
         }
     }

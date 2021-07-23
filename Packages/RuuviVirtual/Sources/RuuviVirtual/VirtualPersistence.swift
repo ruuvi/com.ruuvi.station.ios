@@ -29,7 +29,7 @@ public protocol VirtualPersistence {
     func persist(
         provider: VirtualProvider,
         location: Location
-    ) -> Future<VirtualProvider, VirtualPersistenceError>
+    ) -> Future<AnyVirtualTagSensor, VirtualPersistenceError>
 
     func remove(sensor: VirtualSensor) -> Future<Bool, VirtualPersistenceError>
 
