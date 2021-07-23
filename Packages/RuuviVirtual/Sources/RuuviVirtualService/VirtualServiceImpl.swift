@@ -40,13 +40,13 @@ public final class VirtualServiceImpl: VirtualService {
     public func add(
         provider: VirtualProvider,
         name: String
-    ) -> Future<VirtualProvider, VirtualServiceError> {
-        let promise = Promise<VirtualProvider, VirtualServiceError>()
+    ) -> Future<AnyVirtualTagSensor, VirtualServiceError> {
+        let promise = Promise<AnyVirtualTagSensor, VirtualServiceError>()
         virtualPersistence.persist(
             provider: provider,
             name: name
-        ).on(success: { provider in
-            promise.succeed(value: provider)
+        ).on(success: { virtualSensor in
+            promise.succeed(value: virtualSensor)
         }, failure: { error in
             promise.fail(error: .virtualPersistence(error))
         })

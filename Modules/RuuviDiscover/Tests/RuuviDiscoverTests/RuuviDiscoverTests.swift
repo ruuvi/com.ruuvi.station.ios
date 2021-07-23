@@ -1,11 +1,7 @@
-    import XCTest
-    @testable import RuuviDiscover
+import XCTest
+@testable import RuuviDiscover
 
-    final class RuuviDiscoverTests: XCTestCase {
-        func testExample() {
-            // This is an example of a functional test case.
-            // Use XCTAssert and related functions to verify your tests produce the correct
-            // results.
-            XCTAssertEqual(RuuviDiscover().text, "Hello, World!")
-        }
+final class RuuviDiscoverTests: XCTestCase {
+    func testExample() {
     }
+}

@@ -2,6 +2,7 @@ import Foundation
 import RuuviCloud
 import RuuviService
 import RuuviUser
+import RuuviPresenters
 
 class SignInConfigurator {
     func configure(view: SignInViewController) {

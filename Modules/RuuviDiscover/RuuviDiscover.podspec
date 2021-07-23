@@ -19,6 +19,16 @@ Pod::Spec.new do |s|
     ss.resource_bundles = {
         'RuuviDiscover' => ['Sources/**/Resources/**/*']
     }
+
+    ss.dependency 'BTKit'
+    ss.dependency 'RuuviContext'
+    ss.dependency 'RuuviReactor'
+    ss.dependency 'RuuviLocal'
+    ss.dependency 'RuuviService'
+    ss.dependency 'RuuviVirtual'
+    ss.dependency 'RuuviCore'
+    ss.dependency 'RuuviLocalization'
+    ss.dependency 'RuuviPresenters'
   end
 
   s.test_spec 'Tests' do |test_spec|

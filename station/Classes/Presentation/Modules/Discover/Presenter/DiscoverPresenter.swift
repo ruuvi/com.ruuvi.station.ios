@@ -9,6 +9,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviCore
+import RuuviPresenters
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
