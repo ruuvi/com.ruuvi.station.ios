@@ -1,4 +1,5 @@
 import UIKit
+import RuuviBundleUtils
 
 final class RuuviOnboardImageTitleViewController: UIViewController {
     init(imageName: String, titleKey: String) {

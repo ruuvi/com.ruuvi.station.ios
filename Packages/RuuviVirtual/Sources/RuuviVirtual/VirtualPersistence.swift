@@ -24,7 +24,7 @@ public protocol VirtualPersistence {
     func persist(
         provider: VirtualProvider,
         name: String
-    ) -> Future<VirtualProvider, VirtualPersistenceError>
+    ) -> Future<AnyVirtualTagSensor, VirtualPersistenceError>
 
     func persist(
         provider: VirtualProvider,

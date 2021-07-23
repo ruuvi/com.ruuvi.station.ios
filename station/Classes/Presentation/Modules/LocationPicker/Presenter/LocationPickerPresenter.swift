@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import RuuviLocation
 import RuuviCore
+import RuuviPresenters
 
 class LocationPickerPresenter: LocationPickerModuleInput {
     weak var view: LocationPickerViewInput!

@@ -6,6 +6,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviCore
+import RuuviPresenters
 
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {
