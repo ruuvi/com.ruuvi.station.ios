@@ -42,17 +42,17 @@ final class AppRouter {
     }
     private weak var weakOnboardRouter: OnboardRouter?
 
-    private func discoverRouter() -> RuuviDiscoverRouter {
+    private func discoverRouter() -> DiscoverRouter {
         if let discoverRouter = weakDiscoverRouter {
             return discoverRouter
         } else {
-            let discoverRouter = RuuviDiscoverRouter()
+            let discoverRouter = DiscoverRouter()
             discoverRouter.delegate = self
             self.weakDiscoverRouter = discoverRouter
             return discoverRouter
         }
     }
-    private weak var weakDiscoverRouter: RuuviDiscoverRouter?
+    private weak var weakDiscoverRouter: DiscoverRouter?
 }
 
 extension AppRouter: OnboardRouterDelegate {
@@ -63,8 +63,8 @@ extension AppRouter: OnboardRouterDelegate {
     }
 }
 
-extension AppRouter: RuuviDiscoverRouterDelegate {
-    func discoverRouterWantsClose(_ router: RuuviDiscoverRouter) {
+extension AppRouter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
         let storyboard = UIStoryboard(name: "Cards", bundle: .main)
         let cards = storyboard.instantiateInitialViewController()!
         navigationController.pushViewController(cards, animated: true)

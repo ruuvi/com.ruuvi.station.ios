@@ -34,7 +34,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     }
 
     func openDiscover() {
-        let discoverRouter = RuuviDiscoverRouter()
+        let discoverRouter = DiscoverRouter()
         discoverRouter.delegate = self
         let viewController = discoverRouter.viewController
         viewController.presentationController?.delegate = self
@@ -104,8 +104,8 @@ class CardsRouter: NSObject, CardsRouterInput {
 
 }
 
-extension CardsRouter: RuuviDiscoverRouterDelegate {
-    func discoverRouterWantsClose(_ router: RuuviDiscoverRouter) {
+extension CardsRouter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
         router.viewController.dismiss(animated: true)
     }
 }
