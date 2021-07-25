@@ -11,12 +11,10 @@ class LocationPickerPresenter: RuuviLocationPicker {
         } else {
             let storyboard = UIStoryboard.named("LocationPicker", for: Self.self)
             // swiftlint:disable:next force_cast
-            let navigation = storyboard.instantiateInitialViewController() as! UINavigationController
-            // swiftlint:disable:next force_cast
-            let view = navigation.topViewController as! LocationPickerAppleViewController
+            let view = storyboard.instantiateInitialViewController() as! LocationPickerAppleViewController
             view.output = self
             self.view = view
-            return navigation
+            return view
         }
     }
 
