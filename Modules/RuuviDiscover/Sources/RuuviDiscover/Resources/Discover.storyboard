@@ -120,35 +120,23 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="-70 dBm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDo-7K-kj4">
-                                            <rect key="frame" x="158" y="13" width="202" height="18"/>
+                                            <rect key="frame" x="300" y="13" width="60" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth-connected" translatesAutoresizingMaskIntoConstraints="NO" id="8Wq-4D-yx3">
-                                            <rect key="frame" x="130" y="12" width="20" height="20"/>
-                                            <color key="tintColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="20" id="HPF-zh-TYz"/>
-                                                <constraint firstAttribute="height" constant="20" id="UeC-xo-dNS"/>
-                                            </constraints>
-                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="SH5-FF-pqY" firstAttribute="centerY" secondItem="iPH-xW-e3d" secondAttribute="centerY" id="4T0-Pv-lAB"/>
                                         <constraint firstItem="SH5-FF-pqY" firstAttribute="leading" secondItem="iPH-xW-e3d" secondAttribute="leading" constant="20" id="8Lz-As-U80"/>
-                                        <constraint firstItem="8Wq-4D-yx3" firstAttribute="leading" secondItem="SH5-FF-pqY" secondAttribute="trailing" constant="8" id="9Dy-Li-s5Z"/>
-                                        <constraint firstItem="hDo-7K-kj4" firstAttribute="leading" secondItem="8Wq-4D-yx3" secondAttribute="trailing" constant="8" id="9TC-eB-nH2"/>
                                         <constraint firstItem="hDo-7K-kj4" firstAttribute="centerY" secondItem="Qdm-6q-Clj" secondAttribute="centerY" id="AJF-cK-aZh"/>
                                         <constraint firstAttribute="trailing" secondItem="Qdm-6q-Clj" secondAttribute="trailing" constant="20" id="Chw-la-VoH"/>
                                         <constraint firstItem="Qdm-6q-Clj" firstAttribute="leading" secondItem="hDo-7K-kj4" secondAttribute="trailing" constant="8" id="WqD-r8-d6f"/>
                                         <constraint firstItem="Qdm-6q-Clj" firstAttribute="centerY" secondItem="iPH-xW-e3d" secondAttribute="centerY" id="ZqR-It-0Y6"/>
-                                        <constraint firstItem="8Wq-4D-yx3" firstAttribute="centerY" secondItem="SH5-FF-pqY" secondAttribute="centerY" id="sBy-B4-Nga"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="identifierLabel" destination="SH5-FF-pqY" id="OSx-Xx-7Fd"/>
-                                    <outlet property="isConnectableImageView" destination="8Wq-4D-yx3" id="9ZZ-zj-v5m"/>
                                     <outlet property="rssiImageView" destination="Qdm-6q-Clj" id="fH5-Qr-r5B"/>
                                     <outlet property="rssiLabel" destination="hDo-7K-kj4" id="yyA-pW-x1O"/>
                                 </connections>
@@ -245,7 +233,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bluetooth-connected" width="24" height="24"/>
         <image name="bluetooth_disabled_icon" width="108" height="108"/>
         <image name="dismiss-modal-icon" width="17" height="17"/>
         <systemColor name="groupTableViewBackgroundColor">
