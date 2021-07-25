@@ -62,7 +62,8 @@ extension DiscoverRouter: RuuviDiscoverOutput {
     }
 
     func ruuviDiscoverWantsPickLocation(_ ruuviDiscover: RuuviDiscover) {
-        viewController.present(locationPicker.viewController, animated: true)
+        let navigation = UINavigationController(rootViewController: locationPicker.viewController)
+        viewController.present(navigation, animated: true)
     }
 
     func ruuviDiscoverWantsClose(_ ruuviDiscover: RuuviDiscover) {
