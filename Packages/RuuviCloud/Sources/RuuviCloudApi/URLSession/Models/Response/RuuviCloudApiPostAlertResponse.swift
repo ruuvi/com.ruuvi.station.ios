@@ -1,5 +1,5 @@
 import Foundation
 
-struct RuuviCloudApiPostAlertResponse: Decodable {
-    let action: String
+public struct RuuviCloudApiPostAlertResponse: Decodable {
+    public let action: String
 }

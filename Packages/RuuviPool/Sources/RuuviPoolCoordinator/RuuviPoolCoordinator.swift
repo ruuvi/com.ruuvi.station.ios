@@ -3,6 +3,7 @@ import Future
 import RuuviOntology
 import RuuviPersistence
 import RuuviLocal
+import RuuviPool
 
 final class RuuviPoolCoordinator: RuuviPool {
     private var sqlite: RuuviPersistence

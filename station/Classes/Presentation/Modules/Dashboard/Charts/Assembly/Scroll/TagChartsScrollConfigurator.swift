@@ -5,6 +5,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviPool
 import RuuviService
+import RuuviNotifier
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
@@ -27,7 +28,7 @@ class TagChartsScrollConfigurator {
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
-        presenter.alertHandler = r.resolve(AlertService.self)
+        presenter.alertHandler = r.resolve(RuuviNotifier.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
@@ -38,7 +39,7 @@ class TagChartsScrollConfigurator {
 
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
-        interactor.exportService = r.resolve(ExportService.self)
+        interactor.exportService = r.resolve(RuuviServiceExport.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
         interactor.ruuviPool = r.resolve(RuuviPool.self)
         interactor.ruuviStorage = r.resolve(RuuviStorage.self)

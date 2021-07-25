@@ -17,13 +17,12 @@ class TagChartsInteractor {
     var settings: RuuviLocalSettings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
-    var exportService: ExportService!
+    var exportService: RuuviServiceExport!
     var ruuviSensorRecords: RuuviServiceSensorRecords!
     var featureToggleService: FeatureToggleService!
 
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
-    private var didMigrationCompleteToken: NSObjectProtocol?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
@@ -46,7 +45,6 @@ class TagChartsInteractor {
     private var sensors: [AnyRuuviTagSensor] = []
 
     deinit {
-        didMigrationCompleteToken?.invalidate()
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
     }
@@ -133,7 +131,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(success: { (url) in
             promise.succeed(value: url)
         }, failure: { (error) in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviService(error))
         })
         return promise.future
     }
@@ -155,7 +153,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviService(error))
         })
         return promise.future
     }
@@ -183,7 +181,6 @@ extension TagChartsInteractor: TagChartModuleOutput {
     }
 
     func chartViewDidChangeViewPort(_ chartView: TagChartView) {
-        guard featureToggleService.isEnabled(.syncZoom) else { return }
         chartViews.filter({ $0 != chartView }).forEach { otherChart in
             let matrix = chartView.viewPortHandler.touchMatrix
             otherChart.viewPortHandler.refresh(
@@ -196,14 +193,6 @@ extension TagChartsInteractor: TagChartModuleOutput {
 }
 // MARK: - Private
 extension TagChartsInteractor {
-    private func startObserveMigrationCompletion() {
-        didMigrationCompleteToken = NotificationCenter
-            .default
-            .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
-                self?.restartObservingTags()
-            })
-    }
-
     private func restartScheduler() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(
@@ -325,7 +314,7 @@ extension TagChartsInteractor {
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviService(error))
         })
         return promise.future
     }

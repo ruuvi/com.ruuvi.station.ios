@@ -8,7 +8,7 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
 }
 
 extension TemperatureUnit {
-    var ruuviCloudApiSettingString: String {
+    public var ruuviCloudApiSettingString: String {
         switch self {
         case .celsius:
             return "C"
@@ -21,7 +21,7 @@ extension TemperatureUnit {
 }
 
 extension HumidityUnit {
-    var ruuviCloudApiSettingString: String {
+    public var ruuviCloudApiSettingString: String {
         switch self {
         case .percent:
             return "0"
@@ -34,7 +34,7 @@ extension HumidityUnit {
 }
 
 extension UnitPressure {
-    var ruuviCloudApiSettingString: String {
+    public var ruuviCloudApiSettingString: String {
         switch self {
         case .hectopascals:
             return "1"
@@ -50,7 +50,7 @@ extension UnitPressure {
 }
 
 extension String {
-    var ruuviCloudApiSettingUnitTemperature: TemperatureUnit? {
+    public var ruuviCloudApiSettingUnitTemperature: TemperatureUnit? {
         switch self {
         case "C":
             return .celsius
@@ -63,7 +63,7 @@ extension String {
         }
     }
 
-    var ruuviCloudApiSettingUnitHumidity: HumidityUnit? {
+    public var ruuviCloudApiSettingUnitHumidity: HumidityUnit? {
         switch self {
         case "0":
             return .percent
@@ -76,7 +76,7 @@ extension String {
         }
     }
 
-    var ruuviCloudApiSettingUnitPressure: UnitPressure? {
+    public var ruuviCloudApiSettingUnitPressure: UnitPressure? {
         switch self {
         case "0":
             return nil // TODO: @rinat support Pa

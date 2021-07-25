@@ -1,9 +1,9 @@
 import Foundation
 
-struct RuuviCloudApiVerifyResponse: Decodable {
-    let email: String
-    let accessToken: String
-    let isNewUser: Bool
+public struct RuuviCloudApiVerifyResponse: Decodable {
+    public let email: String
+    public let accessToken: String
+    public let isNewUser: Bool
 
     enum CodingKeys: String, CodingKey {
         case email

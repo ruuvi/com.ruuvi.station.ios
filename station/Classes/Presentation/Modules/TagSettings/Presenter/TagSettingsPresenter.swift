@@ -9,6 +9,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviUser
+import RuuviCore
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -22,12 +23,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     }
     var foreground: BTForeground!
     var background: BTBackground!
-    var calibrationService: CalibrationService!
     var alertService: RuuviServiceAlert!
     var settings: RuuviLocalSettings!
     var ruuviLocalImages: RuuviLocalImages!
     var connectionPersistence: RuuviLocalConnections!
-    var pushNotificationsManager: PushNotificationsManager!
+    var pushNotificationsManager: RuuviCorePN!
     var permissionPresenter: PermissionPresenter!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
@@ -36,6 +36,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var featureToggleService: FeatureToggleService!
+    var exportService: RuuviServiceExport!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -80,6 +81,16 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var backgroundUploadProgressToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
+    private var exportFileUrl: URL?
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                activityPresenter.increment()
+            } else {
+                activityPresenter.decrement()
+            }
+        }
+    }
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -123,7 +134,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                 pressureOffsetDate: nil
             )
         }
-        self.viewModel.canShowUpdateFirmware.value = featureToggleService.isEnabled(.updateFirmware)
 
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
@@ -228,16 +238,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         view.showUpdateFirmwareDialog()
     }
 
-    func viewDidTapOnHumidityAccessoryButton() {
-        view.showHumidityIsClippedDialog()
-    }
-
-    func viewDidAskToFixHumidityAdjustment() {
-        if let humidity = humidity {
-            calibrationService.calibrateHumidityTo100Percent(currentValue: humidity.value, for: ruuviTag)
-        }
-    }
-
     func viewDidTapOnAlertsDisabledView() {
         let isPN = viewModel.isPushNotificationsEnabled.value ?? false
         let isCo = viewModel.isConnected.value ?? false
@@ -301,6 +301,26 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let macId = ruuviTag.macId {
             ruuviLocalImages.deleteBackgroundUploadProgress(for: macId)
         }
+    }
+
+    func viewDidTapOnExport() {
+        isLoading = true
+        exportService.csvLog(for: ruuviTag.id)
+            .on(success: { [weak self] url in
+                #if targetEnvironment(macCatalyst)
+                guard let sSelf = self else {
+                    fatalError()
+                }
+                sSelf.exportFileUrl = url
+                sSelf.router.macCatalystExportFile(with: url, delegate: sSelf)
+                #else
+                self?.view.showExportSheet(with: url)
+                #endif
+            }, failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.isLoading = false
+            })
     }
 }
 
@@ -613,8 +633,8 @@ extension TagSettingsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier
-                    if sSelf.ruuviTag.luid?.value == luid?.value
-                        || sSelf.ruuviTag.macId?.value == macId?.value {
+                    if (sSelf.ruuviTag.luid?.value != nil && sSelf.ruuviTag.luid?.value == luid?.value)
+                        || (sSelf.ruuviTag.macId?.value != nil && sSelf.ruuviTag.macId?.value == macId?.value) {
                         if let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double {
                             sSelf.viewModel.uploadingBackgroundPercentage.value = percentage
                             sSelf.viewModel.isUploadingBackground.value = percentage < 1.0
@@ -635,8 +655,8 @@ extension TagSettingsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    if sSelf.ruuviTag.luid?.value == luid?.value
-                        || sSelf.ruuviTag.macId?.value == macId?.value {
+                    if (sSelf.ruuviTag.luid?.value != nil && sSelf.ruuviTag.luid?.value == luid?.value)
+                        || (sSelf.ruuviTag.macId?.value != nil && sSelf.ruuviTag.macId?.value == macId?.value) {
                         sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
                             .on(success: { [weak sSelf] image in
                                 sSelf?.viewModel.background.value = image
@@ -653,13 +673,13 @@ extension TagSettingsPresenter {
         ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
             case .insert(let sensor):
-                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
-                    sensor.macId?.any == self?.ruuviTag.macId?.any {
+                if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
+                    || (sensor.macId?.any != nil && sensor.macId?.any == self?.ruuviTag.macId?.any) {
                     self?.ruuviTag = sensor
                 }
             case .update(let sensor):
-                if sensor.luid?.any == self?.ruuviTag.luid?.any ||
-                    sensor.macId?.any == self?.ruuviTag.macId?.any {
+                if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
+                    || (sensor.macId?.any != nil && sensor.macId?.any == self?.ruuviTag.macId?.any) {
                     self?.ruuviTag = sensor
                 }
             case .error(let error):
@@ -740,6 +760,12 @@ extension TagSettingsPresenter {
         }
         viewModel.updateRecord(record)
         reloadMutedTill()
+
+        if viewModel.canShowUpdateFirmware.value == false
+            && featureToggleService.isEnabled(.updateFirmware)
+            && (source == .advertisement || source == .heartbeat) {
+            viewModel.canShowUpdateFirmware.value = true
+        }
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
@@ -1111,22 +1137,22 @@ extension TagSettingsPresenter {
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
                             if let userInfo = notification.userInfo {
                                if let physicalSensor
-                                    = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                                    = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
                                   physicalSensor.id == self?.viewModel.uuid.value,
-                                   let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                                   let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
                                     self?.updateIsOnState(of: type, for: physicalSensor.id)
                                     self?.updateMutedTill(of: type, for: physicalSensor.id)
                                 }
                                 if let virtualSensor
-                                    = userInfo[AlertServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
+                                    = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
                                    virtualSensor.id == self?.viewModel.uuid.value,
-                                    let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                                    let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
                                     self?.updateIsOnState(of: type, for: virtualSensor.id)
                                      self?.updateMutedTill(of: type, for: virtualSensor.id)
                                  }
@@ -1213,6 +1239,14 @@ extension TagSettingsPresenter {
         let isOn = alertService.isOn(type: type, for: uuid)
         if isOn != observable.value {
             observable.value = isOn
+        }
+    }
+}
+
+extension TagSettingsPresenter: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let url = exportFileUrl {
+            try? FileManager.default.removeItem(at: url)
         }
     }
 }

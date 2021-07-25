@@ -1,6 +1,7 @@
 import UIKit
 import RuuviContext
 import RuuviService
+import RuuviMigration
 
 class MainInitializer: NSObject {
     @IBOutlet weak var navigationController: UINavigationController!
@@ -9,14 +10,14 @@ class MainInitializer: NSObject {
         super.awakeFromNib()
         let r = AppAssembly.shared.assembler.resolver
         // the order is important
-        r.resolve(MigrationManagerToVIPER.self)?.migrateIfNeeded()
-        r.resolve(SQLiteContext.self)?.database.migrateIfNeeded()
-        r.resolve(MigrationManagerToSQLite.self)?.migrateIfNeeded()
-        r.resolve(MigrationManagerAlertService.self)?.migrateIfNeeded()
-        r.resolve(MigrationManagerToPrune240.self)?.migrateIfNeeded()
-        r.resolve(MigrationManagerToChartDuration240.self)?.migrateIfNeeded()
-        r.resolve(MigrationManagerSensorSettings.self)?.migrateIfNeeded()
-        r.resolve(MigrationManagerToRH.self)?.migrateIfNeeded()
+        r.resolve(RuuviMigration.self, name: "realm")?
+            .migrateIfNeeded()
+        r.resolve(SQLiteContext.self)?
+            .database
+            .migrateIfNeeded()
+        r.resolve(RuuviMigrationFactory.self)?
+            .createAllOrdered()
+            .forEach({ $0.migrateIfNeeded() })
         MainConfigurator().configure(navigationController: navigationController)
     }
 }

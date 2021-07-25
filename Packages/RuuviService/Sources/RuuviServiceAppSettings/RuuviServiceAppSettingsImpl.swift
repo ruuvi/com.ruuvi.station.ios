@@ -3,12 +3,13 @@ import Future
 import RuuviOntology
 import RuuviCloud
 import RuuviLocal
+import RuuviService
 
-final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
+public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     private let cloud: RuuviCloud
     private var localSettings: RuuviLocalSettings
 
-    init(
+    public init(
         cloud: RuuviCloud,
         localSettings: RuuviLocalSettings
     ) {
@@ -17,7 +18,7 @@ final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError> {
+    public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError> {
         let promise = Promise<TemperatureUnit, RuuviServiceError>()
         localSettings.temperatureUnit = temperatureUnit
         cloud.set(temperatureUnit: temperatureUnit)
@@ -30,7 +31,7 @@ final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError> {
+    public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError> {
         let promise = Promise<HumidityUnit, RuuviServiceError>()
         localSettings.humidityUnit = humidityUnit
         cloud.set(humidityUnit: humidityUnit)
@@ -43,7 +44,7 @@ final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError> {
+    public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError> {
         let promise = Promise<UnitPressure, RuuviServiceError>()
         localSettings.pressureUnit = pressureUnit
         cloud.set(pressureUnit: pressureUnit)

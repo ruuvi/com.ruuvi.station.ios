@@ -6,19 +6,31 @@ public class SensorSettingsRealm: Object {
     @objc public dynamic var luid: String?
     @objc public dynamic var macId: String?
 
-    public let temperatureOffset = RealmOptional<Double>()
+    public let temperatureOffset = RealmProperty<Double?>()
     @objc public dynamic var temperatureOffsetDate: Date?
 
-    public let humidityOffset = RealmOptional<Double>()
+    public let humidityOffset = RealmProperty<Double?>()
     @objc public dynamic var humidityOffsetDate: Date?
 
-    public let pressureOffset = RealmOptional<Double>()
+    public let pressureOffset = RealmProperty<Double?>()
     @objc public dynamic var pressureOffsetDate: Date?
 
     public convenience init(ruuviTag: RuuviTagSensor) {
         self.init()
         luid = ruuviTag.luid?.value
         macId = ruuviTag.macId?.value
+    }
+
+    public convenience init(settings: SensorSettings) {
+        self.init()
+        luid = settings.luid?.value
+        macId = settings.macId?.value
+        temperatureOffset.value = settings.temperatureOffset
+        temperatureOffsetDate = settings.temperatureOffsetDate
+        humidityOffset.value = settings.humidityOffset
+        humidityOffsetDate = settings.humidityOffsetDate
+        pressureOffset.value = settings.pressureOffset
+        pressureOffsetDate = settings.pressureOffsetDate
     }
 }
 
