@@ -288,11 +288,11 @@ extension DiscoverTableViewController {
         if let rssi = device.rssi {
             cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized()
             if rssi < -80 {
-                cell.rssiImageView.image = UIImage(named: "icon-connection-1")
+                cell.rssiImageView.image = UIImage.named("icon-connection-1", for: Self.self)
             } else if rssi < -50 {
-                cell.rssiImageView.image = UIImage(named: "icon-connection-2")
+                cell.rssiImageView.image = UIImage.named("icon-connection-2", for: Self.self)
             } else {
-                cell.rssiImageView.image = UIImage(named: "icon-connection-3")
+                cell.rssiImageView.image = UIImage.named("icon-connection-3", for: Self.self)
             }
         } else {
             cell.rssiImageView.image = nil

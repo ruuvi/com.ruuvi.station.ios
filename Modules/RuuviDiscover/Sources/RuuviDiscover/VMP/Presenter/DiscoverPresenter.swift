@@ -56,7 +56,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var lostToken: ObservationToken?
     private var virtualReactorToken: VirtualReactorToken?
     private var persistedReactorToken: RuuviReactorToken?
-    private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
+    private lazy var ruuviLogoImage = UIImage.named("ruuvi_logo", for: Self.self)
     private var lastSelectedWebTag: DiscoverVirtualTagViewModel?
 
     deinit {
@@ -75,12 +75,12 @@ extension DiscoverPresenter: DiscoverViewOutput {
         let current = DiscoverVirtualTagViewModel(
             provider: .openWeatherMap,
             locationType: .current,
-            icon: UIImage(named: "icon-webtag-current")
+            icon: UIImage.named("icon-webtag-current", for: Self.self)
         )
         let manual = DiscoverVirtualTagViewModel(
             provider: .openWeatherMap,
             locationType: .manual,
-            icon: UIImage(named: "icon-webtag-map")
+            icon: UIImage.named("icon-webtag-map", for: Self.self)
         )
         if virtualService.isCurrentLocationVirtualTagExists {
             view?.virtualTags = [manual]
