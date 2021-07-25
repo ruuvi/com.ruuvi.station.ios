@@ -209,32 +209,11 @@ extension CardsPresenter: CardsViewOutput {
     }
 }
 
-// MARK: - DiscoverModuleOutput
-extension CardsPresenter: DiscoverModuleOutput {
-    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
-        module.dismiss()
-        self.startObservingRuuviTags()
-    }
-    
-    func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
-        module.dismiss()
-        self.startObservingRuuviTags()
-    }
-    
-    func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
-        module.dismiss()
-    }
-    
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
-        module.dismiss()
-    }
-}
-
 // MARK: - MenuModuleOutput
 extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover(output: self)
+        router.openDiscover()
     }
     
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -367,7 +346,7 @@ extension CardsPresenter {
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
             && viewModels.isEmpty {
-            self.router.openDiscover(output: self)
+            self.router.openDiscover()
         }
     }
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
