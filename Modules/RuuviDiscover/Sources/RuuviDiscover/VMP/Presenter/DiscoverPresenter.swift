@@ -147,10 +147,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
 
-    func viewDidTapOnGetMoreSensors() {
-        output?.ruuviDiscoverWantsBuySensors(self)
-    }
-
     func viewDidTriggerClose() {
         output?.ruuviDiscoverWantsClose(self)
     }

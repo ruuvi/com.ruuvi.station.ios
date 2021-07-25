@@ -11,7 +11,6 @@ public protocol RuuviDiscover: AnyObject {
 
 public protocol RuuviDiscoverOutput: AnyObject {
     func ruuviDiscoverWantsClose(_ ruuviDiscover: RuuviDiscover)
-    func ruuviDiscoverWantsBuySensors(_ ruuviDiscover: RuuviDiscover)
     func ruuviDiscoverWantsPickLocation(_ ruuviDiscover: RuuviDiscover)
     func ruuvi(discover: RuuviDiscover, didAdd virtualSensor: AnyVirtualTagSensor)
     func ruuvi(discover: RuuviDiscover, didAdd ruuviTag: AnyRuuviTagSensor)
