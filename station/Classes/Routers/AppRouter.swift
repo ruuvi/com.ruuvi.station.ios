@@ -57,7 +57,7 @@ final class AppRouter {
 
 extension AppRouter: OnboardRouterDelegate {
     func onboardRouterDidFinish(_ router: OnboardRouter) {
-//        settings.welcomeShown = true
+        settings.welcomeShown = true
         let discover = self.discoverRouter().viewController
         navigationController.pushViewController(discover, animated: true)
     }
