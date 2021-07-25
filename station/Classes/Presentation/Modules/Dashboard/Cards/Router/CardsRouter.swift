@@ -33,17 +33,24 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
-    func openDiscover(output: DiscoverModuleOutput) {
-        let restorationId = "DiscoverTableNavigationController"
-        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
-            .apply(to: { (viewController) in
-                viewController.presentationController?.delegate = self
-            })
-            .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: false, output: output)
-            })
+    func openDiscover() {
+        let discoverRouter = RuuviDiscoverRouter()
+        discoverRouter.delegate = self
+        let viewController = discoverRouter.viewController
+        viewController.presentationController?.delegate = self
+        let navigationController = UINavigationController(rootViewController: viewController)
+        transitionHandler.present(navigationController, animated: true)
+
+//        let restorationId = "DiscoverTableNavigationController"
+//        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
+//        try! transitionHandler
+//            .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
+//            .apply(to: { (viewController) in
+//                viewController.presentationController?.delegate = self
+//            })
+//            .then({ (module) -> Any? in
+//                module.configure(isOpenedFromWelcome: false, output: output)
+//            })
     }
 
     func openSettings() {
@@ -106,6 +113,12 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
+}
+
+extension CardsRouter: RuuviDiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: RuuviDiscoverRouter) {
+        router.viewController.dismiss(animated: true)
+    }
 }
 
 extension CardsRouter: UIAdaptivePresentationControllerDelegate {
