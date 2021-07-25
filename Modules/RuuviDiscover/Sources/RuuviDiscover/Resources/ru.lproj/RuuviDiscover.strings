@@ -1,0 +1,14 @@
+"DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
+"DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
+"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
+"DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
+"OK" = "OK";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
+"DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
+"dBm" = "дБм";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
+"DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
+"WebTagLocationSource.current" = "Ваше текущее месторасположение";
+"WebTagLocationSource.manual" = "Месторасположение на карте";

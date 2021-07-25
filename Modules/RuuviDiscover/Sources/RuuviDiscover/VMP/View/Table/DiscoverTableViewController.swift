@@ -108,21 +108,27 @@ class DiscoverTableViewController: UITableViewController {
 extension DiscoverTableViewController: DiscoverViewInput {
 
     func localize() {
-        navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
-        getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
-        getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
+        navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
+        getMoreSensorsFooterButton.setTitle(
+            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self),
+            for: .normal
+        )
+        getMoreSensorsEmptyDataSetButton.setTitle(
+            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self),
+            for: .normal
+        )
     }
 
     func showBluetoothDisabled() {
-        let title = "DiscoverTable.BluetoothDisabledAlert.title".localized()
-        let message = "DiscoverTable.BluetoothDisabledAlert.message".localized()
+        let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
+        let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
         showAlert(title: title, message: message)
     }
 
     func showWebTagInfoDialog() {
-        let message = "DiscoverTable.WebTagsInfoDialog.message".localized()
+        let message = "DiscoverTable.WebTagsInfoDialog.message".localized(for: Self.self)
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 }
@@ -197,8 +203,8 @@ extension DiscoverTableViewController {
         case .noDevices:
             let cell = tableView.dequeueReusableCell(with: DiscoverNoDevicesTableViewCell.self, for: indexPath)
             cell.descriptionLabel.text = isBluetoothEnabled
-                ? "DiscoverTable.NoDevicesSection.NotFound.text".localized()
-                : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
+                ? "DiscoverTable.NoDevicesSection.NotFound.text".localized(for: Self.self)
+                : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized(for: Self.self)
             return cell
         }
     }
@@ -256,9 +262,9 @@ extension DiscoverTableViewController {
         let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownRuuviTags.count)
         switch sectionType {
         case .device:
-            return shownRuuviTags.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+            return shownRuuviTags.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
         case .noDevices:
-            return shownRuuviTags.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+            return shownRuuviTags.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
         default:
             return nil
         }
@@ -286,7 +292,7 @@ extension DiscoverTableViewController {
 
         // RSSI
         if let rssi = device.rssi {
-            cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized()
+            cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized(for: Self.self)
             if rssi < -80 {
                 cell.rssiImageView.image = UIImage.named("icon-connection-1", for: Self.self)
             } else if rssi < -50 {
@@ -352,10 +358,10 @@ extension DiscoverTableViewController {
     private func displayName(for device: DiscoverRuuviTagViewModel) -> String {
         // identifier
         if let mac = device.mac {
-            return "DiscoverTable.RuuviDevice.prefix".localized()
+            return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            return "DiscoverTable.RuuviDevice.prefix".localized()
+            return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
                 + " " + (device.luid?.value.prefix(4) ?? "")
         }
     }

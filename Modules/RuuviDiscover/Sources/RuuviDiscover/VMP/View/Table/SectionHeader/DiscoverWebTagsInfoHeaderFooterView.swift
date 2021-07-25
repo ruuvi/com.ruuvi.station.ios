@@ -17,7 +17,7 @@ class DiscoverWebTagsInfoHeaderFooterView: UITableViewHeaderFooterView, Localiza
     }
 
     func localize() {
-        webTagsLabel.text = "DiscoverTable.SectionTitle.WebTags".localized().uppercased()
+        webTagsLabel.text = "DiscoverTable.SectionTitle.WebTags".localized(for: Self.self).uppercased()
     }
 
     @IBAction func noValuesButtonTouchUpInside(_ sender: UIButton) {
