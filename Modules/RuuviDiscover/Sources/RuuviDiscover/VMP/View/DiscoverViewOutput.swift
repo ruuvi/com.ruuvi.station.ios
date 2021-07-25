@@ -6,7 +6,6 @@ protocol DiscoverViewOutput {
     func viewWillDisappear()
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String)
     func viewDidChoose(webTag: DiscoverVirtualTagViewModel)
-    func viewDidTapOnGetMoreSensors()
     func viewDidTriggerClose()
     func viewDidTapOnWebTagInfo()
 }
