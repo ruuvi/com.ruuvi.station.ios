@@ -57,10 +57,6 @@ extension DiscoverRouter: RuuviLocationPickerOutput {
 }
 
 extension DiscoverRouter: RuuviDiscoverOutput {
-    func ruuviDiscoverWantsBuySensors(_ ruuviDiscover: RuuviDiscover) {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
-    }
-
     func ruuviDiscoverWantsPickLocation(_ ruuviDiscover: RuuviDiscover) {
         let navigation = UINavigationController(rootViewController: locationPicker.viewController)
         viewController.present(navigation, animated: true)
