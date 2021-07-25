@@ -288,7 +288,6 @@ extension DiscoverTableViewController {
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverRuuviTagViewModel) {
 
         cell.identifierLabel.text = displayName(for: device)
-        cell.isConnectableImageView.isHidden = !device.isConnectable
 
         // RSSI
         if let rssi = device.rssi {
