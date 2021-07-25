@@ -35,7 +35,7 @@ class TagChartsRouter: TagChartsRouterInput {
     }
 
     func openDiscover() {
-        let discoverRouter = RuuviDiscoverRouter()
+        let discoverRouter = DiscoverRouter()
         discoverRouter.delegate = self
         let viewController = discoverRouter.viewController
         let navigationController = UINavigationController(rootViewController: viewController)
@@ -92,8 +92,8 @@ class TagChartsRouter: TagChartsRouterInput {
     }
 }
 
-extension TagChartsRouter: RuuviDiscoverRouterDelegate {
-    func discoverRouterWantsClose(_ router: RuuviDiscoverRouter) {
+extension TagChartsRouter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
         router.viewController.dismiss(animated: true) { [weak self] in
             self?.dismiss()
         }

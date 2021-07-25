@@ -120,8 +120,8 @@
 		0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
 		0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302422D0B19600B52E39 /* AppStateService.swift */; };
 		0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
-		0E62299526AAA0570041DCDD /* RuuviDiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62299426AAA0570041DCDD /* RuuviDiscoverRouter.swift */; };
-		0E62299626AAA0570041DCDD /* RuuviDiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62299426AAA0570041DCDD /* RuuviDiscoverRouter.swift */; };
+		0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62299426AAA0570041DCDD /* DiscoverRouter.swift */; };
+		0E62299626AAA0570041DCDD /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62299426AAA0570041DCDD /* DiscoverRouter.swift */; };
 		0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
 		0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
 		0E6C471723D305960016B46E /* StationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C471623D305960016B46E /* StationUITests.swift */; };
@@ -957,7 +957,7 @@
 		0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenterSheet.swift; sourceTree = "<group>"; };
 		0E5C302422D0B19600B52E39 /* AppStateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateService.swift; sourceTree = "<group>"; };
 		0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateServiceImpl.swift; sourceTree = "<group>"; };
-		0E62299426AAA0570041DCDD /* RuuviDiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviDiscoverRouter.swift; sourceTree = "<group>"; };
+		0E62299426AAA0570041DCDD /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
 		0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsMoreInfoHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsMoreInfoHeaderFooterView.xib; sourceTree = "<group>"; };
 		0E6C471623D305960016B46E /* StationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationUITests.swift; sourceTree = "<group>"; };
@@ -1882,7 +1882,7 @@
 			children = (
 				0E2B339A26A2BC3F00366B01 /* AppRouter.swift */,
 				0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */,
-				0E62299426AAA0570041DCDD /* RuuviDiscoverRouter.swift */,
+				0E62299426AAA0570041DCDD /* DiscoverRouter.swift */,
 			);
 			path = Routers;
 			sourceTree = "<group>";
@@ -4217,7 +4217,7 @@
 				0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				66BC449C2657AED400A03253 /* OffsetCorrectionConfigurator.swift in Sources */,
 				66718A3B266A685700A380F8 /* DfuFlashAppleInitializer.swift in Sources */,
-				0E62299626AAA0570041DCDD /* RuuviDiscoverRouter.swift in Sources */,
+				0E62299626AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				0E8BD2DD238566AB008B31EF /* Localizable.swift in Sources */,
 				0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E97D7A9268C922C00FE9D5B /* DFUInteractor.swift in Sources */,
@@ -4889,7 +4889,7 @@
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0E1B2F32239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */,
 				A90E168F24604F7400631E6C /* TagChartPresenter.swift in Sources */,
-				0E62299526AAA0570041DCDD /* RuuviDiscoverRouter.swift in Sources */,
+				0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				A9F4471624B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */,
 				A907A1D3245F7C6600041F6E /* ProgressBarView.swift in Sources */,
 				0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */,

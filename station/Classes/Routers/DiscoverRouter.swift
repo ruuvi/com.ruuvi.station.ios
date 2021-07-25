@@ -4,15 +4,15 @@ import RuuviOntology
 import BTKit
 import RuuviLocationPicker
 
-protocol RuuviDiscoverRouterDelegate: AnyObject {
-    func discoverRouterWantsClose(_ router: RuuviDiscoverRouter)
+protocol DiscoverRouterDelegate: AnyObject {
+    func discoverRouterWantsClose(_ router: DiscoverRouter)
 }
 
-final class RuuviDiscoverRouter {
+final class DiscoverRouter {
     var viewController: UIViewController {
         return self.discover.viewController
     }
-    weak var delegate: RuuviDiscoverRouterDelegate?
+    weak var delegate: DiscoverRouterDelegate?
 
     // modules
     private var discover: RuuviDiscover {
@@ -44,7 +44,7 @@ final class RuuviDiscoverRouter {
     private weak var weakLocationPicker: RuuviLocationPicker?
 }
 
-extension RuuviDiscoverRouter: RuuviLocationPickerOutput {
+extension DiscoverRouter: RuuviLocationPickerOutput {
     func ruuviLocationPickerWantsClose(_ ruuviLocationPicker: RuuviLocationPicker) {
         ruuviLocationPicker.viewController.dismiss(animated: true)
     }
@@ -56,7 +56,7 @@ extension RuuviDiscoverRouter: RuuviLocationPickerOutput {
     }
 }
 
-extension RuuviDiscoverRouter: RuuviDiscoverOutput {
+extension DiscoverRouter: RuuviDiscoverOutput {
     func ruuviDiscoverWantsBuySensors(_ ruuviDiscover: RuuviDiscover) {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
