@@ -182,7 +182,7 @@
 "TagSettings.Alerts.Connection.description" = "Notifier lorsque l'appareil est connecté/déconnecté";
 "TagSettings.ConnectionAlert.title" = "Connexion";
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
-"TagSettings.Firmware.UpdateFirmware" = "Update Firmware";
+"TagSettings.Firmware.UpdateFirmware" = "Mettre à jour le firmware";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Le résultat est nul";
 "UnexpectedError.callerDeinitedDuringOperation" = "Les invitations ont été délocalisées";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Echec de l'annulation de la géolocalisation";
@@ -268,7 +268,7 @@
 "About.Troubleshooting.contents" = "Si vous rencontrez des problèmes et que vous ne trouvez pas la réponse dans la notice, veuillez consulter la page d'assistance technique : ruuvi.com/troubles";
 "About.Troubleshooting.header" = "DÉPANNAGE TECHNIQUE";
 "TagSettings.AirHumidityAlert.title" = "Humidité de l'air (%@)";
-"HumidityUnit.gm3.title" = "Absolue (gr/m³)";
+"HumidityUnit.gm3.title" = "Absolue (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relative (%)";
 "%" = "%";
@@ -438,4 +438,25 @@
 RuuviTag est prêt à être utilisé !";
 "DfuFlash.CancelAlert.text" = "Voulez-vous annuler la mise à jour ?";
 "RuuviDfuError.invalidFirmwareFile" = "Fichier de mise à jour invalide";
+"DFUUIView.navigationTitle" = "Mise à jour du firmware";
+"DFUUIView.latestTitle" = "Dernière version du Ruuvi Firmware :";
+"DFUUIView.currentTitle" = "Version actuelle :";
+"DFUUIView.notReportingDescription" = "Impossible d'obtenir la version actuelle de l'appareil. La version est probablement trop ancienne et il est recommandé d'effectuer une mise à jour";
+"DFUUIView.alreadyOnLatest" = "L'appareil est à déjà à jour";
+"DFUUIView.startUpdateProcess" = "Début de la mise à jour";
+"DFUUIView.downloadingTitle" = "Téléchargement de la dernière version pour la mise à jour...";
+"DFUUIView.prepareTitle" = "Configuration de l'appareil pour la mise à jour";
+"DFUUIView.openCoverTitle" = "1. Ouvrir le boitier du capteur Ruuvi";
+"DFUUIView.setUpdatingModeTitle" = "2. Configuration de l'appareil pour la mise à jour";
+"DFUUIView.toBootModeTwoButtonsDescription" = "Sur un appareil à deux boutons, enfoncez le bouton B, tout en le gardant enfoncé, appuyez sur le bouton R";
+"DFUUIView.toBootModeOneButtonDescription" = "Si l'appareil n'a qu'un seul bouton, maintenez le enfoncé pendant 10 secondes";
+"DFUUIView.toBootModeSuccessTitle" = "3. Une led rouge s'allume lorsque l'appareil est configuré";
+"DFUUIView.updatingTitle" = "Mise à jour...";
+"DFUUIView.searchingTitle" = "Recherche de capteur";
+"DFUUIView.startTitle" = "Commencer la mise à jour";
+"DFUUIView.doNotCloseTitle" = "Ne pas fermer l'application ou enlever la pile du capteur pendant la mise à jour";
+"DFUUIView.successfulTitle" = "Mise à jour réussie";
+"RuuviDfuError.failedToConstructUUID" = "Echec de la création de l'UUID";
+"SignIn.EmailMismatch.Alert.message" = "Oups, vous avez demandé le code de connexion pour l'utilisateur %@ alors qu'il est destiné à l'utilisateur %@. Veuillez vérifier que vous utilisez bien le code pour %@";
+"SignIn.EmailMissing.Alert.message" = "Oups, l'adresse mail utilisée n'a pu être enregistrée. Veuillez réessayer.";
 

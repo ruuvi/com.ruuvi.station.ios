@@ -3,12 +3,22 @@ import Future
 import RuuviOntology
 import RuuviUser
 
+public struct ValidateCodeResponse {
+    public var email: String
+    public var apiKey: String
+
+    public init(email: String, apiKey: String) {
+        self.email = email
+        self.apiKey = apiKey
+    }
+}
+
 public protocol RuuviCloud {
     @discardableResult
     func requestCode(email: String) -> Future<String, RuuviCloudError>
 
     @discardableResult
-    func validateCode(code: String) -> Future<String, RuuviCloudError>
+    func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError>
 
     @discardableResult
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
@@ -100,4 +110,10 @@ public protocol RuuviCloud {
 
 public protocol RuuviCloudFactory {
     func create(baseUrl: URL, user: RuuviUser) -> RuuviCloud
+}
+
+public enum MimeType: String, Encodable {
+    case png = "image/png"
+    case gif = "image/gif"
+    case jpg = "image/jpeg"
 }

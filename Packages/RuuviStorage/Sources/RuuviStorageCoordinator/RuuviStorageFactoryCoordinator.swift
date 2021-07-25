@@ -1,5 +1,6 @@
 import Foundation
 import RuuviPersistence
+import RuuviStorage
 
 public final class RuuviStorageFactoryCoordinator: RuuviStorageFactory {
     public init() {}

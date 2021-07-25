@@ -1,7 +1,7 @@
 import Foundation
 
-struct RuuviCloudApiClaimResponse: Decodable {
-    let sensor: String
+public struct RuuviCloudApiClaimResponse: Decodable {
+    public let sensor: String
 }
-struct RuuviCloudApiUnclaimResponse: Decodable {
+public struct RuuviCloudApiUnclaimResponse: Decodable {
 }

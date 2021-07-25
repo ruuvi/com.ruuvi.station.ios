@@ -14,14 +14,20 @@ Pod::Spec.new do |s|
 
   s.default_subspecs = 'SQLite'
 
+  s.subspec 'Contract' do |ss|
+    ss.source_files = 'Sources/RuuviContext/**/*.{h,m,swift}', 'Sources/RuuviContext/*.{h,m,swift}'
+  end
+
   s.subspec 'Realm' do |ss|
     ss.source_files = 'Sources/RuuviContextRealm/**/*.{h,m,swift}', 'Sources/RuuviContextRealm/*.{h,m,swift}'
+    ss.dependency 'RuuviContext/Contract'
     ss.dependency 'Realm'
     ss.dependency 'RealmSwift'
-   end
+  end
 
   s.subspec 'SQLite' do |ss|
     ss.source_files = 'Sources/RuuviContextSQLite/**/*.{h,m,swift}', 'Sources/RuuviContextSQLite/*.{h,m,swift}'
+    ss.dependency 'RuuviContext/Contract'
     ss.dependency 'RuuviOntology/SQLite'
     ss.dependency 'GRDB.swift'
   end

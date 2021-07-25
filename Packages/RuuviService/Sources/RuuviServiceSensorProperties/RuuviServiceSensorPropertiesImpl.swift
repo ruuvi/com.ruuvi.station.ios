@@ -1,18 +1,20 @@
 import Foundation
+import UIKit
 import Future
 import RuuviOntology
 import RuuviPool
 import RuuviCloud
 import RuuviLocal
 import RuuviCore
+import RuuviService
 
-final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
+public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
     private let pool: RuuviPool
     private let cloud: RuuviCloud
     private let coreImage: RuuviCoreImage
     private let localImages: RuuviLocalImages
 
-    init(
+    public init(
         pool: RuuviPool,
         cloud: RuuviCloud,
         coreImage: RuuviCoreImage,
@@ -24,7 +26,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         self.localImages = localImages
     }
 
-    func set(
+    public func set(
         name: String,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
@@ -51,7 +53,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return promise.future
     }
 
-    func set(
+    public func set(
         image: UIImage,
         for sensor: VirtualSensor
     ) -> Future<URL, RuuviServiceError> {
@@ -67,13 +69,13 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return promise.future
     }
 
-    func setNextDefaultBackground(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
+    public func setNextDefaultBackground(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
         let luid = sensor.id.luid
         let macId: MACIdentifier? = nil
         return setNextDefaultBackground(luid: luid, macId: macId)
     }
 
-    func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
+    public func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
         let luid = sensor.luid
         let macId = sensor.macId
         if sensor.isCloud {
@@ -82,7 +84,10 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return setNextDefaultBackground(luid: luid, macId: macId)
     }
 
-    func setNextDefaultBackground(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
+    public func setNextDefaultBackground(
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?
+    ) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
         let identifier = macId ?? luid
         if let identifier = identifier {
@@ -98,7 +103,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
     }
 
     // swiftlint:disable:next function_body_length
-    func set(
+    public func set(
         image: UIImage,
         for sensor: RuuviTagSensor,
         progress: ((MACIdentifier, Double) -> Void)?,
@@ -176,17 +181,17 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return promise.future
     }
 
-    func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
+    public func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
         let luid = sensor.id.luid
         let macId: MACIdentifier? = nil
         return getImage(luid: luid, macId: macId)
     }
 
-    func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
+    public func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
         return getImage(luid: sensor.luid, macId: sensor.macId)
     }
 
-    func removeImage(for sensor: RuuviTagSensor) {
+    public func removeImage(for sensor: RuuviTagSensor) {
         if let macId = sensor.macId {
             localImages.deleteCustomBackground(for: macId)
         }
@@ -199,10 +204,11 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         }
     }
 
-    func removeImage(for sensor: VirtualSensor) {
+    public func removeImage(for sensor: VirtualSensor) {
         localImages.deleteCustomBackground(for: sensor.id.luid)
     }
 
+    @discardableResult
     private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
         guard let macId = sensor.macId else {

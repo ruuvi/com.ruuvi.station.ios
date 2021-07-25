@@ -1,5 +1,6 @@
 import Foundation
 import RuuviOntology
+import RuuviLocal
 
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
@@ -162,10 +163,10 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 15)
+    @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 30)
     var connectionTimeout: TimeInterval
 
-    @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 60)
+    @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 300)
     var serviceTimeout: TimeInterval
 
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)

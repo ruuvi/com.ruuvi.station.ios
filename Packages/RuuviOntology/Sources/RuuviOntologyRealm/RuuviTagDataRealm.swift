@@ -11,21 +11,21 @@ public final class RuuviTagDataRealm: Object {
     @objc public dynamic var sourceString: String = "unknown"
 
     // all versions
-    public let rssi = RealmOptional<Int>()
-    public let celsius = RealmOptional<Double>()
-    public let humidity = RealmOptional<Double>()
-    public let pressure = RealmOptional<Double>()
+    public let rssi = RealmProperty<Int?>()
+    public let celsius = RealmProperty<Double?>()
+    public let humidity = RealmProperty<Double?>()
+    public let pressure = RealmProperty<Double?>()
 
     // v3 & v5
-    public let accelerationX = RealmOptional<Double>()
-    public let accelerationY = RealmOptional<Double>()
-    public let accelerationZ = RealmOptional<Double>()
-    public let voltage = RealmOptional<Double>()
+    public let accelerationX = RealmProperty<Double?>()
+    public let accelerationY = RealmProperty<Double?>()
+    public let accelerationZ = RealmProperty<Double?>()
+    public let voltage = RealmProperty<Double?>()
 
     // v5
-    public let movementCounter = RealmOptional<Int>()
-    public let measurementSequenceNumber = RealmOptional<Int>()
-    public let txPower = RealmOptional<Int>()
+    public let movementCounter = RealmProperty<Int?>()
+    public let measurementSequenceNumber = RealmProperty<Int?>()
+    public let txPower = RealmProperty<Int?>()
 
     @objc public dynamic var temperatureOffset: Double = 0.0
     @objc public dynamic var humidityOffset: Double = 0.0
@@ -68,10 +68,6 @@ public final class RuuviTagDataRealm: Object {
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
-        // TODO: fixthis
-        // self.temperatureOffset = data.temperatureOffset
-        // self.humidityOffset = data.humidityOffset
-        // self.pressureOffset = data.pressureOffset
     }
 
     public convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
@@ -91,10 +87,7 @@ public final class RuuviTagDataRealm: Object {
         self.sourceString = record.source.rawValue
         self.rssi.value = record.rssi
         self.celsius.value = record.temperature?.converted(to: .celsius).value
-        if let temperature = record.temperature {
-            let humidity = record.humidity?.converted(to: .relative(temperature: temperature))
-            self.humidity.value = humidity?.value
-        }
+        self.humidity.value = record.humidity?.value
         self.pressure.value = record.pressure?.converted(to: .hectopascals).value
         self.accelerationX.value = record.acceleration?.x.value
         self.accelerationY.value = record.acceleration?.y.value

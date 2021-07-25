@@ -1,15 +1,17 @@
 import Foundation
 import CoreLocation
+import RuuviLocation
+import RuuviCore
 
 class LocationPickerPresenter: LocationPickerModuleInput {
     weak var view: LocationPickerViewInput!
     var router: LocationPickerRouterInput!
-    var locationService: LocationService!
+    var locationService: RuuviLocationService!
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
-    var permissionsManager: PermissionsManager!
+    var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
-    var locationManager: LocationManager!
+    var locationManager: RuuviCoreLocation!
 
     private var isLoading: Bool = false {
         didSet {

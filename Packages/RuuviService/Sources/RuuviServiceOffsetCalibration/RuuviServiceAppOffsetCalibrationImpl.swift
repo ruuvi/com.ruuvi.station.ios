@@ -3,12 +3,13 @@ import Future
 import RuuviOntology
 import RuuviCloud
 import RuuviPool
+import RuuviService
 
-final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration {
+public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration {
     private let cloud: RuuviCloud
     private var pool: RuuviPool
 
-    init(
+    public init(
         cloud: RuuviCloud,
         pool: RuuviPool
     ) {
@@ -17,7 +18,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
     }
 
     @discardableResult
-    func set(
+    public func set(
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor,

@@ -1,16 +1,16 @@
 import Foundation
 import RuuviOntology
 
-struct RuuviCloudApiGetSensorsResponse: Decodable {
-    let sensors: [CloudApiShareableSensor]
+public struct RuuviCloudApiGetSensorsResponse: Decodable {
+    public let sensors: [CloudApiShareableSensor]
 
-    struct CloudApiShareableSensor: Decodable {
-        let sensor: String
-        let name: String
-        let picture: String
-        let isPublic: Bool
-        let canShare: Bool
-        let sharedTo: [String]
+    public struct CloudApiShareableSensor: Decodable {
+        public let sensor: String
+        public let name: String
+        public let picture: String
+        public let isPublic: Bool
+        public let canShare: Bool
+        public let sharedTo: [String]
 
         enum CodingKeys: String, CodingKey {
             case sensor
@@ -21,7 +21,7 @@ struct RuuviCloudApiGetSensorsResponse: Decodable {
             case sharedTo
         }
 
-        var shareableSensor: ShareableSensor {
+        public var shareableSensor: ShareableSensor {
             return ShareableSensorStruct(id: sensor, sharedTo: sharedTo)
         }
     }

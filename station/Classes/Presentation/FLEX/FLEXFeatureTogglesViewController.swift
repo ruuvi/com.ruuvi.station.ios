@@ -114,8 +114,6 @@ extension FLEXFeatureTogglesViewController {
             return "Network"
         case .updateFirmware:
             return "Update Firmware"
-        case .syncZoom:
-            return "Sync Zoom"
         case .dpahAlerts:
             return "DP and AH Alerts"
         }

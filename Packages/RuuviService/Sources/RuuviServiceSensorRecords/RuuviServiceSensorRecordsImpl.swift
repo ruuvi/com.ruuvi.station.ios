@@ -3,12 +3,13 @@ import Future
 import RuuviOntology
 import RuuviPool
 import RuuviLocal
+import RuuviService
 
-final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
+public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
     private let pool: RuuviPool
     private let localSyncState: RuuviLocalSyncState
 
-    init(
+    public init(
         pool: RuuviPool,
         localSyncState: RuuviLocalSyncState
     ) {
@@ -17,7 +18,7 @@ final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
     }
 
     @discardableResult
-    func clear(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
+    public func clear(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
         pool.deleteAllRecords(sensor.id)
             .on(success: { [weak self] _ in

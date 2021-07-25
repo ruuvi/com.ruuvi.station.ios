@@ -5,6 +5,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviUser
+import RuuviCore
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -20,11 +21,10 @@ class TagSettingsTableConfigurator {
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
-        presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
@@ -34,8 +34,9 @@ class TagSettingsTableConfigurator {
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
+        presenter.exportService = r.resolve(RuuviServiceExport.self)
 
-        view.measurementService = r.resolve(MeasurementsService.self)
+        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
     }

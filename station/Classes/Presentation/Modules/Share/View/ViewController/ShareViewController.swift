@@ -117,6 +117,13 @@ extension ShareViewController: ShareViewInput {
         }
         cell.emailTextField.text = nil
     }
+
+    func showInvalidEmail() {
+        showAlert(
+            title: nil,
+            message: "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
+        )
+    }
 }
 extension ShareViewController: ShareEmailTableViewCellDelegate {
     func didTapUnshare(for email: String) {

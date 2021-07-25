@@ -1,4 +1,4 @@
 import Foundation
 
-struct RuuviCloudApiUnshareResponse: Decodable {
+public struct RuuviCloudApiUnshareResponse: Decodable {
 }

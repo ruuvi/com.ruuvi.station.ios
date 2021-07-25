@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import Foundation
-import RealmSwift
 import BTKit
 import UIKit
 import Charts
@@ -10,6 +9,9 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
+import RuuviNotification
+import RuuviNotifier
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -27,7 +29,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     var alertService: RuuviServiceAlert!
-    var alertHandler: AlertService!
+    var alertHandler: RuuviNotifier!
     var background: BTBackground!
 
     var feedbackEmail: String!
@@ -60,7 +62,6 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
-    private var exportFileUrl: URL?
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -164,25 +165,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view.showSyncConfirmationDialog(for: viewModel)
     }
 
-    func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
-        isLoading = true
-        interactor.export().on(success: { [weak self] url in
-            #if targetEnvironment(macCatalyst)
-            guard let sSelf = self else {
-                fatalError()
-            }
-            sSelf.exportFileUrl = url
-            sSelf.router.macCatalystExportFile(with: url, delegate: sSelf)
-            #else
-            self?.view.showExportSheet(with: url)
-            #endif
-        }, failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.isLoading = false
-        })
-    }
-
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
         view.showClearConfirmationDialog(for: viewModel)
     }
@@ -269,7 +251,7 @@ extension TagChartsPresenter: DiscoverModuleOutput {
         }
     }
 
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
+    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
         module.dismiss { [weak self] in
             self?.router.dismiss()
         }
@@ -337,9 +319,10 @@ extension TagChartsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - AlertServiceObserver
-extension TagChartsPresenter: AlertServiceObserver {
-    func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
+// MARK: - RuuviNotifierObserver
+extension TagChartsPresenter: RuuviNotifierObserver {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+        guard uuid == viewModel.uuid.value else { return }
         let newValue: AlertState = isTriggered ? .firing : .registered
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue
@@ -362,7 +345,6 @@ extension TagChartsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension TagChartsPresenter {
-
     private func tryToShowSwipeUpHint() {
         if UIWindow.isLandscape
             && !settings.tagChartsLandscapeSwipeInstructionWasShown {
@@ -480,13 +462,13 @@ extension TagChartsPresenter {
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceAlertDidChange,
+            .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
             if let sSelf = self,
                 let userInfo = notification.userInfo,
-                let physicalSensor = userInfo[AlertServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
                 self?.viewModel.mac.value == physicalSensor.macId?.value {
                 if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                     self?.viewModel.alertState.value = .registered
@@ -576,14 +558,6 @@ extension TagChartsPresenter {
             }
             self?.interactor.restartObservingData()
         })
-    }
-}
-
-extension TagChartsPresenter: UIDocumentPickerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        if let url = exportFileUrl {
-            try? FileManager.default.removeItem(at: url)
-        }
     }
 }
 // swiftlint:enable file_length

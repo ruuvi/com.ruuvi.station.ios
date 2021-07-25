@@ -1,5 +1,6 @@
 import Foundation
 
-struct RuuviCloudApiGetAlertsRequest: Encodable {
+public struct RuuviCloudApiGetAlertsRequest: Encodable {
     var sensor: String?
+    public init() {}
 }

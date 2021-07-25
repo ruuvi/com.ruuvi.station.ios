@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 protocol KeychainService {
     var ruuviUserApiKey: String? { get set }

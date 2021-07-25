@@ -110,3 +110,18 @@ extension SensorSettingsSQLite {
         )
     }
 }
+
+extension SensorSettings {
+    public var sqlite: SensorSettingsSQLite {
+        return SensorSettingsSQLite(
+            luid: luid,
+            macId: macId,
+            temperatureOffset: temperatureOffset,
+            temperatureOffsetDate: temperatureOffsetDate,
+            humidityOffset: humidityOffset,
+            humidityOffsetDate: humidityOffsetDate,
+            pressureOffset: pressureOffset,
+            pressureOffsetDate: pressureOffsetDate
+        )
+    }
+}

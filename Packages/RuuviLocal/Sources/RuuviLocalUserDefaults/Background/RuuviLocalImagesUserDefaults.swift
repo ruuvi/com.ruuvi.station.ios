@@ -1,6 +1,7 @@
 import UIKit
 import Future
 import RuuviOntology
+import RuuviLocal
 
 final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     init(imagePersistence: ImagePersistence) {
@@ -48,7 +49,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func getBackground(for identifier: Identifier) -> UIImage? {
-        var id = backgroundId(for: identifier)
+        let id = backgroundId(for: identifier)
         if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {

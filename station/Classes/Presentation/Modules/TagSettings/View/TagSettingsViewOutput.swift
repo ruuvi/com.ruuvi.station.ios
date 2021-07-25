@@ -15,13 +15,12 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnTxPower()
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
-    func viewDidTapOnHumidityAccessoryButton()
-    func viewDidAskToFixHumidityAdjustment()
     func viewDidTapOnAlertsDisabledView()
     func viewDidAskToConnectFromAlertsDisabledDialog()
     func viewDidTapClaimButton()
     func viewDidTapShareButton()
     func viewDidTapOnBackgroundIndicator()
+    func viewDidTapOnExport()
 
     // Offset Correction
     func viewDidTapTemperatureOffsetCorrection()
