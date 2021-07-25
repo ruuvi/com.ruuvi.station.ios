@@ -40,17 +40,6 @@ class CardsRouter: NSObject, CardsRouterInput {
         viewController.presentationController?.delegate = self
         let navigationController = UINavigationController(rootViewController: viewController)
         transitionHandler.present(navigationController, animated: true)
-
-//        let restorationId = "DiscoverTableNavigationController"
-//        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
-//        try! transitionHandler
-//            .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
-//            .apply(to: { (viewController) in
-//                viewController.presentationController?.delegate = self
-//            })
-//            .then({ (module) -> Any? in
-//                module.configure(isOpenedFromWelcome: false, output: output)
-//            })
     }
 
     func openSettings() {

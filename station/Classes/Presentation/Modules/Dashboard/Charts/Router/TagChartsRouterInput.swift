@@ -4,7 +4,7 @@ import RuuviVirtual
 
 protocol TagChartsRouterInput {
     func dismiss(completion: (() -> Void)?)
-    func openDiscover(output: DiscoverModuleOutput)
+    func openDiscover()
     func openSettings()
     func openAbout()
     func openRuuviWebsite()

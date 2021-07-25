@@ -34,14 +34,12 @@ class TagChartsRouter: TagChartsRouterInput {
             .perform()
     }
 
-    func openDiscover(output: DiscoverModuleOutput) {
-        let restorationId = "DiscoverTableNavigationController"
-        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
-            .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: false, output: output)
-            })
+    func openDiscover() {
+        let discoverRouter = RuuviDiscoverRouter()
+        discoverRouter.delegate = self
+        let viewController = discoverRouter.viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        transitionHandler.present(navigationController, animated: true)
     }
 
     func openAbout() {
@@ -91,5 +89,13 @@ class TagChartsRouter: TagChartsRouterInput {
             .then({ (module) -> Any? in
                 module.configure(with: .enterEmail, output: output)
             })
+    }
+}
+
+extension TagChartsRouter: RuuviDiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: RuuviDiscoverRouter) {
+        router.viewController.dismiss(animated: true) { [weak self] in
+            self?.dismiss()
+        }
     }
 }
