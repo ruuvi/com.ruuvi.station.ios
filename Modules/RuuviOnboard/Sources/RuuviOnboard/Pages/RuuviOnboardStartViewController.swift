@@ -59,7 +59,6 @@ final class RuuviOnboardStartViewController: UIViewController {
             view.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 20),
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             button.heightAnchor.constraint(equalToConstant: 50),
-            button.widthAnchor.constraint(equalToConstant: 120),
             guide.topAnchor.constraint(equalTo: imageView.bottomAnchor),
             guide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -97,6 +96,7 @@ extension RuuviOnboardStartViewController {
         button.layer.cornerRadius = 25
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.white.cgColor
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return button
     }
 }
