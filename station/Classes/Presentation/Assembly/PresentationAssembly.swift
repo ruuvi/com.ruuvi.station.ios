@@ -1,10 +1,10 @@
 import Swinject
 import SwinjectPropertyLoader
 import RuuviCore
+import RuuviPresenters
 
 class PresentationAssembly: Assembly {
     func assemble(container: Container) {
-
         let config = PlistPropertyLoader(bundle: .main, name: "Presentation")
         try! container.applyPropertyLoader(config)
 

@@ -12,6 +12,7 @@ import RuuviService
 import RuuviVirtual
 import RuuviNotification
 import RuuviNotifier
+import RuuviPresenters
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -243,38 +244,12 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
         alertPresenter.showAlert(alertViewModel)
     }
 }
-// MARK: - DiscoverModuleOutput
-extension TagChartsPresenter: DiscoverModuleOutput {
-    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-
-    func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-
-    func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-}
 
 // MARK: - MenuModuleOutput
 extension TagChartsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover(output: self)
+        router.openDiscover()
     }
 
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {

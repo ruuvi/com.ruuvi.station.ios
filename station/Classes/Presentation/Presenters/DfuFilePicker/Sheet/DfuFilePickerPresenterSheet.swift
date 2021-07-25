@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import RuuviCore
+import RuuviPresenters
 
 class DfuFilePickerPresenterSheet: NSObject, DfuFilePickerPresenter {
     weak var delegate: DfuFilePickerPresenterDelegate?

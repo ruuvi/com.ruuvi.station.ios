@@ -181,8 +181,8 @@
 "TagSettings.Alerts.Pressure.description" = "Hälytä, mikäli ilmanpaine %.0f tai yli %.0f";
 "TagSettings.Alerts.Connection.description" = "Hälytä, mikäli yhteys muodostettu/yhteys menetetty";
 "TagSettings.ConnectionAlert.title" = "Yhteys";
-"TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
-"TagSettings.Firmware.UpdateFirmware" = "Update Firmware";
+"TagSettings.SectionHeader.Firmware.title" = "LAITEOHJELMISTO";
+"TagSettings.Firmware.UpdateFirmware" = "Päivitä laiteohjelmisto";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
