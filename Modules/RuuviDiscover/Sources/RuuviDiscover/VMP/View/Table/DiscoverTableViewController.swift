@@ -30,7 +30,6 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
-    @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
 
     private var alertVC: UIAlertController?
@@ -109,10 +108,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
-        getMoreSensorsFooterButton.setTitle(
-            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self),
-            for: .normal
-        )
         getMoreSensorsEmptyDataSetButton.setTitle(
             "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self),
             for: .normal
@@ -137,10 +132,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
 extension DiscoverTableViewController {
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerClose()
-    }
-
-    @IBAction func getMoreSensorsTableFooterViewButtonTouchUpInside(_ sender: Any) {
-        output.viewDidTapOnGetMoreSensors()
     }
 }
 

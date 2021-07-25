@@ -39,30 +39,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                         <view key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" id="Zgc-HN-yFj">
-                            <rect key="frame" x="0.0" y="198" width="414" height="150"/>
+                            <rect key="frame" x="0.0" y="198" width="414" height="1"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0v4-V1-W6B">
-                                    <rect key="frame" x="100.5" y="53.5" width="213" height="43"/>
-                                    <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                    <state key="normal" title="GET MORE SENSORS"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="22"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="getMoreSensorsTableFooterViewButtonTouchUpInside:" destination="KWd-e4-kyA" eventType="touchUpInside" id="vJW-F3-emx"/>
-                                    </connections>
-                                </button>
-                            </subviews>
                             <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
-                            <constraints>
-                                <constraint firstItem="0v4-V1-W6B" firstAttribute="centerY" secondItem="Zgc-HN-yFj" secondAttribute="centerY" id="6ol-Hu-Uju"/>
-                                <constraint firstItem="0v4-V1-W6B" firstAttribute="centerX" secondItem="Zgc-HN-yFj" secondAttribute="centerX" id="hye-7u-5WE"/>
-                            </constraints>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverWebTagTableViewCell" id="Pdq-EP-b1c" customClass="DiscoverWebTagTableViewCell" customModule="RuuviDiscover" customModuleProvider="target">
@@ -184,7 +163,6 @@
                         <outlet property="closeBarButtonItem" destination="wzL-rj-N05" id="38R-M9-MDJ"/>
                         <outlet property="getMoreSensorsEmptyDataSetButton" destination="Fwc-BS-iKB" id="7Es-MS-Uf3"/>
                         <outlet property="getMoreSensorsEmptyDataSetView" destination="QrL-fM-HUZ" id="GlA-pj-S1F"/>
-                        <outlet property="getMoreSensorsFooterButton" destination="0v4-V1-W6B" id="Sgy-ZK-NDL"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F67-h2-RM0" userLabel="First Responder" sceneMemberID="firstResponder"/>
