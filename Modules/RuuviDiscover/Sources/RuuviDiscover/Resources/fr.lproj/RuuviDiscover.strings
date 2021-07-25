@@ -1,0 +1,14 @@
+"DiscoverTable.NavigationItem.title" = "Ajouter un capteur";
+"DiscoverTable.GetMoreSensors.button.title" = "ACHETER DES CAPTEURS";
+"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth désactivé";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station a besoin du Bluetooth pour fonctionner. Activez-le dans les paramètres de votre appareil.";
+"DiscoverTable.WebTagsInfoDialog.message" = "Les capteurs virtuels permettent d'afficher des données recueillies à partir de stations météorologiques locales.";
+"OK" = "OK";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "(Pas de capteurs à portée du Bluetooth)";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth désactivé)";
+"DiscoverTable.SectionTitle.Devices" = "Capteurs Ruuvi à proximité";
+"dBm" = "dBm";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
+"DiscoverTable.SectionTitle.WebTags" = "Capteurs virtuels";
+"WebTagLocationSource.current" = "Localisation actuelle";
+"WebTagLocationSource.manual" = "Choisir sur la carte";
