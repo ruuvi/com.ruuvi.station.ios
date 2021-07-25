@@ -6,6 +6,7 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 import RuuviCore
+import RuuviPresenters
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {

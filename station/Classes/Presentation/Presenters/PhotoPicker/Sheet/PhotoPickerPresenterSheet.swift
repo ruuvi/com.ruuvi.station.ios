@@ -1,6 +1,7 @@
 import UIKit
 import MobileCoreServices
 import RuuviCore
+import RuuviPresenters
 
 class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     weak var delegate: PhotoPickerPresenterDelegate?

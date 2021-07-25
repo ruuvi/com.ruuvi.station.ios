@@ -3,6 +3,7 @@ import Future
 import RuuviCloud
 import RuuviService
 import RuuviUser
+import RuuviPresenters
 
 class SignInPresenter: NSObject {
     enum State {

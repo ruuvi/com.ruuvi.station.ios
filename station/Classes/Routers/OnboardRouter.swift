@@ -13,8 +13,8 @@ final class OnboardRouter {
 
     // modules
     private var onboard: RuuviOnboard {
-        if let review = self.weakOnboard {
-            return review
+        if let onboard = self.weakOnboard {
+            return onboard
         } else {
             let onboard = RuuviOnboardPages()
             onboard.router = self

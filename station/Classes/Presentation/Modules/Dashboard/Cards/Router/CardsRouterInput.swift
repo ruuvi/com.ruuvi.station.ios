@@ -4,7 +4,7 @@ import RuuviVirtual
 
 protocol CardsRouterInput {
     func openMenu(output: MenuModuleOutput)
-    func openDiscover(output: DiscoverModuleOutput)
+    func openDiscover()
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
