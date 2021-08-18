@@ -383,7 +383,18 @@ extension TagSettingsPresenter {
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
-        viewModel.owner.value = ruuviTag.owner
+
+        // Not set / Someone else / email of the one who shared the sensor with you / You
+        if let owner = ruuviTag.owner {
+            if owner == ruuviUser.email {
+                viewModel.owner.value = "TagSettings.ImOwner.title".localized()
+            } else {
+                viewModel.owner.value = owner
+            }
+        } else {
+            viewModel.owner.value = "TagSettings.EmptyOwner.title".localized()
+        }
+
         viewModel.isClaimedTag.value = ruuviTag.isClaimed
 
         if (ruuviTag.name == ruuviTag.luid?.value

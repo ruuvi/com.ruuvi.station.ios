@@ -9,10 +9,10 @@ enum TagSettingsTableSection: Int {
     case name = 1
     case connection = 2
     case alerts = 3
-    case offsetCorrection = 4
-    case moreInfo = 5
-    case firmware = 6
-    case networkInfo = 7
+    case ownership = 4
+    case offsetCorrection = 5
+    case moreInfo = 6
+    case firmware = 7
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -26,9 +26,8 @@ enum TagSettingsTableSection: Int {
         return TagSettingsTableSection(rawValue: sectionIndex) ?? .name
     }
 
-    static func showNetworkInfo(for viewModel: TagSettingsViewModel?) -> Bool {
+    static func showOwnership(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isAuthorized.value == true
-            && viewModel?.owner.value?.isEmpty == false
     }
 
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
@@ -393,9 +392,9 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
-        case .networkInfo:
-            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
-                ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
+        case .ownership:
+            return TagSettingsTableSection.showOwnership(for: viewModel)
+                ? "TagSettings.SectionHeader.Ownership.title".localized() : nil
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
@@ -438,8 +437,8 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
-        case .networkInfo:
-            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+        case .ownership:
+            return TagSettingsTableSection.showOwnership(for: viewModel)
                 ? 44 : .leastNormalMagnitude
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
@@ -473,8 +472,8 @@ extension TagSettingsTableViewController {
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
 
-        case .networkInfo:
-            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+        case .ownership:
+            return TagSettingsTableSection.showOwnership(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)

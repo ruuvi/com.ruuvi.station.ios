@@ -459,3 +459,6 @@
 "RuuviDfuError.failedToConstructUUID" = "Не удалось создать UUID";
 "SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
 "SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
+"TagSettings.EmptyOwner.title" = "Не установлено";
+"TagSettings.ImOwner.title" = "Вы";
+"TagSettings.SectionHeader.Ownership.title" = "Владелец";
