@@ -303,13 +303,16 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    public func claim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError> {
+    public func claim(
+        name: String,
+        macId: MACIdentifier
+    ) -> Future<MACIdentifier, RuuviCloudError> {
         let promise = Promise<MACIdentifier, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiClaimRequest(name: nil, sensor: macId.value)
+        let request = RuuviCloudApiClaimRequest(name: name, sensor: macId.value)
         api.claim(request, authorization: apiKey)
             .on(success: { response in
                 promise.succeed(value: response.sensor.mac)
