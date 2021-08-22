@@ -68,7 +68,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
-        cloud.claim(macId: macId)
+        cloud.claim(name: sensor.name, macId: macId)
             .on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 let claimedSensor = sensor.with(isClaimed: true)
