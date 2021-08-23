@@ -49,7 +49,8 @@ public protocol RuuviServiceFactory {
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
         localImages: RuuviLocalImages,
-        storage: RuuviStorage
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -115,7 +116,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
         localImages: RuuviLocalImages,
-        storage: RuuviStorage
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert
     ) -> RuuviServiceOwnership {
         return RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
@@ -123,7 +125,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             propertiesService: propertiesService,
             localIDs: localIDs,
             localImages: localImages,
-            storage: storage
+            storage: storage,
+            alertService: alertService
         )
     }
 
