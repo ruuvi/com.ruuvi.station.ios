@@ -25,6 +25,7 @@ public protocol RuuviLocalImages {
     func getBackground(for identifier: Identifier) -> UIImage?
     func setBackground(_ id: Int, for identifier: Identifier)
     func setNextDefaultBackground(for identifier: Identifier) -> UIImage?
+    func getCustomBackground(for identifier: Identifier) -> UIImage?
     func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RuuviLocalError>
     func deleteCustomBackground(for uuid: Identifier)
 
