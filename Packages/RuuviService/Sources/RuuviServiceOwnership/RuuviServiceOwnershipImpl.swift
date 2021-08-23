@@ -13,19 +13,22 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let propertiesService: RuuviServiceSensorProperties
     private let localIDs: RuuviLocalIDs
     private let localImages: RuuviLocalImages
+    private let storage: RuuviStorage
 
     public init(
         cloud: RuuviCloud,
         pool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
-        localImages: RuuviLocalImages
+        localImages: RuuviLocalImages,
+        storage: RuuviStorage
     ) {
         self.cloud = cloud
         self.pool = pool
         self.propertiesService = propertiesService
         self.localIDs = localIDs
         self.localImages = localImages
+        self.storage = storage
     }
 
     @discardableResult
@@ -65,6 +68,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
+    // swiftlint:disable:next function_body_length
     public func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         guard let macId = sensor.macId else {
@@ -98,6 +102,18 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                         } else {
                             promise.succeed(value: claimedSensor.any)
                         }
+
+                        ssSelf.storage
+                            .readSensorSettings(sensor)
+                            .on { [weak ssSelf] settings in
+                                guard let sssSelf = ssSelf else { return }
+                                sssSelf.cloud.update(
+                                    temperatureOffset: settings?.temperatureOffset ?? 0,
+                                    humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
+                                    pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPA local, Pa on cloud
+                                    for: sensor
+                                ).on()
+                            }
                     }, failure: { error in
                         promise.fail(error: .ruuviPool(error))
                     })
