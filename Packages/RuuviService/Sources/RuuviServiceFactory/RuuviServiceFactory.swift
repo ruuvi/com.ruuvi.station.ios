@@ -42,12 +42,15 @@ public protocol RuuviServiceFactory {
         ruuviAlertService: RuuviServiceAlert
     ) -> RuuviServiceCloudSync
 
+    // swiftlint:disable:next function_parameter_count
     func createOwnership(
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
-        localImages: RuuviLocalImages
+        localImages: RuuviLocalImages,
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -106,19 +109,24 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         )
     }
 
+    // swiftlint:disable:next function_parameter_count
     public func createOwnership(
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
-        localImages: RuuviLocalImages
+        localImages: RuuviLocalImages,
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert
     ) -> RuuviServiceOwnership {
         return RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
             pool: ruuviPool,
             propertiesService: propertiesService,
             localIDs: localIDs,
-            localImages: localImages
+            localImages: localImages,
+            storage: storage,
+            alertService: alertService
         )
     }
 
