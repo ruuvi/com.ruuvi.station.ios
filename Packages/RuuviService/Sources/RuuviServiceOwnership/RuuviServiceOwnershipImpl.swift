@@ -12,17 +12,20 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let pool: RuuviPool
     private let propertiesService: RuuviServiceSensorProperties
     private let localIDs: RuuviLocalIDs
+    private let localImages: RuuviLocalImages
 
     public init(
         cloud: RuuviCloud,
         pool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localImages: RuuviLocalImages
     ) {
         self.cloud = cloud
         self.pool = pool
         self.propertiesService = propertiesService
         self.localIDs = localIDs
+        self.localImages = localImages
     }
 
     @discardableResult
@@ -74,8 +77,27 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 let claimedSensor = sensor.with(isClaimed: true)
                 sSelf.pool
                     .update(claimedSensor)
-                    .on(success: { _ in
-                        promise.succeed(value: claimedSensor.any)
+                    .on(success: { [weak sSelf] _ in
+                        guard let ssSelf = sSelf else { return }
+                        if let customImage = ssSelf.localImages.getCustomBackground(for: macId) {
+                            if let jpegData = customImage.jpegData(compressionQuality: 1.0) {
+                                let remote = ssSelf.cloud.upload(
+                                    imageData: jpegData,
+                                    mimeType: .jpg,
+                                    progress: nil,
+                                    for: macId
+                                )
+                                remote.on(success: { _ in
+                                    promise.succeed(value: claimedSensor.any)
+                                }, failure: { error in
+                                    promise.fail(error: .ruuviCloud(error))
+                                })
+                            } else {
+                                promise.fail(error: .failedToGetJpegRepresentation)
+                            }
+                        } else {
+                            promise.succeed(value: claimedSensor.any)
+                        }
                     }, failure: { error in
                         promise.fail(error: .ruuviPool(error))
                     })
@@ -97,7 +119,9 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         cloud.unclaim(macId: macId)
             .on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
-                let unclaimedSensor = sensor.with(isClaimed: false)
+                let unclaimedSensor = sensor
+                    .with(isClaimed: false)
+                    .withoutOwner()
                 sSelf.pool
                     .update(unclaimedSensor)
                     .on(success: { _ in
