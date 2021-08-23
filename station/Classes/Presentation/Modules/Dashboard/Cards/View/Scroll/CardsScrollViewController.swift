@@ -361,8 +361,8 @@ extension CardsScrollViewController {
     }
 
     private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
-        view.chartsButtonContainerView.bind(viewModel.isConnectable) {(view, isConnectable) in
-            view.isHidden = !isConnectable.bound
+        view.chartsButtonContainerView.bind(viewModel.isChartAvailable) { view, isChartAvailable in
+            view.isHidden = !isChartAvailable.bound
         }
 
         let type = viewModel.type
