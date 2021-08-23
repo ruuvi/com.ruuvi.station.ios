@@ -35,6 +35,7 @@ struct CardsViewModel {
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
+    var isChartAvailable: Observable<Bool?> = Observable<Bool?>()
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
@@ -84,6 +85,7 @@ struct CardsViewModel {
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
+        isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud
     }
 
     func update(_ record: RuuviTagSensorRecord) {
@@ -102,6 +104,11 @@ struct CardsViewModel {
     func update(with ruuviTag: RuuviTag) {
         if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable, ruuviTag.isConnectable {
             isConnectable.value = ruuviTag.isConnectable
+            if let isChart = isChartAvailable.value,
+               !isChart,
+               ruuviTag.isConnectable {
+                isChartAvailable.value = true
+            }
         }
         temperature.value = ruuviTag.temperature
         humidity.value = ruuviTag.humidity
