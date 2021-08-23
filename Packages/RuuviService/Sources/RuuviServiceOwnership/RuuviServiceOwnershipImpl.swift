@@ -14,6 +14,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let localIDs: RuuviLocalIDs
     private let localImages: RuuviLocalImages
     private let storage: RuuviStorage
+    private let alertService: RuuviServiceAlert
 
     public init(
         cloud: RuuviCloud,
@@ -21,7 +22,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
         localImages: RuuviLocalImages,
-        storage: RuuviStorage
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert
     ) {
         self.cloud = cloud
         self.pool = pool
@@ -29,6 +31,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         self.localIDs = localIDs
         self.localImages = localImages
         self.storage = storage
+        self.alertService = alertService
     }
 
     @discardableResult
@@ -114,6 +117,12 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                                     for: sensor
                                 ).on()
                             }
+
+                        AlertType.allCases.forEach { type in
+                            if let alert = ssSelf.alertService.alert(for: sensor, of: type) {
+                                ssSelf.alertService.register(type: alert, ruuviTag: claimedSensor)
+                            }
+                        }
                     }, failure: { error in
                         promise.fail(error: .ruuviPool(error))
                     })
