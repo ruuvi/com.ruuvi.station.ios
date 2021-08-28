@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Owner View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="OwnerViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fQr-YC-dHG">
+                                <rect key="frame" x="20" y="64" width="374" height="385.5"/>
+                                <mutableString key="text">Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.
+
+Benefits:
+
+● Sensor names, background images, offsets and alert settings will be securely stored in the cloud
+
+● Access sensors remotely over the Internet (requires a Ruuvi Gateway)
+
+● Share sensors with friends and family (requires a Ruuvi Gateway)
+
+● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kzt-pX-QVM">
+                                <rect key="frame" x="104" y="481.5" width="206" height="44"/>
+                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="YoW-Uo-mXN"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                <state key="normal" title="CLAIM OWNERSHIP"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="22"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="claimOwnershipButtonTouchUpInside:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="5qX-iv-xEs"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="fQr-YC-dHG" secondAttribute="trailing" constant="20" id="F81-8O-eN8"/>
+                            <constraint firstItem="fQr-YC-dHG" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="jdY-AG-NIh"/>
+                            <constraint firstItem="kzt-pX-QVM" firstAttribute="centerX" secondItem="fQr-YC-dHG" secondAttribute="centerX" id="nds-SH-kCH"/>
+                            <constraint firstItem="kzt-pX-QVM" firstAttribute="top" secondItem="fQr-YC-dHG" secondAttribute="bottom" constant="32" id="qwC-pC-qr7"/>
+                            <constraint firstItem="fQr-YC-dHG" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="20" id="tSg-tn-otd"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="claimDescriptionLabel" destination="fQr-YC-dHG" id="d8h-sz-WP7"/>
+                        <outlet property="claimOwnershipButton" destination="kzt-pX-QVM" id="gaZ-Ja-b5A"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="235-8Z-uVw" customClass="OwnerInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="Y6W-OH-hqX" id="sLw-Wy-v11"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="113.04347826086958" y="71.651785714285708"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

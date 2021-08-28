@@ -328,6 +328,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
                 self?.isLoading = false
             })
     }
+
+    func viewDidTapOnOwner() {
+        router.openOwner()
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
