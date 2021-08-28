@@ -459,6 +459,5 @@ RuuviTag-sensorn är redo att användas!";
 "RuuviDfuError.failedToConstructUUID" = "Det gick inte att skapa UUID";
 "SignIn.EmailMismatch.Alert.message" = "Oj, du har begärt koden för %@, men använde koden för %@. Kontrollera att du använder koden för %@";
 "SignIn.EmailMissing.Alert.message" = "Oj, e-postadressen du har använt för att få koden sparades inte. Försök att logga in igen ";
-"TagSettings.EmptyOwner.title" = "Not set";
-"TagSettings.ImOwner.title" = "You";
-"TagSettings.SectionHeader.Ownership.title" = "OWNERSHIP";
+"TagSettings.SectionHeader.General.title" = "General";
+"TagSettings.General.Owner.none" = "None";
