@@ -330,7 +330,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidTapOnOwner() {
-        router.openOwner()
+        if viewModel.isClaimedTag.value == false {
+            router.openOwner()
+        }
     }
 }
 
@@ -401,7 +403,7 @@ extension TagSettingsPresenter {
             viewModel.owner.value = "TagSettings.General.Owner.none".localized()
         }
 
-        viewModel.isClaimedTag.value = ruuviTag.isClaimed
+        viewModel.isClaimedTag.value = ruuviTag.isClaimed || !ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
