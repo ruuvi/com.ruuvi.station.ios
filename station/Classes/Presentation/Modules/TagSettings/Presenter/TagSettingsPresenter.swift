@@ -331,7 +331,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnOwner() {
         if viewModel.isClaimedTag.value == false {
-            router.openOwner()
+            router.openOwner(ruuviTag: ruuviTag)
         }
     }
 }

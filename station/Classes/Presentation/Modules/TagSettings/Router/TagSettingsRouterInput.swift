@@ -9,7 +9,7 @@ protocol TagSettingsRouterInput {
                               ruuviTag: RuuviTagSensor,
                               sensorSettings: SensorSettings?)
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
-    func openOwner()
+    func openOwner(ruuviTag: RuuviTagSensor)
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?)
 }
 extension TagSettingsRouterInput {
