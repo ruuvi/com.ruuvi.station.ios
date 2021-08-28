@@ -165,7 +165,8 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: luid)
-                || background.isConnected(uuid: luid.value) {
+                || background.isConnected(uuid: luid.value)
+                || viewModel.isConnectable.value == false {
                 router.openTagCharts()
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
