@@ -52,6 +52,14 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
             .delegate = self
     }
 
+    func openOwner() {
+        let factory = StoryboardFactory(storyboardName: "Owner")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: OwnerModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .perform()
+    }
+
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
         let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
         controller.delegate = delegate

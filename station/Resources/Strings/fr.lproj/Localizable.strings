@@ -460,5 +460,8 @@ RuuviTag est prêt à être utilisé !";
 "SignIn.EmailMismatch.Alert.message" = "Oups, vous avez demandé le code de connexion pour l'utilisateur %@ alors qu'il est destiné à l'utilisateur %@. Veuillez vérifier que vous utilisez bien le code pour %@";
 "SignIn.EmailMissing.Alert.message" = "Oups, l'adresse mail utilisée n'a pu être enregistrée. Veuillez réessayer.";
 "TagSettings.SectionHeader.General.title" = "General";
+"Owner.title" = "Claim sensor";
+"Owner.ClaimOwnership.button" = "CLAIM OWNERSHIP";
+"Owner.Claim.description" = "Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.\n\nBenefits:\n\n ● Sensor names, background images, offsets and alert settings will be securely stored in the cloud\n\n ● Access sensors remotely over the Internet (requires a Ruuvi Gateway)\n\n ● Share sensors with friends and family (requires a Ruuvi Gateway)\n\n ● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)";
 "TagSettings.General.Owner.none" = "None";
 

@@ -359,6 +359,8 @@ extension TagSettingsTableViewController {
         switch cell {
         case tagNameCell:
             tagNameTextField.becomeFirstResponder()
+        case networkOwnerCell:
+            output.viewDidTapOnOwner()
         case macAddressCell:
             output.viewDidTapOnMacAddress()
         case uuidCell:
