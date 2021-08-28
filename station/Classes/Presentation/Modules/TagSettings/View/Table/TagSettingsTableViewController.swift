@@ -779,6 +779,10 @@ extension TagSettingsTableViewController {
         }
         tagNameTextField.bind(viewModel.name) { $0.text = $1 }
 
+        networkOwnerCell.bind(viewModel.isClaimedTag) { cell, isClaimed in
+            cell.accessoryType = (isClaimed ?? false) ? .none : .disclosureIndicator
+        }
+
         let emptyValueString = "TagSettings.EmptyValue.sign"
 
         uuidValueLabel.bind(viewModel.uuid) { label, uuid in
