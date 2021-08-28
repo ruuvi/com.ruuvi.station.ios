@@ -460,7 +460,10 @@
 "SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
 "SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
 "TagSettings.SectionHeader.General.title" = "Основное";
+"TagSettings.Shared.title" = "Shared";
+"TagSettings.NotShared.title" = "Not shared";
 "Owner.title" = "Claim sensor";
 "Owner.ClaimOwnership.button" = "CLAIM OWNERSHIP";
 "Owner.Claim.description" = "Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.\n\nBenefits:\n\n ● Sensor names, background images, offsets and alert settings will be securely stored in the cloud\n\n ● Access sensors remotely over the Internet (requires a Ruuvi Gateway)\n\n ● Share sensors with friends and family (requires a Ruuvi Gateway)\n\n ● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)";
 "TagSettings.General.Owner.none" = "Нет";
+"TagSettings.Share.title" = "Поделиться";

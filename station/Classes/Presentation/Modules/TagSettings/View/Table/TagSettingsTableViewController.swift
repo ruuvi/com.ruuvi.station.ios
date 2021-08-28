@@ -29,6 +29,10 @@ enum TagSettingsTableSection: Int {
         return viewModel?.isAuthorized.value == true
     }
 
+    static func showShare(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isClaimedTag.value == true
+    }
+
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.canShowUpdateFirmware.value ?? false
     }
@@ -61,6 +65,10 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var networkOwnerCell: UITableViewCell!
     @IBOutlet weak var networkOwnerLabel: UILabel!
     @IBOutlet weak var networkOwnerValueLabel: UILabel!
+
+    @IBOutlet weak var shareCell: UITableViewCell!
+    @IBOutlet weak var shareTitleLabel: UILabel!
+    @IBOutlet weak var shareValueLabel: UILabel!
 
     @IBOutlet weak var networkTagActionsStackView: UIStackView!
     @IBOutlet weak var claimTagButton: UIButton!
@@ -190,6 +198,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
         shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
+
+        shareTitleLabel.text = "TagSettings.Share.title".localized()
 
         tableView.reloadData()
     }
@@ -361,6 +371,8 @@ extension TagSettingsTableViewController {
             tagNameTextField.becomeFirstResponder()
         case networkOwnerCell:
             output.viewDidTapOnOwner()
+        case shareCell:
+            output.viewDidTapShareButton()
         case macAddressCell:
             output.viewDidTapOnMacAddress()
         case uuidCell:
@@ -462,7 +474,14 @@ extension TagSettingsTableViewController {
         switch s {
         case .general:
             let showOwner = TagSettingsTableSection.showOwner(for: viewModel)
-            return showOwner ? 2 : 1
+            let showShare = TagSettingsTableSection.showShare(for: viewModel)
+            if showOwner && showShare {
+                return 3
+            } else if showOwner {
+                return 2
+            } else {
+                return 1
+            }
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
