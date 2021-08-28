@@ -30,7 +30,7 @@ enum TagSettingsTableSection: Int {
     }
 
     static func showShare(for viewModel: TagSettingsViewModel?) -> Bool {
-        return viewModel?.isClaimedTag.value == true
+        return viewModel?.canShareTag.value == true
     }
 
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
