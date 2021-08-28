@@ -257,20 +257,26 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapClaimButton() {
         if viewModel.isClaimedTag.value == true {
+            isLoading = true
             ruuviOwnershipService
                 .unclaim(sensor: ruuviTag)
                 .on(success: { [weak self] unclaimedSensor in
                     self?.ruuviTag = unclaimedSensor
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
+                }, completion: { [weak self] in
+                    self?.isLoading = false
                 })
         } else {
+            isLoading = true
             ruuviOwnershipService
                 .claim(sensor: ruuviTag)
                 .on(success: { [weak self] claimedSensor in
                     self?.ruuviTag = claimedSensor
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
+                }, completion: { [weak self] in
+                    self?.isLoading = false
                 })
         }
     }
