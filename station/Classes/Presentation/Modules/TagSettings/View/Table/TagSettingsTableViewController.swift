@@ -6,13 +6,12 @@ import RuuviService
 
 enum TagSettingsTableSection: Int {
     case image = 0
-    case name = 1
+    case general = 1
     case connection = 2
     case alerts = 3
-    case ownership = 4
-    case offsetCorrection = 5
-    case moreInfo = 6
-    case firmware = 7
+    case offsetCorrection = 4
+    case moreInfo = 5
+    case firmware = 6
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -23,10 +22,10 @@ enum TagSettingsTableSection: Int {
     }
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
-        return TagSettingsTableSection(rawValue: sectionIndex) ?? .name
+        return TagSettingsTableSection(rawValue: sectionIndex) ?? .general
     }
 
-    static func showOwnership(for viewModel: TagSettingsViewModel?) -> Bool {
+    static func showOwner(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isAuthorized.value == true
     }
 
@@ -385,16 +384,13 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = TagSettingsTableSection.section(for: section)
         switch section {
-        case .name:
-            return "TagSettings.SectionHeader.Name.title".localized()
+        case .general:
+            return "TagSettings.SectionHeader.General.title".localized()
         case .offsetCorrection:
             return "TagSettings.SectionHeader.OffsetCorrection.Title".localized()
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
-        case .ownership:
-            return TagSettingsTableSection.showOwnership(for: viewModel)
-                ? "TagSettings.SectionHeader.Ownership.title".localized() : nil
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
@@ -437,9 +433,6 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
-        case .ownership:
-            return TagSettingsTableSection.showOwnership(for: viewModel)
-                ? 44 : .leastNormalMagnitude
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? 44 : .leastNormalMagnitude
@@ -465,15 +458,14 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
+        case .general:
+            let showOwner = TagSettingsTableSection.showOwner(for: viewModel)
+            return showOwner ? 2 : 1
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
-                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
-
-        case .ownership:
-            return TagSettingsTableSection.showOwnership(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)

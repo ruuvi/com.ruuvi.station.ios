@@ -459,6 +459,5 @@ RuuviTag on valmis käyttöön!";
 "RuuviDfuError.failedToConstructUUID" = "UUID:n muodostaminen epäonnistui";
 "SignIn.EmailMismatch.Alert.message" = "Hupsis, olet pyytänyt kirjautumiskoodia käyttäjälle %@ mutta käytettävä koodi on tarkoitettu käyttäjälle %@. Tarkasta, että saamasi koodi on käyttäjälle %@";
 "SignIn.EmailMissing.Alert.message" = "Hupsis, kirjautumiskoodin saamiseksi antamaasi sähköpostia ei voitu tallentaa. Yritä kirjautumista uudelleen";
-"TagSettings.EmptyOwner.title" = "Not set";
-"TagSettings.ImOwner.title" = "You";
-"TagSettings.SectionHeader.Ownership.title" = "OWNERSHIP";
+"TagSettings.SectionHeader.General.title" = "General";
+"TagSettings.General.Owner.none" = "None";
