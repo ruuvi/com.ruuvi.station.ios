@@ -176,7 +176,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRemoveRuuviTag() {
-        view.showTagRemovalConfirmationDialog()
+        if viewModel.isClaimedTag.value == true {
+            view.showUnclaimAndRemoveConfirmationDialog()
+        } else {
+            view.showTagRemovalConfirmationDialog()
+        }
     }
 
     func viewDidConfirmTagRemoval() {

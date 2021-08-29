@@ -181,7 +181,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="2902.5" width="414" height="145"/>
+                            <rect key="frame" x="0.0" y="2996.5" width="414" height="145"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Cy9-GG-Tpy">
@@ -1702,6 +1702,30 @@ IMAGE</string>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="REMOVE" id="1KJ-PV-K4R" userLabel="REMOVE">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="3oB-8c-jKg">
+                                        <rect key="frame" x="0.0" y="2934.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3oB-8c-jKg" id="4wG-gl-PQx">
+                                            <rect key="frame" x="0.0" y="0.0" width="384.5" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove this sensor" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ugR-ba-KjB">
+                                                    <rect key="frame" x="20" y="11.5" width="149" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ugR-ba-KjB" firstAttribute="centerY" secondItem="4wG-gl-PQx" secondAttribute="centerY" id="Fmf-ee-RPq"/>
+                                                <constraint firstItem="ugR-ba-KjB" firstAttribute="leading" secondItem="4wG-gl-PQx" secondAttribute="leading" constant="20" id="yiU-MW-DaF"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="JXe-xp-HbB" id="ACm-2h-12K"/>
@@ -1770,7 +1794,9 @@ IMAGE</string>
                         <outlet property="pressureOffsetCorrectionCell" destination="PD5-5y-2Bd" id="cY0-Sg-KiZ"/>
                         <outlet property="pressureOffsetTitleLabel" destination="TIj-c2-cuT" id="4LZ-4V-N5c"/>
                         <outlet property="pressureOffsetValueLabel" destination="a7V-zj-ZUa" id="yLx-ac-8Np"/>
+                        <outlet property="removeCell" destination="3oB-8c-jKg" id="zY1-fa-ctI"/>
                         <outlet property="removeThisRuuviTagButton" destination="dfl-wc-2o6" id="4Jd-nv-rA2"/>
+                        <outlet property="removeThisSensorLabel" destination="ugR-ba-KjB" id="IIy-Xc-0Hq"/>
                         <outlet property="rhAlertControlsCell" destination="0uX-4K-glb" id="M0T-SZ-t8D"/>
                         <outlet property="rhAlertHeaderCell" destination="rdU-ws-jAF" id="ZPd-aQ-sHl"/>
                         <outlet property="rssiTitleLabel" destination="Y0Y-YA-ftf" id="h7M-S2-h6L"/>
