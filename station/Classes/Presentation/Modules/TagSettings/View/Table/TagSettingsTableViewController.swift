@@ -12,6 +12,7 @@ enum TagSettingsTableSection: Int {
     case offsetCorrection = 4
     case moreInfo = 5
     case firmware = 6
+    case remove = 7
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -131,6 +132,9 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var exportBarButtonItem: UIBarButtonItem!
 
+    @IBOutlet weak var removeThisSensorLabel: UILabel!
+    @IBOutlet weak var removeCell: UITableViewCell!
+
     var viewModel: TagSettingsViewModel? {
         didSet {
             bindViewModel()
@@ -201,12 +205,27 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         shareTitleLabel.text = "TagSettings.Share.title".localized()
 
+
+        removeThisSensorLabel.text = "TagSettings.RemoveThisSensor.title".localized()
         tableView.reloadData()
     }
 
     func showTagRemovalConfirmationDialog() {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
         let message = "TagSettings.confirmTagRemovalDialog.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
+                                            self?.output.viewDidConfirmTagRemoval()
+                                           }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+
+    func showUnclaimAndRemoveConfirmationDialog() {
+        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
+        let message = "TagSettings.confirmTagUnclaimAndRemoveDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(),
                                            style: .destructive,
@@ -389,6 +408,8 @@ extension TagSettingsTableViewController {
             output.viewDidTapOnPressureOffsetCorrection()
         case updateFirmwareCell:
             output.viewDidTapOnUpdateFirmware()
+        case removeCell:
+            output.viewDidAskToRemoveRuuviTag()
         default:
             break
         }
@@ -408,6 +429,8 @@ extension TagSettingsTableViewController {
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
+        case .remove:
+            return "TagSettings.SectionHeader.Remove.title".localized()
         default:
             return nil
         }
