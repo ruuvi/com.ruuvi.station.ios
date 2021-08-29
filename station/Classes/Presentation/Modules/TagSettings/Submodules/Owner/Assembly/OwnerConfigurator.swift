@@ -13,7 +13,7 @@ final class OwnerConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
-        
+
         view.output = presenter
     }
 }
