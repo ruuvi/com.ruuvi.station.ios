@@ -4,6 +4,7 @@ protocol TagSettingsViewInput: ViewInput {
     var viewModel: TagSettingsViewModel? { get set }
 
     func showTagRemovalConfirmationDialog()
+    func showUnclaimAndRemoveConfirmationDialog()
     func showMacAddressDetail()
     func showUUIDDetail()
     func showUpdateFirmwareDialog()

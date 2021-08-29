@@ -6,6 +6,7 @@ import RuuviLocal
 import RuuviCore
 import RuuviRepository
 import RuuviService
+import RuuviUser
 #if canImport(RuuviServiceAlert)
 import RuuviServiceAlert
 #endif
@@ -50,7 +51,8 @@ public protocol RuuviServiceFactory {
         localIDs: RuuviLocalIDs,
         localImages: RuuviLocalImages,
         storage: RuuviStorage,
-        alertService: RuuviServiceAlert
+        alertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -117,7 +119,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         localIDs: RuuviLocalIDs,
         localImages: RuuviLocalImages,
         storage: RuuviStorage,
-        alertService: RuuviServiceAlert
+        alertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser
     ) -> RuuviServiceOwnership {
         return RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
@@ -126,7 +129,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             localIDs: localIDs,
             localImages: localImages,
             storage: storage,
-            alertService: alertService
+            alertService: alertService,
+            ruuviUser: ruuviUser
         )
     }
 
