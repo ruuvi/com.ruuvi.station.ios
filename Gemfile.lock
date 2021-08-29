@@ -275,6 +275,7 @@ DEPENDENCIES
   cocoapods
   fastlane
   fastlane-plugin-firebase_app_distribution
+  i18n (~> 1.8)
 
 BUNDLED WITH
    2.2.8
