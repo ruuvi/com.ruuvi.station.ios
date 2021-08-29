@@ -176,7 +176,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRemoveRuuviTag() {
-        view.showTagRemovalConfirmationDialog()
+        if viewModel.isClaimedTag.value == true && ruuviTag.isOwner {
+            view.showUnclaimAndRemoveConfirmationDialog()
+        } else {
+            view.showTagRemovalConfirmationDialog()
+        }
     }
 
     func viewDidConfirmTagRemoval() {
@@ -328,6 +332,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
                 self?.isLoading = false
             })
     }
+
+    func viewDidTapOnOwner() {
+        if viewModel.isClaimedTag.value == false {
+            router.openOwner(ruuviTag: ruuviTag)
+        }
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -389,8 +399,15 @@ extension TagSettingsPresenter {
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
-        viewModel.owner.value = ruuviTag.owner
-        viewModel.isClaimedTag.value = ruuviTag.isClaimed
+
+        // Not set / Someone else / email of the one who shared the sensor with you / You
+        if let owner = ruuviTag.owner {
+            viewModel.owner.value = owner
+        } else {
+            viewModel.owner.value = "TagSettings.General.Owner.none".localized()
+        }
+
+        viewModel.isClaimedTag.value = ruuviTag.isClaimed || !ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
