@@ -83,6 +83,19 @@ extension RuuviTagSensor {
         )
     }
 
+    public func with(owner: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner
+        )
+    }
+
     public func with(macId: MACIdentifier) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,

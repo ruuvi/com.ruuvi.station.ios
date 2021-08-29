@@ -6,13 +6,13 @@ import RuuviService
 
 enum TagSettingsTableSection: Int {
     case image = 0
-    case name = 1
+    case general = 1
     case connection = 2
     case alerts = 3
     case offsetCorrection = 4
     case moreInfo = 5
     case firmware = 6
-    case networkInfo = 7
+    case remove = 7
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -23,12 +23,15 @@ enum TagSettingsTableSection: Int {
     }
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
-        return TagSettingsTableSection(rawValue: sectionIndex) ?? .name
+        return TagSettingsTableSection(rawValue: sectionIndex) ?? .general
     }
 
-    static func showNetworkInfo(for viewModel: TagSettingsViewModel?) -> Bool {
+    static func showOwner(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isAuthorized.value == true
-            && viewModel?.owner.value?.isEmpty == false
+    }
+
+    static func showShare(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.canShareTag.value == true
     }
 
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
@@ -64,9 +67,9 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var networkOwnerLabel: UILabel!
     @IBOutlet weak var networkOwnerValueLabel: UILabel!
 
-    @IBOutlet weak var networkTagActionsStackView: UIStackView!
-    @IBOutlet weak var claimTagButton: UIButton!
-    @IBOutlet weak var shareTagButton: UIButton!
+    @IBOutlet weak var shareCell: UITableViewCell!
+    @IBOutlet weak var shareTitleLabel: UILabel!
+    @IBOutlet weak var shareValueLabel: UILabel!
 
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
@@ -121,9 +124,11 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var updateFirmwareCell: UITableViewCell!
     @IBOutlet weak var updateFirmwareTitleLabel: UILabel!
 
-    @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var exportBarButtonItem: UIBarButtonItem!
+
+    @IBOutlet weak var removeThisSensorLabel: UILabel!
+    @IBOutlet weak var removeCell: UITableViewCell!
 
     var viewModel: TagSettingsViewModel? {
         didSet {
@@ -161,7 +166,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
-        removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
 
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
@@ -189,16 +193,30 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         updateFirmwareTitleLabel.text = "TagSettings.Firmware.UpdateFirmware".localized()
 
-        claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
-        shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
 
+        shareTitleLabel.text = "TagSettings.Share.title".localized()
+
+        removeThisSensorLabel.text = "TagSettings.RemoveThisSensor.title".localized()
         tableView.reloadData()
     }
 
     func showTagRemovalConfirmationDialog() {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
         let message = "TagSettings.confirmTagRemovalDialog.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
+                                            self?.output.viewDidConfirmTagRemoval()
+                                           }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+
+    func showUnclaimAndRemoveConfirmationDialog() {
+        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
+        let message = "TagSettings.confirmTagUnclaimAndRemoveDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(),
                                            style: .destructive,
@@ -308,11 +326,6 @@ extension TagSettingsTableViewController {
         output.viewDidAskToDismiss()
     }
 
-    @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
-        playImpact()
-        output.viewDidAskToRemoveRuuviTag()
-    }
-
     @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRandomizeBackground()
     }
@@ -329,16 +342,6 @@ extension TagSettingsTableViewController {
 
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
-    }
-
-    @IBAction func didTapClaimButton(_ sender: UIButton) {
-        playImpact()
-        output.viewDidTapClaimButton()
-    }
-
-    @IBAction func didTapShareButton(_ sender: UIButton) {
-        playImpact()
-        output.viewDidTapShareButton()
     }
 
     @IBAction func exportBarButtonItemAction(_ sender: Any) {
@@ -361,6 +364,10 @@ extension TagSettingsTableViewController {
         switch cell {
         case tagNameCell:
             tagNameTextField.becomeFirstResponder()
+        case networkOwnerCell:
+            output.viewDidTapOnOwner()
+        case shareCell:
+            output.viewDidTapShareButton()
         case macAddressCell:
             output.viewDidTapOnMacAddress()
         case uuidCell:
@@ -377,6 +384,8 @@ extension TagSettingsTableViewController {
             output.viewDidTapOnPressureOffsetCorrection()
         case updateFirmwareCell:
             output.viewDidTapOnUpdateFirmware()
+        case removeCell:
+            output.viewDidAskToRemoveRuuviTag()
         default:
             break
         }
@@ -386,19 +395,18 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = TagSettingsTableSection.section(for: section)
         switch section {
-        case .name:
-            return "TagSettings.SectionHeader.Name.title".localized()
+        case .general:
+            return "TagSettings.SectionHeader.General.title".localized()
         case .offsetCorrection:
             return "TagSettings.SectionHeader.OffsetCorrection.Title".localized()
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
-        case .networkInfo:
-            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
-                ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
+        case .remove:
+            return "TagSettings.SectionHeader.Remove.title".localized()
         default:
             return nil
         }
@@ -438,9 +446,6 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
-        case .networkInfo:
-            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
-                ? 44 : .leastNormalMagnitude
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? 44 : .leastNormalMagnitude
@@ -466,15 +471,21 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
+        case .general:
+            let showOwner = TagSettingsTableSection.showOwner(for: viewModel)
+            let showShare = TagSettingsTableSection.showShare(for: viewModel)
+            if showOwner && showShare {
+                return 3
+            } else if showOwner {
+                return 2
+            } else {
+                return 1
+            }
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
-                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
-
-        case .networkInfo:
-            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
@@ -719,7 +730,6 @@ extension TagSettingsTableViewController {
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
-        bindTagNetworkActions()
 
         guard isViewLoaded, let viewModel = viewModel else { return }
 
@@ -785,6 +795,10 @@ extension TagSettingsTableViewController {
             }
         }
         tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+
+        networkOwnerCell.bind(viewModel.isClaimedTag) { cell, isClaimed in
+            cell.accessoryType = (isClaimed ?? false) ? .none : .disclosureIndicator
+        }
 
         let emptyValueString = "TagSettings.EmptyValue.sign"
 
@@ -1442,33 +1456,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-// MARK: - bind tag network actions
-    func bindTagNetworkActions() {
-        guard isViewLoaded, let viewModel = viewModel else {
-            return
-        }
-        let enabledColor = UIColor(red: 21/255, green: 141/255, blue: 165/255, alpha: 1.0)
-        let disabledColor = UIColor.gray
-        networkTagActionsStackView.bind(viewModel.isAuthorized) { (stack, isAuthorized) in
-            stack.isHidden = !(isAuthorized ?? false)
-        }
-        claimTagButton.bind(viewModel.canClaimTag) { (button, canClaimTag) in
-            let canClaimTag: Bool = canClaimTag ?? false
-            button.isEnabled = canClaimTag
-            button.backgroundColor = canClaimTag ? enabledColor : disabledColor
-        }
-        shareTagButton.bind(viewModel.canShareTag) { (button, canShareTag) in
-            let canShareTag: Bool = canShareTag ?? false
-            button.isEnabled = canShareTag
-            button.backgroundColor = canShareTag ? enabledColor : disabledColor
-        }
-        claimTagButton.bind(viewModel.isClaimedTag) { (button, isClaimedTag) in
-                let title = isClaimedTag ?? false
-                    ? "TagSettings.ClaimTagButton.Unclaim".localized()
-                    : "TagSettings.ClaimTagButton.Claim".localized()
-                button.setTitle(title, for: .normal)
-        }
-    }
     private func bindOffsetCorrectionCells() {
         guard isViewLoaded, let viewModel = viewModel else {
             return
