@@ -6,6 +6,7 @@ import RuuviCloud
 import RuuviPool
 import RuuviLocal
 import RuuviService
+import RuuviUser
 
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
@@ -15,6 +16,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let localImages: RuuviLocalImages
     private let storage: RuuviStorage
     private let alertService: RuuviServiceAlert
+    private let ruuviUser: RuuviUser
 
     public init(
         cloud: RuuviCloud,
@@ -23,7 +25,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         localIDs: RuuviLocalIDs,
         localImages: RuuviLocalImages,
         storage: RuuviStorage,
-        alertService: RuuviServiceAlert
+        alertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser
     ) {
         self.cloud = cloud
         self.pool = pool
@@ -32,6 +35,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         self.localImages = localImages
         self.storage = storage
         self.alertService = alertService
+        self.ruuviUser = ruuviUser
     }
 
     @discardableResult
@@ -78,10 +82,16 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
+        guard let owner = ruuviUser.email else {
+            promise.fail(error: .ruuviCloud(.notAuthorized))
+            return promise.future
+        }
         cloud.claim(name: sensor.name, macId: macId)
             .on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
-                let claimedSensor = sensor.with(isClaimed: true)
+                let claimedSensor = sensor
+                    .with(owner: owner)
+                    .with(isClaimed: true)
                 sSelf.pool
                     .update(claimedSensor)
                     .on(success: { [weak sSelf] _ in
