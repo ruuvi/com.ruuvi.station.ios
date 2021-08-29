@@ -702,6 +702,7 @@ private final class BusinessAssembly: Assembly {
             let localImages = r.resolve(RuuviLocalImages.self)!
             let storage = r.resolve(RuuviStorage.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
+            let user = r.resolve(RuuviUser.self)!
             return factory.createOwnership(
                 ruuviCloud: cloud,
                 ruuviPool: pool,
@@ -709,7 +710,8 @@ private final class BusinessAssembly: Assembly {
                 localIDs: localIDs,
                 localImages: localImages,
                 storage: storage,
-                alertService: alertService
+                alertService: alertService,
+                ruuviUser: user
             )
         }
 
