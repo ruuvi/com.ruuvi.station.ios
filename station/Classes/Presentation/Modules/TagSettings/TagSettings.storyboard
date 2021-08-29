@@ -181,81 +181,9 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="2996.5" width="414" height="145"/>
+                            <rect key="frame" x="0.0" y="2996.5" width="414" height="20"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Cy9-GG-Tpy">
-                                    <rect key="frame" x="79.5" y="8" width="255" height="107"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="sUo-Yp-ntD">
-                                            <rect key="frame" x="0.0" y="0.0" width="255" height="44"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cnr-Pg-Ahg">
-                                                    <rect key="frame" x="0.0" y="0.0" width="96" height="44"/>
-                                                    <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="NML-2L-tix"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                                    <state key="normal" title="Claim"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="22"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <action selector="didTapClaimButton:" destination="JXe-xp-HbB" eventType="touchUpInside" id="gYi-2V-P2i"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rSk-oG-8no">
-                                                    <rect key="frame" x="160" y="0.0" width="95" height="44"/>
-                                                    <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="taa-bJ-drZ"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                                    <state key="normal" title="Share"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="22"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <action selector="didTapShareButton:" destination="JXe-xp-HbB" eventType="touchUpInside" id="8wH-gs-B0H"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="44" id="8fR-rw-kJT"/>
-                                            </constraints>
-                                        </stackView>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
-                                            <rect key="frame" x="68" y="64" width="119" height="43"/>
-                                            <color key="backgroundColor" red="0.082352941176470587" green="0.55294117647058827" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                            <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                            <state key="normal" title="REMOVE"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="22"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="removeThisRuuviTagButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="btN-AQ-GfZ"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                </stackView>
-                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" secondItem="Cy9-GG-Tpy" secondAttribute="bottom" constant="30" id="JKm-Wl-63A"/>
-                                <constraint firstItem="Cy9-GG-Tpy" firstAttribute="centerX" secondItem="oC8-Vk-na9" secondAttribute="centerX" id="cAQ-Ej-yph"/>
-                                <constraint firstItem="Cy9-GG-Tpy" firstAttribute="top" secondItem="oC8-Vk-na9" secondAttribute="top" constant="8" id="vMz-qj-iUM"/>
-                            </constraints>
                         </view>
                         <sections>
                             <tableViewSection headerTitle="" id="JWO-yA-kVd">
@@ -1756,7 +1684,6 @@ IMAGE</string>
                         <outlet property="backgroundImageLabel" destination="K60-4C-oF8" id="PW8-0e-kwo"/>
                         <outlet property="backgroundImageView" destination="PPK-KZ-0TC" id="1NZ-SW-ZHa"/>
                         <outlet property="batteryVoltageTitleLabel" destination="Wim-BP-74w" id="6Vj-s0-VH2"/>
-                        <outlet property="claimTagButton" destination="Cnr-Pg-Ahg" id="F62-gQ-IBw"/>
                         <outlet property="connectStatusLabel" destination="j9c-gN-4Da" id="5ZL-zl-roh"/>
                         <outlet property="connectionAlertDescriptionCell" destination="SHq-wf-GdC" id="jdS-2I-0Ez"/>
                         <outlet property="connectionAlertHeaderCell" destination="Ys9-CY-kSW" id="IeI-Se-lG3"/>
@@ -1788,21 +1715,18 @@ IMAGE</string>
                         <outlet property="networkOwnerCell" destination="uaJ-tK-9dE" id="1ui-bY-IQt"/>
                         <outlet property="networkOwnerLabel" destination="MkW-gb-yNU" id="0A3-3t-Hyh"/>
                         <outlet property="networkOwnerValueLabel" destination="unu-ZE-wgc" id="VqC-Vc-2CM"/>
-                        <outlet property="networkTagActionsStackView" destination="sUo-Yp-ntD" id="xDU-GU-T8T"/>
                         <outlet property="pressureAlertControlsCell" destination="iu5-8h-FfM" id="8O1-Jh-XUC"/>
                         <outlet property="pressureAlertHeaderCell" destination="wNV-cm-93s" id="JJH-kL-bVA"/>
                         <outlet property="pressureOffsetCorrectionCell" destination="PD5-5y-2Bd" id="cY0-Sg-KiZ"/>
                         <outlet property="pressureOffsetTitleLabel" destination="TIj-c2-cuT" id="4LZ-4V-N5c"/>
                         <outlet property="pressureOffsetValueLabel" destination="a7V-zj-ZUa" id="yLx-ac-8Np"/>
                         <outlet property="removeCell" destination="3oB-8c-jKg" id="zY1-fa-ctI"/>
-                        <outlet property="removeThisRuuviTagButton" destination="dfl-wc-2o6" id="4Jd-nv-rA2"/>
                         <outlet property="removeThisSensorLabel" destination="ugR-ba-KjB" id="IIy-Xc-0Hq"/>
                         <outlet property="rhAlertControlsCell" destination="0uX-4K-glb" id="M0T-SZ-t8D"/>
                         <outlet property="rhAlertHeaderCell" destination="rdU-ws-jAF" id="ZPd-aQ-sHl"/>
                         <outlet property="rssiTitleLabel" destination="Y0Y-YA-ftf" id="h7M-S2-h6L"/>
                         <outlet property="rssiValueLabel" destination="U7H-cA-ndl" id="got-g4-YZe"/>
                         <outlet property="shareCell" destination="s4o-2E-Wm9" id="2tD-i2-lYP"/>
-                        <outlet property="shareTagButton" destination="rSk-oG-8no" id="bfH-eZ-ivw"/>
                         <outlet property="shareTitleLabel" destination="Lde-Fp-xs7" id="Rbq-9k-1Ok"/>
                         <outlet property="shareValueLabel" destination="5Dd-GB-1Kw" id="6Md-ey-0Zv"/>
                         <outlet property="tagNameCell" destination="Ltg-8j-gFv" id="ITi-X4-fhs"/>

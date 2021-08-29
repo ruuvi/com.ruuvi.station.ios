@@ -71,10 +71,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var shareTitleLabel: UILabel!
     @IBOutlet weak var shareValueLabel: UILabel!
 
-    @IBOutlet weak var networkTagActionsStackView: UIStackView!
-    @IBOutlet weak var claimTagButton: UIButton!
-    @IBOutlet weak var shareTagButton: UIButton!
-
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
@@ -128,7 +124,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var updateFirmwareCell: UITableViewCell!
     @IBOutlet weak var updateFirmwareTitleLabel: UILabel!
 
-    @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var exportBarButtonItem: UIBarButtonItem!
 
@@ -171,7 +166,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
-        removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
 
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
@@ -199,12 +193,9 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         updateFirmwareTitleLabel.text = "TagSettings.Firmware.UpdateFirmware".localized()
 
-        claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
-        shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
 
         shareTitleLabel.text = "TagSettings.Share.title".localized()
-
 
         removeThisSensorLabel.text = "TagSettings.RemoveThisSensor.title".localized()
         tableView.reloadData()
@@ -335,11 +326,6 @@ extension TagSettingsTableViewController {
         output.viewDidAskToDismiss()
     }
 
-    @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
-        playImpact()
-        output.viewDidAskToRemoveRuuviTag()
-    }
-
     @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRandomizeBackground()
     }
@@ -356,16 +342,6 @@ extension TagSettingsTableViewController {
 
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
-    }
-
-    @IBAction func didTapClaimButton(_ sender: UIButton) {
-        playImpact()
-        output.viewDidTapClaimButton()
-    }
-
-    @IBAction func didTapShareButton(_ sender: UIButton) {
-        playImpact()
-        output.viewDidTapShareButton()
     }
 
     @IBAction func exportBarButtonItemAction(_ sender: Any) {
@@ -754,7 +730,6 @@ extension TagSettingsTableViewController {
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
-        bindTagNetworkActions()
 
         guard isViewLoaded, let viewModel = viewModel else { return }
 
@@ -1481,33 +1456,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-// MARK: - bind tag network actions
-    func bindTagNetworkActions() {
-        guard isViewLoaded, let viewModel = viewModel else {
-            return
-        }
-        let enabledColor = UIColor(red: 21/255, green: 141/255, blue: 165/255, alpha: 1.0)
-        let disabledColor = UIColor.gray
-        networkTagActionsStackView.bind(viewModel.isAuthorized) { (stack, isAuthorized) in
-            stack.isHidden = !(isAuthorized ?? false)
-        }
-        claimTagButton.bind(viewModel.canClaimTag) { (button, canClaimTag) in
-            let canClaimTag: Bool = canClaimTag ?? false
-            button.isEnabled = canClaimTag
-            button.backgroundColor = canClaimTag ? enabledColor : disabledColor
-        }
-        shareTagButton.bind(viewModel.canShareTag) { (button, canShareTag) in
-            let canShareTag: Bool = canShareTag ?? false
-            button.isEnabled = canShareTag
-            button.backgroundColor = canShareTag ? enabledColor : disabledColor
-        }
-        claimTagButton.bind(viewModel.isClaimedTag) { (button, isClaimedTag) in
-                let title = isClaimedTag ?? false
-                    ? "TagSettings.ClaimTagButton.Unclaim".localized()
-                    : "TagSettings.ClaimTagButton.Claim".localized()
-                button.setTitle(title, for: .normal)
-        }
-    }
     private func bindOffsetCorrectionCells() {
         guard isViewLoaded, let viewModel = viewModel else {
             return
