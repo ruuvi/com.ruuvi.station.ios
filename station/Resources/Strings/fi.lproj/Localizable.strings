@@ -464,7 +464,7 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Shared.title" = "Jaettu";
 "TagSettings.NotShared.title" = "Ei jaettu";
 "Owner.title" = "Vahvista omistajuus";
-"Owner.ClaimOwnership.button" = "VAHVISTA OMISTAJUUS";
+"Owner.ClaimOwnership.button" = "Vahvista Omistajuus";
 "Owner.Claim.description" = "Omistatko tämän anturin? Vahvista omistajuus ja anturi lisätään Ruuvi-tilillesi. Jokaisella Ruuvi-anturilla voi olla vain yksi omistaja.\n\nHyödyt:\n\n ● Anturien nimet, taustakuvat, kalibrointi- ja hälytystiedot turvallisesta pilvipalvelusta\n\n ● Lue anturitiedot etänä verkossa (vaatii Ruuvi Gateway -reitittimen)\n\n ● Jaa antureita ystävien ja perheen kesken (vaatii Ruuvi Gateway -reitittimen)\n\n ● Jopa 2 vuoden historiatiedot osoitteesta station.ruuvi.com (vaatii Ruuvi Gateway -reitittimen)";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "Anturin poistaminen mitätöi omistajuuden. Kuka tahansa voi vaatia anturin omistajuutta poistamisen jälkeen. Jokaisella Ruuvi-anturilla voi olla vain yksi omistaja.";
 "TagSettings.General.Owner.none" = "Ei omistajaa";
