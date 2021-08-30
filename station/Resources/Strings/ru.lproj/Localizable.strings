@@ -460,6 +460,7 @@
 "SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
 "SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
 "TagSettings.RemoveThisSensor.title" = "Remove this sensor";
+"Share.Success.message" = "Успешно поделились данными датчика";
 "TagSettings.SectionHeader.General.title" = "Основное";
 "TagSettings.Shared.title" = "Shared";
 "TagSettings.NotShared.title" = "Not shared";

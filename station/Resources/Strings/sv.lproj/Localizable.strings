@@ -460,6 +460,7 @@ RuuviTag-sensorn är redo att användas!";
 "SignIn.EmailMismatch.Alert.message" = "Oj, du har begärt koden för %@, men använde koden för %@. Kontrollera att du använder koden för %@";
 "SignIn.EmailMissing.Alert.message" = "Oj, e-postadressen du har använt för att få koden sparades inte. Försök att logga in igen ";
 "TagSettings.RemoveThisSensor.title" = "Ta bort sensorn";
+"Share.Success.message" = "Successfully shared sensor";
 "TagSettings.SectionHeader.General.title" = "General";
 "TagSettings.Shared.title" = "Shared";
 "TagSettings.NotShared.title" = "Not shared";

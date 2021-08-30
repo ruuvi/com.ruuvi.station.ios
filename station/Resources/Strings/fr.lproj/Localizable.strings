@@ -460,6 +460,7 @@ RuuviTag est prêt à être utilisé !";
 "SignIn.EmailMismatch.Alert.message" = "Oups, vous avez demandé le code de connexion pour l'utilisateur %@ alors qu'il est destiné à l'utilisateur %@. Veuillez vérifier que vous utilisez bien le code pour %@";
 "SignIn.EmailMissing.Alert.message" = "Oups, l'adresse mail utilisée n'a pu être enregistrée. Veuillez réessayer.";
 "TagSettings.RemoveThisSensor.title" = "Remove this sensor";
+"Share.Success.message" = "Successfully shared sensor";
 "TagSettings.SectionHeader.General.title" = "General";
 "TagSettings.Shared.title" = "Shared";
 "TagSettings.NotShared.title" = "Not shared";
