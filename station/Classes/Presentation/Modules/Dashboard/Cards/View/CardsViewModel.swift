@@ -35,7 +35,7 @@ struct CardsViewModel {
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
-    var isChartAvailable: Observable<Bool?> = Observable<Bool?>()
+    var isChartAvailable: Observable<Bool?> = Observable<Bool?>(false)
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
