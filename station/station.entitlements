@@ -7,6 +7,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:network.ruuvi.com</string>
+		<string>applinks:station.ruuvi.com</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
