@@ -43,6 +43,7 @@ extension SharePresenter: ShareViewOutput {
             .share(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] _ in
                 self?.fetchShared()
+                self?.view.showSuccessfullyShared()
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
