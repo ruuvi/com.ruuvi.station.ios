@@ -336,7 +336,7 @@
 "MenuTableViewController.None" = "ei kirjautunut";
 "MenuTableViewController.User" = "Käyttäjä: %@";
 "ShareViewController.Title" = "Jaa anturi";
-"ShareViewController.Description" = "Jaa anturitiedot verkossa lisäämällä ystäväsi sähköpostiosoite (maks. 10)";
+"ShareViewController.Description" = "Voit jakaa tämän anturin ystäville tai perheenjäsenille, mikäli laite on Ruuvi Gateway -reitittimen kuuluvuusalueella.\n\nVastaanottaja saa jakamisesta ilmoituksen sähköpostilla. Ilmainen Ruuvi-tili luodaan ensimmäisen sisäänkirjautumisen yhteydessä, mikäli vastaanottajalla ei ole vielä Ruuvi-tiliä.\n\nAnturin nimi ja taustakuva jaetaan ensimmäisen synkronoinnin yhteydessä, jonka jälkeen vastaanottaja voi muokata tietoja haluamallaan tavalla. Kalibroidut arvot (mikäli käytössä) synkronoidaan automaattisesti. Vastaanottaja näkee aina korjatut arvot.";
 "ShareViewController.addFriend.Title" = "Lisää ystävä";
 "ShareViewController.emailTextField.placeholder" = "Anna sähköpostiosoite";
 "ShareViewController.sharedEmails.Title" = "Anturi on jo jaettu %d/%d";
