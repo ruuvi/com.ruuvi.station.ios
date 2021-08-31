@@ -326,8 +326,8 @@
 "SignIn.EmailSent" = "Sähköposti lähetetty";
 "SignIn.CheckMailbox" = "Tarkasta aktivointikoodi saamastasi sähköpostista.";
 "SignIn.CodeHint" = "Koodi";
-"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Haluatko varmasti kirjautua ulos?";
-"TagSettings.ClaimTagButton.Claim" = "Lukitse";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Anturit, joiden omistajuuden olet vahvistanut asetussivulla poistetaan sovelluksesta automaattisesti uloskirjauduttaessa. Anturitiedot palautetaan pilvipalvelusta samalla sähköpostiosoitteella uudelleenkirjauduttaessa.\n\n Haluatko varmasti kirjautua ulos?";
+"TagSettings.ClaimTagButton.Claim" = "Vahvista";
 "TagSettings.ClaimTagButton.Unclaim" = "Vapauta";
 "TagSettings.ShareButton" = "Jaa";
 "Syncing..." = "Synkronoidaan…";
@@ -344,9 +344,9 @@
 "SharePresenter.UnshareSensor.Message" = "Haluatko lopettaa anturin jakamisen käyttäjälle %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "VERKON TIEDOT";
 "TagSettings.NetworkInfo.Owner" = "Omistaja";
-"Menu.RuuviNetworkStatus.text" = "Ruuvi Networkin tila";
-"SignIn.TitleLabel.text" = "Kirjaudu\nRuuvi\nNetworkiin";
-"SignIn.SubtitleLabel.text" = "Hyödynnä kaikki Ruuvi Network mahdollisuudet! Kirjaudu sisään tai luo uusi Ruuvi-käyttäjätili antamalla sähköpostiosoitteesi.";
+"Menu.RuuviNetworkStatus.text" = "Ruuvi cloudin tila";
+"SignIn.TitleLabel.text" = "Kirjaudu\nRuuvi\ncloudiin";
+"SignIn.SubtitleLabel.text" = "Hyödynnä Ruuvi-pilvipalvelun mahdollisuudet! Kirjaudu sisään tai luo uusi Ruuvi-käyttäjätili antamalla sähköpostiosoitteesi.";
 "SignIn.VerificationCodePlaceholder" = "vahvistuskoodi muodossa: CJSM";
 "UserApiError.ER_FORBIDDEN" = "Kielletty";
 "UserApiError.ER_UNAUTHORIZED" = "Ei sallittu";
