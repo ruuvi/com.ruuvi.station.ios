@@ -326,7 +326,7 @@
 "SignIn.EmailSent" = "Email sent";
 "SignIn.CheckMailbox" = "Check your email for an activation code.";
 "SignIn.CodeHint" = "Code";
-"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "When you sign out, sensors of which ownerships you've claimed on the sensor settings page, will be automatically removed from the app. When you sign in again using the same email address, the sensors will be returned from the cloud.\n\n Do you want sign out?";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
 "TagSettings.ShareButton" = "Share";
@@ -344,8 +344,8 @@
 "SharePresenter.UnshareSensor.Message" = "Do you want to unshare sensor for %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
 "TagSettings.NetworkInfo.Owner" = "Owner";
-"Menu.RuuviNetworkStatus.text" = "Ruuvi Network status";
-"SignIn.TitleLabel.text" = "Login to\nRuuvi\nNetwork";
+"Menu.RuuviNetworkStatus.text" = "Ruuvi Cloud status";
+"SignIn.TitleLabel.text" = "Login to\nRuuvi\nCloud";
 "SignIn.SubtitleLabel.text" = "To enjoy all the features, create an account or login to your existing Ruuvi account by entering your email address.";
 "SignIn.VerificationCodePlaceholder" = "verification code in format: CJSM";
 "UserApiError.ER_FORBIDDEN" = "Forbidden";
