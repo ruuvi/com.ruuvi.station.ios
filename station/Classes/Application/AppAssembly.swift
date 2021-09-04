@@ -669,6 +669,22 @@ private final class BusinessAssembly: Assembly {
             )
         }
 
+        container.register(RuuviServiceAuth.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let user = r.resolve(RuuviUser.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let storage = r.resolve(RuuviStorage.self)!
+            let propertiesService = r.resolve(RuuviServiceSensorProperties.self)!
+            let localIDs = r.resolve(RuuviLocalIDs.self)!
+            return factory.createAuth(
+                ruuviUser: user,
+                pool: pool,
+                storage: storage,
+                propertiesService: propertiesService,
+                localIDs: localIDs
+            )
+        }
+
         container.register(RuuviServiceCloudSync.self) { r in
             let factory = r.resolve(RuuviServiceFactory.self)!
             let storage = r.resolve(RuuviStorage.self)!

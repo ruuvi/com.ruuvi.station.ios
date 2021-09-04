@@ -7,10 +7,12 @@ class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
     var router: MenuRouterInput!
     var alertPresenter: AlertPresenter!
+    var errorPresenter: ErrorPresenter!
     var cloudSyncService: RuuviServiceCloudSync!
     var ruuviUser: RuuviUser!
     var localSyncState: RuuviLocalSyncState!
     var featureToggleService: FeatureToggleService!
+    var authService: RuuviServiceAuth!
 
     var viewModel: MenuViewModel? {
         didSet {
@@ -177,8 +179,13 @@ extension MenuPresenter {
         let cancelActionTitle = "Cancel".localized()
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
-            self?.ruuviUser.logout()
-            self?.dismiss()
+            guard let sSelf = self else { return }
+            sSelf.authService.logout()
+                .on(success: { [weak sSelf] _ in
+                    sSelf?.dismiss()
+                }, failure: { [weak sSelf] error in
+                    sSelf?.errorPresenter.present(error: error)
+                })
         }
         let cancleAction = UIAlertAction(title: cancelActionTitle,
                                          style: .cancel,
