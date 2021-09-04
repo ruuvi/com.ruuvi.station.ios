@@ -33,6 +33,13 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviService/OffsetCalibration'
   end
 
+  s.subspec 'Auth' do |ss|
+    ss.source_files = 'Sources/RuuviServiceAuth/**/*.{h,m,swift}', 'Sources/RuuviServiceAuth/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'RuuviUser'
+    ss.dependency 'FutureX'
+  end
+
   s.subspec 'CloudSync' do |ss|
     ss.source_files = 'Sources/RuuviServiceCloudSync/**/*.{h,m,swift}', 'Sources/RuuviServiceCloudSync/*.{h,m,swift}'
     ss.dependency 'RuuviService/Contract'
