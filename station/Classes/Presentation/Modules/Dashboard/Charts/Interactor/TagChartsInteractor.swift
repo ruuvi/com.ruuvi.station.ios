@@ -111,11 +111,9 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     }
 
     func restartObservingData() {
-        presenter.isLoading = true
         fetchAll { [weak self] in
             self?.restartScheduler()
             self?.reloadCharts()
-            self?.presenter.isLoading = false
         }
     }
 
