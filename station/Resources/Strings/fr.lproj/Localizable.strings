@@ -470,4 +470,5 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "By removing the sensor, your sensor ownership status will be revoked. After removal, someone else can claim ownership of the sensor. Every Ruuvi sensor can have only one owner.";
 "TagSettings.General.Owner.none" = "None";
 "TagSettings.Share.title" = "Partager";
+"Menu.LoggedIn.title" = "Logged in:";
 

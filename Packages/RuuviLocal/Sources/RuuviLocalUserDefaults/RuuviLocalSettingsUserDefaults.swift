@@ -218,7 +218,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])
     var tagsSorting: [String]
 
-    @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
+    @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 60)
     var networkPullIntervalSeconds: Int
 
     @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: 240)
