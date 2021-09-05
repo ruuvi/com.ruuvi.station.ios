@@ -32,6 +32,7 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
+            cloudSyncDaemon.refreshImmediately()
         }
         heartbeatDaemon.start()
         propertiesDaemon.start()
