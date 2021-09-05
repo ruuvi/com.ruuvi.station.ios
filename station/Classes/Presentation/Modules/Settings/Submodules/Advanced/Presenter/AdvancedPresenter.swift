@@ -17,9 +17,6 @@ class AdvancedPresenter: NSObject, AdvancedModuleInput {
     func configure() {
         var sections: [AdvancedSection] = []
         sections.append(buildChartsSection())
-        if featureToggleService.isEnabled(.network) {
-            sections.append(buildNetworkSection())
-        }
         viewModel = AdvancedViewModel(sections: sections)
     }
 
@@ -30,13 +27,6 @@ class AdvancedPresenter: NSObject, AdvancedModuleInput {
                 buildChartDownsampling(),
                 buildChartIntervalSeconds()
             ]
-        )
-    }
-
-    private func buildNetworkSection() -> AdvancedSection {
-        return AdvancedSection(
-            title: "Advanced.Network.title".localized(),
-            cells: [buildNetworkPullInterval()]
         )
     }
 }
@@ -83,20 +73,6 @@ extension AdvancedPresenter {
         bind(cell.boolean, fire: false) { observer, value in
             guard let value = value else { return }
             observer.settings.chartDownsamplingOn = value
-        }
-        return cell
-    }
-
-    private func buildNetworkPullInterval() -> AdvancedCell {
-        let title = "Advanced.NetworkInterval.title".localized()
-        let value = settings.networkPullIntervalSeconds / 60
-        let unit = AdvancedIntegerUnit.minutes
-        let type: AdvancedCellType = .stepper(title: title, value: value, unit: unit)
-        let cell = AdvancedCell(type: type)
-        cell.integer.value = value
-        bind(cell.integer, fire: false) { observer, value in
-            guard let value = value else { return }
-            observer.settings.networkPullIntervalSeconds = value * 60
         }
         return cell
     }
