@@ -470,3 +470,4 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "Anturin poistaminen mitätöi omistajuuden. Kuka tahansa voi vaatia anturin omistajuutta poistamisen jälkeen. Jokaisella Ruuvi-anturilla voi olla vain yksi omistaja.";
 "TagSettings.General.Owner.none" = "Ei omistajaa";
 "TagSettings.Share.title" = "Jaa";
+"Menu.LoggedIn.title" = "Kirjautunut:";
