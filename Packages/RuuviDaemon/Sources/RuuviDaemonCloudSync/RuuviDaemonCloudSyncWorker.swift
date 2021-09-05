@@ -22,6 +22,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     func start() {
         start { [weak self] in
             guard let sSelf = self else { return }
+            sSelf.pullTimer?.invalidate()
             let timer = Timer.scheduledTimer(
                 timeInterval: TimeInterval(sSelf.localSettings.networkPullIntervalSeconds),
                 target: sSelf,
