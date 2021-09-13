@@ -398,7 +398,10 @@ extension TagSettingsPresenter {
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
-        viewModel.canClaimTag.value = ruuviTag.isOwner
+
+        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && ruuviTag.owner == nil
+        viewModel.canClaimTag.value = canBeClaimed
+        viewModel.isClaimedTag.value = !canBeClaimed
 
         // Not set / Someone else / email of the one who shared the sensor with you / You
         if let owner = ruuviTag.owner {
@@ -406,8 +409,6 @@ extension TagSettingsPresenter {
         } else {
             viewModel.owner.value = "TagSettings.General.Owner.none".localized()
         }
-
-        viewModel.isClaimedTag.value = ruuviTag.isClaimed || !ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
