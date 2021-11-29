@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.3.0)
+  - BTKit (0.4.0)
   - Firebase (8.2.0):
     - Firebase/Core (= 8.2.0)
   - Firebase/Analytics (8.2.0):
@@ -721,7 +721,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: 7335dc432b6747a92b83481461970a226fbda20d
+  BTKit: c409ccfad57a372438db9b4951687289ba14c4c9
   Firebase: 12c568897b807321964e89d2b263ef4c6cff3db6
   FirebaseABTesting: 5f37131c5eceea579c471c915f7a0f8cad484d1f
   FirebaseAnalytics: 7a744b1e7dc50125cb37714c6bdaea167e412082
@@ -779,4 +779,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 12b04e7e059d5bc0479201b29636f0bd96d25b0a
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2
