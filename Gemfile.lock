@@ -274,7 +274,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cocoapods
+  cocoapods (= 1.11.2)
   fastlane
   fastlane-plugin-firebase_app_distribution
   i18n (~> 1.8)
