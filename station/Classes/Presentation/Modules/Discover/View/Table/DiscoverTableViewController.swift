@@ -28,8 +28,6 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
-    @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
-    @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
 
     private var alertVC: UIAlertController?
 
@@ -107,8 +105,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
-        getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
-        getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
     }
 
     func showBluetoothDisabled() {
