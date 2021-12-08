@@ -31,8 +31,8 @@ class TagChartsScrollConfigurator {
         presenter.alertHandler = r.resolve(RuuviNotifier.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
-        presenter.feedbackEmail = r.property("Feedback Email")!
-        presenter.feedbackSubject = r.property("Feedback Subject")!
+        presenter.feedbackEmail = PresentationConstants.feedbackEmail
+        presenter.feedbackSubject = PresentationConstants.feedbackSubject
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.interactor = interactor
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
