@@ -773,6 +773,8 @@
 		74E67721EFA7BF9397D52B1F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */; };
 		7876409C275FD7CC0060EC1D /* PresentationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409B275FD7CC0060EC1D /* PresentationConstants.swift */; };
 		7876409E275FD88F0060EC1D /* AppAssemblyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409D275FD88F0060EC1D /* AppAssemblyConstants.swift */; };
+		78EA657627612A1200D4F16F /* PresentationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409B275FD7CC0060EC1D /* PresentationConstants.swift */; };
+		78EA657727612A1E00D4F16F /* AppAssemblyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409D275FD88F0060EC1D /* AppAssemblyConstants.swift */; };
 		898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
 		8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
 		A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
@@ -4627,6 +4629,7 @@
 				0EA7968A2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
+				78EA657627612A1200D4F16F /* PresentationConstants.swift in Sources */,
 				0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */,
 				0EAD33DE2399273D00EC5BAA /* HeartbeatList.swift in Sources */,
 				0E8BD2BE238566AB008B31EF /* DefaultsViewOutput.swift in Sources */,
@@ -4796,6 +4799,7 @@
 				0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */,
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
 				0EF4E34126824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
+				78EA657727612A1E00D4F16F /* AppAssemblyConstants.swift in Sources */,
 				0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */,
 				66718A56266A685700A380F8 /* DfuFlashViewOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
