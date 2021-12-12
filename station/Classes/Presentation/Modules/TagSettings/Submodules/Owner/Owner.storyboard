@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina3_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,12 +18,13 @@
         <scene sceneID="s0d-6b-0kx">
             <objects>
                 <viewController id="Y6W-OH-hqX" customClass="OwnerViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <stackView key="view" opaque="NO" contentMode="center" layoutMarginsFollowReadableWidth="YES" axis="vertical" distribution="equalSpacing" alignment="center" id="wSg-r0-R7m">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fQr-YC-dHG">
-                                <rect key="frame" x="20" y="64" width="374" height="344"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="U0n-xo-BDk">
+                                <rect key="frame" x="20" y="20" width="280" height="382"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.
 
 Benefits:
@@ -36,14 +37,16 @@ Benefits:
 
 ● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kzt-pX-QVM">
-                                <rect key="frame" x="104" y="440" width="206" height="44"/>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d9e-ov-v9p">
+                                <rect key="frame" x="57" y="416" width="206" height="44"/>
                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="YoW-Uo-mXN"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="08V-Xv-l29"/>
+                                    <constraint firstAttribute="height" constant="44" id="7W5-Gm-5WV"/>
+                                    <constraint firstAttribute="width" constant="206" id="xsA-W2-lcB"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
@@ -54,23 +57,20 @@ Benefits:
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="claimOwnershipButtonTouchUpInside:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="5qX-iv-xEs"/>
+                                    <action selector="claimOwnershipButtonTouchUpInside:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="IT5-77-szG"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <viewLayoutGuide key="safeArea" id="s7m-qc-hqB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="fQr-YC-dHG" secondAttribute="trailing" constant="20" id="F81-8O-eN8"/>
-                            <constraint firstItem="fQr-YC-dHG" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="jdY-AG-NIh"/>
-                            <constraint firstItem="kzt-pX-QVM" firstAttribute="centerX" secondItem="fQr-YC-dHG" secondAttribute="centerX" id="nds-SH-kCH"/>
-                            <constraint firstItem="kzt-pX-QVM" firstAttribute="top" secondItem="fQr-YC-dHG" secondAttribute="bottom" constant="32" id="qwC-pC-qr7"/>
-                            <constraint firstItem="fQr-YC-dHG" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="20" id="tSg-tn-otd"/>
+                            <constraint firstItem="d9e-ov-v9p" firstAttribute="centerX" secondItem="wSg-r0-R7m" secondAttribute="centerX" id="QxE-PU-sKD"/>
                         </constraints>
-                    </view>
+                        <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
+                    </stackView>
                     <connections>
-                        <outlet property="claimDescriptionLabel" destination="fQr-YC-dHG" id="d8h-sz-WP7"/>
-                        <outlet property="claimOwnershipButton" destination="kzt-pX-QVM" id="gaZ-Ja-b5A"/>
+                        <outlet property="claimOwnershipButton" destination="d9e-ov-v9p" id="JKp-FX-nM1"/>
+                        <outlet property="claimOwnershipDescriptionLabel" destination="U0n-xo-BDk" id="dMm-o5-i6i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
