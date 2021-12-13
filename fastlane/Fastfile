@@ -105,6 +105,7 @@ platform :ios do
         release_notes = "No release notes found"
     else
         release_notes = last_pr_title + "\n\n" + last_pr_body
+    end
 
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
