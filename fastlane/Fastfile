@@ -107,6 +107,7 @@ platform :ios do
     if last_pr_body.nil?
         last_pr_body = "No PR body found"
     end
+    release_notes = last_pr_title + "\n\n" + last_pr_body
 
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
