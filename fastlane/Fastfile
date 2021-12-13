@@ -16,7 +16,7 @@ def remove_artifacts
   begin
       sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
       sh("rm", "report.xml")
-      sh("rm", "README.md")
+      # sh("rm", "README.md")
    rescue => ex
      UI.error(ex)
    end
