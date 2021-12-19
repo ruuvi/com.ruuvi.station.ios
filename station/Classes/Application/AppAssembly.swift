@@ -12,7 +12,6 @@ import RuuviDFU
 import RuuviMigration
 import RuuviPersistence
 import RuuviReactor
-import SwinjectPropertyLoader
 import RuuviCloud
 import RuuviUser
 import RuuviDaemon
@@ -322,18 +321,16 @@ private final class PersistenceAssembly: Assembly {
 
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
-        let config = PlistPropertyLoader(bundle: .main, name: "Networking")
-        try! container.applyPropertyLoader(config)
 
         container.register(OpenWeatherMapAPI.self) { r in
-            let apiKey: String = r.property("Open Weather Map API Key")!
+            let apiKey: String = AppAssemblyConstants.openWeatherMapApiKey
             let api = OpenWeatherMapAPIURLSession(apiKey: apiKey)
             return api
         }
 
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
-            let baseUrlString: String = r.property("Ruuvi Cloud URL")!
+            let baseUrlString: String = AppAssemblyConstants.ruuviCloudUrl
             let baseUrl = URL(string: baseUrlString)!
             let cloud = r.resolve(RuuviCloudFactory.self)!.create(
                 baseUrl: baseUrl,
