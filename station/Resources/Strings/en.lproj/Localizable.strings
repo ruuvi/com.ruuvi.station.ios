@@ -466,7 +466,7 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.NotShared.title" = "Not shared";
 "Owner.title" = "Claim sensor";
 "Owner.ClaimOwnership.button" = "Claim Ownership";
-"Owner.Claim.description" = "Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.\n\nBenefits:\n\n ● Sensor names, background images, offsets and alert settings will be securely stored in the Cloud\n\n ● Access sensors remotely over the Internet (requires a Ruuvi Gateway)\n\n ● Share sensors with friends and family (requires a Ruuvi Gateway)\n\n ● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)";
+"Owner.Claim.description" = "Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.\n\nBenefits:\n\n ● Sensor names, background images, offsets and alert settings will be securely stored in the cloud\n\n ● Access sensors remotely over the Internet (requires a Ruuvi Gateway)\n\n ● Share sensors with friends and family (requires a Ruuvi Gateway)\n\n ● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "By removing the sensor, your sensor ownership status will be revoked. After removal, someone else can claim ownership of the sensor. Every Ruuvi sensor can have only one owner.";
 "TagSettings.General.Owner.none" = "None";
 "TagSettings.Share.title" = "Share";
