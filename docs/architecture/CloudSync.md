@@ -5,7 +5,7 @@ The following diagram shows the process of [RuuviDaemon](../../Packages/RuuviDae
 [RuuviRepository](../../Packages/RuuviRepository/README.md) triggers [RuuviReactor](../../Packages/RuuviReactor/README.md), and because the presentation layer is observing [RuuviReactor](../../Packages/RuuviReactor/README.md), it gets notified with new data came from `RuuviCloud`. 
 
 
-![Diagram](/CloudSync/diagram_v1.png)
+![Diagram](CloudSync/diagram_v1.png)
 
 
 ```plantuml
