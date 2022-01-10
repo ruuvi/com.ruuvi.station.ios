@@ -362,7 +362,14 @@ extension CardsPresenter {
             return viewModel
         })
         viewModels = reorder(ruuviViewModels + virtualViewModels)
-
+        // Sort sensors by name alphabetically
+        viewModels = viewModels.sorted(by: {
+            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
+                return first < second
+            } else {
+                return true
+            }
+        })
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
