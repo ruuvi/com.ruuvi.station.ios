@@ -172,6 +172,13 @@ extension CardsPresenter: CardsViewOutput {
                 view.showKeepConnectionDialog(for: viewModel)
             }
         } else if viewModel.mac.value != nil {
+            // Setup initial tag chart
+            if let sensor = ruuviTags
+                .first(where: {
+                    ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+                }) {
+                tagCharts?.configure(ruuviTag: sensor)
+            }
             router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -362,7 +369,14 @@ extension CardsPresenter {
             return viewModel
         })
         viewModels = reorder(ruuviViewModels + virtualViewModels)
-
+        // Sort sensors by name alphabetically
+        viewModels = viewModels.sorted(by: {
+            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
+                return first < second
+            } else {
+                return true
+            }
+        })
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
