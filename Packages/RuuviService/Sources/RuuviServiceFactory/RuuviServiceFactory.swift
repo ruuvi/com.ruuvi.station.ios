@@ -87,7 +87,8 @@ public protocol RuuviServiceFactory {
         pool: RuuviPool,
         storage: RuuviStorage,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
     ) -> RuuviServiceAuth
 }
 
@@ -201,14 +202,16 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         pool: RuuviPool,
         storage: RuuviStorage,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
     ) -> RuuviServiceAuth {
         return RuuviServiceAuthImpl(
             ruuviUser: ruuviUser,
             pool: pool,
             storage: storage,
             propertiesService: propertiesService,
-            localIDs: localIDs
+            localIDs: localIDs,
+            localSyncState: localSyncState
         )
     }
 }

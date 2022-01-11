@@ -673,12 +673,14 @@ private final class BusinessAssembly: Assembly {
             let storage = r.resolve(RuuviStorage.self)!
             let propertiesService = r.resolve(RuuviServiceSensorProperties.self)!
             let localIDs = r.resolve(RuuviLocalIDs.self)!
+            let localSyncState = r.resolve(RuuviLocalSyncState.self)!
             return factory.createAuth(
                 ruuviUser: user,
                 pool: pool,
                 storage: storage,
                 propertiesService: propertiesService,
-                localIDs: localIDs
+                localIDs: localIDs,
+                localSyncState: localSyncState
             )
         }
 
