@@ -73,6 +73,7 @@ struct TagSettingsViewModel {
     let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
     let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
     let owner: Observable<String?> = Observable<String?>()
+    let isOwner: Observable<Bool?> = Observable<Bool?>(false)
 
     let temperatureOffsetCorrection: Observable<Double?> = Observable<Double?>()
     let humidityOffsetCorrection: Observable<Double?> = Observable<Double?>()
