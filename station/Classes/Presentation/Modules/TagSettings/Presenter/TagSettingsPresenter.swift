@@ -409,6 +409,8 @@ extension TagSettingsPresenter {
         } else {
             viewModel.owner.value = "TagSettings.General.Owner.none".localized()
         }
+        // Set isOwner value
+        viewModel.isOwner.value = ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
