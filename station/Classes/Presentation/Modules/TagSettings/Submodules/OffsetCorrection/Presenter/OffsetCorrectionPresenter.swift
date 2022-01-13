@@ -91,11 +91,6 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             .on(success: { [weak self] settings in
                 self?.sensorSettings = settings
                 self?.view.viewModel.update(sensorSettings: settings)
-                if let lastRecord = self?.lastSensorRecord {
-                    self?.view.viewModel.update(
-                        ruuviTagRecord: lastRecord.with(sensorSettings: settings)
-                    )
-                }
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
@@ -110,12 +105,6 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             .on(success: { [weak self] sensorSettings in
                 self?.sensorSettings = sensorSettings
                 self?.view.viewModel.update(sensorSettings: sensorSettings)
-                if let lastRecord = self?.lastSensorRecord {
-                    self?.view.viewModel.update(
-                        ruuviTagRecord: lastRecord
-                            .with(sensorSettings: sensorSettings)
-                    )
-                }
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
