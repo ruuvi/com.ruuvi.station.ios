@@ -150,6 +150,8 @@ class TagSettingsTableViewController: UITableViewController {
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
     private let alertOffString = "TagSettings.Alerts.Off"
     private static var localizedCache: LocalizedCache = LocalizedCache()
+    /// The limit for the tag name is 32 characters
+    private let tagNameCharaterLimit: Int = 32
 }
 
 // MARK: - TagSettingsViewInput
@@ -1483,9 +1485,17 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITextFieldDelegate
 extension TagSettingsTableViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return false
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard textField == tagNameTextField else {
+            textField.resignFirstResponder()
+            return true
+        }
+        let limit = (textField.text?.utf16.count)! + string.utf16.count - range.length
+        if limit <= tagNameCharaterLimit {
+            return true
+        } else {
+            return false
+        }
     }
 }
 
