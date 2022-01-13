@@ -167,18 +167,14 @@ extension CardsPresenter: CardsViewOutput {
             if settings.keepConnectionDialogWasShown(for: luid)
                 || background.isConnected(uuid: luid.value)
                 || viewModel.isConnectable.value == false {
+                configureInitialChart(from: viewModel)
                 router.openTagCharts()
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
         } else if viewModel.mac.value != nil {
             // Setup initial tag chart
-            if let sensor = ruuviTags
-                .first(where: {
-                    ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
-                }) {
-                tagCharts?.configure(ruuviTag: sensor)
-            }
+            configureInitialChart(from: viewModel)
             router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -389,6 +385,14 @@ extension CardsPresenter {
             return viewModels
         }
         return viewModels.reorder(by: settings.tagsSorting)
+    }
+    private func configureInitialChart(from viewModel: CardsViewModel) {
+        if let sensor = ruuviTags
+            .first(where: {
+                ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+            }) {
+            tagCharts?.configure(ruuviTag: sensor)
+        }
     }
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
