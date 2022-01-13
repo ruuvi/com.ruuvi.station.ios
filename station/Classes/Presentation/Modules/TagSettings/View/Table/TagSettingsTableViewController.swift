@@ -1023,8 +1023,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1073,8 +1072,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isConnectionAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1121,8 +1119,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isMovementAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1205,8 +1202,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1291,8 +1287,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isRelativeHumidityAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1375,8 +1370,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1463,8 +1457,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
