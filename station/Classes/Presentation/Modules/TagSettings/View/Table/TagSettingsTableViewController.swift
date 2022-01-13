@@ -37,6 +37,10 @@ enum TagSettingsTableSection: Int {
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.canShowUpdateFirmware.value ?? false
     }
+    
+    static func showOffsetCorrection(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isOwner.value == true
+    }
 }
 
 class TagSettingsTableViewController: UITableViewController {
@@ -397,7 +401,9 @@ extension TagSettingsTableViewController {
         case .general:
             return "TagSettings.SectionHeader.General.title".localized()
         case .offsetCorrection:
-            return "TagSettings.SectionHeader.OffsetCorrection.Title".localized()
+            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            return showOffsetCorrection ? "TagSettings.SectionHeader.OffsetCorrection.Title".localized() : nil
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
@@ -438,6 +444,10 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
+        case .offsetCorrection:
+            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            return showOffsetCorrection ? super.tableView(tableView, heightForHeaderInSection: section) : 0.01
         case .moreInfo:
             return 44
         case .alerts:
@@ -480,6 +490,10 @@ extension TagSettingsTableViewController {
             } else {
                 return 1
             }
+        case .offsetCorrection:
+            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            return showOffsetCorrection ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
@@ -1009,8 +1023,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1059,8 +1072,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isConnectionAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1107,8 +1119,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isMovementAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1191,8 +1202,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1277,8 +1287,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isRelativeHumidityAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1361,8 +1370,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1449,8 +1457,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
