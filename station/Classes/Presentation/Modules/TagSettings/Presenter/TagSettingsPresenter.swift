@@ -192,6 +192,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
         ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
+            sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
@@ -409,6 +410,8 @@ extension TagSettingsPresenter {
         } else {
             viewModel.owner.value = "TagSettings.General.Owner.none".localized()
         }
+        // Set isOwner value
+        viewModel.isOwner.value = ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
