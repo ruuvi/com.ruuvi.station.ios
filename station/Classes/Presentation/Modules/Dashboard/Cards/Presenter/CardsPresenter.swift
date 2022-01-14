@@ -645,11 +645,13 @@ extension CardsPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
             case .insert(let sensor):
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
                 if let index = sSelf.viewModels.firstIndex(where: {
                     return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
                         || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
@@ -670,6 +672,7 @@ extension CardsPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
                 if sSelf.view.currentPage < sSelf.ruuviTags.count {
                     let tag = sSelf.ruuviTags[sSelf.view.currentPage]
                     sSelf.restartObservingRuuviTagLastRecord(for: tag)
@@ -690,6 +693,7 @@ extension CardsPresenter {
                     sSelf.syncViewModels()
                     sSelf.restartObserveRuuviTagAdvertisements()
                 }
+                sSelf.startObservingWebTags()
             }
         }
     }
