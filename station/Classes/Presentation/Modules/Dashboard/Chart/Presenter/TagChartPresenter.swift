@@ -14,6 +14,7 @@ class TagChartPresenter: NSObject {
         }
     }
     weak var ouptut: TagChartModuleOutput!
+    private var sensorSettings: SensorSettings!
     var measurementService: RuuviServiceMeasurement! {
         didSet {
             measurementService.add(self)
@@ -67,9 +68,10 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput, luid: LocalIdentifier?) {
+    func configure(_ viewModel: TagChartViewModel, sensorSettings: SensorSettings, output: TagChartModuleOutput, luid: LocalIdentifier?) {
         configureViewModel(viewModel)
         self.ouptut = output
+        self.sensorSettings = sensorSettings
         self.luid = luid
     }
 
@@ -264,13 +266,16 @@ extension TagChartPresenter {
         var value: Double?
         switch viewModel.type {
         case .temperature:
-            value = measurementService.double(for: data.temperature)
+            let temp = measurementService.double(for: data.temperature) ?? 0
+            value = temp + sensorSettings.temperatureOffset.bound
         case .humidity:
             value = measurementService.double(for: data.humidity,
-                                              temperature: data.temperature,
+                                                 temperature: data.temperature,
                                               isDecimal: false)
+            value = (value ?? 0) + sensorSettings.humidityOffset.bound * 100
         case .pressure:
-            if let value = measurementService.double(for: data.pressure) {
+            if var value = measurementService.double(for: data.pressure) {
+                value = value + sensorSettings.pressureOffset.bound
                 return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
             } else {
                 return nil
