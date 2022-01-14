@@ -35,7 +35,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         storage.readAll()
             .on(success: { [weak self] localSensors in
                 guard let sSelf = self else { return }
-                localSensors.forEach { sensor in
+                localSensors.filter({ $0.isClaimed || $0.isCloud }).forEach { sensor in
                     let deleteSensorOperation = sSelf.pool.delete(sensor)
                     let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
                     sSelf.propertiesService.removeImage(for: sensor)
