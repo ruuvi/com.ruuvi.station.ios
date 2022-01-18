@@ -81,7 +81,16 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         case .pressure:
             offset = correctValue - view.viewModel.originalValue.value.bound
         default:
-            offset = correctValue - view.viewModel.originalValue.value.bound
+            // Temperature
+            let fromTemperature = view.viewModel.originalValue.value.bound - view.viewModel.offsetCorrectionValue.value.bound
+            switch settings.temperatureUnit {
+            case .celsius:
+                offset = correctValue - fromTemperature
+            case .fahrenheit:
+                offset = correctValue.celsiusFromFahrenheit - fromTemperature
+            case .kelvin:
+                offset = correctValue.celsiusFromKelvin - fromTemperature
+            }
         }
         ruuviOffsetCalibrationService.set(
             offset: offset,
