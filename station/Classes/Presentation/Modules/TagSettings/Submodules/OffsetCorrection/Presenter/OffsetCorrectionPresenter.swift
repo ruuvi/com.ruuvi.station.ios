@@ -76,12 +76,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     func viewDidSetCorrectValue(correctValue: Double) {
         var offset: Double = 0
         switch view.viewModel.type {
-        case .humidity:
-            offset = (correctValue / 100) - view.viewModel.originalValue.value.bound
-        case .pressure:
-            offset = correctValue - view.viewModel.originalValue.value.bound
-        default:
-            // Temperature
+        case .temperature:
             let fromTemperature = view.viewModel.originalValue.value.bound - view.viewModel.offsetCorrectionValue.value.bound
             switch settings.temperatureUnit {
             case .celsius:
@@ -91,6 +86,10 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             case .kelvin:
                 offset = correctValue.celsiusFromKelvin - fromTemperature
             }
+        case .humidity:
+            offset = (correctValue / 100) - view.viewModel.originalValue.value.bound
+        case .pressure:
+            offset = correctValue - view.viewModel.originalValue.value.bound
         }
         ruuviOffsetCalibrationService.set(
             offset: offset,
