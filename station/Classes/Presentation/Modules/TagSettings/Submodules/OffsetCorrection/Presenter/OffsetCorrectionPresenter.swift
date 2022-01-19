@@ -77,7 +77,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         var offset: Double = 0
         switch view.viewModel.type {
         case .temperature:
-            let fromTemperature = view.viewModel.originalValue.value.bound - view.viewModel.offsetCorrectionValue.value.bound
+            let fromTemperature = view.viewModel.originalValue.value.bound
             switch settings.temperatureUnit {
             case .celsius:
                 offset = correctValue - fromTemperature
