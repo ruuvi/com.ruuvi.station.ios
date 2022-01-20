@@ -306,6 +306,7 @@
 "WebTagSettings.Label.TagName.text" = "Anturin nimi";
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
 "TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän anturin?";
+"TagSettings.confirmSharedTagRemovalDialog.message" = "Poistamisesta ilmoitetaan anturin omistajalle ja anturin tietojen lukuoikeus päättyy.";
 "TagSettings.temperatureAlertTitleLabel.text" = "Lämpötila (%@)";
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "ºC" = "°C";

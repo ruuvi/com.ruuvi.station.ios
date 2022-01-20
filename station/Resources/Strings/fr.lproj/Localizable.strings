@@ -306,6 +306,7 @@
 "WebTagSettings.Label.TagName.text" = "Nom du capteur";
 "TagSettings.confirmTagRemovalDialog.title" = "Supprimer le capteur";
 "TagSettings.confirmTagRemovalDialog.message" = "Êtes-vous certain de vouloir supprimer ce capteur ?";
+"TagSettings.confirmSharedTagRemovalDialog.message" = "Si vous supprimez le capteur, le propriétaire du capteur sera averti et vous ne pourrez plus accéder au capteur.";
 "TagSettings.temperatureAlertTitleLabel.text" = "Température (%@)";
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "ºC" = "°C";
