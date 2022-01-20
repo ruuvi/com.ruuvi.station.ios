@@ -34,13 +34,14 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         return formatter
     }()
 
-    public func csvLog(for uuid: String) -> Future<URL, RuuviServiceError> {
+    public func csvLog(for uuid: String, settings: SensorSettings) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let ruuviTag = ruuviStorage.readOne(uuid)
         ruuviTag.on(success: { [weak self] ruuviTag in
             let recordsOperation = self?.ruuviStorage.readAll(uuid)
             recordsOperation?.on(success: { [weak self] records in
-                self?.csvLog(for: ruuviTag, with: records).on(success: { url in
+                let offsetedLogs = records.compactMap({ $0.with(sensorSettings: settings)})
+                self?.csvLog(for: ruuviTag, with: offsetedLogs).on(success: { url in
                     promise.succeed(value: url)
                 }, failure: { error in
                     promise.fail(error: error)
