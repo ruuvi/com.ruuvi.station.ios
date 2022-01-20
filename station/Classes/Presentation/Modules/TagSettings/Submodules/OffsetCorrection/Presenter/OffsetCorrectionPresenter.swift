@@ -89,7 +89,16 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         case .humidity:
             offset = (correctValue / 100) - view.viewModel.originalValue.value.bound
         case .pressure:
-            offset = correctValue - view.viewModel.originalValue.value.bound
+            switch settings.pressureUnit {
+            case .hectopascals:
+                offset = correctValue - view.viewModel.originalValue.value.bound
+            case .inchesOfMercury:
+                offset = correctValue.hPaFrominHg - view.viewModel.originalValue.value.bound
+            case .millimetersOfMercury:
+                offset = correctValue.hPaFrommmHg - view.viewModel.originalValue.value.bound
+            default:
+                offset = correctValue - view.viewModel.originalValue.value.bound
+            }
         }
         ruuviOffsetCalibrationService.set(
             offset: offset,
