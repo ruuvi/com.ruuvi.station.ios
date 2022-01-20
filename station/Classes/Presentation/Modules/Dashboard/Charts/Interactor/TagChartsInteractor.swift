@@ -128,7 +128,10 @@ extension TagChartsInteractor: TagChartsInteractorInput {
 
     func export() -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
-        let op = exportService.csvLog(for: ruuviTagSensor.id)
+        guard let sensorSettings = sensorSettings else {
+            return promise.future
+        }
+        let op = exportService.csvLog(for: ruuviTagSensor.id, settings: sensorSettings)
         op.on(success: { (url) in
             promise.succeed(value: url)
         }, failure: { (error) in
