@@ -24,7 +24,8 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
         let promise = Promise<AnyRuuviTagSensorRecord, RuuviRepositoryError>()
         storage.readSensorSettings(sensor)
             .on(success: { settings in
-                let offseted = record.with(sensorSettings: settings)
+                let offseted = record
+                    //.with(sensorSettings: settings)
                 self.pool.create(offseted)
                     .on(success: { _ in
                         promise.succeed(value: offseted.any)
@@ -44,7 +45,9 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviRepositoryError>()
         storage.readSensorSettings(sensor)
             .on(success: { settings in
-                let offseted = records.map({ $0.with(sensorSettings: settings).any })
+                let offseted = records.map({ $0.any
+                    //.with(sensorSettings: settings).any
+                })
                 self.pool.create(offseted)
                     .on(success: { _ in
                         promise.succeed(value: offseted)
