@@ -179,7 +179,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.isClaimedTag.value == true && ruuviTag.isOwner {
             view.showUnclaimAndRemoveConfirmationDialog()
         } else {
-            view.showTagRemovalConfirmationDialog()
+            view.showTagRemovalConfirmationDialog(isOwner: ruuviTag.isOwner)
         }
     }
 

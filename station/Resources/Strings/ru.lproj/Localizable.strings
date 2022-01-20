@@ -306,6 +306,7 @@
 "WebTagSettings.Label.TagName.text" = "Имя";
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить сенсор";
 "TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот сенсор?";
+"TagSettings.confirmSharedTagRemovalDialog.message" = "Если вы удалите датчик, то владелец будет уведомлен и вы более не сможете получать данные с него.";
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура (%@)";
 "TemperatureUnit.Celsius.title" = "Цельсий (℃)";
 "ºC" = "°C";
