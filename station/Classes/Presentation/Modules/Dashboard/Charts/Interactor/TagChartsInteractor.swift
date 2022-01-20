@@ -54,7 +54,10 @@ class TagChartsInteractor {
         MeasurementType.chartsCases.forEach({
             let viewModel = TagChartViewModel(type: $0)
             let module = TagChartAssembler.createModule()
-            module.configure(viewModel, output: self, luid: ruuviTagSensor.luid)
+            guard let sensorSettings = sensorSettings else {
+                return
+            }
+            module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
             chartModules.append(module)
         })
     }
@@ -125,7 +128,10 @@ extension TagChartsInteractor: TagChartsInteractorInput {
 
     func export() -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
-        let op = exportService.csvLog(for: ruuviTagSensor.id)
+        guard let sensorSettings = sensorSettings else {
+            return promise.future
+        }
+        let op = exportService.csvLog(for: ruuviTagSensor.id, settings: sensorSettings)
         op.on(success: { (url) in
             promise.succeed(value: url)
         }, failure: { (error) in

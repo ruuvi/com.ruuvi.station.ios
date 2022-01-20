@@ -215,6 +215,7 @@ extension CardsScrollViewController {
 // MARK: - UIScrollViewDelegate
 extension CardsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard viewModels.count > 0 else {return}
         output.viewDidScroll(to: viewModels[currentPage])
     }
 }
