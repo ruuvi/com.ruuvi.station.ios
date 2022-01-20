@@ -73,6 +73,7 @@ struct TagSettingsViewModel {
     let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
     let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
     let owner: Observable<String?> = Observable<String?>()
+    let isOwner: Observable<Bool?> = Observable<Bool?>(false)
 
     let temperatureOffsetCorrection: Observable<Double?> = Observable<Double?>()
     let humidityOffsetCorrection: Observable<Double?> = Observable<Double?>()
@@ -100,5 +101,39 @@ struct TagSettingsViewModel {
         measurementSequenceNumber.value = record.measurementSequenceNumber
         txPower.value = record.txPower
         source.value = record.source
+    }
+    
+    
+    func reset() {
+        isTemperatureAlertOn.value = false
+        temperatureLowerBound.value = Temperature(-40, unit: .celsius)
+        temperatureUpperBound.value = Temperature(85, unit: .celsius)
+        temperatureAlertDescription.value = nil
+        
+        isHumidityAlertOn.value = false
+        humidityLowerBound.value = Humidity(value: 0, unit: .absolute)
+        humidityUpperBound.value = Humidity(value: 40, unit: .absolute)
+        humidityAlertDescription.value = nil
+        
+        isRelativeHumidityAlertOn.value = false
+        relativeHumidityLowerBound.value = 0
+        relativeHumidityUpperBound.value = 100
+        relativeHumidityAlertDescription.value = nil
+        
+        isDewPointAlertOn.value = false
+        dewPointLowerBound.value = Temperature(-40, unit: .celsius)
+        dewPointUpperBound.value = Temperature(85, unit: .celsius)
+        dewPointAlertDescription.value = nil
+        
+        isPressureAlertOn.value = false
+        pressureLowerBound.value = Pressure(300, unit: .hectopascals)
+        pressureUpperBound.value = Pressure(1100, unit: .hectopascals)
+        pressureAlertDescription.value = nil
+        
+        isConnectionAlertOn.value = false
+        connectionAlertDescription.value = nil
+        
+        isMovementAlertOn.value = false
+        movementAlertDescription.value = nil
     }
 }
