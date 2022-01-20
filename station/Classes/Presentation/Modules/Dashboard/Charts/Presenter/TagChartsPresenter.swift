@@ -175,6 +175,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
+                guard let syncing =  self?.isSyncing, syncing else {
+                    return
+                }
                 self?.view.setSync(progress: progress, for: viewModel)
             }
         }
@@ -189,12 +192,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
                 self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
+                
             }
-        }, completion: {
-            DispatchQueue.main.async { [weak self] in
-                self?.view.setSync(progress: nil, for: viewModel)
-            }
-        })
+        }, completion: nil)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
