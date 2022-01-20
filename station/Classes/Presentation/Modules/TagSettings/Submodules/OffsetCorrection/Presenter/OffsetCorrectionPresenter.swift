@@ -76,12 +76,29 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     func viewDidSetCorrectValue(correctValue: Double) {
         var offset: Double = 0
         switch view.viewModel.type {
+        case .temperature:
+            let fromTemperature = view.viewModel.originalValue.value.bound
+            switch settings.temperatureUnit {
+            case .celsius:
+                offset = correctValue - fromTemperature
+            case .fahrenheit:
+                offset = correctValue.celsiusFromFahrenheit - fromTemperature
+            case .kelvin:
+                offset = correctValue.celsiusFromKelvin - fromTemperature
+            }
         case .humidity:
             offset = (correctValue / 100) - view.viewModel.originalValue.value.bound
         case .pressure:
-            offset = correctValue - view.viewModel.originalValue.value.bound
-        default:
-            offset = correctValue - view.viewModel.originalValue.value.bound
+            switch settings.pressureUnit {
+            case .hectopascals:
+                offset = correctValue - view.viewModel.originalValue.value.bound
+            case .inchesOfMercury:
+                offset = correctValue.hPaFrominHg - view.viewModel.originalValue.value.bound
+            case .millimetersOfMercury:
+                offset = correctValue.hPaFrommmHg - view.viewModel.originalValue.value.bound
+            default:
+                offset = correctValue - view.viewModel.originalValue.value.bound
+            }
         }
         ruuviOffsetCalibrationService.set(
             offset: offset,
@@ -91,6 +108,11 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             .on(success: { [weak self] settings in
                 self?.sensorSettings = settings
                 self?.view.viewModel.update(sensorSettings: settings)
+                if let lastRecord = self?.lastSensorRecord {
+                    self?.view.viewModel.update(
+                        ruuviTagRecord: lastRecord.with(sensorSettings: settings)
+                    )
+                }
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
@@ -105,6 +127,12 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             .on(success: { [weak self] sensorSettings in
                 self?.sensorSettings = sensorSettings
                 self?.view.viewModel.update(sensorSettings: sensorSettings)
+                if let lastRecord = self?.lastSensorRecord {
+                    self?.view.viewModel.update(
+                        ruuviTagRecord: lastRecord
+                            .with(sensorSettings: sensorSettings)
+                    )
+                }
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })

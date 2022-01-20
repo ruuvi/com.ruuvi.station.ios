@@ -266,16 +266,16 @@ extension TagChartPresenter {
         var value: Double?
         switch viewModel.type {
         case .temperature:
-            let temp = measurementService.double(for: data.temperature) ?? 0
-            value = temp + sensorSettings.temperatureOffset.bound
+            let temp = data.temperature?.plus(sensorSettings: sensorSettings)
+            value = measurementService.double(for: temp) ?? 0
         case .humidity:
-            value = measurementService.double(for: data.humidity,
+            let humidity = data.humidity?.plus(sensorSettings: sensorSettings)
+            value = measurementService.double(for: humidity,
                                                  temperature: data.temperature,
                                               isDecimal: false)
-            value = (value ?? 0) + sensorSettings.humidityOffset.bound * 100
         case .pressure:
-            if var value = measurementService.double(for: data.pressure) {
-                value = value + sensorSettings.pressureOffset.bound
+            let pressure = data.pressure?.plus(sensorSettings: sensorSettings)
+            if let value = measurementService.double(for: pressure) {
                 return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
             } else {
                 return nil
