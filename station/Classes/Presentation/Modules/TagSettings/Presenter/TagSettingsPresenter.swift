@@ -316,7 +316,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnExport() {
         isLoading = true
-        exportService.csvLog(for: ruuviTag.id)
+        guard let sensorSettings = sensorSettings else {
+            return
+        }
+        exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
             .on(success: { [weak self] url in
                 #if targetEnvironment(macCatalyst)
                 guard let sSelf = self else {
