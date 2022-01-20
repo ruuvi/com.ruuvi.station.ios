@@ -196,7 +196,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                             observer.ruuviPool.create(
                                 ruuviTag
                                     .with(source: .heartbeat)
-                                    .with(sensorSettings: sensorSettings)
+                                    //.with(sensorSettings: sensorSettings)
                             )
                             observer.savedDate[uuid] = Date()
                         }
@@ -204,7 +204,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         observer.ruuviPool.create(
                             ruuviTag
                                 .with(source: .heartbeat)
-                                .with(sensorSettings: sensorSettings)
+                                //.with(sensorSettings: sensorSettings)
                         )
                         observer.savedDate[uuid] = Date()
                     }
