@@ -65,6 +65,18 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func setupChartViews(chartViews: [TagChartView]) {
         self.chartViews = chartViews
     }
+    
+    /// Clear and Sync button should be only available if the last stored data is from the cloud.
+    func handleClearSyncButtons(for sharedSensors: Bool) {
+        if sharedSensors {
+            clearButton.isHidden = true
+            syncButton.isHidden = true
+            syncStatusLabel.isHidden = true
+        } else {
+            clearButton.isHidden = false
+            syncButton.isHidden = false
+        }
+    }
 
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
