@@ -138,7 +138,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view?.setupChartViews(chartViews: interactor.chartViews)
     }
     func handleClearSyncButtons() {
-        view.handleClearSyncButtons(for: !ruuviTag.isOwner)
+        view.handleClearSyncButtons(sharedSensors: !ruuviTag.isOwner, isSyncing: interactor.isSyncingRecords() )
     }
     func viewDidTransition() {
         tryToShowSwipeUpHint()
