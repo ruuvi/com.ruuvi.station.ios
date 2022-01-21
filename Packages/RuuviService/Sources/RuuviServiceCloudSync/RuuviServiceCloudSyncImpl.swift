@@ -183,7 +183,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 return self.ruuviPool.update(unclaimed)
                             } else {
                                 // If there is a local sensor which is claimed and deleted from the cloud, delete it from local storage
-                                return self.ruuviPool.delete(localSensor)
+                                // Otherwise keep it stored
+                                if localSensor.isCloud {
+                                    return self.ruuviPool.delete(localSensor)
+                                } else {
+                                    return nil
+                                }
                             }
                         }
                     })
