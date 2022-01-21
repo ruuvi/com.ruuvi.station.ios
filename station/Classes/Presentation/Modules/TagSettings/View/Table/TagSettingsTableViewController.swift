@@ -206,11 +206,11 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         tableView.reloadData()
     }
 
-    func showTagRemovalConfirmationDialog() {
+    func showTagRemovalConfirmationDialog(isOwner: Bool) {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = "TagSettings.confirmTagRemovalDialog.message".localized()
+        let message = isOwner ? "TagSettings.confirmTagRemovalDialog.message".localized() : "TagSettings.confirmSharedTagRemovalDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+        controller.addAction(UIAlertAction(title: isOwner ? "Confirm".localized() : "Ok".localized(),
                                            style: .destructive,
                                            handler: { [weak self] _ in
                                             self?.output.viewDidConfirmTagRemoval()
