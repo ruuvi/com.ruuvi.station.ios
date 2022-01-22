@@ -137,6 +137,17 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         return promise.future
     }
 
+    func isSyncingRecords() -> Bool {
+        guard let luid = ruuviTagSensor.luid else {
+            return false
+        }
+        if gattService.isSyncingLogs(with: luid.value) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         guard let luid = ruuviTagSensor.luid else {
