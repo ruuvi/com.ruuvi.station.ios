@@ -512,9 +512,7 @@ PODS:
     - RuuviVirtual/Contract
   - RuuviVirtual/Tests (0.0.1)
   - SwiftGen (6.4.0)
-  - Swinject (2.6.2)
-  - SwinjectPropertyLoader (1.0.2):
-    - Swinject (~> 2.6.0)
+  - Swinject (2.8.1)
   - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
@@ -620,7 +618,6 @@ DEPENDENCIES:
   - RuuviVirtual/Tests (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - SwiftGen (~> 6.0)
   - Swinject
-  - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
 
 SPEC REPOS:
   trunk:
@@ -703,8 +700,6 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviUser/RuuviUser.podspec
   RuuviVirtual:
     :path: Packages/RuuviVirtual/RuuviVirtual.podspec
-  SwinjectPropertyLoader:
-    :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 CHECKOUT OPTIONS:
   Humidity:
@@ -716,9 +711,6 @@ CHECKOUT OPTIONS:
   RangeSeekSlider:
     :commit: 35712fc13229f527e0a356f3de34deccbcfd6b59
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
-  SwinjectPropertyLoader:
-    :commit: 618874fce0eef263fdf9f7fd3c16eee5ccda4c74
-    :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
   BTKit: c409ccfad57a372438db9b4951687289ba14c4c9
@@ -773,10 +765,9 @@ SPEC CHECKSUMS:
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
-  Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
-  SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
+  Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 12b04e7e059d5bc0479201b29636f0bd96d25b0a
+PODFILE CHECKSUM: 10e4d919531d9e2010759be9f6e01efdf0b29d17
 
 COCOAPODS: 1.11.2

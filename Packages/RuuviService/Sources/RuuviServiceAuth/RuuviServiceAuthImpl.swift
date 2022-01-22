@@ -11,19 +11,22 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
     private let storage: RuuviStorage
     private let propertiesService: RuuviServiceSensorProperties
     private let localIDs: RuuviLocalIDs
+    private let localSyncState: RuuviLocalSyncState
 
     public init(
         ruuviUser: RuuviUser,
         pool: RuuviPool,
         storage: RuuviStorage,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
     ) {
         self.ruuviUser = ruuviUser
         self.pool = pool
         self.storage = storage
         self.propertiesService = propertiesService
         self.localIDs = localIDs
+        self.localSyncState = localSyncState
     }
 
     public func logout() -> Future<Bool, RuuviServiceError> {
@@ -32,11 +35,12 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         storage.readAll()
             .on(success: { [weak self] localSensors in
                 guard let sSelf = self else { return }
-                localSensors.filter({ $0.isCloud }).forEach { sensor in
+                localSensors.filter({ $0.isClaimed || $0.isCloud }).forEach { sensor in
                     let deleteSensorOperation = sSelf.pool.delete(sensor)
                     let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
                     sSelf.propertiesService.removeImage(for: sensor)
                     sSelf.localIDs.clear(sensor: sensor)
+                    sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
                     Future.zip([deleteSensorOperation, deleteRecordsOperation])
                         .on(success: { _ in
                             promise.succeed(value: true)
