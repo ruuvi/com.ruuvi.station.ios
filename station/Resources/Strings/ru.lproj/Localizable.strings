@@ -327,7 +327,7 @@
 "SignIn.EmailSent" = "Email отправлен";
 "SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
 "SignIn.CodeHint" = "Код для входа";
-"TagsManagerPresenter.SignOutConfirmAlert.Message" = "When you sign out, sensors the ownerships of which you've claimed on the sensor Settings page will be automatically removed from the app. When you sign in again using the same email address, the sensors will be returned from the cloud.\n\nDo you want to sign out?";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "When you sign out, sensors the ownerships of which you've claimed on the sensor Settings page will be automatically removed from the app. When you sign in again using the same email address, the sensors will be returned from the Cloud.\n\n Do you want to sign out?";
 "TagSettings.ClaimTagButton.Claim" = "Claim ownership";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim ownership";
 "TagSettings.ShareButton" = "Поделиться";
