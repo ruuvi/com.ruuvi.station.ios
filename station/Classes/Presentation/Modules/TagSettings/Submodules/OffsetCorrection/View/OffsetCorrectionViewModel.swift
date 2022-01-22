@@ -40,30 +40,14 @@ class OffsetCorrectionViewModel {
         self.type = type
         self.update(sensorSettings: sensorSettings)
     }
-
-    func update(ruuviTag: RuuviTag) {
-        switch type {
-        case .humidity:
-            if let value = ruuviTag.humidity?.value {
-                self.originalValue.value = value - ruuviTag.humidityOffset
-                self.correctedValue.value = value
-            }
-        case .pressure:
-            if let value = ruuviTag.pressure?.value {
-                self.originalValue.value = value - ruuviTag.pressureOffset
-                self.correctedValue.value = value
-            }
-        default:
-            if let value = ruuviTag.temperature?.value {
-                self.originalValue.value = value - ruuviTag.temperatureOffset
-                self.correctedValue.value = value
-            }
-        }
-        self.updateAt.value = Date()
-    }
-
+    
     func update(ruuviTagRecord: RuuviTagSensorRecord) {
         switch type {
+        case .temperature:
+            if let value = ruuviTagRecord.temperature?.value {
+                self.originalValue.value = value - ruuviTagRecord.temperatureOffset
+                self.correctedValue.value = value
+            }
         case .humidity:
             if let value = ruuviTagRecord.humidity?.value {
                 self.originalValue.value = value - ruuviTagRecord.humidityOffset
@@ -74,26 +58,21 @@ class OffsetCorrectionViewModel {
                 self.originalValue.value = value - ruuviTagRecord.pressureOffset
                 self.correctedValue.value = value
             }
-        default:
-            if let value = ruuviTagRecord.temperature?.value {
-                self.originalValue.value = value - ruuviTagRecord.temperatureOffset
-                self.correctedValue.value = value
-            }
         }
         self.updateAt.value = Date()
     }
 
     func update(sensorSettings: SensorSettings) {
         switch type {
+        case .temperature:
+            self.offsetCorrectionValue.value = sensorSettings.temperatureOffset
+            self.offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         case .humidity:
             self.offsetCorrectionValue.value = sensorSettings.humidityOffset
             self.offsetCorrectionDate.value = sensorSettings.humidityOffsetDate
         case .pressure:
             self.offsetCorrectionValue.value = sensorSettings.pressureOffset
             self.offsetCorrectionDate.value = sensorSettings.pressureOffsetDate
-        default:
-            self.offsetCorrectionValue.value = sensorSettings.temperatureOffset
-            self.offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         }
 
         if let value = self.offsetCorrectionValue.value, value != 0 {

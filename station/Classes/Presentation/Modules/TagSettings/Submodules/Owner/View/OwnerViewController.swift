@@ -3,8 +3,8 @@ import UIKit
 final class OwnerViewController: UIViewController {
     var output: OwnerViewOutput!
 
+    @IBOutlet weak var claimOwnershipDescriptionLabel: UILabel!
     @IBOutlet weak var claimOwnershipButton: UIButton!
-    @IBOutlet weak var claimDescriptionLabel: UILabel!
 
     @IBAction func claimOwnershipButtonTouchUpInside(_ sender: Any) {
         output.viewDidTapOnClaim()
@@ -19,7 +19,7 @@ final class OwnerViewController: UIViewController {
 extension OwnerViewController: OwnerViewInput {
     func localize() {
         title = "Owner.title".localized()
-        claimDescriptionLabel.text = "Owner.Claim.description".localized()
+        claimOwnershipDescriptionLabel.text = "Owner.Claim.description".localized()
         claimOwnershipButton.setTitle("Owner.ClaimOwnership.button".localized(), for: .normal)
     }
 }

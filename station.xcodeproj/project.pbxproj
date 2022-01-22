@@ -771,6 +771,10 @@
 		7350803A8D6DD23F1057994F /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B5190CB557178D11AB2CE /* SignInPresenter.swift */; };
 		73949279A33A1BF08159FE0E /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7097B76856D5F01896F963EC /* Pods_station_dev.framework */; };
 		74E67721EFA7BF9397D52B1F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */; };
+		7876409C275FD7CC0060EC1D /* PresentationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409B275FD7CC0060EC1D /* PresentationConstants.swift */; };
+		7876409E275FD88F0060EC1D /* AppAssemblyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409D275FD88F0060EC1D /* AppAssemblyConstants.swift */; };
+		78EA657627612A1200D4F16F /* PresentationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409B275FD7CC0060EC1D /* PresentationConstants.swift */; };
+		78EA657727612A1E00D4F16F /* AppAssemblyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876409D275FD88F0060EC1D /* AppAssemblyConstants.swift */; };
 		898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
 		8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
 		A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
@@ -1376,6 +1380,8 @@
 		6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareModuleInput.swift; sourceTree = "<group>"; };
 		6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouter.swift; sourceTree = "<group>"; };
 		7097B76856D5F01896F963EC /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7876409B275FD7CC0060EC1D /* PresentationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationConstants.swift; sourceTree = "<group>"; };
+		7876409D275FD88F0060EC1D /* AppAssemblyConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssemblyConstants.swift; sourceTree = "<group>"; };
 		8018B7836CF8C748718825DD /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85B8587156E1062D613B8960 /* SignInInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInInitializer.swift; sourceTree = "<group>"; };
 		85F06A44D8D006FBFB90ABE0 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -1687,6 +1693,7 @@
 				A9FC78E7257966EF00F94604 /* UniversalLinks */,
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
+				7876409D275FD88F0060EC1D /* AppAssemblyConstants.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -1927,6 +1934,7 @@
 			children = (
 				0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */,
 				0E197C6E23C4A7D00074015B /* Presentation.plist */,
+				7876409B275FD7CC0060EC1D /* PresentationConstants.swift */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -4621,6 +4629,7 @@
 				0EA7968A2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
+				78EA657627612A1200D4F16F /* PresentationConstants.swift in Sources */,
 				0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */,
 				0EAD33DE2399273D00EC5BAA /* HeartbeatList.swift in Sources */,
 				0E8BD2BE238566AB008B31EF /* DefaultsViewOutput.swift in Sources */,
@@ -4790,6 +4799,7 @@
 				0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */,
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
 				0EF4E34126824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
+				78EA657727612A1E00D4F16F /* AppAssemblyConstants.swift in Sources */,
 				0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */,
 				66718A56266A685700A380F8 /* DfuFlashViewOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
@@ -5402,6 +5412,7 @@
 				660EB2672669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
 				0E11D226267F3100002D0686 /* RuuviVirtualError+LocalizedError.swift in Sources */,
+				7876409C275FD7CC0060EC1D /* PresentationConstants.swift in Sources */,
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				0E59583326DA337B00A99A97 /* OwnerViewInput.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
@@ -5423,6 +5434,7 @@
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
+				7876409E275FD88F0060EC1D /* AppAssemblyConstants.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				0EB8ED36268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
@@ -5553,7 +5565,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.6;
+				MARKETING_VERSION = 0.7.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5581,7 +5593,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.6;
+				MARKETING_VERSION = 0.7.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5759,7 +5771,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.6;
+				MARKETING_VERSION = 0.7.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5786,7 +5798,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.6;
+				MARKETING_VERSION = 0.7.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
