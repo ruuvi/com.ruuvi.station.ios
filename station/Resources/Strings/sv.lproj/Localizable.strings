@@ -250,7 +250,7 @@
 "TagCharts.Status.Serving" = "Synkroniserar...";
 "TagCharts.Status.Connecting" = "Ansluter...";
 "TagSettings.ConnectStatus.Disconnected" = "Frånkopplad";
-"TagCharts.Export.title" = "EXPORT";
+"TagCharts.Export.title" = "EXPORTERA";
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi State är en lättanvänt och kraftfullt program för Ruuvi sensorer. Sätt igång genom att lägga till sensorer.";
 "About.AboutHelp.header" = "OM / HJÄLP";
@@ -306,7 +306,6 @@
 "WebTagSettings.Label.TagName.text" = "Sensornamn";
 "TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";
 "TagSettings.confirmTagRemovalDialog.message" = "Är du säker på att du vill ta bort den här sensorn?";
-"TagSettings.confirmSharedTagRemovalDialog.message" = "Om du tar bort sensorn så meddelas ägaren till sensorn och du kan inte komma åt den längre.";
 "TagSettings.temperatureAlertTitleLabel.text" = "Temperatur (%@)";
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "ºC" = "°C";
@@ -340,7 +339,7 @@
 "ShareViewController.Description" = "Du kan dela sensorn med vänner och familj om den är inom räckhåll för en Ruuvi Gateway.\n\nMottagaren meddelas via e-post. Om mottagaren inte har ett Ruuvi-konto skapas ett gratis Ruuvi-konto automatiskt vid första inloggningen.\n\nObservera att sensorns anpassade namn och bakgrundsbild delas. Namnet och bildsynkroniseringen sker endast vid en gång, efteråt kan det anpassas av mottagaren. Kalibreringsvärden (om sådana finns) synkroniseras automatiskt och mottagaren ser alltid de korrigerade värdena.";
 "ShareViewController.addFriend.Title" = "Lägg till vän";
 "ShareViewController.emailTextField.placeholder" = "Ange e-postadress";
-"ShareViewController.sharedEmails.Title" = "Sensorn är redan delad {%d^%1$,d}/{%d^%2$,d}";
+"ShareViewController.sharedEmails.Title" = "Sensorn är redan delad %d/%d";
 "Share.Send.button" = "Skicka";
 "SharePresenter.UnshareSensor.Message" = "Vill du sluta dela sensorn med %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NÄTVERKSINFO";
@@ -469,6 +468,7 @@ RuuviTag-sensorn är redo att användas!";
 "Owner.ClaimOwnership.button" = "Bekräfta Ägandet";
 "Owner.Claim.description" = "Äger du den här sensorn? Bekräfta ägandet och så läggs sensorn till på ditt Ruuvi-konto. Varje Ruuvi-sensor kan bara ha en ägare.\n\nFördelar:\n\n ● Sensornamn, bakgrundsbilder, kalibrering och larminformation från en säker molntjänst\n\n ● Läs sensorinformation på distans online ( kräver Ruuvi Gateway-router)\n\n ● Dela sensorer med vänner och familj (kräver Ruuvi Gateway)\n\n ● Upp till 2 års historik från station.ruuvi.com (kräver Ruuvi Gateway)";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "Om du tar bort sensorn upphör ägarskapet. Vem som helst kan göra anspråk på ägandet av sensorn efter borttagning. Varje Ruuvi-sensor kan bara ha en ägare.";
+"TagSettings.confirmSharedTagRemovalDialog.message" = "Om du tar bort sensorn så meddelas ägaren till sensorn och du kan inte komma åt den längre.";
 "TagSettings.General.Owner.none" = "Ingen";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
