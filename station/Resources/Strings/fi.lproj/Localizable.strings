@@ -306,7 +306,6 @@
 "WebTagSettings.Label.TagName.text" = "Anturin nimi";
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
 "TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän anturin?";
-"TagSettings.confirmSharedTagRemovalDialog.message" = "Poistamisesta ilmoitetaan anturin omistajalle ja anturin tietojen lukuoikeus päättyy.";
 "TagSettings.temperatureAlertTitleLabel.text" = "Lämpötila (%@)";
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "ºC" = "°C";
@@ -340,7 +339,7 @@
 "ShareViewController.Description" = "Voit jakaa tämän anturin ystäville tai perheenjäsenille, mikäli laite on Ruuvi Gateway -reitittimen kuuluvuusalueella.\n\nVastaanottaja saa jakamisesta ilmoituksen sähköpostilla. Ilmainen Ruuvi-tili luodaan ensimmäisen sisäänkirjautumisen yhteydessä, mikäli vastaanottajalla ei ole vielä Ruuvi-tiliä.\n\nAnturin nimi ja taustakuva jaetaan vastaanottajalle vain kertaalleen. Sen jälkeen kumpikin voivat muokata vain omia anturiasetuksiaan. Kalibrointiarvot (mikäli käytössä) synkronoidaan automaattisesti jaetuille antureille ja vastaanottaja näkee vain lopulliset korjatut arvot.";
 "ShareViewController.addFriend.Title" = "Lisää ystävä";
 "ShareViewController.emailTextField.placeholder" = "Anna sähköpostiosoite";
-"ShareViewController.sharedEmails.Title" = "Anturi on jo jaettu {%d^%1$,d}/{%d^%2$,d}";
+"ShareViewController.sharedEmails.Title" = "Anturi on jo jaettu %d/%d";
 "Share.Send.button" = "Lähetä";
 "SharePresenter.UnshareSensor.Message" = "Haluatko lopettaa anturin jakamisen käyttäjälle %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "VERKON TIEDOT";
@@ -469,6 +468,7 @@ RuuviTag on valmis käyttöön!";
 "Owner.ClaimOwnership.button" = "Vahvista Omistajuus";
 "Owner.Claim.description" = "Omistatko tämän anturin? Vahvista omistajuus ja anturi lisätään Ruuvi-tilillesi. Jokaisella Ruuvi-anturilla voi olla vain yksi omistaja.\n\nHyödyt:\n\n ● Anturien nimet, taustakuvat sekä kalibrointi- ja hälytysasetukset tallentuvat turvallisesti tilillesi pilvipalveluun\n\n ● Lue anturitiedot etänä verkossa (vaatii Ruuvi Gateway -reitittimen)\n\n ● Jaa antureita ystävien ja perheen kesken (vaatii Ruuvi Gateway -reitittimen)\n\n ● Selaa jopa 2 vuoden historiatietoja osoitteessa station.ruuvi.com (vaatii Ruuvi Gateway -reitittimen)";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "Anturin poistaminen mitätöi omistajuuden. Kuka tahansa voi vaatia anturin omistajuutta poistamisen jälkeen. Jokaisella Ruuvi-anturilla voi olla vain yksi omistaja.";
+"TagSettings.confirmSharedTagRemovalDialog.message" = "Poistamisesta ilmoitetaan anturin omistajalle ja anturin tietojen lukuoikeus päättyy.";
 "TagSettings.General.Owner.none" = "Ei omistajaa";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
