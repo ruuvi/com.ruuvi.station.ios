@@ -14,7 +14,10 @@ extension RuuviTagSensorRecord {
             acceleration: acceleration,
             voltage: voltage,
             movementCounter: movementCounter,
-            txPower: txPower
+            txPower: txPower,
+            temperatureOffset: temperatureOffset,
+            humidityOffset: humidityOffset,
+            pressureOffset: pressureOffset
         )
     }
 }
