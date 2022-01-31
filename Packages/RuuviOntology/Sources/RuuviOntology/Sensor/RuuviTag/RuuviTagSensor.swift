@@ -174,8 +174,10 @@ extension RuuviTagSensor {
         )
     }
 
+    // Considering only claimed sensors are cloud sensors
+    // Unclaimed local sensors on a device also can have owner on another device/user
     public var isCloud: Bool {
-        return owner != nil || isClaimed
+        return isClaimed
     }
 }
 

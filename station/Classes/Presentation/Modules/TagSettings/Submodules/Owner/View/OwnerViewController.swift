@@ -30,7 +30,12 @@ extension OwnerViewController: OwnerViewInput {
         let alertVC = UIAlertController(title: "ErrorPresenterAlert.Error".localized(),
                                         message: message,
                                         preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak self] _ in
+            guard let email = email else {
+                return
+            }
+            self?.output.update(with: email)
+        }))
         present(alertVC, animated: true)
     }
     func localize() {
