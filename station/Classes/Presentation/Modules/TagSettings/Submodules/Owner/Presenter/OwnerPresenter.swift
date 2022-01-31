@@ -18,7 +18,7 @@ final class OwnerPresenter: OwnerModuleInput {
             }
         }
     }
-
+    
     func configure(ruuviTag: RuuviTagSensor) {
         self.ruuviTag = ruuviTag
     }
@@ -32,7 +32,12 @@ extension OwnerPresenter: OwnerViewOutput {
             .on(success: { [weak self] _ in
                 self?.router.dismiss()
             }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
+                switch error {
+                case .ruuviCloud(.api(.claim(let claimError))):
+                    self?.view.showSensorAlreadyClaimedError(error: claimError.code, email: claimError.error.email())
+                default:
+                    return
+                }
             }, completion: { [weak self] in
                 self?.isLoading = false
             })
