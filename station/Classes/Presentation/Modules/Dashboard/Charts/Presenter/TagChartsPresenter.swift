@@ -192,11 +192,12 @@ extension TagChartsPresenter: TagChartsViewOutput {
             self?.view.setSync(progress: nil, for: viewModel)
             if case .btkit(.logic(.connectionTimedOut)) = error {
                 self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+            } else if case .ruuviService(.btkit(.logic(.connectionTimedOut))) = error {
+                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
             } else if case .btkit(.logic(.serviceTimedOut)) = error {
                 self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
-                
             }
         }, completion: nil)
     }
