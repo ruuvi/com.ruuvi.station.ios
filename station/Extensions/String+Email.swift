@@ -1,11 +1,3 @@
-//
-//  String+Email.swift
-//  station
-//
-//  Created by iPriyo on 28/1/22.
-//  Copyright © 2022 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
 extension String {
     /// This method extracts email address from a given string.
