@@ -12,6 +12,7 @@ public struct RuuviTagSQLite: RuuviTagSensor {
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
+    public var isCloudSensor: Bool?
 
     public init(
         id: String,
@@ -22,7 +23,8 @@ public struct RuuviTagSQLite: RuuviTagSensor {
         isConnectable: Bool,
         isClaimed: Bool,
         isOwner: Bool,
-        owner: String?
+        owner: String?,
+        isCloudSensor: Bool?
     ) {
         self.id = id
         self.macId = macId
@@ -33,6 +35,7 @@ public struct RuuviTagSQLite: RuuviTagSensor {
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.isCloudSensor = isCloudSensor
     }
 }
 
@@ -47,6 +50,7 @@ extension RuuviTagSQLite {
     public static let isClaimedColumn = Column("isClaimed")
     public static let isOwnerColumn = Column("isOwner")
     public static let owner = Column("owner")
+    public static let isCloudSensor = Column("isCloudSensor")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -64,6 +68,7 @@ extension RuuviTagSQLite: FetchableRecord {
         isClaimed = row[RuuviTagSQLite.isClaimedColumn]
         isOwner = row[RuuviTagSQLite.isOwnerColumn]
         owner = row[RuuviTagSQLite.owner]
+        isCloudSensor = row[RuuviTagSQLite.isCloudSensor]
     }
 }
 
@@ -82,6 +87,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.isClaimedColumn] = isClaimed
         container[RuuviTagSQLite.isOwnerColumn] = isOwner
         container[RuuviTagSQLite.owner] = owner
+        container[RuuviTagSQLite.isCloudSensor] = isCloudSensor
     }
 }
 
@@ -101,6 +107,7 @@ extension RuuviTagSQLite {
                 .notNull()
                 .defaults(to: true)
             table.column(RuuviTagSQLite.owner.name, .text)
+            table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
         })
     }
 }

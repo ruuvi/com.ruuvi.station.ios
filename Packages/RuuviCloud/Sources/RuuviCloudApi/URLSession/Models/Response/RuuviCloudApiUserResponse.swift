@@ -64,6 +64,10 @@ extension RuuviCloudApiSensor: CloudSensor {
         return isOwner
     }
 
+    public var isCloudSensor: Bool? {
+        return true
+    }
+    
     public var id: String {
         return sensorId
     }
