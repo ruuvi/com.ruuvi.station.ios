@@ -51,7 +51,7 @@ extension OwnerPresenter: OwnerViewOutput {
     /// Update the tag with owner information
     func update(with email: String) {
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
-            guard let sSelf = self else {return}
+            guard let sSelf = self else { return }
             if let sensor = localSensors.first(where: {$0.id == sSelf.ruuviTag.id }) {
                 sSelf.ruuviPool.update(sensor
                                         .with(owner: email))
