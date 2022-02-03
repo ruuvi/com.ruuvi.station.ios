@@ -14,7 +14,7 @@ class TagChartPresenter: NSObject {
         }
     }
     weak var ouptut: TagChartModuleOutput!
-    private var sensorSettings: SensorSettings!
+    private var sensorSettings: SensorSettings?
     var measurementService: RuuviServiceMeasurement! {
         didSet {
             measurementService.add(self)
@@ -68,7 +68,7 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, sensorSettings: SensorSettings, output: TagChartModuleOutput, luid: LocalIdentifier?) {
+    func configure(_ viewModel: TagChartViewModel, sensorSettings: SensorSettings?, output: TagChartModuleOutput, luid: LocalIdentifier?) {
         configureViewModel(viewModel)
         self.ouptut = output
         self.sensorSettings = sensorSettings
@@ -266,15 +266,45 @@ extension TagChartPresenter {
         var value: Double?
         switch viewModel.type {
         case .temperature:
-            let temp = data.temperature?.plus(sensorSettings: sensorSettings)
+            var temp: Temperature?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has temperature offset added, calculate and get original temp data
+            // 2: Apply current sensor settings
+            if let offset = data.temperatureOffset, offset != 0 {
+                temp = data.temperature?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                temp = data.temperature?.plus(sensorSettings: sensorSettings)
+            }
             value = measurementService.double(for: temp) ?? 0
         case .humidity:
-            let humidity = data.humidity?.plus(sensorSettings: sensorSettings)
+            var humidity: Humidity?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has humidity offset added, calculate and get original humidity data
+            // 2: Apply current sensor settings
+            if let offset = data.humidityOffset, offset != 0 {
+                humidity = data.humidity?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                humidity = data.humidity?.plus(sensorSettings: sensorSettings)
+            }
             value = measurementService.double(for: humidity,
                                                  temperature: data.temperature,
                                               isDecimal: false)
         case .pressure:
-            let pressure = data.pressure?.plus(sensorSettings: sensorSettings)
+            var pressure: Pressure?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has pressure offset added, calculate and get original pressure data
+            // 2: Apply current sensor settings
+            if let offset = data.pressureOffset, offset != 0 {
+                pressure = data.pressure?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                pressure = data.pressure?.plus(sensorSettings: sensorSettings)
+            }
             if let value = measurementService.double(for: pressure) {
                 return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
             } else {

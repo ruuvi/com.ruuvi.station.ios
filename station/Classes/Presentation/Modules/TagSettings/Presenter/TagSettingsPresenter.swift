@@ -179,17 +179,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.isClaimedTag.value == true && ruuviTag.isOwner {
             view.showUnclaimAndRemoveConfirmationDialog()
         } else {
-            view.showTagRemovalConfirmationDialog()
+            view.showTagRemovalConfirmationDialog(isOwner: ruuviTag.isOwner)
         }
     }
 
     func viewDidConfirmTagRemoval() {
-        if let isConnected = viewModel.isConnected.value,
-           let keepConnection = viewModel.keepConnection.value,
-           !isConnected && keepConnection {
-            errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
-            return
-        }
         ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.viewModel.reset()
@@ -403,7 +397,14 @@ extension TagSettingsPresenter {
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
 
-        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && ruuviTag.owner == nil
+        // swiftlint:disable line_length
+        // Context:
+        // The tag can be claimable only when -
+        // 1: When - the tag is not claimed already, AND
+        // 2: When - the tag macId is not Nil, AND
+        // 3: When - there's no owner of the tag OR there's a owner of the tag but it's not the logged in user
+        // Last one is for the scenario when a tag is added locally but claimed by other user
+        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && (ruuviTag.owner == nil || (ruuviTag.owner != nil && ruuviTag.isOwner))
         viewModel.canClaimTag.value = canBeClaimed
         viewModel.isClaimedTag.value = !canBeClaimed
 

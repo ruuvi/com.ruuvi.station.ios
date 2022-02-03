@@ -125,6 +125,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         tryToShowSwipeUpHint()
         restartObservingData()
         interactor.restartObservingTags()
+        handleClearSyncButtons()
         syncChartViews()
     }
 
@@ -135,6 +136,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
+    }
+    func handleClearSyncButtons() {
+        view.handleClearSyncButtons(sharedSensors: !ruuviTag.isOwner, isSyncing: interactor.isSyncingRecords() )
     }
     func viewDidTransition() {
         tryToShowSwipeUpHint()
@@ -175,6 +179,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
+                guard let syncing =  self?.isSyncing, syncing else {
+                    return
+                }
                 self?.view.setSync(progress: progress, for: viewModel)
             }
         }
@@ -185,16 +192,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
             self?.view.setSync(progress: nil, for: viewModel)
             if case .btkit(.logic(.connectionTimedOut)) = error {
                 self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+            } else if case .ruuviService(.btkit(.logic(.connectionTimedOut))) = error {
+                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
             } else if case .btkit(.logic(.serviceTimedOut)) = error {
                 self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
             }
-        }, completion: {
-            DispatchQueue.main.async { [weak self] in
-                self?.view.setSync(progress: nil, for: viewModel)
-            }
-        })
+        }, completion: nil)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {

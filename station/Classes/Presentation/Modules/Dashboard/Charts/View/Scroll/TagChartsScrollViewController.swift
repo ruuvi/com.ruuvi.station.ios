@@ -65,6 +65,27 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func setupChartViews(chartViews: [TagChartView]) {
         self.chartViews = chartViews
     }
+    
+    /// This method requires more context
+    /// 1: Clear and Sync button should not be visible and
+    /// the status should be visible is a sync progress is already running in the background
+    /// 2: Clear and Sync button should be hidden for shared sensors
+    /// 3: The only case these buttons are shown are when the last stored data is from the cloud
+    /// no sync process running in the background
+    func handleClearSyncButtons(sharedSensors: Bool, isSyncing: Bool) {
+        if isSyncing {
+            hideUtilButtons()
+            syncStatusLabel.isHidden = false
+            syncStatusLabel.text = "TagCharts.Status.Serving".localized()
+            return
+        }
+        if sharedSensors {
+            hideUtilButtons()
+            syncStatusLabel.isHidden = true
+        } else {
+            showUtilButtons(withDelay: false)
+        }
+    }
 
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
@@ -116,14 +137,19 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             case .disconnecting:
                 syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
             case .success:
+                ///Show success message
                 syncStatusLabel.text = "TagCharts.Status.Success".localized()
+                /// Hide success message and show buttons after two seconds
+                showUtilButtons()
             case .failure:
+                ///Show success message
                 syncStatusLabel.text = "TagCharts.Status.Error".localized()
+                /// Hide success message and show buttons after two seconds
+                showUtilButtons()
             }
         } else {
-            syncStatusLabel.isHidden = true
-            syncButton.isHidden = false
-            clearButton.isHidden = false
+            /// Show buttons after two seconds if there's an unexpected error
+            showUtilButtons()
         }
     }
 
@@ -339,5 +365,19 @@ extension TagChartsScrollViewController {
         } else {
             alertImageView.image = nil
         }
+    }
+    
+    /// This method helps present the clear and sync button after a successful or failed operation.
+    /// However, the visibility changes after two seconds to make sure user have a noticeable time to see the operation response
+    private func showUtilButtons(withDelay: Bool = true) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(withDelay ? 2 : 0), execute: { [weak self] in
+            self?.syncStatusLabel.isHidden = true
+            self?.syncButton.isHidden = false
+            self?.clearButton.isHidden = false
+        })
+    }
+    private func hideUtilButtons() {
+        clearButton.isHidden = true
+        syncButton.isHidden = true
     }
 }
