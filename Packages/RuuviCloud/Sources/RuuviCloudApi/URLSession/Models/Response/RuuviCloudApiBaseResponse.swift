@@ -34,6 +34,11 @@ extension RuuviCloudApiBaseResponse {
             }
             return .success(data)
         case .error:
+            // Check whether the error is related to sensor claim
+            if let code = code, code == "ER_SENSOR_ALREADY_CLAIMED", let description = errorDescription {
+                return .failure(.claim(RuuviCloudApiClaimError(error: description, code: "UserApiError." + code)))
+            }
+            // Other errors
             guard let code = code else {
                 if let description = errorDescription {
                     return .failure(.api(description))
