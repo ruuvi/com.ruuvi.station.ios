@@ -54,9 +54,6 @@ class TagChartsInteractor {
         MeasurementType.chartsCases.forEach({
             let viewModel = TagChartViewModel(type: $0)
             let module = TagChartAssembler.createModule()
-            guard let sensorSettings = sensorSettings else {
-                return
-            }
             module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
             chartModules.append(module)
         })
@@ -140,6 +137,17 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         return promise.future
     }
 
+    func isSyncingRecords() -> Bool {
+        guard let luid = ruuviTagSensor.luid else {
+            return false
+        }
+        if gattService.isSyncingLogs(with: luid.value) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         guard let luid = ruuviTagSensor.luid else {
