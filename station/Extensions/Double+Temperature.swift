@@ -22,15 +22,15 @@ extension Double {
     var inHg: Double {
         return self * 0.02953
     }
-    
+
     var mmHg: Double {
         return self * 0.75006
     }
-    
+
     var hPaFrominHg: Double {
         return self * 33.86389
     }
-    
+
     var hPaFrommmHg: Double {
         return self * 1.33322
     }

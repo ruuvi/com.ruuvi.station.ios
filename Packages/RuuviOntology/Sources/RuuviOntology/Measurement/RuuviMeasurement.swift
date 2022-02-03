@@ -26,7 +26,6 @@ public struct RuuviMeasurement {
     // v5
     public var movementCounter: Int?
     public var txPower: Int?
-    
     // Backword compatibility for the users using versions < 0.7.7
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
