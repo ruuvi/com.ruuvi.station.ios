@@ -173,7 +173,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     .compactMap({ localSensor in
                         if let cloudSensor = cloudSensors.first(where: {$0.id == localSensor.id }) {
                             updatedSensors.insert(localSensor)
-                            // Update the local sensor data with cloud data if there's a match of sensor in local storage and cloud
+                            // Update the local sensor data with cloud data
+                            // if there's a match of sensor in local storage and cloud
                             return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
                         } else {
                             let unclaimed = localSensor.unclaimed()
@@ -182,7 +183,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 updatedSensors.insert(localSensor)
                                 return self.ruuviPool.update(unclaimed)
                             } else {
-                                // If there is a local sensor which is claimed and deleted from the cloud, delete it from local storage
+                                // If there is a local sensor which is claimed and deleted from the cloud,
+                                // delete it from local storage
                                 // Otherwise keep it stored
                                 if localSensor.isCloud {
                                     return self.ruuviPool.delete(localSensor)

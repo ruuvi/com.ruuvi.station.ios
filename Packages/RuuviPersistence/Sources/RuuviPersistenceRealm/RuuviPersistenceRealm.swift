@@ -192,7 +192,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                     name: ruuviTagRealm.name,
                     isClaimed: false,
                     isOwner: false,
-                    owner: ruuviTagRealm.owner
+                    owner: ruuviTagRealm.owner,
+                    isCloudSensor: ruuviTagRealm.isCloudSensor
                 ).any
                 promise.succeed(value: result)
             } else {
@@ -215,7 +216,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                     name: ruuviTagRealm.name,
                     isClaimed: false,
                     isOwner: false,
-                    owner: ruuviTagRealm.owner
+                    owner: ruuviTagRealm.owner,
+                    isCloudSensor: ruuviTagRealm.isCloudSensor
                 ).any
             }
             promise.succeed(value: result)
