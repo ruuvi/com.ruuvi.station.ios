@@ -22,18 +22,11 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensorRecord, RuuviRepositoryError> {
         let promise = Promise<AnyRuuviTagSensorRecord, RuuviRepositoryError>()
-        storage.readSensorSettings(sensor)
-            .on(success: { settings in
-                let offseted = record
-                    //.with(sensorSettings: settings)
-                self.pool.create(offseted)
-                    .on(success: { _ in
-                        promise.succeed(value: offseted.any)
-                    }, failure: { error in
-                        promise.fail(error: .ruuviPool(error))
-                    })
+        self.pool.create(record)
+            .on(success: { _ in
+                promise.succeed(value: record.any)
             }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
+                promise.fail(error: .ruuviPool(error))
             })
         return promise.future
     }
@@ -43,19 +36,12 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
         for sensor: RuuviTagSensor
     ) -> Future<[AnyRuuviTagSensorRecord], RuuviRepositoryError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviRepositoryError>()
-        storage.readSensorSettings(sensor)
-            .on(success: { settings in
-                let offseted = records.map({ $0.any
-                    //.with(sensorSettings: settings).any
-                })
-                self.pool.create(offseted)
-                    .on(success: { _ in
-                        promise.succeed(value: offseted)
-                    }, failure: { error in
-                        promise.fail(error: .ruuviPool(error))
-                    })
+        let mappedRecords = records.map({ $0.any })
+        self.pool.create(mappedRecords)
+            .on(success: { _ in
+                promise.succeed(value: mappedRecords)
             }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
+                promise.fail(error: .ruuviPool(error))
             })
         return promise.future
     }
