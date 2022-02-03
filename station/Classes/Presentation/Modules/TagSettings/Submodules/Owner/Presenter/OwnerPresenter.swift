@@ -12,7 +12,7 @@ final class OwnerPresenter: OwnerModuleInput {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviStorage: RuuviStorage!
     var ruuviPool: RuuviPool!
-    
+
     private var ruuviTag: RuuviTagSensor!
     private var isLoading: Bool = false {
         didSet {
@@ -23,7 +23,7 @@ final class OwnerPresenter: OwnerModuleInput {
             }
         }
     }
-    
+
     func configure(ruuviTag: RuuviTagSensor) {
         self.ruuviTag = ruuviTag
     }
