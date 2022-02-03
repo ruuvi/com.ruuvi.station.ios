@@ -261,7 +261,7 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "<br><br>" + summary)
+                                                body: "\n\n" + summary)
         }
     }
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
