@@ -43,7 +43,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isConnectable: ruuviTag.isConnectable,
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
-            owner: ruuviTag.owner
+            owner: ruuviTag.owner,
+            isCloudSensor: ruuviTag.isCloudSensor
         )
         do {
             try database.dbPool.write { db in
@@ -264,7 +265,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                             isConnectable: ruuviTag.isConnectable,
                             isClaimed: ruuviTag.isClaimed,
                             isOwner: ruuviTag.isOwner,
-                            owner: ruuviTag.owner)
+                            owner: ruuviTag.owner,
+                            isCloudSensor: ruuviTag.isCloudSensor)
 
         do {
             try database.dbPool.write { db in
@@ -290,7 +292,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isConnectable: ruuviTag.isConnectable,
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
-            owner: ruuviTag.owner
+            owner: ruuviTag.owner,
+            isCloudSensor: ruuviTag.isCloudSensor
         )
         do {
             var success = false
