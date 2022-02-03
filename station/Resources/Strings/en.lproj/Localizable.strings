@@ -360,6 +360,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Sensor share limit is reached";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "In order to share the sensor, you need to have a Ruuvi Gateway router nearby the sensor";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "This sensor is already shared";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Sensor already claimed by %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Sensor already claimed";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Unable to send e-mail";
 "UserApiError.ER_MISSING_ARGUMENT" = "Missing argument";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Invalid density mode";

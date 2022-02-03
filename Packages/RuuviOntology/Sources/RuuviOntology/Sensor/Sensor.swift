@@ -24,6 +24,7 @@ public protocol Claimable {
     var isClaimed: Bool { get }
     var isOwner: Bool { get }
     var owner: String? { get }
+    var isCloudSensor: Bool? { get }
 }
 
 public protocol Sensor: StringIdentifieable {}
