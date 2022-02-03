@@ -37,7 +37,7 @@ enum TagSettingsTableSection: Int {
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.canShowUpdateFirmware.value ?? false
     }
-    
+
     static func showOffsetCorrection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isOwner.value == true
     }
@@ -208,7 +208,9 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
     func showTagRemovalConfirmationDialog(isOwner: Bool) {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = isOwner ? "TagSettings.confirmTagRemovalDialog.message".localized() : "TagSettings.confirmSharedTagRemovalDialog.message".localized()
+        let message = isOwner ?
+        "TagSettings.confirmTagRemovalDialog.message".localized() :
+        "TagSettings.confirmSharedTagRemovalDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: isOwner ? "Confirm".localized() : "Ok".localized(),
                                            style: .destructive,
@@ -1485,7 +1487,9 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITextFieldDelegate
 extension TagSettingsTableViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn
+                   range: NSRange,
+                   replacementString string: String) -> Bool {
         guard textField == tagNameTextField else {
             textField.resignFirstResponder()
             return true
