@@ -322,7 +322,7 @@ private final class PersistenceAssembly: Assembly {
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
 
-        container.register(OpenWeatherMapAPI.self) { r in
+        container.register(OpenWeatherMapAPI.self) { _ in
             let apiKey: String = AppAssemblyConstants.openWeatherMapApiKey
             let api = OpenWeatherMapAPIURLSession(apiKey: apiKey)
             return api

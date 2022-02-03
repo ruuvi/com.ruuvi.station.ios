@@ -120,7 +120,7 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
     public var isCloudSensor: Bool? {
         return object.isCloudSensor
     }
-    
+
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {
         return lhs.id == rhs.id
     }
