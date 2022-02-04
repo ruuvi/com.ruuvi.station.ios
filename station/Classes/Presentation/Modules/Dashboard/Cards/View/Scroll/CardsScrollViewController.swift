@@ -367,10 +367,34 @@ extension CardsScrollViewController {
         }
 
         let type = viewModel.type
+        // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
+        // If the sensor is a cloud sensor show the bell regardless whether it's connected or not
+        // If it's neither cloud not connected hide the bell
         view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
             switch type {
             case .ruuvi:
-                view.isHidden = !isConnected.bound
+                if let isCloud = viewModel.isCloud.value, isCloud {
+                    view.isHidden = !isCloud
+                } else {
+                    view.isHidden = !isConnected.bound
+                }
+            case .web:
+                view.isHidden = false
+            }
+        }
+        // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
+        // If the sensor is a cloud sensor show the bell regardless whether it's connected or not
+        // If it's neither cloud not connected hide the bell
+        view.alertView.bind(viewModel.isCloud) { (view, isCloud) in
+            switch type {
+            case .ruuvi:
+                if isCloud.bound {
+                    view.isHidden = !isCloud.bound
+                } else {
+                    if let isConnected = viewModel.isConnected.value {
+                        view.isHidden = !isConnected
+                    }
+                }
             case .web:
                 view.isHidden = false
             }
