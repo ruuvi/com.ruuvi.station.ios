@@ -156,6 +156,16 @@ class TagSettingsTableViewController: UITableViewController {
 
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
+    /// If settings page is opened using the alert bell tableview will be
+    /// scrolled to the alert settings section
+    func updateScrollPosition(scrollToAlert: Bool) {
+        if scrollToAlert {
+            let scrollToSection = TagSettingsTableSection.showConnection(for: viewModel) ? 2 : 1
+            let indexPath = IndexPath(row: 0, section: scrollToSection)
+            tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        }
+    }
+
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()

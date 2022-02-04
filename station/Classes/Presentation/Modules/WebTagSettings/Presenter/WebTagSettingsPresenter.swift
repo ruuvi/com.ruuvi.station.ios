@@ -43,6 +43,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
             bindViewModel(to: virtualSensor)
         }
     }
+    private var scrollToAlert: Bool = false
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -56,10 +57,12 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
 
     func configure(
         sensor: VirtualTagSensor,
-        temperature: Temperature?
+        temperature: Temperature?,
+        scrollToAlert: Bool
     ) {
         self.virtualSensor = sensor
         self.temperature = temperature
+        self.scrollToAlert = scrollToAlert
         startObservingWebTag()
         startObservingSettingsChanges()
         startObservingApplicationState()
@@ -73,6 +76,7 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     func viewWillAppear() {
         checkPushNotificationsStatus()
         syncViewModel()
+        view.updateScrollPosition(scrollToAlert: scrollToAlert)
     }
 
     func viewDidAskToDismiss() {
