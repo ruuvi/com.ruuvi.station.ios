@@ -38,13 +38,17 @@ class TagChartsScrollViewController: UIViewController {
     deinit {
         appDidBecomeActiveToken?.invalidate()
     }
-// MARK: - Actions
+    // MARK: - Actions
+    @IBAction func didTriggerAlertBell(_ sender: Any) {
+        output.viewDidTriggerSettings(for: viewModel, scrollToAlert: true)
+    }
+
     @IBAction func didTriggerCards(_ sender: Any) {
         output.viewDidTriggerCards(for: viewModel)
     }
 
     @IBAction func didTriggerSettings(_ sender: Any) {
-        output.viewDidTriggerSettings(for: viewModel)
+        output.viewDidTriggerSettings(for: viewModel, scrollToAlert: false)
     }
 
     @IBAction func didTriggerClear(_ sender: Any) {

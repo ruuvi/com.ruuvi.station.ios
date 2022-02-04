@@ -91,6 +91,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             }
         }
     }
+    private var scrollToAlert: Bool = false
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -109,16 +110,19 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         backgroundToken?.invalidate()
     }
 
+    // swiftlint:disable:next function_parameter_count
     func configure(ruuviTag: RuuviTagSensor,
                    temperature: Temperature?,
                    humidity: Humidity?,
                    sensor: SensorSettings?,
-                   output: TagSettingsModuleOutput) {
+                   output: TagSettingsModuleOutput,
+                   scrollToAlert: Bool) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
         self.temperature = temperature
         self.humidity = humidity
         self.ruuviTag = ruuviTag
+        self.scrollToAlert = scrollToAlert
 
         if let sensorSettings = sensor {
             self.sensorSettings = sensorSettings
@@ -160,6 +164,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
+        view.updateScrollPosition(scrollToAlert: scrollToAlert)
     }
 
     func viewDidAskToDismiss() {

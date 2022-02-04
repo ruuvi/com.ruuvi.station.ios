@@ -152,14 +152,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.dismiss()
     }
 
-    func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
+    func viewDidTriggerSettings(for viewModel: TagChartsViewModel, scrollToAlert: Bool) {
         if viewModel.type == .ruuvi,
             ruuviTag.luid?.value == viewModel.uuid.value {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
                                    sensor: sensorSettings,
-                                   output: self)
+                                   output: self,
+                                   scrollToAlert: scrollToAlert)
         } else {
             assert(false)
         }

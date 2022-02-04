@@ -229,10 +229,10 @@ extension CardsScrollViewController: CardViewDelegate {
         }
     }
 
-    func card(view: CardView, didTriggerSettings sender: Any) {
+    func card(view: CardView, didTriggerSettings sender: Any, scrollToAlert: Bool) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[index])
+            output.viewDidTriggerSettings(for: viewModels[index], with: scrollToAlert)
         }
     }
 }
