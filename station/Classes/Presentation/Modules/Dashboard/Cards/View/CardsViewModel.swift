@@ -32,6 +32,7 @@ struct CardsViewModel {
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var provider: VirtualProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
+    var isCloud: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
@@ -50,6 +51,7 @@ struct CardsViewModel {
 //        pressure.value = virtualSensor.lastRecord?.pressure
         isConnectable.value = false
         isConnected.value = false
+        isCloud.value = false
 //        date.value = virtualSensor.data.last?.date
 //        location.value = virtualSensor.location?.location
         provider = virtualSensor.provider
@@ -62,6 +64,7 @@ struct CardsViewModel {
         pressure.value = record.pressure
         isConnectable.value = false
         isConnected.value = false
+        isCloud.value = false
         currentLocation.value = record.location
         date.value = record.date
     }
@@ -86,6 +89,7 @@ struct CardsViewModel {
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
         isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud
+        isCloud.value = ruuviTag.isCloud
     }
 
     func update(_ record: RuuviTagSensorRecord) {
