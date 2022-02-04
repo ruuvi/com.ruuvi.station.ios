@@ -2,7 +2,7 @@ import UIKit
 import Charts
 import BTKit
 import GestureInstructions
-
+// swiftlint:disable file_length
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
 
@@ -310,8 +310,25 @@ extension TagChartsScrollViewController {
         bacgroundImageViewOverlay?.bind(viewModel.background, block: {
             $0.isHidden = $1 == nil
         })
-        alertImageView?.bind(viewModel.isConnected) { (view, isConnected) in
-            view.isHidden = !isConnected.bound
+        // Cloud sensors will show the alert bell
+        // If it's not cloud sensor check whether it's connected and show bell icon if connected only
+        alertImageView?.bind(viewModel.isConnected) { [weak self] (view, isConnected) in
+            if let isCloud = self?.viewModel.isCloud.value.bound, isCloud {
+                view.isHidden = !isCloud
+            } else {
+                view.isHidden = !isConnected.bound
+            }
+        }
+        // Cloud sensors will always show the alert bell
+        // If it's not cloud sensor check whether it's connected and show bell icon if connected only
+        alertImageView?.bind(viewModel.isCloud) { [weak self] (view, isCloud) in
+            if isCloud.bound {
+                view.isHidden = !isCloud.bound
+            } else {
+                if let isConnected = self?.viewModel.isConnected.value.bound {
+                    view.isHidden = !isConnected
+                }
+            }
         }
         alertImageView?.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
@@ -377,6 +394,8 @@ extension TagChartsScrollViewController {
             self?.clearButton.isHidden = false
         })
     }
+
+    /// Hides Clear and Sync buttons
     private func hideUtilButtons() {
         clearButton.isHidden = true
         syncButton.isHidden = true
