@@ -90,7 +90,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
     private let ruuviStorage: RuuviStorage
     private let virtualPersistence: VirtualPersistence
     private let settings: RuuviLocalSettings
-    
 
     public init(
         ruuviUser: RuuviUser,
@@ -136,6 +135,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.language(settings.language))
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func set(_ property: Properties) {
         let value: String
         switch property {
