@@ -218,10 +218,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
     }
 
-    func viewDidTapOnUUID() {
-        view.showUUIDDetail()
-    }
-
     func viewDidAskToLearnMoreAboutFirmwareUpdate() {
         UIApplication.shared.open(URL(string: "https://lab.ruuvi.com/dfu")!)
     }
