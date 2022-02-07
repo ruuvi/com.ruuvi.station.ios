@@ -123,6 +123,26 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
+    func getClaimedTagsCount() -> Future<Int, RuuviStorageError> {
+        let promise = Promise<Int, RuuviStorageError>()
+        let allTags = readAll()
+        allTags.on(success: { tags in
+            let claimedTags = tags.filter({ $0.isClaimed && $0.isOwner })
+            promise.succeed(value: claimedTags.count)
+        })
+        return promise.future
+    }
+
+    func getOfflineTagsCount() -> Future<Int, RuuviStorageError> {
+        let promise = Promise<Int, RuuviStorageError>()
+        let allTags = readAll()
+        allTags.on(success: { tags in
+            let claimedTags = tags.filter({ !$0.isCloud })
+            promise.succeed(value: claimedTags.count)
+        })
+        return promise.future
+    }
+
     func getStoredMeasurementsCount() -> Future<Int, RuuviStorageError> {
         let promise = Promise<Int, RuuviStorageError>()
         let sqliteOperation = sqlite.getStoredMeasurementsCount()

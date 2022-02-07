@@ -155,6 +155,8 @@ PODS:
     - RuuviAnalytics/Contract
     - RuuviLocal
     - RuuviStorage
+    - RuuviUser
+    - RuuviVirtual
   - RuuviAnalytics/Tests (0.0.1)
   - RuuviCloud (0.0.1):
     - RuuviCloud/Contract (= 0.0.1)
@@ -744,7 +746,7 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: a2db54d9dcceddeba936b429f5b3d6610a109686
   RealmSwift: 2a3c75ecbf5a3b04080ff5f6f0554cf6337b4764
-  RuuviAnalytics: f332b19b2554f52d11fb517cca34084c83b1463e
+  RuuviAnalytics: 9bcb8ba615c61950c3298fff0419db2a8cff20a1
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4

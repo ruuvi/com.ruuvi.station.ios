@@ -23,6 +23,8 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviAnalytics/Contract'
     ss.dependency 'RuuviStorage'
     ss.dependency 'RuuviLocal'
+    ss.dependency 'RuuviVirtual'
+    ss.dependency 'RuuviUser'
   end
 
   s.test_spec 'Tests' do |test_spec|
