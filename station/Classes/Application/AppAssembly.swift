@@ -788,10 +788,14 @@ private final class BusinessAssembly: Assembly {
         }
         #if canImport(RuuviAnalytics)
         container.register(RuuviAnalytics.self) { r in
+            let ruuviUser = r.resolve(RuuviUser.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let virtualPersistence = r.resolve(VirtualPersistence.self)!
             let settings = r.resolve(RuuviLocalSettings.self)!
             let service = RuuviAnalyticsImpl(
+                ruuviUser: ruuviUser,
                 ruuviStorage: ruuviStorage,
+                virtualPersistence: virtualPersistence,
                 settings: settings
             )
             return service
