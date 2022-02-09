@@ -360,6 +360,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Du kan inte dela sensorn med flera användare";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "För att dela sensorn måste du ha en Ruuvi Gateway router i närheten av sensorn";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Sensorn är redan delad";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Sensorn ägs redan av %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Sensorn har redan en ägare";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Kunde inte skicka e-post";
 "UserApiError.ER_MISSING_ARGUMENT" = "Argument saknas";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Ogiltig densitet";
