@@ -322,7 +322,7 @@ private final class PersistenceAssembly: Assembly {
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
 
-        container.register(OpenWeatherMapAPI.self) { r in
+        container.register(OpenWeatherMapAPI.self) { _ in
             let apiKey: String = AppAssemblyConstants.openWeatherMapApiKey
             let api = OpenWeatherMapAPIURLSession(apiKey: apiKey)
             return api
@@ -788,10 +788,14 @@ private final class BusinessAssembly: Assembly {
         }
         #if canImport(RuuviAnalytics)
         container.register(RuuviAnalytics.self) { r in
+            let ruuviUser = r.resolve(RuuviUser.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let virtualPersistence = r.resolve(VirtualPersistence.self)!
             let settings = r.resolve(RuuviLocalSettings.self)!
             let service = RuuviAnalyticsImpl(
+                ruuviUser: ruuviUser,
                 ruuviStorage: ruuviStorage,
+                virtualPersistence: virtualPersistence,
                 settings: settings
             )
             return service

@@ -135,7 +135,7 @@ extension CardsPresenter: CardsViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
         if viewModel.type == .ruuvi,
            let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             var humidity: Humidity?
@@ -152,12 +152,14 @@ extension CardsPresenter: CardsViewOutput {
                             ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
                                 || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
                     }),
-                output: self)
+                output: self,
+                scrollToAlert: scrollToAlert)
         } else if viewModel.type == .web,
                   let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
             router.openVirtualSensorSettings(
                 sensor: webTag,
-                temperature: viewModel.temperature.value
+                temperature: viewModel.temperature.value,
+                scrollToAlert: scrollToAlert
             )
         }
     }
@@ -261,7 +263,7 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "<br><br>" + summary)
+                                                body: "\n\n" + summary)
         }
     }
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {

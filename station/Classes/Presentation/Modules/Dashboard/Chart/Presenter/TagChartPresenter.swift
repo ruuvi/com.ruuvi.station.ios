@@ -4,7 +4,7 @@ import UIKit
 import RuuviOntology
 import RuuviLocal
 import RuuviService
-
+// swiftlint:disable file_length
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
     var settings: RuuviLocalSettings!
@@ -68,7 +68,10 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, sensorSettings: SensorSettings?, output: TagChartModuleOutput, luid: LocalIdentifier?) {
+    func configure(_ viewModel: TagChartViewModel,
+                   sensorSettings: SensorSettings?,
+                   output: TagChartModuleOutput,
+                   luid: LocalIdentifier?) {
         configureViewModel(viewModel)
         self.ouptut = output
         self.sensorSettings = sensorSettings

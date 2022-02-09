@@ -82,6 +82,7 @@ public protocol RuuviServiceFactory {
         ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceAlert
 
+    // swiftlint:disable:next function_parameter_count
     func createAuth(
         ruuviUser: RuuviUser,
         pool: RuuviPool,
@@ -197,6 +198,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         )
     }
 
+    // swiftlint:disable:next function_parameter_count
     public func createAuth(
         ruuviUser: RuuviUser,
         pool: RuuviPool,

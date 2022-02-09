@@ -33,7 +33,6 @@ extension RuuviCloudApiSensor: CloudSensor {
     public var offsetTemperature: Double? {
         return temperatureOffset
     }
-
     // on cloud in percent, locally in fraction of one
     public var offsetHumidity: Double? {
         if let humidityOffset = humidityOffset {
@@ -42,7 +41,6 @@ extension RuuviCloudApiSensor: CloudSensor {
             return nil
         }
     }
-
     // on cloud in Pa, locally in hPa
     public var offsetPressure: Double? {
         if let pressureOffset = pressureOffset {
@@ -51,23 +49,23 @@ extension RuuviCloudApiSensor: CloudSensor {
             return nil
         }
     }
-
+    /// Returns the background image of the sensor
     public var picture: URL? {
         return URL(string: pictureUrl)
     }
-
+    /// Returns the email address of the owner of a sensor
     public var owner: String? {
         return sensorOwner
     }
-
+    /// Returns status of sensor whether it is already claimed
     public var isClaimed: Bool {
         return isOwner
     }
-
+    /// Returns always true since this is a property of sensors returns from the cloud
     public var isCloudSensor: Bool? {
         return true
     }
-    
+    /// Returns the 'id' of the sensor
     public var id: String {
         return sensorId
     }
