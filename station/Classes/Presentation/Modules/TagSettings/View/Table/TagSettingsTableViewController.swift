@@ -37,7 +37,7 @@ enum TagSettingsTableSection: Int {
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.canShowUpdateFirmware.value ?? false
     }
-    
+
     static func showOffsetCorrection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isOwner.value == true
     }
@@ -86,10 +86,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
-    @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
     @IBOutlet weak var tagNameCell: UITableViewCell!
-    @IBOutlet weak var uuidValueLabel: UILabel!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
     @IBOutlet weak var accelerationZValueLabel: UILabel!
@@ -105,7 +103,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var txPowerValueLabel: UILabel!
     @IBOutlet weak var backgroundImageLabel: UILabel!
     @IBOutlet weak var tagNameTitleLabel: UILabel!
-    @IBOutlet weak var uuidTitleLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var rssiTitleLabel: UILabel!
     @IBOutlet weak var dataFormatTitleLabel: UILabel!
@@ -156,12 +153,21 @@ class TagSettingsTableViewController: UITableViewController {
 
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
+    /// If settings page is opened using the alert bell tableview will be
+    /// scrolled to the alert settings section
+    func updateScrollPosition(scrollToAlert: Bool) {
+        if scrollToAlert {
+            let scrollToSection = TagSettingsTableSection.showConnection(for: viewModel) ? 2 : 1
+            let indexPath = IndexPath(row: 0, section: scrollToSection)
+            tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        }
+    }
+
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
         tagNameTitleLabel.text = "TagSettings.tagNameTitleLabel.text".localized()
         rssiTitleLabel.text = "TagSettings.rssiTitleLabel.text".localized()
-        uuidTitleLabel.text = "TagSettings.uuidTitleLabel.text".localized()
         macAddressTitleLabel.text = "TagSettings.macAddressTitleLabel.text".localized()
         dataFormatTitleLabel.text = "TagSettings.dataFormatTitleLabel.text".localized()
         batteryVoltageTitleLabel.text = "TagSettings.batteryVoltageTitleLabel.text".localized()
@@ -208,7 +214,9 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
     func showTagRemovalConfirmationDialog(isOwner: Bool) {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = isOwner ? "TagSettings.confirmTagRemovalDialog.message".localized() : "TagSettings.confirmSharedTagRemovalDialog.message".localized()
+        let message = isOwner ?
+        "TagSettings.confirmTagRemovalDialog.message".localized() :
+        "TagSettings.confirmSharedTagRemovalDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: isOwner ? "Confirm".localized() : "Ok".localized(),
                                            style: .destructive,
@@ -238,18 +246,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
             if let mac = self?.viewModel?.mac.value {
                 UIPasteboard.general.string = mac
-            }
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
-    func showUUIDDetail() {
-        let title = "TagSettings.UUID.Alert.title".localized()
-        let controller = UIAlertController(title: title, message: viewModel?.uuid.value, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
-            if let uuid = self?.viewModel?.uuid.value {
-                UIPasteboard.general.string = uuid
             }
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -375,8 +371,6 @@ extension TagSettingsTableViewController {
             output.viewDidTapShareButton()
         case macAddressCell:
             output.viewDidTapOnMacAddress()
-        case uuidCell:
-            output.viewDidTapOnUUID()
         case txPowerCell:
             output.viewDidTapOnTxPower()
         case msnCell:
@@ -816,14 +810,6 @@ extension TagSettingsTableViewController {
         }
 
         let emptyValueString = "TagSettings.EmptyValue.sign"
-
-        uuidValueLabel.bind(viewModel.uuid) { label, uuid in
-            if let uuid = uuid {
-                label.text = uuid
-            } else {
-                label.text = emptyValueString.localized()
-            }
-        }
 
         macAddressValueLabel.bind(viewModel.mac) { label, mac in
             if let mac = mac {
@@ -1485,7 +1471,9 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITextFieldDelegate
 extension TagSettingsTableViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn
+                   range: NSRange,
+                   replacementString string: String) -> Bool {
         guard textField == tagNameTextField else {
             textField.resignFirstResponder()
             return true

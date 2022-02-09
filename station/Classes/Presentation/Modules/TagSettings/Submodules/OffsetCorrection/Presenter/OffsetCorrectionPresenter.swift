@@ -73,6 +73,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         view.showClearConfirmationDialog()
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func viewDidSetCorrectValue(correctValue: Double) {
         var offset: Double = 0
         switch view.viewModel.type {

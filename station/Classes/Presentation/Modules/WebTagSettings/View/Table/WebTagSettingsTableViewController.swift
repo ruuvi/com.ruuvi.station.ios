@@ -53,6 +53,15 @@ class WebTagSettingsTableViewController: UITableViewController {
 
 // MARK: - WebTagSettingsViewInput
 extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
+    /// If settings page is opened using the alert bell tableview will be
+    /// scrolled to the alert settings section
+    func updateScrollPosition(scrollToAlert: Bool) {
+        if scrollToAlert {
+            let indexPath = IndexPath(row: 0, section: 1)
+            tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        }
+    }
+
     func localize() {
         navigationItem.title = "WebTagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "WebTagSettings.Label.BackgroundImage.text".localized()
