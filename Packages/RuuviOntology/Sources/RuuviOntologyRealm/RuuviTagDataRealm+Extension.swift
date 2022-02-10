@@ -60,7 +60,10 @@ extension RuuviTagDataRealm {
             acceleration: acceleration,
             voltage: unitVoltage,
             movementCounter: movementCounter.value,
-            txPower: txPower.value
+            txPower: txPower.value,
+            temperatureOffset: temperatureOffset,
+            humidityOffset: humidityOffset,
+            pressureOffset: pressureOffset
         )
     }
 }

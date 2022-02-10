@@ -6,23 +6,36 @@ import RuuviCloud
 import RuuviPool
 import RuuviLocal
 import RuuviService
+import RuuviUser
 
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
     private let propertiesService: RuuviServiceSensorProperties
     private let localIDs: RuuviLocalIDs
+    private let localImages: RuuviLocalImages
+    private let storage: RuuviStorage
+    private let alertService: RuuviServiceAlert
+    private let ruuviUser: RuuviUser
 
     public init(
         cloud: RuuviCloud,
         pool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localImages: RuuviLocalImages,
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser
     ) {
         self.cloud = cloud
         self.pool = pool
         self.propertiesService = propertiesService
         self.localIDs = localIDs
+        self.localImages = localImages
+        self.storage = storage
+        self.alertService = alertService
+        self.ruuviUser = ruuviUser
     }
 
     @discardableResult
@@ -62,20 +75,64 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
+    // swiftlint:disable:next function_body_length
     public func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         guard let macId = sensor.macId else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
-        cloud.claim(macId: macId)
+        guard let owner = ruuviUser.email else {
+            promise.fail(error: .ruuviCloud(.notAuthorized))
+            return promise.future
+        }
+        cloud.claim(name: sensor.name, macId: macId)
             .on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
-                let claimedSensor = sensor.with(isClaimed: true)
+                let claimedSensor = sensor
+                    .with(owner: owner)
+                    .with(isClaimed: true)
                 sSelf.pool
                     .update(claimedSensor)
-                    .on(success: { _ in
-                        promise.succeed(value: claimedSensor.any)
+                    .on(success: { [weak sSelf] _ in
+                        guard let ssSelf = sSelf else { return }
+                        if let customImage = ssSelf.localImages.getCustomBackground(for: macId) {
+                            if let jpegData = customImage.jpegData(compressionQuality: 1.0) {
+                                let remote = ssSelf.cloud.upload(
+                                    imageData: jpegData,
+                                    mimeType: .jpg,
+                                    progress: nil,
+                                    for: macId
+                                )
+                                remote.on(success: { _ in
+                                    promise.succeed(value: claimedSensor.any)
+                                }, failure: { error in
+                                    promise.fail(error: .ruuviCloud(error))
+                                })
+                            } else {
+                                promise.fail(error: .failedToGetJpegRepresentation)
+                            }
+                        } else {
+                            promise.succeed(value: claimedSensor.any)
+                        }
+
+                        ssSelf.storage
+                            .readSensorSettings(sensor)
+                            .on { [weak ssSelf] settings in
+                                guard let sssSelf = ssSelf else { return }
+                                sssSelf.cloud.update(
+                                    temperatureOffset: settings?.temperatureOffset ?? 0,
+                                    humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
+                                    pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPA local, Pa on cloud
+                                    for: sensor
+                                ).on()
+                            }
+
+                        AlertType.allCases.forEach { type in
+                            if let alert = ssSelf.alertService.alert(for: sensor, of: type) {
+                                ssSelf.alertService.register(type: alert, ruuviTag: claimedSensor)
+                            }
+                        }
                     }, failure: { error in
                         promise.fail(error: .ruuviPool(error))
                     })
@@ -97,7 +154,9 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         cloud.unclaim(macId: macId)
             .on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
-                let unclaimedSensor = sensor.with(isClaimed: false)
+                let unclaimedSensor = sensor
+                    .with(isClaimed: false)
+                    .withoutOwner()
                 sSelf.pool
                     .update(unclaimedSensor)
                     .on(success: { _ in

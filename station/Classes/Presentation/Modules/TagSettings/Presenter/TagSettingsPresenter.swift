@@ -92,6 +92,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             }
         }
     }
+    private var scrollToAlert: Bool = false
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -110,16 +111,19 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         backgroundToken?.invalidate()
     }
 
+    // swiftlint:disable:next function_parameter_count
     func configure(ruuviTag: RuuviTagSensor,
                    temperature: Temperature?,
                    humidity: Humidity?,
                    sensor: SensorSettings?,
-                   output: TagSettingsModuleOutput) {
+                   output: TagSettingsModuleOutput,
+                   scrollToAlert: Bool) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
         self.temperature = temperature
         self.humidity = humidity
         self.ruuviTag = ruuviTag
+        self.scrollToAlert = scrollToAlert
 
         if let sensorSettings = sensor {
             self.sensorSettings = sensorSettings
@@ -135,7 +139,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                 pressureOffsetDate: nil
             )
         }
-        self.viewModel.canShowUpdateFirmware.value = featureToggleService.isEnabled(.updateFirmware)
 
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
@@ -162,6 +165,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
+        view.updateScrollPosition(scrollToAlert: scrollToAlert)
     }
 
     func viewDidAskToDismiss() {
@@ -178,18 +182,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRemoveRuuviTag() {
-        view.showTagRemovalConfirmationDialog()
+        if viewModel.isClaimedTag.value == true && ruuviTag.isOwner {
+            view.showUnclaimAndRemoveConfirmationDialog()
+        } else {
+            view.showTagRemovalConfirmationDialog(isOwner: ruuviTag.isOwner)
+        }
     }
 
     func viewDidConfirmTagRemoval() {
-        if let isConnected = viewModel.isConnected.value,
-           let keepConnection = viewModel.keepConnection.value,
-           !isConnected && keepConnection {
-            errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
-            return
-        }
         ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
+            sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
@@ -214,10 +217,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         } else {
             view.showUpdateFirmwareDialog()
         }
-    }
-
-    func viewDidTapOnUUID() {
-        view.showUUIDDetail()
     }
 
     func viewDidAskToLearnMoreAboutFirmwareUpdate() {
@@ -259,20 +258,26 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapClaimButton() {
         if viewModel.isClaimedTag.value == true {
+            isLoading = true
             ruuviOwnershipService
                 .unclaim(sensor: ruuviTag)
                 .on(success: { [weak self] unclaimedSensor in
                     self?.ruuviTag = unclaimedSensor
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
+                }, completion: { [weak self] in
+                    self?.isLoading = false
                 })
         } else {
+            isLoading = true
             ruuviOwnershipService
                 .claim(sensor: ruuviTag)
                 .on(success: { [weak self] claimedSensor in
                     self?.ruuviTag = claimedSensor
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
+                }, completion: { [weak self] in
+                    self?.isLoading = false
                 })
         }
     }
@@ -307,7 +312,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnExport() {
         isLoading = true
-        exportService.csvLog(for: ruuviTag.id)
+        guard let sensorSettings = sensorSettings else {
+            return
+        }
+        exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
             .on(success: { [weak self] url in
                 #if targetEnvironment(macCatalyst)
                 guard let sSelf = self else {
@@ -323,6 +331,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             }, completion: { [weak self] in
                 self?.isLoading = false
             })
+    }
+
+    func viewDidTapOnOwner() {
+        if viewModel.isClaimedTag.value == false {
+            router.openOwner(ruuviTag: ruuviTag)
+        }
     }
 }
 
@@ -384,9 +398,26 @@ extension TagSettingsPresenter {
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
-        viewModel.canClaimTag.value = ruuviTag.isOwner
-        viewModel.owner.value = ruuviTag.owner
-        viewModel.isClaimedTag.value = ruuviTag.isClaimed
+
+        // swiftlint:disable line_length
+        // Context:
+        // The tag can be claimable only when -
+        // 1: When - the tag is not claimed already, AND
+        // 2: When - the tag macId is not Nil, AND
+        // 3: When - there's no owner of the tag OR there's a owner of the tag but it's not the logged in user
+        // Last one is for the scenario when a tag is added locally but claimed by other user
+        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && (ruuviTag.owner == nil || (ruuviTag.owner != nil && ruuviTag.isOwner))
+        viewModel.canClaimTag.value = canBeClaimed
+        viewModel.isClaimedTag.value = !canBeClaimed
+
+        // Not set / Someone else / email of the one who shared the sensor with you / You
+        if let owner = ruuviTag.owner {
+            viewModel.owner.value = owner
+        } else {
+            viewModel.owner.value = "TagSettings.General.Owner.none".localized()
+        }
+        // Set isOwner value
+        viewModel.isOwner.value = ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
@@ -762,6 +793,12 @@ extension TagSettingsPresenter {
         }
         viewModel.updateRecord(record)
         reloadMutedTill()
+
+        if viewModel.canShowUpdateFirmware.value == false
+            && featureToggleService.isEnabled(.updateFirmware)
+            && (source == .advertisement || source == .heartbeat) {
+            viewModel.canShowUpdateFirmware.value = true
+        }
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {

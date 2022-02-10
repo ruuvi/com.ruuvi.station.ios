@@ -27,7 +27,8 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -40,7 +41,8 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -53,7 +55,8 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -66,7 +69,8 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -79,7 +83,22 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
+        )
+    }
+
+    public func with(owner: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -92,7 +111,8 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -105,7 +125,22 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
+        )
+    }
+
+    public func withoutOwner() -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: nil,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -118,12 +153,13 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(cloudSensor: CloudSensor) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+        let sensor = RuuviTagSensorStruct(
             version: version,
             luid: luid,
             macId: macId,
@@ -131,8 +167,10 @@ extension RuuviTagSensor {
             name: cloudSensor.name.isEmpty ? cloudSensor.id : cloudSensor.name,
             isClaimed: cloudSensor.isOwner,
             isOwner: cloudSensor.isOwner,
-            owner: cloudSensor.owner
+            owner: cloudSensor.owner,
+            isCloudSensor: cloudSensor.isCloudSensor ?? true
         )
+        return sensor
     }
 
     public func unclaimed() -> RuuviTagSensor {
@@ -144,12 +182,15 @@ extension RuuviTagSensor {
             name: name,
             isClaimed: false,
             isOwner: true,
-            owner: owner
+            owner: owner,
+            isCloudSensor: false
         )
     }
 
+    /// This is a computed property to unwrap the optional isCloudSensor property from database
+    /// The property returns false if isCloudSensor is nil, otherwise returns the stored value
     public var isCloud: Bool {
-        return owner != nil || isClaimed
+        return isCloudSensor ?? false
     }
 }
 
@@ -162,6 +203,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
+    public var isCloudSensor: Bool?
 
     public init(
         version: Int,
@@ -171,7 +213,8 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         name: String,
         isClaimed: Bool,
         isOwner: Bool,
-        owner: String?
+        owner: String?,
+        isCloudSensor: Bool?
     ) {
         self.version = version
         self.luid = luid
@@ -181,6 +224,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.isCloudSensor = isCloudSensor
     }
 }
 
@@ -218,7 +262,9 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     public var owner: String? {
         return object.owner
     }
-
+    public var isCloudSensor: Bool? {
+        return object.isCloudSensor
+    }
     public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
         let idIsEqual = lhs.id == rhs.id
         var luidIsEqual = false

@@ -126,6 +126,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         tryToShowSwipeUpHint()
         restartObservingData()
         interactor.restartObservingTags()
+        handleClearSyncButtons()
         syncChartViews()
     }
 
@@ -136,6 +137,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
+    }
+    func handleClearSyncButtons() {
+        view.handleClearSyncButtons(sharedSensors: !ruuviTag.isOwner, isSyncing: interactor.isSyncingRecords() )
     }
     func viewDidTransition() {
         tryToShowSwipeUpHint()
@@ -149,14 +153,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.dismiss()
     }
 
-    func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
+    func viewDidTriggerSettings(for viewModel: TagChartsViewModel, scrollToAlert: Bool) {
         if viewModel.type == .ruuvi,
             ruuviTag.luid?.value == viewModel.uuid.value {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
                                    sensor: sensorSettings,
-                                   output: self)
+                                   output: self,
+                                   scrollToAlert: scrollToAlert)
         } else {
             assert(false)
         }
@@ -176,6 +181,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
+                guard let syncing =  self?.isSyncing, syncing else {
+                    return
+                }
                 self?.view.setSync(progress: progress, for: viewModel)
             }
         }
@@ -186,16 +194,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
             self?.view.setSync(progress: nil, for: viewModel)
             if case .btkit(.logic(.connectionTimedOut)) = error {
                 self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+            } else if case .ruuviService(.btkit(.logic(.connectionTimedOut))) = error {
+                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
             } else if case .btkit(.logic(.serviceTimedOut)) = error {
                 self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
             }
-        }, completion: {
-            DispatchQueue.main.async { [weak self] in
-                self?.view.setSync(progress: nil, for: viewModel)
-            }
-        })
+        }, completion: nil)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
@@ -297,6 +303,7 @@ extension TagChartsPresenter: SignInModuleOutput {
 // MARK: - RuuviNotifierObserver
 extension TagChartsPresenter: RuuviNotifierObserver {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+        guard uuid == viewModel.uuid.value else { return }
         let newValue: AlertState = isTriggered ? .firing : .registered
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue

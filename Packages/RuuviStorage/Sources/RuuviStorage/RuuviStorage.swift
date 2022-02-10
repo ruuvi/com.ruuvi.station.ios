@@ -16,6 +16,8 @@ public protocol RuuviStorage {
     func readLast(_ id: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError>
     func getStoredTagsCount() -> Future<Int, RuuviStorageError>
+    func getClaimedTagsCount() -> Future<Int, RuuviStorageError>
+    func getOfflineTagsCount() -> Future<Int, RuuviStorageError>
     func getStoredMeasurementsCount() -> Future<Int, RuuviStorageError>
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError>
 }

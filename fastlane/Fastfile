@@ -101,6 +101,12 @@ platform :ios do
     )
     last_pr_title = result[:json]['title']
     last_pr_body = result[:json]['body']
+    if last_pr_title.nil?
+        last_pr_title = "No PR title found"
+    end
+    if last_pr_body.nil?
+        last_pr_body = "No PR body found"
+    end
     release_notes = last_pr_title + "\n\n" + last_pr_body
 
     firebase_app_distribution(

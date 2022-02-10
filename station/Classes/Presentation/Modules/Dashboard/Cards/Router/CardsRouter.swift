@@ -49,11 +49,13 @@ class CardsRouter: NSObject, CardsRouterInput {
             .perform()
     }
 
+    // swiftlint:disable:next function_parameter_count
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
                          sensorSettings: SensorSettings?,
-                         output: TagSettingsModuleOutput) {
+                         output: TagSettingsModuleOutput,
+                         scrollToAlert: Bool) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
@@ -62,19 +64,21 @@ class CardsRouter: NSObject, CardsRouterInput {
                                  temperature: temperature,
                                  humidity: humidity,
                                  sensor: sensorSettings,
-                                 output: output)
+                                 output: output,
+                                 scrollToAlert: scrollToAlert)
             })
     }
 
     func openVirtualSensorSettings(
         sensor: VirtualTagSensor,
-        temperature: Temperature?
+        temperature: Temperature?,
+        scrollToAlert: Bool
     ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(sensor: sensor, temperature: temperature)
+                module.configure(sensor: sensor, temperature: temperature, scrollToAlert: scrollToAlert)
             })
     }
 
