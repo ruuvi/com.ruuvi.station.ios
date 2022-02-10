@@ -360,6 +360,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Vous ne pouvez pas partager le capteur à d'avantage d'utilisateurs";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "In order to share the sensor, you need to have a Ruuvi Gateway router nearby the sensor";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Ce capteur est déjà partagé";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Capteur déjà revendiqué par %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Capteur déjà revendiqué";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Impossible d'envoyer l'email";
 "UserApiError.ER_MISSING_ARGUMENT" = "Argument manquant";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Mode de densité invalide";

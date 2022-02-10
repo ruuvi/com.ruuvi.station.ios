@@ -200,6 +200,10 @@ extension CardsScrollViewController {
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        guard isViewLoaded else {
+            super.viewWillTransition(to: size, with: coordinator)
+            return
+        }
         let page = CGFloat(currentPage)
         coordinator.animate(alongsideTransition: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width

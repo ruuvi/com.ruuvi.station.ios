@@ -5,6 +5,7 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviPresenters
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
