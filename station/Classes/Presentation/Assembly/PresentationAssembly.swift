@@ -2,6 +2,7 @@ import Swinject
 import RuuviCore
 import RuuviPresenters
 
+
 class PresentationAssembly: Assembly {
     func assemble(container: Container) {
         container.register(ActivityPresenter.self) { _ in
