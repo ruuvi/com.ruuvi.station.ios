@@ -1,8 +1,8 @@
 import Foundation
 import MessageUI
+import RuuviPresenters
 
 class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
-
     var errorPresenter: ErrorPresenter!
 
     func present(email: String, subject: String, body: String?) {

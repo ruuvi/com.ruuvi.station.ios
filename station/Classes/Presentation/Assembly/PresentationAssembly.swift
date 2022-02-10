@@ -1,10 +1,9 @@
 import Swinject
 import RuuviCore
-import Foundation
+import RuuviPresenters
 
 class PresentationAssembly: Assembly {
     func assemble(container: Container) {
-
         container.register(ActivityPresenter.self) { _ in
             let presenter = ActivityPresenterRuuviLogo()
             return presenter

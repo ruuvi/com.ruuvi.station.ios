@@ -149,8 +149,8 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
     public func persist(
         provider: VirtualProvider,
         location: Location
-    ) -> Future<VirtualProvider, VirtualPersistenceError> {
-        let promise = Promise<VirtualProvider, VirtualPersistenceError>()
+    ) -> Future<AnyVirtualTagSensor, VirtualPersistenceError> {
+        let promise = Promise<AnyVirtualTagSensor, VirtualPersistenceError>()
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
@@ -163,7 +163,7 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                     webTag.location = webTagLocation
                 }
                 self.settings.tagsSorting.append(uuid)
-                promise.succeed(value: provider)
+                promise.succeed(value: webTag.struct.any)
             } catch {
                 promise.fail(error: .persistence(error))
             }
@@ -171,8 +171,11 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
         return promise.future
     }
 
-    public func persist(provider: VirtualProvider, name: String) -> Future<VirtualProvider, VirtualPersistenceError> {
-        let promise = Promise<VirtualProvider, VirtualPersistenceError>()
+    public func persist(
+        provider: VirtualProvider,
+        name: String
+    ) -> Future<AnyVirtualTagSensor, VirtualPersistenceError> {
+        let promise = Promise<AnyVirtualTagSensor, VirtualPersistenceError>()
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
@@ -182,7 +185,7 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                     self.context.bg.add(webTag, update: .all)
                 }
                 self.settings.tagsSorting.append(uuid)
-                promise.succeed(value: provider)
+                promise.succeed(value: webTag.struct.any)
             } catch {
                 promise.fail(error: .persistence(error))
             }
