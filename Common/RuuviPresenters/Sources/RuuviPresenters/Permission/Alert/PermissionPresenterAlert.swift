@@ -2,9 +2,7 @@ import UIKit
 import RuuviBundleUtils
 
 public final class PermissionPresenterAlert: PermissionPresenter {
-    public init() {
-        // Intentionally unimplemented
-    }
+    public init() {}
 
     public func presentNoPhotoLibraryPermission() {
         let message = "PermissionPresenter.NoPhotoLibraryAccess.message".localized(for: Self.self)

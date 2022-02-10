@@ -2,12 +2,12 @@ import UIKit
 import RuuviBundleUtils
 
 public final class ErrorPresenterAlert: ErrorPresenter {
-    public init() {
-        // Intentionally unimplemented
-    }
+    public init() {}
+
     public func present(error: Error) {
         presentAlert(error: error)
     }
+
     private func presentAlert(error: Error) {
         var title: String? = "ErrorPresenterAlert.Error".localized(for: Self.self)
         if let localizedError = error as? LocalizedError {
@@ -29,17 +29,14 @@ public final class ErrorPresenterAlert: ErrorPresenter {
                 fireAfter = .milliseconds(750)
             }
             group.leave()
-            group.notify(queue: .main) { [weak self] in
-                self?.provideHapticFeedback(fireAfter, alert: alert)
+            group.notify(queue: .main) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + fireAfter) {
+                    let feedback = UINotificationFeedbackGenerator()
+                    feedback.notificationOccurred(.error)
+                    feedback.prepare()
+                    UIApplication.shared.topViewController()?.present(alert, animated: true)
+                }
             }
-        }
-    }
-    private func provideHapticFeedback(_ fireAfter: DispatchTimeInterval, alert: UIAlertController) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + fireAfter) {
-            let feedback = UINotificationFeedbackGenerator()
-            feedback.notificationOccurred(.error)
-            feedback.prepare()
-            UIApplication.shared.topViewController()?.present(alert, animated: true)
         }
     }
 }
