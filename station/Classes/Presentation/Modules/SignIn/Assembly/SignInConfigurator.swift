@@ -4,7 +4,6 @@ import RuuviService
 import RuuviUser
 import RuuviPresenters
 import RuuviDaemon
-import RuuviPresenters
 
 class SignInConfigurator {
     func configure(view: SignInViewController) {
