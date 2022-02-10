@@ -5,7 +5,6 @@ import RuuviService
 import RuuviUser
 import RuuviPresenters
 import RuuviDaemon
-import RuuviPresenters
 
 class SignInPresenter: NSObject {
     enum State {
