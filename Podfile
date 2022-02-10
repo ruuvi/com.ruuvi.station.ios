@@ -68,6 +68,7 @@ def shared_pods
   pod 'RuuviStorage/Coordinator', :path => 'Packages/RuuviStorage/RuuviStorage.podspec'
   pod 'RuuviService', :path => 'Packages/RuuviService/RuuviService.podspec', :testspecs => ['Tests']
   pod 'RuuviService/Factory', :path => 'Packages/RuuviService/RuuviService.podspec'
+  pod 'RuuviService/Auth', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/CloudSync', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/Ownership', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/SensorProperties', :path => 'Packages/RuuviService/RuuviService.podspec'
@@ -93,7 +94,6 @@ def shared_pods
   pod 'RuuviVirtual/Service', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
   pod 'RuuviVirtual/OWM', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
   pod 'Swinject'
-  pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
   pod 'SwiftGen', '~> 6.0'
   pod 'KeychainAccess'
   pod 'iOSDFULibrary'

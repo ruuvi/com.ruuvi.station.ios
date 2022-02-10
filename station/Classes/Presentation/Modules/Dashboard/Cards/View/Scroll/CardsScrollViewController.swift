@@ -219,6 +219,7 @@ extension CardsScrollViewController {
 // MARK: - UIScrollViewDelegate
 extension CardsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard viewModels.count > 0 else {return}
         output.viewDidScroll(to: viewModels[currentPage])
     }
 }
@@ -232,10 +233,10 @@ extension CardsScrollViewController: CardViewDelegate {
         }
     }
 
-    func card(view: CardView, didTriggerSettings sender: Any) {
+    func card(view: CardView, didTriggerSettings sender: Any, scrollToAlert: Bool) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[index])
+            output.viewDidTriggerSettings(for: viewModels[index], with: scrollToAlert)
         }
     }
 }
@@ -365,15 +366,39 @@ extension CardsScrollViewController {
     }
 
     private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
-        view.chartsButtonContainerView.bind(viewModel.isConnectable) {(view, isConnectable) in
-            view.isHidden = !isConnectable.bound
+        view.chartsButtonContainerView.bind(viewModel.isChartAvailable) { view, isChartAvailable in
+            view.isHidden = !isChartAvailable.bound
         }
 
         let type = viewModel.type
+        // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
+        // If the sensor is a cloud sensor show the bell regardless whether it's connected or not
+        // If it's neither cloud not connected hide the bell
         view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
             switch type {
             case .ruuvi:
-                view.isHidden = !isConnected.bound
+                if let isCloud = viewModel.isCloud.value, isCloud {
+                    view.isHidden = !isCloud
+                } else {
+                    view.isHidden = !isConnected.bound
+                }
+            case .web:
+                view.isHidden = false
+            }
+        }
+        // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
+        // If the sensor is a cloud sensor show the bell regardless whether it's connected or not
+        // If it's neither cloud not connected hide the bell
+        view.alertView.bind(viewModel.isCloud) { (view, isCloud) in
+            switch type {
+            case .ruuvi:
+                if isCloud.bound {
+                    view.isHidden = !isCloud.bound
+                } else {
+                    if let isConnected = viewModel.isConnected.value {
+                        view.isHidden = !isConnected
+                    }
+                }
             case .web:
                 view.isHidden = false
             }

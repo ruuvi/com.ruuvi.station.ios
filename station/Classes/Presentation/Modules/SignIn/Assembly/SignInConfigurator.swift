@@ -3,6 +3,7 @@ import RuuviCloud
 import RuuviService
 import RuuviUser
 import RuuviPresenters
+import RuuviDaemon
 
 class SignInConfigurator {
     func configure(view: SignInViewController) {
@@ -21,6 +22,7 @@ class SignInConfigurator {
         presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.ruuviCloud = r.resolve(RuuviCloud.self)
         presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
+        presenter.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
 
         view.output = presenter
     }

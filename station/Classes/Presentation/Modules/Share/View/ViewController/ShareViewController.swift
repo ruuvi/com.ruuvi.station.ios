@@ -124,6 +124,13 @@ extension ShareViewController: ShareViewInput {
             message: "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
         )
     }
+
+    func showSuccessfullyShared() {
+        showAlert(
+            title: nil,
+            message: "Share.Success.message".localized()
+        )
+    }
 }
 extension ShareViewController: ShareEmailTableViewCellDelegate {
     func didTapUnshare(for email: String) {
@@ -140,14 +147,7 @@ extension ShareViewController {
         let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
         let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
         cell.descriptionLabel.text = description
-        if #available(iOS 13.0, *) {
-            cell.descriptionLabel.textColor = .secondaryLabel
-        } else {
-            cell.descriptionLabel.textColor = UIColor(red: 138.0/255.0,
-                                                      green: 138.0/255.0,
-                                                      blue: 142.0/255.0,
-                                                      alpha: 1.0)
-        }
+        cell.descriptionLabel.textColor = .darkGray
         return cell
     }
 

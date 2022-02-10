@@ -5,4 +5,5 @@ protocol ShareViewInput: ViewInput {
     func reloadTableView()
     func clearInput()
     func showInvalidEmail()
+    func showSuccessfullyShared()
 }

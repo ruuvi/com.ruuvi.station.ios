@@ -21,7 +21,8 @@ extension RuuviTagRealm: RuuviTagSensor {
                 name: name,
                 isClaimed: isClaimed,
                 isOwner: isOwner,
-                owner: owner
+                owner: owner,
+                isCloudSensor: isCloudSensor
             )
         )
     }
@@ -34,5 +35,8 @@ extension RuuviTagRealm: RuuviTagSensor {
     }
     public var owner: String? {
         return nil
+    }
+    public var isCloudSensor: Bool? {
+        return false
     }
 }

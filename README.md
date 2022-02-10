@@ -42,7 +42,7 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## Requirements
 
-- iOS 10.0+
+- iOS 13.0+
 - Xcode 11.3
 
 ## How to use

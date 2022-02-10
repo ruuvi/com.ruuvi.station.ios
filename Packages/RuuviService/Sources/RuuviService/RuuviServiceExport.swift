@@ -1,8 +1,9 @@
 import Foundation
 import Future
+import RuuviOntology
 
 public protocol RuuviServiceExport {
-    func csvLog(for uuid: String) -> Future<URL, RuuviServiceError>
+    func csvLog(for uuid: String, settings: SensorSettings) -> Future<URL, RuuviServiceError>
 }
 
 public protocol RuuviServiceExportHeaders {

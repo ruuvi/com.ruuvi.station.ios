@@ -13,6 +13,8 @@ extension RuuviCloudApiError: LocalizedError {
             return "RuuviCloudApiError.unexpectedHTTPStatusCode".localized()
         case .api(let code):
             return code.localized()
+        case .claim(let claimError):
+            return claimError.error.localized()
         case .networking(let error):
             return error.localizedDescription
         case .parsing(let error):

@@ -136,7 +136,7 @@ extension CardsPresenter: CardsViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
         if viewModel.type == .ruuvi,
            let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             var humidity: Humidity?
@@ -153,12 +153,14 @@ extension CardsPresenter: CardsViewOutput {
                             ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
                                 || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
                     }),
-                output: self)
+                output: self,
+                scrollToAlert: scrollToAlert)
         } else if viewModel.type == .web,
                   let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
             router.openVirtualSensorSettings(
                 sensor: webTag,
-                temperature: viewModel.temperature.value
+                temperature: viewModel.temperature.value,
+                scrollToAlert: scrollToAlert
             )
         }
     }
@@ -166,12 +168,16 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: luid)
-                || background.isConnected(uuid: luid.value) {
+                || background.isConnected(uuid: luid.value)
+                || viewModel.isConnectable.value == false {
+                configureInitialChart(from: viewModel)
                 router.openTagCharts()
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
         } else if viewModel.mac.value != nil {
+            // Setup initial tag chart
+            configureInitialChart(from: viewModel)
             router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -237,7 +243,7 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "<br><br>" + summary)
+                                                body: "\n\n" + summary)
         }
     }
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
@@ -341,7 +347,14 @@ extension CardsPresenter {
             return viewModel
         })
         viewModels = reorder(ruuviViewModels + virtualViewModels)
-
+        // Sort sensors by name alphabetically
+        viewModels = viewModels.sorted(by: {
+            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
+                return first < second
+            } else {
+                return true
+            }
+        })
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
@@ -354,6 +367,14 @@ extension CardsPresenter {
             return viewModels
         }
         return viewModels.reorder(by: settings.tagsSorting)
+    }
+    private func configureInitialChart(from viewModel: CardsViewModel) {
+        if let sensor = ruuviTags
+            .first(where: {
+                ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+            }) {
+            tagCharts?.configure(ruuviTag: sensor)
+        }
     }
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
@@ -606,11 +627,13 @@ extension CardsPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
             case .insert(let sensor):
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
                 if let index = sSelf.viewModels.firstIndex(where: {
                     return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
                         || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
@@ -631,6 +654,7 @@ extension CardsPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
                 if sSelf.view.currentPage < sSelf.ruuviTags.count {
                     let tag = sSelf.ruuviTags[sSelf.view.currentPage]
                     sSelf.restartObservingRuuviTagLastRecord(for: tag)
@@ -651,6 +675,7 @@ extension CardsPresenter {
                     sSelf.syncViewModels()
                     sSelf.restartObserveRuuviTagAdvertisements()
                 }
+                sSelf.startObservingWebTags()
             }
         }
     }
