@@ -14,7 +14,9 @@ public final class RuuviOnboardPages: RuuviOnboard {
         }
     }
 
-    public init() {}
+    public init() {
+        // Intentionally unimplemented
+    }
 
     private weak var weakView: UIViewController?
 }

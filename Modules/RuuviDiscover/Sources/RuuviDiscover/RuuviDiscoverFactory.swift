@@ -43,7 +43,9 @@ public struct RuuviDiscoverDependencies {
 }
 
 public final class RuuviDiscoverFactory {
-    public init() {}
+    public init() {
+        // Intentionally unimplemented
+    }
 
     public func create(dependencies: RuuviDiscoverDependencies) -> RuuviDiscover {
         let presenter = DiscoverPresenter()
