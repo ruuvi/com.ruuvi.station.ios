@@ -34,7 +34,7 @@
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag_bg_layer" translatesAutoresizingMaskIntoConstraints="NO" id="BaO-7f-YjR">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-nega" translatesAutoresizingMaskIntoConstraints="NO" id="YoH-aD-scc">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo_" translatesAutoresizingMaskIntoConstraints="NO" id="YoH-aD-scc">
                                 <rect key="frame" x="64" y="13" width="124" height="24"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -270,7 +270,7 @@
         <image name="gradient_layer" width="359" height="641"/>
         <image name="icon-alert-off" width="17" height="20"/>
         <image name="icon-cards-button" width="18" height="18"/>
-        <image name="logo-nega" width="501" height="101"/>
+        <image name="ruuvi_logo_" width="379" height="101"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>
