@@ -7,7 +7,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSettings: RuuviLocalSettings
     private var localSyncState: RuuviLocalSyncState
     private let cloudSyncService: RuuviServiceCloudSync
-    private var needToRefreshImmediately: Bool = false
+    private var pullTimer: Timer?
 
     init(
         localSettings: RuuviLocalSettings,
@@ -19,36 +19,23 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         self.cloudSyncService = cloudSyncService
     }
 
-    private var pullTimer: Timer?
-
-    @objc func wakeUp() {
-        if needToRefreshImmediately || needsToPullNetworkTagData {
-            pullNetworkTagData()
-            needToRefreshImmediately = false
-        }
-    }
-
-    func refreshImmediately() {
-        needToRefreshImmediately = true
-        wakeUp()
-    }
-
     func start() {
         start { [weak self] in
             guard let sSelf = self else { return }
-            let timer = Timer.scheduledTimer(timeInterval: 60,
-                                             target: sSelf,
-                                             selector: #selector(RuuviDaemonCloudSyncWorker.wakeUp),
-                                             userInfo: nil,
-                                             repeats: true)
+            sSelf.pullTimer?.invalidate()
+            let timer = Timer.scheduledTimer(
+                timeInterval: TimeInterval(sSelf.localSettings.networkPullIntervalSeconds),
+                target: sSelf,
+                selector: #selector(RuuviDaemonCloudSyncWorker.refreshImmediately),
+                userInfo: nil,
+                repeats: true
+            )
             RunLoop.current.add(timer, forMode: .common)
             sSelf.pullTimer = timer
-            sSelf.needToRefreshImmediately = false
         }
     }
 
     func stop() {
-        needToRefreshImmediately = true
         guard let thread = thread else {
             return
         }
@@ -64,13 +51,8 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         stopWork()
     }
 
-    private var needsToPullNetworkTagData: Bool {
-        guard let latestSyncDate = localSyncState.latestSyncDate else { return true }
-        let elapsed = Int(Date().timeIntervalSince(latestSyncDate))
-        return elapsed >= localSettings.networkPullIntervalSeconds
-    }
-
-    private func pullNetworkTagData() {
-        cloudSyncService.syncAllRecords()
+    @objc
+    func refreshImmediately() {
+        cloudSyncService.syncAll()
     }
 }

@@ -2,6 +2,7 @@ import Foundation
 import RuuviService
 import RuuviLocal
 import RuuviUser
+import RuuviPresenters
 
 class MenuTableConfigurator {
     func configure(view: MenuTableViewController) {
@@ -12,10 +13,12 @@ class MenuTableConfigurator {
 
         let presenter = MenuPresenter()
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
+        presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
+        presenter.authService = r.resolve(RuuviServiceAuth.self)
         presenter.view = view
         presenter.router = router
 

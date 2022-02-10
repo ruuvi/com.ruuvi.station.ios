@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Feedback Email</key>
+	<key>FeedbackEmail</key>
 	<string>contact@ruuvi.com</string>
-	<key>Feedback Subject</key>
+	<key>FeedbackSubject</key>
 	<string>Ruuvi Station iOS Feedback</string>
 </dict>
 </plist>

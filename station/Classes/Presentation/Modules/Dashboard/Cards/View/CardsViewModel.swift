@@ -32,9 +32,11 @@ struct CardsViewModel {
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var provider: VirtualProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
+    var isCloud: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
+    var isChartAvailable: Observable<Bool?> = Observable<Bool?>(false)
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
@@ -49,6 +51,7 @@ struct CardsViewModel {
 //        pressure.value = virtualSensor.lastRecord?.pressure
         isConnectable.value = false
         isConnected.value = false
+        isCloud.value = false
 //        date.value = virtualSensor.data.last?.date
 //        location.value = virtualSensor.location?.location
         provider = virtualSensor.provider
@@ -61,6 +64,7 @@ struct CardsViewModel {
         pressure.value = record.pressure
         isConnectable.value = false
         isConnected.value = false
+        isCloud.value = false
         currentLocation.value = record.location
         date.value = record.date
     }
@@ -84,6 +88,8 @@ struct CardsViewModel {
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
+        isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud
+        isCloud.value = ruuviTag.isCloud
     }
 
     func update(_ record: RuuviTagSensorRecord) {
@@ -102,6 +108,11 @@ struct CardsViewModel {
     func update(with ruuviTag: RuuviTag) {
         if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable, ruuviTag.isConnectable {
             isConnectable.value = ruuviTag.isConnectable
+            if let isChart = isChartAvailable.value,
+               !isChart,
+               ruuviTag.isConnectable {
+                isChartAvailable.value = true
+            }
         }
         temperature.value = ruuviTag.temperature
         humidity.value = ruuviTag.humidity

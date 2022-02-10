@@ -545,6 +545,32 @@
 		26BA929FDA200CCAC9964651 /* SharePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */; };
 		2BB81E4733D8EC40BECC68EF /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */; };
 		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		342AB8D927B504BE00B6449F /* AppAssemblyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8D827B504BE00B6449F /* AppAssemblyConstants.swift */; };
+		342AB8DA27B504BE00B6449F /* AppAssemblyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8D827B504BE00B6449F /* AppAssemblyConstants.swift */; };
+		342AB8DC27B505C400B6449F /* PresentationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8DB27B505C400B6449F /* PresentationConstants.swift */; };
+		342AB8DD27B505C400B6449F /* PresentationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8DB27B505C400B6449F /* PresentationConstants.swift */; };
+		342AB8ED27B508AB00B6449F /* Owner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342AB8DF27B508AB00B6449F /* Owner.storyboard */; };
+		342AB8EE27B508AB00B6449F /* Owner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342AB8DF27B508AB00B6449F /* Owner.storyboard */; };
+		342AB8EF27B508AB00B6449F /* OwnerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E127B508AB00B6449F /* OwnerInitializer.swift */; };
+		342AB8F027B508AB00B6449F /* OwnerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E127B508AB00B6449F /* OwnerInitializer.swift */; };
+		342AB8F127B508AB00B6449F /* OwnerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E227B508AB00B6449F /* OwnerConfigurator.swift */; };
+		342AB8F227B508AB00B6449F /* OwnerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E227B508AB00B6449F /* OwnerConfigurator.swift */; };
+		342AB8F327B508AB00B6449F /* OwnerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E427B508AB00B6449F /* OwnerPresenter.swift */; };
+		342AB8F427B508AB00B6449F /* OwnerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E427B508AB00B6449F /* OwnerPresenter.swift */; };
+		342AB8F527B508AB00B6449F /* OwnerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E527B508AB00B6449F /* OwnerModuleInput.swift */; };
+		342AB8F627B508AB00B6449F /* OwnerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E527B508AB00B6449F /* OwnerModuleInput.swift */; };
+		342AB8F727B508AB00B6449F /* OwnerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E727B508AB00B6449F /* OwnerViewInput.swift */; };
+		342AB8F827B508AB00B6449F /* OwnerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E727B508AB00B6449F /* OwnerViewInput.swift */; };
+		342AB8F927B508AB00B6449F /* OwnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E827B508AB00B6449F /* OwnerViewController.swift */; };
+		342AB8FA27B508AB00B6449F /* OwnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E827B508AB00B6449F /* OwnerViewController.swift */; };
+		342AB8FB27B508AB00B6449F /* OwnerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E927B508AB00B6449F /* OwnerViewOutput.swift */; };
+		342AB8FC27B508AB00B6449F /* OwnerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8E927B508AB00B6449F /* OwnerViewOutput.swift */; };
+		342AB8FD27B508AB00B6449F /* OwnerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8EB27B508AB00B6449F /* OwnerRouter.swift */; };
+		342AB8FE27B508AB00B6449F /* OwnerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8EB27B508AB00B6449F /* OwnerRouter.swift */; };
+		342AB8FF27B508AB00B6449F /* OwnerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8EC27B508AB00B6449F /* OwnerRouterInput.swift */; };
+		342AB90027B508AB00B6449F /* OwnerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB8EC27B508AB00B6449F /* OwnerRouterInput.swift */; };
+		342AB90227B509CD00B6449F /* String+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB90127B509CD00B6449F /* String+Email.swift */; };
+		342AB90327B509CD00B6449F /* String+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AB90127B509CD00B6449F /* String+Email.swift */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
@@ -1142,6 +1168,19 @@
 		2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		310159B82644864400A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		310159B92644864C00A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		342AB8D827B504BE00B6449F /* AppAssemblyConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAssemblyConstants.swift; sourceTree = "<group>"; };
+		342AB8DB27B505C400B6449F /* PresentationConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationConstants.swift; sourceTree = "<group>"; };
+		342AB8DF27B508AB00B6449F /* Owner.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Owner.storyboard; sourceTree = "<group>"; };
+		342AB8E127B508AB00B6449F /* OwnerInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerInitializer.swift; sourceTree = "<group>"; };
+		342AB8E227B508AB00B6449F /* OwnerConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerConfigurator.swift; sourceTree = "<group>"; };
+		342AB8E427B508AB00B6449F /* OwnerPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerPresenter.swift; sourceTree = "<group>"; };
+		342AB8E527B508AB00B6449F /* OwnerModuleInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerModuleInput.swift; sourceTree = "<group>"; };
+		342AB8E727B508AB00B6449F /* OwnerViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerViewInput.swift; sourceTree = "<group>"; };
+		342AB8E827B508AB00B6449F /* OwnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerViewController.swift; sourceTree = "<group>"; };
+		342AB8E927B508AB00B6449F /* OwnerViewOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerViewOutput.swift; sourceTree = "<group>"; };
+		342AB8EB27B508AB00B6449F /* OwnerRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerRouter.swift; sourceTree = "<group>"; };
+		342AB8EC27B508AB00B6449F /* OwnerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerRouterInput.swift; sourceTree = "<group>"; };
+		342AB90127B509CD00B6449F /* String+Email.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
 		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1530,6 +1569,7 @@
 		0E09671522AE74CB00E85F48 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				342AB8D827B504BE00B6449F /* AppAssemblyConstants.swift */,
 				0E5C302322D0B16300B52E39 /* AppState */,
 				0EB48D6D2619D4D4008E0D2D /* Features */,
 				0E197C7223C5C7770074015B /* Info */,
@@ -1643,6 +1683,7 @@
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit+Localization.swift */,
 				A92E3C4B24261CF900D981D5 /* MeasurementType.swift */,
 				A9BD38B924F6108300904BBE /* Humidity+Offset.swift */,
+				342AB90127B509CD00B6449F /* String+Email.swift */,
 				A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */,
 				A9E6774725A33081000B75A3 /* String+Characters.swift */,
 				0E9E7759238CCE5F006D7013 /* String+Replace.swift */,
@@ -1707,6 +1748,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */,
+				342AB8DB27B505C400B6449F /* PresentationConstants.swift */,
 				0E197C6E23C4A7D00074015B /* Presentation.plist */,
 			);
 			path = Assembly;
@@ -2803,6 +2845,55 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		342AB8DE27B508AB00B6449F /* Owner */ = {
+			isa = PBXGroup;
+			children = (
+				342AB8DF27B508AB00B6449F /* Owner.storyboard */,
+				342AB8E027B508AB00B6449F /* Assembly */,
+				342AB8E327B508AB00B6449F /* Presenter */,
+				342AB8E627B508AB00B6449F /* View */,
+				342AB8EA27B508AB00B6449F /* Router */,
+			);
+			path = Owner;
+			sourceTree = "<group>";
+		};
+		342AB8E027B508AB00B6449F /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				342AB8E127B508AB00B6449F /* OwnerInitializer.swift */,
+				342AB8E227B508AB00B6449F /* OwnerConfigurator.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		342AB8E327B508AB00B6449F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				342AB8E427B508AB00B6449F /* OwnerPresenter.swift */,
+				342AB8E527B508AB00B6449F /* OwnerModuleInput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		342AB8E627B508AB00B6449F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				342AB8E727B508AB00B6449F /* OwnerViewInput.swift */,
+				342AB8E827B508AB00B6449F /* OwnerViewController.swift */,
+				342AB8E927B508AB00B6449F /* OwnerViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		342AB8EA27B508AB00B6449F /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				342AB8EB27B508AB00B6449F /* OwnerRouter.swift */,
+				342AB8EC27B508AB00B6449F /* OwnerRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		3D930628B855379BB9A9B1FF /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
@@ -3134,6 +3225,7 @@
 		66BC44812657AED400A03253 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				342AB8DE27B508AB00B6449F /* Owner */,
 				0E97D782268C826400FE9D5B /* DFU */,
 				66BC44822657AED400A03253 /* OffsetCorrection */,
 				663155CA2667F40C005B90A6 /* UpdateFirmware */,
@@ -3840,6 +3932,7 @@
 				0E8BD3EF238566AB008B31EF /* Muli-Regular.ttf in Resources */,
 				0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
+				342AB8EE27B508AB00B6449F /* Owner.storyboard in Resources */,
 				0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */,
 				0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E8BD3F3238566AB008B31EF /* InfoPlist.strings in Resources */,
@@ -3887,6 +3980,7 @@
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
+				342AB8ED27B508AB00B6449F /* Owner.storyboard in Resources */,
 				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
 				0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */,
 				0E84BF552397F29800A37E1A /* Heartbeat.storyboard in Resources */,
@@ -4171,6 +4265,7 @@
 				0EAD33DE2399273D00EC5BAA /* HeartbeatList.swift in Sources */,
 				0E8BD2BE238566AB008B31EF /* DefaultsViewOutput.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
+				342AB8FA27B508AB00B6449F /* OwnerViewController.swift in Sources */,
 				0E8BD2C0238566AB008B31EF /* ForegroundRouter.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
@@ -4226,6 +4321,7 @@
 				0E8BD2DF238566AB008B31EF /* TagChartsPresenter.swift in Sources */,
 				66718A53266A685700A380F8 /* DfuFlashViewInput.swift in Sources */,
 				A90E16A524606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
+				342AB8FE27B508AB00B6449F /* OwnerRouter.swift in Sources */,
 				66BC44B12657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
 				663155F02667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
 				0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */,
@@ -4350,6 +4446,7 @@
 				663155FC2667F40C005B90A6 /* UpdateFirmwareRouter.swift in Sources */,
 				0E8BD34C238566AB008B31EF /* DefaultsRouter.swift in Sources */,
 				0EB8ED30268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
+				342AB8F027B508AB00B6449F /* OwnerInitializer.swift in Sources */,
 				A91D03042511207300694733 /* SelectionViewOutput.swift in Sources */,
 				663155F32667F40C005B90A6 /* UpdateFirmwareViewInput.swift in Sources */,
 				0EB8ED1F268EFF4200C6B0FA /* Publishers+System.swift in Sources */,
@@ -4366,7 +4463,9 @@
 				0E8BD359238566AB008B31EF /* ForegroundViewOutput.swift in Sources */,
 				0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0EB48D702619D50A008E0D2D /* FeatureToggle.swift in Sources */,
+				342AB8DD27B505C400B6449F /* PresentationConstants.swift in Sources */,
 				0E8BD35A238566AB008B31EF /* LanguageModuleInput.swift in Sources */,
+				342AB8FC27B508AB00B6449F /* OwnerViewOutput.swift in Sources */,
 				663155ED2667F40C005B90A6 /* UpdateFirmwareAppleViewController.swift in Sources */,
 				0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */,
 				A91D02EF2511207200694733 /* SelectionTableConfigurator.swift in Sources */,
@@ -4375,11 +4474,13 @@
 				0EB8ED1B268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				A91D03012511207300694733 /* SelectionTableViewController.swift in Sources */,
 				0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */,
+				342AB8F827B508AB00B6449F /* OwnerViewInput.swift in Sources */,
 				0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */,
 				0EA796822664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
 				0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */,
 				0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
+				342AB90027B508AB00B6449F /* OwnerRouterInput.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
 				0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
@@ -4403,6 +4504,7 @@
 				0E8BD37C238566AB008B31EF /* ViewInput.swift in Sources */,
 				0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */,
 				0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */,
+				342AB8DA27B504BE00B6449F /* AppAssemblyConstants.swift in Sources */,
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
@@ -4448,8 +4550,10 @@
 				0E8BD3A8238566AB008B31EF /* TagChartsScrollInitializer.swift in Sources */,
 				A90E169D24606ABF00631E6C /* TagChartsInteractor.swift in Sources */,
 				0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */,
+				342AB90327B509CD00B6449F /* String+Email.swift in Sources */,
 				0E8BD3A9238566AB008B31EF /* ForegroundConfigurator.swift in Sources */,
 				0E8BD3AA238566AB008B31EF /* AppDelegate.swift in Sources */,
+				342AB8F227B508AB00B6449F /* OwnerConfigurator.swift in Sources */,
 				0E8BD3AB238566AB008B31EF /* TagSettingsTableInitializer.swift in Sources */,
 				0EA7AB7B2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
 				A9BD38BB24F6108300904BBE /* Humidity+Offset.swift in Sources */,
@@ -4493,6 +4597,8 @@
 				A9646479247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A92E3C64242644B800D981D5 /* TagChartViewInput.swift in Sources */,
 				0E1B2F33239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */,
+				342AB8F627B508AB00B6449F /* OwnerModuleInput.swift in Sources */,
+				342AB8F427B508AB00B6449F /* OwnerPresenter.swift in Sources */,
 				A90E169024604F7400631E6C /* TagChartPresenter.swift in Sources */,
 				A907A1D4245F7C6600041F6E /* ProgressBarView.swift in Sources */,
 				0E8BD3CF238566AB008B31EF /* SettingsViewInput.swift in Sources */,
@@ -4553,6 +4659,7 @@
 				A93CDCDE25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				663155F22667F40C005B90A6 /* UpdateFirmwareViewInput.swift in Sources */,
+				342AB90227B509CD00B6449F /* String+Email.swift in Sources */,
 				0E00C4F12684D97B009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				A9646472247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				0EF4E34026824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
@@ -4637,9 +4744,11 @@
 				0E2AFFA0266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */,
 				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
+				342AB8FF27B508AB00B6449F /* OwnerRouterInput.swift in Sources */,
 				A9B5743F253B993100DB7353 /* SignInConfigurator.swift in Sources */,
 				660EB25B2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
 				0EA92FDB2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
+				342AB8EF27B508AB00B6449F /* OwnerInitializer.swift in Sources */,
 				0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
 				A9B57448253B994700DB7353 /* SignInViewModel.swift in Sources */,
@@ -4671,6 +4780,7 @@
 				0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */,
 				0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
+				342AB8F127B508AB00B6449F /* OwnerConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0EB8ED1A268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */,
@@ -4750,17 +4860,20 @@
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				A98BC875250E4265001CEFDC /* Double+Round.swift in Sources */,
 				A9646481247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
+				342AB8DC27B505C400B6449F /* PresentationConstants.swift in Sources */,
 				0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */,
 				A9E6774825A33081000B75A3 /* String+Characters.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EF6F5C0235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
 				A91D02FD2511207300694733 /* SelectionTableViewCell.swift in Sources */,
+				342AB8FD27B508AB00B6449F /* OwnerRouter.swift in Sources */,
 				0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */,
 				0E8A10142384610400A9CBA6 /* DefaultsRouter.swift in Sources */,
 				0ECFF36023506BD60061D11B /* ForegroundViewInput.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */,
+				342AB8F327B508AB00B6449F /* OwnerPresenter.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */,
 				0EA796892664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
@@ -4812,6 +4925,7 @@
 				0E0A381923616AC3003A0364 /* UserDefaults+Optional.swift in Sources */,
 				0E8FD0C7233366DC00FFA577 /* TagChartsRouterInput.swift in Sources */,
 				0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */,
+				342AB8F927B508AB00B6449F /* OwnerViewController.swift in Sources */,
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
@@ -4858,6 +4972,7 @@
 				0E97D7A8268C922C00FE9D5B /* DFUInteractor.swift in Sources */,
 				66718A5B266A685700A380F8 /* DfuFlashRouter.swift in Sources */,
 				0E046F3622F0581E00BD4E9C /* WebTagSettingsPresenter.swift in Sources */,
+				342AB8F527B508AB00B6449F /* OwnerModuleInput.swift in Sources */,
 				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,
 				0E1C1DE822B3C2B60032F6CA /* CardsScrollInitializer.swift in Sources */,
 				0E8A10122384605A00A9CBA6 /* DefaultsTableViewController.swift in Sources */,
@@ -4891,18 +5006,21 @@
 				A90E168F24604F7400631E6C /* TagChartPresenter.swift in Sources */,
 				0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				A9F4471624B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */,
+				342AB8FB27B508AB00B6449F /* OwnerViewOutput.swift in Sources */,
 				A907A1D3245F7C6600041F6E /* ProgressBarView.swift in Sources */,
 				0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */,
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				A90E169324604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */,
 				A9646475247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
+				342AB8D927B504BE00B6449F /* AppAssemblyConstants.swift in Sources */,
 				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
 				A91D03002511207300694733 /* SelectionTableViewController.swift in Sources */,
 				0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */,
 				A964646F247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
+				342AB8F727B508AB00B6449F /* OwnerViewInput.swift in Sources */,
 				A91D02F42511207300694733 /* SelectionPresenter.swift in Sources */,
 				0E290A852660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 			);
