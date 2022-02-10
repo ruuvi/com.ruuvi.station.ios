@@ -6,6 +6,7 @@ import RuuviLocal
 import RuuviCore
 import RuuviRepository
 import RuuviService
+import RuuviUser
 #if canImport(RuuviServiceAlert)
 import RuuviServiceAlert
 #endif
@@ -42,11 +43,16 @@ public protocol RuuviServiceFactory {
         ruuviAlertService: RuuviServiceAlert
     ) -> RuuviServiceCloudSync
 
+    // swiftlint:disable:next function_parameter_count
     func createOwnership(
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localImages: RuuviLocalImages,
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -75,6 +81,16 @@ public protocol RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceAlert
+
+    // swiftlint:disable:next function_parameter_count
+    func createAuth(
+        ruuviUser: RuuviUser,
+        pool: RuuviPool,
+        storage: RuuviStorage,
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
+    ) -> RuuviServiceAuth
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -105,17 +121,26 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         )
     }
 
+    // swiftlint:disable:next function_parameter_count
     public func createOwnership(
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
         propertiesService: RuuviServiceSensorProperties,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        localImages: RuuviLocalImages,
+        storage: RuuviStorage,
+        alertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser
     ) -> RuuviServiceOwnership {
         return RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
             pool: ruuviPool,
             propertiesService: propertiesService,
-            localIDs: localIDs
+            localIDs: localIDs,
+            localImages: localImages,
+            storage: storage,
+            alertService: alertService,
+            ruuviUser: ruuviUser
         )
     }
 
@@ -170,6 +195,25 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         return RuuviServiceAlertImpl(
             cloud: ruuviCloud,
             localIDs: ruuviLocalIDs
+        )
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    public func createAuth(
+        ruuviUser: RuuviUser,
+        pool: RuuviPool,
+        storage: RuuviStorage,
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
+    ) -> RuuviServiceAuth {
+        return RuuviServiceAuthImpl(
+            ruuviUser: ruuviUser,
+            pool: pool,
+            storage: storage,
+            propertiesService: propertiesService,
+            localIDs: localIDs,
+            localSyncState: localSyncState
         )
     }
 }

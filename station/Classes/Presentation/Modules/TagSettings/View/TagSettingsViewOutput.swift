@@ -10,7 +10,6 @@ protocol TagSettingsViewOutput {
     func viewDidChangeTag(name: String)
     func viewDidAskToSelectBackground(sourceView: UIView)
     func viewDidTapOnMacAddress()
-    func viewDidTapOnUUID()
     func viewDidAskToLearnMoreAboutFirmwareUpdate()
     func viewDidTapOnTxPower()
     func viewDidTapOnMeasurementSequenceNumber()
@@ -21,6 +20,7 @@ protocol TagSettingsViewOutput {
     func viewDidTapShareButton()
     func viewDidTapOnBackgroundIndicator()
     func viewDidTapOnExport()
+    func viewDidTapOnOwner()
 
     // Offset Correction
     func viewDidTapTemperatureOffsetCorrection()

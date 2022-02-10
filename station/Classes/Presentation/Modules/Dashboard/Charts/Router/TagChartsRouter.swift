@@ -53,11 +53,13 @@ class TagChartsRouter: TagChartsRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
 
+    // swiftlint:disable:next function_parameter_count
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
                          sensor: SensorSettings?,
-                         output: TagSettingsModuleOutput) {
+                         output: TagSettingsModuleOutput,
+                         scrollToAlert: Bool) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
@@ -66,19 +68,21 @@ class TagChartsRouter: TagChartsRouterInput {
                                  temperature: temperature,
                                  humidity: humidity,
                                  sensor: sensor,
-                                 output: output)
+                                 output: output,
+                                 scrollToAlert: scrollToAlert)
             })
     }
 
     func openWebTagSettings(
         sensor: VirtualTagSensor,
-        temperature: Temperature?
+        temperature: Temperature?,
+        scrollToAlert: Bool
     ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(sensor: sensor, temperature: temperature)
+                module.configure(sensor: sensor, temperature: temperature, scrollToAlert: scrollToAlert)
             })
     }
 

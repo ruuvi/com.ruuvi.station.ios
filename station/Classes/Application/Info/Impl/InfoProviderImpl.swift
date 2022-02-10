@@ -89,18 +89,19 @@ class InfoProviderImpl: InfoProvider {
 
     func summary(completion: @escaping (String) -> Void) {
         var result = ""
+        result += "------------------------------------------\n"
         #if targetEnvironment(macCatalyst)
-            result += "<p>MacCatalyst</p>"
+            result += "MacCatalyst"
         #else
-            result += "<p>Device: " + deviceModel + "</p>"
+            result += "Device: " + deviceModel + "\n"
         #endif
-        result += "<p>OS: " + systemName + " " + systemVersion + "</p>"
-        result += "<p>App: " + appName + " " + appVersion + "</p>"
-        result += "<p>" + locationPermission + "</p>"
-        result += "<p>" + photoLibraryPermission + "</p>"
-        result += "<p>" + cameraPermission + "</p>"
+        result += "OS: " + systemName + " " + systemVersion + "\n"
+        result += "App: " + appName + " " + appVersion + "\n"
+        result += locationPermission + "\n"
+        result += photoLibraryPermission + "\n"
+        result += cameraPermission + "\n"
 
-        result += "<p>Notifications: "
+        result += "Notifications: "
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
@@ -117,7 +118,7 @@ class InfoProviderImpl: InfoProvider {
                 @unknown default:
                     result += "unknown"
                 }
-                result += "</p>"
+                result += "\n------------------------------------------\n"
                 completion(result)
             }
         }

@@ -26,6 +26,10 @@ public struct RuuviMeasurement {
     // v5
     public var movementCounter: Int?
     public var txPower: Int?
+    // Backword compatibility for the users using versions < 0.7.7
+    public var temperatureOffset: Double?
+    public var humidityOffset: Double?
+    public var pressureOffset: Double?
 
     public init(
         luid: LocalIdentifier?,
@@ -39,7 +43,10 @@ public struct RuuviMeasurement {
         acceleration: Acceleration?,
         voltage: Voltage?,
         movementCounter: Int?,
-        txPower: Int?
+        txPower: Int?,
+        temperatureOffset: Double?,
+        humidityOffset: Double?,
+        pressureOffset: Double?
     ) {
         self.luid = luid
         self.macId = macId
@@ -53,5 +60,8 @@ public struct RuuviMeasurement {
         self.voltage = voltage
         self.movementCounter = movementCounter
         self.txPower = txPower
+        self.temperatureOffset = temperatureOffset
+        self.humidityOffset = humidityOffset
+        self.pressureOffset = pressureOffset
     }
 }

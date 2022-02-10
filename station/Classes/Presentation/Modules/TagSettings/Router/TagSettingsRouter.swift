@@ -2,6 +2,7 @@ import UIKit
 import LightRoute
 import SwiftUI
 import RuuviOntology
+import RuuviUser
 
 class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     weak var transitionHandler: UIViewController!
@@ -50,6 +51,16 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
             .navigationController?
             .presentationController?
             .delegate = self
+    }
+
+    func openOwner(ruuviTag: RuuviTagSensor) {
+        let factory = StoryboardFactory(storyboardName: "Owner")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: OwnerModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure(ruuviTag: ruuviTag)
+            })
     }
 
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {

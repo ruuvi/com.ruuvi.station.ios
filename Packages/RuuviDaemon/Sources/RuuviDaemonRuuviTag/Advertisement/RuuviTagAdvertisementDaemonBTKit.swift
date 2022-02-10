@@ -204,7 +204,6 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         ruuviPool.create(
             record
                 .with(source: .advertisement)
-                .with(sensorSettings: sensorSettings)
         ).on(failure: { [weak self] error in
             if case RuuviPoolError.ruuviPersistence(let persistenceError) = error {
                 switch persistenceError {

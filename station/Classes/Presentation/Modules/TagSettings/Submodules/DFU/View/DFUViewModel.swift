@@ -28,6 +28,7 @@ final class DFUViewModel: ObservableObject {
                 self.whenReading(),
                 self.whenDownloading(),
                 self.whenListening(),
+                self.whenReadyToUpdate(),
                 self.whenFlashing(),
                 self.userInput(input: input.eraseToAnyPublisher())
             ]
@@ -103,6 +104,13 @@ extension DFUViewModel {
              )
         case onDidFailDownloading(Error)
         case onHeardRuuviBootDevice(
+                LatestRelease,
+                CurrentRelease?,
+                uuid: String,
+                appUrl: URL,
+                fullUrl: URL
+             )
+        case onLostRuuviBootDevice(
                 LatestRelease,
                 CurrentRelease?,
                 uuid: String,
@@ -203,6 +211,8 @@ extension DFUViewModel {
             }
         case .readyToUpdate:
             switch event {
+            case let .onLostRuuviBootDevice(latestRelease, currentRelease, _, appUrl, fullUrl):
+                return .listening(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
             case let .onUserDidConfirmToFlash(latestRelease, currentRelease, uuid, appUrl, fullUrl):
                 return .flashing(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
             default:
@@ -264,6 +274,27 @@ extension DFUViewModel {
             })
             .catch { Just(Event.onDidFailFlashingFirmware($0)) }
             .eraseToAnyPublisher()
+        }
+    }
+
+    func whenReadyToUpdate() -> Feedback<State, Event> {
+        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
+            guard case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl) = state,
+                  let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            return sSelf.interactor.observeLost(uuid: uuid)
+                .receive(on: RunLoop.main)
+                .map { uuid in
+                    return Event.onLostRuuviBootDevice(
+                        latestRelease,
+                        currentRelease,
+                        uuid: uuid,
+                        appUrl: appUrl,
+                        fullUrl: fullUrl
+                    )
+                }
+                .eraseToAnyPublisher()
         }
     }
 
