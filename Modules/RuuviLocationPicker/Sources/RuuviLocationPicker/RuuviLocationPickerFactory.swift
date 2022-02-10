@@ -29,7 +29,9 @@ public struct RuuviLocationPickerDependencies {
 }
 
 public final class RuuviLocationPickerFactory {
-    public init() {}
+    public init() {
+        // Intentionally unimplemented
+    }
 
     public func create(dependencies: RuuviLocationPickerDependencies) -> RuuviLocationPicker {
         let presenter = LocationPickerPresenter()

@@ -3,5 +3,6 @@ import XCTest
 
 final class RuuviLocationPickerTests: XCTestCase {
     func testExample() {
+        // Intentionally unimplemented
     }
 }
