@@ -35,8 +35,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uaL-Iv-OL5">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="150"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="iye-gm-a3M">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="150"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="Aa1-4J-ZBV">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="900"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="3oT-2A-fV9">
                                         <rect key="frame" x="8" y="117" width="190" height="25"/>
@@ -50,12 +50,12 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="3oT-2A-fV9" secondAttribute="bottom" constant="8" id="63r-Hd-Ilv"/>
                                     <constraint firstItem="3oT-2A-fV9" firstAttribute="leading" secondItem="uaL-Iv-OL5" secondAttribute="leading" constant="52" id="JSe-aZ-X4e"/>
-                                    <constraint firstItem="iye-gm-a3M" firstAttribute="leading" secondItem="uaL-Iv-OL5" secondAttribute="leading" id="Mc8-iS-M9V"/>
                                     <constraint firstAttribute="height" constant="150" id="MrR-MB-CIq"/>
-                                    <constraint firstAttribute="trailing" secondItem="iye-gm-a3M" secondAttribute="trailing" id="PiD-5B-Ene"/>
-                                    <constraint firstItem="iye-gm-a3M" firstAttribute="top" secondItem="uaL-Iv-OL5" secondAttribute="top" id="pgs-wm-uXB"/>
+                                    <constraint firstItem="Aa1-4J-ZBV" firstAttribute="top" secondItem="uaL-Iv-OL5" secondAttribute="top" id="Wjj-GL-bNI"/>
+                                    <constraint firstAttribute="trailing" secondItem="Aa1-4J-ZBV" secondAttribute="trailing" id="a0n-3b-c5Y"/>
+                                    <constraint firstItem="Aa1-4J-ZBV" firstAttribute="leading" secondItem="uaL-Iv-OL5" secondAttribute="leading" id="gMe-zO-y2z"/>
                                     <constraint firstItem="3oT-2A-fV9" firstAttribute="leading" secondItem="uaL-Iv-OL5" secondAttribute="leading" constant="8" id="qST-ov-QZN"/>
-                                    <constraint firstAttribute="bottom" secondItem="iye-gm-a3M" secondAttribute="bottom" id="x80-8r-m0g"/>
+                                    <constraint firstAttribute="bottom" secondItem="Aa1-4J-ZBV" secondAttribute="bottom" constant="-750" id="uH5-YH-IT5"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">

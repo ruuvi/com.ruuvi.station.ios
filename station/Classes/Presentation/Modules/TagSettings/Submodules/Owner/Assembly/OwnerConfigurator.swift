@@ -2,6 +2,7 @@ import Foundation
 import RuuviService
 import RuuviPool
 import RuuviStorage
+import RuuviPresenters
 
 final class OwnerConfigurator {
     func configure(view: OwnerViewController) {

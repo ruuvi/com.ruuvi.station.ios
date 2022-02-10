@@ -1,5 +1,6 @@
 import Foundation
 import RuuviDFU
+import RuuviPresenters
 
 class DfuFlashConfigurator: NSObject {
     func configure(view: DfuFlashAppleViewController) {

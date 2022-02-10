@@ -1,6 +1,7 @@
 import UIKit
 import RuuviCore
 import RuuviLocation
+import RuuviPresenters
 
 class LocationPickerAppleConfigurator {
     func configure(view: LocationPickerAppleViewController) {

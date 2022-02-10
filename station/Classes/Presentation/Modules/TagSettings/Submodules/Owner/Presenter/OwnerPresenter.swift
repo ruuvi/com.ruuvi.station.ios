@@ -3,6 +3,7 @@ import RuuviOntology
 import RuuviService
 import RuuviPool
 import RuuviStorage
+import RuuviPresenters
 
 final class OwnerPresenter: OwnerModuleInput {
     weak var view: OwnerViewInput!
