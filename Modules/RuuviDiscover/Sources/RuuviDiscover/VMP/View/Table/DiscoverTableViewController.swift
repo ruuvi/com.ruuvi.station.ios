@@ -31,6 +31,7 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
+
     private var alertVC: UIAlertController?
 
     var virtualTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]()
