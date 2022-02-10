@@ -4,6 +4,7 @@ import RuuviService
 import RuuviReactor
 import RuuviLocal
 import RuuviStorage
+import RuuviPresenters
 
 class OffsetCorrectionConfigurator {
     func configure(view: OffsetCorrectionAppleViewController) {

@@ -7,6 +7,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviCore
+import RuuviPresenters
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!

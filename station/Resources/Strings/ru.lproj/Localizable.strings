@@ -360,6 +360,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Превышено количество общих сенсоров";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "Чтобы поделиться датчиком необходимо наличие Ruuvi Gateway поблизости";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Вы уже делились этим сенсором";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Sensor already claimed by %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Sensor already claimed";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Не удалось отправить e-mail";
 "UserApiError.ER_MISSING_ARGUMENT" = "Пропущен аргумент запроса";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Недопустимый режим плотности";

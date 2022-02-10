@@ -8,6 +8,7 @@ import RuuviService
 import RuuviVirtual
 import RuuviCore
 import RuuviNotifier
+import RuuviPresenters
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length

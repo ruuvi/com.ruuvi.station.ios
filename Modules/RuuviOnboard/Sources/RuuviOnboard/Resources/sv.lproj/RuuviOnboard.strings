@@ -1,0 +1,6 @@
+"RuuviOnboard.Welcome.title" = "Det här kan Ruuvi Station göra för dig";
+"RuuviOnboard.Measure.title" = "Mät förhållandena i din miljö: temperatur, luftfuktighet och lufttryck";
+"RuuviOnboard.Access.title" = "Visa sensordata i realtid eller granska historisk data som är lagrad på enheten";
+"RuuviOnboard.Alerts.title" = "Ställ in alarm och få notiser om dem";
+"RuuviOnboard.Start.title" = "Tryck på SCAN för att se sensorerna i närheten";
+"RuuviOnboard.Start.button" = "SKANNA";

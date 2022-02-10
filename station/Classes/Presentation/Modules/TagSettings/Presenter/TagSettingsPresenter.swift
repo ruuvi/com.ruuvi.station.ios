@@ -10,6 +10,7 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 import RuuviCore
+import RuuviPresenters
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!

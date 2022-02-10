@@ -20,6 +20,9 @@ import RuuviNotification
 import RuuviRepository
 import RuuviLocation
 import RuuviCore
+import RuuviDiscover
+import RuuviPresenters
+import RuuviLocationPicker
 #if canImport(RuuviCloudPure)
 import RuuviCloudPure
 #endif
@@ -155,6 +158,7 @@ final class AppAssembly {
                 CoreAssembly(),
                 DaemonAssembly(),
                 MigrationAssembly(),
+                ModulesAssembly(),
                 NetworkingAssembly(),
                 PersistenceAssembly(),
                 PresentationAssembly(),
@@ -872,6 +876,55 @@ private final class CoreAssembly: Assembly {
             )
             return service
         })
+    }
+}
+
+private final class ModulesAssembly: Assembly {
+    func assemble(container: Container) {
+        container.register(RuuviDiscover.self) { r in
+            let virtualReactor = r.resolve(VirtualReactor.self)!
+            let errorPresenter = r.resolve(ErrorPresenter.self)!
+            let activityPresenter = r.resolve(ActivityPresenter.self)!
+            let virtualService = r.resolve(VirtualService.self)!
+            let permissionsManager = r.resolve(RuuviCorePermission.self)!
+            let permissionPresenter = r.resolve(PermissionPresenter.self)!
+            let foreground = r.resolve(BTForeground.self)!
+            let ruuviReactor = r.resolve(RuuviReactor.self)!
+            let ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)!
+
+            let factory = RuuviDiscoverFactory()
+            let dependencies = RuuviDiscoverDependencies(
+                virtualReactor: virtualReactor,
+                errorPresenter: errorPresenter,
+                activityPresenter: activityPresenter,
+                virtualService: virtualService,
+                permissionsManager: permissionsManager,
+                permissionPresenter: permissionPresenter,
+                foreground: foreground,
+                ruuviReactor: ruuviReactor,
+                ruuviOwnershipService: ruuviOwnershipService
+            )
+            return factory.create(dependencies: dependencies)
+        }
+
+        container.register(RuuviLocationPicker.self) { r in
+            let locationService = r.resolve(RuuviLocationService.self)!
+            let activityPresenter = r.resolve(ActivityPresenter.self)!
+            let errorPresenter = r.resolve(ErrorPresenter.self)!
+            let permissionsManager = r.resolve(RuuviCorePermission.self)!
+            let permissionPresenter = r.resolve(PermissionPresenter.self)!
+            let locationManager = r.resolve(RuuviCoreLocation.self)!
+            let dependencies = RuuviLocationPickerDependencies(
+                locationService: locationService,
+                activityPresenter: activityPresenter,
+                errorPresenter: errorPresenter,
+                permissionsManager: permissionsManager,
+                permissionPresenter: permissionPresenter,
+                locationManager: locationManager
+            )
+            let factory = RuuviLocationPickerFactory()
+            return factory.create(dependencies: dependencies)
+        }
     }
 }
 

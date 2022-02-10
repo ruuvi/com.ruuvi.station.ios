@@ -360,6 +360,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Et voi jakaa anturia useammalle käyttäjälle";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "Jotta voit jakaa anturin, sen täytyy olla Ruuvi Gateway -reitittimen kuuluvuusalueella";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Tämä anturi on jo jaettu";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Anturilla on jo toinen omistaja: %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Anturilla on jo toinen omistaja";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Sähköpostin lähetys epäonnistui";
 "UserApiError.ER_MISSING_ARGUMENT" = "Argumentti puuttuu";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Virheellinen tiheuden tila";
