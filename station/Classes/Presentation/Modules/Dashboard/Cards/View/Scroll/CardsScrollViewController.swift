@@ -383,7 +383,8 @@ extension CardsScrollViewController {
                     view.isHidden = !isConnected.bound
                 }
             case .web:
-                view.isHidden = false
+                // Hide alert bell for virtual tags
+                view.isHidden = true
             }
         }
         // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
@@ -400,7 +401,8 @@ extension CardsScrollViewController {
                     }
                 }
             case .web:
-                view.isHidden = false
+                // Hide alert bell for virtual tags
+                view.isHidden = true
             }
         }
     }
