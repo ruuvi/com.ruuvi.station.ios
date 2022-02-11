@@ -2,7 +2,8 @@ import UIKit
 import RuuviBundleUtils
 
 final class RuuviOnboardImageTitleViewController: UIViewController {
-    init(imageName: String, titleKey: String) {
+    init(imageName: String, titleKey: String, isWelcomScreen: Bool = false) {
+        self.isWelcomeScreen = isWelcomScreen
         self.imageName = imageName
         self.titleKey = titleKey
         self.imageView = Self.makeImageView()
@@ -37,9 +38,10 @@ final class RuuviOnboardImageTitleViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             guide.topAnchor.constraint(equalTo: imageView.topAnchor),
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 24),
-            imageView.heightAnchor.constraint(equalToConstant: 140),
-            imageView.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
+            imageView.heightAnchor.constraint(equalToConstant: isWelcomeScreen ? 148 : 88),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             guide.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             guide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
@@ -58,6 +60,7 @@ final class RuuviOnboardImageTitleViewController: UIViewController {
     private let titleLabel: UILabel
     private let imageName: String
     private let titleKey: String
+    private let isWelcomeScreen: Bool
 }
 
 // MARK: - Factory
@@ -72,6 +75,8 @@ extension RuuviOnboardImageTitleViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }
 }
