@@ -65,10 +65,9 @@ final class RuuviOnboardStartViewController: UIViewController {
             guide.topAnchor.constraint(equalTo: imageView.bottomAnchor),
             guide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            guide.bottomAnchor.constraint(equalTo: button.topAnchor),      
+            guide.bottomAnchor.constraint(equalTo: button.topAnchor),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
-            //label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             view.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 32)
         ])
     }
