@@ -66,7 +66,7 @@ extension RuuviServiceExportImpl {
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyMMdd-HHmm"
+        dateFormatter.dateFormat = "yyyyMMdd-HHmm"
         let date = dateFormatter.string(from: Date())
         dateFormatter.dateFormat = "\"yyyy-MM-dd HH:mm:ss\""
         let group = DispatchGroup()
@@ -75,7 +75,7 @@ extension RuuviServiceExportImpl {
             autoreleasepool {
                 group.enter()
 
-                let fileName = ruuviTag.name + "-" + date + ".csv"
+                let fileName = ruuviTag.name + "_" + date + ".csv"
                 let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
                 let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
                 let headersString = self.headersProvider.getHeaders(units)
@@ -105,6 +105,13 @@ extension RuuviServiceExportImpl {
 
                         let p = self.measurementService.double(for: log.pressure)
                         let pressure: String = toString(p, format: "%.2f")
+
+                        var rssi: String
+                        if let rssiValue = log.rssi {
+                            rssi = "\(rssiValue)"
+                        } else {
+                            rssi = self.emptyValueString
+                        }
 
                         let accelerationX: String = toString(log.acceleration?.x.value, format: "%.3f")
                         let accelerationY: String = toString(log.acceleration?.y.value, format: "%.3f")
@@ -137,6 +144,7 @@ extension RuuviServiceExportImpl {
                             + "\(temperature)" + ","
                             + "\(humidity)" + ","
                             + "\(pressure)" + ","
+                            + "\(rssi)" + ","
                             + "\(accelerationX)" + ","
                             + "\(accelerationY)" + ","
                             + "\(accelerationZ)" + ","
