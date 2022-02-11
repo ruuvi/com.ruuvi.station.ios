@@ -18,7 +18,7 @@ class PresentationAssembly: Assembly {
             let presenter = ErrorPresenterAlert()
             return presenter
         }
-        
+
         container.register(FLEXFeatureTogglesViewController.self) { r in
             let controller = FLEXFeatureTogglesViewController()
             controller.featureToggleService = r.resolve(FeatureToggleService.self)
