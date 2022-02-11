@@ -4,7 +4,6 @@ import RuuviOntology
 protocol WebTagSettingsModuleInput: AnyObject {
     func configure(
         sensor: VirtualTagSensor,
-        temperature: Temperature?,
-        scrollToAlert: Bool
+        temperature: Temperature?
     )
 }

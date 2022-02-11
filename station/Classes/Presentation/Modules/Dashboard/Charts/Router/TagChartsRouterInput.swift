@@ -21,8 +21,7 @@ protocol TagChartsRouterInput {
     )
     func openWebTagSettings(
         sensor: VirtualTagSensor,
-        temperature: Temperature?,
-        scrollToAlert: Bool
+        temperature: Temperature?
     )
 }
 extension TagChartsRouterInput {

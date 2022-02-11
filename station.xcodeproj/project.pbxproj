@@ -104,10 +104,6 @@
 		0E2B339C26A2BC3F00366B01 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339A26A2BC3F00366B01 /* AppRouter.swift */; };
 		0E2B339E26A2BCBE00366B01 /* OnboardRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */; };
 		0E2B339F26A2BCBE00366B01 /* OnboardRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */; };
-		0E31B04223BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */; };
-		0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */; };
-		0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */; };
-		0E31B04723BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */; };
 		0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */; };
 		0E3CA70C267365B1000D9B25 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3CA70B267365B1000D9B25 /* Debouncer.swift */; };
 		0E3CA70D267365B1000D9B25 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3CA70B267365B1000D9B25 /* Debouncer.swift */; };
@@ -936,8 +932,6 @@
 		0E2AFF9F266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviRepositoryError+LocalizedError.swift"; sourceTree = "<group>"; };
 		0E2B339A26A2BC3F00366B01 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		0E2B339D26A2BCBE00366B01 /* OnboardRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardRouter.swift; sourceTree = "<group>"; };
-		0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
-		0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebTagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
 		0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitionManager.swift; sourceTree = "<group>"; };
 		0E3CA70B267365B1000D9B25 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TemperatureUnit+Localization.swift"; sourceTree = "<group>"; };
@@ -1417,7 +1411,6 @@
 		0E046F2C22F0563E00BD4E9C /* Table */ = {
 			isa = PBXGroup;
 			children = (
-				0E31B04023BBA34C00660412 /* SectionHeader */,
 				0EE49B9323B74704003012C2 /* Cells */,
 				0E046F2D22F0569000BD4E9C /* WebTagSettingsTableViewController.swift */,
 			);
@@ -1880,15 +1873,6 @@
 				0E62299426AAA0570041DCDD /* DiscoverRouter.swift */,
 			);
 			path = Routers;
-			sourceTree = "<group>";
-		};
-		0E31B04023BBA34C00660412 /* SectionHeader */ = {
-			isa = PBXGroup;
-			children = (
-				0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */,
-				0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */,
-			);
-			path = SectionHeader;
 			sourceTree = "<group>";
 		};
 		0E5C302322D0B16300B52E39 /* AppState */ = {
@@ -3788,7 +3772,6 @@
 				0E8BD3E0238566AB008B31EF /* About.storyboard in Resources */,
 				0E8BD3E1238566AB008B31EF /* GoogleService-Info.plist in Resources */,
 				0E197C7023C4A7D00074015B /* Presentation.plist in Resources */,
-				0E31B04723BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				66BC44962657AED400A03253 /* OffsetCorrection.storyboard in Resources */,
 				0E8BD3E3238566AB008B31EF /* Networking.plist in Resources */,
 				340BE39F27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */,
@@ -3836,7 +3819,6 @@
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
 				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
 				0E197C6F23C4A7D00074015B /* Presentation.plist in Resources */,
-				0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				66BC44952657AED400A03253 /* OffsetCorrection.storyboard in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
 				340BE39E27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */,
@@ -4435,7 +4417,6 @@
 				66718A69266A6CA700A380F8 /* DfuFilePickerPresenterSheet.swift in Sources */,
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
-				0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
 				0E290A862660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 				A9646476247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
@@ -4827,7 +4808,6 @@
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
-				0E31B04223BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				66718A52266A685700A380F8 /* DfuFlashViewInput.swift in Sources */,
 				660EB27F2669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,

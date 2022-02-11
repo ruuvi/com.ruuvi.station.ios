@@ -20,8 +20,7 @@ protocol CardsRouterInput {
     )
     func openVirtualSensorSettings(
         sensor: VirtualTagSensor,
-        temperature: Temperature?,
-        scrollToAlert: Bool
+        temperature: Temperature?
     )
     func openTagCharts()
 }
