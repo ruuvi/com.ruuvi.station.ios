@@ -110,10 +110,6 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openLanguage()
     }
 
-    func viewDidTapOnForeground() {
-        router.openForeground()
-    }
-
     func viewDidTapOnDefaults() {
         router.openDefaults()
     }
