@@ -106,6 +106,8 @@ extension LocationPickerAppleViewController {
         }
 
         searchBar = UISearchBar(frame: .zero)
+        searchBar.backgroundColor = .systemBackground
+        searchBar.searchTextField.leftView?.tintColor = .secondaryLabel
         searchBar.delegate = self
         navigationItem.titleView = searchBar
 
