@@ -88,7 +88,8 @@ final class RuuviOnboardPagesViewController: UIViewController {
 
         let welcome = RuuviOnboardImageTitleViewController(
             imageName: "welcome_friend",
-            titleKey: "RuuviOnboard.Welcome.title"
+            titleKey: "RuuviOnboard.Welcome.title",
+            isWelcomScreen: true
         )
         controllers.append(welcome)
 
