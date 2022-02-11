@@ -29,8 +29,6 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
-    @IBOutlet weak var foregroundCell: UITableViewCell!
-    @IBOutlet weak var foregroundTitleLabel: UILabel!
     @IBOutlet weak var advancedCell: UITableViewCell!
     @IBOutlet weak var advancedTitleLabel: UILabel!
     @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
@@ -89,7 +87,6 @@ extension SettingsTableViewController: SettingsViewInput {
         pressureTitleLabel.text = "Settings.Label.PressureUnit.text".localized()
         pressureSubitleLabel.text = pressureUnit.title
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
-        foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
         advancedTitleLabel.text = "Settings.Label.Advanced".localized()
@@ -155,7 +152,6 @@ extension SettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
@@ -167,8 +163,6 @@ extension SettingsTableViewController {
                 output.viewDidTapOnPressure()
             case languageCell:
                 output.viewDidTapOnLanguage()
-            case foregroundCell:
-                output.viewDidTapOnForeground()
             case defaultsCell:
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
