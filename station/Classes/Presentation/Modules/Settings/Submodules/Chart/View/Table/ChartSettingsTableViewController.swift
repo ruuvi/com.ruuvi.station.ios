@@ -1,9 +1,9 @@
 import UIKit
 
-class AdvancedTableViewController: UITableViewController {
-    var output: AdvancedViewOutput!
+class ChartSettingsTableViewController: UITableViewController {
+    var output: ChartSettingsViewOutput!
 
-    var viewModel = AdvancedViewModel(sections: []) {
+    var viewModel = ChartSettingsViewModel(sections: []) {
         didSet {
             if isViewLoaded {
                 tableView.reloadData()
@@ -22,19 +22,19 @@ class AdvancedTableViewController: UITableViewController {
     }
 }
 
-extension AdvancedTableViewController: AdvancedViewInput {
+extension ChartSettingsTableViewController: ChartSettingsViewInput {
     func localize() {
-        title = "Advanced.title".localized()
+        title = "Settings.Label.Chart".localized()
     }
 }
 
 // MARK: - View lifecycle
-extension AdvancedTableViewController {
+extension ChartSettingsTableViewController {
 
 }
 
 // MARK: - UITableViewDataSource
-extension AdvancedTableViewController {
+extension ChartSettingsTableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.sections.count
@@ -46,36 +46,37 @@ extension AdvancedTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
+
         switch cellViewModel.type {
         case .switcher(let title, let value):
             let cell = tableView
-                .dequeueReusableCell(with: AdvancedSwitchTableViewCell.self, for: indexPath)
+                .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
             cell.isOnSwitch.isOn = value
             cell.delegate = self
             return cell
-        case .stepper(let title, let value, let unit):
+        case .stepper(let title, let value, let unitSingular, let unitPlural):
             let cell = tableView
-                .dequeueReusableCell(with: AdvancedStepperTableViewCell.self,
+                .dequeueReusableCell(with: ChartSettingsStepperTableViewCell.self,
                                      for: indexPath)
             let title = title
-            cell.unit = unit
+            let unit = value > 1 ? unitPlural : unitSingular
             cell.titleLabel.text = title + " "
                 + "(" + "\(value)" + " "
-                + unit.unitString + ")"
+            + unit.unitString + ")"
             cell.prefix = title
             cell.stepper.value = Double(value)
             cell.delegate = self
             return cell
         case .disclosure(let title):
-            let cell = tableView.dequeueReusableCell(with: AdvancedDisclosureTableViewCell.self, for: indexPath)
+            let cell = tableView.dequeueReusableCell(with: ChartSettingsDisclosureTableViewCell.self, for: indexPath)
             cell.textLabel?.text = title
             return cell
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.sections[section].title
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return viewModel.sections[section].note
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -84,8 +85,8 @@ extension AdvancedTableViewController {
 }
 
 // MARK: - AdvancedSwitchTableViewCellDelegate
-extension AdvancedTableViewController: AdvancedSwitchTableViewCellDelegate {
-    func advancedSwitch(cell: AdvancedSwitchTableViewCell, didChange value: Bool) {
+extension ChartSettingsTableViewController: ChartSettingsSwitchTableViewCellDelegate {
+    func chartSettingsSwitch(cell: ChartSettingsSwitchTableViewCell, didChange value: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
             let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
             cellViewModel.boolean.value = value
@@ -94,8 +95,8 @@ extension AdvancedTableViewController: AdvancedSwitchTableViewCellDelegate {
 }
 
 // MARK: - AdvancedStepperTableViewCellDelegate
-extension AdvancedTableViewController: AdvancedStepperTableViewCellDelegate {
-    func advancedStepper(cell: AdvancedStepperTableViewCell, didChange value: Int) {
+extension ChartSettingsTableViewController: ChartSettingsStepperTableViewCellDelegate {
+    func chartSettingsStepper(cell: ChartSettingsStepperTableViewCell, didChange value: Int) {
         if let indexPath = tableView.indexPath(for: cell) {
             let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
             cellViewModel.integer.value = value
