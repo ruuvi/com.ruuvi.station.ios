@@ -131,6 +131,66 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(showAllData: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .chartShowAllPoints,
+            value: showAllData.chartBoolSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: showAllData)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(drawDots: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .chartDrawDots,
+            value: drawDots.chartBoolSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: drawDots)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(chartDuration: Int) -> Future<Int, RuuviCloudError> {
+        let promise = Promise<Int, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .chartViewPeriod,
+            value: chartDuration.chartDurationSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: chartDuration)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError> {
         let promise = Promise<RuuviCloudSettings, RuuviCloudError>()
         guard let apiKey = user.apiKey else {

@@ -29,8 +29,8 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
-    @IBOutlet weak var advancedCell: UITableViewCell!
-    @IBOutlet weak var advancedTitleLabel: UILabel!
+    @IBOutlet weak var chartCell: UITableViewCell!
+    @IBOutlet weak var chartTitleLabel: UILabel!
     @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
     @IBOutlet weak var experimentalFunctionsLabel: UILabel!
 
@@ -89,7 +89,7 @@ extension SettingsTableViewController: SettingsViewInput {
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
-        advancedTitleLabel.text = "Settings.Label.Advanced".localized()
+        chartTitleLabel.text = "Settings.Label.Chart".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -167,8 +167,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
-            case advancedCell:
-                output.viewDidTapOnAdvanced()
+            case chartCell:
+                output.viewDidTapOnChart()
             case experimentalFunctionsCell:
                 output.viewDidTapOnExperimental()
             default:

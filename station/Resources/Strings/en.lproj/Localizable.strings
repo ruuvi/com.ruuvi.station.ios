@@ -46,10 +46,6 @@
 "Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Chart Duration";
-"Advanced.title" = "Advanced Settings";
-"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
-"Advanced.Downsampling.title" = "Downsampling";
-"Advanced.Interval.Min.string" = "min";
 "DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs Bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
@@ -122,7 +118,6 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
-"Settings.Label.Advanced" = "Advanced";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
 "OWMError.apiLimitExceeded" = "API limit exceeded";
 "OWMError.notAHttpResponse" = "Not an HTTP response";
@@ -267,6 +262,8 @@
 "About.TagsCount.text" = "Seen sensors: %d";
 "About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/support";
 "About.Troubleshooting.header" = "TROUBLESHOOTING";
+"Interval.Hour.string" = "Hours";
+"Interval.Days.string" = "Days";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity (%@)";
 "HumidityUnit.gm3.title" = "Absolute (g/m³)";
 "g/m³" = "g/m³";
@@ -293,7 +290,14 @@
 "Welcome.scan.title" = "SCAN";
 "Background.Interval.Sec.string" = "sec";
 "Settings.navigationItem.title" = "Settings";
+"Settings.Label.Chart" = "Chart Settings";
+"ChartSettings.AllPoints.title" = "Display all data in chart";
+"ChartSettings.AllPoints.description" = "Enabling it may cause charts to update slowly";
+"ChartSettings.DrawDots.title" = "Draw dots in chart";
+"ChartSettings.DrawDots.description" = "Small dots will help to understand when measurements were collected";
 "Defaults.ChartIntervalSeconds.title" = "Chart Interval";
+"ChartSettings.Duration.title" = "Chart history view period";
+"ChartSettings.Duration.description" = "Configure the period of history to be shown on chart from 1 to 10 days";
 "Settings.Label.HumidityUnit.text" = "Humidity Unit";
 "Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
 "Settings.Label.PressureUnit.text" = "Pressure Unit";
@@ -387,9 +391,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Temperature";
 "TagSettings.OffsetCorrection.Humidity" = "Humidity";
 "TagSettings.OffsetCorrection.Pressure" = "Pressure";
-"Advanced.Charts.title" = "Charts";
-"Advanced.Network.title" = "Network";
-"Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
 "SignIn.EnterVerificationCode" = "Please enter verification code";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
@@ -474,3 +475,4 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.General.Owner.none" = "No owner";
 "TagSettings.Share.title" = "Share";
 "Menu.LoggedIn.title" = "Logged in:";
+"Interval.Day.string" = "Day";
