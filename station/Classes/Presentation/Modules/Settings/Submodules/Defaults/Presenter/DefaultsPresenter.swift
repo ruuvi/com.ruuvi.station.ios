@@ -16,7 +16,9 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildWebPullInterval(),
                            buildPruningOffsetHours(),
                            buildChartIntervalSeconds(),
-                           buildChartDurationHours()]
+                           buildChartDurationHours(),
+                           saveAdvertisementsInterval(),
+                           buildSaveAndLoadFromWebIntervalMinutues()]
     }
 }
 
@@ -144,5 +146,29 @@ extension DefaultsPresenter {
             observer.settings.chartDurationHours = chartDurationHours.bound
         }
         return chartDurationHours
+    }
+
+    private func saveAdvertisementsInterval() -> DefaultsViewModel {
+        let advertisementInterval = DefaultsViewModel()
+        advertisementInterval.title = "ForegroundRow.advertisement.title".localized()
+        advertisementInterval.integer.value = settings.advertisementDaemonIntervalMinutes
+        advertisementInterval.unit = .minutes
+
+        bind(advertisementInterval.integer, fire: false) { observer, interval in
+            observer.settings.advertisementDaemonIntervalMinutes = interval.bound
+        }
+        return advertisementInterval
+    }
+
+    private func buildSaveAndLoadFromWebIntervalMinutues() -> DefaultsViewModel {
+        let webSaveAndLoadInterval = DefaultsViewModel()
+        webSaveAndLoadInterval.title = "ForegroundRow.webTags.title".localized()
+        webSaveAndLoadInterval.integer.value = settings.webTagDaemonIntervalMinutes
+        webSaveAndLoadInterval.unit = .minutes
+
+        bind(webSaveAndLoadInterval.integer, fire: false) { observer, interval in
+            observer.settings.webTagDaemonIntervalMinutes = interval.bound
+        }
+        return webSaveAndLoadInterval
     }
 }

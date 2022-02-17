@@ -255,7 +255,7 @@ extension TagChartsInteractor {
     private func fetchAll(_ competion: (() -> Void)? = nil) {
         let date = Calendar.current.date(
             byAdding: .hour,
-            value: -settings.dataPruningOffsetHours,
+            value: -settings.chartDurationHours,
             to: Date()
         ) ?? Date.distantPast
         let op = ruuviStorage.read(

@@ -46,10 +46,6 @@
 "Defaults.PruningOffsetHours.title" = "Beskärning av förskjutningstider";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Historikens längd";
-"Advanced.title" = "Avancerade inställningar";
-"Advanced.ChartIntervalMinutes.title" = "Historikens noggrannhet";
-"Advanced.Downsampling.title" = "Nedsampling";
-"Advanced.Interval.Min.string" = "min";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station behöver bluetooth för att fungera. Gå till Inställningar och aktivera Bluetooth.";
@@ -122,7 +118,6 @@
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
-"Settings.Label.Advanced" = "Avancerat";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";
 "OWMError.apiLimitExceeded" = "API gräns överskriden";
 "OWMError.notAHttpResponse" = "Ingen HTTP respons";
@@ -267,6 +262,8 @@
 "About.TagsCount.text" = "Upptäckta sensorer: %d";
 "About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/support";
 "About.Troubleshooting.header" = "FELSÖKNING";
+"Interval.Hour.string" = "Timmar";
+"Interval.Days.string" = "Dagar";
 "TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
 "HumidityUnit.gm3.title" = "Absolut (g/m³)";
 "g/m³" = "g/m³";
@@ -293,7 +290,14 @@
 "Welcome.scan.title" = "SKANNA";
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Inställningar";
+"Settings.Label.Chart" = "Historik";
+"ChartSettings.AllPoints.title" = "Visa all insamlad data i graferna";
+"ChartSettings.AllPoints.description" = "Den här funktionen kan göra appen laddar historik långsammare";
+"ChartSettings.DrawDots.title" = "Visa datapunkter";
+"ChartSettings.DrawDots.description" = "Datapunkter gör det lättare att utforska lagrad historikinformation";
 "Defaults.ChartIntervalSeconds.title" = "Historikens noggrannhet";
+"ChartSettings.Duration.title" = "Historik";
+"ChartSettings.Duration.description" = "Ange hur långt bak historiken skall visas, mellan 1 - 10 dagar";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
 "Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas";
 "Settings.Label.PressureUnit.text" = "Tryckenhet";
@@ -387,9 +391,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Temperatur";
 "TagSettings.OffsetCorrection.Humidity" = "Fuktighet";
 "TagSettings.OffsetCorrection.Pressure" = "Lufttryck";
-"Advanced.Charts.title" = "Histogram";
-"Advanced.Network.title" = "Nätverk";
-"Advanced.NetworkInterval.title" = "Datahämtningsintervall";
 "PhotoPicker.Sheet.files" = "Välj från filer";
 "SignIn.EnterVerificationCode" = "Ange verifieringskod";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Det gick inte att hitta eller skapa bakgrundsbild";
@@ -474,3 +475,4 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.General.Owner.none" = "Ingen";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
+"Interval.Day.string" = "Dag";

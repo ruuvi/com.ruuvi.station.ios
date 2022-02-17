@@ -232,7 +232,8 @@ extension TagChartPresenter {
                 dataSet.circleRadius = 6
                 dataSet.drawCirclesEnabled = true
             default:
-                dataSet.drawCirclesEnabled = false
+                dataSet.circleRadius = 0.8
+                dataSet.drawCirclesEnabled = settings.chartDrawDotsOn
             }
         }
     }

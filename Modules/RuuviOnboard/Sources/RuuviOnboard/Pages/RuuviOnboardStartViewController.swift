@@ -54,18 +54,20 @@ final class RuuviOnboardStartViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 140),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             view.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 20),
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            button.heightAnchor.constraint(equalToConstant: 50),
+            button.heightAnchor.constraint(equalToConstant: 56),
+            button.widthAnchor.constraint(equalToConstant: 168),
             guide.topAnchor.constraint(equalTo: imageView.bottomAnchor),
             guide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             guide.bottomAnchor.constraint(equalTo: button.topAnchor),
-            label.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
             view.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 32)
         ])
     }
@@ -88,14 +90,17 @@ extension RuuviOnboardStartViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }
 
     private static func makeButton() -> UIButton {
         let button = UIButton()
-        button.layer.cornerRadius = 25
+        button.layer.cornerRadius = 28
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.white.cgColor
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return button
     }

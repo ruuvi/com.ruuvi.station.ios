@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KUd-sO-HYy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KUd-sO-HYy">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,7 +24,7 @@
             </objects>
             <point key="canvasLocation" x="-396" y="-190"/>
         </scene>
-        <!--View Controller-->
+        <!--Location Picker Apple View Controller-->
         <scene sceneID="741-cx-xC3">
             <objects>
                 <viewController storyboardIdentifier="LocationPickerAppleViewController" id="OPB-2U-HF7" customClass="LocationPickerAppleViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
@@ -39,6 +39,7 @@
                                 </connections>
                             </mapView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="HEg-0T-EEb"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="qJv-cN-I5g" secondAttribute="bottom" id="1jV-3f-NLZ"/>
@@ -46,7 +47,6 @@
                             <constraint firstItem="qJv-cN-I5g" firstAttribute="top" secondItem="HEg-0T-EEb" secondAttribute="top" id="rKF-8B-QxI"/>
                             <constraint firstItem="qJv-cN-I5g" firstAttribute="leading" secondItem="HEg-0T-EEb" secondAttribute="leading" id="ykL-ey-Co2"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="HEg-0T-EEb"/>
                     </view>
                     <navigationItem key="navigationItem" id="W5P-a6-meh">
                         <leftBarButtonItems>
