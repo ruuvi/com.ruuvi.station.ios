@@ -110,10 +110,6 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openLanguage()
     }
 
-    func viewDidTapOnForeground() {
-        router.openForeground()
-    }
-
     func viewDidTapOnDefaults() {
         router.openDefaults()
     }
@@ -122,8 +118,8 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openHeartbeat()
     }
 
-    func viewDidTapOnAdvanced() {
-        router.openAdvanced()
+    func viewDidTapOnChart() {
+        router.openChart()
     }
 
     func viewDidTapOnExperimental() {

@@ -16,15 +16,6 @@ class SettingsRouter: SettingsRouterInput {
             .perform()
     }
 
-    func openForeground() {
-        let factory = StoryboardFactory(storyboardName: "Foreground")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: ForegroundModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ module in
-                module.configure()
-            })
-    }
     func openDefaults() {
         let factory = StoryboardFactory(storyboardName: "Defaults")
         try! transitionHandler
@@ -45,10 +36,10 @@ class SettingsRouter: SettingsRouterInput {
             })
     }
 
-    func openAdvanced() {
-        let factory = StoryboardFactory(storyboardName: "AdvancedSettings")
+    func openChart() {
+        let factory = StoryboardFactory(storyboardName: "ChartSettings")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: AdvancedModuleInput.self)
+            .forStoryboard(factory: factory, to: ChartSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
                 module.configure()

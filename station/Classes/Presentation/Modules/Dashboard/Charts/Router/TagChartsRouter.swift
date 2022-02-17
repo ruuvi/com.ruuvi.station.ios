@@ -75,14 +75,13 @@ class TagChartsRouter: TagChartsRouterInput {
 
     func openWebTagSettings(
         sensor: VirtualTagSensor,
-        temperature: Temperature?,
-        scrollToAlert: Bool
+        temperature: Temperature?
     ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(sensor: sensor, temperature: temperature, scrollToAlert: scrollToAlert)
+                module.configure(sensor: sensor, temperature: temperature)
             })
     }
 

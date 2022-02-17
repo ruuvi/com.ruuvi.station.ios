@@ -60,6 +60,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var cloudSyncToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartIntervalDidChangeToken: NSObjectProtocol?
+    private var chartDurationHourDidChangeToken: NSObjectProtocol?
+    private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
@@ -93,6 +95,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         cloudSyncToken?.invalidate()
         downsampleDidChangeToken?.invalidate()
         chartIntervalDidChangeToken?.invalidate()
+        chartDurationHourDidChangeToken?.invalidate()
+        chartDrawDotsDidChangeToken?.invalidate()
     }
 
     func configure(output: TagChartsModuleOutput) {
@@ -361,6 +365,7 @@ extension TagChartsPresenter {
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingData()
     }
+    // swiftlint:disable:next function_body_length
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default
@@ -399,6 +404,22 @@ extension TagChartsPresenter {
         chartIntervalDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .ChartIntervalDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.interactor.notifyDownsamleOnDidChange()
+        })
+        chartDurationHourDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartDurationHourDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.interactor.notifyDownsamleOnDidChange()
+        })
+        chartDrawDotsDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartDrawDotsOnDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in

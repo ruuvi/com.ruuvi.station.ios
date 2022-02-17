@@ -159,8 +159,7 @@ extension CardsPresenter: CardsViewOutput {
                   let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
             router.openVirtualSensorSettings(
                 sensor: webTag,
-                temperature: viewModel.temperature.value,
-                scrollToAlert: scrollToAlert
+                temperature: viewModel.temperature.value
             )
         }
     }
