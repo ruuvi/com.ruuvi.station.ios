@@ -118,8 +118,8 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openHeartbeat()
     }
 
-    func viewDidTapOnAdvanced() {
-        router.openAdvanced()
+    func viewDidTapOnChart() {
+        router.openChart()
     }
 
     func viewDidTapOnExperimental() {

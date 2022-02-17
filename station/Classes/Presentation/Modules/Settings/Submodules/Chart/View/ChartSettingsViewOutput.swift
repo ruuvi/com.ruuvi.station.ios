@@ -1,5 +1,5 @@
 import Foundation
 
-protocol AdvancedViewOutput {
+protocol ChartSettingsViewOutput {
     func viewWillDisappear()
 }

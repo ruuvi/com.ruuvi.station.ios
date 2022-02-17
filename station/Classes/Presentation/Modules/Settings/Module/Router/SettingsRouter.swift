@@ -36,10 +36,10 @@ class SettingsRouter: SettingsRouterInput {
             })
     }
 
-    func openAdvanced() {
-        let factory = StoryboardFactory(storyboardName: "AdvancedSettings")
+    func openChart() {
+        let factory = StoryboardFactory(storyboardName: "ChartSettings")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: AdvancedModuleInput.self)
+            .forStoryboard(factory: factory, to: ChartSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
                 module.configure()

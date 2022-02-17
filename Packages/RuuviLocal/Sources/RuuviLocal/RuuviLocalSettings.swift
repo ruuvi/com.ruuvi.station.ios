@@ -13,6 +13,8 @@ extension Notification.Name {
     public static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
     public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
     public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
+    public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
+    public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
 }
 
 public protocol RuuviLocalSettings {
@@ -39,6 +41,7 @@ public protocol RuuviLocalSettings {
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
     var chartDownsamplingOn: Bool { get set }
+    var chartDrawDotsOn: Bool { get set }
     var tagsSorting: [String] { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }

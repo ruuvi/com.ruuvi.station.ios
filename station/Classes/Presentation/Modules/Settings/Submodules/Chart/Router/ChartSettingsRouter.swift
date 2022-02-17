@@ -1,10 +1,10 @@
 import LightRoute
 
-enum AdvancedEmbedSegue: String {
+enum ChartSettingsEmbedSegue: String {
     case list = "EmbedAdvancedSwiftUIHostingControllerSegueIdentifier"
     case table = "EmbedAdvancedTableViewControllerSegueIdentifier"
 }
 
-class AdvancedRouter: AdvancedRouterInput {
+class ChartSettingsRouter: ChartSettingsRouterInput {
     weak var transitionHandler: TransitionHandler!
 }
