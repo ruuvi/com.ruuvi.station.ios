@@ -9,7 +9,7 @@ protocol SettingsViewOutput {
     func viewDidTapOnLanguage()
     func viewDidTapOnDefaults()
     func viewDidTapOnHeartbeat()
-    func viewDidTapOnAdvanced()
+    func viewDidTapOnChart()
     func viewDidTapOnExperimental()
     func viewDidTriggerShake()
 }

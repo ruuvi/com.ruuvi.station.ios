@@ -46,10 +46,6 @@
 "Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
 "Defaults.Interval.Hour.string" = "ч";
 "Defaults.ChartDurationHours.title" = "Размер Графиков";
-"Advanced.title" = "Расширенные настройки";
-"Advanced.ChartIntervalMinutes.title" = "Интервал графиков";
-"Advanced.Downsampling.title" = "Downsampling";
-"Advanced.Interval.Min.string" = "мин";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
@@ -122,7 +118,6 @@
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
-"Settings.Label.Advanced" = "Дополнительно";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
@@ -267,6 +262,8 @@
 "About.TagsCount.text" = "Датчиков обнаружено: %d";
 "About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/support";
 "About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
+"Interval.Hour.string" = "Часов";
+"Interval.Days.string" = "Дней";
 "TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
 "HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
 "g/m³" = "г/м³";
@@ -293,7 +290,14 @@
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
 "Background.Interval.Sec.string" = "сек";
 "Settings.navigationItem.title" = "Настройки";
+"Settings.Label.Chart" = "Настройки графиков";
+"ChartSettings.AllPoints.title" = "Отображать все данные";
+"ChartSettings.AllPoints.description" = "Это может привести к медленному обновлению графиков";
+"ChartSettings.DrawDots.title" = "Показывать точки на графике";
+"ChartSettings.DrawDots.description" = "Маленькие точки помогут точно понять когда были получены данные";
 "Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
+"ChartSettings.Duration.title" = "Диапазон отображения графиков";
+"ChartSettings.Duration.description" = "Установите диапазон для отображения на графиках от 1-го до 10-ти дней";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
 "Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
 "Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
@@ -387,9 +391,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Температура";
 "TagSettings.OffsetCorrection.Humidity" = "Влажность";
 "TagSettings.OffsetCorrection.Pressure" = "Давление";
-"Advanced.Charts.title" = "Графики";
-"Advanced.Network.title" = "Облако";
-"Advanced.NetworkInterval.title" = "Интервал Синхронизации";
 "PhotoPicker.Sheet.files" = "Выбрать из файлов";
 "SignIn.EnterVerificationCode" = "Пожалуйста, введите код подтверждения";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Не удалось найти или сгенерировать фоновое изображение";
@@ -474,3 +475,4 @@
 "TagSettings.General.Owner.none" = "Нет владельца";
 "TagSettings.Share.title" = "Поделиться";
 "Menu.LoggedIn.title" = "Пользователь:";
+"Interval.Day.string" = "день";

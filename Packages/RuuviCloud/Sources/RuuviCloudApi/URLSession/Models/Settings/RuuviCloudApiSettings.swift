@@ -5,6 +5,9 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case unitTemperature = "UNIT_TEMPERATURE"
     case unitHumidity = "UNIT_HUMIDITY"
     case unitPressure = "UNIT_PRESSURE"
+    case chartViewPeriod = "CHART_VIEW_PERIOD"
+    case chartShowAllPoints = "CHART_SHOW_ALL_POINTS"
+    case chartDrawDots = "CHART_DRAW_DOTS"
 }
 
 extension TemperatureUnit {
@@ -49,6 +52,18 @@ extension UnitPressure {
     }
 }
 
+extension Int {
+    public var chartDurationSettingString: String {
+        return String(self)
+    }
+}
+
+extension Bool {
+    public var chartBoolSettingString: String {
+        return self ? "true" : "false"
+    }
+}
+
 extension String {
     public var ruuviCloudApiSettingUnitTemperature: TemperatureUnit? {
         switch self {
@@ -89,5 +104,20 @@ extension String {
         default:
             return nil
         }
+    }
+
+    public var ruuviCloudApiSettingBoolean: Bool? {
+        switch self {
+        case "true":
+            return true
+        case "false":
+            return false
+        default:
+            return nil
+        }
+    }
+
+    public var ruuviCloudApiSettingChartViewPeriod: Int? {
+        return Int(self)
     }
 }

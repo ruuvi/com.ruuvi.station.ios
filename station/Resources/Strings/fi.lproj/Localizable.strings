@@ -46,10 +46,6 @@
 "Defaults.PruningOffsetHours.title" = "Poistojen tuntisiirtymä";
 "Defaults.Interval.Hour.string" = "t";
 "Defaults.ChartDurationHours.title" = "Historian kesto";
-"Advanced.title" = "Lisäasetukset";
-"Advanced.ChartIntervalMinutes.title" = "Historian esitystarkkuus";
-"Advanced.Downsampling.title" = "Tarkkuuden vähennys";
-"Advanced.Interval.Min.string" = "min";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
@@ -122,7 +118,6 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
-"Settings.Label.Advanced" = "Lisäasetukset";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
 "OWMError.apiLimitExceeded" = "API-raja ylittyi";
 "OWMError.notAHttpResponse" = "Vastaus ei ole HTTP-muodossa";
@@ -267,6 +262,8 @@
 "About.TagsCount.text" = "Havaitut anturit: %d";
 "About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset: ruuvi.com/fi/tuki";
 "About.Troubleshooting.header" = "VIANETSINTÄ";
+"Interval.Hour.string" = "tuntia";
+"Interval.Days.string" = "päivää";
 "TagSettings.AirHumidityAlert.title" = "Ilmankosteus (%@)";
 "HumidityUnit.gm3.title" = "Absoluuttinen (g/m³)";
 "g/m³" = "g/m³";
@@ -293,7 +290,14 @@
 "Welcome.scan.title" = "SKANNAA";
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Asetukset";
+"Settings.Label.Chart" = "Historiatietojen asetukset";
+"ChartSettings.AllPoints.title" = "Näytä kaikki kerätyt mittaukset";
+"ChartSettings.AllPoints.description" = "Ominaisuuden käyttäminen saattaa hidastaa historiatietojen päivittymistä";
+"ChartSettings.DrawDots.title" = "Näytä tietopisteet";
+"ChartSettings.DrawDots.description" = "Tietopisteiden näyttäminen helpottaa tallennetun historiatiedon tutkimista";
 "Defaults.ChartIntervalSeconds.title" = "Historian tarkkuus";
+"ChartSettings.Duration.title" = "Historian tarkastelujakso";
+"ChartSettings.Duration.description" = "Määritä historian tarkastelujakso 1 - 10 päivää";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
 "Settings.ChooseHumidityUnit.text" = "Valitse sovelluksessa käytettävä kosteusyksikkö";
 "Settings.Label.PressureUnit.text" = "Paineyksikkö";
@@ -387,9 +391,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Lämpötila";
 "TagSettings.OffsetCorrection.Humidity" = "Kosteus";
 "TagSettings.OffsetCorrection.Pressure" = "Paine";
-"Advanced.Charts.title" = "Histogrammit";
-"Advanced.Network.title" = "Verkko";
-"Advanced.NetworkInterval.title" = "Tiedonhakuväli";
 "PhotoPicker.Sheet.files" = "Valitse tiedostoista";
 "SignIn.EnterVerificationCode" = "Syötä vahvistuskoodi";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Taustakuvaa ei löydy tai sen luominen epäonnistui";
@@ -474,3 +475,4 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.General.Owner.none" = "Ei omistajaa";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
+"Interval.Day.string" = "päivä";

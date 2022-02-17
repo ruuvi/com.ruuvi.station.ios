@@ -74,6 +74,19 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
                 }
+                if let chartShowAllData = cloudSettings.chartShowAllPoints,
+                   chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
+                    sSelf.ruuviLocalSettings.chartDownsamplingOn = !chartShowAllData
+                }
+                if let chartDrawDots = cloudSettings.chartDrawDots,
+                   chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
+                    sSelf.ruuviLocalSettings.chartDrawDotsOn = chartDrawDots
+                }
+                if let chartViewPeriod = cloudSettings.chartViewPeriod,
+                   (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
+                    sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
+                }
+
                 promise.succeed(value: cloudSettings)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))

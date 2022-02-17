@@ -5,7 +5,7 @@ protocol SettingsRouterInput {
     func openLanguage()
     func openDefaults()
     func openHeartbeat()
-    func openAdvanced()
+    func openChart()
     func openFeatureToggles()
     func openSelection(with viewModel: SelectionViewModel, output: SelectionModuleOutput?)
 }
