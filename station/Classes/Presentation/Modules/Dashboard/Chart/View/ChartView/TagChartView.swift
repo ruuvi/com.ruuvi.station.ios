@@ -142,7 +142,12 @@ class TagChartView: LineChartView {
         leftAxis.minWidth = 30.0
         leftAxis.maxWidth = 30.0
 
-        rightAxis.enabled = false
+        rightAxis.enabled = true
+        rightAxis.labelPosition = .outsideChart
+        rightAxis.drawGridLinesEnabled = false
+        rightAxis.labelTextColor = .clear
+        rightAxis.minWidth = 0
+        rightAxis.maxWidth = 30.0
 
         legend.form = .line
         noDataTextColor = UIColor.white
