@@ -301,7 +301,7 @@ extension TagChartsScrollViewController {
             height = scrollView.frame.height / 3
         }
         chartViews.forEach({ chartView in
-            chartView.frame = CGRect(x: 0, y: maxY, width: scrollView.frame.width, height: height)
+            chartView.frame = CGRect(x: 8, y: maxY, width: scrollView.frame.width - 8, height: height)
             maxY += height
         })
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: height * CGFloat(chartViews.count))
