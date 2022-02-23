@@ -133,14 +133,14 @@ class TagChartView: LineChartView {
         xAxis.granularity = 59.9
         xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
-        xAxis.setLabelCount(9, force: true)
+        xAxis.setLabelCount(6, force: true)
 
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
-        leftAxis.minWidth = 30.0
-        leftAxis.maxWidth = 30.0
+        leftAxis.minWidth = 40.0
+        leftAxis.maxWidth = 40.0
 
         rightAxis.enabled = true
         rightAxis.labelPosition = .outsideChart
