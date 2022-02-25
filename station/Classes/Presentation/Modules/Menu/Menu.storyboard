@@ -268,28 +268,10 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BETA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yHc-1F-gsl">
-                                                    <rect key="frame" x="75.5" y="4" width="44" height="16"/>
-                                                    <color key="backgroundColor" red="0.396078431372549" green="0.086274509803921567" blue="0.71372549019607845" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="3vB-2g-ewU"/>
-                                                        <constraint firstAttribute="width" constant="44" id="rOf-pa-9sQ"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="4"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="aXb-tc-Q6M" firstAttribute="centerY" secondItem="LWZ-nI-0bk" secondAttribute="centerY" id="cbB-rZ-V2y"/>
-                                                <constraint firstItem="yHc-1F-gsl" firstAttribute="top" secondItem="LWZ-nI-0bk" secondAttribute="top" constant="4" id="kOp-zz-qe5"/>
                                                 <constraint firstItem="aXb-tc-Q6M" firstAttribute="leading" secondItem="LWZ-nI-0bk" secondAttribute="leadingMargin" id="lSx-lG-l85"/>
-                                                <constraint firstItem="yHc-1F-gsl" firstAttribute="leading" secondItem="aXb-tc-Q6M" secondAttribute="trailing" constant="8" id="yn0-id-PSP"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -309,7 +291,6 @@
                         <outlet property="addANewSensorLabel" destination="nMq-BK-yrq" id="ypm-F4-8KI"/>
                         <outlet property="addRuuviTagCell" destination="7M8-AE-dVG" id="XHE-LM-utr"/>
                         <outlet property="appSettingsLabel" destination="Zj9-0b-xPj" id="mnX-OE-YGf"/>
-                        <outlet property="betaLabel" destination="yHc-1F-gsl" id="ns9-LZ-Xni"/>
                         <outlet property="feedbackCell" destination="7Db-rZ-B61" id="WEF-eb-3gN"/>
                         <outlet property="feedbackLabel" destination="B8e-tg-okE" id="Ro3-Wm-Lta"/>
                         <outlet property="getMoreSensorsCell" destination="Q41-gm-NmA" id="yQD-Eu-H6g"/>
