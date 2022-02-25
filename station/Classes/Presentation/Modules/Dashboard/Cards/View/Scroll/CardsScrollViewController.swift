@@ -527,8 +527,7 @@ extension CardsScrollViewController: UIGestureRecognizerDelegate {
 // MARK: - View configuration
 extension CardsScrollViewController {
     private func configureViews() {
-        configureEdgeGestureRecognozer()
-        configurePanGestureRecognozer()
+        configureEdgeGestureRecognizer()
         configureGestureInstructor()
         configureRestartAnimationsOnAppDidBecomeActive()
     }
@@ -547,16 +546,7 @@ extension CardsScrollViewController {
         GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
 
-     private func configurePanGestureRecognozer() {
-         let gr = UIPanGestureRecognizer()
-         gr.delegate = self
-         gr.cancelsTouchesInView = true
-         scrollView.addGestureRecognizer(gr)
-         gr.addTarget(tagChartsPresentInteractiveTransition as Any,
-                      action: #selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
-     }
-
-    private func configureEdgeGestureRecognozer() {
+    private func configureEdgeGestureRecognizer() {
         let leftScreenEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer()
         leftScreenEdgeGestureRecognizer.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(leftScreenEdgeGestureRecognizer)

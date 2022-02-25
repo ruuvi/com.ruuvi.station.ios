@@ -34,7 +34,7 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         return formatter
     }()
 
-    public func csvLog(for uuid: String, settings: SensorSettings) -> Future<URL, RuuviServiceError> {
+    public func csvLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let ruuviTag = ruuviStorage.readOne(uuid)
         ruuviTag.on(success: { [weak self] ruuviTag in

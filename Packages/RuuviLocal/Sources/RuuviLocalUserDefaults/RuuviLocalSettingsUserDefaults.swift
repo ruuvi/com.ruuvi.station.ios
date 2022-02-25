@@ -170,13 +170,13 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 300)
     var serviceTimeout: TimeInterval
 
-    @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
+    @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 1)
     var advertisementDaemonIntervalMinutes: Int
 
     @UserDefault("SettingsUserDegaults.alertsMuteIntervalMinutes", defaultValue: 60)
     var alertsMuteIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: false)
+    @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: true)
     var saveHeartbeats: Bool
 
     @UserDefault("SettingsUserDegaults.saveHeartbeatsIntervalMinutes", defaultValue: 5)
