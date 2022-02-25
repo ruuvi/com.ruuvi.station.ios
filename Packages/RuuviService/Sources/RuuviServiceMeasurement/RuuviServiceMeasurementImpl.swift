@@ -113,7 +113,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
-        let number = NSNumber(value: value)
+        let number = NSNumber(value: value.round(to: numberFormatter.maximumFractionDigits))
         numberFormatter.numberStyle = .decimal
         numberFormatter.locale = settings.language.locale
         return numberFormatter.string(from: number) ?? emptyValueString
