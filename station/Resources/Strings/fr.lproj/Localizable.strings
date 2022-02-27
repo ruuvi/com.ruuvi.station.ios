@@ -177,7 +177,8 @@
 "TagSettings.Alerts.Connection.description" = "Notifier lorsque l'appareil est connecté/déconnecté";
 "TagSettings.ConnectionAlert.title" = "Connexion";
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
-"TagSettings.Firmware.UpdateFirmware" = "Mettre à jour le firmware";
+"TagSettings.Firmware.CurrentVersion" = "Version actuelle";
+"TagSettings.Firmware.UpdateFirmware" = "Mettre à jour";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Le résultat est nul";
 "UnexpectedError.callerDeinitedDuringOperation" = "Les invitations ont été délocalisées";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Echec de l'annulation de la géolocalisation";

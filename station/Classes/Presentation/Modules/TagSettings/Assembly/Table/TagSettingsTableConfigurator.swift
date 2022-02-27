@@ -7,6 +7,7 @@ import RuuviService
 import RuuviUser
 import RuuviCore
 import RuuviPresenters
+import RuuviPool
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -36,6 +37,7 @@ class TagSettingsTableConfigurator {
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.exportService = r.resolve(RuuviServiceExport.self)
+        presenter.ruuviPool = r.resolve(RuuviPool.self)
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 

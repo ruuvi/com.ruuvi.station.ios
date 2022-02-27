@@ -242,6 +242,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             sSelf.processingUUIDs.insert(tag.uuid)
             let ruuviSensor = RuuviTagSensorStruct(
                 version: tag.version,
+                firmwareVersion: nil,
                 luid: device.uuid.luid,
                 macId: mac,
                 isConnectable: device.isConnectable,
