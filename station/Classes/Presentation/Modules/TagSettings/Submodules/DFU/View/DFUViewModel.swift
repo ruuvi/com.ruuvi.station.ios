@@ -1,6 +1,8 @@
+// swiftlint:disable file_length
 import Foundation
 import Combine
 import RuuviOntology
+import RuuviPool
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
@@ -11,13 +13,16 @@ final class DFUViewModel: ObservableObject {
     private let input = PassthroughSubject<Event, Never>()
     private let interactor: DFUInteractorInput
     private let ruuviTag: RuuviTagSensor
+    private let ruuviPool: RuuviPool
 
     init(
         interactor: DFUInteractorInput,
-        ruuviTag: RuuviTagSensor
+        ruuviTag: RuuviTagSensor,
+        ruuviPool: RuuviPool
     ) {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
+        self.ruuviPool = ruuviPool
         Publishers.system(
             initial: state,
             reduce: Self.reduce,
@@ -43,6 +48,10 @@ final class DFUViewModel: ObservableObject {
 
     func send(event: Event) {
         input.send(event)
+    }
+    func storeUpdatedFirmware(latestRelease: LatestRelease) {
+        ruuviPool.update(ruuviTag
+                            .with(firmwareVersion: latestRelease.version.replace("Ruuvi FW ", with: "")))
     }
 }
 
@@ -77,7 +86,7 @@ extension DFUViewModel {
                 appUrl: URL,
                 fullUrl: URL
              )
-        case successfulyFlashed
+        case successfulyFlashed(LatestRelease)
         case error(Error)
     }
 
@@ -124,7 +133,7 @@ extension DFUViewModel {
                 appUrl: URL,
                 fullUrl: URL
              )
-        case onSuccessfullyFlashedFirmware
+        case onSuccessfullyFlashedFirmware(LatestRelease)
         case onDidFailFlashingFirmware(Error)
     }
 }
@@ -220,8 +229,8 @@ extension DFUViewModel {
             }
         case .flashing:
             switch event {
-            case .onSuccessfullyFlashedFirmware:
-                return .successfulyFlashed
+            case .onSuccessfullyFlashedFirmware(let latestRelease):
+                return .successfulyFlashed(latestRelease)
             case .onDidFailFlashingFirmware(let error):
                 return .error(error)
             default:
@@ -264,7 +273,7 @@ extension DFUViewModel {
             .compactMap({ [weak sSelf] response in
                 switch response {
                 case .done:
-                    return Event.onSuccessfullyFlashedFirmware
+                    return Event.onSuccessfullyFlashedFirmware(latestRelease)
                 case .progress(let percentage):
                     sSelf?.flashProgress = percentage
                     return nil
