@@ -87,6 +87,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
+    @IBOutlet weak var firmwareRefreshButton: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
@@ -98,6 +99,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var uploadBackgroundIndicatorView: UIView!
     @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
     @IBOutlet weak var tagNameTextField: UITextField!
+    @IBOutlet weak var firmwareVersionValueLabel: UILabel!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
     @IBOutlet weak var txPowerValueLabel: UILabel!
@@ -105,6 +107,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var tagNameTitleLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var rssiTitleLabel: UILabel!
+    @IBOutlet weak var firmwareVersionTitleLabel: UILabel!
     @IBOutlet weak var dataFormatTitleLabel: UILabel!
     @IBOutlet weak var batteryVoltageTitleLabel: UILabel!
     @IBOutlet weak var accelerationXTitleLabel: UILabel!
@@ -202,6 +205,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
         pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
 
+        firmwareVersionTitleLabel.text = "TagSettings.Firmware.CurrentVersion".localized()
         updateFirmwareTitleLabel.text = "TagSettings.Firmware.UpdateFirmware".localized()
 
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
@@ -854,6 +858,14 @@ extension TagSettingsTableViewController {
         accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
             if let accelerationZ = accelerationZ {
                 label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
+            } else {
+                label.text = emptyValueString.localized()
+            }
+        }
+
+        firmwareVersionValueLabel.bind(viewModel.firmwareVersion) { (label, version) in
+            if let version = version {
+                label.text = version
             } else {
                 label.text = emptyValueString.localized()
             }

@@ -177,7 +177,8 @@
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
 "TagSettings.SectionHeader.Firmware.title" = "PROGRAMVARA";
-"TagSettings.Firmware.UpdateFirmware" = "Uppdatera Programvara";
+"TagSettings.Firmware.CurrentVersion" = "Nuvarande version";
+"TagSettings.Firmware.UpdateFirmware" = "Uppdatera";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Både resultatet och felmeddelande är nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Uppringare avallokerad under operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Det gick inte att få geokoordinaterna för platsen";
