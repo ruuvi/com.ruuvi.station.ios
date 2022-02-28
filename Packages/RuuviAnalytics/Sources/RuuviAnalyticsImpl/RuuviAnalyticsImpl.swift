@@ -21,6 +21,12 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case offlineTags(Int)
         // Quantity of virtual tags(if greater that 10, then "10+")
         case virtualTags(Int)
+        // Quantity of tags using data format 3
+        case df3_tags(Int)
+        // Quantity of tags using data format 4
+        case df4_tags(Int)
+        // Quantity of tags using data format 5
+        case df5_tags(Int)
         // Background scan enabled or not (true/false)
         case backgroundScanEnabled(Bool)
         // Background scan interval (seconds)
@@ -58,6 +64,12 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
                 return "offline_tags"
             case .virtualTags:
                 return "virtual_tags"
+            case .df3_tags:
+                return "use_df3"
+            case .df4_tags:
+                return "use_df4"
+            case .df5_tags:
+                return "use_df5"
             case .backgroundScanEnabled:
                 return "background_scan_enabled"
             case .backgroundScanInterval:
@@ -111,6 +123,9 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.loggedIn(ruuviUser.isAuthorized))
         ruuviStorage.readAll().on(success: { tags in
             self.set(.addedTags(tags.count))
+            self.set(.df3_tags(tags.filter({ $0.version == 3 }).count))
+            self.set(.df4_tags(tags.filter({ $0.version == 4 }).count))
+            self.set(.df5_tags(tags.filter({ $0.version == 5 }).count))
         })
         ruuviStorage.getClaimedTagsCount().on(success: { count in
             self.set(.claimedTags(count))
@@ -135,19 +150,18 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.language(settings.language))
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     private func set(_ property: Properties) {
         let value: String
         switch property {
         case .loggedIn(let isLoggedIn):
             value = isLoggedIn.description
-        case .addedTags(let count):
-            value = count > 10 ? "10+" : String(count)
-        case .claimedTags(let count):
-            value = count > 10 ? "10+" : String(count)
-        case .offlineTags(let count):
-            value = count > 10 ? "10+" : String(count)
-        case .virtualTags(let count):
+        case .addedTags(let count),
+            .claimedTags(let count),
+            .offlineTags(let count),
+            .virtualTags(let count),
+            .df3_tags(let count),
+            .df4_tags(let count),
+            .df5_tags(let count):
             value = count > 10 ? "10+" : String(count)
         case .backgroundScanEnabled(let isEnabled),
              .dashboardEnabled(let isEnabled),
