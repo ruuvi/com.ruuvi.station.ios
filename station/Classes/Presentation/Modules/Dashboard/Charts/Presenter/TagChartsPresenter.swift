@@ -142,9 +142,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
     }
+
     func handleClearSyncButtons() {
-        view.handleClearSyncButtons(sharedSensors: !ruuviTag.isOwner, isSyncing: interactor.isSyncingRecords() )
+        view.handleClearSyncButtons(cloudSensor: settings.cloudModeEnabled && viewModel.isCloud.value.bound,
+                                    sharedSensor: !ruuviTag.isOwner,
+                                    isSyncing: interactor.isSyncingRecords())
     }
+
     func viewDidTransition() {
         tryToShowSwipeUpHint()
     }

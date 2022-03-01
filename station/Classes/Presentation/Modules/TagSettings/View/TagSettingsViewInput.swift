@@ -7,8 +7,9 @@ protocol TagSettingsViewInput: ViewInput {
     func showTagRemovalConfirmationDialog(isOwner: Bool)
     func showUnclaimAndRemoveConfirmationDialog()
     func showMacAddressDetail()
-    func showUpdateFirmwareDialog()
     func showBothNotConnectedAndNoPNPermissionDialog()
     func showNotConnectedDialog()
     func showExportSheet(with path: URL)
+    func showFirmwareUpdateDialog()
+    func showFirmwareDismissConfirmationUpdateDialog()
 }

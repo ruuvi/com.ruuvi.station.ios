@@ -69,6 +69,7 @@ class CardsPresenter: CardsModuleInput {
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var universalLinkObservationToken: NSObjectProtocol?
+    private var cloudModeToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -111,6 +112,7 @@ class CardsPresenter: CardsModuleInput {
         readRSSIIntervalToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
         universalLinkObservationToken?.invalidate()
+        cloudModeToken?.invalidate()
     }
 }
 
@@ -126,6 +128,7 @@ extension CardsPresenter: CardsViewOutput {
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
         startObservingLocalNotificationsManager()
+        startObservingCloudModeNotification()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -147,7 +150,8 @@ extension CardsPresenter: CardsViewOutput {
             if let luid = viewModel.luid.value {
                 if settings.keepConnectionDialogWasShown(for: luid)
                     || background.isConnected(uuid: luid.value)
-                    || viewModel.isConnectable.value == false {
+                    || viewModel.isConnectable.value == false
+                    || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                     openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
                 } else {
                     view.showKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
@@ -168,7 +172,8 @@ extension CardsPresenter: CardsViewOutput {
         if let luid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: luid)
                 || background.isConnected(uuid: luid.value)
-                || viewModel.isConnectable.value == false {
+                || viewModel.isConnectable.value == false
+                || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                 configureInitialChart(from: viewModel)
                 router.openTagCharts()
             } else {
@@ -502,7 +507,8 @@ extension CardsPresenter {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
-            ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
+            ruuviTags.filter({ !(settings.cloudModeEnabled && $0.isCloud) })
+                .contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
         }.forEach { (luid) in
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
@@ -525,24 +531,26 @@ extension CardsPresenter {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
-            if viewModel.type == .ruuvi,
-               let luid = viewModel.luid.value {
-                advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
-                    if let ruuviTag = device.ruuvi?.tag,
-                       let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                        let sensorSettings = self?.sensorSettingsList
-                            .first(where: {
+            if !(settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
+                if viewModel.type == .ruuvi,
+                   let luid = viewModel.luid.value {
+                    advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
+                        if let ruuviTag = device.ruuvi?.tag,
+                           let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
+                            let sensorSettings = self?.sensorSettingsList
+                                .first(where: {
                                     ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                        || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
-                            })
-                        viewModel.update(
-                            ruuviTag
-                                .with(source: .advertisement)
-                                .with(sensorSettings: sensorSettings)
-                        )
-                        viewModel.update(rssi: ruuviTag.rssi)
-                    }
-                })
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                                })
+                            viewModel.update(
+                                ruuviTag
+                                    .with(source: .advertisement)
+                                    .with(sensorSettings: sensorSettings)
+                            )
+                            viewModel.update(rssi: ruuviTag.rssi)
+                        }
+                    })
+                }
             }
         }
     }
@@ -1000,6 +1008,47 @@ extension CardsPresenter {
                 guard let email = self?.ruuviUser.email else { return }
                 self?.view.showAlreadyLoggedInAlert(with: email)
         })
+    }
+
+    private func startObservingCloudModeNotification() {
+        cloudModeToken?.invalidate()
+        cloudModeToken = NotificationCenter
+            .default
+            .addObserver(forName: .CloudModeDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                // Do something here
+                self?.handleCloudModeState()
+            })
+    }
+
+    private func handleCloudModeState() {
+        // Disconnect the owned cloud tags
+        removeConnectionsForCloudTags()
+        // Stop listening to advertisements and heartbeats
+        observeRuuviTags()
+        // Update viewmodel data source to ruuvi network from heartbeats/advertisements
+        updateViewModelsSource()
+    }
+
+    private func removeConnectionsForCloudTags() {
+        connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
+            ruuviTags.filter({ $0.isCloud }).contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
+        }.forEach { (luid) in
+            connectionPersistence.setKeepConnection(false, for: luid)
+        }
+    }
+    
+    private func updateViewModelsSource() {
+        let vms = viewModels
+        guard settings.cloudModeEnabled else { return }
+        vms.indices.forEach {
+            if vms[$0].luid.value != nil && vms[$0].isCloud.value.bound {
+                vms[$0].source.value = .ruuviNetwork
+            }
+        }
+        viewModels = vms
     }
 }
 // swiftlint:enable file_length trailing_whitespace
