@@ -18,6 +18,10 @@ enum TagSettingsTableSection: Int {
         return viewModel?.isConnectable.value ?? false
     }
 
+    static func enableConnection(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isConnectionSectionEnabled.value ?? false
+    }
+
     static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isAlertsVisible.value ?? false
     }
@@ -256,18 +260,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         present(controller, animated: true)
     }
 
-    func showUpdateFirmwareDialog() {
-        let title = "TagSettings.UpdateFirmware.Alert.title".localized()
-        let message = "TagSettings.UpdateFirmware.Alert.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let actionTitle = "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title".localized()
-        controller.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidAskToLearnMoreAboutFirmwareUpdate()
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
     func showBothNotConnectedAndNoPNPermissionDialog() {
         let message = "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -288,6 +280,32 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
+    }
+
+    func showFirmwareUpdateDialog() {
+        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidIgnoreFirmwareUpdateDialog()
+        }))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate()
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog() {
+        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: nil))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate()
+        }))
+        present(alert, animated: true)
     }
 
     func showExportSheet(with path: URL) {
@@ -412,6 +430,18 @@ extension TagSettingsTableViewController {
                 ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
         case .remove:
             return "TagSettings.SectionHeader.Remove.title".localized()
+        default:
+            return nil
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        let section = TagSettingsTableSection.section(for: section)
+        switch section {
+        case .connection:
+            return !TagSettingsTableSection.enableConnection(for: viewModel) &&
+            TagSettingsTableSection.showConnection(for: viewModel)
+            ? "TagSettings.Connection.description".localized() : nil
         default:
             return nil
         }
@@ -950,6 +980,19 @@ extension TagSettingsTableViewController {
             } else {
                 label.text = "TagSettings.ConnectStatus.Disconnected".localized()
             }
+        }
+
+        connectStatusLabel.bind(viewModel.isConnectionSectionEnabled) { (label, isEnabled) in
+            label.alpha = isEnabled.bound ? 1 : 0.5
+        }
+
+        keepConnectionSwitch.bind(viewModel.isConnectionSectionEnabled) { (view, isEnabled) in
+            view.isEnabled = isEnabled.bound
+            view.alpha = isEnabled.bound ? 1 : 0.5
+        }
+
+        keepConnectionTitleLabel.bind(viewModel.isConnectionSectionEnabled) { (label, isEnabled) in
+            label.alpha = isEnabled.bound ? 1 : 0.5
         }
 
         bindOffsetCorrectionCells()
