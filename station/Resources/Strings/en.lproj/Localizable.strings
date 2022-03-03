@@ -20,6 +20,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
 "Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimised.";
+"Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Cancel";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Keep the Connection";
 "Cards.Connected.title" = "Connected";
