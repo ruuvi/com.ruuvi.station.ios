@@ -149,16 +149,30 @@ extension CardsScrollViewController: CardsViewInput {
         }
     }
 
-    func showKeepConnectionDialog(for viewModel: CardsViewModel) {
+    func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
-            self?.output.viewDidDismissKeepConnectionDialog(for: viewModel)
+            self?.output.viewDidDismissKeepConnectionDialogChart(for: viewModel)
         }))
         let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToKeepConnection(to: viewModel)
+            self?.output.viewDidConfirmToKeepConnectionChart(to: viewModel)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
+        let message = "Cards.KeepConnectionDialog.Settings.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+        }))
+        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel, scrollToAlert: scrollToAlert)
         }))
         present(alert, animated: true)
     }

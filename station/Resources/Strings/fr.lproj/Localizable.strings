@@ -20,6 +20,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Trop de demandes simultanées";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Réessayez dans 5 minutes";
 "Cards.KeepConnectionDialog.message" = "Votre appareil est programmé pour rester connecté. Souhaitez-vous maintenir la connexion en arrière plan? Cela permettra de tracer les histogrammes et de recevoir les alertes même lorsque l'application est fermée.";
+"Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Supprimer";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Maintenir la connexion";
 "Cards.Connected.title" = "Connecté";
