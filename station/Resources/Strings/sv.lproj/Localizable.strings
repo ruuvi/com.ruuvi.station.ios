@@ -20,6 +20,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "För många förfrågningar";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Försök igen om 5 minutes";
 "Cards.KeepConnectionDialog.message" = "Det ser ut som din Ruuvi enhet har anslutningsbar firmware. Vill du att anslutningen till enheten skall hållas öppen i bakgrunden? Detta gör att histogram och alarm fungerar även om applikationen är minimerad.";
+"Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Avbryt";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Håll Anslutningen";
 "Cards.Connected.title" = "Ansluten";
@@ -177,7 +178,8 @@
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
 "TagSettings.SectionHeader.Firmware.title" = "PROGRAMVARA";
-"TagSettings.Firmware.UpdateFirmware" = "Uppdatera Programvara";
+"TagSettings.Firmware.CurrentVersion" = "Nuvarande version";
+"TagSettings.Firmware.UpdateFirmware" = "Uppdatera";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Både resultatet och felmeddelande är nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Uppringare avallokerad under operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Det gick inte att få geokoordinaterna för platsen";
@@ -476,3 +478,5 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
 "Interval.Day.string" = "Dag";
+"Settings.Label.CloudMode" = "Molnläge";
+"Settings.Label.CloudMode.description" = "Uppdatera närliggande molnregistrerade sensorer endast från molnet genom att inte lyssna på deras Bluetooth-meddelanden. Kräver en Ruuvi Gateway.";

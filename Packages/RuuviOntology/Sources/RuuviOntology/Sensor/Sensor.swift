@@ -14,6 +14,7 @@ public protocol Nameable {
 
 public protocol Versionable {
     var version: Int { get }
+    var firmwareVersion: String? { get }
 }
 
 public protocol Locateable {

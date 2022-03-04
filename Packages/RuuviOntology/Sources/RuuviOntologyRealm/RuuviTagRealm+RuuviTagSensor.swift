@@ -15,6 +15,7 @@ extension RuuviTagRealm: RuuviTagSensor {
         return AnyRuuviTagSensor(
             object: RuuviTagSensorStruct(
                 version: version,
+                firmwareVersion: firmwareVersion,
                 luid: luid,
                 macId: macId,
                 isConnectable: isConnectable,
@@ -38,5 +39,8 @@ extension RuuviTagRealm: RuuviTagSensor {
     }
     public var isCloudSensor: Bool? {
         return false
+    }
+    public var firmwareVersion: String? {
+        return nil
     }
 }

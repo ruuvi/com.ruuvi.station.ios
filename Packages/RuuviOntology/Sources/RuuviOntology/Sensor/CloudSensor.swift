@@ -4,6 +4,7 @@ extension CloudSensor {
     public var ruuviTagSensor: RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: nil,
             macId: id.mac,
             isConnectable: true,

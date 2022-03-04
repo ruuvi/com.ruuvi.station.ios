@@ -20,6 +20,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
 "Cards.KeepConnectionDialog.message" = "Laitteessasi on yhteyden säilyttämiseen pystyvä laiteohjelmisto. Haluatko pitää yhteyden avoinna tähän Ruuvi-laitteeseen ohjelman ollessa taustalla? Tämä mahdollistaa historian ja hälytysten toiminnan ohjelman ollessa pienennettynä.";
+"Cards.KeepConnectionDialog.Settings.message" = "Tämä asetus mahdollistaa Bluetooth-hälytykset ja historiatietojen tallentamisen sovelluksen omaan muistiin silloinkin, kun sovellus on taka-alalla.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Hylkää";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Säilytä yhteys";
 "Cards.Connected.title" = "Yhdistetty";
@@ -177,7 +178,8 @@
 "TagSettings.Alerts.Connection.description" = "Hälytä, mikäli yhteys muodostettu/yhteys menetetty";
 "TagSettings.ConnectionAlert.title" = "Yhteys";
 "TagSettings.SectionHeader.Firmware.title" = "LAITEOHJELMISTO";
-"TagSettings.Firmware.UpdateFirmware" = "Päivitä laiteohjelmisto";
+"TagSettings.Firmware.CurrentVersion" = "Nykyinen versio";
+"TagSettings.Firmware.UpdateFirmware" = "Päivitä";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
@@ -476,3 +478,5 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
 "Interval.Day.string" = "päivä";
+"Settings.Label.CloudMode" = "Pilvitila";
+"Settings.Label.CloudMode.description" = "Päivitä lähellä olevat pilveen rekisteröidyt anturit ainoastaan pilvestä hylkäämällä niiden Bluetooth-viestit. Vaatii Ruuvi Gateway -reitittimen.";
