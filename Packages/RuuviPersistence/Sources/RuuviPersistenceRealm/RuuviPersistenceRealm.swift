@@ -186,6 +186,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
                 let result = RuuviTagSensorStruct(
                     version: ruuviTagRealm.version,
+                    firmwareVersion: ruuviTagRealm.firmwareVersion,
                     luid: ruuviTagRealm.uuid.luid,
                     macId: ruuviTagRealm.mac?.mac,
                     isConnectable: ruuviTagRealm.isConnectable,
@@ -210,6 +211,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
                 return RuuviTagSensorStruct(
                     version: ruuviTagRealm.version,
+                    firmwareVersion: ruuviTagRealm.firmwareVersion,
                     luid: ruuviTagRealm.uuid.luid,
                     macId: ruuviTagRealm.mac?.mac,
                     isConnectable: ruuviTagRealm.isConnectable,

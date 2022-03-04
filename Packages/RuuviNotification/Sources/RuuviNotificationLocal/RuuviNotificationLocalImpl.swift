@@ -443,6 +443,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                 // TODO: @rinat go with sensors instead of pure uuid
                 let ruuviTag = RuuviTagSensorStruct(
                     version: 5,
+                    firmwareVersion: nil,
                     luid: uuid.luid,
                     macId: uuid.mac,
                     isConnectable: true,
@@ -469,6 +470,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                 // TODO: @rinat go with sensors instead of pure uuid
                 let ruuviTag = RuuviTagSensorStruct(
                     version: 5,
+                    firmwareVersion: nil,
                     luid: uuid.luid,
                     macId: uuid.mac,
                     isConnectable: true,
@@ -509,6 +511,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         // TODO: @rinat go with sensors instead of pure uuid
         let ruuviTag = RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: uuid.luid,
             macId: uuid.mac,
             isConnectable: true,
@@ -538,6 +541,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         // TODO: @rinat go with sensors instead of pure uuid
         let ruuviTag = RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: uuid.luid,
             macId: uuid.mac,
             isConnectable: true,
