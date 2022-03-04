@@ -24,7 +24,7 @@ class TagChartsInteractor {
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var timer: Timer?
-    private var chartModules: [TagChartModuleInput] = []
+    var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
         didSet {
             if let last = ruuviTagData.last {
@@ -49,14 +49,29 @@ class TagChartsInteractor {
         ruuviTagSensorObservationToken = nil
     }
 
+    /// This method creates the chart modules for each sensors i.e. Temperature, Humidity, and Pressure
+    /// The missing sensors do not return any chart
     func createChartModules() {
         chartModules = []
-        MeasurementType.chartsCases.forEach({
-            let viewModel = TagChartViewModel(type: $0)
-            let module = TagChartAssembler.createModule()
-            module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
-            chartModules.append(module)
-        })
+//        var chartsCases = MeasurementType.chartsCases
+//        if let last = ruuviTagData.last {
+//            if last.humidity == nil {
+//                chartsCases.remove(at: 1)
+//            } else if last.pressure == nil {
+//                chartsCases.remove(at: 2)
+//            }
+//        }
+//        chartsCases.forEach({
+//            let viewModel = TagChartViewModel(type: $0)
+//            let module = TagChartAssembler.createModule()
+//            module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
+//            chartModules.append(module)
+//        })
+        let viewModel = TagChartViewModel(type: .temperature)
+        let module = TagChartAssembler.createModule()
+        module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
+        chartModules.append(module)
+        presenter.interactorDidUpdate(sensor: ruuviTagSensor)
     }
 }
 // MARK: - TagChartsInteractorInput
@@ -99,7 +114,9 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
-        createChartModules()
+        fetchAll { [weak self] in
+            self?.createChartModules()
+        }
     }
 
     func updateSensorSettings(settings: SensorSettings?) {

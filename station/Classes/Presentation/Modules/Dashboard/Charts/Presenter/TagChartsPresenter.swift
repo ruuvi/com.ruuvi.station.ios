@@ -230,6 +230,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.ruuviTag = sensor
+        view?.setupChartViews(chartViews: interactor.chartViews)
     }
 
     func interactorDidSyncComplete(_ recordsCount: Int) {
