@@ -146,12 +146,11 @@ class TagChartView: LineChartView {
         rightAxis.labelPosition = .outsideChart
         rightAxis.drawGridLinesEnabled = false
         rightAxis.labelTextColor = .clear
-        rightAxis.minWidth = 0
+        rightAxis.minWidth = 30.0
         rightAxis.maxWidth = 30.0
 
         legend.form = .line
-        noDataTextColor = UIColor.white
-        noDataText = "TagCharts.NoChartData.text".localized()
+        noDataTextColor = UIColor.clear
         scaleXEnabled = true
         scaleYEnabled = true
     }
@@ -183,7 +182,6 @@ extension TagChartView: TagChartViewInput {
     }
 
     func localize() {
-        noDataText = "TagCharts.NoChartData.text".localized()
         xAxis.valueFormatter = DateValueFormatter(with: settings.language.locale)
     }
 

@@ -478,3 +478,5 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
 "Interval.Day.string" = "Dag";
+"Settings.Label.CloudMode" = "Molnläge";
+"Settings.Label.CloudMode.description" = "Uppdatera närliggande molnregistrerade sensorer endast från molnet genom att inte lyssna på deras Bluetooth-meddelanden. Kräver en Ruuvi Gateway.";
