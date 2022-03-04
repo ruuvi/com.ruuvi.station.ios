@@ -478,3 +478,5 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.Share.title" = "Share";
 "Menu.LoggedIn.title" = "Logged in:";
 "Interval.Day.string" = "Day";
+"Settings.Label.CloudMode" = "Cloud Mode";
+"Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages. Requires a Ruuvi Gateway router.";
