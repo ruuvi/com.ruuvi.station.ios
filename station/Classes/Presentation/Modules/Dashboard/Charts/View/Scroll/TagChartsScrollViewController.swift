@@ -298,12 +298,24 @@ extension TagChartsScrollViewController {
         if UIWindow.isLandscape {
             height = scrollView.frame.height
         } else {
-            height = scrollView.frame.height / 3
+            if chartViews.count == 1 {
+                height = scrollView.frame.height / 2
+            } else {
+                height = scrollView.frame.height / CGFloat(chartViews.count)
+            }
         }
-        chartViews.forEach({ chartView in
-            chartView.frame = CGRect(x: 8, y: maxY, width: scrollView.frame.width - 8, height: height)
-            maxY += height
-        })
+
+        if chartViews.count == 1 {
+            chartViews.first?.frame = CGRect(x: 8,
+                                            y: scrollView.frame.height/2 - height/2,
+                                            width: scrollView.frame.width - 8,
+                                            height: height)
+        } else {
+            chartViews.forEach({ chartView in
+                chartView.frame = CGRect(x: 8, y: maxY, width: scrollView.frame.width - 8, height: height)
+                maxY += height
+            })
+        }
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: height * CGFloat(chartViews.count))
         scrollView.layoutSubviews()
     }
