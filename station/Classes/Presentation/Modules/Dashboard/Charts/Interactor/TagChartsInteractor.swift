@@ -53,24 +53,20 @@ class TagChartsInteractor {
     /// The missing sensors do not return any chart
     func createChartModules() {
         chartModules = []
-//        var chartsCases = MeasurementType.chartsCases
-//        if let last = ruuviTagData.last {
-//            if last.humidity == nil {
-//                chartsCases.remove(at: 1)
-//            } else if last.pressure == nil {
-//                chartsCases.remove(at: 2)
-//            }
-//        }
-//        chartsCases.forEach({
-//            let viewModel = TagChartViewModel(type: $0)
-//            let module = TagChartAssembler.createModule()
-//            module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
-//            chartModules.append(module)
-//        })
-        let viewModel = TagChartViewModel(type: .temperature)
-        let module = TagChartAssembler.createModule()
-        module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
-        chartModules.append(module)
+        var chartsCases = MeasurementType.chartsCases
+        if let last = ruuviTagData.last {
+            if last.humidity == nil {
+                chartsCases.remove(at: 1)
+            } else if last.pressure == nil {
+                chartsCases.remove(at: 2)
+            }
+        }
+        chartsCases.forEach({
+            let viewModel = TagChartViewModel(type: $0)
+            let module = TagChartAssembler.createModule()
+            module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
+            chartModules.append(module)
+        })
         presenter.interactorDidUpdate(sensor: ruuviTagSensor)
     }
 }
