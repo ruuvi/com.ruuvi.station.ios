@@ -183,6 +183,14 @@ extension CardsScrollViewController: CardsViewInput {
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alert, animated: true)
     }
+
+    func showAlreadyLoggedInAlert(with email: String) {
+        let message = String.localizedStringWithFormat("Cards.Alert.AlreadyLoggedIn.message".localized(),
+                                                                 email)
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - IBActions

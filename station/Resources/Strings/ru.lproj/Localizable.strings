@@ -479,5 +479,6 @@
 "TagSettings.Share.title" = "Поделиться";
 "Menu.LoggedIn.title" = "Пользователь:";
 "Interval.Day.string" = "день";
+"Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
 "Settings.Label.CloudMode" = "Режим облака";
 "Settings.Label.CloudMode.description" = "Получайте данные с ближайших датчиков только через облако, игнорируя при этом измерения через Bluetooth. Требуется Ruuvi Gateway.";
