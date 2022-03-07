@@ -14,6 +14,7 @@ import RuuviNotification
 import RuuviNotifier
 import RuuviDaemon
 import RuuviPresenters
+import RuuviUser
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -40,6 +41,7 @@ class CardsPresenter: CardsModuleInput {
     var measurementService: RuuviServiceMeasurement!
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
+    var ruuviUser: RuuviUser!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
@@ -65,6 +67,7 @@ class CardsPresenter: CardsModuleInput {
     private var alertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
+    private var universalLinkObservationToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -106,6 +109,7 @@ class CardsPresenter: CardsModuleInput {
         readRSSIToken?.invalidate()
         readRSSIIntervalToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
+        universalLinkObservationToken?.invalidate()
     }
 }
 
@@ -125,6 +129,7 @@ extension CardsPresenter: CardsViewOutput {
     }
     
     func viewWillAppear() {
+        startObservingUniversalLinks()
         startObservingBluetoothState()
     }
     
@@ -139,7 +144,9 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid.value {
-                if settings.keepConnectionDialogWasShown(for: luid) {
+                if settings.keepConnectionDialogWasShown(for: luid)
+                    || background.isConnected(uuid: luid.value)
+                    || viewModel.isConnectable.value == false {
                     openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
                 } else {
                     view.showKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
@@ -949,6 +956,18 @@ extension CardsPresenter {
                 output: self,
                 scrollToAlert: scrollToAlert)
         }
+    }
+
+    private func startObservingUniversalLinks() {
+        universalLinkObservationToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidOpenWithUniversalLink,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (_) in
+                guard let email = self?.ruuviUser.email else { return }
+                self?.view.showAlreadyLoggedInAlert(with: email)
+        })
     }
 }
 // swiftlint:enable file_length trailing_whitespace
