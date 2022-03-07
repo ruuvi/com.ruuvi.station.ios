@@ -139,7 +139,9 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid.value {
-                if settings.keepConnectionDialogWasShown(for: luid) {
+                if settings.keepConnectionDialogWasShown(for: luid)
+                    || background.isConnected(uuid: luid.value)
+                    || viewModel.isConnectable.value == false {
                     openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
                 } else {
                     view.showKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
