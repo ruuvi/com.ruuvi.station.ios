@@ -180,6 +180,7 @@
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
 "TagSettings.Firmware.CurrentVersion" = "Current Version";
 "TagSettings.Firmware.UpdateFirmware" = "Update";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Failed to reverse geocode location";
