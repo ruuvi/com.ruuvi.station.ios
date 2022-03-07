@@ -179,6 +179,7 @@
 "TagSettings.ConnectionAlert.title" = "Connexion";
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
 "TagSettings.Firmware.CurrentVersion" = "Version actuelle";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
 "TagSettings.Firmware.UpdateFirmware" = "Mettre à jour";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Le résultat est nul";
 "UnexpectedError.callerDeinitedDuringOperation" = "Les invitations ont été délocalisées";

@@ -541,6 +541,10 @@ extension TagSettingsTableViewController {
                 return (viewModel?.isConnectionAlertOn.value ?? false) ? descriptionHeight : 0
             case movementAlertDescriptionCell:
                 return (viewModel?.isMovementAlertOn.value ?? false) ? descriptionHeight : 0
+            case humidityOffsetCorrectionCell:
+                return (viewModel?.humidityOffsetCorrectionVisible.value ?? false) ? 44 : 0
+            case pressureOffsetCorrectionCell:
+                return (viewModel?.pressureOffsetCorrectionVisible.value ?? false) ? 44 : 0
             default:
                 return 44
             }
@@ -561,6 +565,10 @@ extension TagSettingsTableViewController {
                  movementAlertHeaderCell,
                  movementAlertDescriptionCell:
                 return 0
+            case humidityOffsetCorrectionCell:
+                return (viewModel?.humidityOffsetCorrectionVisible.value ?? false) ? 44 : 0
+            case pressureOffsetCorrectionCell:
+                return (viewModel?.pressureOffsetCorrectionVisible.value ?? false) ? 44 : 0
             default:
                 return 44
             }

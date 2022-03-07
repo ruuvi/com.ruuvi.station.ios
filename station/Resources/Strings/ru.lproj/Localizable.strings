@@ -179,6 +179,7 @@
 "TagSettings.ConnectionAlert.title" = "Соединение";
 "TagSettings.SectionHeader.Firmware.title" = "ПРОШИВКА";
 "TagSettings.Firmware.CurrentVersion" = "Текущая версия";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
 "TagSettings.Firmware.UpdateFirmware" = "Обновить";
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
