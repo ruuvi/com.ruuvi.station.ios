@@ -179,6 +179,7 @@
 "TagSettings.ConnectionAlert.title" = "Connexion";
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
 "TagSettings.Firmware.CurrentVersion" = "Version actuelle";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
 "TagSettings.Firmware.UpdateFirmware" = "Mettre à jour";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Le résultat est nul";
 "UnexpectedError.callerDeinitedDuringOperation" = "Les invitations ont été délocalisées";
@@ -478,6 +479,7 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Share.title" = "Partager";
 "Menu.LoggedIn.title" = "Logged in:";
 "Interval.Day.string" = "Jour";
+"Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud Mode";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages. Requires a Ruuvi Gateway router.";
 

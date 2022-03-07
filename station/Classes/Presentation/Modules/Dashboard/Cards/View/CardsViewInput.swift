@@ -11,6 +11,7 @@ protocol CardsViewInput: ViewInput {
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool)
     func showReverseGeocodingFailed()
+    func showAlreadyLoggedInAlert(with email: String)
 }
 
 extension CardsViewInput {

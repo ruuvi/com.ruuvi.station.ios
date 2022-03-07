@@ -179,6 +179,7 @@
 "TagSettings.ConnectionAlert.title" = "Connection";
 "TagSettings.SectionHeader.Firmware.title" = "FIRMWARE";
 "TagSettings.Firmware.CurrentVersion" = "Current Version";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
 "TagSettings.Firmware.UpdateFirmware" = "Update";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
@@ -478,5 +479,6 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.Share.title" = "Share";
 "Menu.LoggedIn.title" = "Logged in:";
 "Interval.Day.string" = "Day";
+"Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud Mode";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages. Requires a Ruuvi Gateway router.";

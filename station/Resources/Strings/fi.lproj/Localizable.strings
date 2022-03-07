@@ -179,6 +179,7 @@
 "TagSettings.ConnectionAlert.title" = "Yhteys";
 "TagSettings.SectionHeader.Firmware.title" = "LAITEOHJELMISTO";
 "TagSettings.Firmware.CurrentVersion" = "Nykyinen versio";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Hyvin vanha";
 "TagSettings.Firmware.UpdateFirmware" = "Päivitä";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
@@ -478,5 +479,6 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
 "Interval.Day.string" = "päivä";
+"Cards.Alert.AlreadyLoggedIn.message" = "Käyttäjä %@ on jo kirjautuneena sisälle. Mikäli haluat käyttää toista tiliä, kirjaudu ensin ulos ja yritä sitten uudelleen.";
 "Settings.Label.CloudMode" = "Pilvitila";
 "Settings.Label.CloudMode.description" = "Päivitä lähellä olevat pilveen rekisteröidyt anturit ainoastaan pilvestä hylkäämällä niiden Bluetooth-viestit. Vaatii Ruuvi Gateway -reitittimen.";

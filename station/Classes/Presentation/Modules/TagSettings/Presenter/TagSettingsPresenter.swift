@@ -777,6 +777,12 @@ extension TagSettingsPresenter {
             humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
             pressureOffset: sensorSettings?.pressureOffset ?? 0.0
         ).with(sensorSettings: sensorSettings)
+        if viewModel.humidityOffsetCorrectionVisible.value == nil {
+            viewModel.humidityOffsetCorrectionVisible.value = device.humidity == nil ? false : true
+        }
+        if viewModel.pressureOffsetCorrectionVisible.value == nil {
+            viewModel.pressureOffsetCorrectionVisible.value = device.pressure == nil ? false : true
+        }
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
@@ -1279,9 +1285,7 @@ extension TagSettingsPresenter {
     /// This method return the firmware version
     private func checkFirmwareVersion() {
         guard viewModel.firmwareVersion.value == nil else { return }
-        guard let uuid = ruuviTag.luid?.value else {
-            return
-        }
+        guard let uuid = ruuviTag.luid?.value else { return }
         background.services.gatt.firmwareRevision(for: self,
                                                      uuid: uuid,
                                                      options: [.connectionTimeout(15)]) { [weak self] _, result in
