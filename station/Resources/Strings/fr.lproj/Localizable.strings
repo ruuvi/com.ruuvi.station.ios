@@ -479,6 +479,7 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Share.title" = "Partager";
 "Menu.LoggedIn.title" = "Logged in:";
 "Interval.Day.string" = "Jour";
+"Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud Mode";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages. Requires a Ruuvi Gateway router.";
 
