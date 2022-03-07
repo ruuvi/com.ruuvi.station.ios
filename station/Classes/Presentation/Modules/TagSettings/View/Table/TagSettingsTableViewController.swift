@@ -867,7 +867,7 @@ extension TagSettingsTableViewController {
             if let version = version {
                 label.text = version
             } else {
-                label.text = emptyValueString.localized()
+                label.text = "TagSettings.Firmware.CurrentVersion.VeryOld".localized()
             }
         }
 
