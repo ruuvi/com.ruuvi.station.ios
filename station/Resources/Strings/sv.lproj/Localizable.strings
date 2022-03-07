@@ -179,6 +179,7 @@
 "TagSettings.ConnectionAlert.title" = "Anslutning";
 "TagSettings.SectionHeader.Firmware.title" = "PROGRAMVARA";
 "TagSettings.Firmware.CurrentVersion" = "Nuvarande version";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
 "TagSettings.Firmware.UpdateFirmware" = "Uppdatera";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Både resultatet och felmeddelande är nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Uppringare avallokerad under operation";

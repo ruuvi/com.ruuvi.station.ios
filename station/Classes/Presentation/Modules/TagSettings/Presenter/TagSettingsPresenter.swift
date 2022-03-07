@@ -777,6 +777,12 @@ extension TagSettingsPresenter {
             humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
             pressureOffset: sensorSettings?.pressureOffset ?? 0.0
         ).with(sensorSettings: sensorSettings)
+        if viewModel.humidityOffsetCorrectionVisible.value == nil {
+            viewModel.humidityOffsetCorrectionVisible.value = device.humidity == nil ? false : true
+        }
+        if viewModel.pressureOffsetCorrectionVisible.value == nil {
+            viewModel.pressureOffsetCorrectionVisible.value = device.pressure == nil ? false : true
+        }
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
