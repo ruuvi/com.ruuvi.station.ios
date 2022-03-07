@@ -179,8 +179,8 @@
 "TagSettings.ConnectionAlert.title" = "Yhteys";
 "TagSettings.SectionHeader.Firmware.title" = "LAITEOHJELMISTO";
 "TagSettings.Firmware.CurrentVersion" = "Nykyinen versio";
-"TagSettings.Firmware.UpdateFirmware" = "Päivitä";
 "TagSettings.Firmware.CurrentVersion.VeryOld" = "Hyvin vanha";
+"TagSettings.Firmware.UpdateFirmware" = "Päivitä";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
