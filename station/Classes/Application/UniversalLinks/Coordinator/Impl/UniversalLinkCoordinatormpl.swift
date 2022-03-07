@@ -57,6 +57,9 @@ extension UniversalLinkCoordinatorImpl {
                 .first(where: { $0.name == "token" })?
                 .value,
               !ruuviUser.isAuthorized else {
+                  NotificationCenter.default.post(name: .DidOpenWithUniversalLink,
+                                                  object: nil,
+                                                  userInfo: nil)
             return
         }
         router.openSignInVerify(with: token, from: topViewController)
