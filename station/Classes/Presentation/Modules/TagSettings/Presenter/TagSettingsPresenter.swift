@@ -85,6 +85,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var backgroundToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
     private var exportFileUrl: URL?
+    private var lastMeasurement: RuuviTagSensorRecord? {
+        didSet {
+            syncOffsetCorrection()
+        }
+    }
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -169,6 +174,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         checkLastSensorSettings()
         view.updateScrollPosition(scrollToAlert: scrollToAlert)
         checkFirmwareVersion()
+        checkLastRecord()
     }
 
     func viewDidAskToDismiss() {
@@ -442,6 +448,8 @@ extension TagSettingsPresenter {
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         viewModel.firmwareVersion.value = ruuviTag.firmwareVersion
+        viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
+        viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
         syncAlerts()
     }
 
@@ -528,6 +536,9 @@ extension TagSettingsPresenter {
         viewModel.temperatureOffsetCorrection.value = sensorSettings?.temperatureOffset
         viewModel.humidityOffsetCorrection.value = sensorSettings?.humidityOffset
         viewModel.pressureOffsetCorrection.value = sensorSettings?.pressureOffset
+
+        viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
+        viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
     }
 
     private func syncAlerts() {
@@ -777,12 +788,6 @@ extension TagSettingsPresenter {
             humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
             pressureOffset: sensorSettings?.pressureOffset ?? 0.0
         ).with(sensorSettings: sensorSettings)
-        if viewModel.humidityOffsetCorrectionVisible.value == nil {
-            viewModel.humidityOffsetCorrectionVisible.value = device.humidity == nil ? false : true
-        }
-        if viewModel.pressureOffsetCorrectionVisible.value == nil {
-            viewModel.pressureOffsetCorrectionVisible.value = device.pressure == nil ? false : true
-        }
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
@@ -1286,9 +1291,10 @@ extension TagSettingsPresenter {
     private func checkFirmwareVersion() {
         guard viewModel.firmwareVersion.value == nil else { return }
         guard let uuid = ruuviTag.luid?.value else { return }
+        isLoading = true
         background.services.gatt.firmwareRevision(for: self,
                                                      uuid: uuid,
-                                                     options: [.connectionTimeout(15)]) { [weak self] _, result in
+                                                     options: [.connectionTimeout(5)]) { [weak self] _, result in
             guard let sSelf = self else { return }
             switch result {
             case .success(let version):
@@ -1296,10 +1302,18 @@ extension TagSettingsPresenter {
                 sSelf.viewModel.firmwareVersion.value = currentVersion
                 sSelf.ruuviPool.update(sSelf.ruuviTag
                                         .with(firmwareVersion: currentVersion))
+                sSelf.isLoading = false
             case .failure:
                 sSelf.viewModel.firmwareVersion.value = nil
+                sSelf.isLoading = false
             }
         }
+    }
+
+    private func checkLastRecord() {
+        ruuviStorage.readLast(ruuviTag).on(success: { [weak self] record in
+            self?.lastMeasurement = record
+        })
     }
 }
 
