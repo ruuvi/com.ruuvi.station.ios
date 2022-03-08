@@ -151,6 +151,8 @@ extension CardsPresenter: CardsViewOutput {
                 } else {
                     view.showKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
                 }
+            } else {
+                openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
             }
         } else if viewModel.type == .web,
                   let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
