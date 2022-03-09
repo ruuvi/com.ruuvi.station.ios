@@ -150,6 +150,37 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func readAll(
+        _ ruuviTagId: String,
+        after date: Date
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        readQueue.async { [weak self] in
+            var sqliteEntities = [RuuviTagSensorRecord]()
+            do {
+                try self?.database.dbPool.read { db in
+                    let request = """
+                    SELECT
+                        *
+                    FROM  ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    ORDER BY date
+                    """
+                    sqliteEntities = try Record.fetchAll(
+                        db,
+                        sql: request,
+                        arguments: [date]
+                    )
+                }
+                promise.succeed(value: sqliteEntities.map({ $0.any }))
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
     public func read(
         _ ruuviTagId: String,
         after date: Date,

@@ -553,11 +553,13 @@ private final class BusinessAssembly: Assembly {
         container.register(RuuviServiceExport.self) { r in
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let measurementService = r.resolve(RuuviServiceMeasurement.self)!
+            let localSettings = r.resolve(RuuviLocalSettings.self)!
             let service = RuuviServiceExportImpl(
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
                 headersProvider: ExportHeadersProvider(),
-                emptyValueString: "N/A".localized()
+                emptyValueString: "N/A".localized(),
+                ruuviLocalSettings: localSettings
             )
             return service
         }
