@@ -23,6 +23,9 @@
 "Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Supprimer";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Maintenir la connexion";
+"Cards.LegacyFirmwareUpdateDialog.message" = "Seems that your sensor is using an old firmware software version. To access new features such as history graphs, alerts and cloud services, updating is mandatory.";
+"Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message" = "Are you sure? Without updating, you won't be able to claim ownership of the sensor, download history graphs and set alerts. The update includes also bug fixes. If you cancel now, you can start the update process again from the sensor's settings page.";
+"Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title" = "Show updating instructions";
 "Cards.Connected.title" = "Connecté";
 "Cards.Error.ReverseGeocodingFailed.message" = "Echec du téléchargement des données de l'appareil.";
 "CoreError.failedToGetPngRepresentation" = "Echec de la représentation PNG";
