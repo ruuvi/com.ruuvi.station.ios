@@ -103,8 +103,14 @@ extension RuuviServiceExportImpl {
                                                                isDecimal: false)
                         let humidity: String = toString(h, format: "%.2f")
 
+                        var pressure: String
                         let p = self.measurementService.double(for: log.pressure)
-                        let pressure: String = toString(p, format: "%.2f")
+                        // Gatt sync returns this -0.01 value for missing sensors, e.g. pressure
+                        if p == -0.01 {
+                            pressure = toString(nil, format: "%.2f")
+                        } else {
+                            pressure = toString(p, format: "%.2f")
+                        }
 
                         var rssi: String
                         if let rssiValue = log.rssi {
