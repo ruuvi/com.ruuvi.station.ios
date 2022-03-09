@@ -1,6 +1,7 @@
 import UIKit
 import Foundation
 import RuuviOntology
+import RuuviPresenters
 #if canImport(NordicDFU)
 import NordicDFU
 #endif

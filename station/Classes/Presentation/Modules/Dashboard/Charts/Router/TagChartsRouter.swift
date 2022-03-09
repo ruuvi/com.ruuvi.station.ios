@@ -34,14 +34,12 @@ class TagChartsRouter: TagChartsRouterInput {
             .perform()
     }
 
-    func openDiscover(output: DiscoverModuleOutput) {
-        let restorationId = "DiscoverTableNavigationController"
-        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
-            .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: false, output: output)
-            })
+    func openDiscover() {
+        let discoverRouter = DiscoverRouter()
+        discoverRouter.delegate = self
+        let viewController = discoverRouter.viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        transitionHandler.present(navigationController, animated: true)
     }
 
     func openAbout() {
@@ -55,11 +53,13 @@ class TagChartsRouter: TagChartsRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
 
+    // swiftlint:disable:next function_parameter_count
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
                          sensor: SensorSettings?,
-                         output: TagSettingsModuleOutput) {
+                         output: TagSettingsModuleOutput,
+                         scrollToAlert: Bool) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
@@ -68,7 +68,8 @@ class TagChartsRouter: TagChartsRouterInput {
                                  temperature: temperature,
                                  humidity: humidity,
                                  sensor: sensor,
-                                 output: output)
+                                 output: output,
+                                 scrollToAlert: scrollToAlert)
             })
     }
 
@@ -91,5 +92,13 @@ class TagChartsRouter: TagChartsRouterInput {
             .then({ (module) -> Any? in
                 module.configure(with: .enterEmail, output: output)
             })
+    }
+}
+
+extension TagChartsRouter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
+        router.viewController.dismiss(animated: true) { [weak self] in
+            self?.dismiss()
+        }
     }
 }

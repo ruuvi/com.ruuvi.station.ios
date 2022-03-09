@@ -15,6 +15,7 @@ struct TagChartsViewModel {
     var name: Observable<String?> = Observable<String?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
+    var isCloud: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var isHandleInitialResult: Observable<Bool?> = Observable<Bool?>(false)
@@ -28,6 +29,7 @@ struct TagChartsViewModel {
         uuid.value = virtualSensor.id
         name.value = virtualSensor.name
         isConnectable.value = false
+        isCloud.value = false
     }
 
     init(_ ruuviTag: RuuviTagSensor) {
@@ -38,5 +40,6 @@ struct TagChartsViewModel {
         }
         name.value = ruuviTag.name
         isConnectable.value = ruuviTag.isConnectable
+        isCloud.value = ruuviTag.isCloud
     }
 }

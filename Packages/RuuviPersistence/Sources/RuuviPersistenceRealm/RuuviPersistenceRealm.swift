@@ -186,6 +186,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
                 let result = RuuviTagSensorStruct(
                     version: ruuviTagRealm.version,
+                    firmwareVersion: ruuviTagRealm.firmwareVersion,
                     luid: ruuviTagRealm.uuid.luid,
                     macId: ruuviTagRealm.mac?.mac,
                     isConnectable: ruuviTagRealm.isConnectable,
@@ -210,6 +211,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
                 return RuuviTagSensorStruct(
                     version: ruuviTagRealm.version,
+                    firmwareVersion: ruuviTagRealm.firmwareVersion,
                     luid: ruuviTagRealm.uuid.luid,
                     macId: ruuviTagRealm.mac?.mac,
                     isConnectable: ruuviTagRealm.isConnectable,
@@ -291,6 +293,50 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                             temperatureOffset: tagDataRealm.temperatureOffset,
                             humidityOffset: tagDataRealm.humidityOffset,
                             pressureOffset: tagDataRealm.pressureOffset
+                        )
+                    )
+                }
+            }
+            promise.succeed(value: results)
+        }
+        return promise.future
+    }
+
+    public func readAll(
+        _ ruuviTagId: String,
+        after date: Date
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        context.bgWorker.enqueue {
+            let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
+                .filter("ruuviTag.uuid == %@ AND date > %@", ruuviTagId, date)
+                .sorted(byKeyPath: "date")
+            var results: [RuuviTagSensorRecord] = []
+            var previousDate = realmRecords.first?.date ?? Date()
+            for realmRecord in realmRecords {
+                autoreleasepool {
+                    guard realmRecord.date >= previousDate else {
+                        return
+                    }
+                    previousDate = realmRecord.date
+                    results.append(
+                        RuuviTagSensorRecordStruct(
+                            luid: realmRecord.ruuviTag?.luid,
+                            date: realmRecord.date,
+                            source: realmRecord.source,
+                            macId: nil,
+                            rssi: realmRecord.rssi.value,
+                            temperature: realmRecord.unitTemperature,
+                            humidity: realmRecord.unitHumidity,
+                            pressure: realmRecord.unitPressure,
+                            acceleration: realmRecord.acceleration,
+                            voltage: realmRecord.unitVoltage,
+                            movementCounter: realmRecord.movementCounter.value,
+                            measurementSequenceNumber: realmRecord.measurementSequenceNumber.value,
+                            txPower: realmRecord.txPower.value,
+                            temperatureOffset: realmRecord.temperatureOffset,
+                            humidityOffset: realmRecord.humidityOffset,
+                            pressureOffset: realmRecord.pressureOffset
                         )
                     )
                 }

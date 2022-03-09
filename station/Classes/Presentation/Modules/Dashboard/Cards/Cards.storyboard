@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pVR-SE-6mP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pVR-SE-6mP">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,7 +11,7 @@
         <!--Ruuvi Station-->
         <scene sceneID="GFb-Vj-mkO">
             <objects>
-                <viewController storyboardIdentifier="CardsScrollViewController" id="pVR-SE-6mP" customClass="CardsScrollViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CardsScrollViewController" id="pVR-SE-6mP" customClass="CardsScrollViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gfm-eP-ACx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -29,7 +29,7 @@
                                     <outlet property="delegate" destination="pVR-SE-6mP" id="7T5-4K-hvl"/>
                                 </connections>
                             </scrollView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-nega" translatesAutoresizingMaskIntoConstraints="NO" id="HLP-h6-z2n">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo_" translatesAutoresizingMaskIntoConstraints="NO" id="HLP-h6-z2n">
                                 <rect key="frame" x="64" y="13" width="124" height="24"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -90,7 +90,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EaF-Br-ohx" sceneMemberID="firstResponder"/>
-                <customObject id="bfj-My-BrB" customClass="CardsScrollInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                <customObject id="bfj-My-BrB" customClass="CardsScrollInitializer" customModule="station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="pVR-SE-6mP" id="Ir2-gC-7SY"/>
                     </connections>
@@ -103,6 +103,6 @@
         <image name="baseline_menu_white_48pt" width="48" height="48"/>
         <image name="bg9" width="960" height="1440"/>
         <image name="gradient_layer" width="359" height="641"/>
-        <image name="logo-nega" width="501" height="101"/>
+        <image name="ruuvi_logo_" width="379" height="101"/>
     </resources>
 </document>

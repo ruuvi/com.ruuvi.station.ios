@@ -2,6 +2,7 @@ import UIKit
 import LightRoute
 import SwiftUI
 import RuuviOntology
+import RuuviUser
 
 class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     weak var transitionHandler: UIViewController!

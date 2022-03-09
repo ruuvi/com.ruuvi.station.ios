@@ -20,6 +20,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
 "Cards.KeepConnectionDialog.message" = "На вашем устройстве установлена прошивка, поддерживающая соединение. Хотите поддерживать соединение активным для этого устройства в фоновом режиме? Это позволит использовать графики и уведомления даже когда приложение закрыто.";
+"Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Закрыть";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
 "Cards.Connected.title" = "Соединен";
@@ -46,10 +47,6 @@
 "Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
 "Defaults.Interval.Hour.string" = "ч";
 "Defaults.ChartDurationHours.title" = "Размер Графиков";
-"Advanced.title" = "Расширенные настройки";
-"Advanced.ChartIntervalMinutes.title" = "Интервал графиков";
-"Advanced.Downsampling.title" = "Downsampling";
-"Advanced.Interval.Min.string" = "мин";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
@@ -122,7 +119,6 @@
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
-"Settings.Label.Advanced" = "Дополнительно";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
@@ -182,7 +178,9 @@
 "TagSettings.Alerts.Connection.description" = "Уведомить при установке/разрыве соединения";
 "TagSettings.ConnectionAlert.title" = "Соединение";
 "TagSettings.SectionHeader.Firmware.title" = "ПРОШИВКА";
-"TagSettings.Firmware.UpdateFirmware" = "Обновить прошивку";
+"TagSettings.Firmware.CurrentVersion" = "Текущая версия";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
+"TagSettings.Firmware.UpdateFirmware" = "Обновить";
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
@@ -267,6 +265,8 @@
 "About.TagsCount.text" = "Датчиков обнаружено: %d";
 "About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/support";
 "About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
+"Interval.Hour.string" = "Часов";
+"Interval.Days.string" = "Дней";
 "TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
 "HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
 "g/m³" = "г/м³";
@@ -293,7 +293,14 @@
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
 "Background.Interval.Sec.string" = "сек";
 "Settings.navigationItem.title" = "Настройки";
+"Settings.Label.Chart" = "Настройки графиков";
+"ChartSettings.AllPoints.title" = "Отображать все данные";
+"ChartSettings.AllPoints.description" = "Это может привести к медленному обновлению графиков";
+"ChartSettings.DrawDots.title" = "Показывать точки на графике";
+"ChartSettings.DrawDots.description" = "Маленькие точки помогут точно понять когда были получены данные";
 "Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
+"ChartSettings.Duration.title" = "Диапазон отображения графиков";
+"ChartSettings.Duration.description" = "Установите диапазон для отображения на графиках от 1-го до 10-ти дней";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
 "Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
 "Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
@@ -360,6 +367,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Превышено количество общих сенсоров";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "Чтобы поделиться датчиком необходимо наличие Ruuvi Gateway поблизости";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Вы уже делились этим сенсором";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Sensor already claimed by %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Sensor already claimed";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Не удалось отправить e-mail";
 "UserApiError.ER_MISSING_ARGUMENT" = "Пропущен аргумент запроса";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Недопустимый режим плотности";
@@ -385,9 +394,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Температура";
 "TagSettings.OffsetCorrection.Humidity" = "Влажность";
 "TagSettings.OffsetCorrection.Pressure" = "Давление";
-"Advanced.Charts.title" = "Графики";
-"Advanced.Network.title" = "Облако";
-"Advanced.NetworkInterval.title" = "Интервал Синхронизации";
 "PhotoPicker.Sheet.files" = "Выбрать из файлов";
 "SignIn.EnterVerificationCode" = "Пожалуйста, введите код подтверждения";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Не удалось найти или сгенерировать фоновое изображение";
@@ -472,3 +478,7 @@
 "TagSettings.General.Owner.none" = "Нет владельца";
 "TagSettings.Share.title" = "Поделиться";
 "Menu.LoggedIn.title" = "Пользователь:";
+"Interval.Day.string" = "день";
+"Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
+"Settings.Label.CloudMode" = "Режим облака";
+"Settings.Label.CloudMode.description" = "Получайте данные с ближайших датчиков только через облако, игнорируя при этом измерения через Bluetooth. Требуется Ruuvi Gateway.";

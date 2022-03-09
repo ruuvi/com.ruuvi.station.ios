@@ -4,6 +4,7 @@ extension CloudSensor {
     public var ruuviTagSensor: RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: nil,
             macId: id.mac,
             isConnectable: true,
@@ -120,7 +121,7 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
     public var isCloudSensor: Bool? {
         return object.isCloudSensor
     }
-    
+
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {
         return lhs.id == rhs.id
     }

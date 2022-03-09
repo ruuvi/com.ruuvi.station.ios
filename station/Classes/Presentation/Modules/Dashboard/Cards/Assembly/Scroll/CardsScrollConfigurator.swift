@@ -8,6 +8,8 @@ import RuuviService
 import RuuviVirtual
 import RuuviCore
 import RuuviNotifier
+import RuuviPresenters
+import RuuviUser
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -43,6 +45,7 @@ class CardsScrollConfigurator {
         presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
+        presenter.ruuviUser = r.resolve(RuuviUser.self)
         router.delegate = presenter
 
         // swiftlint:disable force_cast
