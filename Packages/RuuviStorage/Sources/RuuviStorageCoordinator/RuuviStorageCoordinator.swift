@@ -50,6 +50,18 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
+    func readAll(_ id: String, after date: Date) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
+        let sqliteOperation = sqlite.readAll(id, after: date)
+        let realmOperation = realm.readAll(id, after: date)
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     func read(
         _ id: String,
         after date: Date,
