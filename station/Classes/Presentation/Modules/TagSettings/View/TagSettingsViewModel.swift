@@ -17,6 +17,7 @@ struct TagSettingsViewModel {
     let accelerationY: Observable<Double?> = Observable<Double?>()
     let accelerationZ: Observable<Double?> = Observable<Double?>()
     let version: Observable<Int?> = Observable<Int?>()
+    let firmwareVersion: Observable<String?> = Observable<String?>()
     let movementCounter: Observable<Int?> = Observable<Int?>()
     let measurementSequenceNumber: Observable<Int?> = Observable<Int?>()
     let txPower: Observable<Int?> = Observable<Int?>()
@@ -79,6 +80,9 @@ struct TagSettingsViewModel {
     let humidityOffsetCorrection: Observable<Double?> = Observable<Double?>()
     let pressureOffsetCorrection: Observable<Double?> = Observable<Double?>()
 
+    let humidityOffsetCorrectionVisible: Observable<Bool?> = Observable<Bool?>()
+    let pressureOffsetCorrectionVisible: Observable<Bool?> = Observable<Bool?>()
+
     let canShowUpdateFirmware: Observable<Bool?> = Observable<Bool?>(false)
 
     let isAlertsEnabled: Observable<Bool?> = Observable<Bool?>(false)
@@ -102,37 +106,37 @@ struct TagSettingsViewModel {
         txPower.value = record.txPower
         source.value = record.source
     }
-    
-    
+
     func reset() {
+        // TODO:- @Priyonto: This whole block needs to be refactored in good level later
         isTemperatureAlertOn.value = false
         temperatureLowerBound.value = Temperature(-40, unit: .celsius)
         temperatureUpperBound.value = Temperature(85, unit: .celsius)
         temperatureAlertDescription.value = nil
-        
+
         isHumidityAlertOn.value = false
         humidityLowerBound.value = Humidity(value: 0, unit: .absolute)
         humidityUpperBound.value = Humidity(value: 40, unit: .absolute)
         humidityAlertDescription.value = nil
-        
+
         isRelativeHumidityAlertOn.value = false
         relativeHumidityLowerBound.value = 0
         relativeHumidityUpperBound.value = 100
         relativeHumidityAlertDescription.value = nil
-        
+
         isDewPointAlertOn.value = false
         dewPointLowerBound.value = Temperature(-40, unit: .celsius)
         dewPointUpperBound.value = Temperature(85, unit: .celsius)
         dewPointAlertDescription.value = nil
-        
+
         isPressureAlertOn.value = false
         pressureLowerBound.value = Pressure(300, unit: .hectopascals)
         pressureUpperBound.value = Pressure(1100, unit: .hectopascals)
         pressureAlertDescription.value = nil
-        
+
         isConnectionAlertOn.value = false
         connectionAlertDescription.value = nil
-        
+
         isMovementAlertOn.value = false
         movementAlertDescription.value = nil
     }

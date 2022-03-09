@@ -2,6 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviLocal
 
+// swiftlint:disable:next type_body_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
@@ -169,13 +170,13 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 300)
     var serviceTimeout: TimeInterval
 
-    @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
+    @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 1)
     var advertisementDaemonIntervalMinutes: Int
 
     @UserDefault("SettingsUserDegaults.alertsMuteIntervalMinutes", defaultValue: 60)
     var alertsMuteIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: false)
+    @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: true)
     var saveHeartbeats: Bool
 
     @UserDefault("SettingsUserDegaults.saveHeartbeatsIntervalMinutes", defaultValue: 5)
@@ -213,7 +214,15 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var chartIntervalSeconds: Int
 
     @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 240)
-    var chartDurationHours: Int
+    var chartDurationHours: Int {
+        didSet {
+            NotificationCenter
+                .default
+                .post(name: .ChartDurationHourDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
 
     @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])
     var tagsSorting: [String]
@@ -265,6 +274,17 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             NotificationCenter
                 .default
                 .post(name: .DownsampleOnDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.chartDrawDotsOn", defaultValue: false)
+    var chartDrawDotsOn: Bool {
+        didSet {
+            NotificationCenter
+                .default
+                .post(name: .ChartDrawDotsOnDidChange,
                       object: self,
                       userInfo: nil)
         }

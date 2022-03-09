@@ -21,6 +21,7 @@ extension RuuviTagSensor {
     public var `struct`: RuuviTagSensorStruct {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -35,6 +36,7 @@ extension RuuviTagSensor {
     public func with(isClaimed: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -49,6 +51,7 @@ extension RuuviTagSensor {
     public func with(isOwner: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -63,6 +66,22 @@ extension RuuviTagSensor {
     public func with(version: Int) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            isCloudSensor: isCloudSensor
+        )
+    }
+
+    public func with(firmwareVersion: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -77,6 +96,7 @@ extension RuuviTagSensor {
     public func with(name: String) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -91,6 +111,7 @@ extension RuuviTagSensor {
     public func with(owner: String) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -105,6 +126,7 @@ extension RuuviTagSensor {
     public func with(macId: MACIdentifier) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -119,6 +141,7 @@ extension RuuviTagSensor {
     public func withoutMac() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: nil,
             isConnectable: isConnectable,
@@ -133,6 +156,7 @@ extension RuuviTagSensor {
     public func withoutOwner() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -147,6 +171,7 @@ extension RuuviTagSensor {
     public func with(isConnectable: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -161,6 +186,7 @@ extension RuuviTagSensor {
     public func with(cloudSensor: CloudSensor) -> RuuviTagSensor {
         let sensor = RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -176,6 +202,7 @@ extension RuuviTagSensor {
     public func unclaimed() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
@@ -196,6 +223,7 @@ extension RuuviTagSensor {
 
 public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var version: Int
+    public var firmwareVersion: String?
     public var luid: LocalIdentifier? // local unqiue id
     public var macId: MACIdentifier?
     public var isConnectable: Bool
@@ -207,6 +235,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
 
     public init(
         version: Int,
+        firmwareVersion: String?,
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
         isConnectable: Bool,
@@ -217,6 +246,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         isCloudSensor: Bool?
     ) {
         self.version = version
+        self.firmwareVersion = firmwareVersion
         self.luid = luid
         self.macId = macId
         self.isConnectable = isConnectable
@@ -240,6 +270,9 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
     public var version: Int {
         return object.version
+    }
+    public var firmwareVersion: String? {
+        return object.firmwareVersion
     }
     public var luid: LocalIdentifier? {
         return object.luid

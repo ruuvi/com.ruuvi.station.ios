@@ -20,6 +20,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "För många förfrågningar";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Försök igen om 5 minutes";
 "Cards.KeepConnectionDialog.message" = "Det ser ut som din Ruuvi enhet har anslutningsbar firmware. Vill du att anslutningen till enheten skall hållas öppen i bakgrunden? Detta gör att histogram och alarm fungerar även om applikationen är minimerad.";
+"Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Avbryt";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Håll Anslutningen";
 "Cards.Connected.title" = "Ansluten";
@@ -46,10 +47,6 @@
 "Defaults.PruningOffsetHours.title" = "Beskärning av förskjutningstider";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Historikens längd";
-"Advanced.title" = "Avancerade inställningar";
-"Advanced.ChartIntervalMinutes.title" = "Historikens noggrannhet";
-"Advanced.Downsampling.title" = "Nedsampling";
-"Advanced.Interval.Min.string" = "min";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station behöver bluetooth för att fungera. Gå till Inställningar och aktivera Bluetooth.";
@@ -122,7 +119,6 @@
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
-"Settings.Label.Advanced" = "Avancerat";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";
 "OWMError.apiLimitExceeded" = "API gräns överskriden";
 "OWMError.notAHttpResponse" = "Ingen HTTP respons";
@@ -182,7 +178,9 @@
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
 "TagSettings.SectionHeader.Firmware.title" = "PROGRAMVARA";
-"TagSettings.Firmware.UpdateFirmware" = "Uppdatera Programvara";
+"TagSettings.Firmware.CurrentVersion" = "Nuvarande version";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
+"TagSettings.Firmware.UpdateFirmware" = "Uppdatera";
 "UnexpectedError.callbackErrorAndResultAreNil" = "Både resultatet och felmeddelande är nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Uppringare avallokerad under operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Det gick inte att få geokoordinaterna för platsen";
@@ -267,6 +265,8 @@
 "About.TagsCount.text" = "Upptäckta sensorer: %d";
 "About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/support";
 "About.Troubleshooting.header" = "FELSÖKNING";
+"Interval.Hour.string" = "Timmar";
+"Interval.Days.string" = "Dagar";
 "TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
 "HumidityUnit.gm3.title" = "Absolut (g/m³)";
 "g/m³" = "g/m³";
@@ -293,7 +293,14 @@
 "Welcome.scan.title" = "SKANNA";
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Inställningar";
+"Settings.Label.Chart" = "Historik";
+"ChartSettings.AllPoints.title" = "Visa all insamlad data i graferna";
+"ChartSettings.AllPoints.description" = "Den här funktionen kan göra appen laddar historik långsammare";
+"ChartSettings.DrawDots.title" = "Visa datapunkter";
+"ChartSettings.DrawDots.description" = "Datapunkter gör det lättare att utforska lagrad historikinformation";
 "Defaults.ChartIntervalSeconds.title" = "Historikens noggrannhet";
+"ChartSettings.Duration.title" = "Historik";
+"ChartSettings.Duration.description" = "Ange hur långt bak historiken skall visas, mellan 1 - 10 dagar";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
 "Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas";
 "Settings.Label.PressureUnit.text" = "Tryckenhet";
@@ -360,6 +367,8 @@
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Du kan inte dela sensorn med flera användare";
 "UserApiError.ER_NO_DATA_TO_SHARE" = "För att dela sensorn måste du ha en Ruuvi Gateway router i närheten av sensorn";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Sensorn är redan delad";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED" = "Sensorn ägs redan av %@";
+"UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL" = "Sensorn har redan en ägare";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Kunde inte skicka e-post";
 "UserApiError.ER_MISSING_ARGUMENT" = "Argument saknas";
 "UserApiError.ER_INVALID_DENSITY_MODE" = "Ogiltig densitet";
@@ -385,9 +394,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Temperatur";
 "TagSettings.OffsetCorrection.Humidity" = "Fuktighet";
 "TagSettings.OffsetCorrection.Pressure" = "Lufttryck";
-"Advanced.Charts.title" = "Histogram";
-"Advanced.Network.title" = "Nätverk";
-"Advanced.NetworkInterval.title" = "Datahämtningsintervall";
 "PhotoPicker.Sheet.files" = "Välj från filer";
 "SignIn.EnterVerificationCode" = "Ange verifieringskod";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Det gick inte att hitta eller skapa bakgrundsbild";
@@ -472,3 +478,7 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.General.Owner.none" = "Ingen";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
+"Interval.Day.string" = "Dag";
+"Cards.Alert.AlreadyLoggedIn.message" = "Användare %@ är redan inloggad. Om du vill använda ett annat konto, logga ut först och försök sedan igen.";
+"Settings.Label.CloudMode" = "Molnläge";
+"Settings.Label.CloudMode.description" = "Uppdatera närliggande molnregistrerade sensorer endast från molnet genom att inte lyssna på deras Bluetooth-meddelanden. Kräver en Ruuvi Gateway.";

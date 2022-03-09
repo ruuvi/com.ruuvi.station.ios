@@ -29,10 +29,8 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
-    @IBOutlet weak var foregroundCell: UITableViewCell!
-    @IBOutlet weak var foregroundTitleLabel: UILabel!
-    @IBOutlet weak var advancedCell: UITableViewCell!
-    @IBOutlet weak var advancedTitleLabel: UILabel!
+    @IBOutlet weak var chartCell: UITableViewCell!
+    @IBOutlet weak var chartTitleLabel: UILabel!
     @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
     @IBOutlet weak var experimentalFunctionsLabel: UILabel!
 
@@ -89,10 +87,9 @@ extension SettingsTableViewController: SettingsViewInput {
         pressureTitleLabel.text = "Settings.Label.PressureUnit.text".localized()
         pressureSubitleLabel.text = pressureUnit.title
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
-        foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
-        advancedTitleLabel.text = "Settings.Label.Advanced".localized()
+        chartTitleLabel.text = "Settings.Label.Chart".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -155,7 +152,6 @@ extension SettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
@@ -167,14 +163,12 @@ extension SettingsTableViewController {
                 output.viewDidTapOnPressure()
             case languageCell:
                 output.viewDidTapOnLanguage()
-            case foregroundCell:
-                output.viewDidTapOnForeground()
             case defaultsCell:
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
-            case advancedCell:
-                output.viewDidTapOnAdvanced()
+            case chartCell:
+                output.viewDidTapOnChart()
             case experimentalFunctionsCell:
                 output.viewDidTapOnExperimental()
             default:

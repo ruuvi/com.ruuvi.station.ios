@@ -3,6 +3,7 @@ import RuuviLocal
 import RuuviService
 import RuuviVirtual
 import RuuviCore
+import RuuviPresenters
 
 class WebTagSettingsTableConfigurator {
     func configure(view: WebTagSettingsTableViewController) {

@@ -55,4 +55,40 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
+
+    @discardableResult
+    public func set(showAllData: Bool) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        cloud.set(showAllData: showAllData)
+            .on(success: { showAllData in
+                promise.succeed(value: showAllData)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(drawDots: Bool) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        cloud.set(drawDots: drawDots)
+            .on(success: { drawDots in
+                promise.succeed(value: drawDots)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(chartDuration: Int) -> Future<Int, RuuviServiceError> {
+        let promise = Promise<Int, RuuviServiceError>()
+        cloud.set(chartDuration: chartDuration)
+            .on(success: { chartDuration in
+                promise.succeed(value: chartDuration)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }

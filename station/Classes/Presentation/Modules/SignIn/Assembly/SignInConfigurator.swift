@@ -2,6 +2,7 @@ import Foundation
 import RuuviCloud
 import RuuviService
 import RuuviUser
+import RuuviPresenters
 import RuuviDaemon
 
 class SignInConfigurator {

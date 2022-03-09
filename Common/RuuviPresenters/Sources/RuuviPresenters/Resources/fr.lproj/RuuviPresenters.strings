@@ -1,0 +1,8 @@
+"ErrorPresenterAlert.Error" = "Erreur";
+"ErrorPresenterAlert.OK" = "OK";
+"PermissionPresenter.NoPhotoLibraryAccess.message" = "Veuillez autoriser l'accès aux fichiers multimédias de votre appareil.";
+"PermissionPresenter.NoCameraAccess.message" = "Veuillez autoriser l'accès à l'appareil photo.";
+"PermissionPresenter.NoLocationAccess.message" = "Veuillez autoriser l'accès aux services de géolocalisation.";
+"PermissionPresenter.settings" = "Réglages";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Veuillez autoriser les notifications dans les réglages de l'appareil.";
+"Cancel" = "Annuler";

@@ -4,7 +4,7 @@ import UIKit
 import RuuviOntology
 import RuuviLocal
 import RuuviService
-
+// swiftlint:disable file_length
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
     var settings: RuuviLocalSettings!
@@ -68,7 +68,10 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, sensorSettings: SensorSettings?, output: TagChartModuleOutput, luid: LocalIdentifier?) {
+    func configure(_ viewModel: TagChartViewModel,
+                   sensorSettings: SensorSettings?,
+                   output: TagChartModuleOutput,
+                   luid: LocalIdentifier?) {
         configureViewModel(viewModel)
         self.ouptut = output
         self.sensorSettings = sensorSettings
@@ -229,7 +232,8 @@ extension TagChartPresenter {
                 dataSet.circleRadius = 6
                 dataSet.drawCirclesEnabled = true
             default:
-                dataSet.drawCirclesEnabled = false
+                dataSet.circleRadius = 0.8
+                dataSet.drawCirclesEnabled = settings.chartDrawDotsOn
             }
         }
     }

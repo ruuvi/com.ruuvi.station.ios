@@ -3,6 +3,7 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviPresenters
 
 class SettingsTableConfigurator {
     func configure(view: SettingsTableViewController) {

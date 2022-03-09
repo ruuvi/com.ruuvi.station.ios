@@ -2,6 +2,7 @@ import UIKit
 import RuuviService
 import RuuviLocal
 import RuuviUser
+import RuuviPresenters
 
 class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!

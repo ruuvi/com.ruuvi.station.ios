@@ -4,23 +4,27 @@ import Future
 import RuuviOntology
 import RuuviStorage
 import RuuviService
+import RuuviLocal
 
 public final class RuuviServiceExportImpl: RuuviServiceExport {
     private let ruuviStorage: RuuviStorage
     private let measurementService: RuuviServiceMeasurement
     private let emptyValueString: String
     private let headersProvider: RuuviServiceExportHeaders
+    private let ruuviLocalSettings: RuuviLocalSettings
 
     public init(
         ruuviStorage: RuuviStorage,
         measurementService: RuuviServiceMeasurement,
         headersProvider: RuuviServiceExportHeaders,
-        emptyValueString: String
+        emptyValueString: String,
+        ruuviLocalSettings: RuuviLocalSettings
     ) {
         self.ruuviStorage = ruuviStorage
         self.measurementService = measurementService
         self.headersProvider = headersProvider
         self.emptyValueString = emptyValueString
+        self.ruuviLocalSettings = ruuviLocalSettings
     }
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.RuuviServiceExportImpl.queue", qos: .userInitiated)
@@ -34,11 +38,13 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         return formatter
     }()
 
-    public func csvLog(for uuid: String, settings: SensorSettings) -> Future<URL, RuuviServiceError> {
+    public func csvLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
+        let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
+        let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
         let ruuviTag = ruuviStorage.readOne(uuid)
         ruuviTag.on(success: { [weak self] ruuviTag in
-            let recordsOperation = self?.ruuviStorage.readAll(uuid)
+            let recordsOperation = self?.ruuviStorage.readAll(uuid, after: networkPuningDate)
             recordsOperation?.on(success: { [weak self] records in
                 let offsetedLogs = records.compactMap({ $0.with(sensorSettings: settings)})
                 self?.csvLog(for: ruuviTag, with: offsetedLogs).on(success: { url in
@@ -66,7 +72,7 @@ extension RuuviServiceExportImpl {
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyMMdd-HHmm"
+        dateFormatter.dateFormat = "yyyyMMdd-HHmm"
         let date = dateFormatter.string(from: Date())
         dateFormatter.dateFormat = "\"yyyy-MM-dd HH:mm:ss\""
         let group = DispatchGroup()
@@ -75,7 +81,7 @@ extension RuuviServiceExportImpl {
             autoreleasepool {
                 group.enter()
 
-                let fileName = ruuviTag.name + "-" + date + ".csv"
+                let fileName = ruuviTag.name + "_" + date + ".csv"
                 let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
                 let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
                 let headersString = self.headersProvider.getHeaders(units)
@@ -103,8 +109,21 @@ extension RuuviServiceExportImpl {
                                                                isDecimal: false)
                         let humidity: String = toString(h, format: "%.2f")
 
+                        var pressure: String
                         let p = self.measurementService.double(for: log.pressure)
-                        let pressure: String = toString(p, format: "%.2f")
+                        // Gatt sync returns this -0.01 value for missing sensors, e.g. pressure
+                        if p == -0.01 {
+                            pressure = toString(nil, format: "%.2f")
+                        } else {
+                            pressure = toString(p, format: "%.2f")
+                        }
+
+                        var rssi: String
+                        if let rssiValue = log.rssi {
+                            rssi = "\(rssiValue)"
+                        } else {
+                            rssi = self.emptyValueString
+                        }
 
                         let accelerationX: String = toString(log.acceleration?.x.value, format: "%.3f")
                         let accelerationY: String = toString(log.acceleration?.y.value, format: "%.3f")
@@ -137,6 +156,7 @@ extension RuuviServiceExportImpl {
                             + "\(temperature)" + ","
                             + "\(humidity)" + ","
                             + "\(pressure)" + ","
+                            + "\(rssi)" + ","
                             + "\(accelerationX)" + ","
                             + "\(accelerationY)" + ","
                             + "\(accelerationZ)" + ","

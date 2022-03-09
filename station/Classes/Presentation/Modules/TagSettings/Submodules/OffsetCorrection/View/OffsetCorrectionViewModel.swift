@@ -40,7 +40,7 @@ class OffsetCorrectionViewModel {
         self.type = type
         self.update(sensorSettings: sensorSettings)
     }
-    
+
     func update(ruuviTagRecord: RuuviTagSensorRecord) {
         switch type {
         case .temperature:
