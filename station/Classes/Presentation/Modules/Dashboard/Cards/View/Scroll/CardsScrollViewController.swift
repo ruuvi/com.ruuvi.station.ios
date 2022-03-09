@@ -135,16 +135,19 @@ extension CardsScrollViewController: CardsViewInput {
     }
 
     func scroll(to index: Int, immediately: Bool = false, animated: Bool = false) {
+        let viewModel = viewModels[index]
         if immediately {
             view.layoutIfNeeded()
             scrollView.layoutIfNeeded()
             let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
             scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+            output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                 guard let sSelf = self else { return }
                 let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
                 sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+                sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
             }
         }
     }
@@ -173,6 +176,34 @@ extension CardsScrollViewController: CardsViewInput {
         let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel, scrollToAlert: scrollToAlert)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidIgnoreFirmwareUpdateDialog(for: viewModel)
+        }))
+        let updatingInstructionTitle = "Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title".localized()
+        alert.addAction(UIAlertAction(title: updatingInstructionTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel) {
+        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidDismissFirmwareUpdateDialog(for: viewModel)
+        }))
+        let updatingInstructionTitle = "Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title".localized()
+        alert.addAction(UIAlertAction(title: updatingInstructionTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
         present(alert, animated: true)
     }
@@ -213,6 +244,7 @@ extension CardsScrollViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         restartAnimations()
+        navigationController?.setNavigationBarHidden(true, animated: false)
         output.viewWillAppear()
     }
 
@@ -242,7 +274,9 @@ extension CardsScrollViewController {
 extension CardsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard viewModels.count > 0 else {return}
-        output.viewDidScroll(to: viewModels[currentPage])
+        let viewModel = viewModels[currentPage]
+        output.viewDidScroll(to: viewModel)
+        output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
     }
 }
 

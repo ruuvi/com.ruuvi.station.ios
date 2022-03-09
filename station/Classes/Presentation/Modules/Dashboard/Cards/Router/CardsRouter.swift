@@ -9,6 +9,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!
     weak var delegate: CardsRouterDelegate!
     weak var tagCharts: UIViewController!
+    private var dfuModule: DFUModuleInput?
     var settings: RuuviLocalSettings!
 
     // swiftlint:disable weak_delegate
@@ -103,6 +104,22 @@ class CardsRouter: NSObject, CardsRouterInput {
             .then({ (module) -> Any? in
                 module.configure(with: .enterEmail, output: output)
             })
+    }
+
+    func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
+        let factory: DFUModuleFactory = DFUModuleFactoryImpl()
+        let module = factory.create(for: ruuviTag)
+        self.dfuModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
+        transitionHandler
+            .navigationController?
+            .presentationController?
+            .delegate = self
     }
 
 }

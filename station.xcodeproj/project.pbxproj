@@ -535,6 +535,8 @@
 		340BE39E27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		340BE39F27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
+		3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
@@ -1127,6 +1129,7 @@
 		340BE38527B54F37006D6C34 /* OwnerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerRouterInput.swift; sourceTree = "<group>"; };
 		340BE39A27B54FEB006D6C34 /* String+Email.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
 		340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ruuvi_logo_splash.png; sourceTree = "<group>"; };
+		3490A4C227D9F2C70032BBAB /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
 		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1641,6 +1644,7 @@
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
+				3490A4C227D9F2C70032BBAB /* UINavigationController.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -4302,6 +4306,7 @@
 				66718A44266A685700A380F8 /* DfuFlashModuleOutput.swift in Sources */,
 				A91D03072511207300694733 /* SelectionRouter.swift in Sources */,
 				0E8BD353238566AB008B31EF /* LocalizationService.swift in Sources */,
+				3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */,
 				0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */,
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,
 				0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */,
@@ -4810,6 +4815,7 @@
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				66718A52266A685700A380F8 /* DfuFlashViewInput.swift in Sources */,
+				3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */,
 				660EB27F2669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				A9B5744A253B994700DB7353 /* SignInViewOutput.swift in Sources */,
