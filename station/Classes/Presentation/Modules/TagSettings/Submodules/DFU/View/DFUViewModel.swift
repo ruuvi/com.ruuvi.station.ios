@@ -49,7 +49,11 @@ final class DFUViewModel: ObservableObject {
     func send(event: Event) {
         input.send(event)
     }
+    /// Update the localdb only when the tag data format is not "Very Old"
+    /// Otherwise a migration to realm to sqlite is needed since older data format tags are stored in the realm db
+    /// before trying to update the db record
     func storeUpdatedFirmware(latestRelease: LatestRelease) {
+        guard ruuviTag.firmwareVersion != nil else { return }
         ruuviPool.update(ruuviTag
                             .with(firmwareVersion: latestRelease.version.replace("Ruuvi FW ", with: "")))
     }
