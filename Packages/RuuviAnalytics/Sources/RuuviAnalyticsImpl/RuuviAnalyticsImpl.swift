@@ -21,6 +21,8 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case offlineTags(Int)
         // Quantity of virtual tags(if greater that 10, then "10+")
         case virtualTags(Int)
+        // Quantity of tags using data format 2
+        case df2_tags(Int)
         // Quantity of tags using data format 3
         case df3_tags(Int)
         // Quantity of tags using data format 4
@@ -64,6 +66,8 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
                 return "offline_tags"
             case .virtualTags:
                 return "virtual_tags"
+            case .df2_tags:
+                return "use_df2"
             case .df3_tags:
                 return "use_df3"
             case .df4_tags:
@@ -122,10 +126,12 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         }
         set(.loggedIn(ruuviUser.isAuthorized))
         ruuviStorage.readAll().on(success: { tags in
-            self.set(.addedTags(tags.count))
-            self.set(.df3_tags(tags.filter({ $0.version == 3 }).count))
-            self.set(.df4_tags(tags.filter({ $0.version == 4 }).count))
-            self.set(.df5_tags(tags.filter({ $0.version == 5 }).count))
+            let addedTags = tags.filter({ $0.isOwner })
+            self.set(.addedTags(addedTags.count))
+            self.set(.df3_tags(addedTags.filter({ $0.version == 2 }).count))
+            self.set(.df3_tags(addedTags.filter({ $0.version == 3 }).count))
+            self.set(.df4_tags(addedTags.filter({ $0.version == 4 }).count))
+            self.set(.df5_tags(addedTags.filter({ $0.version == 5 }).count))
         })
         ruuviStorage.getClaimedTagsCount().on(success: { count in
             self.set(.claimedTags(count))
@@ -159,6 +165,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
             .claimedTags(let count),
             .offlineTags(let count),
             .virtualTags(let count),
+            .df2_tags(let count),
             .df3_tags(let count),
             .df4_tags(let count),
             .df5_tags(let count):
