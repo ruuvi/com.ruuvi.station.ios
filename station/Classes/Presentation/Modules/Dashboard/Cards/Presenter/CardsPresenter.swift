@@ -42,6 +42,7 @@ class CardsPresenter: CardsModuleInput {
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var ruuviUser: RuuviUser!
+    var featureToggleService: FeatureToggleService!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
@@ -219,6 +220,33 @@ extension CardsPresenter: CardsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
+
+    func viewDidTriggerFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+        guard let luid = viewModel.luid.value,
+              let version = viewModel.version.value, version < 5,
+              featureToggleService.isEnabled(.legacyFirmwareUpdatePopup) else { return }
+        if !settings.firmwareUpdateDialogWasShown(for: luid) {
+            view.showFirmwareUpdateDialog(for: viewModel)
+        }
+    }
+    
+    func viewDidConfirmFirmwareUpdate(for viewModel: CardsViewModel) {
+        if let sensor = ruuviTags
+            .first(where: {
+                ($0.luid != nil && ($0.luid?.any == viewModel.luid.value))
+            }) {
+            router.openUpdateFirmware(ruuviTag: sensor)
+        }
+    }
+
+    func viewDidIgnoreFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+        view.showFirmwareDismissConfirmationUpdateDialog(for: viewModel)
+    }
+    
+    func viewDidDismissFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+        guard let luid = viewModel.luid.value else { return }
+        settings.setFirmwareUpdateDialogWasShown(for: luid)
+    }
     
     func viewDidScroll(to viewModel: CardsViewModel) {
         if let sensor = ruuviTags
@@ -364,14 +392,6 @@ extension CardsPresenter {
             return viewModel
         })
         viewModels = reorder(ruuviViewModels + virtualViewModels)
-        // Sort sensors by name alphabetically
-        viewModels = viewModels.sorted(by: {
-            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
-                return first < second
-            } else {
-                return true
-            }
-        })
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
@@ -383,7 +403,14 @@ extension CardsPresenter {
         guard !settings.tagsSorting.isEmpty else {
             return viewModels
         }
-        return viewModels.reorder(by: settings.tagsSorting)
+        return viewModels.reorder(by: settings.tagsSorting).sorted(by: {
+            // Sort sensors by name alphabetically
+            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
+                return first < second
+            } else {
+                return true
+            }
+        })
     }
     private func configureInitialChart(from viewModel: CardsViewModel) {
         if let sensor = ruuviTags
@@ -645,6 +672,9 @@ extension CardsPresenter {
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
+                if let viewModel = sSelf.viewModels.first {
+                    sSelf.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
+                }
             case .insert(let sensor):
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()

@@ -46,6 +46,7 @@ class CardsScrollConfigurator {
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
+        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         router.delegate = presenter
 
         // swiftlint:disable force_cast

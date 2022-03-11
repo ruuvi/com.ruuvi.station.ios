@@ -23,6 +23,9 @@
 "Cards.KeepConnectionDialog.Settings.message" = "Tämä asetus mahdollistaa Bluetooth-hälytykset ja historiatietojen tallentamisen sovelluksen omaan muistiin silloinkin, kun sovellus on taka-alalla.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Hylkää";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Säilytä yhteys";
+"Cards.LegacyFirmwareUpdateDialog.message" = "Näyttää siltä, että anturisi laiteohjelmistoversio on vanha. Käyttääksesi uusia ominaisuuksia kuten historiakuvaajia, hälytyksiä ja pilvipalvelua, päivitys on pakollinen.";
+"Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message" = "Oletko varma? Ilman päivittämistä et voi vahvistaa anturin omistajuutta, ladata sen sisäistä historiaa etkä asettaa hälytyksiä. Päivitys sisältää myös bugikorjauksia. Mikäli peruutat nyt, voit aloittaa päivityksen uudelleen anturin asetussivulta käsin.";
+"Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title" = "Näytä päivitysohjeet";
 "Cards.Connected.title" = "Yhdistetty";
 "Cards.Error.ReverseGeocodingFailed.message" = "Virtuaalisen anturin tietojen lataaminen epäonnistui. Maantieteellisten koordinaattien käänteishaun toimintaraja ylittyi.";
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
