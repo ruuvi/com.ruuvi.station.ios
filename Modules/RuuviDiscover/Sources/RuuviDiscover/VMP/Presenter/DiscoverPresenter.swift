@@ -47,7 +47,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     }
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
-            view?.savedRuuviTagIds = persistedSensors.map({ $0.luid?.any })
+            view?.persistedSensors = persistedSensors
         }
     }
     private var reloadTimer: Timer?
