@@ -1,0 +1,8 @@
+"ErrorPresenterAlert.Error" = "Fehler";
+"ErrorPresenterAlert.OK" = "OK";
+"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station muss auf Ihre Kamera zugreifen, um diese Funktion zu aktivieren.";
+"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station muss auf Ihre Kamera zugreifen, um diese Funktion zu aktivieren.";
+"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station muss auf Ihren Standort zugreifen, um diese Funktion zu aktivieren.";
+"PermissionPresenter.settings" = "Einstellungen";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station benötigt die Berechtigung für Push-Benachrichtigungen, um diese Funktion zu aktivieren";
+"Cancel" = "Abbrechen";

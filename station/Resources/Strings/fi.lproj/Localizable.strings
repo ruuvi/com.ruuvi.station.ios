@@ -100,6 +100,7 @@
 "Language.Russian" = "Русский";
 "Language.Swedish" = "Svenska";
 "Language.French" = "Français";
+"Language.German" = "Deutsch";
 "LocalNotificationsManager.DidConnect.title" = "Yhdistetty";
 "LocalNotificationsManager.DidDisconnect.title" = "Yhteys katkaistu";
 "LocalNotificationsManager.Disable.button" = "Poista käytöstä";
