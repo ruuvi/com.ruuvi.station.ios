@@ -33,7 +33,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func setFirmwareVersion(for luid: LocalIdentifier, value: String) {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
     }
-    
+
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {

@@ -103,18 +103,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         showAlert(title: title, message: message)
     }
 
-    func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let title = "TagCharts.SyncConfirmationDialog.title".localized()
-        let message = "TagCharts.SyncConfirmationDialog.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        let fromTag = "OK".localized()
-        alertVC.addAction(UIAlertAction(title: fromTag, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSyncWithTag(for: viewModel)
-        }))
-        present(alertVC, animated: true)
-    }
-
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
         let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
         let message = "TagCharts.DeleteHistoryConfirmationDialog.message".localized()
