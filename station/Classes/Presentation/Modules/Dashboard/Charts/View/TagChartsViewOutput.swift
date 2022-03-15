@@ -11,7 +11,6 @@ protocol TagChartsViewOutput {
     func viewDidTriggerCards(for viewModel: TagChartsViewModel)
     func viewDidTriggerSync(for viewModel: TagChartsViewModel)
     func viewDidTriggerClear(for viewModel: TagChartsViewModel)
-    func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel)
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel)
     func viewDidLocalized()
 }
