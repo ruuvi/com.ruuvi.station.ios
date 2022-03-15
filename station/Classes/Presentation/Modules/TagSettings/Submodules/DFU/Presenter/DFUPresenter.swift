@@ -3,6 +3,7 @@ import SwiftUI
 import Combine
 import RuuviOntology
 import RuuviPool
+import RuuviLocal
 
 final class DFUPresenter: DFUModuleInput {
     var viewController: UIViewController {
@@ -20,19 +21,23 @@ final class DFUPresenter: DFUModuleInput {
     private let interactor: DFUInteractorInput
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
+    private let settings: RuuviLocalSettings
 
     init(
         interactor: DFUInteractorInput,
         ruuviTag: RuuviTagSensor,
-        ruuviPool: RuuviPool
+        ruuviPool: RuuviPool,
+        settings: RuuviLocalSettings
     ) {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
+        self.settings = settings
         self.viewModel = DFUViewModel(
             interactor: interactor,
             ruuviTag: ruuviTag,
-            ruuviPool: ruuviPool
+            ruuviPool: ruuviPool,
+            settings: settings
         )
     }
 
