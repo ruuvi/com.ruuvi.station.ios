@@ -172,14 +172,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
-        view.showSyncConfirmationDialog(for: viewModel)
-    }
-
-    func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
-        view.showClearConfirmationDialog(for: viewModel)
-    }
-
-    func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
@@ -206,6 +198,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
                 self?.errorPresenter.present(error: error)
             }
         }, completion: nil)
+    }
+
+    func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
+        view.showClearConfirmationDialog(for: viewModel)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {

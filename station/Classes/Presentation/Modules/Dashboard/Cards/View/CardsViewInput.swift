@@ -10,6 +10,8 @@ protocol CardsViewInput: ViewInput {
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool)
+    func showFirmwareUpdateDialog(for viewModel: CardsViewModel)
+    func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()
     func showAlreadyLoggedInAlert(with email: String)
 }

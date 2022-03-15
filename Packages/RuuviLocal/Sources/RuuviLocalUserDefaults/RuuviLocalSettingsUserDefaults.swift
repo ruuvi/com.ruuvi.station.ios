@@ -15,6 +15,25 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
+    private let firmwareUpdateDialogWasShownUDPrefix = "SettingsUserDegaults.firmwareUpdateDialogWasShownUDPrefix."
+
+    func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool {
+        return UserDefaults.standard.bool(forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
+    }
+
+    func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier) {
+        UserDefaults.standard.set(true, forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
+    }
+
+    private let firmwareVersionPrefix = "SettingsUserDegaults.firmwareVersionPrefix"
+    func firmwareVersion(for luid: LocalIdentifier) -> String? {
+        return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
+    }
+
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String) {
+        UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
+    }
+
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {

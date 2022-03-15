@@ -3,6 +3,7 @@ import Foundation
 import Combine
 import RuuviOntology
 import RuuviPool
+import RuuviLocal
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
@@ -14,15 +15,18 @@ final class DFUViewModel: ObservableObject {
     private let interactor: DFUInteractorInput
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
+    private let settings: RuuviLocalSettings
 
     init(
         interactor: DFUInteractorInput,
         ruuviTag: RuuviTagSensor,
-        ruuviPool: RuuviPool
+        ruuviPool: RuuviPool,
+        settings: RuuviLocalSettings
     ) {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
+        self.settings = settings
         Publishers.system(
             initial: state,
             reduce: Self.reduce,
@@ -49,7 +53,12 @@ final class DFUViewModel: ObservableObject {
     func send(event: Event) {
         input.send(event)
     }
+    /// Update the localdb only when the tag data format is not "Very Old"
+    /// Otherwise a migration to realm to sqlite is needed since older data format tags are stored in the realm db
+    /// before trying to update the db record
     func storeUpdatedFirmware(latestRelease: LatestRelease) {
+        guard let luid = ruuviTag.luid else { return }
+        guard settings.firmwareVersion(for: luid) != nil else { return }
         ruuviPool.update(ruuviTag
                             .with(firmwareVersion: latestRelease.version.replace("Ruuvi FW ", with: "")))
     }
