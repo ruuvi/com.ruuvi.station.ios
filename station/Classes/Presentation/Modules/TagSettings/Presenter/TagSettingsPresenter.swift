@@ -16,6 +16,7 @@ import RuuviPool
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
+    var interactor: TagSettingsInteractorInput!
     var router: TagSettingsRouterInput!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
@@ -447,7 +448,9 @@ extension TagSettingsPresenter {
         }
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
-        viewModel.firmwareVersion.value = ruuviTag.firmwareVersion
+        if let luid = ruuviTag.luid {
+            viewModel.firmwareVersion.value = settings.firmwareVersion(for: luid)
+        }
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
         syncAlerts()
@@ -1287,27 +1290,18 @@ extension TagSettingsPresenter {
         }
     }
 
-    /// This method return the firmware version
     private func checkFirmwareVersion() {
-        guard viewModel.firmwareVersion.value == nil else { return }
-        guard let uuid = ruuviTag.luid?.value else { return }
-        isLoading = true
-        background.services.gatt.firmwareRevision(for: self,
-                                                     uuid: uuid,
-                                                     options: [.connectionTimeout(5)]) { [weak self] _, result in
-            guard let sSelf = self else { return }
-            switch result {
-            case .success(let version):
+        guard let luid = ruuviTag.luid else { return }
+        guard settings.firmwareVersion(for: luid) == nil else { return }
+        interactor.checkFirmwareVersion(for: luid.value)
+            .on(success: { [weak self] version in
+                guard let sSelf = self else { return }
                 let currentVersion = version.replace("Ruuvi FW ", with: "")
                 sSelf.viewModel.firmwareVersion.value = currentVersion
-                sSelf.ruuviPool.update(sSelf.ruuviTag
-                                        .with(firmwareVersion: currentVersion))
-                sSelf.isLoading = false
-            case .failure:
-                sSelf.viewModel.firmwareVersion.value = nil
-                sSelf.isLoading = false
-            }
-        }
+                sSelf.settings.setFirmwareVersion(for: luid, value: currentVersion)
+            }, failure: { [weak self] _ in
+                self?.viewModel.firmwareVersion.value = "TagSettings.Firmware.CurrentVersion.VeryOld".localized()
+            })
     }
 
     private func checkLastRecord() {
