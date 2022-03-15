@@ -1,8 +1,8 @@
 NSBluetoothPeripheralUsageDescription = "The app uses Bluetooth LE to read data from Ruuvi sensors.";
 NSBluetoothAlwaysUsageDescription = "The app uses Bluetooth LE to read data from Ruuvi sensors.";
 NSCameraUsageDescription = "Ruuvi Station needs to access your camera in order to be able to capture photos and use them as sensor background.";
-NSLocationUsageDescription = "Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.";
+NSLocationUsageDescription = "Ruuvi Station needs to access your location in order to determine your position and show weather parameters for your live location.";
 NSLocationAlwaysUsageDescription = "Ruuvi Station needs to access your location while being in background in order to pull data for Virtual Sensors for your current location and display alerts.";
-NSLocationWhenInUseUsageDescription = "Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.";
-NSLocationAlwaysAndWhenInUseUsageDescription = "Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.";
+NSLocationWhenInUseUsageDescription = "Ruuvi Station needs to access your location in order to determine your position and show weather parameters for your live location.";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Ruuvi Station needs to access your location in order to determine your position and show weather parameters for your live location.";
 NSPhotoLibraryUsageDescription = "Ruuvi Station needs to access your camera roll to enable selecting the background for the sensor.";

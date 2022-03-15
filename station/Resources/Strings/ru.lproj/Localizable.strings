@@ -23,6 +23,9 @@
 "Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Закрыть";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
+"Cards.LegacyFirmwareUpdateDialog.message" = "Seems that your sensor is using an old firmware software version. To access new features such as history graphs, alerts and cloud services, updating is mandatory.";
+"Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message" = "Are you sure? Without updating, you won't be able to claim ownership of the sensor, download history graphs and set alerts. The update includes also bug fixes. If you cancel now, you can start the update process again from the sensor's settings page.";
+"Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title" = "Show updating instructions";
 "Cards.Connected.title" = "Соединен";
 "Cards.Error.ReverseGeocodingFailed.message" = "Не удалось загрузить данные для виртуального сенсора. Превышен лимит операций обратного геокодирования.";
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
@@ -97,6 +100,7 @@
 "Language.Russian" = "Русский";
 "Language.Swedish" = "Svenska";
 "Language.French" = "Français";
+"Language.German" = "Deutsch";
 "LocalNotificationsManager.DidConnect.title" = "Соединился";
 "LocalNotificationsManager.DidDisconnect.title" = "Отсоединился";
 "LocalNotificationsManager.Disable.button" = "Отключить";
@@ -179,7 +183,7 @@
 "TagSettings.ConnectionAlert.title" = "Соединение";
 "TagSettings.SectionHeader.Firmware.title" = "ПРОШИВКА";
 "TagSettings.Firmware.CurrentVersion" = "Текущая версия";
-"TagSettings.Firmware.CurrentVersion.VeryOld" = "Very Old";
+"TagSettings.Firmware.CurrentVersion.VeryOld" = "Устаревшая";
 "TagSettings.Firmware.UpdateFirmware" = "Обновить";
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";

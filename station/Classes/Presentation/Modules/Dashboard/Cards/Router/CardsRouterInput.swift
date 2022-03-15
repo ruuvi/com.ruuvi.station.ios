@@ -9,6 +9,7 @@ protocol CardsRouterInput {
     func openAbout()
     func openRuuviWebsite()
     func openSignIn(output: SignInModuleOutput)
+    func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     // swiftlint:disable:next function_parameter_count
     func openTagSettings(
         ruuviTag: RuuviTagSensor,

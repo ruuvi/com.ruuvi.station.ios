@@ -49,4 +49,10 @@ public protocol RuuviLocalSettings {
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
+
+    func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool
+    func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
+
+    func firmwareVersion(for luid: LocalIdentifier) -> String?
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String)
 }

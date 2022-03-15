@@ -13,6 +13,7 @@ final class OwnerPresenter: OwnerModuleInput {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviStorage: RuuviStorage!
     var ruuviPool: RuuviPool!
+    var featureToggleService: FeatureToggleService!
 
     private var ruuviTag: RuuviTagSensor!
     private var isLoading: Bool = false {
@@ -58,5 +59,19 @@ extension OwnerPresenter: OwnerViewOutput {
                                         .with(owner: email))
             }
         })
+    }
+    func viewDidTriggerFirmwareUpdateDialog() {
+        guard ruuviTag.luid?.value != nil,
+              ruuviTag.version < 5,
+              featureToggleService.isEnabled(.legacyFirmwareUpdatePopup) else { return }
+        view.showFirmwareUpdateDialog()
+    }
+
+    func viewDidConfirmFirmwareUpdate() {
+        router.openUpdateFirmware(ruuviTag: ruuviTag)
+    }
+
+    func viewDidIgnoreFirmwareUpdateDialog() {
+        view.showFirmwareDismissConfirmationUpdateDialog()
     }
 }
