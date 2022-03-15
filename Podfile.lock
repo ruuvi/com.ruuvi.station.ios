@@ -1,30 +1,30 @@
 PODS:
   - BTKit (0.4.0)
-  - Firebase (8.12.1):
-    - Firebase/Core (= 8.12.1)
-  - Firebase/Analytics (8.12.1):
+  - Firebase (8.13.0):
+    - Firebase/Core (= 8.13.0)
+  - Firebase/Analytics (8.13.0):
     - Firebase/Core
-  - Firebase/Core (8.12.1):
+  - Firebase/Core (8.13.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 8.12.0)
-  - Firebase/CoreOnly (8.12.1):
-    - FirebaseCore (= 8.12.1)
-  - Firebase/Crashlytics (8.12.1):
+    - FirebaseAnalytics (~> 8.13.0)
+  - Firebase/CoreOnly (8.13.0):
+    - FirebaseCore (= 8.13.0)
+  - Firebase/Crashlytics (8.13.0):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 8.12.0)
-  - Firebase/InAppMessaging (8.12.1):
+    - FirebaseCrashlytics (~> 8.13.0)
+  - Firebase/InAppMessaging (8.13.0):
     - Firebase/CoreOnly
-    - FirebaseInAppMessaging (~> 8.12.0-beta)
-  - Firebase/Messaging (8.12.1):
+    - FirebaseInAppMessaging (~> 8.13.0-beta)
+  - Firebase/Messaging (8.13.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 8.12.0)
-  - Firebase/RemoteConfig (8.12.1):
+    - FirebaseMessaging (~> 8.13.0)
+  - Firebase/RemoteConfig (8.13.0):
     - Firebase/CoreOnly
-    - FirebaseRemoteConfig (~> 8.12.0)
-  - FirebaseABTesting (8.12.0):
+    - FirebaseRemoteConfig (~> 8.13.0)
+  - FirebaseABTesting (8.13.0):
     - FirebaseCore (~> 8.0)
-  - FirebaseAnalytics (8.12.0):
-    - FirebaseAnalytics/AdIdSupport (= 8.12.0)
+  - FirebaseAnalytics (8.13.0):
+    - FirebaseAnalytics/AdIdSupport (= 8.13.0)
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
@@ -32,43 +32,43 @@ PODS:
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (8.12.0):
+  - FirebaseAnalytics/AdIdSupport (8.13.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
-    - GoogleAppMeasurement (= 8.12.0)
+    - GoogleAppMeasurement (= 8.13.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - FirebaseCore (8.12.1):
+  - FirebaseCore (8.13.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
-  - FirebaseCoreDiagnostics (8.12.0):
+  - FirebaseCoreDiagnostics (8.13.0):
     - GoogleDataTransport (~> 9.1)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseCrashlytics (8.12.0):
+  - FirebaseCrashlytics (8.13.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleDataTransport (~> 9.1)
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseInAppMessaging (8.12.0-beta):
+  - FirebaseInAppMessaging (8.13.0-beta):
     - FirebaseABTesting (~> 8.0)
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.12.0):
+  - FirebaseInstallations (8.13.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseMessaging (8.12.0):
+  - FirebaseMessaging (8.13.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleDataTransport (~> 9.1)
@@ -77,7 +77,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseRemoteConfig (8.12.0):
+  - FirebaseRemoteConfig (8.13.0):
     - FirebaseABTesting (~> 8.0)
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
@@ -86,21 +86,21 @@ PODS:
   - FLEX (4.6.1)
   - FutureX (1.1.1)
   - GestureInstructions (0.0.2)
-  - GoogleAppMeasurement (8.12.0):
-    - GoogleAppMeasurement/AdIdSupport (= 8.12.0)
+  - GoogleAppMeasurement (8.13.0):
+    - GoogleAppMeasurement/AdIdSupport (= 8.13.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (8.12.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 8.12.0)
+  - GoogleAppMeasurement/AdIdSupport (8.13.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 8.13.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (~> 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (8.12.0):
+  - GoogleAppMeasurement/WithoutAdIdSupport (8.13.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
     - GoogleUtilities/MethodSwizzler (~> 7.7)
     - GoogleUtilities/Network (~> 7.7)
@@ -153,11 +153,11 @@ PODS:
   - PromisesObjC (2.0.0)
   - Quick (4.0.0)
   - RangeSeekSlider (1.8.2)
-  - Realm (10.22.0):
-    - Realm/Headers (= 10.22.0)
-  - Realm/Headers (10.22.0)
-  - RealmSwift (10.22.0):
-    - Realm (= 10.22.0)
+  - Realm (10.24.1):
+    - Realm/Headers (= 10.24.1)
+  - Realm/Headers (10.24.1)
+  - RealmSwift (10.24.1):
+    - Realm (= 10.24.1)
   - RuuviAnalytics (0.0.1):
     - RuuviAnalytics/Contract (= 0.0.1)
   - RuuviAnalytics/Contract (0.0.1)
@@ -791,20 +791,20 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BTKit: c409ccfad57a372438db9b4951687289ba14c4c9
-  Firebase: 580d09e8edafc3073ebf09c03fd42e4d80d35fe9
-  FirebaseABTesting: 1b05c92327b3f0a9545cea3bab4d93e82550e29b
-  FirebaseAnalytics: bd10d7706ba8d6e01ea2816f8fe9e9b881cb0918
-  FirebaseCore: 8138de860a90ca7eec5e324da5788fb0ebf1d93c
-  FirebaseCoreDiagnostics: 3b40dfadef5b90433a60ae01f01e90fe87aa76aa
-  FirebaseCrashlytics: 7952ffd988006128325510664b99dc8ca5851dff
-  FirebaseInAppMessaging: 871e8d04ed0d1ca77c9c0e4c246c13d010d7a8de
-  FirebaseInstallations: 25764cf322e77f99449395870a65b2bef88e1545
-  FirebaseMessaging: 23db8bf05585e929ada8af0f0968933c25252808
-  FirebaseRemoteConfig: f174a7091ac8e69bf6d0de2bae2212edb922a0ab
+  Firebase: ee9b1d9b1801371e29f5591eda89eb5a314ab599
+  FirebaseABTesting: c390fb900b9dd6e9c04888e34dda8e9e84b07195
+  FirebaseAnalytics: 2be3cc52ac310759f28861aec9d459c851370cdb
+  FirebaseCore: c7e3fa30492e50ccdeef280bf0d5584af38da3e1
+  FirebaseCoreDiagnostics: c2836d254a8f0bbb4121ff18f2c2ea39d118fd08
+  FirebaseCrashlytics: 3b6eafb7e508c26d37ff7a256d0f74406f7e47bd
+  FirebaseInAppMessaging: 78ecb145bf4b14335c7f9f70435e2b0b6e386ff8
+  FirebaseInstallations: 60edbf7e11d91ae4c751d26c200dfd037099abe0
+  FirebaseMessaging: 8cddb4c478663611d58c03b353e10dd0ed6468f6
+  FirebaseRemoteConfig: 39462033ba6fe7979eb49499f40f07feaa016b0a
   FLEX: bbc55d197f87d7cde2454c3981aa47069b694144
   FutureX: 85faeccb370f5a4286ae8540849095adb0bd7b2d
   GestureInstructions: acbd12854a5c7658365a11eaae2652dcbe623038
-  GoogleAppMeasurement: ae033c3aad67e68294369373056b4d74cc8ae0d6
+  GoogleAppMeasurement: 135c2fbcf5038e0f37dbce04fa641a702fc275d1
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
@@ -819,8 +819,8 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: d9e4e5877095a6722145811f56fe89a531c9659d
-  RealmSwift: e4191b4b957fcfcbed23751ec65eec98f8173ab5
+  Realm: f9bc5a212a9ab084b4ed90cda1c28d835a38a06b
+  RealmSwift: 0b03bb38001bee4280dcc27709e6b33f438cfad1
   RuuviAnalytics: 9bcb8ba615c61950c3298fff0419db2a8cff20a1
   RuuviBundleUtils: 2bf9121120e2c0707449dd7cd2f013d2512bc9a0
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
