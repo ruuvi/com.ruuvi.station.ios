@@ -1135,6 +1135,8 @@
 		340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ruuvi_logo_splash.png; sourceTree = "<group>"; };
 		345057B727E0797000759B57 /* TagSettingsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractor.swift; sourceTree = "<group>"; };
 		345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractorInput.swift; sourceTree = "<group>"; };
+		3451BD8427E0F9870065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3451BD8527E0F9880065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3490A4C227D9F2C70032BBAB /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
@@ -3766,6 +3768,7 @@
 				fi,
 				sv,
 				fr,
+				de,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
@@ -4942,6 +4945,7 @@
 				0E53A3F5232DFC6500ACED49 /* fi */,
 				64A2DAE324310B2900DE6699 /* sv */,
 				310159B92644864C00A5E8E8 /* fr */,
+				3451BD8527E0F9880065A7A6 /* de */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4954,6 +4958,7 @@
 				0EBAF0832320120F0025A191 /* fi */,
 				64A2DAE224310B2900DE6699 /* sv */,
 				310159B82644864400A5E8E8 /* fr */,
+				3451BD8427E0F9870065A7A6 /* de */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
