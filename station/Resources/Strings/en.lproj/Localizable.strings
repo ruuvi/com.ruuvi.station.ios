@@ -100,6 +100,7 @@
 "Language.Russian" = "Русский";
 "Language.Swedish" = "Svenska";
 "Language.French" = "Français";
+"Language.German" = "Deutsch";
 "LocalNotificationsManager.DidConnect.title" = "Connected";
 "LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
 "LocalNotificationsManager.Disable.button" = "Turn Off";

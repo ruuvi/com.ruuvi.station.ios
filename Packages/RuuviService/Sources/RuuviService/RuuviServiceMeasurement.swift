@@ -101,11 +101,15 @@ extension Language {
             return Locale(identifier: "fr")
         case .swedish:
             return Locale(identifier: "sv")
+        case .german:
+            return Locale(identifier: "de")
         }
     }
 
     public var humidityLanguage: HumiditySettings.Language {
         switch self {
+        case .german:
+            return .en
         case .russian:
             return .ru
         case .finnish:
