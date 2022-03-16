@@ -15,7 +15,7 @@ extension TagSettingsInteractor: TagSettingsInteractorInput {
         background.services.gatt.firmwareRevision(
             for: self,
             uuid: luid,
-            options: [.connectionTimeout(5)]
+            options: [.connectionTimeout(15)]
         ) { _, result in
             switch result {
             case .success(let version):

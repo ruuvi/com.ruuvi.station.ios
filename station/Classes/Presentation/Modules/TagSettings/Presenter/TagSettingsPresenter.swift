@@ -771,6 +771,7 @@ extension TagSettingsPresenter {
         })
     }
 
+    // swiftlint:disable:next function_body_length
     private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.plus(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
@@ -794,9 +795,19 @@ extension TagSettingsPresenter {
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
-        if !device.isConnected, viewModel.isConnectable.value != device.isConnectable, device.isConnectable {
-            viewModel.isConnectable.value = device.isConnectable && device.luid != nil
+
+        let connectionState = !device.isConnected && viewModel.isConnectable.value != device.isConnectable
+        if connectionState, device.isConnectable {
+            if !viewModel.isConnectable.value.bound {
+                let isConnectable = device.isConnectable && device.luid != nil
+                viewModel.isConnectable.value = isConnectable
+            }
+        } else if connectionState, !device.isConnectable {
+            if viewModel.isConnectable.value.bound {
+                viewModel.isConnectable.value = false
+            }
         }
+
         if viewModel.isConnected.value != device.isConnected {
             viewModel.isConnected.value = device.isConnected
         }
@@ -820,6 +831,9 @@ extension TagSettingsPresenter {
         if let luid = ruuviTag.luid {
             bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                if !keepConnection.bound {
+                    observer.viewModel.isConnectable.value = true
+                }
             }
         }
 
