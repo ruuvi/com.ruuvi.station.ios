@@ -218,6 +218,33 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingsSwitchTableViewCell" id="mUW-OK-ZJ7">
+                                        <rect key="frame" x="0.0" y="504.5" width="414" height="43"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mUW-OK-ZJ7" id="bpW-jO-TXI">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Cloud Mode" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AD2-Ou-Tdi">
+                                                    <rect key="frame" x="20" y="11" width="92.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tda-V3-VP9">
+                                                    <rect key="frame" x="343" y="6" width="51" height="31"/>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Tda-V3-VP9" secondAttribute="trailing" constant="22" id="AzS-Z0-qgG"/>
+                                                <constraint firstItem="Tda-V3-VP9" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="AD2-Ou-Tdi" secondAttribute="trailing" constant="8" id="Tv0-N3-tT4"/>
+                                                <constraint firstItem="AD2-Ou-Tdi" firstAttribute="top" secondItem="bpW-jO-TXI" secondAttribute="topMargin" id="Wnh-Nb-AHU"/>
+                                                <constraint firstItem="Tda-V3-VP9" firstAttribute="centerY" secondItem="bpW-jO-TXI" secondAttribute="centerY" id="XX4-es-8S7"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="AD2-Ou-Tdi" secondAttribute="bottom" id="cv8-35-iWd"/>
+                                                <constraint firstItem="AD2-Ou-Tdi" firstAttribute="leading" secondItem="bpW-jO-TXI" secondAttribute="leading" constant="20" id="xdU-gv-HGA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -238,6 +265,9 @@
                         <outlet property="chartCell" destination="ApR-a7-gMY" id="X4v-cH-n3y"/>
                         <outlet property="chartTitleLabel" destination="b46-Rg-0X0" id="vEU-4c-Des"/>
                         <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
+                        <outlet property="cloudModeCell" destination="mUW-OK-ZJ7" id="9Ck-Fy-xfE"/>
+                        <outlet property="cloudModeEnableSwitch" destination="Tda-V3-VP9" id="MBc-Hk-KfV"/>
+                        <outlet property="cloudModeTitleLabel" destination="AD2-Ou-Tdi" id="8VU-Pq-U2L"/>
                         <outlet property="defaultsCell" destination="zPg-YI-U3o" id="qvw-Bo-WKb"/>
                         <outlet property="defaultsTitleLabel" destination="xAA-Ek-iEf" id="00Z-4t-FuC"/>
                         <outlet property="experimentalFunctionsCell" destination="Ukf-1h-Vb7" id="0y4-xe-Xi7"/>

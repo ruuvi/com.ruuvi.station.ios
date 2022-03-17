@@ -25,7 +25,7 @@
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Maintenir la connexion";
 "Cards.LegacyFirmwareUpdateDialog.message" = "Seems that your sensor is using an old firmware software version. To access new features such as history graphs, alerts and cloud services, updating is mandatory.";
 "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message" = "Are you sure? Without updating, you won't be able to claim ownership of the sensor, download history graphs and set alerts. The update includes also bug fixes. If you cancel now, you can start the update process again from the sensor's settings page.";
-"Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title" = "Show updating instructions";
+"Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Check for update";
 "Cards.Connected.title" = "Connecté";
 "Cards.Error.ReverseGeocodingFailed.message" = "Echec du téléchargement des données de l'appareil.";
 "CoreError.failedToGetPngRepresentation" = "Echec de la représentation PNG";
@@ -485,5 +485,6 @@ RuuviTag est prêt à être utilisé !";
 "Interval.Day.string" = "Jour";
 "Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud Mode";
-"Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages. Requires a Ruuvi Gateway router.";
+"Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
+"TagSettings.Connection.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";
 

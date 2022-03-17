@@ -6,20 +6,7 @@ class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
     var errorPresenter: ErrorPresenter!
 
     func present(email: String, subject: String, body: String?) {
-        guard let viewController = UIApplication.shared.topViewController() else { return }
-        // If default iOS Mail app is configured, open the mail composer
-        // Otherwise open the default email client set by the user followed by checking whether gmail app
-        let emailRecipient = String(format: "App Feedback <%@>".localized(), email)
-        if MFMailComposeViewController.canSendMail() {
-            let mail = MFMailComposeViewController()
-            mail.mailComposeDelegate = self
-            mail.setSubject(subject)
-            if let body = body {
-                mail.setMessageBody(body, isHTML: false)
-            }
-            mail.setToRecipients([emailRecipient])
-            viewController.present(mail, animated: true)
-        } else if let emailURL = generateEmailURL(email: emailRecipient, subject: subject, body: body) {
+        if let emailURL = generateEmailURL(email: email, subject: subject, body: body) {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(emailURL)
             } else {

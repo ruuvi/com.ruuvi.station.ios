@@ -12,4 +12,5 @@ protocol SettingsViewOutput {
     func viewDidTapOnChart()
     func viewDidTapOnExperimental()
     func viewDidTriggerShake()
+    func viewCloudModeDidChange(isOn: Bool)
 }
