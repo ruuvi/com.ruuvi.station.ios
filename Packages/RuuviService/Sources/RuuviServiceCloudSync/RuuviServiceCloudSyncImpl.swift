@@ -87,6 +87,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
                 }
 
+                if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
+                   cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
+                    sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
+                }
+
                 promise.succeed(value: cloudSettings)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))

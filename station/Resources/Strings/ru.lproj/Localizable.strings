@@ -25,7 +25,7 @@
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
 "Cards.LegacyFirmwareUpdateDialog.message" = "Seems that your sensor is using an old firmware software version. To access new features such as history graphs, alerts and cloud services, updating is mandatory.";
 "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message" = "Are you sure? Without updating, you won't be able to claim ownership of the sensor, download history graphs and set alerts. The update includes also bug fixes. If you cancel now, you can start the update process again from the sensor's settings page.";
-"Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title" = "Show updating instructions";
+"Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Check for update";
 "Cards.Connected.title" = "Соединен";
 "Cards.Error.ReverseGeocodingFailed.message" = "Не удалось загрузить данные для виртуального сенсора. Превышен лимит операций обратного геокодирования.";
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
@@ -485,4 +485,5 @@
 "Interval.Day.string" = "день";
 "Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
 "Settings.Label.CloudMode" = "Режим облака";
-"Settings.Label.CloudMode.description" = "Получайте данные с ближайших датчиков только через облако, игнорируя при этом измерения через Bluetooth. Требуется Ruuvi Gateway.";
+"Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
+"TagSettings.Connection.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";

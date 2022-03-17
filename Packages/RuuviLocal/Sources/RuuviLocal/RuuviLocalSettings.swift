@@ -15,6 +15,7 @@ extension Notification.Name {
     public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
+    public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
 }
 
 public protocol RuuviLocalSettings {
@@ -46,6 +47,7 @@ public protocol RuuviLocalSettings {
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }
+    var cloudModeEnabled: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
