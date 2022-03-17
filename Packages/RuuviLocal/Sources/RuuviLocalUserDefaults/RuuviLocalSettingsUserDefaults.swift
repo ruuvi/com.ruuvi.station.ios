@@ -311,4 +311,15 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
     var experimentalFeaturesEnabled: Bool
+
+    @UserDefault("SettingsUserDefaults.cloudModeEnabled", defaultValue: false)
+    var cloudModeEnabled: Bool {
+        didSet {
+            NotificationCenter
+                .default
+                .post(name: .CloudModeDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
 }

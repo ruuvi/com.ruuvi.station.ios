@@ -34,6 +34,10 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
     @IBOutlet weak var experimentalFunctionsLabel: UILabel!
 
+    @IBOutlet weak var cloudModeTitleLabel: UILabel!
+    @IBOutlet weak var cloudModeEnableSwitch: UISwitch!
+    @IBOutlet weak var cloudModeCell: UITableViewCell!
+
     #if DEVELOPMENT
     private let showDefaults = true
     #else
@@ -70,6 +74,16 @@ class SettingsTableViewController: UITableViewController {
             updateTableIfLoaded()
         }
     }
+    var cloudModeVisible: Bool = false {
+        didSet {
+            updateTableIfLoaded()
+        }
+    }
+    var cloudModeEnabled: Bool = false {
+        didSet {
+            cloudModeEnableSwitch.isOn = cloudModeEnabled
+        }
+    }
 }
 
 // MARK: - SettingsViewInput
@@ -90,6 +104,7 @@ extension SettingsTableViewController: SettingsViewInput {
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
         chartTitleLabel.text = "Settings.Label.Chart".localized()
+        cloudModeTitleLabel.text = "Settings.Label.CloudMode".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -113,6 +128,7 @@ extension SettingsTableViewController {
         super.viewDidLoad()
         setupLocalization()
         updateUI()
+        setupCloudModeCellSwitch()
         output.viewDidLoad()
         becomeFirstResponder()
     }
@@ -133,8 +149,10 @@ extension SettingsTableViewController {
                 ? super.tableView(tableView, heightForRowAt: indexPath)
                 : 0
         }
+        // Add the logic for the cloud mode cell here
         if !isBackgroundVisible && cell == heartbeatCell ||
-            !showDefaults && cell == defaultsCell {
+            !showDefaults && cell == defaultsCell ||
+            !cloudModeVisible && cell == cloudModeCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -147,6 +165,15 @@ extension SettingsTableViewController {
             return "Settings.SectionHeader.General.title".localized()
         case SettingsTableSection.application.rawValue:
             return "Settings.SectionHeader.Application.title".localized()
+        default:
+            return nil
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case SettingsTableSection.application.rawValue:
+            return cloudModeVisible ? "Settings.Label.CloudMode.description".localized() : nil
         default:
             return nil
         }
@@ -222,5 +249,16 @@ extension SettingsTableViewController {
         if isViewLoaded {
             pressureSubitleLabel.text = pressureUnit.title
         }
+    }
+
+    private func setupCloudModeCellSwitch() {
+        cloudModeEnableSwitch.addTarget(self,
+                                        action: #selector(cloudModeSwitchValueChangeHandler),
+                                        for: .valueChanged)
+    }
+
+    @objc
+    private func cloudModeSwitchValueChangeHandler(_ sender: UISwitch) {
+        output.viewCloudModeDidChange(isOn: sender.isOn)
     }
 }

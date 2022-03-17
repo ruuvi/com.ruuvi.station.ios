@@ -191,6 +191,26 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .cloudModeEnabled,
+            value: cloudMode.chartBoolSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: cloudMode)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError> {
         let promise = Promise<RuuviCloudSettings, RuuviCloudError>()
         guard let apiKey = user.apiKey else {

@@ -225,28 +225,44 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.mac.value != nil {
             view.showMacAddressDetail()
         } else {
-            view.showUpdateFirmwareDialog()
+            viewDidTriggerFirmwareUpdateDialog()
         }
     }
 
-    func viewDidAskToLearnMoreAboutFirmwareUpdate() {
-        UIApplication.shared.open(URL(string: "https://lab.ruuvi.com/dfu")!)
+    func viewDidTriggerFirmwareUpdateDialog() {
+        guard let luid = ruuviTag.luid else {
+            return
+        }
+        if !settings.firmwareUpdateDialogWasShown(for: luid) {
+            view.showFirmwareUpdateDialog()
+        }
+    }
+
+    func viewDidConfirmFirmwareUpdate() {
+        guard ruuviTag.luid != nil else {
+            return
+        }
+        router.openUpdateFirmware(ruuviTag: ruuviTag)
+    }
+
+    func viewDidIgnoreFirmwareUpdateDialog() {
+        view.showFirmwareDismissConfirmationUpdateDialog()
     }
 
     func viewDidTapOnTxPower() {
         if viewModel.txPower.value == nil {
-            view.showUpdateFirmwareDialog()
+            viewDidTriggerFirmwareUpdateDialog()
         }
     }
 
     func viewDidTapOnMeasurementSequenceNumber() {
         if viewModel.measurementSequenceNumber.value == nil {
-            view.showUpdateFirmwareDialog()
+            viewDidTriggerFirmwareUpdateDialog()
         }
     }
 
     func viewDidTapOnNoValuesView() {
-        view.showUpdateFirmwareDialog()
+        viewDidTriggerFirmwareUpdateDialog()
     }
 
     func viewDidTapOnAlertsDisabledView() {
@@ -435,6 +451,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil
+        viewModel.isConnectionSectionEnabled.value = !(ruuviTag.isCloud && settings.cloudModeEnabled)
         viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -453,6 +470,18 @@ extension TagSettingsPresenter {
         }
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
+
+        if settings.cloudModeEnabled && ruuviTag.isCloud {
+            viewModel.source.value = .ruuviNetwork
+        }
+
+        if featureToggleService.isEnabled(.updateFirmware) {
+            if (viewModel.source.value == .advertisement || viewModel.source.value == .heartbeat)
+                || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
+                viewModel.canShowUpdateFirmware.value = true
+            }
+        }
+
         syncAlerts()
     }
 
@@ -758,6 +787,9 @@ extension TagSettingsPresenter {
         guard let luid = ruuviTag.luid else {
             return
         }
+        guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else {
+            return
+        }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag, source: .advertisement)
@@ -771,6 +803,7 @@ extension TagSettingsPresenter {
         })
     }
 
+    // swiftlint:disable:next function_body_length
     private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.plus(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
@@ -794,9 +827,19 @@ extension TagSettingsPresenter {
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
-        if !device.isConnected, viewModel.isConnectable.value != device.isConnectable, device.isConnectable {
-            viewModel.isConnectable.value = device.isConnectable && device.luid != nil
+
+        let connectionState = !device.isConnected && viewModel.isConnectable.value != device.isConnectable
+        if connectionState, device.isConnectable {
+            if !viewModel.isConnectable.value.bound {
+                let isConnectable = device.isConnectable && device.luid != nil
+                viewModel.isConnectable.value = isConnectable && !(ruuviTag.isCloud && settings.cloudModeEnabled)
+            }
+        } else if connectionState, !device.isConnectable {
+            if viewModel.isConnectable.value.bound {
+                viewModel.isConnectable.value = false
+            }
         }
+
         if viewModel.isConnected.value != device.isConnected {
             viewModel.isConnected.value = device.isConnected
         }
@@ -810,9 +853,10 @@ extension TagSettingsPresenter {
         reloadMutedTill()
 
         if viewModel.canShowUpdateFirmware.value == false
-            && featureToggleService.isEnabled(.updateFirmware)
-            && (source == .advertisement || source == .heartbeat) {
-            viewModel.canShowUpdateFirmware.value = true
+            && featureToggleService.isEnabled(.updateFirmware) {
+            if (source == .advertisement || source == .heartbeat) || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
+                viewModel.canShowUpdateFirmware.value = true
+            }
         }
     }
 
@@ -820,6 +864,9 @@ extension TagSettingsPresenter {
         if let luid = ruuviTag.luid {
             bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                if !keepConnection.bound {
+                    observer.viewModel.isConnectable.value = true
+                }
             }
         }
 
