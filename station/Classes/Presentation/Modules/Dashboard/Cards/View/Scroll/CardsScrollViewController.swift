@@ -187,8 +187,8 @@ extension CardsScrollViewController: CardsViewInput {
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidIgnoreFirmwareUpdateDialog(for: viewModel)
         }))
-        let updatingInstructionTitle = "Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title".localized()
-        alert.addAction(UIAlertAction(title: updatingInstructionTitle, style: .default, handler: { [weak self] _ in
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
         present(alert, animated: true)
@@ -201,8 +201,8 @@ extension CardsScrollViewController: CardsViewInput {
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissFirmwareUpdateDialog(for: viewModel)
         }))
-        let updatingInstructionTitle = "Cards.LegacyFirmwareUpdateDialog.ShowUpdatingInstructions.title".localized()
-        alert.addAction(UIAlertAction(title: updatingInstructionTitle, style: .default, handler: { [weak self] _ in
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
         present(alert, animated: true)

@@ -125,6 +125,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func restartObserving() {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
@@ -133,6 +134,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         sensorSettingsTokens.removeAll()
 
         for ruuviTag in ruuviTags {
+            guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else { continue }
             guard let luid = ruuviTag.luid else { continue }
             observeTokens.append(foreground.observe(self,
                                                     uuid: luid.value,
