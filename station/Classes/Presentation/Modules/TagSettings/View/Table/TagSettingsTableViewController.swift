@@ -364,6 +364,7 @@ extension TagSettingsTableViewController {
     }
 
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
+        viewModel?.isConnectionSwitchEnabled.value = false
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
     }
 
@@ -969,6 +970,15 @@ extension TagSettingsTableViewController {
 
         keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
             view.isOn = keepConnection.bound
+        }
+
+        keepConnectionSwitch.bind(viewModel.isConnected) { (view, isConnected) in
+            view.isOn = isConnected.bound
+            view.isEnabled = true
+        }
+
+        keepConnectionSwitch.bind(viewModel.isConnectionSwitchEnabled) { (view, isEnabled) in
+            view.isEnabled = isEnabled.bound
         }
 
         connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
