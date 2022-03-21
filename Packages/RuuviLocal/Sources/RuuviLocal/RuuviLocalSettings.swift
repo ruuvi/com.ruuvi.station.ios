@@ -57,4 +57,5 @@ public protocol RuuviLocalSettings {
 
     func firmwareVersion(for luid: LocalIdentifier) -> String?
     func setFirmwareVersion(for luid: LocalIdentifier, value: String)
+    func removeFirmwareVersion(for luid: LocalIdentifier)
 }

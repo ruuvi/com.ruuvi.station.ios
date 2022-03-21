@@ -204,6 +204,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             guard let sSelf = self else { return }
             sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
+            if let luid = sSelf.ruuviTag.luid {
+                sSelf.settings.removeFirmwareVersion(for: luid)
+            }
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
