@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OjO-bV-5dQ">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Chart Settings Table View Controller-->
+        <scene sceneID="I82-4C-N0X">
+            <objects>
+                <tableViewController storyboardIdentifier="ChartSettingsTableViewController" id="OjO-bV-5dQ" customClass="ChartSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="VGo-Tu-EOG">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChartSettingsSwitchTableViewCell" id="uoB-8T-dsW" customClass="ChartSettingsSwitchTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="49.5" width="414" height="43"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uoB-8T-dsW" id="xGs-dl-eqH">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wdo-1Y-WaD">
+                                            <rect key="frame" x="20" y="11" width="33" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EaL-rX-LTw">
+                                            <rect key="frame" x="343" y="6" width="51" height="31"/>
+                                            <connections>
+                                                <action selector="isOnSwitchValueChanged:" destination="uoB-8T-dsW" eventType="valueChanged" id="oU5-bh-xsU"/>
+                                            </connections>
+                                        </switch>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Wdo-1Y-WaD" secondAttribute="bottom" id="JSm-YO-6Se"/>
+                                        <constraint firstItem="Wdo-1Y-WaD" firstAttribute="top" secondItem="xGs-dl-eqH" secondAttribute="topMargin" id="MQY-Qx-Ts4"/>
+                                        <constraint firstItem="EaL-rX-LTw" firstAttribute="centerY" secondItem="xGs-dl-eqH" secondAttribute="centerY" id="SUJ-Hk-9Xl"/>
+                                        <constraint firstItem="EaL-rX-LTw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Wdo-1Y-WaD" secondAttribute="trailing" constant="8" id="p4J-Eb-7Ge"/>
+                                        <constraint firstAttribute="trailing" secondItem="EaL-rX-LTw" secondAttribute="trailing" constant="22" id="wJd-a8-tB8"/>
+                                        <constraint firstItem="Wdo-1Y-WaD" firstAttribute="leading" secondItem="xGs-dl-eqH" secondAttribute="leading" constant="20" id="xQk-eM-cON"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="isOnSwitch" destination="EaL-rX-LTw" id="Knx-UG-3tB"/>
+                                    <outlet property="titleLabel" destination="Wdo-1Y-WaD" id="UrM-94-eJi"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChartSettingsStepperTableViewCell" id="gg0-u5-vzZ" customClass="ChartSettingsStepperTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92.5" width="414" height="43"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gg0-u5-vzZ" id="Rwl-wW-QVX">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XgF-1S-sH0">
+                                            <rect key="frame" x="20" y="11" width="89" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="n1j-om-szT">
+                                            <rect key="frame" x="300" y="5.5" width="94" height="32"/>
+                                            <connections>
+                                                <action selector="stepperValueChanged:" destination="gg0-u5-vzZ" eventType="valueChanged" id="KfH-49-MIe"/>
+                                            </connections>
+                                        </stepper>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="XgF-1S-sH0" firstAttribute="top" secondItem="Rwl-wW-QVX" secondAttribute="topMargin" id="8iP-Fp-ZMG"/>
+                                        <constraint firstItem="XgF-1S-sH0" firstAttribute="leading" secondItem="Rwl-wW-QVX" secondAttribute="leading" constant="20" id="Q8C-iE-Ue3"/>
+                                        <constraint firstItem="n1j-om-szT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XgF-1S-sH0" secondAttribute="trailing" constant="8" id="gVj-v7-S18"/>
+                                        <constraint firstAttribute="trailing" secondItem="n1j-om-szT" secondAttribute="trailing" constant="20" id="hU0-Ue-daH"/>
+                                        <constraint firstItem="XgF-1S-sH0" firstAttribute="bottom" secondItem="Rwl-wW-QVX" secondAttribute="bottomMargin" id="qYV-MP-rAS"/>
+                                        <constraint firstItem="n1j-om-szT" firstAttribute="centerY" secondItem="Rwl-wW-QVX" secondAttribute="centerY" id="vRP-lK-Iua"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="stepper" destination="n1j-om-szT" id="9UJ-AK-Eq8"/>
+                                    <outlet property="titleLabel" destination="XgF-1S-sH0" id="kxC-G4-2MB"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ChartSettingsDisclosureTableViewCell" textLabel="usP-w3-XIW" style="IBUITableViewCellStyleDefault" id="X75-YS-g9S" customClass="ChartSettingsDisclosureTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="135.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X75-YS-g9S" id="8S6-nD-IfR">
+                                    <rect key="frame" x="0.0" y="0.0" width="385.5" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="usP-w3-XIW">
+                                            <rect key="frame" x="20" y="0.0" width="357.5" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="OjO-bV-5dQ" id="5Gz-8j-ChA"/>
+                            <outlet property="delegate" destination="OjO-bV-5dQ" id="f4X-aq-DgQ"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RiR-h1-vHs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="A6l-8f-KCS" customClass="ChartSettingsInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="OjO-bV-5dQ" id="D35-K8-86b"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-107" y="364"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="groupTableViewBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

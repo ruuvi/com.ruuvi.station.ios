@@ -4,7 +4,7 @@ import RuuviOntology
 import RuuviLocal
 
 protocol CardViewDelegate: AnyObject {
-    func card(view: CardView, didTriggerSettings sender: Any)
+    func card(view: CardView, didTriggerSettings sender: Any, scrollToAlert: Bool)
     func card(view: CardView, didTriggerCharts sender: Any)
 }
 
@@ -64,12 +64,16 @@ class CardView: UIView {
         })
     }
 
+    @IBAction func alertBellButtonTouchUpInside(_ sender: Any) {
+        delegate?.card(view: self, didTriggerSettings: sender, scrollToAlert: true)
+    }
+
     @IBAction func chartsButtonTouchUpInside(_ sender: Any) {
         delegate?.card(view: self, didTriggerCharts: sender)
     }
 
     @IBAction func settingsButtonTouchUpInside(_ sender: Any) {
-        delegate?.card(view: self, didTriggerSettings: sender)
+        delegate?.card(view: self, didTriggerSettings: sender, scrollToAlert: false)
     }
 
     private func startTimer() {

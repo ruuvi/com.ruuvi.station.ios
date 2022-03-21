@@ -50,6 +50,18 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
+    func readAll(_ id: String, after date: Date) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
+        let sqliteOperation = sqlite.readAll(id, after: date)
+        let realmOperation = realm.readAll(id, after: date)
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     func read(
         _ id: String,
         after date: Date,
@@ -119,6 +131,26 @@ final class RuuviStorageCoordinator: RuuviStorage {
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
             promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    func getClaimedTagsCount() -> Future<Int, RuuviStorageError> {
+        let promise = Promise<Int, RuuviStorageError>()
+        let allTags = readAll()
+        allTags.on(success: { tags in
+            let claimedTags = tags.filter({ $0.isClaimed && $0.isOwner })
+            promise.succeed(value: claimedTags.count)
+        })
+        return promise.future
+    }
+
+    func getOfflineTagsCount() -> Future<Int, RuuviStorageError> {
+        let promise = Promise<Int, RuuviStorageError>()
+        let allTags = readAll()
+        allTags.on(success: { tags in
+            let claimedTags = tags.filter({ !$0.isCloud })
+            promise.succeed(value: claimedTags.count)
         })
         return promise.future
     }

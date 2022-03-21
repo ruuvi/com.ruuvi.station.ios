@@ -14,6 +14,7 @@ public protocol Nameable {
 
 public protocol Versionable {
     var version: Int { get }
+    var firmwareVersion: String? { get }
 }
 
 public protocol Locateable {
@@ -24,6 +25,7 @@ public protocol Claimable {
     var isClaimed: Bool { get }
     var isOwner: Bool { get }
     var owner: String? { get }
+    var isCloudSensor: Bool? { get }
 }
 
 public protocol Sensor: StringIdentifieable {}

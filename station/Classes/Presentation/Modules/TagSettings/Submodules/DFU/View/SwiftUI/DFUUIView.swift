@@ -273,7 +273,8 @@ struct DFUUIView: View {
             )
             .padding()
             .eraseToAnyView()
-        case .successfulyFlashed:
+        case .successfulyFlashed(let latestRelease):
+            viewModel.storeUpdatedFirmware(latestRelease: latestRelease)
             return Text(texts.successfulTitle)
                 .frame(
                     maxWidth: .infinity,

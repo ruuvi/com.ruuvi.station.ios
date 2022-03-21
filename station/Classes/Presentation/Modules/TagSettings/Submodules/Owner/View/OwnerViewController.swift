@@ -3,8 +3,8 @@ import UIKit
 final class OwnerViewController: UIViewController {
     var output: OwnerViewOutput!
 
+    @IBOutlet weak var claimOwnershipDescriptionLabel: UILabel!
     @IBOutlet weak var claimOwnershipButton: UIButton!
-    @IBOutlet weak var claimDescriptionLabel: UILabel!
 
     @IBAction func claimOwnershipButtonTouchUpInside(_ sender: Any) {
         output.viewDidTapOnClaim()
@@ -17,9 +17,30 @@ final class OwnerViewController: UIViewController {
 }
 
 extension OwnerViewController: OwnerViewInput {
+    func showSensorAlreadyClaimedError(error: String, email: String?) {
+        var message: String = ""
+        if let email = email {
+            // If there's email in the error
+            message = String.localizedStringWithFormat(error.localized(),
+                                                       email)
+        } else {
+            // if there's no email address in the error
+            message = "UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL".localized()
+        }
+        let alertVC = UIAlertController(title: "ErrorPresenterAlert.Error".localized(),
+                                        message: message,
+                                        preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak self] _ in
+            guard let email = email else {
+                return
+            }
+            self?.output.update(with: email)
+        }))
+        present(alertVC, animated: true)
+    }
     func localize() {
         title = "Owner.title".localized()
-        claimDescriptionLabel.text = "Owner.Claim.description".localized()
+        claimOwnershipDescriptionLabel.text = "Owner.Claim.description".localized()
         claimOwnershipButton.setTitle("Owner.ClaimOwnership.button".localized(), for: .normal)
     }
 }

@@ -3,6 +3,8 @@ import Future
 import RuuviCloud
 import RuuviService
 import RuuviUser
+import RuuviPresenters
+import RuuviDaemon
 
 class SignInPresenter: NSObject {
     enum State {
@@ -19,6 +21,7 @@ class SignInPresenter: NSObject {
     var ruuviUser: RuuviUser!
     var ruuviCloud: RuuviCloud!
     var cloudSyncService: RuuviServiceCloudSync!
+    var cloudSyncDaemon: RuuviDaemonCloudSync!
 
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -170,6 +173,7 @@ extension SignInPresenter {
                     sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                         guard let ssSelf = sSelf else { return }
                         ssSelf.activityPresenter.decrement()
+                        ssSelf.cloudSyncDaemon.start()
                         ssSelf.signIn(module: ssSelf, didSuccessfulyLogin: nil)
                     }, failure: { [weak self] error in
                         self?.activityPresenter.decrement()

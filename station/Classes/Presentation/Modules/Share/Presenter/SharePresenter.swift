@@ -3,6 +3,7 @@ import Future
 import UIKit
 import RuuviService
 import RuuviOntology
+import RuuviPresenters
 
 class SharePresenter {
     weak var view: ShareViewInput!
