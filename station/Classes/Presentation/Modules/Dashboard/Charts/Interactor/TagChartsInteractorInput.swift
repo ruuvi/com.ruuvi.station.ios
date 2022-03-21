@@ -15,6 +15,7 @@ protocol TagChartsInteractorInput: AnyObject {
     func stopObservingRuuviTagsData()
     func export() -> Future<URL, RUError>
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError>
+    func isSyncingRecords() -> Bool
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
     func notifySettingsChanged()
     func notifyDownsamleOnDidChange()

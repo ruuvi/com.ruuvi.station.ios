@@ -1,4 +1,5 @@
 import UIKit
+import RuuviPresenters
 
 class AlertPresenterImpl: AlertPresenter {
     func showAlert(_ viewModel: AlertViewModel) {

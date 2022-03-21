@@ -4,13 +4,15 @@ extension CloudSensor {
     public var ruuviTagSensor: RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: nil,
             macId: id.mac,
             isConnectable: true,
             name: name.isEmpty ? id : name,
             isClaimed: isOwner,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
@@ -24,7 +26,8 @@ extension CloudSensor {
             picture: picture,
             offsetTemperature: offsetTemperature,
             offsetHumidity: offsetHumidity,
-            offsetPressure: offsetPressure
+            offsetPressure: offsetPressure,
+            isCloudSensor: isCloudSensor
         )
     }
 }
@@ -39,6 +42,7 @@ public struct CloudSensorStruct: CloudSensor {
     public var offsetTemperature: Double?
     public var offsetHumidity: Double?
     public var offsetPressure: Double?
+    public var isCloudSensor: Bool?
 
     public init(
         id: String,
@@ -49,7 +53,8 @@ public struct CloudSensorStruct: CloudSensor {
         picture: URL?,
         offsetTemperature: Double?,
         offsetHumidity: Double?,
-        offsetPressure: Double?
+        offsetPressure: Double?,
+        isCloudSensor: Bool?
     ) {
         self.id = id
         self.name = name
@@ -60,6 +65,7 @@ public struct CloudSensorStruct: CloudSensor {
         self.offsetTemperature = offsetTemperature
         self.offsetHumidity = offsetHumidity
         self.offsetPressure = offsetPressure
+        self.isCloudSensor = isCloudSensor
     }
 }
 
@@ -110,6 +116,10 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
 
     public var offsetPressure: Double? {
         return object.offsetPressure
+    }
+
+    public var isCloudSensor: Bool? {
+        return object.isCloudSensor
     }
 
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {

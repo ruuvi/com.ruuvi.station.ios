@@ -443,13 +443,15 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                 // TODO: @rinat go with sensors instead of pure uuid
                 let ruuviTag = RuuviTagSensorStruct(
                     version: 5,
+                    firmwareVersion: nil,
                     luid: uuid.luid,
                     macId: uuid.mac,
                     isConnectable: true,
                     name: "",
                     isClaimed: false,
                     isOwner: false,
-                    owner: nil
+                    owner: nil,
+                    isCloudSensor: false
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
                 let virtualSensor = VirtualSensorStruct(id: uuid)
@@ -468,13 +470,15 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                 // TODO: @rinat go with sensors instead of pure uuid
                 let ruuviTag = RuuviTagSensorStruct(
                     version: 5,
+                    firmwareVersion: nil,
                     luid: uuid.luid,
                     macId: uuid.mac,
                     isConnectable: true,
                     name: "",
                     isClaimed: false,
                     isOwner: false,
-                    owner: nil
+                    owner: nil,
+                    isCloudSensor: false
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
                 let virtualSensor = VirtualSensorStruct(id: uuid)
@@ -507,13 +511,15 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         // TODO: @rinat go with sensors instead of pure uuid
         let ruuviTag = RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: uuid.luid,
             macId: uuid.mac,
             isConnectable: true,
             name: "",
             isClaimed: false,
             isOwner: false,
-            owner: nil
+            owner: nil,
+            isCloudSensor: false
         )
         ruuviAlertService.mute(
             type: Self.alertType(from: type),
@@ -535,13 +541,15 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         // TODO: @rinat go with sensors instead of pure uuid
         let ruuviTag = RuuviTagSensorStruct(
             version: 5,
+            firmwareVersion: nil,
             luid: uuid.luid,
             macId: uuid.mac,
             isConnectable: true,
             name: "",
             isClaimed: false,
             isOwner: false,
-            owner: nil
+            owner: nil,
+            isCloudSensor: false
         )
         ruuviAlertService.mute(
             type: Self.alertType(from: type),

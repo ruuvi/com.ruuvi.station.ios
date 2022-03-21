@@ -13,6 +13,8 @@ import RuuviCore
 import RuuviNotification
 import RuuviNotifier
 import RuuviDaemon
+import RuuviPresenters
+import RuuviUser
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -39,6 +41,7 @@ class CardsPresenter: CardsModuleInput {
     var measurementService: RuuviServiceMeasurement!
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
+    var ruuviUser: RuuviUser!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
@@ -64,6 +67,7 @@ class CardsPresenter: CardsModuleInput {
     private var alertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
+    private var universalLinkObservationToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -105,6 +109,7 @@ class CardsPresenter: CardsModuleInput {
         readRSSIToken?.invalidate()
         readRSSIIntervalToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
+        universalLinkObservationToken?.invalidate()
     }
 }
 
@@ -124,6 +129,7 @@ extension CardsPresenter: CardsViewOutput {
     }
     
     func viewWillAppear() {
+        startObservingUniversalLinks()
         startObservingBluetoothState()
     }
     
@@ -135,24 +141,19 @@ extension CardsPresenter: CardsViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
-        if viewModel.type == .ruuvi,
-           let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            var humidity: Humidity?
-            if let temperature = viewModel.temperature.value {
-                humidity = viewModel.humidity.value?
-                    .converted(to: .relative(temperature: temperature))
+    func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
+        if viewModel.type == .ruuvi {
+            if let luid = viewModel.luid.value {
+                if settings.keepConnectionDialogWasShown(for: luid)
+                    || background.isConnected(uuid: luid.value)
+                    || viewModel.isConnectable.value == false {
+                    openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
+                } else {
+                    view.showKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+                }
+            } else {
+                openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
             }
-            self.router.openTagSettings(
-                ruuviTag: ruuviTag,
-                temperature: viewModel.temperature.value,
-                humidity: humidity,
-                sensorSettings: sensorSettingsList
-                    .first(where: {
-                            ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
-                                || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
-                    }),
-                output: self)
         } else if viewModel.type == .web,
                   let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
             router.openVirtualSensorSettings(
@@ -167,18 +168,21 @@ extension CardsPresenter: CardsViewOutput {
             if settings.keepConnectionDialogWasShown(for: luid)
                 || background.isConnected(uuid: luid.value)
                 || viewModel.isConnectable.value == false {
+                configureInitialChart(from: viewModel)
                 router.openTagCharts()
             } else {
-                view.showKeepConnectionDialog(for: viewModel)
+                view.showKeepConnectionDialogChart(for: viewModel)
             }
         } else if viewModel.mac.value != nil {
+            // Setup initial tag chart
+            configureInitialChart(from: viewModel)
             router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
     
-    func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
+    func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
             router.openTagCharts()
@@ -187,11 +191,30 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
     
-    func viewDidConfirmToKeepConnection(to viewModel: CardsViewModel) {
+    func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
             router.openTagCharts()
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
+        if let luid = viewModel.luid.value {
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel, scrollToAlert: Bool) {
+        if let luid = viewModel.luid.value {
+            connectionPersistence.setKeepConnection(true, for: luid)
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
@@ -209,32 +232,11 @@ extension CardsPresenter: CardsViewOutput {
     }
 }
 
-// MARK: - DiscoverModuleOutput
-extension CardsPresenter: DiscoverModuleOutput {
-    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
-        module.dismiss()
-        self.startObservingRuuviTags()
-    }
-    
-    func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
-        module.dismiss()
-        self.startObservingRuuviTags()
-    }
-    
-    func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
-        module.dismiss()
-    }
-    
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
-        module.dismiss()
-    }
-}
-
 // MARK: - MenuModuleOutput
 extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover(output: self)
+        router.openDiscover()
     }
     
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -258,7 +260,7 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "<br><br>" + summary)
+                                                body: "\n\n" + summary)
         }
     }
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
@@ -362,12 +364,19 @@ extension CardsPresenter {
             return viewModel
         })
         viewModels = reorder(ruuviViewModels + virtualViewModels)
-
+        // Sort sensors by name alphabetically
+        viewModels = viewModels.sorted(by: {
+            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
+                return first < second
+            } else {
+                return true
+            }
+        })
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
             && viewModels.isEmpty {
-            self.router.openDiscover(output: self)
+            self.router.openDiscover()
         }
     }
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
@@ -375,6 +384,14 @@ extension CardsPresenter {
             return viewModels
         }
         return viewModels.reorder(by: settings.tagsSorting)
+    }
+    private func configureInitialChart(from viewModel: CardsViewModel) {
+        if let sensor = ruuviTags
+            .first(where: {
+                ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+            }) {
+            tagCharts?.configure(ruuviTag: sensor)
+        }
     }
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
@@ -627,11 +644,13 @@ extension CardsPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
             case .insert(let sensor):
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
                 if let index = sSelf.viewModels.firstIndex(where: {
                     return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
                         || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
@@ -652,6 +671,7 @@ extension CardsPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
+                sSelf.startObservingWebTags()
                 if sSelf.view.currentPage < sSelf.ruuviTags.count {
                     let tag = sSelf.ruuviTags[sSelf.view.currentPage]
                     sSelf.restartObservingRuuviTagLastRecord(for: tag)
@@ -672,6 +692,7 @@ extension CardsPresenter {
                     sSelf.syncViewModels()
                     sSelf.restartObserveRuuviTagAdvertisements()
                 }
+                sSelf.startObservingWebTags()
             }
         }
     }
@@ -916,6 +937,39 @@ extension CardsPresenter {
                                 self?.tagCharts?.configure(ruuviTag: ruuviTag)
                             }
                          })
+    }
+
+    private func openTagSettingsScreens(viewModel: CardsViewModel, scrollToAlert: Bool) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+            var humidity: Humidity?
+            if let temperature = viewModel.temperature.value {
+                humidity = viewModel.humidity.value?
+                    .converted(to: .relative(temperature: temperature))
+            }
+            self.router.openTagSettings(
+                ruuviTag: ruuviTag,
+                temperature: viewModel.temperature.value,
+                humidity: humidity,
+                sensorSettings: sensorSettingsList
+                    .first(where: {
+                        ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
+                        || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
+                    }),
+                output: self,
+                scrollToAlert: scrollToAlert)
+        }
+    }
+
+    private func startObservingUniversalLinks() {
+        universalLinkObservationToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidOpenWithUniversalLink,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (_) in
+                guard let email = self?.ruuviUser.email else { return }
+                self?.view.showAlreadyLoggedInAlert(with: email)
+        })
     }
 }
 // swiftlint:enable file_length trailing_whitespace

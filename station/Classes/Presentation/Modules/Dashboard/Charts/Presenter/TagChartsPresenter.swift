@@ -12,6 +12,7 @@ import RuuviService
 import RuuviVirtual
 import RuuviNotification
 import RuuviNotifier
+import RuuviPresenters
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -59,6 +60,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var cloudSyncToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartIntervalDidChangeToken: NSObjectProtocol?
+    private var chartDurationHourDidChangeToken: NSObjectProtocol?
+    private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
@@ -92,6 +95,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         cloudSyncToken?.invalidate()
         downsampleDidChangeToken?.invalidate()
         chartIntervalDidChangeToken?.invalidate()
+        chartDurationHourDidChangeToken?.invalidate()
+        chartDrawDotsDidChangeToken?.invalidate()
     }
 
     func configure(output: TagChartsModuleOutput) {
@@ -125,6 +130,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         tryToShowSwipeUpHint()
         restartObservingData()
         interactor.restartObservingTags()
+        handleClearSyncButtons()
         syncChartViews()
     }
 
@@ -135,6 +141,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
+    }
+    func handleClearSyncButtons() {
+        view.handleClearSyncButtons(sharedSensors: !ruuviTag.isOwner, isSyncing: interactor.isSyncingRecords() )
     }
     func viewDidTransition() {
         tryToShowSwipeUpHint()
@@ -148,14 +157,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.dismiss()
     }
 
-    func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
+    func viewDidTriggerSettings(for viewModel: TagChartsViewModel, scrollToAlert: Bool) {
         if viewModel.type == .ruuvi,
             ruuviTag.luid?.value == viewModel.uuid.value {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
                                    sensor: sensorSettings,
-                                   output: self)
+                                   output: self,
+                                   scrollToAlert: scrollToAlert)
         } else {
             assert(false)
         }
@@ -175,6 +185,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
+                guard let syncing =  self?.isSyncing, syncing else {
+                    return
+                }
                 self?.view.setSync(progress: progress, for: viewModel)
             }
         }
@@ -185,16 +198,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
             self?.view.setSync(progress: nil, for: viewModel)
             if case .btkit(.logic(.connectionTimedOut)) = error {
                 self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+            } else if case .ruuviService(.btkit(.logic(.connectionTimedOut))) = error {
+                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
             } else if case .btkit(.logic(.serviceTimedOut)) = error {
                 self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
             }
-        }, completion: {
-            DispatchQueue.main.async { [weak self] in
-                self?.view.setSync(progress: nil, for: viewModel)
-            }
-        })
+        }, completion: nil)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
@@ -219,6 +230,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.ruuviTag = sensor
+        view?.setupChartViews(chartViews: interactor.chartViews)
     }
 
     func interactorDidSyncComplete(_ recordsCount: Int) {
@@ -243,38 +255,12 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
         alertPresenter.showAlert(alertViewModel)
     }
 }
-// MARK: - DiscoverModuleOutput
-extension TagChartsPresenter: DiscoverModuleOutput {
-    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-
-    func discover(module: DiscoverModuleInput, didAddWebTag provider: VirtualProvider) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-
-    func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-
-    func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
-        module.dismiss { [weak self] in
-            self?.router.dismiss()
-        }
-    }
-}
 
 // MARK: - MenuModuleOutput
 extension TagChartsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover(output: self)
+        router.openDiscover()
     }
 
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -380,6 +366,7 @@ extension TagChartsPresenter {
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingData()
     }
+    // swiftlint:disable:next function_body_length
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default
@@ -418,6 +405,22 @@ extension TagChartsPresenter {
         chartIntervalDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .ChartIntervalDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.interactor.notifyDownsamleOnDidChange()
+        })
+        chartDurationHourDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartDurationHourDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.interactor.notifyDownsamleOnDidChange()
+        })
+        chartDrawDotsDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartDrawDotsOnDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
