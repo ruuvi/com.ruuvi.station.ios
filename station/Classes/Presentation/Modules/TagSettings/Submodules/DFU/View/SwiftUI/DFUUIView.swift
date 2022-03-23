@@ -36,6 +36,9 @@ struct DFUUIView: View {
                 )
         }
         .onAppear { self.viewModel.send(event: .onAppear) }
+        .onReceive(.RuuviTagMigrationDidComplete) { _ in
+            self.viewModel.isLoading = false
+        }
     }
 
     private var content: some View {

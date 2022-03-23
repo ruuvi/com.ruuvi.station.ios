@@ -26,6 +26,7 @@ struct TagSettingsViewModel {
     let isNetworkConnected: Observable<Bool?> = Observable<Bool?>()
     let keepConnection: Observable<Bool?> = Observable<Bool?>()
     let isConnectionSectionEnabled: Observable<Bool?> = Observable<Bool?>()
+    let isConnectionSwitchEnabled: Observable<Bool?> = Observable<Bool?>()
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
 
     let temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
