@@ -153,11 +153,11 @@ PODS:
   - PromisesObjC (2.0.0)
   - Quick (4.0.0)
   - RangeSeekSlider (1.8.2)
-  - Realm (10.24.1):
-    - Realm/Headers (= 10.24.1)
-  - Realm/Headers (10.24.1)
-  - RealmSwift (10.24.1):
-    - Realm (= 10.24.1)
+  - Realm (10.24.2):
+    - Realm/Headers (= 10.24.2)
+  - Realm/Headers (10.24.2)
+  - RealmSwift (10.24.2):
+    - Realm (= 10.24.2)
   - RuuviAnalytics (0.0.1):
     - RuuviAnalytics/Contract (= 0.0.1)
   - RuuviAnalytics/Contract (0.0.1)
@@ -819,8 +819,8 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: f9bc5a212a9ab084b4ed90cda1c28d835a38a06b
-  RealmSwift: 0b03bb38001bee4280dcc27709e6b33f438cfad1
+  Realm: c8421eee9ff92b16b4f91a313b5cc695c37c1921
+  RealmSwift: 10ed6fa09c36aaaff55e12afdc71802ec3ddb1c0
   RuuviAnalytics: 9bcb8ba615c61950c3298fff0419db2a8cff20a1
   RuuviBundleUtils: 2bf9121120e2c0707449dd7cd2f013d2512bc9a0
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825

@@ -756,6 +756,7 @@ extension TagSettingsPresenter {
                 if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
                     || (sensor.macId?.any != nil && sensor.macId?.any == self?.ruuviTag.macId?.any) {
                     self?.ruuviTag = sensor
+                    self?.notifyFirmwareUpdate()
                 }
             case .update(let sensor):
                 if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
@@ -1357,6 +1358,20 @@ extension TagSettingsPresenter {
     private func checkLastRecord() {
         ruuviStorage.readLast(ruuviTag).on(success: { [weak self] record in
             self?.lastMeasurement = record
+        })
+    }
+
+    /// Notify the DFU screen after successful migration of the database
+    private func notifyFirmwareUpdate() {
+        if let luid = ruuviTag.luid {
+            connectionPersistence.setKeepConnection(true, for: luid)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
+            NotificationCenter
+                .default
+                .post(name: .RuuviTagMigrationDidComplete,
+                      object: nil,
+                      userInfo: nil)
         })
     }
 }
