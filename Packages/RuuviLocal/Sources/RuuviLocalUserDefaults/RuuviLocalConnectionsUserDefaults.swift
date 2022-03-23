@@ -44,8 +44,7 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
                     [CPDidStartToKeepConnectionKey.uuid: uuid])
             }
         } else {
-            if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String],
-                array.contains(uuid) {
+            if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
                 array.removeAll(where: { $0 == uuid })
                 prefs.set(array, forKey: keepConnectionArrayUDKey)
                 NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,

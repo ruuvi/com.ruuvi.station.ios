@@ -4,6 +4,8 @@ import Combine
 import RuuviOntology
 import RuuviPool
 import RuuviLocal
+import RuuviDaemon
+import RuuviPresenters
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
@@ -16,17 +18,29 @@ final class DFUViewModel: ObservableObject {
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
     private let settings: RuuviLocalSettings
+    private let propertiesDaemon: RuuviTagPropertiesDaemon
+    private let activityPresenter: ActivityPresenter
+
+    var isLoading: Bool = false {
+        didSet {
+            isLoading ? activityPresenter.increment() : activityPresenter.decrement()
+        }
+    }
 
     init(
         interactor: DFUInteractorInput,
         ruuviTag: RuuviTagSensor,
         ruuviPool: RuuviPool,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        propertiesDaemon: RuuviTagPropertiesDaemon,
+        activityPresenter: ActivityPresenter
     ) {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
         self.settings = settings
+        self.propertiesDaemon = propertiesDaemon
+        self.activityPresenter = activityPresenter
         Publishers.system(
             initial: state,
             reduce: Self.reduce,
@@ -53,14 +67,27 @@ final class DFUViewModel: ObservableObject {
     func send(event: Event) {
         input.send(event)
     }
-    /// Update the localdb only when the tag data format is not "Very Old"
-    /// Otherwise a migration to realm to sqlite is needed since older data format tags are stored in the realm db
-    /// before trying to update the db record
+
     func storeUpdatedFirmware(latestRelease: LatestRelease) {
         guard let luid = ruuviTag.luid else { return }
-        guard settings.firmwareVersion(for: luid) != nil else { return }
-        ruuviPool.update(ruuviTag
-                            .with(firmwareVersion: latestRelease.version.replace("Ruuvi FW ", with: "")))
+        let firmwareVersion = latestRelease.version.replace("Ruuvi FW ", with: "")
+        settings.setFirmwareVersion(for: luid, value: firmwareVersion)
+        isLoading = true
+        // If the tag is stored on realm then migration needed
+        // Usually tags without macId are stored in the realm database
+        // For tags with macId don't need migration
+        if ruuviTag.macId != nil {
+            ruuviPool.update(ruuviTag
+                .with(isConnectable: true)
+                .with(firmwareVersion: firmwareVersion))
+            .on(success: { [weak self] _ in
+                self?.isLoading = false
+            }, failure: { [weak self] _ in
+                self?.isLoading = false
+            })
+        } else {
+            propertiesDaemon.start()
+        }
     }
 }
 
