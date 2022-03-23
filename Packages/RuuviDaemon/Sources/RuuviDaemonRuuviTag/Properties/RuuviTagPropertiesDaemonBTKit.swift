@@ -149,29 +149,38 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     })
             } else {
                 isTransitioningFromRealmToSQLite = true
-                idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
                 // now we need to remove the tag from Realm and add it to SQLite
                 sqiltePersistence.create(
                     pair.ruuviTag
                         .with(macId: mac.mac)
+                        .with(isConnectable: true)
+                        .with(version: pair.device.version)
                         .with(isOwner: true)
                 ).on(success: { [weak self] _ in
-                    self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
-                        self?.realmPersistence.delete(pair.ruuviTag.withoutMac())
-                            .on(success: { [weak self] _ in
-                                self?.realmPersistence.readSensorSettings(pair.ruuviTag.withoutMac())
-                                    .on(success: { [weak self] sensorSettings in
-                                        if let withMacSettings = sensorSettings?.with(macId: mac.mac) {
-                                            self?.sqiltePersistence.save(sensorSettings: withMacSettings)
-                                                .on(success: { _ in
+                    self?.realmPersistence.readAll(pair.device.uuid).on(success: { realmRecords in
+                        var records = realmRecords.map({ $0.with(macId: mac.mac) })
+                        self?.sqiltePersistence.create(records).on(success: { _ in
+                            self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
+                                self?.idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
+                                self?.realmPersistence.delete(pair.ruuviTag.withoutMac())
+                                    .on(success: { [weak self] _ in
+                                        self?.realmPersistence.readSensorSettings(pair.ruuviTag.withoutMac())
+                                            .on(success: { [weak self] sensorSettings in
+                                                if let withMacSettings = sensorSettings?.with(macId: mac.mac) {
+                                                    self?.sqiltePersistence.save(sensorSettings: withMacSettings)
+                                                        .on(success: { _ in
+                                                            self?.isTransitioningFromRealmToSQLite = false
+                                                        }, failure: { error in
+                                                            self?.post(error: .ruuviPersistence(error))
+                                                            self?.isTransitioningFromRealmToSQLite = false
+                                                        })
+                                                } else {
                                                     self?.isTransitioningFromRealmToSQLite = false
-                                                }, failure: { error in
-                                                    self?.post(error: .ruuviPersistence(error))
-                                                    self?.isTransitioningFromRealmToSQLite = false
-                                                })
-                                        } else {
-                                            self?.isTransitioningFromRealmToSQLite = false
-                                        }
+                                                }
+                                            }, failure: { error in
+                                                self?.post(error: .ruuviPersistence(error))
+                                                self?.isTransitioningFromRealmToSQLite = false
+                                            })
                                     }, failure: { error in
                                         self?.post(error: .ruuviPersistence(error))
                                         self?.isTransitioningFromRealmToSQLite = false
@@ -180,9 +189,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                                 self?.post(error: .ruuviPersistence(error))
                                 self?.isTransitioningFromRealmToSQLite = false
                             })
-                    }, failure: { error in
-                        self?.post(error: .ruuviPersistence(error))
-                        self?.isTransitioningFromRealmToSQLite = false
+                        })
                     })
                 }, failure: { [weak self] (error) in
                     self?.post(error: .ruuviPersistence(error))
@@ -198,30 +205,8 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                         self?.post(error: .ruuviPool(error))
                     })
             } else {
-                assertionFailure("Should never be there")
-            }
-        }
-
-        // while transitioning tag from realm to sqlite - stop operating
-        guard !isTransitioningFromRealmToSQLite else { return }
-
-        // version and isConnectable change is allowed only when
-        // the tag is in SQLite and has MAC
-        if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-            if pair.device.version != pair.ruuviTag.version {
-                ruuviPool.update(pair.ruuviTag.with(version: pair.device.version).with(macId: mac))
-                    .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
-                    })
-            }
-            // ignore switch to not connectable state
-            if !pair.device.isConnected,
-               pair.device.isConnectable != pair.ruuviTag.isConnectable,
-               pair.device.isConnectable {
-                ruuviPool.update(pair.ruuviTag.with(isConnectable: pair.device.isConnectable).with(macId: mac))
-                    .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
-                    })
+                // Should never be there
+                return
             }
         }
     }
