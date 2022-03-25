@@ -134,13 +134,16 @@ class TagChartView: LineChartView {
         xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
         xAxis.setLabelCount(6, force: true)
+        xAxis.yOffset = 10.0
 
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+        leftAxis.setLabelCount(5, force: true)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
         leftAxis.minWidth = 40.0
         leftAxis.maxWidth = 40.0
+        leftAxis.xOffset = 10.0
 
         rightAxis.enabled = true
         rightAxis.labelPosition = .outsideChart
@@ -189,6 +192,11 @@ extension TagChartView: TagChartViewInput {
         clearValues()
         resetCustomAxisMinMax()
         resetZoom()
+    }
+
+    func setYAxisLimit(min: Double, max: Double) {
+        leftAxis.axisMinimum = min - 0.5
+        leftAxis.axisMaximum = max + 0.5
     }
 
     func setXRange(min: TimeInterval, max: TimeInterval) {
