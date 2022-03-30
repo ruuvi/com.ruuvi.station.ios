@@ -134,7 +134,6 @@ extension TagChartPresenter {
         lineChartDataSet.drawCircleHoleEnabled = false
         lineChartDataSet.drawFilledEnabled = true
         lineChartDataSet.highlightEnabled = false
-        lineChartDataSet.mode = .cubicBezier
         return lineChartDataSet
     }
     private func handleEmptyResults() {
