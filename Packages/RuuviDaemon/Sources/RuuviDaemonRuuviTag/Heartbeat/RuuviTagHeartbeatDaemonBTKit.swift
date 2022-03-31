@@ -190,9 +190,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 )
                 if observer.settings.saveHeartbeats {
                     let uuid = ruuviTag.uuid
-                    let interval = observer.settings.saveHeartbeatsIntervalMinutes
+                    // Save heartbeats in 
                     if let date = observer.savedDate[uuid] {
-                        if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
+                        if Date().timeIntervalSince(date) > TimeInterval(2) {
                             observer.ruuviPool.create(
                                 ruuviTag
                                     .with(source: .heartbeat)
