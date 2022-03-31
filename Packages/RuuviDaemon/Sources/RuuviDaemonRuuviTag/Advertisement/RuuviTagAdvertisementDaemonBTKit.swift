@@ -22,9 +22,11 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var sensorSettingsList = [SensorSettings]()
     private var savedDate = [String: Date]() // uuid:date
     private var isOnToken: NSObjectProtocol?
+    // TODO:- @Priyonto: Remove this variable if the build is stable
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
+    private var previousAdvertisementSequence: Int?
 
     @objc private class RuuviTagWrapper: NSObject {
         var device: RuuviTag
@@ -179,11 +181,17 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     @objc private func persist(wrapper: RuuviTagWrapper) {
         let uuid = wrapper.device.uuid
         if let date = savedDate[uuid] {
-            if Date().timeIntervalSince(date) > saveInterval {
-                persist(wrapper.device, uuid)
+            if previousAdvertisementSequence != nil {
+                if wrapper.device.measurementSequenceNumber != previousAdvertisementSequence {
+                    persist(wrapper.device, uuid)
+                    previousAdvertisementSequence = nil
+                }
+            } else {
+                previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
             }
         } else {
             persist(wrapper.device, uuid)
+            previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
         }
     }
 

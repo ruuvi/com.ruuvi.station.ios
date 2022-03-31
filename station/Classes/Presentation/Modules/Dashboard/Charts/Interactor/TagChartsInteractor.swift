@@ -221,7 +221,7 @@ extension TagChartsInteractor {
     private func restartScheduler() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(settings.chartIntervalSeconds),
+            withTimeInterval: 2,
             repeats: true,
             block: { [weak self] (_) in
                 self?.fetchLast()
@@ -245,17 +245,12 @@ extension TagChartsInteractor {
         guard let lastDate = lastMeasurement?.date else {
             return
         }
-        let interval = TimeInterval(settings.chartIntervalSeconds)
         let op = ruuviStorage.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
         op.on(success: { [weak self] (results) in
             guard results.count > 0 else { return }
             var lastResults: [RuuviMeasurement] = []
-            var lastMeasurementDate: Date = lastDate
             results.forEach({
-                if $0.date >= lastMeasurementDate.addingTimeInterval(interval) {
-                    lastMeasurementDate = $0.date
-                    lastResults.append($0.measurement)
-                }
+                lastResults.append($0.measurement)
             })
             self?.lastMeasurement = lastResults.last
             self?.ruuviTagData.append(contentsOf: lastResults)
@@ -274,7 +269,7 @@ extension TagChartsInteractor {
         let op = ruuviStorage.read(
             ruuviTagSensor.id,
             after: date,
-            with: TimeInterval(settings.chartIntervalSeconds)
+            with: TimeInterval(2)
         )
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
