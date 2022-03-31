@@ -327,7 +327,6 @@ extension TagChartPresenter {
         guard let y = value else {
             return nil
         }
-        //let rounded = Double(round(10*y)/10)
         return ChartDataEntry(x: data.date.timeIntervalSince1970, y: y)
     }
 
