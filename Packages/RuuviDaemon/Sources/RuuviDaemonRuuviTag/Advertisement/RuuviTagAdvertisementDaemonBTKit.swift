@@ -22,7 +22,6 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var sensorSettingsList = [SensorSettings]()
     private var savedDate = [String: Date]() // uuid:date
     private var isOnToken: NSObjectProtocol?
-    // TODO:- @Priyonto: Remove this variable if the build is stable
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
@@ -180,18 +179,31 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     @objc private func persist(wrapper: RuuviTagWrapper) {
         let uuid = wrapper.device.uuid
-        if let date = savedDate[uuid] {
-            if previousAdvertisementSequence != nil {
-                if wrapper.device.measurementSequenceNumber != previousAdvertisementSequence {
-                    persist(wrapper.device, uuid)
-                    previousAdvertisementSequence = nil
+        // If the tag chart is on foreground store all advertisements
+        // Otherwise respect the settings
+        guard let luid = wrapper.device.luid else { return }
+        if settings.tagChartOnForeground(for: luid) {
+            if let date = savedDate[uuid] {
+                if previousAdvertisementSequence != nil {
+                    if wrapper.device.measurementSequenceNumber != previousAdvertisementSequence {
+                        persist(wrapper.device, uuid)
+                        previousAdvertisementSequence = nil
+                    }
+                } else {
+                    previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
                 }
             } else {
+                persist(wrapper.device, uuid)
                 previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
             }
         } else {
-            persist(wrapper.device, uuid)
-            previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
+            if let date = savedDate[uuid] {
+                if Date().timeIntervalSince(date) > saveInterval {
+                    persist(wrapper.device, uuid)
+                }
+            } else {
+                persist(wrapper.device, uuid)
+            }
         }
     }
 

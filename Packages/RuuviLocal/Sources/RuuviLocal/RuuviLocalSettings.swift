@@ -58,4 +58,7 @@ public protocol RuuviLocalSettings {
     func firmwareVersion(for luid: LocalIdentifier) -> String?
     func setFirmwareVersion(for luid: LocalIdentifier, value: String)
     func removeFirmwareVersion(for luid: LocalIdentifier)
+
+    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool
+    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool)
 }
