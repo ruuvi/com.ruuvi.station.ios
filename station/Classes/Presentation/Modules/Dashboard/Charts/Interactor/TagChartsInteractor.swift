@@ -215,9 +215,12 @@ extension TagChartsInteractor: TagChartModuleOutput {
 
     func chartViewDidChangeViewPort(_ chartView: TagChartView) {
         chartViews.filter({ $0 != chartView }).forEach { otherChart in
-            let matrix = chartView.viewPortHandler.touchMatrix
+            let sourceMatrix = chartView.viewPortHandler.touchMatrix
+            var targetMatrix = otherChart.viewPortHandler.touchMatrix
+            targetMatrix.a = sourceMatrix.a
+            targetMatrix.tx = sourceMatrix.tx
             otherChart.viewPortHandler.refresh(
-                newMatrix: matrix,
+                newMatrix: targetMatrix,
                 chart: otherChart,
                 invalidate: true
             )
