@@ -336,4 +336,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                       userInfo: nil)
         }
     }
+
+    @UserDefault("SettingsUserDefaults.bluetoothEnabled", defaultValue: false)
+    var bluetoothEnabled: Bool
 }
