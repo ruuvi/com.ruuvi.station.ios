@@ -176,6 +176,11 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
+        // Check bluetooth
+        guard settings.bluetoothEnabled else {
+            view.showBluetoothDisabled()
+            return
+        }
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout

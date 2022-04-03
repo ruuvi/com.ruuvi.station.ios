@@ -48,6 +48,7 @@ public protocol RuuviLocalSettings {
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }
     var cloudModeEnabled: Bool { get set }
+    var bluetoothEnabled: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
@@ -58,4 +59,7 @@ public protocol RuuviLocalSettings {
     func firmwareVersion(for luid: LocalIdentifier) -> String?
     func setFirmwareVersion(for luid: LocalIdentifier, value: String)
     func removeFirmwareVersion(for luid: LocalIdentifier)
+
+    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool
+    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool)
 }
