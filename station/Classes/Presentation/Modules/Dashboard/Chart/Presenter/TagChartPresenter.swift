@@ -168,6 +168,7 @@ extension TagChartPresenter {
                                stop: currentDate,
                                completion: { [weak self] in
                                 self?.view.setXRange(min: firstDate, max: currentDate)
+                                self?.view.setXAxisRenderer()
                                 if let lineChartData = self?.viewModel.chartData.value {
                                     self?.view.setYAxisLimit(min: lineChartData.yMin, max: lineChartData.yMax)
                                 }
@@ -181,6 +182,7 @@ extension TagChartPresenter {
                 if let lineChartData = self?.viewModel.chartData.value {
                     self?.view.setYAxisLimit(min: lineChartData.yMin, max: lineChartData.yMax)
                 }
+                self?.view.setXAxisRenderer()
                 self?.view.reloadData()
             })
         }
@@ -194,6 +196,7 @@ extension TagChartPresenter {
         viewModel.chartData.value = lineChartData
         drawCirclesIfNeeded(for: chartData)
         view.setYAxisLimit(min: lineChartData.yMin, max: lineChartData.yMax)
+        view.setXAxisRenderer()
         view.reloadData()
     }
 
