@@ -177,7 +177,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
         // Check bluetooth
-        guard settings.bluetoothEnabled else {
+        guard foreground.bluetoothState == .poweredOn else {
             view.showBluetoothDisabled()
             return
         }
