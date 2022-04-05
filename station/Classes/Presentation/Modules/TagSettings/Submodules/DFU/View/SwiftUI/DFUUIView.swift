@@ -15,6 +15,7 @@ struct DFUUIView: View {
         let downloadingTitle = "DFUUIView.downloadingTitle".localized()
         let prepareTitle = "DFUUIView.prepareTitle".localized()
         let openCoverTitle = "DFUUIView.openCoverTitle".localized()
+        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized()
         let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized()
         let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized()
         let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized()
@@ -178,9 +179,17 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case .listening:
             return VStack {
+                HStack {
+                    Spacer()
+                    Image("ruuvitag-b8-button-location").resizable()
+                        .scaledToFit()
+                        .frame(width: 130, height: 130)
+                    Spacer()
+                }.padding()
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.prepareTitle).bold()
                     Text(texts.openCoverTitle)
+                    Text(texts.localBootButtonTitle)
                     Text(texts.setUpdatingModeTitle)
                     Text(texts.toBootModeTwoButtonsDescription)
                     Text(texts.toBootModeOneButtonDescription)
@@ -192,6 +201,7 @@ struct DFUUIView: View {
                     label: {
                         HStack {
                             Text(texts.searchingTitle)
+                                .foregroundColor(.secondary)
                             Spinner(isAnimating: true, style: .medium).eraseToAnyView()
                         }.frame(maxWidth: .infinity)
                     }
@@ -216,9 +226,17 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
             return VStack {
+                HStack {
+                    Spacer()
+                    Image("ruuvitag-b8-button-location").resizable()
+                        .scaledToFit()
+                        .frame(width: 130, height: 130)
+                    Spacer()
+                }.padding()
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.prepareTitle).bold()
                     Text(texts.openCoverTitle)
+                    Text(texts.localBootButtonTitle)
                     Text(texts.setUpdatingModeTitle)
                     Text(texts.toBootModeTwoButtonsDescription)
                     Text(texts.toBootModeOneButtonDescription)

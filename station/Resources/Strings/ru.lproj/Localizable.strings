@@ -280,7 +280,7 @@
 "Menu.Label.AboutHelp.text" = "О Приложении";
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
 "Menu.Label.AppSettings.text" = "Настройки";
-"Menu.Label.GetMoreSensors.text" = "Больше Сенсоров";
+"Menu.Label.GetMoreSensors.text" = "Купить датчики Ruuvi";
 "Menu.Label.Feedback.text" = "Отправить Отзыв";
 "min" = "мин";
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
@@ -457,10 +457,11 @@
 "DFUUIView.downloadingTitle" = "Идет скачивание обновления прошивки...";
 "DFUUIView.prepareTitle" = "Подготовьте ваш сенсор";
 "DFUUIView.openCoverTitle" = "1. Откройте крышку вашего сенсора Ruuvi";
-"DFUUIView.setUpdatingModeTitle" = "2. Переведите сенсор в режим обновления";
-"DFUUIView.toBootModeTwoButtonsDescription" = "Если вы видите две кнопки на сенсоре, зажмите кнопку B и после коротко нажмите кнопку R";
-"DFUUIView.toBootModeOneButtonDescription" = "Если вы видите только одну кнопку на сенсоре, зажмите кнопку на десять секунд";
-"DFUUIView.toBootModeSuccessTitle" = "3. Если все получилось, вы увидите непрерывный красный цвет индикатора";
+"DFUUIView.locateBootButtonTitle" = "2. Locate small round black buttons on white circuit board; older Ruuvi sensors have 2 buttons labelled “R” and “B” while newer ones have only one button with no label.";
+"DFUUIView.setUpdatingModeTitle" = "3. Set the sensor to updating mode:";
+"DFUUIView.toBootModeTwoButtonsDescription" = "3.1. If your sensor has 2 buttons: keep “B” button pressed while tapping button “R” momentarily. Release button “B”.";
+"DFUUIView.toBootModeOneButtonDescription" = "3.2. If your sensor has single button: keep button pressed for 10 seconds.";
+"DFUUIView.toBootModeSuccessTitle" = "4. If set successfully, you will see solid red light lit on circuit board and button in app changes to “Start the update”.";
 "DFUUIView.updatingTitle" = "Обновляю...";
 "DFUUIView.searchingTitle" = "Ищу сенсор";
 "DFUUIView.startTitle" = "Начать обновление";
