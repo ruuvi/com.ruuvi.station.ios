@@ -133,7 +133,6 @@ class TagChartView: LineChartView {
         xAxis.granularity = 1
         xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
-        xAxis.setLabelCount(6, force: true)
         xAxis.yOffset = 10.0
         viewPortHandler.setMaximumScaleX(5000)
         viewPortHandler.setMaximumScaleY(30)
@@ -213,6 +212,7 @@ extension TagChartView: TagChartViewInput {
                                                axis: xAxis,
                                                transformer: getTransformer(forAxis: .left))
         xAxisRenderer = axisRenderer
+        xAxis.setLabelCount(5, force: false)
     }
 
     func resetCustomAxisMinMax() {
