@@ -179,102 +179,97 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case .listening:
             return VStack {
-                HStack {
-                    Spacer()
-                    Image("ruuvitag-b8-button-location").resizable()
-                        .scaledToFit()
-                        .frame(width: 130, height: 130)
-                    Spacer()
-                }.padding()
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(texts.prepareTitle).bold()
-                    Text(texts.openCoverTitle)
-                    Text(texts.localBootButtonTitle)
-                    Text(texts.setUpdatingModeTitle)
-                    Text(texts.toBootModeTwoButtonsDescription)
-                    Text(texts.toBootModeOneButtonDescription)
-                    Text(texts.toBootModeSuccessTitle)
-                }
-
-                Button(
-                    action: {},
-                    label: {
-                        HStack {
-                            Text(texts.searchingTitle)
-                                .foregroundColor(.secondary)
-                            Spinner(isAnimating: true, style: .medium).eraseToAnyView()
-                        }.frame(maxWidth: .infinity)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        RuuviBoardView()
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text(texts.prepareTitle).bold()
+                            Text(texts.openCoverTitle)
+                            Text(texts.localBootButtonTitle)
+                            Text(texts.setUpdatingModeTitle)
+                            Text(texts.toBootModeTwoButtonsDescription)
+                            Text(texts.toBootModeOneButtonDescription)
+                            Text(texts.toBootModeSuccessTitle)
+                        }
+                        Button(
+                            action: {},
+                            label: {
+                                HStack {
+                                    Text(texts.searchingTitle)
+                                        .foregroundColor(.secondary)
+                                    Spinner(isAnimating: true, style: .medium).eraseToAnyView()
+                                }.frame(maxWidth: .infinity)
+                            }
+                        )
+                        .buttonStyle(
+                            LargeButtonStyle(
+                                backgroundColor: RuuviColor.dustyBlue,
+                                foregroundColor: Color.white,
+                                isDisabled: true
+                            )
+                        )
+                        .padding()
+                        .disabled(true)
+                        .frame(maxWidth: .infinity)
                     }
-                )
-                .buttonStyle(
-                    LargeButtonStyle(
-                        backgroundColor: RuuviColor.dustyBlue,
-                        foregroundColor: Color.white,
-                        isDisabled: true
-                    )
-                )
-                .padding()
-                .disabled(true)
-                .frame(maxWidth: .infinity)
+                }
             }
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity,
-                alignment: .topLeading
+                alignment: .top
             )
-            .padding()
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
             return VStack {
-                HStack {
-                    Spacer()
-                    Image("ruuvitag-b8-button-location").resizable()
-                        .scaledToFit()
-                        .frame(width: 130, height: 130)
-                    Spacer()
-                }.padding()
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(texts.prepareTitle).bold()
-                    Text(texts.openCoverTitle)
-                    Text(texts.localBootButtonTitle)
-                    Text(texts.setUpdatingModeTitle)
-                    Text(texts.toBootModeTwoButtonsDescription)
-                    Text(texts.toBootModeOneButtonDescription)
-                    Text(texts.toBootModeSuccessTitle)
-                }
-                Button(
-                    action: {
-                        self.viewModel.send(
-                            event: .onUserDidConfirmToFlash(
-                                latestRelease,
-                                currentRelease,
-                                uuid: uuid,
-                                appUrl: appUrl,
-                                fullUrl: fullUrl
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        RuuviBoardView()
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text(texts.prepareTitle).bold()
+                            Text(texts.openCoverTitle)
+                            Text(texts.localBootButtonTitle)
+                            Text(texts.setUpdatingModeTitle)
+                            Text(texts.toBootModeTwoButtonsDescription)
+                            Text(texts.toBootModeOneButtonDescription)
+                            Text(texts.toBootModeSuccessTitle)
+                        }
+                        Button(
+                            action: {
+                                self.viewModel.send(
+                                    event: .onUserDidConfirmToFlash(
+                                        latestRelease,
+                                        currentRelease,
+                                        uuid: uuid,
+                                        appUrl: appUrl,
+                                        fullUrl: fullUrl
+                                    )
+                                )
+                            },
+                            label: {
+                                Text(texts.startTitle)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        )
+                        .buttonStyle(
+                            LargeButtonStyle(
+                                backgroundColor: RuuviColor.dustyBlue,
+                                foregroundColor: Color.white,
+                                isDisabled: false
                             )
                         )
-                    },
-                    label: {
-                        Text(texts.startTitle)
-                            .frame(maxWidth: .infinity)
+                        .padding()
+                        .frame(maxWidth: .infinity)
                     }
-                )
-                .buttonStyle(
-                    LargeButtonStyle(
-                        backgroundColor: RuuviColor.dustyBlue,
-                        foregroundColor: Color.white,
-                        isDisabled: false
-                    )
-                )
-                .padding()
-                .frame(maxWidth: .infinity)
+                }
             }
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity,
-                alignment: .topLeading
+                alignment: .top
             )
-            .padding()
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case .flashing:
             return VStack(alignment: .center, spacing: 24) {
@@ -304,6 +299,28 @@ struct DFUUIView: View {
                 )
                 .padding()
                 .eraseToAnyView()
+        }
+    }
+
+    struct RuuviBoardView: View {
+        @Environment(\.horizontalSizeClass) var sizeClass
+        private let boardImageName = "ruuvitag-b8-and-older-button-location"
+        var body: some View {
+            HStack {
+                if sizeClass == .compact {
+                    Image(boardImageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                } else {
+                    Spacer()
+                    Image(boardImageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
+                        .frame(width: 300, height: 147)
+                    Spacer()
+                }
+            }.padding()
         }
     }
 }
