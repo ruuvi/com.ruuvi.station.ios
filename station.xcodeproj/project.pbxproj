@@ -535,6 +535,8 @@
 		340BE39E27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		340BE39F27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		344A091627FB376100328F88 /* CustomXAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344A091527FB376100328F88 /* CustomXAxisRenderer.swift */; };
+		344A091727FB376100328F88 /* CustomXAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344A091527FB376100328F88 /* CustomXAxisRenderer.swift */; };
 		345057B827E0797000759B57 /* TagSettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B727E0797000759B57 /* TagSettingsInteractor.swift */; };
 		345057BA27E0798800759B57 /* TagSettingsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */; };
 		345057BE27E079A900759B57 /* TagSettingsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */; };
@@ -1133,6 +1135,7 @@
 		340BE38527B54F37006D6C34 /* OwnerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerRouterInput.swift; sourceTree = "<group>"; };
 		340BE39A27B54FEB006D6C34 /* String+Email.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
 		340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ruuvi_logo_splash.png; sourceTree = "<group>"; };
+		344A091527FB376100328F88 /* CustomXAxisRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomXAxisRenderer.swift; sourceTree = "<group>"; };
 		345057B727E0797000759B57 /* TagSettingsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractor.swift; sourceTree = "<group>"; };
 		345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractorInput.swift; sourceTree = "<group>"; };
 		3451BD8427E0F9870065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -3420,6 +3423,7 @@
 			children = (
 				A907A1D1245F7C4400041F6E /* ProgressBar */,
 				A92E3C592426415100D981D5 /* TagChartView.swift */,
+				344A091527FB376100328F88 /* CustomXAxisRenderer.swift */,
 				A907A1D62460376600041F6E /* TagChartViewModel.swift */,
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 			);
@@ -4377,6 +4381,7 @@
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
+				344A091727FB376100328F88 /* CustomXAxisRenderer.swift in Sources */,
 				0E8BD370238566AB008B31EF /* TagSettingsTableConfigurator.swift in Sources */,
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
@@ -4527,6 +4532,7 @@
 				0E1C1E1122B756B40032F6CA /* CardView.swift in Sources */,
 				A9B57445253B994700DB7353 /* SignInPresenter.swift in Sources */,
 				0EA796792664B37F002BA25D /* RuuviLocalError+LocalizedError.swift in Sources */,
+				344A091627FB376100328F88 /* CustomXAxisRenderer.swift in Sources */,
 				66BC44A72657AED400A03253 /* OffsetCorrectionAppleViewController.swift in Sources */,
 				660EB25E2669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */,
 				0EA7967D2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
@@ -5376,7 +5382,7 @@
 			repositoryURL = "https://github.com/apple/swift-algorithms";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 0.2.1;
 			};
 		};
 		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
@@ -5384,7 +5390,7 @@
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.2;
+				minimumVersion = 4.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
