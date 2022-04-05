@@ -426,11 +426,10 @@ extension CardsPresenter {
         }
     }
     private func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { [weak self ] (observer, state) in
+        stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn {
                 observer.view.showBluetoothDisabled()
             }
-            self?.settings.bluetoothEnabled = state == .poweredOn
         })
     }
     private func stopObservingBluetoothState() {
