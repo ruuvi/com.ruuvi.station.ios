@@ -463,8 +463,8 @@
 "DFUUIView.toBootModeOneButtonDescription" = "3.2. If your sensor has single button: keep button pressed for 10 seconds.";
 "DFUUIView.toBootModeSuccessTitle" = "4. If set successfully, you will see solid red light lit on circuit board and button in app changes to “Start the update”.";
 "DFUUIView.updatingTitle" = "Обновляю...";
-"DFUUIView.searchingTitle" = "Ищу сенсор";
-"DFUUIView.startTitle" = "Начать обновление";
+"DFUUIView.searchingTitle" = "Searching for a sensor";
+"DFUUIView.startTitle" = "Start the update";
 "DFUUIView.doNotCloseTitle" = "Не закрывайте приложение и не отключайте сенсор во время обновления.";
 "DFUUIView.successfulTitle" = "Обновление успешно завершено";
 "RuuviDfuError.failedToConstructUUID" = "Не удалось создать UUID";
