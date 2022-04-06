@@ -199,6 +199,21 @@ extension RuuviTagSensor {
         return sensor
     }
 
+    public func with(isCloudSensor: Bool) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            isCloudSensor: isCloudSensor
+        )
+    }
+
     public func unclaimed() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,

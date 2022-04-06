@@ -8,6 +8,7 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case chartViewPeriod = "CHART_VIEW_PERIOD"
     case chartShowAllPoints = "CHART_SHOW_ALL_POINTS"
     case chartDrawDots = "CHART_DRAW_DOTS"
+    case cloudModeEnabled = "CLOUD_MODE_ENABLED"
 }
 
 extension TemperatureUnit {
