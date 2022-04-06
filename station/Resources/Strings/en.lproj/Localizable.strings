@@ -356,8 +356,8 @@
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
 "TagSettings.NetworkInfo.Owner" = "Owner";
 "Menu.RuuviNetworkStatus.text" = "Ruuvi cloud status";
-"SignIn.TitleLabel.text" = "Login to\nRuuvi\nStation";
-"SignIn.SubtitleLabel.text" = "To enjoy all the features, create a free account or login to your existing Ruuvi account by entering your email address.";
+"SignIn.TitleLabel.text" = "Sign in to\nRuuvi\nStation";
+"SignIn.SubtitleLabel.text" = "To enjoy all the features, create a free account or sign in to your existing Ruuvi account by entering your email address.";
 "SignIn.VerificationCodePlaceholder" = "verification code in format: CJSM";
 "UserApiError.ER_FORBIDDEN" = "Forbidden";
 "UserApiError.ER_UNAUTHORIZED" = "Unauthorised";

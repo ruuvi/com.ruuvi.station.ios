@@ -356,7 +356,7 @@
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETZWERK INFORMATION";
 "TagSettings.NetworkInfo.Owner" = "Eigentümer";
 "Menu.RuuviNetworkStatus.text" = "Ruuvi-Cloud-Status";
-"SignIn.TitleLabel.text" = "Login to\nRuuvi\nStation";
+"SignIn.TitleLabel.text" = "Login zur\nRuuvi\nStation";
 "SignIn.SubtitleLabel.text" = "Um alle Funktionen nutzen zu können, erstellen Sie ein kostenloses Konto oder melden Sie sich bei Ihrem bestehenden Ruuvi-Konto an, indem Sie Ihre E-Mail-Adresse eingeben.";
 "SignIn.VerificationCodePlaceholder" = "Verifizierungscode im Format: CJSM";
 "UserApiError.ER_FORBIDDEN" = "Verboten";
