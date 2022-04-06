@@ -455,8 +455,8 @@
 "DFUUIView.alreadyOnLatest" = "Последняя версия прошивки уже установлена, обновление не требуется";
 "DFUUIView.startUpdateProcess" = "Начать процесс обновления";
 "DFUUIView.downloadingTitle" = "Идет скачивание обновления прошивки...";
-"DFUUIView.prepareTitle" = "Подготовьте ваш сенсор";
-"DFUUIView.openCoverTitle" = "1. Откройте крышку вашего сенсора Ruuvi";
+"DFUUIView.prepareTitle" = "Prepare your sensor";
+"DFUUIView.openCoverTitle" = "1. Open the cover of your Ruuvi sensor";
 "DFUUIView.locateBootButtonTitle" = "2. Locate small round black buttons on white circuit board; older Ruuvi sensors have 2 buttons labelled “R” and “B” while newer ones have only one button with no label.";
 "DFUUIView.setUpdatingModeTitle" = "3. Set the sensor to updating mode:";
 "DFUUIView.toBootModeTwoButtonsDescription" = "3.1. If your sensor has 2 buttons: keep “B” button pressed while tapping button “R” momentarily. Release button “B”.";
