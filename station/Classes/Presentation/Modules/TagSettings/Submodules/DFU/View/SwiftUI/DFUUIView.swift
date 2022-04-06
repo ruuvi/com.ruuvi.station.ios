@@ -303,11 +303,11 @@ struct DFUUIView: View {
     }
 
     struct RuuviBoardView: View {
-        @Environment(\.horizontalSizeClass) var sizeClass
+        @State private var isPortrait = false
         private let boardImageName = "ruuvitag-b8-and-older-button-location"
         var body: some View {
             HStack {
-                if sizeClass == .compact {
+                if isPortrait {
                     Image(boardImageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -320,7 +320,12 @@ struct DFUUIView: View {
                         .frame(width: 300, height: 147)
                     Spacer()
                 }
-            }.padding()
+            }
+            .padding()
+            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                guard let scene = UIApplication.shared.windows.first?.windowScene else { return }
+                self.isPortrait = scene.interfaceOrientation.isPortrait
+            }
         }
     }
 }
