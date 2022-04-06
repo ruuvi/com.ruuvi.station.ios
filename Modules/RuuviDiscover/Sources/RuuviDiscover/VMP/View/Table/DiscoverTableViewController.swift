@@ -52,8 +52,11 @@ class DiscoverTableViewController: UITableViewController {
     var ruuviTags: [DiscoverRuuviTagViewModel] = [DiscoverRuuviTagViewModel]() {
         didSet {
             shownRuuviTags = ruuviTags
-                .filter({ !savedRuuviTagIds.contains( $0.luid )})
-                .sorted(by: {
+                .filter({ tag in
+                    !persistedSensors.contains(where: {
+                        $0.luid?.value == tag.luid?.value || $0.macId?.value == tag.mac
+                    })
+                }).sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
                     } else {
@@ -62,11 +65,14 @@ class DiscoverTableViewController: UITableViewController {
                 })
         }
     }
-    var savedRuuviTagIds: [AnyLocalIdentifier?] = [AnyLocalIdentifier?]() {
+    var persistedSensors: [RuuviTagSensor] = [RuuviTagSensor]() {
         didSet {
             shownRuuviTags = ruuviTags
-                .filter({ !savedRuuviTagIds.contains($0.luid) })
-                .sorted(by: {
+                .filter({ tag in
+                    !persistedSensors.contains(where: {
+                        $0.luid?.value == tag.luid?.value || $0.macId?.value == tag.mac
+                    })
+                }).sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
                     } else {

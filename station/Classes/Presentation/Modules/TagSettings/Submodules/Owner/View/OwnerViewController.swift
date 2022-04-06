@@ -13,6 +13,7 @@ final class OwnerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
+        output.viewDidTriggerFirmwareUpdateDialog()
     }
 }
 
@@ -42,5 +43,30 @@ extension OwnerViewController: OwnerViewInput {
         title = "Owner.title".localized()
         claimOwnershipDescriptionLabel.text = "Owner.Claim.description".localized()
         claimOwnershipButton.setTitle("Owner.ClaimOwnership.button".localized(), for: .normal)
+    }
+    func showFirmwareUpdateDialog() {
+        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidIgnoreFirmwareUpdateDialog()
+        }))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate()
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog() {
+        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: nil))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate()
+        }))
+        present(alert, animated: true)
     }
 }

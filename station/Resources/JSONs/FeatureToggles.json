@@ -11,6 +11,10 @@
       {
          "feature":"ios_dp_ah_alerts",
          "enabled":false
+      },
+      {
+         "feature":"ios_legacy_fw_update_dialog",
+         "enabled":false
       }
    ]
 }

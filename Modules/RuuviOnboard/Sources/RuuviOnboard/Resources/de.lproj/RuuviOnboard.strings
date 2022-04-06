@@ -1,0 +1,6 @@
+"RuuviOnboard.Welcome.title" = "Wischen Sie, um zu sehen, was Ruuvi Station für Sie tun kann";
+"RuuviOnboard.Measure.title" = "Umweltdaten messen: Temperatur, relative Luftfeuchtigkeit und Luftdruck";
+"RuuviOnboard.Access.title" = "Greifen Sie in Echtzeit auf Daten für jeden verknüpften Sensor zu und erkunden Sie Verlaufsdiagramme";
+"RuuviOnboard.Alerts.title" = "Stellen Sie Benachrichtigungen ein und lassen Sie sich benachrichtigen, wenn Ihre Limits erreicht werden";
+"RuuviOnboard.Start.title" = "Drücken Sie SCAN, um Sensoren in der Nähe zu finden und Ihrer Ruuvi Station hinzuzufügen";
+"RuuviOnboard.Start.button" = "SCAN";

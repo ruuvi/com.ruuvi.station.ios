@@ -190,9 +190,13 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 )
                 if observer.settings.saveHeartbeats {
                     let uuid = ruuviTag.uuid
-                    let interval = observer.settings.saveHeartbeatsIntervalMinutes
+                    // If the tag chart is on foreground store all advertisements
+                    // Otherwise respect the settings
+                    guard let luid = ruuviTag.luid else { return }
+                    // swiftlint:disable:next line_length
+                    let interval = observer.settings.tagChartOnForeground(for: luid) ? 2 : (observer.settings.saveHeartbeatsIntervalMinutes * 60)
                     if let date = observer.savedDate[uuid] {
-                        if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
+                        if Date().timeIntervalSince(date) > TimeInterval(interval) {
                             observer.ruuviPool.create(
                                 ruuviTag
                                     .with(source: .heartbeat)

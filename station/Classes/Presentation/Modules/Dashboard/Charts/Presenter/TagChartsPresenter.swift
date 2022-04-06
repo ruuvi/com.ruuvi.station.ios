@@ -142,9 +142,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
     }
+
     func handleClearSyncButtons() {
-        view.handleClearSyncButtons(sharedSensors: !ruuviTag.isOwner, isSyncing: interactor.isSyncingRecords() )
+        view.handleClearSyncButtons(cloudSensor: settings.cloudModeEnabled && viewModel.isCloud.value.bound,
+                                    sharedSensor: !ruuviTag.isOwner,
+                                    isSyncing: interactor.isSyncingRecords())
     }
+
     func viewDidTransition() {
         tryToShowSwipeUpHint()
     }
@@ -172,14 +176,11 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
-        view.showSyncConfirmationDialog(for: viewModel)
-    }
-
-    func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
-        view.showClearConfirmationDialog(for: viewModel)
-    }
-
-    func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
+        // Check bluetooth
+        guard foreground.bluetoothState == .poweredOn else {
+            view.showBluetoothDisabled()
+            return
+        }
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
@@ -206,6 +207,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
                 self?.errorPresenter.present(error: error)
             }
         }, completion: nil)
+    }
+
+    func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
+        view.showClearConfirmationDialog(for: viewModel)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {

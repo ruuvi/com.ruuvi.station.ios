@@ -10,6 +10,7 @@ class SignInPresenter: NSObject {
     enum State {
         case enterEmail
         case enterVerificationCode(_ code: String?)
+        case isSyncing
     }
 
     weak var view: SignInViewInput!
@@ -40,6 +41,7 @@ extension SignInPresenter: SignInViewOutput {
     func viewDidLoad() {
         syncViewModel()
         startObservingUniversalLinks()
+        startObservingAppState()
     }
 
     func viewDidClose() {
@@ -57,6 +59,8 @@ extension SignInPresenter: SignInViewOutput {
                 return
             }
             verify(code)
+        case .isSyncing:
+            return
         }
     }
 
@@ -92,7 +96,7 @@ extension SignInPresenter: SignInModuleInput {
 
 // MARK: - Private
 extension SignInPresenter {
-    private func syncViewModel() {
+    @objc private func syncViewModel() {
         viewModel = SignInViewModel()
         switch state {
         case .enterEmail:
@@ -115,6 +119,8 @@ extension SignInPresenter {
                 viewModel.canPopViewController.value = false
                 processCode(code)
             }
+        case .isSyncing:
+            return
         }
         bindViewModel()
     }
@@ -130,6 +136,8 @@ extension SignInPresenter {
                 if let text = text, text.isEmpty {
                     presenter.viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
                 }
+            case .isSyncing:
+                return
             }
         }
     }
@@ -170,6 +178,7 @@ extension SignInPresenter {
                 guard let sSelf = self else { return }
                 if sSelf.ruuviUser.email == result.email {
                     sSelf.ruuviUser.login(apiKey: result.apiKey)
+                    sSelf.state = .isSyncing
                     sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                         guard let ssSelf = sSelf else { return }
                         ssSelf.activityPresenter.decrement()
@@ -208,6 +217,39 @@ extension SignInPresenter {
             }
             self.processLink(userInfo)
         })
+    }
+
+    private func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(handleAppEnterForgroundState),
+                         name: UIApplication.willEnterForegroundNotification,
+                         object: nil)
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(handleAppEnterBackgroundState),
+                         name: UIApplication.didEnterBackgroundNotification,
+                         object: nil)
+    }
+
+    @objc private func handleAppEnterForgroundState() {
+        switch state {
+        case .isSyncing:
+            activityPresenter.increment()
+        default:
+            return
+        }
+    }
+
+    @objc private func handleAppEnterBackgroundState() {
+        switch state {
+        case .isSyncing:
+            activityPresenter.decrement()
+        default:
+            return
+        }
     }
 
     private func processLink(_ userInfo: [AnyHashable: Any]) {
