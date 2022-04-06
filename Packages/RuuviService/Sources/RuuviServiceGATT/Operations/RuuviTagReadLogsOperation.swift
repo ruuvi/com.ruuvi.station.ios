@@ -47,20 +47,25 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                                                     .serviceTimeout(serviceTimeout ?? 0)],
                                           progress: progress) { (observer, result) in
             switch result {
-            case .success(let logs):
-                let records = logs.map({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
-                    .with(source: .log)
-                    .with(sensorSettings: observer.sensorSettings)
-                })
-                let opLogs = observer.ruuviPool.create(records)
-                opLogs.on(success: { _ in
-                    observer.post(logs: logs, with: observer.uuid)
-                    observer.state = .finished
-                }, failure: { error in
-                    observer.post(error: error, with: observer.uuid)
-                    observer.error = .ruuviPool(error)
-                    observer.state = .finished
-                })
+            case .success(let logResult):
+                switch logResult {
+                case .points(let points):
+                    observer.post(points: points, with: observer.uuid)
+                case .logs(let logs):
+                    let records = logs.compactMap({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
+                        .with(source: .log)
+                        .with(sensorSettings: observer.sensorSettings)
+                    })
+                    let opLogs = observer.ruuviPool.create(records)
+                    opLogs.on(success: { _ in
+                        observer.post(logs: logs, with: observer.uuid)
+                        observer.state = .finished
+                    }, failure: { error in
+                        observer.post(error: error, with: observer.uuid)
+                        observer.error = .ruuviPool(error)
+                        observer.state = .finished
+                    })
+                }
             case .failure(let error):
                 observer.post(error: error, with: observer.uuid)
                 observer.error = .btkit(error)
@@ -76,6 +81,16 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                                             userInfo:
                 [RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
                  RuuviTagReadLogsOperationDidStartKey.fromDate: date])
+        }
+    }
+
+    private func post(points: Int, with uuid: String) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationProgress,
+                                            object: nil,
+                                            userInfo:
+                [RuuviTagReadLogsOperationProgressKey.uuid: uuid,
+                 RuuviTagReadLogsOperationProgressKey.progress: points])
         }
     }
 

@@ -292,6 +292,7 @@
 "hPa" = "гПа";
 "UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
+"TagCharts.Status.ReadingHistory" = "Чтение истории";
 "TagSettings.rssiTitleLabel.text" = "Сила сигнала (RSSI)";
 "s" = "с";
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
