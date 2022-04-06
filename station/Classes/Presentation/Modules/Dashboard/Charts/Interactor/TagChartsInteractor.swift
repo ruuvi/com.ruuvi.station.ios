@@ -191,6 +191,21 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         return promise.future
     }
 
+    func stopSyncRecords() -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        guard let luid = ruuviTagSensor.luid else {
+            promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
+            return promise.future
+        }
+        let op = gattService.stopGattSync(for: luid.value)
+        op.on(success: { response in
+            promise.succeed(value: (response))
+        }, failure: {error in
+            promise.fail(error: .ruuviService(error))
+        })
+        return promise.future
+    }
+
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         ruuviSensorRecords.clear(for: sensor)
