@@ -292,6 +292,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Zoll Quecksilber (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimeter Quecksilbersäule (mmHg)";
+"TagCharts.Status.ReadingHistory" = "History wird gelesen";
 "TagSettings.rssiTitleLabel.text" = "Signalstärke (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SCANNEN";

@@ -10,6 +10,7 @@ protocol TagChartsViewInput: ViewInput {
     func handleClearSyncButtons(cloudSensor: Bool, sharedSensor: Bool, isSyncing: Bool)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel)
+    func setSyncProgressViewHidden()
     func showFailedToSyncIn(connectionTimeout: TimeInterval)
     func showFailedToServeIn(serviceTimeout: TimeInterval)
     func showSwipeUpInstruction()

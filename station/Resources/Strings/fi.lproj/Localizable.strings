@@ -292,6 +292,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Elohopeatuuma (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Elohopeamillimetri (mmHg)";
+"TagCharts.Status.ReadingHistory" = "Historiatietoja luetaan";
 "TagSettings.rssiTitleLabel.text" = "Signaalin voimakkuus (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SKANNAA";

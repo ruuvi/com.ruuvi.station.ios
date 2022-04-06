@@ -132,12 +132,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
         interactor.restartObservingTags()
         handleClearSyncButtons()
         syncChartViews()
+        stopGattSync()
     }
 
     func viewWillDisappear() {
         stopObservingBluetoothState()
         interactor.stopObservingTags()
         interactor.stopObservingRuuviTagsData()
+        stopGattSync()
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
@@ -207,6 +209,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
                 self?.errorPresenter.present(error: error)
             }
         }, completion: nil)
+    }
+
+    func viewDidTriggerStopSync(for viewModel: TagChartsViewModel) {
+        stopGattSync()
     }
 
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
@@ -367,6 +373,14 @@ extension TagChartsPresenter {
         viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag) ? .registered : .empty
         self.viewModel = viewModel
     }
+
+    private func stopGattSync() {
+        interactor.stopSyncRecords()
+            .on(success: { [weak self] _ in
+                self?.view.setSyncProgressViewHidden()
+            })
+    }
+
     private func restartObservingData() {
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingData()
