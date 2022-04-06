@@ -292,6 +292,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Pouce de mercure (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimètre de mercure (mmHg)";
+"TagCharts.Status.ReadingHistory" = "Analyse de l'historique";
 "TagSettings.rssiTitleLabel.text" = "Puissance du signal (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "BALAYAGE EN COURS";
