@@ -4,6 +4,7 @@ import RuuviOntology
 import RuuviService
 import RuuviLocal
 import RuuviStorage
+import RuuviPresenters
 
 final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     weak var view: OffsetCorrectionViewInput!
@@ -73,15 +74,33 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         view.showClearConfirmationDialog()
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func viewDidSetCorrectValue(correctValue: Double) {
         var offset: Double = 0
         switch view.viewModel.type {
+        case .temperature:
+            let fromTemperature = view.viewModel.originalValue.value.bound
+            switch settings.temperatureUnit {
+            case .celsius:
+                offset = correctValue - fromTemperature
+            case .fahrenheit:
+                offset = correctValue.celsiusFromFahrenheit - fromTemperature
+            case .kelvin:
+                offset = correctValue.celsiusFromKelvin - fromTemperature
+            }
         case .humidity:
             offset = (correctValue / 100) - view.viewModel.originalValue.value.bound
         case .pressure:
-            offset = correctValue - view.viewModel.originalValue.value.bound
-        default:
-            offset = correctValue - view.viewModel.originalValue.value.bound
+            switch settings.pressureUnit {
+            case .hectopascals:
+                offset = correctValue - view.viewModel.originalValue.value.bound
+            case .inchesOfMercury:
+                offset = correctValue.hPaFrominHg - view.viewModel.originalValue.value.bound
+            case .millimetersOfMercury:
+                offset = correctValue.hPaFrommmHg - view.viewModel.originalValue.value.bound
+            default:
+                offset = correctValue - view.viewModel.originalValue.value.bound
+            }
         }
         ruuviOffsetCalibrationService.set(
             offset: offset,

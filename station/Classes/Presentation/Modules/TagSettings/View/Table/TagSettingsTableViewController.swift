@@ -18,6 +18,10 @@ enum TagSettingsTableSection: Int {
         return viewModel?.isConnectable.value ?? false
     }
 
+    static func enableConnection(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isConnectionSectionEnabled.value ?? false
+    }
+
     static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isAlertsVisible.value ?? false
     }
@@ -36,6 +40,10 @@ enum TagSettingsTableSection: Int {
 
     static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.canShowUpdateFirmware.value ?? false
+    }
+
+    static func showOffsetCorrection(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isOwner.value == true
     }
 }
 
@@ -82,10 +90,9 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
-    @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
+    @IBOutlet weak var firmwareRefreshButton: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
-    @IBOutlet weak var uuidValueLabel: UILabel!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
     @IBOutlet weak var accelerationZValueLabel: UILabel!
@@ -96,14 +103,15 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var uploadBackgroundIndicatorView: UIView!
     @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
     @IBOutlet weak var tagNameTextField: UITextField!
+    @IBOutlet weak var firmwareVersionValueLabel: UILabel!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
     @IBOutlet weak var txPowerValueLabel: UILabel!
     @IBOutlet weak var backgroundImageLabel: UILabel!
     @IBOutlet weak var tagNameTitleLabel: UILabel!
-    @IBOutlet weak var uuidTitleLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var rssiTitleLabel: UILabel!
+    @IBOutlet weak var firmwareVersionTitleLabel: UILabel!
     @IBOutlet weak var dataFormatTitleLabel: UILabel!
     @IBOutlet weak var batteryVoltageTitleLabel: UILabel!
     @IBOutlet weak var accelerationXTitleLabel: UILabel!
@@ -146,17 +154,27 @@ class TagSettingsTableViewController: UITableViewController {
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
     private let alertOffString = "TagSettings.Alerts.Off"
     private static var localizedCache: LocalizedCache = LocalizedCache()
+    /// The limit for the tag name is 32 characters
+    private let tagNameCharaterLimit: Int = 32
 }
 
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
-    // swiftlint:disable:next function_body_length
+    /// If settings page is opened using the alert bell tableview will be
+    /// scrolled to the alert settings section
+    func updateScrollPosition(scrollToAlert: Bool) {
+        if scrollToAlert {
+            let scrollToSection = TagSettingsTableSection.showConnection(for: viewModel) ? 2 : 1
+            let indexPath = IndexPath(row: 0, section: scrollToSection)
+            tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        }
+    }
+
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
         tagNameTitleLabel.text = "TagSettings.tagNameTitleLabel.text".localized()
         rssiTitleLabel.text = "TagSettings.rssiTitleLabel.text".localized()
-        uuidTitleLabel.text = "TagSettings.uuidTitleLabel.text".localized()
         macAddressTitleLabel.text = "TagSettings.macAddressTitleLabel.text".localized()
         dataFormatTitleLabel.text = "TagSettings.dataFormatTitleLabel.text".localized()
         batteryVoltageTitleLabel.text = "TagSettings.batteryVoltageTitleLabel.text".localized()
@@ -191,6 +209,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
         pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
 
+        firmwareVersionTitleLabel.text = "TagSettings.Firmware.CurrentVersion".localized()
         updateFirmwareTitleLabel.text = "TagSettings.Firmware.UpdateFirmware".localized()
 
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
@@ -201,11 +220,13 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         tableView.reloadData()
     }
 
-    func showTagRemovalConfirmationDialog() {
+    func showTagRemovalConfirmationDialog(isOwner: Bool) {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = "TagSettings.confirmTagRemovalDialog.message".localized()
+        let message = isOwner ?
+        "TagSettings.confirmTagRemovalDialog.message".localized() :
+        "TagSettings.confirmSharedTagRemovalDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+        controller.addAction(UIAlertAction(title: isOwner ? "Confirm".localized() : "Ok".localized(),
                                            style: .destructive,
                                            handler: { [weak self] _ in
                                             self?.output.viewDidConfirmTagRemoval()
@@ -239,30 +260,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         present(controller, animated: true)
     }
 
-    func showUUIDDetail() {
-        let title = "TagSettings.UUID.Alert.title".localized()
-        let controller = UIAlertController(title: title, message: viewModel?.uuid.value, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
-            if let uuid = self?.viewModel?.uuid.value {
-                UIPasteboard.general.string = uuid
-            }
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
-    func showUpdateFirmwareDialog() {
-        let title = "TagSettings.UpdateFirmware.Alert.title".localized()
-        let message = "TagSettings.UpdateFirmware.Alert.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let actionTitle = "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title".localized()
-        controller.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidAskToLearnMoreAboutFirmwareUpdate()
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
     func showBothNotConnectedAndNoPNPermissionDialog() {
         let message = "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -283,6 +280,32 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
+    }
+
+    func showFirmwareUpdateDialog() {
+        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidIgnoreFirmwareUpdateDialog()
+        }))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate()
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog() {
+        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: nil))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate()
+        }))
+        present(alert, animated: true)
     }
 
     func showExportSheet(with path: URL) {
@@ -341,6 +364,7 @@ extension TagSettingsTableViewController {
     }
 
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
+        viewModel?.isConnectionSwitchEnabled.value = false
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
     }
 
@@ -370,8 +394,6 @@ extension TagSettingsTableViewController {
             output.viewDidTapShareButton()
         case macAddressCell:
             output.viewDidTapOnMacAddress()
-        case uuidCell:
-            output.viewDidTapOnUUID()
         case txPowerCell:
             output.viewDidTapOnTxPower()
         case msnCell:
@@ -398,7 +420,9 @@ extension TagSettingsTableViewController {
         case .general:
             return "TagSettings.SectionHeader.General.title".localized()
         case .offsetCorrection:
-            return "TagSettings.SectionHeader.OffsetCorrection.Title".localized()
+            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            return showOffsetCorrection ? "TagSettings.SectionHeader.OffsetCorrection.Title".localized() : nil
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
@@ -407,6 +431,18 @@ extension TagSettingsTableViewController {
                 ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
         case .remove:
             return "TagSettings.SectionHeader.Remove.title".localized()
+        default:
+            return nil
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        let section = TagSettingsTableSection.section(for: section)
+        switch section {
+        case .connection:
+            return !TagSettingsTableSection.enableConnection(for: viewModel) &&
+            TagSettingsTableSection.showConnection(for: viewModel)
+            ? "TagSettings.Connection.description".localized() : nil
         default:
             return nil
         }
@@ -439,6 +475,10 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
+        case .offsetCorrection:
+            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            return showOffsetCorrection ? super.tableView(tableView, heightForHeaderInSection: section) : 0.01
         case .moreInfo:
             return 44
         case .alerts:
@@ -481,6 +521,10 @@ extension TagSettingsTableViewController {
             } else {
                 return 1
             }
+        case .offsetCorrection:
+            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            return showOffsetCorrection ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
@@ -528,6 +572,10 @@ extension TagSettingsTableViewController {
                 return (viewModel?.isConnectionAlertOn.value ?? false) ? descriptionHeight : 0
             case movementAlertDescriptionCell:
                 return (viewModel?.isMovementAlertOn.value ?? false) ? descriptionHeight : 0
+            case humidityOffsetCorrectionCell:
+                return (viewModel?.humidityOffsetCorrectionVisible.value ?? false) ? 44 : 0
+            case pressureOffsetCorrectionCell:
+                return (viewModel?.pressureOffsetCorrectionVisible.value ?? false) ? 44 : 0
             default:
                 return 44
             }
@@ -548,6 +596,10 @@ extension TagSettingsTableViewController {
                  movementAlertHeaderCell,
                  movementAlertDescriptionCell:
                 return 0
+            case humidityOffsetCorrectionCell:
+                return (viewModel?.humidityOffsetCorrectionVisible.value ?? false) ? 44 : 0
+            case pressureOffsetCorrectionCell:
+                return (viewModel?.pressureOffsetCorrectionVisible.value ?? false) ? 44 : 0
             default:
                 return 44
             }
@@ -802,14 +854,6 @@ extension TagSettingsTableViewController {
 
         let emptyValueString = "TagSettings.EmptyValue.sign"
 
-        uuidValueLabel.bind(viewModel.uuid) { label, uuid in
-            if let uuid = uuid {
-                label.text = uuid
-            } else {
-                label.text = emptyValueString.localized()
-            }
-        }
-
         macAddressValueLabel.bind(viewModel.mac) { label, mac in
             if let mac = mac {
                 label.text = mac
@@ -853,6 +897,14 @@ extension TagSettingsTableViewController {
         accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
             if let accelerationZ = accelerationZ {
                 label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
+            } else {
+                label.text = emptyValueString.localized()
+            }
+        }
+
+        firmwareVersionValueLabel.bind(viewModel.firmwareVersion) { (label, version) in
+            if let version = version {
+                label.text = version
             } else {
                 label.text = emptyValueString.localized()
             }
@@ -920,6 +972,15 @@ extension TagSettingsTableViewController {
             view.isOn = keepConnection.bound
         }
 
+        keepConnectionSwitch.bind(viewModel.isConnected) { (view, isConnected) in
+            view.isOn = isConnected.bound
+            view.isEnabled = true
+        }
+
+        keepConnectionSwitch.bind(viewModel.isConnectionSwitchEnabled) { (view, isEnabled) in
+            view.isEnabled = isEnabled.bound
+        }
+
         connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
             let isConnected = isConnected?.value ?? false
             if isConnected {
@@ -929,6 +990,19 @@ extension TagSettingsTableViewController {
             } else {
                 label.text = "TagSettings.ConnectStatus.Disconnected".localized()
             }
+        }
+
+        connectStatusLabel.bind(viewModel.isConnectionSectionEnabled) { (label, isEnabled) in
+            label.alpha = isEnabled.bound ? 1 : 0.5
+        }
+
+        keepConnectionSwitch.bind(viewModel.isConnectionSectionEnabled) { (view, isEnabled) in
+            view.isEnabled = isEnabled.bound
+            view.alpha = isEnabled.bound ? 1 : 0.5
+        }
+
+        keepConnectionTitleLabel.bind(viewModel.isConnectionSectionEnabled) { (label, isEnabled) in
+            label.alpha = isEnabled.bound ? 1 : 0.5
         }
 
         bindOffsetCorrectionCells()
@@ -1010,8 +1084,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1060,8 +1133,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isConnectionAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1108,8 +1180,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isMovementAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1192,8 +1263,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1278,8 +1348,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isRelativeHumidityAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1362,8 +1431,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1450,8 +1518,7 @@ extension TagSettingsTableViewController {
 
         tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
             if tableView.window != nil {
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                tableView.reloadData()
             }
         }
     }
@@ -1477,9 +1544,19 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITextFieldDelegate
 extension TagSettingsTableViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return false
+    func textField(_ textField: UITextField, shouldChangeCharactersIn
+                   range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard textField == tagNameTextField else {
+            textField.resignFirstResponder()
+            return true
+        }
+        let limit = (textField.text?.utf16.count)! + string.utf16.count - range.length
+        if limit <= tagNameCharaterLimit {
+            return true
+        } else {
+            return false
+        }
     }
 }
 

@@ -19,3 +19,7 @@ json:
     outputs:
       - templatePath: ./templates/Localizable_fr.strings.stencil
         output: ./station/Resources/Strings/fr.lproj/Localizable.strings
+  - inputs: ./station.localization/station.localization.json
+    outputs:
+      - templatePath: ./templates/Localizable_de.strings.stencil
+        output: ./station/Resources/Strings/de.lproj/Localizable.strings

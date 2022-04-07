@@ -1,6 +1,11 @@
+// swiftlint:disable file_length
 import Foundation
 import Combine
 import RuuviOntology
+import RuuviPool
+import RuuviLocal
+import RuuviDaemon
+import RuuviPresenters
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
@@ -11,13 +16,31 @@ final class DFUViewModel: ObservableObject {
     private let input = PassthroughSubject<Event, Never>()
     private let interactor: DFUInteractorInput
     private let ruuviTag: RuuviTagSensor
+    private let ruuviPool: RuuviPool
+    private let settings: RuuviLocalSettings
+    private let propertiesDaemon: RuuviTagPropertiesDaemon
+    private let activityPresenter: ActivityPresenter
+
+    var isLoading: Bool = false {
+        didSet {
+            isLoading ? activityPresenter.increment() : activityPresenter.decrement()
+        }
+    }
 
     init(
         interactor: DFUInteractorInput,
-        ruuviTag: RuuviTagSensor
+        ruuviTag: RuuviTagSensor,
+        ruuviPool: RuuviPool,
+        settings: RuuviLocalSettings,
+        propertiesDaemon: RuuviTagPropertiesDaemon,
+        activityPresenter: ActivityPresenter
     ) {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
+        self.ruuviPool = ruuviPool
+        self.settings = settings
+        self.propertiesDaemon = propertiesDaemon
+        self.activityPresenter = activityPresenter
         Publishers.system(
             initial: state,
             reduce: Self.reduce,
@@ -43,6 +66,28 @@ final class DFUViewModel: ObservableObject {
 
     func send(event: Event) {
         input.send(event)
+    }
+
+    func storeUpdatedFirmware(latestRelease: LatestRelease) {
+        guard let luid = ruuviTag.luid else { return }
+        let firmwareVersion = latestRelease.version.replace("Ruuvi FW ", with: "")
+        settings.setFirmwareVersion(for: luid, value: firmwareVersion)
+        isLoading = true
+        // If the tag is stored on realm then migration needed
+        // Usually tags without macId are stored in the realm database
+        // For tags with macId don't need migration
+        if ruuviTag.macId != nil {
+            ruuviPool.update(ruuviTag
+                .with(isConnectable: true)
+                .with(firmwareVersion: firmwareVersion))
+            .on(success: { [weak self] _ in
+                self?.isLoading = false
+            }, failure: { [weak self] _ in
+                self?.isLoading = false
+            })
+        } else {
+            propertiesDaemon.start()
+        }
     }
 }
 
@@ -77,7 +122,7 @@ extension DFUViewModel {
                 appUrl: URL,
                 fullUrl: URL
              )
-        case successfulyFlashed
+        case successfulyFlashed(LatestRelease)
         case error(Error)
     }
 
@@ -124,7 +169,7 @@ extension DFUViewModel {
                 appUrl: URL,
                 fullUrl: URL
              )
-        case onSuccessfullyFlashedFirmware
+        case onSuccessfullyFlashedFirmware(LatestRelease)
         case onDidFailFlashingFirmware(Error)
     }
 }
@@ -220,8 +265,8 @@ extension DFUViewModel {
             }
         case .flashing:
             switch event {
-            case .onSuccessfullyFlashedFirmware:
-                return .successfulyFlashed
+            case .onSuccessfullyFlashedFirmware(let latestRelease):
+                return .successfulyFlashed(latestRelease)
             case .onDidFailFlashingFirmware(let error):
                 return .error(error)
             default:
@@ -264,7 +309,7 @@ extension DFUViewModel {
             .compactMap({ [weak sSelf] response in
                 switch response {
                 case .done:
-                    return Event.onSuccessfullyFlashedFirmware
+                    return Event.onSuccessfullyFlashedFirmware(latestRelease)
                 case .progress(let percentage):
                     sSelf?.flashProgress = percentage
                     return nil

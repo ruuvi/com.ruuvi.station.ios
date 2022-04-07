@@ -8,10 +8,12 @@ public struct RuuviTagSQLite: RuuviTagSensor {
     public var luid: LocalIdentifier?
     public var name: String
     public var version: Int
+    public var firmwareVersion: String?
     public var isConnectable: Bool
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
+    public var isCloudSensor: Bool?
 
     public init(
         id: String,
@@ -19,20 +21,24 @@ public struct RuuviTagSQLite: RuuviTagSensor {
         luid: LocalIdentifier?,
         name: String,
         version: Int,
+        firmwareVersion: String?,
         isConnectable: Bool,
         isClaimed: Bool,
         isOwner: Bool,
-        owner: String?
+        owner: String?,
+        isCloudSensor: Bool?
     ) {
         self.id = id
         self.macId = macId
         self.luid = luid
         self.name = name
         self.version = version
+        self.firmwareVersion = firmwareVersion
         self.isConnectable = isConnectable
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.isCloudSensor = isCloudSensor
     }
 }
 
@@ -42,11 +48,13 @@ extension RuuviTagSQLite {
     public static let luidColumn = Column("luid")
     public static let nameColumn = Column("name")
     public static let versionColumn = Column("version")
+    public static let firmwareVersionColumn = Column("firmwareVersion")
     public static let isConnectableColumn = Column("isConnectable")
     public static let networkProviderColumn = Column("networkProvider")
     public static let isClaimedColumn = Column("isClaimed")
     public static let isOwnerColumn = Column("isOwner")
     public static let owner = Column("owner")
+    public static let isCloudSensor = Column("isCloudSensor")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -60,10 +68,12 @@ extension RuuviTagSQLite: FetchableRecord {
         }
         name = row[RuuviTagSQLite.nameColumn]
         version = row[RuuviTagSQLite.versionColumn]
+        firmwareVersion = row[RuuviTagSQLite.firmwareVersionColumn]
         isConnectable = row[RuuviTagSQLite.isConnectableColumn]
         isClaimed = row[RuuviTagSQLite.isClaimedColumn]
         isOwner = row[RuuviTagSQLite.isOwnerColumn]
         owner = row[RuuviTagSQLite.owner]
+        isCloudSensor = row[RuuviTagSQLite.isCloudSensor]
     }
 }
 
@@ -78,10 +88,12 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.luidColumn] = luid?.value
         container[RuuviTagSQLite.nameColumn] = name
         container[RuuviTagSQLite.versionColumn] = version
+        container[RuuviTagSQLite.firmwareVersionColumn] = firmwareVersion
         container[RuuviTagSQLite.isConnectableColumn] = isConnectable
         container[RuuviTagSQLite.isClaimedColumn] = isClaimed
         container[RuuviTagSQLite.isOwnerColumn] = isOwner
         container[RuuviTagSQLite.owner] = owner
+        container[RuuviTagSQLite.isCloudSensor] = isCloudSensor
     }
 }
 
@@ -93,6 +105,7 @@ extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.luidColumn.name, .text)
             table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
             table.column(RuuviTagSQLite.versionColumn.name, .integer).notNull()
+            table.column(RuuviTagSQLite.firmwareVersionColumn.name, .text)
             table.column(RuuviTagSQLite.isConnectableColumn.name, .boolean).notNull()
             table.column(RuuviTagSQLite.isClaimedColumn.name, .boolean)
                 .notNull()
@@ -101,6 +114,7 @@ extension RuuviTagSQLite {
                 .notNull()
                 .defaults(to: true)
             table.column(RuuviTagSQLite.owner.name, .text)
+            table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
         })
     }
 }

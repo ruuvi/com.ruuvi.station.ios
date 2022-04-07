@@ -21,166 +21,224 @@ extension RuuviTagSensor {
     public var `struct`: RuuviTagSensorStruct {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(isClaimed: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(isOwner: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(version: Int) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
+        )
+    }
+
+    public func with(firmwareVersion: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(name: String) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(owner: String) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(macId: MACIdentifier) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func withoutMac() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: nil,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func withoutOwner() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: nil
+            owner: nil,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(isConnectable: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
             isOwner: isOwner,
-            owner: owner
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func with(cloudSensor: CloudSensor) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+        let sensor = RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: cloudSensor.name.isEmpty ? cloudSensor.id : cloudSensor.name,
             isClaimed: cloudSensor.isOwner,
             isOwner: cloudSensor.isOwner,
-            owner: cloudSensor.owner
+            owner: cloudSensor.owner,
+            isCloudSensor: cloudSensor.isCloudSensor ?? true
+        )
+        return sensor
+    }
+
+    public func with(isCloudSensor: Bool) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            isCloudSensor: isCloudSensor
         )
     }
 
     public func unclaimed() -> RuuviTagSensor {
         return RuuviTagSensorStruct(
             version: version,
+            firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
             isConnectable: isConnectable,
             name: name,
             isClaimed: false,
             isOwner: true,
-            owner: owner
+            owner: owner,
+            isCloudSensor: false
         )
     }
 
+    /// This is a computed property to unwrap the optional isCloudSensor property from database
+    /// The property returns false if isCloudSensor is nil, otherwise returns the stored value
     public var isCloud: Bool {
-        return owner != nil || isClaimed
+        return isCloudSensor ?? false
     }
 }
 
 public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var version: Int
+    public var firmwareVersion: String?
     public var luid: LocalIdentifier? // local unqiue id
     public var macId: MACIdentifier?
     public var isConnectable: Bool
@@ -188,18 +246,22 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
+    public var isCloudSensor: Bool?
 
     public init(
         version: Int,
+        firmwareVersion: String?,
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
         isConnectable: Bool,
         name: String,
         isClaimed: Bool,
         isOwner: Bool,
-        owner: String?
+        owner: String?,
+        isCloudSensor: Bool?
     ) {
         self.version = version
+        self.firmwareVersion = firmwareVersion
         self.luid = luid
         self.macId = macId
         self.isConnectable = isConnectable
@@ -207,6 +269,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.isCloudSensor = isCloudSensor
     }
 }
 
@@ -222,6 +285,9 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
     public var version: Int {
         return object.version
+    }
+    public var firmwareVersion: String? {
+        return object.firmwareVersion
     }
     public var luid: LocalIdentifier? {
         return object.luid
@@ -244,7 +310,9 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     public var owner: String? {
         return object.owner
     }
-
+    public var isCloudSensor: Bool? {
+        return object.isCloudSensor
+    }
     public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
         let idIsEqual = lhs.id == rhs.id
         var luidIsEqual = false

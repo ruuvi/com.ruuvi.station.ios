@@ -5,6 +5,9 @@ import RuuviReactor
 import RuuviLocal
 import RuuviService
 import RuuviVirtual
+import RuuviPresenters
+import RuuviUser
+import RuuviStorage
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
@@ -16,6 +19,8 @@ class SettingsPresenter: SettingsModuleInput {
     var realmContext: RealmContext!
     var featureToggleService: FeatureToggleService!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
+    var ruuviUser: RuuviUser!
+    var ruuviStorage: RuuviStorage!
 
     private var languageToken: NSObjectProtocol?
     private var ruuviTagsToken: RuuviReactorToken?
@@ -63,6 +68,13 @@ extension SettingsPresenter: SettingsViewOutput {
             }
         })
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
+        ruuviStorage.readAll().on(success: { [weak self] tags in
+            guard let sSelf = self else { return }
+            let cloudTagsCount = tags.filter({ $0.isOwner || $0.isCloud }).count
+            let cloudModeVisible = sSelf.ruuviUser.isAuthorized && cloudTagsCount > 0
+            sSelf.view.cloudModeVisible = cloudModeVisible
+            sSelf.view.cloudModeEnabled = sSelf.settings.cloudModeEnabled
+        })
     }
 
     func viewDidTapTemperatureUnit() {
@@ -109,10 +121,6 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openLanguage()
     }
 
-    func viewDidTapOnForeground() {
-        router.openForeground()
-    }
-
     func viewDidTapOnDefaults() {
         router.openDefaults()
     }
@@ -121,8 +129,8 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openHeartbeat()
     }
 
-    func viewDidTapOnAdvanced() {
-        router.openAdvanced()
+    func viewDidTapOnChart() {
+        router.openChart()
     }
 
     func viewDidTapOnExperimental() {
@@ -135,6 +143,11 @@ extension SettingsPresenter: SettingsViewOutput {
         }
         settings.experimentalFeaturesEnabled = true
         view.experimentalFunctionsEnabled = true
+    }
+
+    func viewCloudModeDidChange(isOn: Bool) {
+        settings.cloudModeEnabled = isOn
+        ruuviAppSettingsService.set(cloudMode: isOn)
     }
 }
 extension SettingsPresenter: SelectionModuleOutput {

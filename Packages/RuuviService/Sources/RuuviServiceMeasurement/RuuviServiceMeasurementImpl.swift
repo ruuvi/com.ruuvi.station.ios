@@ -113,7 +113,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
-        let number = NSNumber(value: value)
+        let number = NSNumber(value: value.round(to: numberFormatter.maximumFractionDigits))
         numberFormatter.numberStyle = .decimal
         numberFormatter.locale = settings.language.locale
         return numberFormatter.string(from: number) ?? emptyValueString
@@ -259,7 +259,11 @@ extension RuuviServiceMeasurementImpl {
     }
 
     public func humidityOffsetCorrectionString(for humidity: Double) -> String {
-        return "\((humidityOffsetCorrection(for: humidity) * 100).round(to: 2)) \(percentString)"
+        return humidityFormatter.string(
+            from: Humidity(value: humidityOffsetCorrection(for: humidity),
+                           unit: UnitHumidity.relative(temperature: Temperature(value: 0.0,
+                                                                                unit: UnitTemperature.celsius)))
+        )
     }
 
     public func pressureOffsetCorrection(for pressure: Double) -> Double {

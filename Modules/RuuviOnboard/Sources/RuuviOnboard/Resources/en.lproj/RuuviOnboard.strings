@@ -1,0 +1,6 @@
+"RuuviOnboard.Welcome.title" = "Swipe to see what Ruuvi Station can do for you";
+"RuuviOnboard.Measure.title" = "Measure environmental data: temperature, relative humidity and air pressure";
+"RuuviOnboard.Access.title" = "Access data for each linked sensor in real time and explore history graphs";
+"RuuviOnboard.Alerts.title" = "Set alerts and get notified whenever your limits are hit";
+"RuuviOnboard.Start.title" = "Press SCAN to find and add nearby sensors to your Ruuvi Station";
+"RuuviOnboard.Start.button" = "SCAN";

@@ -15,6 +15,7 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
                 ? String(format: dewPointFormat, units.temperatureUnit.symbol)
                 : String(format: humidityFormat, units.humidityUnit.symbol),
             String(format: pressureFormat, units.pressureUnit.symbol),
+            "RSSI",
             "ExportService.AccelerationX".localized(),
             "ExportService.AccelerationY".localized(),
             "ExportService.AccelerationZ".localized(),

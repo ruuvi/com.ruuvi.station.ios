@@ -3,6 +3,9 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviPresenters
+import RuuviUser
+import RuuviStorage
 
 class SettingsTableConfigurator {
     func configure(view: SettingsTableViewController) {
@@ -21,6 +24,8 @@ class SettingsTableConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
+        presenter.ruuviUser = r.resolve(RuuviUser.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
 
         view.output = presenter
     }

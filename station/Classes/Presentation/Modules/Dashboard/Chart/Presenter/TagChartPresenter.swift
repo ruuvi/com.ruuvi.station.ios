@@ -4,7 +4,7 @@ import UIKit
 import RuuviOntology
 import RuuviLocal
 import RuuviService
-
+// swiftlint:disable file_length
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
     var settings: RuuviLocalSettings!
@@ -13,7 +13,8 @@ class TagChartPresenter: NSObject {
             self.view.configure(with: viewModel)
         }
     }
-    weak var ouptut: TagChartModuleOutput!
+    weak var output: TagChartModuleOutput!
+    private var sensorSettings: SensorSettings?
     var measurementService: RuuviServiceMeasurement! {
         didSet {
             measurementService.add(self)
@@ -67,9 +68,13 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput, luid: LocalIdentifier?) {
+    func configure(_ viewModel: TagChartViewModel,
+                   sensorSettings: SensorSettings?,
+                   output: TagChartModuleOutput,
+                   luid: LocalIdentifier?) {
         configureViewModel(viewModel)
-        self.ouptut = output
+        self.output = output
+        self.sensorSettings = sensorSettings
         self.luid = luid
     }
 
@@ -79,7 +84,7 @@ extension TagChartPresenter: TagChartModuleInput {
     }
 
     func reloadChart() {
-        if ouptut.dataSource.count == 0 {
+        if output.dataSource.count == 0 {
             handleEmptyResults()
         } else {
             createChartData()
@@ -103,11 +108,11 @@ extension TagChartPresenter: TagChartViewOutput {
     }
 
     func chartDidScale(_ chartView: TagChartView) {
-        ouptut?.chartViewDidChangeViewPort(chartView)
+        output?.chartViewDidChangeViewPort(chartView)
     }
 
     func chartDidTranslate(_ chartView: TagChartView) {
-        ouptut?.chartViewDidChangeViewPort(chartView)
+        output?.chartViewDidChangeViewPort(chartView)
     }
 }
 extension TagChartPresenter: RuuviServiceMeasurementDelegate {
@@ -133,7 +138,7 @@ extension TagChartPresenter {
     }
     private func handleEmptyResults() {
         view.clearChartData()
-        if let last = ouptut.lastMeasurement {
+        if let last = output.lastMeasurement {
             setDownSampled(dataSet: [last],
                            completion: { [weak self] in
                 self?.view.reloadData()
@@ -156,20 +161,28 @@ extension TagChartPresenter {
         if let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
                                                               value: -settings.chartDurationHours,
                                                               to: Date())?.timeIntervalSince1970,
-            let firstDate = ouptut.dataSource.first?.date.timeIntervalSince1970,
-            let lastDate = ouptut.dataSource.last?.date.timeIntervalSince1970,
+            let firstDate = output.dataSource.first?.date.timeIntervalSince1970,
+            let lastDate = output.dataSource.last?.date.timeIntervalSince1970,
             (lastDate - firstDate) > (currentDate - chartDurationThreshold) {
             fetchPointsByDates(start: chartDurationThreshold,
                                stop: currentDate,
                                completion: { [weak self] in
                                 self?.view.setXRange(min: firstDate, max: currentDate)
+                                self?.view.setXAxisRenderer()
+                                if let lineChartData = self?.viewModel.chartData.value {
+                                    self?.view.setYAxisLimit(min: lineChartData.yMin, max: lineChartData.yMax)
+                                }
                                 self?.view.reloadData()
                                 self?.view.fitZoomTo(min: chartDurationThreshold, max: currentDate)
                                 self?.view.resetCustomAxisMinMax()
             })
         } else {
-            setDownSampled(dataSet: ouptut.dataSource,
+            setDownSampled(dataSet: output.dataSource,
                            completion: { [weak self] in
+                if let lineChartData = self?.viewModel.chartData.value {
+                    self?.view.setYAxisLimit(min: lineChartData.yMin, max: lineChartData.yMax)
+                }
+                self?.view.setXAxisRenderer()
                 self?.view.reloadData()
             })
         }
@@ -177,11 +190,13 @@ extension TagChartPresenter {
 
     private func createChartDataWithoutDownsampling() {
         let lineChartData = LineChartData(dataSet: newDataSet())
-        ouptut.dataSource.forEach({
+        output.dataSource.forEach({
             addEntry(for: lineChartData, data: $0)
         })
         viewModel.chartData.value = lineChartData
         drawCirclesIfNeeded(for: chartData)
+        view.setYAxisLimit(min: lineChartData.yMin, max: lineChartData.yMax)
+        view.setXAxisRenderer()
         view.reloadData()
     }
 
@@ -227,7 +242,8 @@ extension TagChartPresenter {
                 dataSet.circleRadius = 6
                 dataSet.drawCirclesEnabled = true
             default:
-                dataSet.drawCirclesEnabled = false
+                dataSet.circleRadius = 0.8
+                dataSet.drawCirclesEnabled = settings.chartDrawDotsOn
             }
         }
     }
@@ -240,7 +256,7 @@ extension TagChartPresenter {
                 $0.cancel()
             }
         })
-        let filterOperation = ChartFilterOperation(array: ouptut.dataSource,
+        let filterOperation = ChartFilterOperation(array: output.dataSource,
                                                    threshold: threshold,
                                                    type: viewModel.type,
                                                    start: start,
@@ -264,13 +280,46 @@ extension TagChartPresenter {
         var value: Double?
         switch viewModel.type {
         case .temperature:
-            value = measurementService.double(for: data.temperature)
+            var temp: Temperature?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has temperature offset added, calculate and get original temp data
+            // 2: Apply current sensor settings
+            if let offset = data.temperatureOffset, offset != 0 {
+                temp = data.temperature?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                temp = data.temperature?.plus(sensorSettings: sensorSettings)
+            }
+            value = measurementService.double(for: temp) ?? 0
         case .humidity:
-            value = measurementService.double(for: data.humidity,
-                                              temperature: data.temperature,
+            var humidity: Humidity?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has humidity offset added, calculate and get original humidity data
+            // 2: Apply current sensor settings
+            if let offset = data.humidityOffset, offset != 0 {
+                humidity = data.humidity?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                humidity = data.humidity?.plus(sensorSettings: sensorSettings)
+            }
+            value = measurementService.double(for: humidity,
+                                                 temperature: data.temperature,
                                               isDecimal: false)
         case .pressure:
-            if let value = measurementService.double(for: data.pressure) {
+            var pressure: Pressure?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has pressure offset added, calculate and get original pressure data
+            // 2: Apply current sensor settings
+            if let offset = data.pressureOffset, offset != 0 {
+                pressure = data.pressure?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                pressure = data.pressure?.plus(sensorSettings: sensorSettings)
+            }
+            if let value = measurementService.double(for: pressure) {
                 return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
             } else {
                 return nil
@@ -281,8 +330,7 @@ extension TagChartPresenter {
         guard let y = value else {
             return nil
         }
-        let rounded = Double(round(10*y)/10)
-        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: rounded)
+        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: y)
     }
 
     private func addEntry(for chartData: ChartData, data: RuuviMeasurement, dataSetIndex: Int = 0) {

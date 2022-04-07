@@ -15,6 +15,7 @@ struct DFUUIView: View {
         let downloadingTitle = "DFUUIView.downloadingTitle".localized()
         let prepareTitle = "DFUUIView.prepareTitle".localized()
         let openCoverTitle = "DFUUIView.openCoverTitle".localized()
+        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized()
         let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized()
         let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized()
         let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized()
@@ -36,6 +37,9 @@ struct DFUUIView: View {
                 )
         }
         .onAppear { self.viewModel.send(event: .onAppear) }
+        .onReceive(.RuuviTagMigrationDidComplete) { _ in
+            self.viewModel.isLoading = false
+        }
     }
 
     private var content: some View {
@@ -175,85 +179,97 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case .listening:
             return VStack {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(texts.prepareTitle).bold()
-                    Text(texts.openCoverTitle)
-                    Text(texts.setUpdatingModeTitle)
-                    Text(texts.toBootModeTwoButtonsDescription)
-                    Text(texts.toBootModeOneButtonDescription)
-                    Text(texts.toBootModeSuccessTitle)
-                }
-
-                Button(
-                    action: {},
-                    label: {
-                        HStack {
-                            Text(texts.searchingTitle)
-                            Spinner(isAnimating: true, style: .medium).eraseToAnyView()
-                        }.frame(maxWidth: .infinity)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        RuuviBoardView()
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text(texts.prepareTitle).bold()
+                            Text(texts.openCoverTitle)
+                            Text(texts.localBootButtonTitle)
+                            Text(texts.setUpdatingModeTitle)
+                            Text(texts.toBootModeTwoButtonsDescription)
+                            Text(texts.toBootModeOneButtonDescription)
+                            Text(texts.toBootModeSuccessTitle)
+                        }
+                        Button(
+                            action: {},
+                            label: {
+                                HStack {
+                                    Text(texts.searchingTitle)
+                                        .foregroundColor(.secondary)
+                                    Spinner(isAnimating: true, style: .medium).eraseToAnyView()
+                                }.frame(maxWidth: .infinity)
+                            }
+                        )
+                        .buttonStyle(
+                            LargeButtonStyle(
+                                backgroundColor: RuuviColor.dustyBlue,
+                                foregroundColor: Color.white,
+                                isDisabled: true
+                            )
+                        )
+                        .padding()
+                        .disabled(true)
+                        .frame(maxWidth: .infinity)
                     }
-                )
-                .buttonStyle(
-                    LargeButtonStyle(
-                        backgroundColor: RuuviColor.dustyBlue,
-                        foregroundColor: Color.white,
-                        isDisabled: true
-                    )
-                )
-                .padding()
-                .disabled(true)
-                .frame(maxWidth: .infinity)
+                }
             }
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity,
-                alignment: .topLeading
+                alignment: .top
             )
-            .padding()
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
             return VStack {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(texts.prepareTitle).bold()
-                    Text(texts.openCoverTitle)
-                    Text(texts.setUpdatingModeTitle)
-                    Text(texts.toBootModeTwoButtonsDescription)
-                    Text(texts.toBootModeOneButtonDescription)
-                    Text(texts.toBootModeSuccessTitle)
-                }
-                Button(
-                    action: {
-                        self.viewModel.send(
-                            event: .onUserDidConfirmToFlash(
-                                latestRelease,
-                                currentRelease,
-                                uuid: uuid,
-                                appUrl: appUrl,
-                                fullUrl: fullUrl
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        RuuviBoardView()
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text(texts.prepareTitle).bold()
+                            Text(texts.openCoverTitle)
+                            Text(texts.localBootButtonTitle)
+                            Text(texts.setUpdatingModeTitle)
+                            Text(texts.toBootModeTwoButtonsDescription)
+                            Text(texts.toBootModeOneButtonDescription)
+                            Text(texts.toBootModeSuccessTitle)
+                        }
+                        Button(
+                            action: {
+                                self.viewModel.send(
+                                    event: .onUserDidConfirmToFlash(
+                                        latestRelease,
+                                        currentRelease,
+                                        uuid: uuid,
+                                        appUrl: appUrl,
+                                        fullUrl: fullUrl
+                                    )
+                                )
+                            },
+                            label: {
+                                Text(texts.startTitle)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        )
+                        .buttonStyle(
+                            LargeButtonStyle(
+                                backgroundColor: RuuviColor.dustyBlue,
+                                foregroundColor: Color.white,
+                                isDisabled: false
                             )
                         )
-                    },
-                    label: {
-                        Text(texts.startTitle)
-                            .frame(maxWidth: .infinity)
+                        .padding()
+                        .frame(maxWidth: .infinity)
                     }
-                )
-                .buttonStyle(
-                    LargeButtonStyle(
-                        backgroundColor: RuuviColor.dustyBlue,
-                        foregroundColor: Color.white,
-                        isDisabled: false
-                    )
-                )
-                .padding()
-                .frame(maxWidth: .infinity)
+                }
             }
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity,
-                alignment: .topLeading
+                alignment: .top
             )
-            .padding()
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case .flashing:
             return VStack(alignment: .center, spacing: 24) {
@@ -273,7 +289,8 @@ struct DFUUIView: View {
             )
             .padding()
             .eraseToAnyView()
-        case .successfulyFlashed:
+        case .successfulyFlashed(let latestRelease):
+            viewModel.storeUpdatedFirmware(latestRelease: latestRelease)
             return Text(texts.successfulTitle)
                 .frame(
                     maxWidth: .infinity,
@@ -282,6 +299,33 @@ struct DFUUIView: View {
                 )
                 .padding()
                 .eraseToAnyView()
+        }
+    }
+
+    struct RuuviBoardView: View {
+        @State private var isPortrait = false
+        private let boardImageName = "ruuvitag-b8-and-older-button-location"
+        var body: some View {
+            HStack {
+                if isPortrait {
+                    Image(boardImageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                } else {
+                    Spacer()
+                    Image(boardImageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
+                        .frame(width: 300, height: 147)
+                    Spacer()
+                }
+            }
+            .padding()
+            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                guard let scene = UIApplication.shared.windows.first?.windowScene else { return }
+                self.isPortrait = scene.interfaceOrientation.isPortrait
+            }
         }
     }
 }

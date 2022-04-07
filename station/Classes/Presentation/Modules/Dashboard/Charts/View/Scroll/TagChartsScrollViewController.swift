@@ -2,7 +2,7 @@ import UIKit
 import Charts
 import BTKit
 import GestureInstructions
-
+// swiftlint:disable file_length
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
 
@@ -38,13 +38,17 @@ class TagChartsScrollViewController: UIViewController {
     deinit {
         appDidBecomeActiveToken?.invalidate()
     }
-// MARK: - Actions
+    // MARK: - Actions
+    @IBAction func didTriggerAlertBell(_ sender: Any) {
+        output.viewDidTriggerSettings(for: viewModel, scrollToAlert: true)
+    }
+
     @IBAction func didTriggerCards(_ sender: Any) {
         output.viewDidTriggerCards(for: viewModel)
     }
 
     @IBAction func didTriggerSettings(_ sender: Any) {
-        output.viewDidTriggerSettings(for: viewModel)
+        output.viewDidTriggerSettings(for: viewModel, scrollToAlert: false)
     }
 
     @IBAction func didTriggerClear(_ sender: Any) {
@@ -66,6 +70,27 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         self.chartViews = chartViews
     }
 
+    /// This method requires more context
+    /// 1: Clear and Sync button should not be visible and
+    /// the status should be visible is a sync progress is already running in the background
+    /// 2: Clear and Sync button should be hidden for shared sensors
+    /// 3: The only case these buttons are shown are when the last stored data is from the cloud
+    /// no sync process running in the background
+    func handleClearSyncButtons(cloudSensor: Bool, sharedSensor: Bool, isSyncing: Bool) {
+        if isSyncing {
+            hideUtilButtons()
+            syncStatusLabel.isHidden = false
+            syncStatusLabel.text = "TagCharts.Status.Serving".localized()
+            return
+        }
+        if sharedSensor || cloudSensor {
+            hideUtilButtons()
+            syncStatusLabel.isHidden = true
+        } else {
+            showUtilButtons(withDelay: false)
+        }
+    }
+
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
         syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
@@ -76,18 +101,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         let title = "TagCharts.BluetoothDisabledAlert.title".localized()
         let message = "TagCharts.BluetoothDisabledAlert.message".localized()
         showAlert(title: title, message: message)
-    }
-
-    func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let title = "TagCharts.SyncConfirmationDialog.title".localized()
-        let message = "TagCharts.SyncConfirmationDialog.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        let fromTag = "OK".localized()
-        alertVC.addAction(UIAlertAction(title: fromTag, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSyncWithTag(for: viewModel)
-        }))
-        present(alertVC, animated: true)
     }
 
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
@@ -116,14 +129,19 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             case .disconnecting:
                 syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
             case .success:
+                // Show success message
                 syncStatusLabel.text = "TagCharts.Status.Success".localized()
+                // Hide success message and show buttons after two seconds
+                showUtilButtons()
             case .failure:
+                // Show success message
                 syncStatusLabel.text = "TagCharts.Status.Error".localized()
+                // Hide success message and show buttons after two seconds
+                showUtilButtons()
             }
         } else {
-            syncStatusLabel.isHidden = true
-            syncButton.isHidden = false
-            clearButton.isHidden = false
+            /// Show buttons after two seconds if there's an unexpected error
+            showUtilButtons()
         }
     }
 
@@ -268,12 +286,24 @@ extension TagChartsScrollViewController {
         if UIWindow.isLandscape {
             height = scrollView.frame.height
         } else {
-            height = scrollView.frame.height / 3
+            if chartViews.count == 1 {
+                height = scrollView.frame.height / 2
+            } else {
+                height = scrollView.frame.height / CGFloat(chartViews.count)
+            }
         }
-        chartViews.forEach({ chartView in
-            chartView.frame = CGRect(x: 0, y: maxY, width: scrollView.frame.width, height: height)
-            maxY += height
-        })
+
+        if chartViews.count == 1 {
+            chartViews.first?.frame = CGRect(x: 8,
+                                            y: scrollView.frame.height/2 - height/2,
+                                            width: scrollView.frame.width - 8,
+                                            height: height)
+        } else {
+            chartViews.forEach({ chartView in
+                chartView.frame = CGRect(x: 8, y: maxY, width: scrollView.frame.width - 8, height: height)
+                maxY += height
+            })
+        }
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: height * CGFloat(chartViews.count))
         scrollView.layoutSubviews()
     }
@@ -284,8 +314,25 @@ extension TagChartsScrollViewController {
         bacgroundImageViewOverlay?.bind(viewModel.background, block: {
             $0.isHidden = $1 == nil
         })
-        alertImageView?.bind(viewModel.isConnected) { (view, isConnected) in
-            view.isHidden = !isConnected.bound
+        // Cloud sensors will show the alert bell
+        // If it's not cloud sensor check whether it's connected and show bell icon if connected only
+        alertImageView?.bind(viewModel.isConnected) { [weak self] (view, isConnected) in
+            if let isCloud = self?.viewModel.isCloud.value.bound, isCloud {
+                view.isHidden = !isCloud
+            } else {
+                view.isHidden = !isConnected.bound
+            }
+        }
+        // Cloud sensors will always show the alert bell
+        // If it's not cloud sensor check whether it's connected and show bell icon if connected only
+        alertImageView?.bind(viewModel.isCloud) { [weak self] (view, isCloud) in
+            if isCloud.bound {
+                view.isHidden = !isCloud.bound
+            } else {
+                if let isConnected = self?.viewModel.isConnected.value.bound {
+                    view.isHidden = !isConnected
+                }
+            }
         }
         alertImageView?.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
@@ -339,5 +386,22 @@ extension TagChartsScrollViewController {
         } else {
             alertImageView.image = nil
         }
+    }
+
+    /// This method helps present the clear and sync button after a successful or failed operation.
+    /// However, the visibility changes after two seconds
+    /// to make sure user have a noticeable time to see the operation response
+    private func showUtilButtons(withDelay: Bool = true) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(withDelay ? 2 : 0), execute: { [weak self] in
+            self?.syncStatusLabel.isHidden = true
+            self?.syncButton.isHidden = false
+            self?.clearButton.isHidden = false
+        })
+    }
+
+    /// Hides Clear and Sync buttons
+    private func hideUtilButtons() {
+        clearButton.isHidden = true
+        syncButton.isHidden = true
     }
 }

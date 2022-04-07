@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Open Weather Map API Key</key>
+	<key>OpenWeatherMapAPIKey</key>
 	<string>{ set your API key here }</string>
-	<key>Ruuvi Cloud URL</key>
+	<key>RuuviCloudURL</key>
 	<string>https://network.ruuvi.com</string>
 </dict>
 </plist>

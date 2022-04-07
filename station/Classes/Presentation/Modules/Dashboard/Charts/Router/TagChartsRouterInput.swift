@@ -4,18 +4,20 @@ import RuuviVirtual
 
 protocol TagChartsRouterInput {
     func dismiss(completion: (() -> Void)?)
-    func openDiscover(output: DiscoverModuleOutput)
+    func openDiscover()
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
     func openSignIn(output: SignInModuleOutput)
     func openMenu(output: MenuModuleOutput)
+    // swiftlint:disable:next function_parameter_count
     func openTagSettings(
         ruuviTag: RuuviTagSensor,
         temperature: Temperature?,
         humidity: Humidity?,
         sensor: SensorSettings?,
-        output: TagSettingsModuleOutput
+        output: TagSettingsModuleOutput,
+        scrollToAlert: Bool
     )
     func openWebTagSettings(
         sensor: VirtualTagSensor,
