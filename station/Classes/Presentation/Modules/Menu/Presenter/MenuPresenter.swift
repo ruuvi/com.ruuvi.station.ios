@@ -73,6 +73,10 @@ extension MenuPresenter: MenuViewOutput {
         output?.menu(module: self, didSelectGetMoreSensors: nil)
     }
 
+    func viewDidSelectGetRuuviGateway() {
+        output?.menu(module: self, didSelectGetRuuviGateway: nil)
+    }
+
     func viewDidSelectSettings() {
         output?.menu(module: self, didSelectSettings: nil)
     }
