@@ -1,5 +1,9 @@
 import Foundation
 import RuuviService
+import RuuviPool
+import RuuviStorage
+import RuuviPresenters
+import RuuviLocal
 
 final class OwnerConfigurator {
     func configure(view: OwnerViewController) {
@@ -13,6 +17,11 @@ final class OwnerConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
+        presenter.ruuviPool = r.resolve(RuuviPool.self)
+        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
+        presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter
     }

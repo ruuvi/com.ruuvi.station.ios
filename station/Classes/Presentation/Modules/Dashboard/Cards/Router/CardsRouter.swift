@@ -9,6 +9,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!
     weak var delegate: CardsRouterDelegate!
     weak var tagCharts: UIViewController!
+    private var dfuModule: DFUModuleInput?
     var settings: RuuviLocalSettings!
 
     // swiftlint:disable weak_delegate
@@ -33,17 +34,13 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
-    func openDiscover(output: DiscoverModuleOutput) {
-        let restorationId = "DiscoverTableNavigationController"
-        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
-            .apply(to: { (viewController) in
-                viewController.presentationController?.delegate = self
-            })
-            .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: false, output: output)
-            })
+    func openDiscover() {
+        let discoverRouter = DiscoverRouter()
+        discoverRouter.delegate = self
+        let viewController = discoverRouter.viewController
+        viewController.presentationController?.delegate = self
+        let navigationController = UINavigationController(rootViewController: viewController)
+        transitionHandler.present(navigationController, animated: true)
     }
 
     func openSettings() {
@@ -53,11 +50,13 @@ class CardsRouter: NSObject, CardsRouterInput {
             .perform()
     }
 
+    // swiftlint:disable:next function_parameter_count
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
                          sensorSettings: SensorSettings?,
-                         output: TagSettingsModuleOutput) {
+                         output: TagSettingsModuleOutput,
+                         scrollToAlert: Bool) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
@@ -66,7 +65,8 @@ class CardsRouter: NSObject, CardsRouterInput {
                                  temperature: temperature,
                                  humidity: humidity,
                                  sensor: sensorSettings,
-                                 output: output)
+                                 output: output,
+                                 scrollToAlert: scrollToAlert)
             })
     }
 
@@ -106,6 +106,28 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
+    func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
+        let factory: DFUModuleFactory = DFUModuleFactoryImpl()
+        let module = factory.create(for: ruuviTag)
+        self.dfuModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
+        transitionHandler
+            .navigationController?
+            .presentationController?
+            .delegate = self
+    }
+
+}
+
+extension CardsRouter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
+        router.viewController.dismiss(animated: true)
+    }
 }
 
 extension CardsRouter: UIAdaptivePresentationControllerDelegate {

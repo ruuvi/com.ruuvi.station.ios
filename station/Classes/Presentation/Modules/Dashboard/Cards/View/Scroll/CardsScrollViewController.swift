@@ -135,36 +135,89 @@ extension CardsScrollViewController: CardsViewInput {
     }
 
     func scroll(to index: Int, immediately: Bool = false, animated: Bool = false) {
+        let viewModel = viewModels[index]
         if immediately {
             view.layoutIfNeeded()
             scrollView.layoutIfNeeded()
             let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
             scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+            output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                 guard let sSelf = self else { return }
                 let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
                 sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+                sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
             }
         }
     }
 
-    func showKeepConnectionDialog(for viewModel: CardsViewModel) {
+    func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
-            self?.output.viewDidDismissKeepConnectionDialog(for: viewModel)
+            self?.output.viewDidDismissKeepConnectionDialogChart(for: viewModel)
         }))
         let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToKeepConnection(to: viewModel)
+            self?.output.viewDidConfirmToKeepConnectionChart(to: viewModel)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
+        let message = "Cards.KeepConnectionDialog.Settings.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+        }))
+        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel, scrollToAlert: scrollToAlert)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidIgnoreFirmwareUpdateDialog(for: viewModel)
+        }))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel) {
+        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidDismissFirmwareUpdateDialog(for: viewModel)
+        }))
+        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
         present(alert, animated: true)
     }
 
     func showReverseGeocodingFailed() {
         let message = "Cards.Error.ReverseGeocodingFailed.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
+
+    func showAlreadyLoggedInAlert(with email: String) {
+        let message = String.localizedStringWithFormat("Cards.Alert.AlreadyLoggedIn.message".localized(),
+                                                                 email)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alert, animated: true)
@@ -191,6 +244,7 @@ extension CardsScrollViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         restartAnimations()
+        navigationController?.setNavigationBarHidden(true, animated: false)
         output.viewWillAppear()
     }
 
@@ -200,6 +254,10 @@ extension CardsScrollViewController {
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        guard isViewLoaded else {
+            super.viewWillTransition(to: size, with: coordinator)
+            return
+        }
         let page = CGFloat(currentPage)
         coordinator.animate(alongsideTransition: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
@@ -215,7 +273,10 @@ extension CardsScrollViewController {
 // MARK: - UIScrollViewDelegate
 extension CardsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        output.viewDidScroll(to: viewModels[currentPage])
+        guard viewModels.count > 0 else {return}
+        let viewModel = viewModels[currentPage]
+        output.viewDidScroll(to: viewModel)
+        output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
     }
 }
 
@@ -228,10 +289,10 @@ extension CardsScrollViewController: CardViewDelegate {
         }
     }
 
-    func card(view: CardView, didTriggerSettings sender: Any) {
+    func card(view: CardView, didTriggerSettings sender: Any, scrollToAlert: Bool) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[index])
+            output.viewDidTriggerSettings(for: viewModels[index], with: scrollToAlert)
         }
     }
 }
@@ -366,12 +427,38 @@ extension CardsScrollViewController {
         }
 
         let type = viewModel.type
+        // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
+        // If the sensor is a cloud sensor show the bell regardless whether it's connected or not
+        // If it's neither cloud not connected hide the bell
         view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
             switch type {
             case .ruuvi:
-                view.isHidden = !isConnected.bound
+                if let isCloud = viewModel.isCloud.value, isCloud {
+                    view.isHidden = !isCloud
+                } else {
+                    view.isHidden = !isConnected.bound
+                }
             case .web:
-                view.isHidden = false
+                // Hide alert bell for virtual tags
+                view.isHidden = true
+            }
+        }
+        // If the sensor is in 'connected' mode then show the bell regardless whether it's cloud or not
+        // If the sensor is a cloud sensor show the bell regardless whether it's connected or not
+        // If it's neither cloud not connected hide the bell
+        view.alertView.bind(viewModel.isCloud) { (view, isCloud) in
+            switch type {
+            case .ruuvi:
+                if isCloud.bound {
+                    view.isHidden = !isCloud.bound
+                } else {
+                    if let isConnected = viewModel.isConnected.value {
+                        view.isHidden = !isConnected
+                    }
+                }
+            case .web:
+                // Hide alert bell for virtual tags
+                view.isHidden = true
             }
         }
     }
@@ -496,8 +583,7 @@ extension CardsScrollViewController: UIGestureRecognizerDelegate {
 // MARK: - View configuration
 extension CardsScrollViewController {
     private func configureViews() {
-        configureEdgeGestureRecognozer()
-        configurePanGestureRecognozer()
+        configureEdgeGestureRecognizer()
         configureGestureInstructor()
         configureRestartAnimationsOnAppDidBecomeActive()
     }
@@ -516,16 +602,7 @@ extension CardsScrollViewController {
         GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
 
-     private func configurePanGestureRecognozer() {
-         let gr = UIPanGestureRecognizer()
-         gr.delegate = self
-         gr.cancelsTouchesInView = true
-         scrollView.addGestureRecognizer(gr)
-         gr.addTarget(tagChartsPresentInteractiveTransition as Any,
-                      action: #selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
-     }
-
-    private func configureEdgeGestureRecognozer() {
+    private func configureEdgeGestureRecognizer() {
         let leftScreenEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer()
         leftScreenEdgeGestureRecognizer.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(leftScreenEdgeGestureRecognizer)

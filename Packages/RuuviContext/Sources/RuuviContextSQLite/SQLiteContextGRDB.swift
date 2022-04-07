@@ -128,6 +128,26 @@ extension SQLiteGRDBDatabase {
                 t.add(column: RuuviTagDataSQLite.luidColumn.name, .text)
             })
         }
+        // v6
+        migrator.registerMigration("Create RuuviTagSQLite isCloudSensor column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                    .contains(where: {$0.name == RuuviTagSQLite.isCloudSensor.name}) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagSQLite.isCloudSensor.name, .boolean)
+            })
+        }
+        // v7
+        migrator.registerMigration("Create RuuviTagSQLite firmwareVersion column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                    .contains(where: {$0.name == RuuviTagSQLite.firmwareVersionColumn.name}) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagSQLite.firmwareVersionColumn.name, .text)
+            })
+        }
 
         try migrator.migrate(dbPool)
     }

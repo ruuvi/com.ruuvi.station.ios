@@ -74,6 +74,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
                 }
+                if let chartShowAllData = cloudSettings.chartShowAllPoints,
+                   chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
+                    sSelf.ruuviLocalSettings.chartDownsamplingOn = !chartShowAllData
+                }
+                if let chartDrawDots = cloudSettings.chartDrawDots,
+                   chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
+                    sSelf.ruuviLocalSettings.chartDrawDotsOn = chartDrawDots
+                }
+                if let chartViewPeriod = cloudSettings.chartViewPeriod,
+                   (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
+                    sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
+                }
+
+                if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
+                   cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
+                    sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
+                }
+
                 promise.succeed(value: cloudSettings)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
@@ -173,14 +191,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     .compactMap({ localSensor in
                         if let cloudSensor = cloudSensors.first(where: {$0.id == localSensor.id }) {
                             updatedSensors.insert(localSensor)
+                            // Update the local sensor data with cloud data
+                            // if there's a match of sensor in local storage and cloud
                             return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
                         } else {
                             let unclaimed = localSensor.unclaimed()
+                            // If there is a local sensor which is unclaimed insert it to the list
                             if unclaimed.any != localSensor {
                                 updatedSensors.insert(localSensor)
                                 return self.ruuviPool.update(unclaimed)
                             } else {
-                                return nil
+                                // If there is a local sensor which is claimed and deleted from the cloud,
+                                // delete it from local storage
+                                // Otherwise keep it stored
+                                if localSensor.isCloud {
+                                    return self.ruuviPool.delete(localSensor)
+                                } else {
+                                    return nil
+                                }
                             }
                         }
                     })

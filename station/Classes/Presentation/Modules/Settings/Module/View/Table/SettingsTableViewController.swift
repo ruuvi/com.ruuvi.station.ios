@@ -29,12 +29,14 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
-    @IBOutlet weak var foregroundCell: UITableViewCell!
-    @IBOutlet weak var foregroundTitleLabel: UILabel!
-    @IBOutlet weak var advancedCell: UITableViewCell!
-    @IBOutlet weak var advancedTitleLabel: UILabel!
+    @IBOutlet weak var chartCell: UITableViewCell!
+    @IBOutlet weak var chartTitleLabel: UILabel!
     @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
     @IBOutlet weak var experimentalFunctionsLabel: UILabel!
+
+    @IBOutlet weak var cloudModeTitleLabel: UILabel!
+    @IBOutlet weak var cloudModeEnableSwitch: UISwitch!
+    @IBOutlet weak var cloudModeCell: UITableViewCell!
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -72,6 +74,16 @@ class SettingsTableViewController: UITableViewController {
             updateTableIfLoaded()
         }
     }
+    var cloudModeVisible: Bool = false {
+        didSet {
+            updateTableIfLoaded()
+        }
+    }
+    var cloudModeEnabled: Bool = false {
+        didSet {
+            cloudModeEnableSwitch.isOn = cloudModeEnabled
+        }
+    }
 }
 
 // MARK: - SettingsViewInput
@@ -89,10 +101,10 @@ extension SettingsTableViewController: SettingsViewInput {
         pressureTitleLabel.text = "Settings.Label.PressureUnit.text".localized()
         pressureSubitleLabel.text = pressureUnit.title
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
-        foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
-        advancedTitleLabel.text = "Settings.Label.Advanced".localized()
+        chartTitleLabel.text = "Settings.Label.Chart".localized()
+        cloudModeTitleLabel.text = "Settings.Label.CloudMode".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -116,6 +128,7 @@ extension SettingsTableViewController {
         super.viewDidLoad()
         setupLocalization()
         updateUI()
+        setupCloudModeCellSwitch()
         output.viewDidLoad()
         becomeFirstResponder()
     }
@@ -136,8 +149,10 @@ extension SettingsTableViewController {
                 ? super.tableView(tableView, heightForRowAt: indexPath)
                 : 0
         }
+        // Add the logic for the cloud mode cell here
         if !isBackgroundVisible && cell == heartbeatCell ||
-            !showDefaults && cell == defaultsCell {
+            !showDefaults && cell == defaultsCell ||
+            !cloudModeVisible && cell == cloudModeCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -155,7 +170,15 @@ extension SettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case SettingsTableSection.application.rawValue:
+            return cloudModeVisible ? "Settings.Label.CloudMode.description".localized() : nil
+        default:
+            return nil
+        }
+    }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
@@ -167,14 +190,12 @@ extension SettingsTableViewController {
                 output.viewDidTapOnPressure()
             case languageCell:
                 output.viewDidTapOnLanguage()
-            case foregroundCell:
-                output.viewDidTapOnForeground()
             case defaultsCell:
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
-            case advancedCell:
-                output.viewDidTapOnAdvanced()
+            case chartCell:
+                output.viewDidTapOnChart()
             case experimentalFunctionsCell:
                 output.viewDidTapOnExperimental()
             default:
@@ -228,5 +249,16 @@ extension SettingsTableViewController {
         if isViewLoaded {
             pressureSubitleLabel.text = pressureUnit.title
         }
+    }
+
+    private func setupCloudModeCellSwitch() {
+        cloudModeEnableSwitch.addTarget(self,
+                                        action: #selector(cloudModeSwitchValueChangeHandler),
+                                        for: .valueChanged)
+    }
+
+    @objc
+    private func cloudModeSwitchValueChangeHandler(_ sender: UISwitch) {
+        output.viewCloudModeDidChange(isOn: sender.isOn)
     }
 }

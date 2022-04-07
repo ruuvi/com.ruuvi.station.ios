@@ -10,10 +10,13 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 import RuuviCore
+import RuuviPresenters
+import RuuviPool
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
+    var interactor: TagSettingsInteractorInput!
     var router: TagSettingsRouterInput!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
@@ -29,6 +32,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: RuuviCorePN!
     var permissionPresenter: PermissionPresenter!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var ruuviUser: RuuviUser!
@@ -82,6 +86,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var backgroundToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
     private var exportFileUrl: URL?
+    private var lastMeasurement: RuuviTagSensorRecord? {
+        didSet {
+            syncOffsetCorrection()
+        }
+    }
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -91,6 +100,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             }
         }
     }
+    private var scrollToAlert: Bool = false
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -109,16 +119,19 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         backgroundToken?.invalidate()
     }
 
+    // swiftlint:disable:next function_parameter_count
     func configure(ruuviTag: RuuviTagSensor,
                    temperature: Temperature?,
                    humidity: Humidity?,
                    sensor: SensorSettings?,
-                   output: TagSettingsModuleOutput) {
+                   output: TagSettingsModuleOutput,
+                   scrollToAlert: Bool) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
         self.temperature = temperature
         self.humidity = humidity
         self.ruuviTag = ruuviTag
+        self.scrollToAlert = scrollToAlert
 
         if let sensorSettings = sensor {
             self.sensorSettings = sensorSettings
@@ -160,6 +173,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
+        view.updateScrollPosition(scrollToAlert: scrollToAlert)
+        checkFirmwareVersion()
+        checkLastRecord()
     }
 
     func viewDidAskToDismiss() {
@@ -179,20 +195,18 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.isClaimedTag.value == true && ruuviTag.isOwner {
             view.showUnclaimAndRemoveConfirmationDialog()
         } else {
-            view.showTagRemovalConfirmationDialog()
+            view.showTagRemovalConfirmationDialog(isOwner: ruuviTag.isOwner)
         }
     }
 
     func viewDidConfirmTagRemoval() {
-        if let isConnected = viewModel.isConnected.value,
-           let keepConnection = viewModel.keepConnection.value,
-           !isConnected && keepConnection {
-            errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
-            return
-        }
         ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
+            sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
+            if let luid = sSelf.ruuviTag.luid {
+                sSelf.settings.removeFirmwareVersion(for: luid)
+            }
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
@@ -214,32 +228,44 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.mac.value != nil {
             view.showMacAddressDetail()
         } else {
-            view.showUpdateFirmwareDialog()
+            viewDidTriggerFirmwareUpdateDialog()
         }
     }
 
-    func viewDidTapOnUUID() {
-        view.showUUIDDetail()
+    func viewDidTriggerFirmwareUpdateDialog() {
+        guard let luid = ruuviTag.luid else {
+            return
+        }
+        if !settings.firmwareUpdateDialogWasShown(for: luid) {
+            view.showFirmwareUpdateDialog()
+        }
     }
 
-    func viewDidAskToLearnMoreAboutFirmwareUpdate() {
-        UIApplication.shared.open(URL(string: "https://lab.ruuvi.com/dfu")!)
+    func viewDidConfirmFirmwareUpdate() {
+        guard ruuviTag.luid != nil else {
+            return
+        }
+        router.openUpdateFirmware(ruuviTag: ruuviTag)
+    }
+
+    func viewDidIgnoreFirmwareUpdateDialog() {
+        view.showFirmwareDismissConfirmationUpdateDialog()
     }
 
     func viewDidTapOnTxPower() {
         if viewModel.txPower.value == nil {
-            view.showUpdateFirmwareDialog()
+            viewDidTriggerFirmwareUpdateDialog()
         }
     }
 
     func viewDidTapOnMeasurementSequenceNumber() {
         if viewModel.measurementSequenceNumber.value == nil {
-            view.showUpdateFirmwareDialog()
+            viewDidTriggerFirmwareUpdateDialog()
         }
     }
 
     func viewDidTapOnNoValuesView() {
-        view.showUpdateFirmwareDialog()
+        viewDidTriggerFirmwareUpdateDialog()
     }
 
     func viewDidTapOnAlertsDisabledView() {
@@ -315,7 +341,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnExport() {
         isLoading = true
-        exportService.csvLog(for: ruuviTag.id)
+        exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
             .on(success: { [weak self] url in
                 #if targetEnvironment(macCatalyst)
                 guard let sSelf = self else {
@@ -398,7 +424,17 @@ extension TagSettingsPresenter {
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
-        viewModel.canClaimTag.value = ruuviTag.isOwner
+
+        // swiftlint:disable line_length
+        // Context:
+        // The tag can be claimable only when -
+        // 1: When - the tag is not claimed already, AND
+        // 2: When - the tag macId is not Nil, AND
+        // 3: When - there's no owner of the tag OR there's a owner of the tag but it's not the logged in user
+        // Last one is for the scenario when a tag is added locally but claimed by other user
+        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && (ruuviTag.owner == nil || (ruuviTag.owner != nil && ruuviTag.isOwner))
+        viewModel.canClaimTag.value = canBeClaimed
+        viewModel.isClaimedTag.value = !canBeClaimed
 
         // Not set / Someone else / email of the one who shared the sensor with you / You
         if let owner = ruuviTag.owner {
@@ -406,8 +442,8 @@ extension TagSettingsPresenter {
         } else {
             viewModel.owner.value = "TagSettings.General.Owner.none".localized()
         }
-
-        viewModel.isClaimedTag.value = ruuviTag.isClaimed || !ruuviTag.isOwner
+        // Set isOwner value
+        viewModel.isOwner.value = ruuviTag.isOwner
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
@@ -418,6 +454,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil
+        viewModel.isConnectionSectionEnabled.value = !(ruuviTag.isCloud && settings.cloudModeEnabled)
         viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -431,6 +468,23 @@ extension TagSettingsPresenter {
         }
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
+        if let luid = ruuviTag.luid {
+            viewModel.firmwareVersion.value = settings.firmwareVersion(for: luid)
+        }
+        viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
+        viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
+
+        if settings.cloudModeEnabled && ruuviTag.isCloud {
+            viewModel.source.value = .ruuviNetwork
+        }
+
+        if featureToggleService.isEnabled(.updateFirmware) {
+            if (viewModel.source.value == .advertisement || viewModel.source.value == .heartbeat)
+                || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
+                viewModel.canShowUpdateFirmware.value = true
+            }
+        }
+
         syncAlerts()
     }
 
@@ -517,6 +571,9 @@ extension TagSettingsPresenter {
         viewModel.temperatureOffsetCorrection.value = sensorSettings?.temperatureOffset
         viewModel.humidityOffsetCorrection.value = sensorSettings?.humidityOffset
         viewModel.pressureOffsetCorrection.value = sensorSettings?.pressureOffset
+
+        viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
+        viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
     }
 
     private func syncAlerts() {
@@ -699,6 +756,7 @@ extension TagSettingsPresenter {
                 if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
                     || (sensor.macId?.any != nil && sensor.macId?.any == self?.ruuviTag.macId?.any) {
                     self?.ruuviTag = sensor
+                    self?.notifyFirmwareUpdate()
                 }
             case .update(let sensor):
                 if (sensor.luid?.any != nil && sensor.luid?.any == self?.ruuviTag.luid?.any)
@@ -733,6 +791,9 @@ extension TagSettingsPresenter {
         guard let luid = ruuviTag.luid else {
             return
         }
+        guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else {
+            return
+        }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag, source: .advertisement)
@@ -746,6 +807,7 @@ extension TagSettingsPresenter {
         })
     }
 
+    // swiftlint:disable:next function_body_length
     private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.plus(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
@@ -769,9 +831,19 @@ extension TagSettingsPresenter {
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
-        if !device.isConnected, viewModel.isConnectable.value != device.isConnectable, device.isConnectable {
-            viewModel.isConnectable.value = device.isConnectable && device.luid != nil
+
+        let connectionState = !device.isConnected && viewModel.isConnectable.value != device.isConnectable
+        if connectionState, device.isConnectable {
+            if !viewModel.isConnectable.value.bound {
+                let isConnectable = device.isConnectable && device.luid != nil
+                viewModel.isConnectable.value = isConnectable && !(ruuviTag.isCloud && settings.cloudModeEnabled)
+            }
+        } else if connectionState, !device.isConnectable {
+            if viewModel.isConnectable.value.bound {
+                viewModel.isConnectable.value = false
+            }
         }
+
         if viewModel.isConnected.value != device.isConnected {
             viewModel.isConnected.value = device.isConnected
         }
@@ -785,9 +857,10 @@ extension TagSettingsPresenter {
         reloadMutedTill()
 
         if viewModel.canShowUpdateFirmware.value == false
-            && featureToggleService.isEnabled(.updateFirmware)
-            && (source == .advertisement || source == .heartbeat) {
-            viewModel.canShowUpdateFirmware.value = true
+            && featureToggleService.isEnabled(.updateFirmware) {
+            if (source == .advertisement || source == .heartbeat) || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
+                viewModel.canShowUpdateFirmware.value = true
+            }
         }
     }
 
@@ -795,6 +868,9 @@ extension TagSettingsPresenter {
         if let luid = ruuviTag.luid {
             bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                if !keepConnection.bound {
+                    observer.viewModel.isConnectable.value = true
+                }
             }
         }
 
@@ -1263,6 +1339,40 @@ extension TagSettingsPresenter {
         if isOn != observable.value {
             observable.value = isOn
         }
+    }
+
+    private func checkFirmwareVersion() {
+        guard let luid = ruuviTag.luid else { return }
+        guard settings.firmwareVersion(for: luid) == nil else { return }
+        interactor.checkFirmwareVersion(for: luid.value)
+            .on(success: { [weak self] version in
+                guard let sSelf = self else { return }
+                let currentVersion = version.replace("Ruuvi FW ", with: "")
+                sSelf.viewModel.firmwareVersion.value = currentVersion
+                sSelf.settings.setFirmwareVersion(for: luid, value: currentVersion)
+            }, failure: { [weak self] _ in
+                self?.viewModel.firmwareVersion.value = "TagSettings.Firmware.CurrentVersion.VeryOld".localized()
+            })
+    }
+
+    private func checkLastRecord() {
+        ruuviStorage.readLast(ruuviTag).on(success: { [weak self] record in
+            self?.lastMeasurement = record
+        })
+    }
+
+    /// Notify the DFU screen after successful migration of the database
+    private func notifyFirmwareUpdate() {
+        if let luid = ruuviTag.luid {
+            connectionPersistence.setKeepConnection(true, for: luid)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
+            NotificationCenter
+                .default
+                .post(name: .RuuviTagMigrationDidComplete,
+                      object: nil,
+                      userInfo: nil)
+        })
     }
 }
 

@@ -8,8 +8,12 @@ protocol CardsViewInput: ViewInput {
     func showBluetoothDisabled()
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
-    func showKeepConnectionDialog(for viewModel: CardsViewModel)
+    func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool)
+    func showFirmwareUpdateDialog(for viewModel: CardsViewModel)
+    func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()
+    func showAlreadyLoggedInAlert(with email: String)
 }
 
 extension CardsViewInput {

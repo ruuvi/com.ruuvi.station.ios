@@ -15,13 +15,15 @@ extension RuuviTagRealm: RuuviTagSensor {
         return AnyRuuviTagSensor(
             object: RuuviTagSensorStruct(
                 version: version,
+                firmwareVersion: firmwareVersion,
                 luid: luid,
                 macId: macId,
                 isConnectable: isConnectable,
                 name: name,
                 isClaimed: isClaimed,
                 isOwner: isOwner,
-                owner: owner
+                owner: owner,
+                isCloudSensor: isCloudSensor
             )
         )
     }
@@ -33,6 +35,12 @@ extension RuuviTagRealm: RuuviTagSensor {
         return true
     }
     public var owner: String? {
+        return nil
+    }
+    public var isCloudSensor: Bool? {
+        return false
+    }
+    public var firmwareVersion: String? {
         return nil
     }
 }

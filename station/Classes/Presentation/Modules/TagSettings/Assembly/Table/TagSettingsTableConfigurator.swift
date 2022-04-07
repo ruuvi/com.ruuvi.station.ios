@@ -6,6 +6,8 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 import RuuviCore
+import RuuviPresenters
+import RuuviPool
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -15,6 +17,7 @@ class TagSettingsTableConfigurator {
         router.transitionHandler = view
 
         let presenter = TagSettingsPresenter()
+        let interactor = TagSettingsInteractor()
         presenter.view = view
         presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
@@ -35,6 +38,11 @@ class TagSettingsTableConfigurator {
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.exportService = r.resolve(RuuviServiceExport.self)
+        presenter.ruuviPool = r.resolve(RuuviPool.self)
+
+        interactor.background = r.resolve(BTBackground.self)
+        interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
+        presenter.interactor = interactor
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 

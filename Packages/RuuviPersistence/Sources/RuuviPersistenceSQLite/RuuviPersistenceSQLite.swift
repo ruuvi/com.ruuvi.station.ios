@@ -40,10 +40,12 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             luid: ruuviTag.luid,
             name: ruuviTag.name,
             version: ruuviTag.version,
+            firmwareVersion: ruuviTag.firmwareVersion,
             isConnectable: ruuviTag.isConnectable,
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
-            owner: ruuviTag.owner
+            owner: ruuviTag.owner,
+            isCloudSensor: ruuviTag.isCloudSensor
         )
         do {
             try database.dbPool.write { db in
@@ -138,6 +140,37 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let request = Record.order(Record.dateColumn)
                         .filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                     sqliteEntities = try request.fetchAll(db)
+                }
+                promise.succeed(value: sqliteEntities.map({ $0.any }))
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func readAll(
+        _ ruuviTagId: String,
+        after date: Date
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        readQueue.async { [weak self] in
+            var sqliteEntities = [RuuviTagSensorRecord]()
+            do {
+                try self?.database.dbPool.read { db in
+                    let request = """
+                    SELECT
+                        *
+                    FROM  ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    ORDER BY date
+                    """
+                    sqliteEntities = try Record.fetchAll(
+                        db,
+                        sql: request,
+                        arguments: [date]
+                    )
                 }
                 promise.succeed(value: sqliteEntities.map({ $0.any }))
             } catch {
@@ -261,10 +294,12 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
+                            firmwareVersion: ruuviTag.firmwareVersion,
                             isConnectable: ruuviTag.isConnectable,
                             isClaimed: ruuviTag.isClaimed,
                             isOwner: ruuviTag.isOwner,
-                            owner: ruuviTag.owner)
+                            owner: ruuviTag.owner,
+                            isCloudSensor: ruuviTag.isCloudSensor)
 
         do {
             try database.dbPool.write { db in
@@ -287,10 +322,12 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             luid: ruuviTag.luid,
             name: ruuviTag.name,
             version: ruuviTag.version,
+            firmwareVersion: ruuviTag.firmwareVersion,
             isConnectable: ruuviTag.isConnectable,
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
-            owner: ruuviTag.owner
+            owner: ruuviTag.owner,
+            isCloudSensor: ruuviTag.isCloudSensor
         )
         do {
             var success = false
@@ -457,9 +494,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             if let sqliteSensorRecord = record {
                 try database.dbPool.write { db in
-                    try sqliteSensorRecord.with(
-                        sensorSettings: sqliteSensorSettings
-                    ).sqlite.insert(db)
+                    try sqliteSensorRecord
+                    .sqlite.insert(db)
                 }
             }
             promise.succeed(value: sqliteSensorSettings)

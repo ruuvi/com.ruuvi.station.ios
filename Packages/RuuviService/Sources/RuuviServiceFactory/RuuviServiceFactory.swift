@@ -81,6 +81,16 @@ public protocol RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceAlert
+
+    // swiftlint:disable:next function_parameter_count
+    func createAuth(
+        ruuviUser: RuuviUser,
+        pool: RuuviPool,
+        storage: RuuviStorage,
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
+    ) -> RuuviServiceAuth
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -185,6 +195,25 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         return RuuviServiceAlertImpl(
             cloud: ruuviCloud,
             localIDs: ruuviLocalIDs
+        )
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    public func createAuth(
+        ruuviUser: RuuviUser,
+        pool: RuuviPool,
+        storage: RuuviStorage,
+        propertiesService: RuuviServiceSensorProperties,
+        localIDs: RuuviLocalIDs,
+        localSyncState: RuuviLocalSyncState
+    ) -> RuuviServiceAuth {
+        return RuuviServiceAuthImpl(
+            ruuviUser: ruuviUser,
+            pool: pool,
+            storage: storage,
+            propertiesService: propertiesService,
+            localIDs: localIDs,
+            localSyncState: localSyncState
         )
     }
 }
