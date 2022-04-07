@@ -27,6 +27,12 @@ class CardView: UIView {
     @IBOutlet weak var updatedLabel: UILabel!
     @IBOutlet weak var movementCityImageView: UIImageView!
     @IBOutlet weak var dataSourceImageView: UIImageView!
+    @IBOutlet weak var humidityView: UIView!
+    @IBOutlet weak var humidityViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var pressureView: UIView!
+    @IBOutlet weak var pressureViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var movementCounterView: UIView!
+    @IBOutlet weak var movementCounterViewHeight: NSLayoutConstraint!
 
     var updatedAt: Date?
     var isConnected: Bool?
@@ -43,6 +49,24 @@ class CardView: UIView {
     var syncStatus: NetworkSyncStatus = .none {
         didSet {
             updateSyncLabel(with: syncStatus)
+        }
+    }
+
+    var hideHumidityView: Bool = false {
+        didSet {
+            updateHumidityView(with: hideHumidityView)
+        }
+    }
+
+    var hidePressureView: Bool = false {
+        didSet {
+            updatePressureView(with: hidePressureView)
+        }
+    }
+
+    var hideMovementCounterView: Bool = false {
+        didSet {
+            updateMovementCounterView(with: hideMovementCounterView)
         }
     }
 
@@ -120,6 +144,36 @@ class CardView: UIView {
             updatedLabel.text = "Synchronized".localized()
         case .onError:
             updatedLabel.text = "ErrorPresenterAlert.Error".localized()
+        }
+    }
+
+    private func updateHumidityView(with hideHumidity: Bool) {
+        if hideHumidity {
+            humidityView.isHidden = true
+            humidityViewHeight.constant = 0
+        } else {
+            humidityView.isHidden = false
+            humidityViewHeight.constant = 66
+        }
+    }
+
+    private func updatePressureView(with hidePressure: Bool) {
+        if hidePressure {
+            pressureView.isHidden = true
+            pressureViewHeight.constant = 0
+        } else {
+            pressureView.isHidden = false
+            pressureViewHeight.constant = 66
+        }
+    }
+
+    private func updateMovementCounterView(with hideMovementCounter: Bool) {
+        if hideMovementCounter {
+            movementCounterView.isHidden = true
+            movementCounterViewHeight.constant = 0
+        } else {
+            movementCounterView.isHidden = false
+            movementCounterViewHeight.constant = 66
         }
     }
 }
