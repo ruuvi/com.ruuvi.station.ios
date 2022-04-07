@@ -286,7 +286,12 @@ extension TagChartsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
-        router.openRuuviWebsite()
+        router.openRuuviProductsPage()
+    }
+
+    func menu(module: MenuModuleInput, didSelectGetRuuviGateway sender: Any?) {
+        module.dismiss()
+        router.openRuuviGatewayPage()
     }
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
