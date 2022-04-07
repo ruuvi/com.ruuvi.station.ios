@@ -281,6 +281,7 @@
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
 "Menu.Label.AppSettings.text" = "App Settings";
 "Menu.Label.GetMoreSensors.text" = "Buy Ruuvi Sensors";
+"Menu.Label.BuyRuuviGateway.text" = "Buy Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Send Feedback";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
