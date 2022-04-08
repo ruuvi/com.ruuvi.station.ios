@@ -281,6 +281,7 @@
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
 "Menu.Label.AppSettings.text" = "Настройки";
 "Menu.Label.GetMoreSensors.text" = "Купить датчики Ruuvi";
+"Menu.Label.BuyRuuviGateway.text" = "Купить Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Отправить Отзыв";
 "min" = "мин";
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
@@ -292,6 +293,7 @@
 "hPa" = "гПа";
 "UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
+"TagCharts.Status.ReadingHistory" = "Чтение истории";
 "TagSettings.rssiTitleLabel.text" = "Сила сигнала (RSSI)";
 "s" = "с";
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
@@ -484,7 +486,9 @@
 "TagSettings.Share.title" = "Поделиться";
 "Menu.LoggedIn.title" = "Пользователь:";
 "Interval.Day.string" = "день";
+"DFUUIView.lowBattery.warning.message" = "Уровень заряда батареи датчика слишком низкий и обновление прошивки может завершиться неудачей. Мы рекомендуем заменить батарейку перед обновлением.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
 "Settings.Label.CloudMode" = "Режим облака";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
 "TagSettings.Connection.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";
+"Cards.Movements.title" = "движений";

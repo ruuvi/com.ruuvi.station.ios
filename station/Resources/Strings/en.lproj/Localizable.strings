@@ -281,6 +281,7 @@
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
 "Menu.Label.AppSettings.text" = "App Settings";
 "Menu.Label.GetMoreSensors.text" = "Buy Ruuvi Sensors";
+"Menu.Label.BuyRuuviGateway.text" = "Buy Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Send Feedback";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
@@ -292,6 +293,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
+"TagCharts.Status.ReadingHistory" = "Reading history";
 "TagSettings.rssiTitleLabel.text" = "Signal strength (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SCAN";
@@ -484,7 +486,9 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.Share.title" = "Share";
 "Menu.LoggedIn.title" = "Logged in:";
 "Interval.Day.string" = "Day";
+"DFUUIView.lowBattery.warning.message" = "Sensor's battery voltage seems to be low and the firmware update process may fail. We recommend to replace the battery before updating.";
 "Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud Mode";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
 "TagSettings.Connection.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";
+"Cards.Movements.title" = "movements";

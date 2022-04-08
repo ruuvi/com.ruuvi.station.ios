@@ -9,6 +9,8 @@ struct DFUUIView: View {
         let navigationTitle = "DFUUIView.navigationTitle".localized()
         let latestTitle = "DFUUIView.latestTitle".localized()
         let currentTitle = "DFUUIView.currentTitle".localized()
+        let lowBatteryWarningMessage = "DFUUIView.lowBattery.warning.message".localized()
+        let okTitle = "ErrorPresenterAlert.OK".localized()
         let notReportingDescription = "DFUUIView.notReportingDescription".localized()
         let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized()
         let startUpdateProcess = "DFUUIView.startUpdateProcess".localized()
@@ -28,6 +30,7 @@ struct DFUUIView: View {
     }
 
     private let texts = Texts()
+    @State private var isBatteryLow = false
 
     var body: some View {
         VStack {
@@ -156,6 +159,16 @@ struct DFUUIView: View {
                 maxHeight: .infinity,
                 alignment: .topLeading
             )
+            .onAppear(perform: {
+                viewModel.checkBatteryState(completion: { isLow in
+                    isBatteryLow = isLow
+                })
+            })
+            .alert(isPresented: $isBatteryLow) {
+                Alert(title: Text(""),
+                      message: Text(texts.lowBatteryWarningMessage),
+                      dismissButton: .cancel(Text(texts.okTitle)))
+            }
             .padding()
             .eraseToAnyView()
         case .reading:

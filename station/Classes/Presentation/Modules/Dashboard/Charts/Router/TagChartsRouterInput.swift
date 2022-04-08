@@ -7,7 +7,8 @@ protocol TagChartsRouterInput {
     func openDiscover()
     func openSettings()
     func openAbout()
-    func openRuuviWebsite()
+    func openRuuviProductsPage()
+    func openRuuviGatewayPage()
     func openSignIn(output: SignInModuleOutput)
     func openMenu(output: MenuModuleOutput)
     // swiftlint:disable:next function_parameter_count

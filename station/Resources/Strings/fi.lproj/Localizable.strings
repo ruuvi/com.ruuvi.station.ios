@@ -281,6 +281,7 @@
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
 "Menu.Label.AppSettings.text" = "Asetukset";
 "Menu.Label.GetMoreSensors.text" = "Osta Ruuvi-antureita";
+"Menu.Label.BuyRuuviGateway.text" = "Osta Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Lähetä palautetta";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
@@ -292,6 +293,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Elohopeatuuma (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Elohopeamillimetri (mmHg)";
+"TagCharts.Status.ReadingHistory" = "Historiatietoja luetaan";
 "TagSettings.rssiTitleLabel.text" = "Signaalin voimakkuus (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SKANNAA";
@@ -484,7 +486,9 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
 "Interval.Day.string" = "päivä";
+"DFUUIView.lowBattery.warning.message" = "Anturin paristojännite on alhainen ja päivitysprosessi voi epäonnistua. Suosittelemme vaihtamaan pariston ennen ohjelmiston päivittämistä.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Käyttäjä %@ on jo kirjautuneena sisälle. Mikäli haluat käyttää toista tiliä, kirjaudu ensin ulos ja yritä sitten uudelleen.";
 "Settings.Label.CloudMode" = "Pilvitila";
 "Settings.Label.CloudMode.description" = "Päivitä lähellä olevat pilveen rekisteröidyt anturit ainoastaan pilvestä ja vastaanota ainoastaan sähköpostihälytyksiä hylkäämällä niiden Bluetooth-viestit. Vaatii Ruuvi Gateway -reitittimen.";
 "TagSettings.Connection.description" = "Anturiin ei voida yhdistää Bluetoothilla sovelluksen pilvitilan ollessa aktiivinen. Voit ottaa pilvianturiesi Bluetoothin takaisin käyttöön sammuttamalla pilvitilan sovelluksen asetussivulta.";
+"Cards.Movements.title" = "liikettä";
