@@ -113,6 +113,7 @@ extension CardsScrollViewController: CardsViewInput {
                 let locationUpdate = locationUpdateBlock(for: viewModel)
                 view.movementCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
+            view.movementCityTitleLbl.text = "Cards.Movements.title".localized()
         }
     }
 

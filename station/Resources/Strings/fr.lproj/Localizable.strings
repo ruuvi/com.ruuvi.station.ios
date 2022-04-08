@@ -490,4 +490,5 @@ RuuviTag est prêt à être utilisé !";
 "Settings.Label.CloudMode" = "Statut du cloud";
 "Settings.Label.CloudMode.description" = "Mettre à jour les capteurs à proximité associés au cloud seulement pour recevoir seulement des alertes par mail en rejetant les messages Bluetooth. Nécessite le routeur Ruuvi Gateway";
 "TagSettings.Connection.description" = "Impossible de se connecter au capteur tant que le statut du cloud est actif. Vous pouvez modifier le statut dans les paramètres de l'application.";
+"Cards.Movements.title" = "Mouvements";
 
