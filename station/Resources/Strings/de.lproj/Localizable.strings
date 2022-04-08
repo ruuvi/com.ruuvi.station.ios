@@ -486,6 +486,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "TagSettings.Share.title" = "Teilen";
 "Menu.LoggedIn.title" = "Eingeloggt:";
 "Interval.Day.string" = "Tag";
+"DFUUIView.lowBattery.warning.message" = "Sensor's battery voltage seems to be low and the firmware update process may fail. We recommend to replace the battery before updating.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Benutzer %@ ist bereits angemeldet. Wenn Sie ein anderes Konto verwenden möchten, melden Sie sich bitte zuerst ab und versuchen Sie es dann erneut.";
 "Settings.Label.CloudMode" = "Cloud Mode";
 "Settings.Label.CloudMode.description" = "Aktualisieren Sie Cloud-Sensoren in der Nähe nur aus der Cloud, indem Sie ihre Bluetooth-Nachrichten ignorieren und Warnungen nur per E-Mail erhalten. Erfordert einen Ruuvi Gateway-Router.";
