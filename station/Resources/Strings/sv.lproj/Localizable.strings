@@ -486,6 +486,7 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
 "Interval.Day.string" = "Dag";
+"DFUUIView.lowBattery.warning.message" = "Sensorns batterispänning är låg och uppgraderingsprocessen kan misslyckas. Vi rekommenderar att du byter ut batteriet innan du uppdaterar programvaran.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Användare %@ är redan inloggad. Om du vill använda ett annat konto, logga ut först och försök sedan igen.";
 "Settings.Label.CloudMode" = "Molnläge";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
