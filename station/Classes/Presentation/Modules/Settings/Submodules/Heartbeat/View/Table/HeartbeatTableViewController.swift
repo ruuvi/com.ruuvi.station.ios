@@ -14,10 +14,6 @@ class HeartbeatTableViewController: UITableViewController {
     @IBOutlet weak var saveHeartbeatsSwitch: UISwitch!
     @IBOutlet weak var saveHeartbeatsIntervalLabel: UILabel!
     @IBOutlet weak var saveHeartbeatsIntervalStepper: UIStepper!
-    @IBOutlet weak var readRSSITitleLabel: UILabel!
-    @IBOutlet weak var readRSSISwitch: UISwitch!
-    @IBOutlet weak var readRSSIIntervalLabel: UILabel!
-    @IBOutlet weak var readRSSIIntervalStepper: UIStepper!
 
     private let everyString = "Heartbeat.Interval.Every.string"
 }
@@ -33,23 +29,11 @@ extension HeartbeatTableViewController: HeartbeatViewInput {
         } else {
             saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.All.string".localized()
         }
-        readRSSITitleLabel.text = viewModel.readRSSITitle
-        readRSSIIntervalLabel.text = everyString.localized()
-            + " " + "\(viewModel.readRSSIInterval.value.bound)"
-            + " " + "Heartbeat.Interval.Sec.string".localized()
     }
 }
 
 // MARK: - IBActions
 extension HeartbeatTableViewController {
-    @IBAction func readRSSISwitchValueChanged(_ sender: Any) {
-        viewModel.readRSSI.value = readRSSISwitch.isOn
-    }
-
-    @IBAction func readRSSIIntervalStepperValueChanged(_ sender: Any) {
-        viewModel.readRSSIInterval.value = Int(readRSSIIntervalStepper.value)
-    }
-
     @IBAction func saveHeartbeatsIntervalStepperValueChanged(_ sender: Any) {
         viewModel.saveHeartbeatsInterval.value = Int(saveHeartbeatsIntervalStepper.value)
     }
@@ -87,25 +71,9 @@ extension HeartbeatTableViewController {
                     label.text = "Heartbeat.Interval.All.string".localized()
                 }
             }
-
-            readRSSISwitch.bind(viewModel.readRSSI) { (view, isOn) in
-                view.isOn = isOn.bound
-            }
-
-            readRSSIIntervalLabel.bind(viewModel.readRSSIInterval) { (label, interval) in
-                label.text = every.localized()
-                            + " " + "\(interval.bound)"
-                            + " " + "Heartbeat.Interval.Sec.string".localized()
-            }
-
             saveHeartbeatsIntervalStepper.bind(viewModel.saveHeartbeatsInterval) { (stepper, saveHeartbeatsInterval) in
                 stepper.value = Double(saveHeartbeatsInterval.bound)
             }
-
-            readRSSIIntervalStepper.bind(viewModel.readRSSIInterval) { (stepper, readRSSIInterval) in
-                stepper.value = Double(readRSSIInterval.bound)
-            }
-
         }
     }
 
