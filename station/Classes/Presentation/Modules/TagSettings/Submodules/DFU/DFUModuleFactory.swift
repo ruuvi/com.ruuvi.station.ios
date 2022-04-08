@@ -3,6 +3,7 @@ import RuuviOntology
 import RuuviDFU
 import BTKit
 import RuuviPool
+import RuuviStorage
 import RuuviLocal
 import RuuviDaemon
 import RuuviPresenters
@@ -18,6 +19,7 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
         interactor.ruuviDFU = r.resolve(RuuviDFU.self)
         interactor.background = r.resolve(BTBackground.self)
         let ruuviPool = r.resolve(RuuviPool.self)!
+        let ruuviStorage = r.resolve(RuuviStorage.self)!
         let settings = r.resolve(RuuviLocalSettings.self)!
         let propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)!
         let activityPresenter = r.resolve(ActivityPresenter.self)!
@@ -25,6 +27,7 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
             interactor: interactor,
             ruuviTag: ruuviTag,
             ruuviPool: ruuviPool,
+            ruuviStorage: ruuviStorage,
             settings: settings,
             propertiesDaemon: propertiesDaemon,
             activityPresenter: activityPresenter
