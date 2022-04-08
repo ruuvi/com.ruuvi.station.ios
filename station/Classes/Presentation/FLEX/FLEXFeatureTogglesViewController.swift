@@ -114,8 +114,6 @@ extension FLEXFeatureTogglesViewController {
             return "Network"
         case .updateFirmware:
             return "Update Firmware"
-        case .dpahAlerts:
-            return "DP and AH Alerts"
         case .legacyFirmwareUpdatePopup:
             return "Legacy Firmware Update Alert"
         }

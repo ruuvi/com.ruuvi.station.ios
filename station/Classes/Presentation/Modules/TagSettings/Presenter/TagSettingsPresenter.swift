@@ -488,7 +488,6 @@ extension TagSettingsPresenter {
         syncAlerts()
     }
 
-    // swiftlint:disable:next function_body_length
     private func bindViewModel() {
         // isPNAlertsAvailiable
         let isPNEnabled = viewModel.isPushNotificationsEnabled
@@ -544,26 +543,6 @@ extension TagSettingsPresenter {
             let isCo = isConnected?.value ?? false
             observer.viewModel.isAlertsEnabled.value = isCl || isCo
         }
-
-        // isNonCloudAlertsEnabled
-        let isAlertsEnabled = viewModel.isAlertsEnabled
-        bind(viewModel.isPNAlertsAvailiable) {
-            [weak isAlertsEnabled, weak isConnected] observer, isPNAlertsAvailiable in
-            let isCo = isConnected?.value ?? false
-            let isAe = isAlertsEnabled?.value ?? false
-            let isPN = isPNAlertsAvailiable ?? false
-            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
-        }
-
-        bind(viewModel.isAlertsEnabled) { [weak isPNAlertsAvailiable, weak isConnected] observer, isAlertsEnabled in
-            let isCo = isConnected?.value ?? false
-            let isAe = isAlertsEnabled ?? false
-            let isPN = isPNAlertsAvailiable?.value ?? false
-            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
-        }
-
-        // this is done intentionally
-        viewModel.isNonCloudAlertsVisible.value = featureToggleService.isEnabled(.dpahAlerts)
     }
 
     private func syncOffsetCorrection() {
