@@ -137,6 +137,16 @@ extension ShareViewController: ShareEmailTableViewCellDelegate {
         output.viewDidTapUnshareEmail(email)
     }
 }
+extension ShareViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        tableView.scrollToBottom()
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
+    }
+}
+
 // MARK: - Private
 extension ShareViewController {
     func configureTableView() {
@@ -146,7 +156,7 @@ extension ShareViewController {
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
         let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
-        cell.descriptionLabel.text = description
+        cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.descriptionLabel.textColor = .darkGray
         return cell
     }
@@ -155,13 +165,14 @@ extension ShareViewController {
         let cell = tableView.dequeueReusableCell(with: ShareEmailInputTableViewCell.self, for: indexPath)
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         cell.emailTextField.placeholder = "ShareViewController.emailTextField.placeholder".localized()
+        cell.emailTextField.delegate = self
         return cell
     }
 
     private func getButtonCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareSendButtonTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareSendButtonTableViewCell.self, for: indexPath)
         cell.sendButton.addTarget(self, action: #selector(didTapSendButton(_:)), for: .touchUpInside)
-        cell.sendButton.setTitle("Share.Send.button".localized(), for: .normal)
+        cell.sendButton.setTitle("TagSettings.Share.title".localized(), for: .normal)
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
@@ -184,5 +195,16 @@ extension ShareViewController {
         output.viewDidTapSendButton(
             email: cell.emailTextField.text?.trimmingCharacters(in: .whitespaces)
         )
+    }
+}
+
+extension UITableView {
+    func scrollToBottom() {
+        DispatchQueue.main.async {
+            let indexPath = IndexPath(
+                row: self.numberOfRows(inSection: self.numberOfSections - 1) - 1,
+                section: self.numberOfSections - 1)
+            self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        }
     }
 }

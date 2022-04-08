@@ -3,6 +3,7 @@ import Foundation
 import Combine
 import RuuviOntology
 import RuuviPool
+import RuuviStorage
 import RuuviLocal
 import RuuviDaemon
 import RuuviPresenters
@@ -17,6 +18,7 @@ final class DFUViewModel: ObservableObject {
     private let interactor: DFUInteractorInput
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
+    private let ruuviStorage: RuuviStorage
     private let settings: RuuviLocalSettings
     private let propertiesDaemon: RuuviTagPropertiesDaemon
     private let activityPresenter: ActivityPresenter
@@ -31,6 +33,7 @@ final class DFUViewModel: ObservableObject {
         interactor: DFUInteractorInput,
         ruuviTag: RuuviTagSensor,
         ruuviPool: RuuviPool,
+        ruuviStorage: RuuviStorage,
         settings: RuuviLocalSettings,
         propertiesDaemon: RuuviTagPropertiesDaemon,
         activityPresenter: ActivityPresenter
@@ -38,6 +41,7 @@ final class DFUViewModel: ObservableObject {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
+        self.ruuviStorage = ruuviStorage
         self.settings = settings
         self.propertiesDaemon = propertiesDaemon
         self.activityPresenter = activityPresenter
@@ -88,6 +92,24 @@ final class DFUViewModel: ObservableObject {
         } else {
             propertiesDaemon.start()
         }
+    }
+
+    func checkBatteryState(completion: @escaping(Bool) -> Void ) {
+        ruuviStorage
+            .readLast(ruuviTag)
+            .on(success: { record in
+                if let temperature = record?.temperature?.value, let voltage = record?.voltage?.value {
+                    if (temperature < -20 && voltage < 2) ||
+                        (temperature < 0 && voltage < 2.3) ||
+                        (temperature >= 0 && voltage < 2.5) {
+                        completion(true)
+                    } else {
+                        completion(false)
+                    }
+                }
+            }, failure: { _ in
+                completion(false)
+            })
     }
 }
 

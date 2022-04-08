@@ -49,8 +49,12 @@ class TagChartsRouter: TagChartsRouterInput {
             .perform()
     }
 
-    func openRuuviWebsite() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
+    func openRuuviProductsPage() {
+        UIApplication.shared.open(URL(string: "https://ruuvi.com/products")!, options: [:], completionHandler: nil)
+    }
+
+    func openRuuviGatewayPage() {
+        UIApplication.shared.open(URL(string: "https://ruuvi.com/gateway")!, options: [:], completionHandler: nil)
     }
 
     // swiftlint:disable:next function_parameter_count

@@ -281,6 +281,7 @@
 "Menu.Label.AddAnNewSensor.text" = "Neuen Sensor hinzufügen";
 "Menu.Label.AppSettings.text" = "App Einstellungen";
 "Menu.Label.GetMoreSensors.text" = "Buy Ruuvi Sensors";
+"Menu.Label.BuyRuuviGateway.text" = "Buy Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Feedback schicken";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "MEHR INFO";
@@ -292,6 +293,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Zoll Quecksilber (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimeter Quecksilbersäule (mmHg)";
+"TagCharts.Status.ReadingHistory" = "History wird gelesen";
 "TagSettings.rssiTitleLabel.text" = "Signalstärke (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SCANNEN";
@@ -484,7 +486,9 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "TagSettings.Share.title" = "Teilen";
 "Menu.LoggedIn.title" = "Eingeloggt:";
 "Interval.Day.string" = "Tag";
+"DFUUIView.lowBattery.warning.message" = "Sensor's battery voltage seems to be low and the firmware update process may fail. We recommend to replace the battery before updating.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Benutzer %@ ist bereits angemeldet. Wenn Sie ein anderes Konto verwenden möchten, melden Sie sich bitte zuerst ab und versuchen Sie es dann erneut.";
 "Settings.Label.CloudMode" = "Cloud Mode";
 "Settings.Label.CloudMode.description" = "Aktualisieren Sie Cloud-Sensoren in der Nähe nur aus der Cloud, indem Sie ihre Bluetooth-Nachrichten ignorieren und Warnungen nur per E-Mail erhalten. Erfordert einen Ruuvi Gateway-Router.";
 "TagSettings.Connection.description" = "Der Sensor kann nicht über Bluetooth verbunden werden, wenn der Cloud-Modus aktiv ist. Sie können die Bluetooth-Verbindung für die Cloud-Sensoren wieder aktivieren, indem Sie den Cloud-Modus in den App-Einstellungen deaktivieren.";
+"Cards.Movements.title" = "movements";

@@ -51,8 +51,6 @@ class CardsPresenter: CardsModuleInput {
     private var advertisementTokens = [ObservationToken]()
     private var heartbeatTokens = [ObservationToken]()
     private var sensorSettingsTokens = [RuuviReactorToken]()
-    private var rssiTokens = [AnyLocalIdentifier: ObservationToken]()
-    private var rssiTimers = [AnyLocalIdentifier: Timer]()
     private var backgroundToken: NSObjectProtocol?
     private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
@@ -90,8 +88,6 @@ class CardsPresenter: CardsModuleInput {
         ruuviTagToken?.invalidate()
         virtualSensorsToken?.invalidate()
         ruuviTagObserveLastRecordToken?.invalidate()
-        rssiTokens.values.forEach({ $0.invalidate() })
-        rssiTimers.values.forEach({ $0.invalidate() })
         advertisementTokens.forEach({ $0.invalidate() })
         heartbeatTokens.forEach({ $0.invalidate() })
         virtualSensorsDataTokens.forEach({ $0.invalidate() })
@@ -121,7 +117,6 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
         startObservingWebTags()
-        startObservingSettingsChanges()
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
         startObservingConnectionPersistenceNotifications()
@@ -284,7 +279,12 @@ extension CardsPresenter: MenuModuleOutput {
     
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
-        router.openRuuviWebsite()
+        router.openRuuviProductsPage()
+    }
+
+    func menu(module: MenuModuleInput, didSelectGetRuuviGateway sender: Any?) {
+        module.dismiss()
+        router.openRuuviGatewayPage()
     }
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
@@ -435,73 +435,10 @@ extension CardsPresenter {
     private func stopObservingBluetoothState() {
         stateToken?.invalidate()
     }
-    private func startObservingSettingsChanges() {
-        readRSSIToken = NotificationCenter
-            .default
-            .addObserver(forName: .ReadRSSIDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                            if let readRSSI = self?.settings.readRSSI, readRSSI {
-                                self?.observeRuuviTagRSSI()
-                            } else {
-                                self?.rssiTokens.values.forEach({ $0.invalidate() })
-                                self?.rssiTimers.values.forEach({ $0.invalidate() })
-                                self?.viewModels.forEach({ $0.update(rssi: nil) })
-                            }
-                         })
-        readRSSIIntervalToken = NotificationCenter
-            .default
-            .addObserver(forName: .ReadRSSIIntervalDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                            self?.observeRuuviTagRSSI()
-                         })
-    }
     private func observeRuuviTags() {
         observeSensorSettings()
         restartObserveRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
-        observeRuuviTagRSSI()
-    }
-    private func observeRuuviTagRSSI() {
-        rssiTokens.values.forEach({ $0.invalidate() })
-        rssiTimers.values.forEach({ $0.invalidate() })
-        connectionPersistence.keepConnectionUUIDs
-            .filter({ (luid) -> Bool in
-                ruuviTags.contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
-            }).forEach { (luid) in
-                if settings.readRSSI {
-                    let interval = settings.readRSSIIntervalSeconds
-                    let timer = Timer
-                        .scheduledTimer(withTimeInterval: TimeInterval(interval),
-                                        repeats: true) { [weak self] timer in
-                            guard let sSelf = self else { timer.invalidate(); return }
-                            sSelf.rssiTokens[luid] = sSelf
-                                .background
-                                .readRSSI(for: sSelf,
-                                          uuid: luid.value,
-                                          result: { (observer, result) in
-                                            switch result {
-                                            case .success(let rssi):
-                                                if let viewModel = observer.viewModels
-                                                    .first(where: { $0.luid.value == luid }) {
-                                                    viewModel.update(rssi: rssi, animated: true)
-                                                }
-                                            case .failure(let error):
-                                                if case .logic(let logicError) = error, logicError == .notConnected {
-                                                    // do nothing
-                                                } else {
-                                                    observer.errorPresenter.present(error: error)
-                                                }
-                                            }
-                                          })
-                        }
-                    timer.fire()
-                    rssiTimers[luid] = timer
-                }
-            }
     }
     private func observeRuuviTagHeartbeats() {
         heartbeatTokens.forEach({ $0.invalidate() })
@@ -547,7 +484,6 @@ extension CardsPresenter {
                                     .with(source: .advertisement)
                                     .with(sensorSettings: sensorSettings)
                             )
-                            viewModel.update(rssi: ruuviTag.rssi)
                         }
                     })
                 }
@@ -868,7 +804,6 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
                             self?.observeRuuviTagHeartbeats()
-                            self?.observeRuuviTagRSSI()
                          })
         stopKeepingConnectionToken?.invalidate()
         stopKeepingConnectionToken = NotificationCenter
@@ -878,7 +813,6 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
                             self?.observeRuuviTagHeartbeats()
-                            self?.observeRuuviTagRSSI()
                          })
     }
     func startObservingDidConnectDisconnectNotifications() {
@@ -893,9 +827,6 @@ extension CardsPresenter {
                                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                                 viewModel.isConnected.value = true
-                                if let settings = self?.settings, !settings.readRSSI {
-                                    viewModel.update(rssi: nil)
-                                }
                             }
                          })
         didDisconnectToken?.invalidate()

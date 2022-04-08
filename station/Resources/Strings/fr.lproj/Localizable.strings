@@ -281,6 +281,7 @@
 "Menu.Label.AddAnNewSensor.text" = "Ajouter un capteur";
 "Menu.Label.AppSettings.text" = "Réglages";
 "Menu.Label.GetMoreSensors.text" = "Acheter des capteurs Ruuvi";
+"Menu.Label.BuyRuuviGateway.text" = "Acheter le routeur Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Donnez-nous votre avis!";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "PLUS D'INFOS";
@@ -292,6 +293,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Pouce de mercure (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimètre de mercure (mmHg)";
+"TagCharts.Status.ReadingHistory" = "Analyse de l'historique";
 "TagSettings.rssiTitleLabel.text" = "Puissance du signal (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "BALAYAGE EN COURS";
@@ -347,7 +349,7 @@
 "MenuTableViewController.None" = "non connecté";
 "MenuTableViewController.User" = "Utilisateur : %@";
 "ShareViewController.Title" = "Partager le capteur";
-"ShareViewController.Description" = "Vous pouvez partager ce capteur à des amis ou à des membres de votre famille si le capteur est à portée du routeur Ruuvi Gateway.\n\nL'utilisateur recevra une notification par mail. Le compte Ruuvi est créé en utilisant une adresse mail; si l'utilisateur n'en possède pas encore.\n\Le nom du capteur ainsi que le fond d'écran sont partgés seulement une fois. Si la fonction calibrage est utilisée, les utilisateurs verront seulement la valeur finale une fois ajustée.";
+"ShareViewController.Description" = "Vous pouvez partager ce capteur à des amis ou à des membres de votre famille si le capteur est à portée du routeur Ruuvi Gateway.\n\nL'utilisateur recevra une notification par mail. Le compte Ruuvi est créé en utilisant une adresse mailf si l'utilisateur n'en possède pas encore.\n\Le nom du capteur ainsi que le fond d'écran sont partgés seulement une fois. Si la fonction calibrage est utilisée, les utilisateurs verront seulement la valeur finale une fois ajustée.";
 "ShareViewController.addFriend.Title" = "Ajouter un ami";
 "ShareViewController.emailTextField.placeholder" = "Adresse mail";
 "ShareViewController.sharedEmails.Title" = "Le capteur est déjà partagé %d/%d";
@@ -357,7 +359,7 @@
 "TagSettings.NetworkInfo.Owner" = "Propriétaire";
 "Menu.RuuviNetworkStatus.text" = "Statut du Ruuvi cloud";
 "SignIn.TitleLabel.text" = "Connexion \nRuuvi\nStation";
-"SignIn.SubtitleLabel.text" = "Profitez de tous les avantages du Ruuvi Station! Connectez-vous ou créez votre compte en entrant votre adresse mail.";
+"SignIn.SubtitleLabel.text" = "Profitez de tous les avantages de Ruuvi Station! Connectez-vous ou créez votre compte en entrant votre adresse mail.";
 "SignIn.VerificationCodePlaceholder" = "verification du code au format CJSM";
 "UserApiError.ER_FORBIDDEN" = "Interdit";
 "UserApiError.ER_UNAUTHORIZED" = "Non permis";
@@ -484,8 +486,10 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Share.title" = "Partager";
 "Menu.LoggedIn.title" = "Connecté :";
 "Interval.Day.string" = "Jour";
+"DFUUIView.lowBattery.warning.message" = "La tension de la pile du capteur est faible et risque de faire echouer la mise à jour. Nous vous conseillons de remplacer la batterie avant la mise à jour.";
 "Cards.Alert.AlreadyLoggedIn.message" = "L'utilisateur %@ est déjà connecté. Si vous souhaitez utiliser un autre compte veuillez vous déconnecter d'abord.";
 "Settings.Label.CloudMode" = "Statut du cloud";
 "Settings.Label.CloudMode.description" = "Mettre à jour les capteurs à proximité associés au cloud seulement pour recevoir seulement des alertes par mail en rejetant les messages Bluetooth. Nécessite le routeur Ruuvi Gateway";
 "TagSettings.Connection.description" = "Impossible de se connecter au capteur tant que le statut du cloud est actif. Vous pouvez modifier le statut dans les paramètres de l'application.";
+"Cards.Movements.title" = "Mouvements";
 

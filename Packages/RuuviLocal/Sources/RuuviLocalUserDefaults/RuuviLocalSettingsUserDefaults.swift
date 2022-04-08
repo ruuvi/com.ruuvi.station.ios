@@ -218,28 +218,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDegaults.webPullIntervalMinutes", defaultValue: 15)
     var webPullIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: true)
-    var readRSSI: Bool {
-        didSet {
-            NotificationCenter
-            .default
-            .post(name: .ReadRSSIDidChange,
-             object: self,
-             userInfo: nil)
-        }
-    }
-
-    @UserDefault("SettingsUserDegaults.readRSSIIntervalSeconds", defaultValue: 5)
-    var readRSSIIntervalSeconds: Int {
-        didSet {
-            NotificationCenter
-            .default
-            .post(name: .ReadRSSIIntervalDidChange,
-             object: self,
-             userInfo: nil)
-        }
-    }
-
     @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 240)
     var dataPruningOffsetHours: Int
 
