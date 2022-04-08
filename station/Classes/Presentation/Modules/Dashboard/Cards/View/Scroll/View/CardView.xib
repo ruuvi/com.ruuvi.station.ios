@@ -109,28 +109,38 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dj4-Ac-qjU" userLabel="Movement View">
                     <rect key="frame" x="16" y="465" width="288" height="66"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movement" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Pk-nL-gnn">
-                            <rect key="frame" x="66" y="8" width="222" height="50"/>
-                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-measure-movement" translatesAutoresizingMaskIntoConstraints="NO" id="tnh-8q-eCb">
                             <rect key="frame" x="0.0" y="8" width="50" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="50" id="sOH-5Q-hpM"/>
                             </constraints>
                         </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Pk-nL-gnn">
+                            <rect key="frame" x="66" y="0.0" width="12.5" height="66"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5f5-3f-UcF">
+                            <rect key="frame" x="86.5" y="0.0" width="111" height="66"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="tnh-8q-eCb" firstAttribute="top" secondItem="2Pk-nL-gnn" secondAttribute="top" id="J5R-HS-cXi"/>
+                        <constraint firstAttribute="bottom" secondItem="2Pk-nL-gnn" secondAttribute="bottom" id="5JX-Xx-Xbk"/>
                         <constraint firstItem="tnh-8q-eCb" firstAttribute="leading" secondItem="dj4-Ac-qjU" secondAttribute="leading" id="JPv-kp-vLh"/>
+                        <constraint firstItem="2Pk-nL-gnn" firstAttribute="top" secondItem="dj4-Ac-qjU" secondAttribute="top" id="LIo-Z3-VCm"/>
+                        <constraint firstItem="5f5-3f-UcF" firstAttribute="centerY" secondItem="dj4-Ac-qjU" secondAttribute="centerY" id="Lno-sD-Ep2"/>
                         <constraint firstItem="tnh-8q-eCb" firstAttribute="top" secondItem="dj4-Ac-qjU" secondAttribute="top" constant="8" id="S6H-Mq-3jK"/>
                         <constraint firstItem="2Pk-nL-gnn" firstAttribute="leading" secondItem="tnh-8q-eCb" secondAttribute="trailing" constant="16" id="Trx-ay-EMs"/>
+                        <constraint firstItem="5f5-3f-UcF" firstAttribute="leading" secondItem="2Pk-nL-gnn" secondAttribute="trailing" constant="8" id="U1q-Lh-fI8"/>
+                        <constraint firstItem="5f5-3f-UcF" firstAttribute="top" secondItem="dj4-Ac-qjU" secondAttribute="top" id="cNn-gm-Brt"/>
                         <constraint firstAttribute="bottom" secondItem="tnh-8q-eCb" secondAttribute="bottom" constant="8" id="gM8-FA-0AQ"/>
-                        <constraint firstAttribute="trailing" secondItem="2Pk-nL-gnn" secondAttribute="trailing" id="jXj-AK-8R9"/>
                         <constraint firstAttribute="height" constant="66" id="ntO-RZ-1MM"/>
+                        <constraint firstAttribute="bottom" secondItem="5f5-3f-UcF" secondAttribute="bottom" id="sOQ-XM-CFZ"/>
                         <constraint firstItem="2Pk-nL-gnn" firstAttribute="centerY" secondItem="dj4-Ac-qjU" secondAttribute="centerY" id="wSa-lk-eKI"/>
                     </constraints>
                 </view>
@@ -307,6 +317,7 @@
                 <outlet property="humidityWarningImageView" destination="XbS-ri-gks" id="JVl-I2-kxW"/>
                 <outlet property="movementCityImageView" destination="tnh-8q-eCb" id="BHv-p6-C6H"/>
                 <outlet property="movementCityLabel" destination="2Pk-nL-gnn" id="fGI-Ty-sqh"/>
+                <outlet property="movementCityTitleLbl" destination="5f5-3f-UcF" id="BEG-2K-4s4"/>
                 <outlet property="movementCounterView" destination="dj4-Ac-qjU" id="Qhj-nW-ad7"/>
                 <outlet property="movementCounterViewHeight" destination="ntO-RZ-1MM" id="1aZ-XU-hwM"/>
                 <outlet property="nameLabel" destination="bjH-UG-dwW" id="Mvh-u2-RLu"/>
