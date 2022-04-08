@@ -20,18 +20,6 @@ struct HeartbeatList: View {
                         value: self.$env.viewModel.saveHeartbeatsInterval.value.bound,
                         in: 0...3600)
             }
-
-            Toggle(isOn: self.$env.viewModel.readRSSI.value.bound) {
-                Text(self.env.viewModel.readRSSITitle)
-            }
-
-            if self.env.viewModel.readRSSI.value.bound {
-                Stepper("Heartbeat.Interval.Every.string".localized()
-                    + " " + "\(self.env.viewModel.readRSSIInterval.value.bound)"
-                    + " " + "Heartbeat.Interval.Sec.string".localized(),
-                        value: self.$env.viewModel.readRSSIInterval.value.bound,
-                        in: 1...3600)
-            }
         }
     }
 }
