@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.4.0)
+  - BTKit (0.4.1)
   - Firebase (8.14.0):
     - Firebase/Core (= 8.14.0)
   - Firebase/Analytics (8.14.0):
@@ -471,7 +471,7 @@ PODS:
     - RuuviService/SensorProperties
     - RuuviService/SensorRecords
   - RuuviService/GATT (0.0.1):
-    - BTKit
+    - BTKit (~> 0.4.1)
     - FutureX
     - RuuviOntology
     - RuuviPool
@@ -569,7 +569,7 @@ PODS:
   - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
-  - BTKit
+  - BTKit (~> 0.4.1)
   - Firebase
   - Firebase/Analytics
   - Firebase/Crashlytics
@@ -790,7 +790,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
 
 SPEC CHECKSUMS:
-  BTKit: c409ccfad57a372438db9b4951687289ba14c4c9
+  BTKit: 752fd4c1aaf8f4bc3ea3cd3df55b816bebd59dc0
   Firebase: 7e8fe528c161b9271d365217a74c16aaf834578e
   FirebaseABTesting: aaa0e096c9fc9972ce6806d596e8fcc077d4371f
   FirebaseAnalytics: 2fc3876e2eb347673ad2f35e249ae7b15d6c88f5
@@ -843,7 +843,7 @@ SPEC CHECKSUMS:
   RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
-  RuuviService: 109dc1ba70cc70296862f8be79cd9e205fd22971
+  RuuviService: 2498605539cf2496b2124839c6f53381fc454d2a
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6
@@ -851,6 +851,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 3deef67ea813d616ec184dfad794d1e61e3cf456
+PODFILE CHECKSUM: 4cb75e2589a76fdf5d6a7c1bc83163023eca35ae
 
 COCOAPODS: 1.11.3
