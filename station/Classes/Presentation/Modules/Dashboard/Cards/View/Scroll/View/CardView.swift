@@ -24,6 +24,7 @@ class CardView: UIView {
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var pressureLabel: UILabel!
     @IBOutlet weak var movementCityLabel: UILabel!
+    @IBOutlet weak var movementCityTitleLbl: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
     @IBOutlet weak var movementCityImageView: UIImageView!
     @IBOutlet weak var dataSourceImageView: UIImageView!
