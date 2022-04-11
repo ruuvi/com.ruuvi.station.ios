@@ -31,9 +31,6 @@ extension RuuviTagRealm: RuuviTagSensor {
     public var isClaimed: Bool {
         return false
     }
-    public var isOwner: Bool {
-        return true
-    }
     public var owner: String? {
         return nil
     }

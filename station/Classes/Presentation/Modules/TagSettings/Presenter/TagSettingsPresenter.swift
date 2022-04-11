@@ -850,9 +850,6 @@ extension TagSettingsPresenter {
         if let luid = ruuviTag.luid {
             bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
-                if !keepConnection.bound {
-                    observer.viewModel.isConnectable.value = true
-                }
             }
         }
 
