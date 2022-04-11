@@ -41,6 +41,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var featureToggleService: FeatureToggleService!
     var exportService: RuuviServiceExport!
+    var localSyncState: RuuviLocalSyncState!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -205,6 +206,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
             if let luid = sSelf.ruuviTag.luid {
+                sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
                 sSelf.settings.removeFirmwareVersion(for: luid)
             }
         }, failure: { [weak self] error in

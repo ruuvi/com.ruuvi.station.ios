@@ -15,10 +15,12 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
+    private var from: Date
 
     init(
         uuid: String,
         mac: String?,
+        from: Date,
         settings: SensorSettings?,
         ruuviPool: RuuviPool,
         background: BTBackground,
@@ -28,6 +30,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     ) {
         self.uuid = uuid
         self.mac = mac
+        self.from = from
         self.sensorSettings = settings
         self.ruuviPool = ruuviPool
         self.background = background
@@ -37,11 +40,10 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     }
 
     override func main() {
-        let date = Date.distantPast
-        post(started: date, with: uuid)
+        post(started: from, with: uuid)
         background.services.ruuvi.nus.log(for: self,
                                           uuid: uuid,
-                                          from: date,
+                                          from: from,
                                           options: [.callbackQueue(.untouch),
                                                     .connectionTimeout(connectionTimeout ?? 0),
                                                     .serviceTimeout(serviceTimeout ?? 0)],
