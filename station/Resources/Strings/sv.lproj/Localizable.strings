@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "NAMN";
 "No" = "Nej";
 "OK" = "OK";
+"Cards.NoSensors.title" = "Inga sensorer har lags till,\ntryck här för att lägga till sensorer";
 "TagSettings.PressureAlert.title" = "Lufttryck (%@)";
 "UnitPressure.hectopascal.title" = "Hektopascal (hPa)";
 "hPa" = "hPa";
