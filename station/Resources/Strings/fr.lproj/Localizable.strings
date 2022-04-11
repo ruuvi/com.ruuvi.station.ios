@@ -487,6 +487,7 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Share.title" = "Partager";
 "Menu.LoggedIn.title" = "Connecté :";
 "Interval.Day.string" = "Jour";
+"TagSettings.tagNameTitleLabel.rename.text" = "Les capteurs sont dans l'ordre alphabétique.";
 "DFUUIView.lowBattery.warning.message" = "La tension de la pile du capteur est faible et risque de faire echouer la mise à jour. Nous vous conseillons de remplacer la batterie avant la mise à jour.";
 "Cards.Alert.AlreadyLoggedIn.message" = "L'utilisateur %@ est déjà connecté. Si vous souhaitez utiliser un autre compte veuillez vous déconnecter d'abord.";
 "Settings.Label.CloudMode" = "Statut du cloud";
