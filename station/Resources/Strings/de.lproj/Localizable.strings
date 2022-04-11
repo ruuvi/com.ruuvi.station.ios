@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "No" = "Nein";
 "OK" = "OK";
+"Cards.NoSensors.title" = "Keine Sensoren hinzugefügt, klicken Sie hier, um Sensoren hinzuzufügen";
 "TagSettings.PressureAlert.title" = "Luftdruck (%@)";
 "UnitPressure.hectopascal.title" = "Hektopascal (hPa)";
 "hPa" = "hPa";

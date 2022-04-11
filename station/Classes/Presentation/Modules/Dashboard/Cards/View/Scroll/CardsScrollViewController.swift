@@ -20,6 +20,7 @@ class CardsScrollViewController: UIViewController {
         }
     }
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var noSensorsLabel: UILabel!
 
     var viewModels = [CardsViewModel]() {
         didSet {
@@ -93,6 +94,7 @@ class CardsScrollViewController: UIViewController {
 extension CardsScrollViewController: CardsViewInput {
 
     func localize() {
+        noSensorsLabel.text = "Cards.NoSensors.title".localized().uppercased()
         CardsScrollViewController.localizedCache = LocalizedCache()
         for (i, viewModel) in viewModels.enumerated() where i < views.count {
             let view = views[i]
@@ -129,6 +131,10 @@ extension CardsScrollViewController: CardsViewInput {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
         showAlert(title: title, message: message)
+    }
+
+    func showNoSensorsAddedMessage(show: Bool) {
+        noSensorsLabel.isHidden = !show
     }
 
     func showSwipeLeftRightHint() {
@@ -239,6 +245,7 @@ extension CardsScrollViewController {
         updateUI()
         configureViews()
         setupLocalization()
+        setupNoSensorsLabelTapGesture()
         output.viewDidLoad()
     }
 
@@ -268,6 +275,18 @@ extension CardsScrollViewController {
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
         })
         super.viewWillTransition(to: size, with: coordinator)
+    }
+}
+
+extension CardsScrollViewController {
+    private func setupNoSensorsLabelTapGesture() {
+        noSensorsLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleAddSensorsTap))
+        noSensorsLabel.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func handleAddSensorsTap() {
+        output.viewDidTriggerAddSensors()
     }
 }
 

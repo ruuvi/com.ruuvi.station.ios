@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "No" = "Ei";
 "OK" = "OK";
+"Cards.NoSensors.title" = "Ei antureita. Lisää antureita napauttamalla tästä";
 "TagSettings.PressureAlert.title" = "Ilmanpaine (%@)";
 "UnitPressure.hectopascal.title" = "Hehtopascal (hPa)";
 "hPa" = "hPa";
