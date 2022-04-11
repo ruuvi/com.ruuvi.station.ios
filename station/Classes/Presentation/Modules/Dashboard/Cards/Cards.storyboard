@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pVR-SE-6mP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pVR-SE-6mP">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Ruuvi Station-->
         <scene sceneID="GFb-Vj-mkO">
@@ -49,6 +54,12 @@
                                     <action selector="menuButtonTouchUpInside:" destination="pVR-SE-6mP" eventType="touchUpInside" id="7JK-G1-iuG"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO SENSORS ADDED, PRESS HERE TO ADD SENSORS" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4Z-hl-NNi">
+                                <rect key="frame" x="24" y="314" width="327" height="39.5"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="cQV-kG-itc"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -58,7 +69,10 @@
                             <constraint firstItem="uwL-6G-spH" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="5yA-u0-zfd"/>
                             <constraint firstAttribute="bottom" secondItem="VHk-jU-Dq6" secondAttribute="bottom" id="6Xr-rF-R9l"/>
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="bottom" secondItem="Gfm-eP-ACx" secondAttribute="bottom" id="Gb6-3L-UWE"/>
+                            <constraint firstItem="Q4Z-hl-NNi" firstAttribute="leading" secondItem="cQV-kG-itc" secondAttribute="leading" constant="24" id="JYY-Op-QBs"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="Mfb-Vu-nnk"/>
+                            <constraint firstItem="Q4Z-hl-NNi" firstAttribute="centerY" secondItem="Gfm-eP-ACx" secondAttribute="centerY" id="OyA-Lg-QL7"/>
+                            <constraint firstItem="cQV-kG-itc" firstAttribute="trailing" secondItem="Q4Z-hl-NNi" secondAttribute="trailing" constant="24" id="Ozg-GE-7n0"/>
                             <constraint firstItem="QWq-xL-Hcm" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="8" id="RQ0-hb-Xef"/>
                             <constraint firstItem="HLP-h6-z2n" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="13" id="SRy-5q-Yd4"/>
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="V7f-vw-dMc"/>
@@ -66,6 +80,7 @@
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="d9J-0G-FsY"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="feH-91-mwv"/>
                             <constraint firstItem="QWq-xL-Hcm" firstAttribute="leading" secondItem="cQV-kG-itc" secondAttribute="leading" constant="8" id="fhL-7b-Yzk"/>
+                            <constraint firstItem="Q4Z-hl-NNi" firstAttribute="centerX" secondItem="Gfm-eP-ACx" secondAttribute="centerX" id="lCN-cV-EwC"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="ns4-Pg-hDK"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="smU-BS-OQh"/>
                             <constraint firstItem="HLP-h6-z2n" firstAttribute="leading" secondItem="QWq-xL-Hcm" secondAttribute="trailing" constant="20" id="tkD-FP-V0K"/>
@@ -86,6 +101,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="noSensorsLabel" destination="Q4Z-hl-NNi" id="yWV-PN-oYN"/>
                         <outlet property="scrollView" destination="X3t-5y-1HP" id="EUO-AO-B4e"/>
                     </connections>
                 </viewController>
