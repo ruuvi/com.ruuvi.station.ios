@@ -141,6 +141,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
                 }
                 syncProgressLabel.text = "TagCharts.Status.ReadingHistory".localized() + "... \(points)"
             case .disconnecting:
+                hideSyncProgressView()
                 syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
             case .success:
                 // Show success message
@@ -148,9 +149,10 @@ extension TagChartsScrollViewController: TagChartsViewInput {
                 // Hide success message and show buttons after two seconds
                 showUtilButtons()
             case .failure:
-                // Show success message
+                // Show error message
                 syncStatusLabel.text = "TagCharts.Status.Error".localized()
-                // Hide success message and show buttons after two seconds
+                // Hide error message and show buttons after two seconds
+                hideSyncProgressView()
                 showUtilButtons()
             }
         } else {
@@ -161,6 +163,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
 
     func setSyncProgressViewHidden() {
         // Hide the sync progress view
+        hideSyncProgressView()
         showUtilButtons()
     }
 
@@ -412,7 +415,6 @@ extension TagChartsScrollViewController {
     /// However, the visibility changes after two seconds
     /// to make sure user have a noticeable time to see the operation response
     private func showUtilButtons(withDelay: Bool = true) {
-        hideSyncProgressView()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(withDelay ? 2 : 0), execute: { [weak self] in
             self?.syncStatusLabel.isHidden = true
             self?.syncButton.isHidden = false

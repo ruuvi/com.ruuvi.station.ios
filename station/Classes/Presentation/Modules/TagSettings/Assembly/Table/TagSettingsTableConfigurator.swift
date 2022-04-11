@@ -39,6 +39,7 @@ class TagSettingsTableConfigurator {
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.exportService = r.resolve(RuuviServiceExport.self)
         presenter.ruuviPool = r.resolve(RuuviPool.self)
+        presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
 
         interactor.background = r.resolve(BTBackground.self)
         interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
