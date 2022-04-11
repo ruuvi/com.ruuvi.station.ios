@@ -9,10 +9,7 @@ public final class RuuviTagRealm: Object, RuuviTagRealmProtocol {
     @objc public dynamic var mac: String?
     @objc public dynamic var version: Int = 0
     @objc public dynamic var isConnectable: Bool = false
-
-    // calibration
-    @objc public dynamic var humidityOffset: Double = 0
-    @objc public dynamic var humidityOffsetDate: Date?
+    @objc public dynamic var isOwner: Bool = true
 
     public let data = LinkingObjects(fromType: RuuviTagDataRealm.self, property: "ruuviTag")
 
@@ -27,6 +24,7 @@ public final class RuuviTagRealm: Object, RuuviTagRealmProtocol {
         self.name = mac
         self.version = 5
         self.isConnectable = true
+        self.isOwner = true
     }
 
     public convenience required init(ruuviTag: RuuviTagProtocol, name: String) {
@@ -36,6 +34,7 @@ public final class RuuviTagRealm: Object, RuuviTagRealmProtocol {
         self.mac = ruuviTag.mac
         self.version = ruuviTag.version
         self.isConnectable = ruuviTag.isConnectable
+        self.isOwner = ruuviTag.isOwner
     }
 
     public convenience required init(ruuviTag: RuuviTagSensor) {
@@ -45,5 +44,6 @@ public final class RuuviTagRealm: Object, RuuviTagRealmProtocol {
         self.mac = ruuviTag.macId?.value
         self.version = ruuviTag.version
         self.isConnectable = ruuviTag.isConnectable
+        self.isOwner = ruuviTag.isOwner
     }
 }

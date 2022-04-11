@@ -487,6 +487,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "TagSettings.Share.title" = "Teilen";
 "Menu.LoggedIn.title" = "Eingeloggt:";
 "Interval.Day.string" = "Tag";
+"TagSettings.tagNameTitleLabel.rename.text" = "Ihre Sensoren werden in alphabetischer Reihenfolge angezeigt.";
 "DFUUIView.lowBattery.warning.message" = "Sensor's battery voltage seems to be low and the firmware update process may fail. We recommend to replace the battery before updating.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Benutzer %@ ist bereits angemeldet. Wenn Sie ein anderes Konto verwenden möchten, melden Sie sich bitte zuerst ab und versuchen Sie es dann erneut.";
 "Settings.Label.CloudMode" = "Cloud Mode";
