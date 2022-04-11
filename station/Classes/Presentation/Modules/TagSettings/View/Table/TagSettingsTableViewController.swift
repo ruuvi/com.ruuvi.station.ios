@@ -95,7 +95,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var uploadBackgroundIndicatorView: UIView!
     @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
-    @IBOutlet weak var tagNameTextField: UITextField!
+    @IBOutlet weak var tagNameValueLabel: UILabel!
     @IBOutlet weak var firmwareVersionValueLabel: UILabel!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
@@ -315,6 +315,29 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
 }
 
+// MARK: - Sensor name rename dialog
+extension TagSettingsTableViewController {
+    private func showSensorNameRenameDialog(name: String?) {
+        var textField = UITextField()
+        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
+                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+                                      preferredStyle: .alert)
+        alert.addTextField { alertTextField in
+            alertTextField.delegate = self
+            alertTextField.text = name
+            textField = alertTextField
+        }
+        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+            guard let name = textField.text, !name.isEmpty else { return }
+            self?.output.viewDidChangeTag(name: name)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
 // MARK: - View lifecycle
 extension TagSettingsTableViewController {
     override func viewDidLoad() {
@@ -346,12 +369,6 @@ extension TagSettingsTableViewController {
         output.viewDidAskToSelectBackground(sourceView: sender)
     }
 
-    @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
-        if let name = tagNameTextField.text {
-            output.viewDidChangeTag(name: name)
-        }
-    }
-
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.isConnectionSwitchEnabled.value = false
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
@@ -376,7 +393,7 @@ extension TagSettingsTableViewController {
         }
         switch cell {
         case tagNameCell:
-            tagNameTextField.becomeFirstResponder()
+            showSensorNameRenameDialog(name: viewModel?.name.value)
         case networkOwnerCell:
             output.viewDidTapOnOwner()
         case shareCell:
@@ -798,7 +815,7 @@ extension TagSettingsTableViewController {
                 lb.text = String(format: "%.2f%@", percentage * 100.0, "%")
             }
         }
-        tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+        tagNameValueLabel.bind(viewModel.name) { $0.text = $1?.trimmingCharacters(in: .whitespacesAndNewlines) }
 
         networkOwnerCell.bind(viewModel.isClaimedTag) { cell, isClaimed in
             cell.accessoryType = (isClaimed ?? false) ? .none : .disclosureIndicator
@@ -1329,11 +1346,10 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn
                    range: NSRange,
                    replacementString string: String) -> Bool {
-        guard textField == tagNameTextField else {
-            textField.resignFirstResponder()
+        guard let text = textField.text else {
             return true
         }
-        let limit = (textField.text?.utf16.count)! + string.utf16.count - range.length
+        let limit = text.utf16.count + string.utf16.count - range.length
         if limit <= tagNameCharaterLimit {
             return true
         } else {

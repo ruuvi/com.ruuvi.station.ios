@@ -4,6 +4,7 @@ protocol CardsViewOutput {
     func viewDidLoad()
     func viewWillAppear()
     func viewWillDisappear()
+    func viewDidTriggerAddSensors()
     func viewDidTriggerMenu()
     func viewDidScroll(to viewModel: CardsViewModel)
     func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool)

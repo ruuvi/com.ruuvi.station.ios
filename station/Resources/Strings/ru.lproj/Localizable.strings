@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "No" = "Нет";
 "OK" = "OK";
+"Cards.NoSensors.title" = "Нет добавленных датчиков,\nнажмите чтобы добавить";
 "TagSettings.PressureAlert.title" = "Атмосферное Давление (%@)";
 "UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
 "hPa" = "гПа";
@@ -486,6 +487,7 @@
 "TagSettings.Share.title" = "Поделиться";
 "Menu.LoggedIn.title" = "Пользователь:";
 "Interval.Day.string" = "день";
+"TagSettings.tagNameTitleLabel.rename.text" = "Датчики будут отсортированы в алфавитном порядке.";
 "DFUUIView.lowBattery.warning.message" = "Уровень заряда батареи датчика слишком низкий и обновление прошивки может завершиться неудачей. Мы рекомендуем заменить батарейку перед обновлением.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
 "Settings.Label.CloudMode" = "Режим облака";

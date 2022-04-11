@@ -28,6 +28,7 @@ public final class GATTServiceQueue: GATTService {
     public func syncLogs(
         uuid: String,
         mac: String?,
+        from: Date,
         settings: SensorSettings?,
         progress: ((BTServiceProgress) -> Void)?,
         connectionTimeout: TimeInterval?,
@@ -40,6 +41,7 @@ public final class GATTServiceQueue: GATTService {
             let operation = RuuviTagReadLogsOperation(
                 uuid: uuid,
                 mac: mac,
+                from: from,
                 settings: settings,
                 ruuviPool: ruuviPool,
                 background: background,
