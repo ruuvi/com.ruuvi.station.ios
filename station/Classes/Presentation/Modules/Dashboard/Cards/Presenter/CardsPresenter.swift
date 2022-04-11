@@ -139,7 +139,11 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
-    
+
+    func viewDidTriggerAddSensors() {
+        router.openDiscover()
+    }
+
     func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid.value {
@@ -399,9 +403,8 @@ extension CardsPresenter {
         viewModels = reorder(ruuviViewModels + virtualViewModels)
         // if no tags, open discover
         if didLoadInitialRuuviTags
-            && didLoadInitialWebTags
-            && viewModels.isEmpty {
-            self.router.openDiscover()
+            && didLoadInitialWebTags {
+            self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
         }
     }
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
