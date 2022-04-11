@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "No" = "Ei";
 "OK" = "OK";
+"Cards.NoSensors.title" = "Ei antureita. Lisää antureita napauttamalla tästä";
 "TagSettings.PressureAlert.title" = "Ilmanpaine (%@)";
 "UnitPressure.hectopascal.title" = "Hehtopascal (hPa)";
 "hPa" = "hPa";
@@ -486,6 +487,7 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
 "Interval.Day.string" = "päivä";
+"TagSettings.tagNameTitleLabel.rename.text" = "Anturisi asettuvat automaattisesti aakkosjärjestykseen.";
 "DFUUIView.lowBattery.warning.message" = "Anturin paristojännite on alhainen ja päivitysprosessi voi epäonnistua. Suosittelemme vaihtamaan pariston ennen ohjelmiston päivittämistä.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Käyttäjä %@ on jo kirjautuneena sisälle. Mikäli haluat käyttää toista tiliä, kirjaudu ensin ulos ja yritä sitten uudelleen.";
 "Settings.Label.CloudMode" = "Pilvitila";

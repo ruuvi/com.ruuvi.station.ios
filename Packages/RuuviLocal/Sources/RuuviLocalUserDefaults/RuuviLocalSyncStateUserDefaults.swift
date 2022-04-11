@@ -47,7 +47,7 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     }
 
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?) {
-        guard let macId = macId else { assertionFailure(); return }
+        guard let macId = macId else { return }
         UserDefaults.standard.set(date, forKey: syncDatePrefix + macId.mac)
         if let date = date {
             if let latestSyncDate = latestSyncDate {

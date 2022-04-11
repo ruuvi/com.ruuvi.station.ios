@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "No" = "No";
 "OK" = "OK";
+"Cards.NoSensors.title" = "No sensors added,\npress here to add sensors";
 "TagSettings.PressureAlert.title" = "Air Pressure (%@)";
 "UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
 "hPa" = "hPa";
@@ -486,6 +487,7 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.Share.title" = "Share";
 "Menu.LoggedIn.title" = "Logged in:";
 "Interval.Day.string" = "Day";
+"TagSettings.tagNameTitleLabel.rename.text" = "Your sensors will be in alphabetical order.";
 "DFUUIView.lowBattery.warning.message" = "Sensor's battery voltage seems to be low and the firmware update process may fail. We recommend to replace the battery before updating.";
 "Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud Mode";

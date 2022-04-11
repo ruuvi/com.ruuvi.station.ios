@@ -288,6 +288,7 @@
 "TagSettings.SectionHeader.Name.title" = "NAMN";
 "No" = "Nej";
 "OK" = "OK";
+"Cards.NoSensors.title" = "Inga sensorer har lags till,\ntryck här för att lägga till sensorer";
 "TagSettings.PressureAlert.title" = "Lufttryck (%@)";
 "UnitPressure.hectopascal.title" = "Hektopascal (hPa)";
 "hPa" = "hPa";
@@ -486,6 +487,7 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
 "Interval.Day.string" = "Dag";
+"TagSettings.tagNameTitleLabel.rename.text" = "Dina sensorer kommer att vara i alfabetisk ordning.";
 "DFUUIView.lowBattery.warning.message" = "Sensorns batterispänning är låg och uppgraderingsprocessen kan misslyckas. Vi rekommenderar att du byter ut batteriet innan du uppdaterar programvaran.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Användare %@ är redan inloggad. Om du vill använda ett annat konto, logga ut först och försök sedan igen.";
 "Settings.Label.CloudMode" = "Molnläge";
