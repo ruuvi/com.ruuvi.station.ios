@@ -10,6 +10,12 @@ class LanguageTableViewController: UITableViewController {
         }
     }
 
+    var selectedLanguage: Language! {
+        didSet {
+            updateUI()
+        }
+    }
+
     private let cellReuseIdentifier = "LanguageTableViewCellReuseIdentifier"
 }
 
@@ -44,7 +50,9 @@ extension LanguageTableViewController {
             .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
                                  for: indexPath) as! LanguageTableViewCell
         // swiftlint:enable force_cast
-        cell.languageNameLabel.text = languages[indexPath.row].name
+        let language = languages[indexPath.row]
+        cell.languageNameLabel.text = language.name
+        cell.accessoryType = language == selectedLanguage ? .checkmark : .none
         return cell
     }
 }

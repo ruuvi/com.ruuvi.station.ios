@@ -8,4 +8,5 @@ struct SelectionViewModel {
     let title: String
     let items: [SelectionItemProtocol]
     let description: String
+    let selection: String
 }
