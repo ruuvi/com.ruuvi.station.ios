@@ -11,6 +11,7 @@ class LanguagePresenter: LanguageModuleInput {
 extension LanguagePresenter: LanguageViewOutput {
     func viewDidLoad() {
         view.languages = Language.allCases
+        view.selectedLanguage = settings.language
     }
 
     func viewDidSelect(language: Language) {
