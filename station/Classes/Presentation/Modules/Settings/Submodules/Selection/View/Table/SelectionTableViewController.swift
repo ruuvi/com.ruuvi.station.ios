@@ -50,6 +50,7 @@ extension SelectionTableViewController {
         } else {
             cell.nameLabel.text = item.title
         }
+        cell.accessoryType = item.title == viewModel?.selection ? .checkmark : .none
         return cell
     }
 }

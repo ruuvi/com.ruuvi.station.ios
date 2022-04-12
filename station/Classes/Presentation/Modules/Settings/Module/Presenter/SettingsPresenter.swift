@@ -85,7 +85,8 @@ extension SettingsPresenter: SettingsViewOutput {
         ]
         let viewModel = SelectionViewModel(title: "Settings.Label.TemperatureUnit.text".localized(),
                                            items: selectionItems,
-                                           description: "Settings.ChooseTemperatureUnit.text".localized())
+                                           description: "Settings.ChooseTemperatureUnit.text".localized(),
+                                           selection: settings.temperatureUnit.title)
         router.openSelection(with: viewModel, output: self)
     }
 
@@ -97,7 +98,8 @@ extension SettingsPresenter: SettingsViewOutput {
         ]
         let viewModel = SelectionViewModel(title: "Settings.Label.HumidityUnit.text".localized(),
                                            items: selectionItems,
-                                           description: "Settings.ChooseHumidityUnit.text".localized())
+                                           description: "Settings.ChooseHumidityUnit.text".localized(),
+                                           selection: settings.humidityUnit.title)
         router.openSelection(with: viewModel, output: self)
     }
 
@@ -109,7 +111,8 @@ extension SettingsPresenter: SettingsViewOutput {
         ]
         let viewModel = SelectionViewModel(title: "Settings.Label.PressureUnit.text".localized(),
                                            items: selectionItems,
-                                           description: "Settings.ChoosePressureUnit.text".localized())
+                                           description: "Settings.ChoosePressureUnit.text".localized(),
+                                           selection: settings.pressureUnit.title)
         router.openSelection(with: viewModel, output: self)
     }
 
