@@ -333,7 +333,6 @@
 "Defaults.AlertsMuteInterval.title" = "Hälytysten mykistysväli";
 "SignIn.Title.text" = "Kirjaudu sisään";
 "Menu.SignOut.text" = "Kirjaudu ulos";
-"SignIn.SignInBenefits" = "Sinut merkitään lähelläsi olevien Ruuvi-anturien omistajaksi sisäänkirjautumisen yhteydessä. Kaikki omistajan vaatimat anturit palautetaan verkosta sovelluksen uudelleenasennuksen yhteydessä.\n\nRuuvi Gatewayn avulla voit tarkastella omistamiasi antureita etänä ja jakaa niitä ystävillesi verkossa.";
 "SignIn.EmailPlaceholder" = "Sähköposti";
 "SignIn.RequestCode" = "Pyydä kirjautumiskoodi";
 "SignIn.SubmitCode" = "Lähetä";
