@@ -7,6 +7,9 @@ struct SignInViewModel {
     var errorLabelText: Observable<String?> = .init()
     var inputText: Observable<String?> = .init()
     var placeholder: Observable<String?> = .init()
-    var textContentType: Observable<UITextContentType?> = .init(.emailAddress)
     var canPopViewController: Observable<Bool?> = .init(false)
+    var showEmailField: Observable<Bool?> = .init(true)
+    var showCodeField: Observable<Bool?> = .init(false)
+    var showUnderline: Observable<Bool?> = .init(true)
+    var isFromDeeplink: Observable<Bool?> = .init(false)
 }

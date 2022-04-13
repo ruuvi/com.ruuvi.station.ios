@@ -333,7 +333,6 @@
 "Defaults.AlertsMuteInterval.title" = "Alarmavstängningsintervall";
 "SignIn.Title.text" = "Logga in";
 "Menu.SignOut.text" = "Logga ut";
-"SignIn.SignInBenefits" = "Efter inloggning markeras du automatiskt som ägare till dina närliggande Ruuvi-sensorer. Sensorernas ägare kommer att återställas om appen installerats om igen.\n\nMed en Ruuvi Gateway kan du övervaka dina sensorer på distans och dele dem med dina vänner.";
 "SignIn.EmailPlaceholder" = "E-post";
 "SignIn.RequestCode" = "Begär en inloggningskod";
 "SignIn.SubmitCode" = "Skicka";

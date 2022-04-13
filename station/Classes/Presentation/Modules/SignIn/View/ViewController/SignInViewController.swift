@@ -10,6 +10,8 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var scrollView: SignInScrollView!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var underLineView: UIView!
+    let ruuviCodeView = RuuviCodeView()
 
     var output: SignInViewOutput!
     var viewModel: SignInViewModel! {
@@ -17,6 +19,13 @@ class SignInViewController: UIViewController {
             bindViewModel()
         }
     }
+    var fromDeepLink: Bool = false {
+        didSet {
+            shouldAvoidVerifying = fromDeepLink
+        }
+    }
+
+    private var shouldAvoidVerifying: Bool = false
 
     deinit {
         unregisterFromKeyboardNotifications()
@@ -26,6 +35,7 @@ class SignInViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupRuuviCodeView()
         setupLocalization()
         addTapGesture()
         output.viewDidLoad()
@@ -48,6 +58,18 @@ class SignInViewController: UIViewController {
     @IBAction func didTapSubmit(_ sender: UIButton) {
         updateTextFieldText()
         output.viewDidTapSubmitButton()
+    }
+}
+
+extension SignInViewController: RuuviCodeViewDelegate {
+    func didFinishTypingCode() {
+        if !shouldAvoidVerifying {
+            if ruuviCodeView.isValidCode && viewModel.showCodeField.value.bound {
+                viewModel.errorLabelText.value = nil
+                let code = ruuviCodeView.ruuviCode()
+                output.viewDidTapEnterCodeManually(code: code)
+            }
+        }
     }
 }
 
@@ -150,6 +172,14 @@ extension SignInViewController {
         viewModel.inputText.value = email
     }
 
+    private func setupRuuviCodeView() {
+        containerView.addSubview(ruuviCodeView)
+        ruuviCodeView.delegate = self
+        ruuviCodeView.heightAnchor.constraint(equalTo: textTextField.heightAnchor).isActive = true
+        ruuviCodeView.centerXAnchor.constraint(equalTo: textTextField.centerXAnchor).isActive = true
+        ruuviCodeView.centerYAnchor.constraint(equalTo: textTextField.centerYAnchor).isActive = true
+    }
+
     private func addTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         view.addGestureRecognizer(tapGesture)
@@ -175,19 +205,36 @@ extension SignInViewController {
         textFieldHeaderLabel.bind(viewModel.placeholder) { (label, placeholder) in
             label.text = placeholder
         }
-        textTextField.bind(viewModel.textContentType) { (textField, textContentType) in
-            if let textContentType = textContentType {
-                textField.textContentType = textContentType
+        textTextField.bind(viewModel.showEmailField) { [weak self] (textField, show) in
+            if show.bound {
+                self?.errorLabel.textAlignment = .left
             }
+            textField.isHidden = !show.bound
         }
         textTextField.bind(viewModel.inputText) { (textField, text) in
             if textField.text != text {
                 textField.text = text
             }
         }
-
+        underLineView.bind(viewModel.showUnderline) { (view, show) in
+            view.isHidden = !show.bound
+        }
+        ruuviCodeView.bind(viewModel.showCodeField) { [weak self] (view, show) in
+            if show.bound {
+                self?.errorLabel.textAlignment = .center
+            }
+            view.isHidden = !show.bound
+        }
+        ruuviCodeView.bind(viewModel.inputText) { [weak self] (view, text) in
+            if let showCode = self?.viewModel.showCodeField.value.bound, showCode {
+                view.autofill(with: text)
+            }
+        }
         submitButton.bind(viewModel.submitButtonText) { button, text in
             button.setTitle(text, for: .normal)
+        }
+        submitButton.bind(viewModel.showCodeField) { button, show in
+            button.isHidden = show.bound
         }
 
         navigationItem.leftBarButtonItem?.bind(viewModel.canPopViewController,

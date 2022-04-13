@@ -333,7 +333,6 @@
 "Defaults.AlertsMuteInterval.title" = "Alarmstummschaltintervall";
 "SignIn.Title.text" = "Einloggen";
 "Menu.SignOut.text" = "Ausloggen";
-"SignIn.SignInBenefits" = "Nach der Anmeldung werden Sie automatisch als Besitzer Ihrer Ruuvi-Sensoren in der Nähe markiert. Die Sensoren werden nach einer Neuinstallation der App wiederhergestellt.\n\nMit einem Ruuvi Gateway-Router können Sie die Sensoren aus der Ferne überwachen und mit Ihren Freunden teilen.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.RequestCode" = "Fordern Sie einen Code an";
 "SignIn.SubmitCode" = "Abschicken";
