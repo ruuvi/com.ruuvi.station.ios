@@ -131,15 +131,15 @@ extension RuuviCodeView: UITextFieldDelegate {
         guard let textField = textField as? RuuviCodeTextField else {
             return true
         }
-        guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
-            return false
-        }
         let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
         if code.count > 1 {
             textField.resignFirstResponder()
             populateRuuviCodeFields(with: code)
             return false
         } else {
+            guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
+                return false
+            }
             if range.length == 0 && code == "" {
                 return false
             } else if range.length == 0 {
