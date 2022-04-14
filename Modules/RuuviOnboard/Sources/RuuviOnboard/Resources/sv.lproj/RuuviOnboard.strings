@@ -4,3 +4,13 @@
 "RuuviOnboard.Alerts.title" = "Ställ in alarm och få notiser om dem";
 "RuuviOnboard.Start.title" = "Tryck på SCAN för att se sensorerna i närheten";
 "RuuviOnboard.Start.button" = "SKANNA";
+"RuuviOnboard.Cloud.title" = "Sign in to use the full potential of the app.";
+"RuuviOnboard.Cloud.subtitle" = "Claim ownership of your sensors with a free Ruuvi Cloud account";
+"RuuviOnboard.Cloud.SignIn.title" = "Logga in";
+"RuuviOnboard.Cloud.Details.title" = "Details";
+"RuuviOnboard.Cloud.Benefits.title" = "Ruuvi Cloud";
+"RuuviOnboard.Cloud.Benefits.message" = "Fördelar:\\n\\n ● Sensornamn, bakgrundsbilder, kalibrering och larminformation från en säker molntjänst\\n\\n ● Läs sensorinformation på distans online ( kräver Ruuvi Gateway-router)\\n\\n ● Dela sensorer med vänner och familj (kräver Ruuvi Gateway)\\n\\n ● Upp till 2 års historik från station.ruuvi.com (kräver Ruuvi Gateway)";
+"RuuviOnboard.Cloud.Close.title" = "Stäng";
+"RuuviOnboard.Cloud.Skip.title" = "Are you sure want to skip sign in?";
+"RuuviOnboard.Cloud.Skip.Yes.title" = "Yes, skip";
+"RuuviOnboard.Cloud.Skip.GoBack.title" = "Go Back";
