@@ -37,6 +37,11 @@ final class RuuviUserCoordinator: RuuviUser {
     func login(apiKey: String) {
         self.apiKey = apiKey
         self.isAuthorized = true
+        NotificationCenter
+            .default
+            .post(name: .RuuviUserDidAuthorized,
+                  object: self,
+                  userInfo: nil)
     }
 
     func logout() {
