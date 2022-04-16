@@ -4,3 +4,13 @@
 "RuuviOnboard.Alerts.title" = "Aseta hälytyksiä ja ilmoituksia haluamallasi tavalla";
 "RuuviOnboard.Start.title" = "Näytä lähietäisyydellä olevat anturit napauttamalla SKANNAA";
 "RuuviOnboard.Start.button" = "SKANNAA";
+"RuuviOnboard.Cloud.title" = "Sign in to use the full potential of the app.";
+"RuuviOnboard.Cloud.subtitle" = "Claim ownership of your sensors with a free Ruuvi Cloud account";
+"RuuviOnboard.Cloud.SignIn.title" = "Kirjaudu sisään";
+"RuuviOnboard.Cloud.Details.title" = "Details";
+"RuuviOnboard.Cloud.Benefits.title" = "Ruuvi Cloud";
+"RuuviOnboard.Cloud.Benefits.message" = "Hyödyt:\\n\\n ● Anturien nimet, taustakuvat sekä kalibrointi- ja hälytysasetukset tallentuvat turvallisesti tilillesi pilvipalveluun\\n\\n ● Lue anturitiedot etänä verkossa (vaatii Ruuvi Gateway -reitittimen)\\n\\n ● Jaa antureita ystävien ja perheen kesken (vaatii Ruuvi Gateway -reitittimen)\\n\\n ● Selaa jopa 2 vuoden historiatietoja osoitteessa station.ruuvi.com (vaatii Ruuvi Gateway -reitittimen)";
+"RuuviOnboard.Cloud.Close.title" = "Sulje";
+"RuuviOnboard.Cloud.Skip.title" = "Are you sure want to skip sign in?";
+"RuuviOnboard.Cloud.Skip.Yes.title" = "Yes, skip";
+"RuuviOnboard.Cloud.Skip.GoBack.title" = "Go Back";

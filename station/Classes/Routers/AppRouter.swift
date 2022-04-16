@@ -1,5 +1,7 @@
 import UIKit
 import RuuviLocal
+import LightRoute
+import RuuviUser
 
 final class AppRouter {
     var viewController: UIViewController {
@@ -56,6 +58,15 @@ final class AppRouter {
 }
 
 extension AppRouter: OnboardRouterDelegate {
+    func onboardRouterDidShowSignIn(_ router: OnboardRouter, output: SignInModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "SignIn")
+        try! viewController
+            .forStoryboard(factory: factory, to: SignInModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(with: .enterEmail, output: output)
+            })
+    }
+
     func onboardRouterDidFinish(_ router: OnboardRouter) {
         settings.welcomeShown = true
         let discover = self.discoverRouter().viewController
