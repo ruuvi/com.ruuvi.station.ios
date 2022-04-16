@@ -333,7 +333,6 @@
 "Defaults.AlertsMuteInterval.title" = "Espacement entre deux alarmes";
 "SignIn.Title.text" = "Connexion";
 "Menu.SignOut.text" = "Déconnexion";
-"SignIn.SignInBenefits" = "Après la connexion, vous serez automatiquement propriétaire des RuuviTags à proximité. Les capteurs couplés seront réinitialisés si vous réinstallez l'application.\n\ Avec un routeur Ruuvi Gateway vous pourrez contrôlez vos capteurs à distance et partager vos données avec vos amis.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.RequestCode" = "Obtenir un code";
 "SignIn.SubmitCode" = "Envoyer";

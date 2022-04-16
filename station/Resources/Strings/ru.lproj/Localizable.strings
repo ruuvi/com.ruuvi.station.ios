@@ -333,7 +333,6 @@
 "Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
 "SignIn.Title.text" = "Войти";
 "Menu.SignOut.text" = "Выйти из сети";
-"SignIn.SignInBenefits" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.RequestCode" = "Запросить код";
 "SignIn.SubmitCode" = "Отправить";
