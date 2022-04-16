@@ -4,3 +4,13 @@
 "RuuviOnboard.Alerts.title" = "Stellen Sie Benachrichtigungen ein und lassen Sie sich benachrichtigen, wenn Ihre Limits erreicht werden";
 "RuuviOnboard.Start.title" = "Drücken Sie SCAN, um Sensoren in der Nähe zu finden und Ihrer Ruuvi Station hinzuzufügen";
 "RuuviOnboard.Start.button" = "SCAN";
+"RuuviOnboard.Cloud.title" = "Sign in to use the full potential of the app.";
+"RuuviOnboard.Cloud.subtitle" = "Claim ownership of your sensors with a free Ruuvi Cloud account";
+"RuuviOnboard.Cloud.SignIn.title" = "Einloggen";
+"RuuviOnboard.Cloud.Details.title" = "Details";
+"RuuviOnboard.CloudSignIn.Benefits.title" = "Ruuvi Cloud";
+"RuuviOnboard.CloudSignIn.Benefits.message" = "Vorteile:\\n\\n ● Sensornamen, Hintergrundbilder, Offsets und Alarmeinstellungen werden sicher in der Cloud gespeichert\\n\\n ● Fernzugriff auf Sensoren über das Internet (erfordert ein Ruuvi Gateway)\\n\\n ● Teilen Sie Sensoren mit Freunden und Familie (erfordert ein Ruuvi Gateway)\\n\\n ● Sehen Sie bis zu 2 Jahre Geschichtsdaten auf station.ruuvi.com (erfordert ein Ruuvi-Gateway)";
+"RuuviOnboard.Cloud.Close.title" = "Schließen";
+"RuuviOnboard.Cloud.Skip.title" = "Are you sure want to skip sign in?";
+"RuuviOnboard.Cloud.Skip.Yes.title" = "Yes, skip";
+"RuuviOnboard.Cloud.Skip.GoBack.title" = "Go Back";

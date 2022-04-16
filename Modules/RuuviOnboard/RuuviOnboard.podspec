@@ -20,6 +20,7 @@ Pod::Spec.new do |s|
         'RuuviOnboard' => ['Sources/**/Resources/**/*']
     }
     ss.dependency 'RuuviBundleUtils'
+    ss.dependency 'RuuviUser'
   end
 
   s.test_spec 'Tests' do |test_spec|
