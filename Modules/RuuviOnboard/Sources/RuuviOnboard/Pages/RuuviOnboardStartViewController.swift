@@ -54,21 +54,21 @@ final class RuuviOnboardStartViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 140),
+            guide.topAnchor.constraint(equalTo: imageView.topAnchor),
+            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
+            imageView.heightAnchor.constraint(equalToConstant: 148),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            view.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 20),
+            guide.bottomAnchor.constraint(equalTo: label.topAnchor),
+            guide.leadingAnchor.constraint(equalTo: label.leadingAnchor),
+            guide.trailingAnchor.constraint(equalTo: label.trailingAnchor),
+            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 40),
+            guide.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             button.heightAnchor.constraint(equalToConstant: 56),
             button.widthAnchor.constraint(equalToConstant: 168),
-            guide.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            guide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            guide.bottomAnchor.constraint(equalTo: button.topAnchor),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
-            view.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 32)
+            view.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 20)
         ])
     }
 
