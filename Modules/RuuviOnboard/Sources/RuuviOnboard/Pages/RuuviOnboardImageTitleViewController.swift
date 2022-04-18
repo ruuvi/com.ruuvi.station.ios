@@ -42,7 +42,7 @@ final class RuuviOnboardImageTitleViewController: UIViewController {
             imageView.heightAnchor.constraint(equalToConstant: isWelcomeScreen ? 148 : 88),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            guide.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            guide.bottomAnchor.constraint(equalTo: titleLabel.topAnchor),
             guide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
