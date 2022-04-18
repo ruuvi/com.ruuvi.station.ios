@@ -3,13 +3,12 @@ import RuuviOntology
 import RuuviLocal
 
 extension Array where Element == AnyRuuviTagSensor {
-    func reordered(by settings: RuuviLocalSettings) -> Self {
-        var settings = settings
-        if settings.tagsSorting.isEmpty {
-            settings.tagsSorting = self.map({$0.id})
-            return self
-        } else {
-            return self.reorder(by: settings.tagsSorting)
-        }
+    func reordered() -> Self {
+        return self.sorted(by: {
+            // Sort sensors by name alphabetically
+            let first = $0.name.lowercased()
+            let second = $1.name.lowercased()
+            return first < second
+        })
     }
 }

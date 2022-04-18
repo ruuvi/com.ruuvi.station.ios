@@ -56,18 +56,18 @@ final class RuuviOnboardStartViewController: UIViewController {
         NSLayoutConstraint.activate([
             guide.topAnchor.constraint(equalTo: imageView.topAnchor),
             label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
-            imageView.heightAnchor.constraint(equalToConstant: 148),
+            imageView.heightAnchor.constraint(equalToConstant: isiPhoneSE() ? 120 : 148),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             guide.bottomAnchor.constraint(equalTo: label.topAnchor),
             guide.leadingAnchor.constraint(equalTo: label.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: label.trailingAnchor),
-            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 40),
+            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: isiPhoneSE() ? 20 : 40),
+            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: isiPhoneSE() ? 20 : 40),
             guide.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             button.heightAnchor.constraint(equalToConstant: 56),
-            button.widthAnchor.constraint(equalToConstant: 168),
+            button.widthAnchor.constraint(greaterThanOrEqualToConstant: 168),
             view.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 20)
         ])
     }
