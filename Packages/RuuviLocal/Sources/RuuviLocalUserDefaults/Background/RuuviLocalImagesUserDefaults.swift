@@ -135,6 +135,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         return id
     }
 
+    // swiftlint:disable: legacy_random
     private func biasedToNotUsedRandom() -> Int {
         let array = usedBackgrounds
         var result: Int

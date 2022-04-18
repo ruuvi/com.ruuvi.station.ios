@@ -108,14 +108,14 @@ final class RuuviOnboardCloudSigninViewController: UIViewController {
         NSLayoutConstraint.activate([
             guide.topAnchor.constraint(equalTo: imageView.topAnchor),
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
-            imageView.heightAnchor.constraint(equalToConstant: 148),
+            imageView.heightAnchor.constraint(equalToConstant: isiPhoneSE() ? 120 : 148),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             guide.bottomAnchor.constraint(equalTo: titleLabel.topAnchor),
             guide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 40),
+            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: isiPhoneSE() ? 20 : 40),
+            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: isiPhoneSE() ? 20 : 40),
             guide.centerYAnchor.constraint(equalTo: view.centerYAnchor),
 
             subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
@@ -125,7 +125,7 @@ final class RuuviOnboardCloudSigninViewController: UIViewController {
             view.bottomAnchor.constraint(equalTo: buttonsContainer.bottomAnchor, constant: 20),
             buttonsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonsContainer.heightAnchor.constraint(equalToConstant: 56),
-            detailsButton.widthAnchor.constraint(equalToConstant: 150)
+            detailsButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 140)
         ])
     }
 
@@ -175,23 +175,5 @@ extension RuuviOnboardCloudSigninViewController {
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    }
-}
-
-// MARK: - Alert controller extension
-public extension UIAlertController {
-    func setMessageAlignment(_ alignment: NSTextAlignment) {
-        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as? NSMutableParagraphStyle
-        paragraphStyle?.alignment = alignment
-
-        let messageText = NSMutableAttributedString(
-            string: self.message ?? "",
-            attributes: [
-                NSAttributedString.Key.paragraphStyle: paragraphStyle,
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
-                NSAttributedString.Key.foregroundColor: UIColor.label
-            ]
-        )
-        self.setValue(messageText, forKey: "attributedMessage")
     }
 }
