@@ -408,10 +408,7 @@ extension CardsPresenter {
         }
     }
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
-        guard !settings.tagsSorting.isEmpty else {
-            return viewModels
-        }
-        return viewModels.reorder(by: settings.tagsSorting).sorted(by: {
+        return viewModels.sorted(by: {
             // Sort sensors by name alphabetically
             if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
                 return first < second
@@ -535,10 +532,7 @@ extension CardsPresenter {
                         || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
                 }),
                let record = anyRecord {
-                let previousDate = viewModel.date.value ?? Date.distantPast
-                if previousDate <= record.date {
-                    viewModel.update(record)
-                }
+                viewModel.update(record)
             }
         }
     }
@@ -607,7 +601,7 @@ extension CardsPresenter {
             guard let sSelf = self else { return }
             switch change {
             case .initial(let ruuviTags):
-                let ruuviTags = ruuviTags.reordered(by: sSelf.settings)
+                let ruuviTags = ruuviTags.reordered()
                 let isInitialLoad = sSelf.ruuviTags.count == 0
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags.map({ $0.any })
