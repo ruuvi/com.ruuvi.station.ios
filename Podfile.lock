@@ -158,16 +158,16 @@ PODS:
   - Realm/Headers (10.25.0)
   - RealmSwift (10.25.0):
     - Realm (= 10.25.0)
-  - RuuviAnalytics (0.0.1):
-    - RuuviAnalytics/Contract (= 0.0.1)
-  - RuuviAnalytics/Contract (0.0.1)
-  - RuuviAnalytics/Impl (0.0.1):
+  - RuuviAnalytics (0.0.2):
+    - RuuviAnalytics/Contract (= 0.0.2)
+  - RuuviAnalytics/Contract (0.0.2)
+  - RuuviAnalytics/Impl (0.0.2):
     - RuuviAnalytics/Contract
     - RuuviLocal
     - RuuviStorage
     - RuuviUser
     - RuuviVirtual
-  - RuuviAnalytics/Tests (0.0.1)
+  - RuuviAnalytics/Tests (0.0.2)
   - RuuviBundleUtils (0.0.1):
     - RuuviBundleUtils/RuuviBundleUtils (= 0.0.1)
   - RuuviBundleUtils/RuuviBundleUtils (0.0.1):
@@ -822,7 +822,7 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 22a82aaa0e73f3483e3a6df32549c4c5cd34aa63
   RealmSwift: c2a635212400923edd3f828b8a37d55d3eb31863
-  RuuviAnalytics: 9bcb8ba615c61950c3298fff0419db2a8cff20a1
+  RuuviAnalytics: 472a67ed83727b2fb81e00b3c3bfc48d1ac42f5a
   RuuviBundleUtils: 2bf9121120e2c0707449dd7cd2f013d2512bc9a0
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
