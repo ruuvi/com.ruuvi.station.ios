@@ -126,12 +126,19 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         }
         set(.loggedIn(ruuviUser.isAuthorized))
         ruuviStorage.readAll().on(success: { tags in
-            let addedTags = tags.filter({ $0.isOwner })
-            self.set(.addedTags(addedTags.count))
-            self.set(.df3_tags(addedTags.filter({ $0.version == 2 }).count))
-            self.set(.df3_tags(addedTags.filter({ $0.version == 3 }).count))
-            self.set(.df4_tags(addedTags.filter({ $0.version == 4 }).count))
-            self.set(.df5_tags(addedTags.filter({ $0.version == 5 }).count))
+            // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
+            // So we log them first before filtering
+            let df2_tags_count = tags.filter({ $0.version == 2 }).count
+            let df3_tags_count = tags.filter({ $0.version == 3 }).count
+            let df4_tags_count = tags.filter({ $0.version == 4 }).count
+            self.set(.df2_tags(df2_tags_count))
+            self.set(.df3_tags(df3_tags_count))
+            self.set(.df4_tags(df4_tags_count))
+
+            let owned_tags = tags.filter({ $0.isOwner })
+            let added_tags_count = owned_tags.count + df2_tags_count + df3_tags_count + df4_tags_count
+            self.set(.addedTags(added_tags_count))
+            self.set(.df5_tags(owned_tags.filter({ $0.version == 5 }).count))
         })
         ruuviStorage.getClaimedTagsCount().on(success: { count in
             self.set(.claimedTags(count))

@@ -54,6 +54,7 @@ final class RuuviOnboardCloudSigninViewController: UIViewController {
         }
         if ruuviUser.isAuthorized {
             signInButton.removeFromSuperview()
+            subtitleLabel.text = "RuuviOnboard.Cloud.subtitle.signed".localized(for: Self.self)
         }
     }
 
@@ -105,24 +106,26 @@ final class RuuviOnboardCloudSigninViewController: UIViewController {
 
     private func layoutViews() {
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 130),
+            guide.topAnchor.constraint(equalTo: imageView.topAnchor),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
+            imageView.heightAnchor.constraint(equalToConstant: 148),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            guide.bottomAnchor.constraint(equalTo: titleLabel.topAnchor),
+            guide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            guide.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 40),
+            guide.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+            subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+
             view.bottomAnchor.constraint(equalTo: buttonsContainer.bottomAnchor, constant: 20),
             buttonsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonsContainer.heightAnchor.constraint(equalToConstant: 56),
-            detailsButton.widthAnchor.constraint(equalToConstant: 150),
-            guide.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            guide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            guide.bottomAnchor.constraint(equalTo: buttonsContainer.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
-            view.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 32),
-            subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: 0),
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
-            subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 0)
+            detailsButton.widthAnchor.constraint(equalToConstant: 150)
         ])
     }
 
@@ -185,7 +188,7 @@ public extension UIAlertController {
             string: self.message ?? "",
             attributes: [
                 NSAttributedString.Key.paragraphStyle: paragraphStyle,
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13),
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
                 NSAttributedString.Key.foregroundColor: UIColor.label
             ]
         )

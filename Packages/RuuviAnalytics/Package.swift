@@ -18,7 +18,9 @@ let package = Package(
         .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "8.2.0")),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
-        .package(path: "../RuuviOntology")
+        .package(path: "../RuuviOntology"),
+        .package(path: "../RuuviVirtual"),
+        .package(path: "../RuuviUser")
     ],
     targets: [
         .target(
@@ -31,7 +33,9 @@ let package = Package(
                 .product(name: "FirebaseAnalytics", package: "Firebase"),
                 "RuuviLocal",
                 "RuuviStorage",
-                "RuuviOntology"
+                "RuuviOntology",
+                "RuuviVirtual",
+                "RuuviUser"
             ]),
         .testTarget(
             name: "RuuviAnalyticsTests",
