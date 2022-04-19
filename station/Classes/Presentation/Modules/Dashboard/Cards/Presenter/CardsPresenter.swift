@@ -529,7 +529,7 @@ extension CardsPresenter {
                let viewModel = self?.viewModels
                 .first(where: {
                     ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
-                        || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
+                    || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
                 }),
                let record = anyRecord {
                 viewModel.update(record)
@@ -604,7 +604,7 @@ extension CardsPresenter {
                 let ruuviTags = ruuviTags.reordered()
                 let isInitialLoad = sSelf.ruuviTags.count == 0
                 sSelf.didLoadInitialRuuviTags = true
-                sSelf.ruuviTags = ruuviTags.map({ $0.any })
+                sSelf.ruuviTags = ruuviTags
                 if isInitialLoad, let firstTag = ruuviTags.first {
                     sSelf.tagCharts?.configure(ruuviTag: firstTag)
                     sSelf.restartObservingRuuviTagLastRecord(for: firstTag)
