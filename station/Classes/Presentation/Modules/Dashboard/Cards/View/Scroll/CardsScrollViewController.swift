@@ -20,6 +20,7 @@ class CardsScrollViewController: UIViewController {
         }
     }
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var noSensorsLabel: UILabel!
 
     var viewModels = [CardsViewModel]() {
         didSet {
@@ -93,10 +94,11 @@ class CardsScrollViewController: UIViewController {
 extension CardsScrollViewController: CardsViewInput {
 
     func localize() {
+        noSensorsLabel.text = "Cards.NoSensors.title".localized().uppercased()
         CardsScrollViewController.localizedCache = LocalizedCache()
         for (i, viewModel) in viewModels.enumerated() where i < views.count {
             let view = views[i]
-            let updatePressure = pressureUpdateBlock(for: viewModel)
+            let updatePressure = pressureUpdateBlock(for: viewModel, in: view)
             updatePressure(view.pressureLabel, viewModel.pressure.value)
 
             let updateTemperature = temperatureUpdateBlock(for: viewModel, in: view)
@@ -107,12 +109,13 @@ extension CardsScrollViewController: CardsViewInput {
 
             switch viewModel.type {
             case .ruuvi:
-                let movementUpdate = movementUpdateBlock(for: viewModel)
+                let movementUpdate = movementUpdateBlock(for: viewModel, in: view)
                 view.movementCityLabel.bind(viewModel.movementCounter, block: movementUpdate)
             case .web:
                 let locationUpdate = locationUpdateBlock(for: viewModel)
                 view.movementCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
+            view.movementCityTitleLbl.text = "Cards.Movements.title".localized()
         }
     }
 
@@ -128,6 +131,10 @@ extension CardsScrollViewController: CardsViewInput {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
         showAlert(title: title, message: message)
+    }
+
+    func showNoSensorsAddedMessage(show: Bool) {
+        noSensorsLabel.isHidden = !show
     }
 
     func showSwipeLeftRightHint() {
@@ -238,6 +245,7 @@ extension CardsScrollViewController {
         updateUI()
         configureViews()
         setupLocalization()
+        setupNoSensorsLabelTapGesture()
         output.viewDidLoad()
     }
 
@@ -267,6 +275,18 @@ extension CardsScrollViewController {
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
         })
         super.viewWillTransition(to: size, with: coordinator)
+    }
+}
+
+extension CardsScrollViewController {
+    private func setupNoSensorsLabelTapGesture() {
+        noSensorsLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleAddSensorsTap))
+        noSensorsLabel.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func handleAddSensorsTap() {
+        output.viewDidTriggerAddSensors()
     }
 }
 
@@ -314,8 +334,9 @@ extension CardsScrollViewController: UITextFieldDelegate {
 
 // MARK: - Update Blocks
 extension CardsScrollViewController {
-    private func pressureUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Pressure?) -> Void {
+    private func pressureUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Pressure?) -> Void {
         return { [weak self] label, pressure in
+            view.hidePressureView = pressure == nil
             label.text = self?.measurementService?.string(for: pressure)
         }
     }
@@ -355,13 +376,15 @@ extension CardsScrollViewController {
             } else {
                 humidityWarning?.isHidden = true
             }
+            view.hideHumidityView = value == nil
             label.text = self?.measurementService.string(for: value, temperature: temperature)
         }
         return humidityBlock
     }
 
-    private func movementUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void {
+    private func movementUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Int?) -> Void {
         return { label, movementCounter in
+            view.hideMovementCounterView = movementCounter == nil
             if let movementCounter = movementCounter {
                 label.text = "\(movementCounter)"
             } else {
@@ -508,12 +531,12 @@ extension CardsScrollViewController {
         bindConnectionRelated(view: view, with: viewModel)
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-        let pressureUpdate = pressureUpdateBlock(for: viewModel)
+        let pressureUpdate = pressureUpdateBlock(for: viewModel, in: view)
         view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
 
         switch viewModel.type {
         case .ruuvi:
-            let movementUpdate = movementUpdateBlock(for: viewModel)
+            let movementUpdate = movementUpdateBlock(for: viewModel, in: view)
             view.movementCityLabel.bind(viewModel.movementCounter, block: movementUpdate)
             if let macId = viewModel.mac.value {
                 view.networkTagMacId = macId

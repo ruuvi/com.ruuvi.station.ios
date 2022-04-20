@@ -59,14 +59,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var pressureAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var pressureAlertControlsCell: TagSettingsAlertControlsCell!
 
-    @IBOutlet weak var dewPointAlertHeaderCell: TagSettingsAlertHeaderCell!
-    @IBOutlet weak var dewPointAlertControlsCell: TagSettingsAlertControlsCell!
-
     @IBOutlet weak var temperatureAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var temperatureAlertControlsCell: TagSettingsAlertControlsCell!
-
-    @IBOutlet weak var humidityAlertHeaderCell: TagSettingsAlertHeaderCell!
-    @IBOutlet weak var humidityAlertControlsCell: TagSettingsAlertControlsCell!
 
     @IBOutlet weak var rhAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var rhAlertControlsCell: TagSettingsAlertControlsCell!
@@ -91,7 +85,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
-    @IBOutlet weak var firmwareRefreshButton: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
@@ -102,7 +95,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var uploadBackgroundIndicatorView: UIView!
     @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
-    @IBOutlet weak var tagNameTextField: UITextField!
+    @IBOutlet weak var tagNameValueLabel: UILabel!
     @IBOutlet weak var firmwareVersionValueLabel: UILabel!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
@@ -187,8 +180,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
-        humidityAlertHeaderCell.titleLabel.text
-            = "TagSettings.AirHumidityAlert.title".localized()
         rhAlertHeaderCell.titleLabel.text
             = "TagSettings.AirHumidityAlert.title".localized()
         pressureAlertHeaderCell.titleLabel.text
@@ -198,9 +189,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
         temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
-        humidityAlertControlsCell.textField.placeholder = alertPlaceholder
         rhAlertControlsCell.textField.placeholder = alertPlaceholder
-        dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
         pressureAlertControlsCell.textField.placeholder = alertPlaceholder
         connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
         movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
@@ -326,6 +315,29 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
 }
 
+// MARK: - Sensor name rename dialog
+extension TagSettingsTableViewController {
+    private func showSensorNameRenameDialog(name: String?) {
+        var textField = UITextField()
+        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
+                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+                                      preferredStyle: .alert)
+        alert.addTextField { alertTextField in
+            alertTextField.delegate = self
+            alertTextField.text = name
+            textField = alertTextField
+        }
+        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+            guard let name = textField.text, !name.isEmpty else { return }
+            self?.output.viewDidChangeTag(name: name)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
 // MARK: - View lifecycle
 extension TagSettingsTableViewController {
     override func viewDidLoad() {
@@ -357,12 +369,6 @@ extension TagSettingsTableViewController {
         output.viewDidAskToSelectBackground(sourceView: sender)
     }
 
-    @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
-        if let name = tagNameTextField.text {
-            output.viewDidChangeTag(name: name)
-        }
-    }
-
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.isConnectionSwitchEnabled.value = false
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
@@ -387,7 +393,7 @@ extension TagSettingsTableViewController {
         }
         switch cell {
         case tagNameCell:
-            tagNameTextField.becomeFirstResponder()
+            showSensorNameRenameDialog(name: viewModel?.name.value)
         case networkOwnerCell:
             output.viewDidTapOnOwner()
         case shareCell:
@@ -546,26 +552,22 @@ extension TagSettingsTableViewController {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
-            let isNonCloudAlertsVisible =  (viewModel?.isNonCloudAlertsVisible.value ?? false)
             switch cell {
-            case temperatureAlertHeaderCell,
-                 rhAlertHeaderCell,
-                 pressureAlertHeaderCell,
-                 connectionAlertHeaderCell,
-                 movementAlertHeaderCell:
+                // Headers
+            case temperatureAlertHeaderCell:
                 return headerHeight
-            case humidityAlertHeaderCell:
-                return isNonCloudAlertsVisible ? headerHeight : 0
-            case dewPointAlertHeaderCell:
-                return isNonCloudAlertsVisible ? headerHeight : 0
+            case rhAlertHeaderCell:
+                return (viewModel?.humidityOffsetCorrectionVisible.value ?? false) ? headerHeight : 0
+            case pressureAlertHeaderCell:
+                return (viewModel?.pressureOffsetCorrectionVisible.value ?? false) ? headerHeight : 0
+            case connectionAlertHeaderCell:
+                return TagSettingsTableSection.showConnection(for: viewModel) ? headerHeight : 0
+            case movementAlertHeaderCell:
+                return viewModel?.movementCounter.value != nil ? headerHeight : 0
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
-            case humidityAlertControlsCell:
-                return (isNonCloudAlertsVisible && (viewModel?.isHumidityAlertOn.value ?? false)) ? controlsHeight : 0
             case rhAlertControlsCell:
                 return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
-            case dewPointAlertControlsCell:
-                return (isNonCloudAlertsVisible && (viewModel?.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
             case pressureAlertControlsCell:
                 return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
             case connectionAlertDescriptionCell:
@@ -583,12 +585,8 @@ extension TagSettingsTableViewController {
             switch cell {
             case temperatureAlertHeaderCell,
                  temperatureAlertControlsCell,
-                 humidityAlertHeaderCell,
                  rhAlertHeaderCell,
-                 humidityAlertControlsCell,
                  rhAlertControlsCell,
-                 dewPointAlertHeaderCell,
-                 dewPointAlertControlsCell,
                  pressureAlertHeaderCell,
                  pressureAlertControlsCell,
                  connectionAlertHeaderCell,
@@ -627,12 +625,8 @@ extension TagSettingsTableViewController: TagSettingsAlertHeaderCellDelegate {
         switch cell {
         case temperatureAlertHeaderCell:
             viewModel?.isTemperatureAlertOn.value = isOn
-        case humidityAlertHeaderCell:
-            viewModel?.isHumidityAlertOn.value = isOn
         case rhAlertHeaderCell:
             viewModel?.isRelativeHumidityAlertOn.value = isOn
-        case dewPointAlertHeaderCell:
-            viewModel?.isDewPointAlertOn.value = isOn
         case pressureAlertHeaderCell:
             viewModel?.isPressureAlertOn.value = isOn
         case connectionAlertHeaderCell:
@@ -665,12 +659,8 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         switch cell {
         case temperatureAlertControlsCell:
             viewModel?.temperatureAlertDescription.value = description
-        case humidityAlertControlsCell:
-            viewModel?.humidityAlertDescription.value = description
         case rhAlertControlsCell:
             viewModel?.relativeHumidityAlertDescription.value = description
-        case dewPointAlertControlsCell:
-            viewModel?.dewPointAlertDescription.value = description
         case pressureAlertControlsCell:
             viewModel?.pressureAlertDescription.value = description
         default:
@@ -688,14 +678,6 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         case rhAlertControlsCell:
             viewModel?.relativeHumidityLowerBound.value = Double(minValue)
             viewModel?.relativeHumidityUpperBound.value = Double(maxValue)
-        case humidityAlertControlsCell:
-            viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue), unit: .absolute)
-            viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue), unit: .absolute)
-        case dewPointAlertControlsCell:
-            if let tu = viewModel?.temperatureUnit.value {
-                viewModel?.dewPointLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
-                viewModel?.dewPointUpperBound.value = Temperature(Double(maxValue), unit: tu.unitTemperature)
-            }
         case pressureAlertControlsCell:
             if let pu = viewModel?.pressureUnit.value {
                 viewModel?.pressureLowerBound.value = Pressure(Double(minValue), unit: pu)
@@ -716,12 +698,8 @@ extension TagSettingsTableViewController {
         tableView.register(alertsSectionNib, forHeaderFooterViewReuseIdentifier: alertsSectionHeaderReuseIdentifier)
         temperatureAlertHeaderCell.delegate = self
         temperatureAlertControlsCell.delegate = self
-        humidityAlertHeaderCell.delegate = self
         rhAlertHeaderCell.delegate = self
-        humidityAlertControlsCell.delegate = self
         rhAlertControlsCell.delegate = self
-        dewPointAlertHeaderCell.delegate = self
-        dewPointAlertControlsCell.delegate = self
         pressureAlertHeaderCell.delegate = self
         pressureAlertControlsCell.delegate = self
         connectionAlertHeaderCell.delegate = self
@@ -750,10 +728,6 @@ extension TagSettingsTableViewController {
         temperatureAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
         temperatureAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
 
-        let hu = HumidityUnit.gm3
-        humidityAlertControlsCell.slider.minValue = CGFloat(hu.alertRange.lowerBound)
-        humidityAlertControlsCell.slider.maxValue = CGFloat(hu.alertRange.upperBound)
-
         let rhRange = HumidityUnit.percent.alertRange
         rhAlertControlsCell.slider.minValue = CGFloat(rhRange.lowerBound)
         rhAlertControlsCell.slider.maxValue = CGFloat(rhRange.upperBound)
@@ -761,9 +735,6 @@ extension TagSettingsTableViewController {
         let p = viewModel?.pressureUnit.value ?? .hectopascals
         pressureAlertControlsCell.slider.minValue = CGFloat(p.alertRange.lowerBound)
         pressureAlertControlsCell.slider.maxValue = CGFloat(p.alertRange.upperBound)
-
-        dewPointAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
-        dewPointAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
     }
 }
 
@@ -777,8 +748,6 @@ extension TagSettingsTableViewController {
     private func bindViewModel() {
         bindTemperatureAlertCells()
         bindRhAlertCells()
-        bindHumidityAlertCells()
-        bindDewPointAlertCells()
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
@@ -846,7 +815,7 @@ extension TagSettingsTableViewController {
                 lb.text = String(format: "%.2f%@", percentage * 100.0, "%")
             }
         }
-        tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+        tagNameValueLabel.bind(viewModel.name) { $0.text = $1?.trimmingCharacters(in: .whitespacesAndNewlines) }
 
         networkOwnerCell.bind(viewModel.isClaimedTag) { cell, isClaimed in
             cell.accessoryType = (isClaimed ?? false) ? .none : .disclosureIndicator
@@ -1353,176 +1322,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next function_body_length
-    private func bindHumidityAlertCells() {
-        guard isViewLoaded, let viewModel = viewModel  else { return }
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
-            view.isOn = isOn.bound
-        }
-
-        humidityAlertHeaderCell.mutedTillLabel.bind(viewModel.humidityAlertMutedTill) { (label, date) in
-            if let date = date, date > Date() {
-                label.isHidden = false
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
-            } else {
-                label.isHidden = true
-            }
-        }
-        humidityAlertHeaderCell.mutedTillImageView.bind(viewModel.humidityAlertMutedTill) { (imageView, date) in
-            if let date = date, date > Date() {
-                imageView.isHidden = false
-            } else {
-                imageView.isHidden = true
-            }
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.isHumidityAlertOn) { (slider, isOn) in
-            slider.isEnabled = isOn.bound
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.humidityLowerBound) { [weak self] (_, _) in
-            self?.updateUIHumidityLowerBound()
-            self?.updateUIHumidityAlertDescription()
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.humidityUpperBound) { [weak self] (_, _) in
-            self?.updateUIHumidityUpperBound()
-            self?.updateUIHumidityAlertDescription()
-        }
-
-        humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, _) in
-            let title = "TagSettings.AirHumidityAlert.title"
-            label.text = String(format: title.localized(), HumidityUnit.gm3.symbol)
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, _) in
-            let hu = HumidityUnit.gm3
-            slider.minValue = CGFloat(hu.alertRange.lowerBound)
-            slider.maxValue = CGFloat(hu.alertRange.upperBound)
-        }
-
-        humidityAlertHeaderCell.descriptionLabel.bind(viewModel.isHumidityAlertOn) {
-            [weak self] (_, _) in
-            self?.updateUIHumidityAlertDescription()
-        }
-
-        let isHumidityAlertOn = viewModel.isHumidityAlertOn
-
-        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isNonCloudAlertsEnabled) { view, isNonCloudAlertsEnabled in
-            let isEnabled = isNonCloudAlertsEnabled ?? false
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        humidityAlertControlsCell.slider.bind(viewModel.isNonCloudAlertsEnabled) {
-            [weak isHumidityAlertOn] slider, isNonCloudAlertsEnabled in
-            let isAe = isNonCloudAlertsEnabled ?? false
-            let isOn = isHumidityAlertOn?.value ?? false
-            slider.isEnabled = isOn && isAe
-        }
-
-        humidityAlertControlsCell.textField.bind(viewModel.humidityAlertDescription) {
-            (textField, humidityAlertDescription) in
-            textField.text = humidityAlertDescription
-        }
-
-        tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in
-            if tableView.window != nil {
-                tableView.reloadData()
-            }
-        }
-    }
-
-    // swiftlint:disable:next function_body_length
-    private func bindDewPointAlertCells() {
-        guard isViewLoaded, let viewModel = viewModel else {
-            return
-        }
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isDewPointAlertOn) { (view, isOn) in
-            view.isOn = isOn.bound
-        }
-
-        dewPointAlertHeaderCell.mutedTillLabel.bind(viewModel.dewPointAlertMutedTill) { (label, date) in
-            if let date = date, date > Date() {
-                label.isHidden = false
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
-            } else {
-                label.isHidden = true
-            }
-        }
-        dewPointAlertHeaderCell.mutedTillImageView.bind(viewModel.dewPointAlertMutedTill) { (imageView, date) in
-            if let date = date, date > Date() {
-                imageView.isHidden = false
-            } else {
-                imageView.isHidden = true
-            }
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.isDewPointAlertOn) { (slider, isOn) in
-            slider.isEnabled = isOn.bound
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.dewPointLowerBound) { [weak self] (_, _) in
-            self?.updateUIDewPointCelsiusLowerBound()
-            self?.updateUIDewPointAlertDescription()
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.dewPointUpperBound) { [weak self] (_, _) in
-            self?.updateUIDewPointCelsiusUpperBound()
-            self?.updateUIDewPointAlertDescription()
-        }
-
-        dewPointAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
-            let title = "TagSettings.dewPointAlertTitleLabel.text"
-            label.text = title.localized()
-                + " "
-                + (temperatureUnit?.symbol ?? "N/A".localized())
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
-            if let tu = temperatureUnit {
-                slider.minValue = CGFloat(tu.alertRange.lowerBound)
-                slider.maxValue = CGFloat(tu.alertRange.upperBound)
-            }
-        }
-
-        dewPointAlertHeaderCell.descriptionLabel.bind(viewModel.isDewPointAlertOn) { [weak self] (_, _) in
-            self?.updateUIDewPointAlertDescription()
-        }
-
-        let isDewPointAlertOn = viewModel.isDewPointAlertOn
-
-        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isNonCloudAlertsEnabled) { view, isNonCloudAlertsEnabled in
-            let isEnabled = isNonCloudAlertsEnabled ?? false
-            view.isEnabled = isEnabled
-            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-        }
-
-        dewPointAlertControlsCell.slider.bind(viewModel.isNonCloudAlertsEnabled) {
-            [weak isDewPointAlertOn] slider, isNonCloudAlertsEnabled in
-            let isAe = isNonCloudAlertsEnabled ?? false
-            let isOn = isDewPointAlertOn?.value ?? false
-            slider.isEnabled = isOn && isAe
-        }
-
-        dewPointAlertControlsCell.textField.bind(viewModel.dewPointAlertDescription) {
-            (textField, dewPointAlertDescription) in
-            textField.text = dewPointAlertDescription
-        }
-
-        tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
-            if tableView.window != nil {
-                tableView.reloadData()
-            }
-        }
-    }
-
     private func bindOffsetCorrectionCells() {
         guard isViewLoaded, let viewModel = viewModel else {
             return
@@ -1547,11 +1346,10 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn
                    range: NSRange,
                    replacementString string: String) -> Bool {
-        guard textField == tagNameTextField else {
-            textField.resignFirstResponder()
+        guard let text = textField.text else {
             return true
         }
-        let limit = (textField.text?.utf16.count)! + string.utf16.count - range.length
+        let limit = text.utf16.count + string.utf16.count - range.length
         if limit <= tagNameCharaterLimit {
             return true
         } else {
@@ -1567,17 +1365,9 @@ extension TagSettingsTableViewController {
         updateUITemperatureLowerBound()
         updateUITemperatureUpperBound()
 
-        updateUIHumidityAlertDescription()
-        updateUIHumidityLowerBound()
-        updateUIHumidityUpperBound()
-
         updateUIPressureAlertDescription()
         updateUIPressureLowerBound()
         updateUIPressureUpperBound()
-
-        updateUIDewPointAlertDescription()
-        updateUIDewPointCelsiusLowerBound()
-        updateUIDewPointCelsiusUpperBound()
     }
     // MARK: - updateUITemperature
 
@@ -1665,50 +1455,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-    // MARK: - updateUIHumidity
-    private func updateUIHumidityLowerBound() {
-        guard isViewLoaded else { return }
-        let hu = HumidityUnit.gm3
-        if let lower = viewModel?.humidityLowerBound.value {
-            let lowerAbsolute: Double = max(lower.converted(to: .absolute).value, hu.alertRange.lowerBound)
-            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerAbsolute)
-        } else {
-            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
-        }
-    }
-
-    private func updateUIHumidityUpperBound() {
-        guard isViewLoaded else { return }
-        let hu = HumidityUnit.gm3
-        if let upper = viewModel?.humidityUpperBound.value {
-            let upperAbsolute: Double = min(upper.converted(to: .absolute).value, hu.alertRange.upperBound)
-            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upperAbsolute)
-        } else {
-            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
-        }
-    }
-
-    private func updateUIHumidityAlertDescription() {
-        guard isViewLoaded else { return }
-        guard let isHumidityAlertOn = viewModel?.isHumidityAlertOn.value,
-              isHumidityAlertOn else {
-            humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-            return
-        }
-        let hu = HumidityUnit.gm3
-        if let l = viewModel?.humidityLowerBound.value,
-           let u = viewModel?.humidityUpperBound.value {
-            let format = "TagSettings.Alerts.Humidity.description".localized()
-            let description: String
-            let la: Double = max(l.converted(to: .absolute).value, hu.alertRange.lowerBound)
-            let ua: Double = min(u.converted(to: .absolute).value, hu.alertRange.upperBound)
-            description = String(format: format, la, ua)
-            humidityAlertHeaderCell.descriptionLabel.text = description
-        } else {
-            humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-        }
-    }
-
     // MARK: - updateUIPressure
     private func updateUIPressureLowerBound() {
         guard isViewLoaded else { return }
@@ -1770,55 +1516,6 @@ extension TagSettingsTableViewController {
             pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
         } else {
             pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-        }
-    }
-
-    // MARK: updateUIDewPoint
-
-    private func updateUIDewPointCelsiusLowerBound() {
-        guard isViewLoaded else { return }
-        guard let temperatureUnit = viewModel?.temperatureUnit.value else {
-            let range = TemperatureUnit.celsius.alertRange
-            dewPointAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
-            dewPointAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
-            return
-        }
-        if let lower = viewModel?.dewPointLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
-            dewPointAlertControlsCell.slider.selectedMinValue = CGFloat(lower.value)
-        } else {
-            let lower: CGFloat = CGFloat(temperatureUnit.alertRange.lowerBound)
-            dewPointAlertControlsCell.slider.selectedMinValue = lower
-        }
-    }
-
-    private func updateUIDewPointCelsiusUpperBound() {
-        guard isViewLoaded else { return }
-        guard let temperatureUnit = viewModel?.temperatureUnit.value else {
-            dewPointAlertControlsCell.slider.maxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
-            dewPointAlertControlsCell.slider.selectedMaxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
-            return
-        }
-        if let upper = viewModel?.dewPointUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
-            dewPointAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.value)
-        } else {
-            let upper: CGFloat = CGFloat(temperatureUnit.alertRange.upperBound)
-            dewPointAlertControlsCell.slider.selectedMaxValue = upper
-        }
-    }
-
-    private func updateUIDewPointAlertDescription() {
-        guard isViewLoaded else { return }
-        guard viewModel?.isDewPointAlertOn.value == true else {
-            dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-            return
-        }
-        if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
-           let l = viewModel?.dewPointLowerBound.value?.converted(to: tu),
-           let u = viewModel?.dewPointUpperBound.value?.converted(to: tu) {
-            let format = "TagSettings.Alerts.DewPoint.description".localized()
-            dewPointAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
-        } else {
-            dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
         }
     }
 

@@ -12,6 +12,9 @@ class TagChartsScrollViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var syncButton: UIButton!
+    @IBOutlet weak var syncCancelButton: UIButton!
+    @IBOutlet weak var syncProgressLabel: UILabel!
+    @IBOutlet weak var syncProgressView: UIView!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var bacgroundImageViewOverlay: UIImageView!
@@ -58,6 +61,9 @@ class TagChartsScrollViewController: UIViewController {
     @IBAction func didTriggerSync(_ sender: Any) {
         output.viewDidTriggerSync(for: viewModel)
     }
+    @IBAction func didTriggerCancel(_ sender: Any) {
+        output.viewDidTriggerStopSync(for: viewModel)
+    }
 }
 
 // MARK: - TagChartsViewInput
@@ -94,6 +100,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
         syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
+        syncCancelButton.setTitle("Cancel".localized(), for: .normal)
         output.viewDidLocalized()
     }
 
@@ -126,7 +133,15 @@ extension TagChartsScrollViewController: TagChartsViewInput {
                 syncStatusLabel.text = "TagCharts.Status.Connecting".localized()
             case .serving:
                 syncStatusLabel.text = "TagCharts.Status.Serving".localized()
+            case .reading(let points):
+                syncStatusLabel.isHidden = true
+                if syncProgressView.isHidden {
+                    syncProgressView.isHidden = false
+                    syncProgressLabel.isHidden = false
+                }
+                syncProgressLabel.text = "TagCharts.Status.ReadingHistory".localized() + "... \(points)"
             case .disconnecting:
+                hideSyncProgressView()
                 syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
             case .success:
                 // Show success message
@@ -134,15 +149,22 @@ extension TagChartsScrollViewController: TagChartsViewInput {
                 // Hide success message and show buttons after two seconds
                 showUtilButtons()
             case .failure:
-                // Show success message
+                // Show error message
                 syncStatusLabel.text = "TagCharts.Status.Error".localized()
-                // Hide success message and show buttons after two seconds
+                // Hide error message and show buttons after two seconds
+                hideSyncProgressView()
                 showUtilButtons()
             }
         } else {
             /// Show buttons after two seconds if there's an unexpected error
             showUtilButtons()
         }
+    }
+
+    func setSyncProgressViewHidden() {
+        // Hide the sync progress view
+        hideSyncProgressView()
+        showUtilButtons()
     }
 
     func showFailedToSyncIn(connectionTimeout: TimeInterval) {
@@ -187,6 +209,7 @@ extension TagChartsScrollViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         restartAnimations()
+        hideSyncProgressView()
         output.viewWillAppear()
     }
 
@@ -403,5 +426,9 @@ extension TagChartsScrollViewController {
     private func hideUtilButtons() {
         clearButton.isHidden = true
         syncButton.isHidden = true
+    }
+
+    private func hideSyncProgressView() {
+        syncProgressView.isHidden = true
     }
 }

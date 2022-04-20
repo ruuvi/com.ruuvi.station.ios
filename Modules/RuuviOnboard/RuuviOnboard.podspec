@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'RuuviOnboard'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'Ruuvi Onboard'
   s.homepage         = 'https://ruuvi.com'
   s.author           = { 'Rinat Enikeev' => 'rinat@ruuvi.com' }
@@ -20,6 +20,7 @@ Pod::Spec.new do |s|
         'RuuviOnboard' => ['Sources/**/Resources/**/*']
     }
     ss.dependency 'RuuviBundleUtils'
+    ss.dependency 'RuuviUser'
   end
 
   s.test_spec 'Tests' do |test_spec|

@@ -41,6 +41,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var featureToggleService: FeatureToggleService!
     var exportService: RuuviServiceExport!
+    var localSyncState: RuuviLocalSyncState!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -205,6 +206,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
             if let luid = sSelf.ruuviTag.luid {
+                sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
                 sSelf.settings.removeFirmwareVersion(for: luid)
             }
         }, failure: { [weak self] error in
@@ -360,6 +362,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidTapOnOwner() {
+        guard let isOwner = viewModel.isOwner.value, isOwner else { return }
         if viewModel.isClaimedTag.value == false {
             router.openOwner(ruuviTag: ruuviTag)
         }
@@ -488,7 +491,6 @@ extension TagSettingsPresenter {
         syncAlerts()
     }
 
-    // swiftlint:disable:next function_body_length
     private func bindViewModel() {
         // isPNAlertsAvailiable
         let isPNEnabled = viewModel.isPushNotificationsEnabled
@@ -544,26 +546,6 @@ extension TagSettingsPresenter {
             let isCo = isConnected?.value ?? false
             observer.viewModel.isAlertsEnabled.value = isCl || isCo
         }
-
-        // isNonCloudAlertsEnabled
-        let isAlertsEnabled = viewModel.isAlertsEnabled
-        bind(viewModel.isPNAlertsAvailiable) {
-            [weak isAlertsEnabled, weak isConnected] observer, isPNAlertsAvailiable in
-            let isCo = isConnected?.value ?? false
-            let isAe = isAlertsEnabled?.value ?? false
-            let isPN = isPNAlertsAvailiable ?? false
-            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
-        }
-
-        bind(viewModel.isAlertsEnabled) { [weak isPNAlertsAvailiable, weak isConnected] observer, isAlertsEnabled in
-            let isCo = isConnected?.value ?? false
-            let isAe = isAlertsEnabled ?? false
-            let isPN = isPNAlertsAvailiable?.value ?? false
-            observer.viewModel.isNonCloudAlertsEnabled.value = isAe && isPN && isCo
-        }
-
-        // this is done intentionally
-        viewModel.isNonCloudAlertsVisible.value = featureToggleService.isEnabled(.dpahAlerts)
     }
 
     private func syncOffsetCorrection() {
@@ -868,9 +850,6 @@ extension TagSettingsPresenter {
         if let luid = ruuviTag.luid {
             bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
-                if !keepConnection.bound {
-                    observer.viewModel.isConnectable.value = true
-                }
             }
         }
 

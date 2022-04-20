@@ -20,6 +20,7 @@ class TagChartsInteractor {
     var exportService: RuuviServiceExport!
     var ruuviSensorRecords: RuuviServiceSensorRecords!
     var featureToggleService: FeatureToggleService!
+    var localSyncState: RuuviLocalSyncState!
 
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
@@ -82,8 +83,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         ruuviTagSensorObservationToken = ruuviReactor.observe({ [weak self] change in
             switch change {
             case .initial(let sensors):
-                guard let sSelf = self else { return }
-                let sensors = sensors.reordered(by: sSelf.settings)
                 self?.sensors = sensors
                 if let id = self?.ruuviTagSensor.id,
                    let sensor = sensors.first(where: {$0.id == id}) {
@@ -177,14 +176,43 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         }
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
+        var syncFrom = localSyncState.getSyncDate(for: ruuviTagSensor.macId)
+        let historyLength = Calendar.current.date(
+            byAdding: .hour,
+            value: -settings.dataPruningOffsetHours,
+            to: Date()
+        )
+        if syncFrom == nil {
+            syncFrom = historyLength
+        } else if let from = syncFrom, let history = historyLength, from < history {
+            syncFrom = historyLength
+        }
+
         let op = gattService.syncLogs(uuid: luid.value,
                                       mac: ruuviTagSensor.macId?.value,
+                                      from: syncFrom ?? Date.distantPast,
                                       settings: sensorSettings,
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
-        op.on(success: { _ in
+        op.on(success: { [weak self] _ in
+            self?.localSyncState.setSyncDate(Date(), for: self?.ruuviTagSensor.macId)
             promise.succeed(value: ())
+        }, failure: {error in
+            promise.fail(error: .ruuviService(error))
+        })
+        return promise.future
+    }
+
+    func stopSyncRecords() -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        guard let luid = ruuviTagSensor.luid else {
+            promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
+            return promise.future
+        }
+        let op = gattService.stopGattSync(for: luid.value)
+        op.on(success: { response in
+            promise.succeed(value: (response))
         }, failure: {error in
             promise.fail(error: .ruuviService(error))
         })
@@ -197,6 +225,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             .on(failure: {(error) in
                 promise.fail(error: .ruuviService(error))
             }, completion: { [weak self] in
+                self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
                 self?.clearChartsAndRestartObserving()
                 promise.succeed(value: ())
             })
@@ -342,23 +371,5 @@ extension TagChartsInteractor {
         chartModules.forEach({
             $0.localize()
         })
-    }
-
-    private func syncLocalTag(luid: String, progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
-        let promise = Promise<Void, RUError>()
-        let connectionTimeout: TimeInterval = settings.connectionTimeout
-        let serviceTimeout: TimeInterval = settings.serviceTimeout
-        let op = gattService.syncLogs(uuid: luid,
-                                      mac: ruuviTagSensor.macId?.value,
-                                      settings: sensorSettings,
-                                      progress: progress,
-                                      connectionTimeout: connectionTimeout,
-                                      serviceTimeout: serviceTimeout)
-        op.on(success: { _ in
-            promise.succeed(value: ())
-        }, failure: {error in
-            promise.fail(error: .ruuviService(error))
-        })
-        return promise.future
     }
 }

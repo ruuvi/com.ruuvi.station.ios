@@ -5,6 +5,7 @@ public protocol RuuviTagProtocol {
     var version: Int { get }
     var isConnected: Bool { get }
     var isConnectable: Bool { get }
+    var isOwner: Bool { get }
     var accelerationX: Double? { get }
     var accelerationY: Double? { get }
     var accelerationZ: Double? { get }

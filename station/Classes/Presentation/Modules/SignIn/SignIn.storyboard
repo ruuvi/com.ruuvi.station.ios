@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="k6d-bS-0dj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="k6d-bS-0dj">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -33,7 +33,7 @@
         <!--Sign in-->
         <scene sceneID="LxA-sZ-lQl">
             <objects>
-                <viewController storyboardIdentifier="SignInViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oSZ-yy-qSu" customClass="SignInViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignInViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oSZ-yy-qSu" customClass="SignInViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jyk-P3-W77">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,11 +44,11 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="IGL-Fh-pzD">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jn4-FR-vdq" customClass="SignInScrollView" customModule="Ruuvi_Station" customModuleProvider="target">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jn4-FR-vdq" customClass="SignInScrollView" customModule="station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gDO-61-Z4Q">
-                                        <rect key="frame" x="20" y="174" width="374" height="460"/>
+                                        <rect key="frame" x="20" y="172" width="374" height="464"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zZu-em-u8P">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="172"/>
@@ -91,13 +91,13 @@ Network</string>
                                                 </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="error" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e42-RB-fNh">
-                                                <rect key="frame" x="4" y="368" width="366" height="18"/>
+                                                <rect key="frame" x="4" y="372" width="366" height="18"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" systemColor="systemRedColor"/>
                                                 <color key="highlightedColor" systemColor="labelColor"/>
                                             </label>
                                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pNT-Eq-mH2">
-                                                <rect key="frame" x="113" y="418" width="148" height="42"/>
+                                                <rect key="frame" x="113" y="422" width="148" height="42"/>
                                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
                                                 <inset key="contentEdgeInsets" minX="16" minY="12" maxX="16" maxY="12"/>
@@ -133,7 +133,7 @@ Network</string>
                                             <constraint firstItem="pNT-Eq-mH2" firstAttribute="top" secondItem="e42-RB-fNh" secondAttribute="bottom" constant="32" id="Pg0-AN-Mr2"/>
                                             <constraint firstItem="dXv-OX-K9V" firstAttribute="leading" secondItem="c4U-9j-8pJ" secondAttribute="leading" id="Uel-Pp-Be2"/>
                                             <constraint firstAttribute="trailing" secondItem="zZu-em-u8P" secondAttribute="trailing" id="Wig-T6-QSu"/>
-                                            <constraint firstItem="e42-RB-fNh" firstAttribute="top" secondItem="dXv-OX-K9V" secondAttribute="bottom" constant="4" id="dQh-br-8cJ"/>
+                                            <constraint firstItem="e42-RB-fNh" firstAttribute="top" secondItem="dXv-OX-K9V" secondAttribute="bottom" constant="8" id="dQh-br-8cJ"/>
                                             <constraint firstItem="c4U-9j-8pJ" firstAttribute="leading" secondItem="gDO-61-Z4Q" secondAttribute="leading" id="hFV-G9-MaU"/>
                                             <constraint firstItem="dBp-sa-Q5t" firstAttribute="top" secondItem="zZu-em-u8P" secondAttribute="bottom" constant="40" id="hYN-ux-wzA"/>
                                             <constraint firstItem="pNT-Eq-mH2" firstAttribute="centerX" secondItem="c4U-9j-8pJ" secondAttribute="centerX" id="lKY-o1-Ev4"/>
@@ -190,10 +190,11 @@ Network</string>
                         <outlet property="textFieldHeaderLabel" destination="zCm-oJ-nPu" id="jdE-V6-KOf"/>
                         <outlet property="textTextField" destination="c4U-9j-8pJ" id="3Mc-L5-7Pe"/>
                         <outlet property="titleLabel" destination="zZu-em-u8P" id="wys-Xv-TsI"/>
+                        <outlet property="underLineView" destination="dXv-OX-K9V" id="scA-GC-Bio"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gP2-FS-Vmy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="yTB-lz-s2E" customClass="SignInInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                <customObject id="yTB-lz-s2E" customClass="SignInInitializer" customModule="station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="oSZ-yy-qSu" id="oEU-Ry-cgr"/>
                     </connections>

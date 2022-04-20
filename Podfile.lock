@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.4.0)
+  - BTKit (0.4.1)
   - Firebase (8.14.0):
     - Firebase/Core (= 8.14.0)
   - Firebase/Analytics (8.14.0):
@@ -158,16 +158,16 @@ PODS:
   - Realm/Headers (10.25.0)
   - RealmSwift (10.25.0):
     - Realm (= 10.25.0)
-  - RuuviAnalytics (0.0.1):
-    - RuuviAnalytics/Contract (= 0.0.1)
-  - RuuviAnalytics/Contract (0.0.1)
-  - RuuviAnalytics/Impl (0.0.1):
+  - RuuviAnalytics (0.0.2):
+    - RuuviAnalytics/Contract (= 0.0.2)
+  - RuuviAnalytics/Contract (0.0.2)
+  - RuuviAnalytics/Impl (0.0.2):
     - RuuviAnalytics/Contract
     - RuuviLocal
     - RuuviStorage
     - RuuviUser
     - RuuviVirtual
-  - RuuviAnalytics/Tests (0.0.1)
+  - RuuviAnalytics/Tests (0.0.2)
   - RuuviBundleUtils (0.0.1):
     - RuuviBundleUtils/RuuviBundleUtils (= 0.0.1)
   - RuuviBundleUtils/RuuviBundleUtils (0.0.1):
@@ -340,11 +340,12 @@ PODS:
     - RuuviOntology
     - RuuviVirtual
   - RuuviNotifier/Tests (0.0.1)
-  - RuuviOnboard (0.0.1):
-    - RuuviOnboard/RuuviOnboard (= 0.0.1)
-  - RuuviOnboard/RuuviOnboard (0.0.1):
+  - RuuviOnboard (0.0.2):
+    - RuuviOnboard/RuuviOnboard (= 0.0.2)
+  - RuuviOnboard/RuuviOnboard (0.0.2):
     - RuuviBundleUtils
-  - RuuviOnboard/Tests (0.0.1)
+    - RuuviUser
+  - RuuviOnboard/Tests (0.0.2)
   - RuuviOntology (0.0.1):
     - RuuviOntology/Contract (= 0.0.1)
   - RuuviOntology/Contract (0.0.1):
@@ -471,7 +472,7 @@ PODS:
     - RuuviService/SensorProperties
     - RuuviService/SensorRecords
   - RuuviService/GATT (0.0.1):
-    - BTKit
+    - BTKit (~> 0.4.1)
     - FutureX
     - RuuviOntology
     - RuuviPool
@@ -569,7 +570,7 @@ PODS:
   - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
-  - BTKit
+  - BTKit (~> 0.4.1)
   - Firebase
   - Firebase/Analytics
   - Firebase/Crashlytics
@@ -790,7 +791,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
 
 SPEC CHECKSUMS:
-  BTKit: c409ccfad57a372438db9b4951687289ba14c4c9
+  BTKit: 752fd4c1aaf8f4bc3ea3cd3df55b816bebd59dc0
   Firebase: 7e8fe528c161b9271d365217a74c16aaf834578e
   FirebaseABTesting: aaa0e096c9fc9972ce6806d596e8fcc077d4371f
   FirebaseAnalytics: 2fc3876e2eb347673ad2f35e249ae7b15d6c88f5
@@ -821,7 +822,7 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 22a82aaa0e73f3483e3a6df32549c4c5cd34aa63
   RealmSwift: c2a635212400923edd3f828b8a37d55d3eb31863
-  RuuviAnalytics: 9bcb8ba615c61950c3298fff0419db2a8cff20a1
+  RuuviAnalytics: 472a67ed83727b2fb81e00b3c3bfc48d1ac42f5a
   RuuviBundleUtils: 2bf9121120e2c0707449dd7cd2f013d2512bc9a0
   RuuviCloud: 4d9b94039a8eb1c016f1ab375ff49b5d0c015825
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
@@ -836,14 +837,14 @@ SPEC CHECKSUMS:
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
-  RuuviOnboard: 8b811248872f681bdfaa94e3bca8c08a1aa7616d
+  RuuviOnboard: c313151167bbd590c0b01794809567d8c672989f
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
-  RuuviService: 109dc1ba70cc70296862f8be79cd9e205fd22971
+  RuuviService: 2498605539cf2496b2124839c6f53381fc454d2a
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6
@@ -851,6 +852,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 3deef67ea813d616ec184dfad794d1e61e3cf456
+PODFILE CHECKSUM: 4cb75e2589a76fdf5d6a7c1bc83163023eca35ae
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

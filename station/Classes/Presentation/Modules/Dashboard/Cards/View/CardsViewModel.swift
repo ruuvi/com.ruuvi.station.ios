@@ -125,19 +125,6 @@ struct CardsViewModel {
         movementCounter.value = ruuviTag.movementCounter
         source.value = ruuviTag.source
     }
-
-    func update(rssi: Int?, animated: Bool = false) {
-        if rssi == nil {
-            self.rssi.value = rssi
-        }
-        guard let lastUpdateRssiTime = lastUpdateRssi.value,
-            CFAbsoluteTimeGetCurrent() - lastUpdateRssiTime > 1 else {
-            return
-        }
-        self.lastUpdateRssi.value = CFAbsoluteTimeGetCurrent()
-        self.animateRSSI.value = animated
-        self.rssi.value = rssi
-    }
 }
 
 extension CardsViewModel: Hashable {
