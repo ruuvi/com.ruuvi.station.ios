@@ -93,8 +93,12 @@ class CardsRouter: NSObject, CardsRouterInput {
         transitionHandler.present(tagCharts, animated: true)
     }
 
-    func openRuuviWebsite() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
+    func openRuuviProductsPage() {
+        UIApplication.shared.open(URL(string: "https://ruuvi.com/products")!, options: [:], completionHandler: nil)
+    }
+
+    func openRuuviGatewayPage() {
+        UIApplication.shared.open(URL(string: "https://ruuvi.com/gateway")!, options: [:], completionHandler: nil)
     }
 
     func openSignIn(output: SignInModuleOutput) {

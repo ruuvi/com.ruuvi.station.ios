@@ -28,6 +28,7 @@ public final class GATTServiceQueue: GATTService {
     public func syncLogs(
         uuid: String,
         mac: String?,
+        from: Date,
         settings: SensorSettings?,
         progress: ((BTServiceProgress) -> Void)?,
         connectionTimeout: TimeInterval?,
@@ -40,6 +41,7 @@ public final class GATTServiceQueue: GATTService {
             let operation = RuuviTagReadLogsOperation(
                 uuid: uuid,
                 mac: mac,
+                from: from,
                 settings: settings,
                 ruuviPool: ruuviPool,
                 background: background,
@@ -62,5 +64,17 @@ public final class GATTServiceQueue: GATTService {
 
     public func isSyncingLogs(with uuid: String) -> Bool {
         return queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
+    }
+
+    @discardableResult
+    public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        if isSyncingLogs(with: uuid) {
+            if let operation = queue.operations.filter({ ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }).first {
+                operation.cancel()
+                promise.succeed(value: operation.isCancelled)
+            }
+        }
+        return promise.future
     }
 }

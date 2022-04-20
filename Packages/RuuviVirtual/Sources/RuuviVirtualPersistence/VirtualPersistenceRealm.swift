@@ -162,7 +162,6 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                     self.context.bg.add(webTagLocation, update: .modified)
                     webTag.location = webTagLocation
                 }
-                self.settings.tagsSorting.append(uuid)
                 promise.succeed(value: webTag.struct.any)
             } catch {
                 promise.fail(error: .persistence(error))
@@ -184,7 +183,6 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                 try self.context.bg.write {
                     self.context.bg.add(webTag, update: .all)
                 }
-                self.settings.tagsSorting.append(uuid)
                 promise.succeed(value: webTag.struct.any)
             } catch {
                 promise.fail(error: .persistence(error))
@@ -205,7 +203,6 @@ public final class VirtualPersistenceRealm: VirtualPersistence {
                     try self.context.bg.write {
                         self.context.bg.delete(webTag)
                     }
-                    self.settings.tagsSorting.removeAll(where: { $0 == sensorId })
                     promise.succeed(value: true)
                 } else {
                     promise.fail(error: .failedToFindVirtualTag)

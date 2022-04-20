@@ -34,15 +34,13 @@ final class RuuviPoolCoordinator: RuuviPool {
         }
         if ruuviTag.macId != nil,
             ruuviTag.macId?.value.isEmpty == false {
-            sqlite.create(ruuviTag).on(success: { [weak self] (result) in
-                self?.settings.tagsSorting.append(ruuviTag.id)
+            sqlite.create(ruuviTag).on(success: { (result) in
                 promise.succeed(value: result)
             }, failure: { (error) in
                 promise.fail(error: .ruuviPersistence(error))
             })
         } else {
-            realm.create(ruuviTag).on(success: { [weak self] (result) in
-                self?.settings.tagsSorting.append(ruuviTag.id)
+            realm.create(ruuviTag).on(success: { (result) in
                 promise.succeed(value: result)
             }, failure: { (error) in
                 promise.fail(error: .ruuviPersistence(error))
@@ -85,7 +83,6 @@ final class RuuviPoolCoordinator: RuuviPool {
                     if let luid = ruuviTag.luid {
                         self?.connectionPersistence.setKeepConnection(false, for: luid)
                     }
-                    self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
                     promise.succeed(value: success)
                 }, failure: { error in
                     promise.fail(error: .ruuviPersistence(error))
@@ -98,7 +95,6 @@ final class RuuviPoolCoordinator: RuuviPool {
                 if let luid = ruuviTag.luid {
                     self?.connectionPersistence.setKeepConnection(false, for: luid)
                 }
-                self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
                 promise.succeed(value: success)
             }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))

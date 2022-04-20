@@ -39,14 +39,14 @@ final class RuuviOnboardImageTitleViewController: UIViewController {
         NSLayoutConstraint.activate([
             guide.topAnchor.constraint(equalTo: imageView.topAnchor),
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 36),
-            imageView.heightAnchor.constraint(equalToConstant: isWelcomeScreen ? 148 : 88),
+            imageView.heightAnchor.constraint(equalToConstant: isWelcomeScreen ? (isiPhoneSE() ? 120 : 148) : 88),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            guide.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            guide.bottomAnchor.constraint(equalTo: titleLabel.topAnchor),
             guide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 40),
+            guide.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: isiPhoneSE() ? 20 : 40),
+            view.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: isiPhoneSE() ? 20: 40),
             guide.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
