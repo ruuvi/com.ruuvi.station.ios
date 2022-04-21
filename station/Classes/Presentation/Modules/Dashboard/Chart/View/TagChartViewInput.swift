@@ -9,5 +9,7 @@ protocol TagChartViewInput: ViewInput {
     func fitScreen()
     func reloadData()
     func setXRange(min: TimeInterval, max: TimeInterval)
+    func setXAxisRenderer()
+    func setYAxisLimit(min: Double, max: Double)
     func resetCustomAxisMinMax()
 }

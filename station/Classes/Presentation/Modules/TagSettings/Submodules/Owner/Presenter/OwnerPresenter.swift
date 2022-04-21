@@ -4,6 +4,7 @@ import RuuviService
 import RuuviPool
 import RuuviStorage
 import RuuviPresenters
+import RuuviLocal
 
 final class OwnerPresenter: OwnerModuleInput {
     weak var view: OwnerViewInput!
@@ -13,6 +14,9 @@ final class OwnerPresenter: OwnerModuleInput {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviStorage: RuuviStorage!
     var ruuviPool: RuuviPool!
+    var featureToggleService: FeatureToggleService!
+    var connectionPersistence: RuuviLocalConnections!
+    var settings: RuuviLocalSettings!
 
     private var ruuviTag: RuuviTagSensor!
     private var isLoading: Bool = false {
@@ -38,6 +42,7 @@ extension OwnerPresenter: OwnerViewOutput {
             .claim(sensor: ruuviTag)
             .on(success: { [weak self] _ in
                 self?.router.dismiss()
+                self?.removeConnection()
             }, failure: { [weak self] error in
                 switch error {
                 case .ruuviCloud(.api(.claim(let claimError))):
@@ -58,5 +63,30 @@ extension OwnerPresenter: OwnerViewOutput {
                                         .with(owner: email))
             }
         })
+    }
+    func viewDidTriggerFirmwareUpdateDialog() {
+        guard ruuviTag.luid?.value != nil,
+              ruuviTag.version < 5,
+              featureToggleService.isEnabled(.legacyFirmwareUpdatePopup) else { return }
+        view.showFirmwareUpdateDialog()
+    }
+
+    func viewDidConfirmFirmwareUpdate() {
+        router.openUpdateFirmware(ruuviTag: ruuviTag)
+    }
+
+    func viewDidIgnoreFirmwareUpdateDialog() {
+        view.showFirmwareDismissConfirmationUpdateDialog()
+    }
+}
+
+extension OwnerPresenter {
+    private func removeConnection() {
+        guard settings.cloudModeEnabled else {
+            return
+        }
+        if let luid = ruuviTag.luid {
+            connectionPersistence.setKeepConnection(false, for: luid)
+        }
     }
 }

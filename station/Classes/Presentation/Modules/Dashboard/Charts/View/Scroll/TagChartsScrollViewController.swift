@@ -76,14 +76,14 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     /// 2: Clear and Sync button should be hidden for shared sensors
     /// 3: The only case these buttons are shown are when the last stored data is from the cloud
     /// no sync process running in the background
-    func handleClearSyncButtons(sharedSensors: Bool, isSyncing: Bool) {
+    func handleClearSyncButtons(cloudSensor: Bool, sharedSensor: Bool, isSyncing: Bool) {
         if isSyncing {
             hideUtilButtons()
             syncStatusLabel.isHidden = false
             syncStatusLabel.text = "TagCharts.Status.Serving".localized()
             return
         }
-        if sharedSensors {
+        if sharedSensor || cloudSensor {
             hideUtilButtons()
             syncStatusLabel.isHidden = true
         } else {
@@ -101,18 +101,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         let title = "TagCharts.BluetoothDisabledAlert.title".localized()
         let message = "TagCharts.BluetoothDisabledAlert.message".localized()
         showAlert(title: title, message: message)
-    }
-
-    func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let title = "TagCharts.SyncConfirmationDialog.title".localized()
-        let message = "TagCharts.SyncConfirmationDialog.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        let fromTag = "OK".localized()
-        alertVC.addAction(UIAlertAction(title: fromTag, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSyncWithTag(for: viewModel)
-        }))
-        present(alertVC, animated: true)
     }
 
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {

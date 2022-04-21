@@ -25,6 +25,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
+    private var previousAdvertisementSequence: Int?
 
     @objc private class RuuviTagWrapper: NSObject {
         var device: RuuviTag
@@ -125,6 +126,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func restartObserving() {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
@@ -133,6 +135,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         sensorSettingsTokens.removeAll()
 
         for ruuviTag in ruuviTags {
+            guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else { continue }
             guard let luid = ruuviTag.luid else { continue }
             observeTokens.append(foreground.observe(self,
                                                     uuid: luid.value,
@@ -176,12 +179,31 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     @objc private func persist(wrapper: RuuviTagWrapper) {
         let uuid = wrapper.device.uuid
-        if let date = savedDate[uuid] {
-            if Date().timeIntervalSince(date) > saveInterval {
+        // If the tag chart is on foreground store all advertisements
+        // Otherwise respect the settings
+        guard let luid = wrapper.device.luid else { return }
+        if settings.tagChartOnForeground(for: luid) {
+            if let date = savedDate[uuid] {
+                if previousAdvertisementSequence != nil {
+                    if wrapper.device.measurementSequenceNumber != previousAdvertisementSequence {
+                        persist(wrapper.device, uuid)
+                        previousAdvertisementSequence = nil
+                    }
+                } else {
+                    previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
+                }
+            } else {
                 persist(wrapper.device, uuid)
+                previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
             }
         } else {
-            persist(wrapper.device, uuid)
+            if let date = savedDate[uuid] {
+                if Date().timeIntervalSince(date) > saveInterval {
+                    persist(wrapper.device, uuid)
+                }
+            } else {
+                persist(wrapper.device, uuid)
+            }
         }
     }
 

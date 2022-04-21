@@ -20,4 +20,7 @@ public protocol RuuviServiceAppSettings {
 
     @discardableResult
     func set(chartDuration: Int) -> Future<Int, RuuviServiceError>
+
+    @discardableResult
+    func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError>
 }

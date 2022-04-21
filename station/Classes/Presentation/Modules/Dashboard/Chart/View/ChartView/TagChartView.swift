@@ -130,17 +130,21 @@ class TagChartView: LineChartView {
         xAxis.drawAxisLineEnabled = false
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
-        xAxis.granularity = 59.9
+        xAxis.granularity = 1
         xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
-        xAxis.setLabelCount(6, force: true)
+        xAxis.yOffset = 10.0
+        viewPortHandler.setMaximumScaleX(5000)
+        viewPortHandler.setMaximumScaleY(30)
 
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+        leftAxis.setLabelCount(5, force: true)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
         leftAxis.minWidth = 40.0
         leftAxis.maxWidth = 40.0
+        leftAxis.xOffset = 10.0
 
         rightAxis.enabled = true
         rightAxis.labelPosition = .outsideChart
@@ -191,9 +195,24 @@ extension TagChartView: TagChartViewInput {
         resetZoom()
     }
 
+    func setYAxisLimit(min: Double, max: Double) {
+        leftAxis.axisMinimum = min - 0.5
+        leftAxis.axisMaximum = max + 0.5
+    }
+
     func setXRange(min: TimeInterval, max: TimeInterval) {
         xAxis.axisMinimum = min
         xAxis.axisMaximum = max
+    }
+
+    func setXAxisRenderer() {
+        // TODO: @Priyonto - Handle this from value more efficiently
+        let axisRenderer = CustomXAxisRenderer(from: 0,
+                                               viewPortHandler: viewPortHandler,
+                                               axis: xAxis,
+                                               transformer: getTransformer(forAxis: .left))
+        xAxisRenderer = axisRenderer
+        xAxis.setLabelCount(5, force: false)
     }
 
     func resetCustomAxisMinMax() {
