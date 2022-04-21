@@ -16,6 +16,8 @@ extension Language {
             return "Language.French".localized()
         case .swedish:
             return "Language.Swedish".localized()
+        case .german:
+            return "Language.German".localized()
         }
     }
 }

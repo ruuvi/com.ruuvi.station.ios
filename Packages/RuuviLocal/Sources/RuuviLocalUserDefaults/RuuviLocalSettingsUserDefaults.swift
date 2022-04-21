@@ -15,6 +15,39 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
+    private let firmwareUpdateDialogWasShownUDPrefix = "SettingsUserDegaults.firmwareUpdateDialogWasShownUDPrefix."
+
+    func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool {
+        return UserDefaults.standard.bool(forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
+    }
+
+    func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier) {
+        UserDefaults.standard.set(true, forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
+    }
+
+    private let firmwareVersionPrefix = "SettingsUserDegaults.firmwareVersionPrefix"
+    func firmwareVersion(for luid: LocalIdentifier) -> String? {
+        return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
+    }
+
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String) {
+        UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
+    }
+
+    func removeFirmwareVersion(for luid: LocalIdentifier) {
+        UserDefaults.standard.removeObject(forKey: firmwareVersionPrefix + luid.value)
+    }
+
+    // Store Chart Foreground State
+    private let chartOnForegroundPrefix = "SettingsUserDefaults.chartOnForeground"
+    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool {
+        return UserDefaults.standard.value(forKey: chartOnForegroundPrefix + luid.value) as? Bool ?? false
+    }
+
+    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool) {
+        UserDefaults.standard.set(value, forKey: chartOnForegroundPrefix + luid.value)
+    }
+
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
@@ -292,4 +325,15 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
     var experimentalFeaturesEnabled: Bool
+
+    @UserDefault("SettingsUserDefaults.cloudModeEnabled", defaultValue: false)
+    var cloudModeEnabled: Bool {
+        didSet {
+            NotificationCenter
+                .default
+                .post(name: .CloudModeDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
 }

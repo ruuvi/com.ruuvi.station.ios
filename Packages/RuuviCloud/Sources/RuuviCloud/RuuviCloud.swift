@@ -97,6 +97,9 @@ public protocol RuuviCloud {
     func set(chartDuration: Int) -> Future<Int, RuuviCloudError>
 
     @discardableResult
+    func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
     func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,

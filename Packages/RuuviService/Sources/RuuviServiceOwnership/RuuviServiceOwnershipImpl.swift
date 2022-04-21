@@ -92,6 +92,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 let claimedSensor = sensor
                     .with(owner: owner)
                     .with(isClaimed: true)
+                    .with(isCloudSensor: true)
                 sSelf.pool
                     .update(claimedSensor)
                     .on(success: { [weak sSelf] _ in

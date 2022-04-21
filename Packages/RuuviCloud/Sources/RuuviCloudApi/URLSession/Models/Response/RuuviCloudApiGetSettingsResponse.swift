@@ -25,6 +25,9 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var chartViewPeriod: Int? {
         return chartViewPeriodString?.ruuviCloudApiSettingChartViewPeriod
     }
+    public var cloudModeEnabled: Bool? {
+        return cloudModeEnabledString?.ruuviCloudApiSettingBoolean
+    }
 
     var unitTemperatureString: String?
     var unitHumidityString: String?
@@ -32,6 +35,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var chartShowAllPointsString: String?
     var chartDrawDotsString: String?
     var chartViewPeriodString: String?
+    var cloudModeEnabledString: String?
 
     enum CodingKeys: String, CodingKey {
         case unitTemperatureString = "UNIT_TEMPERATURE"
@@ -40,5 +44,6 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case chartShowAllPointsString = "CHART_SHOW_ALL_POINTS"
         case chartDrawDotsString = "CHART_DRAW_DOTS"
         case chartViewPeriodString = "CHART_VIEW_PERIOD"
+        case cloudModeEnabledString = "CLOUD_MODE_ENABLED"
     }
 }
