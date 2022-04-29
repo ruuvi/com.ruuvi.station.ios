@@ -498,6 +498,7 @@ extension CardsPresenter {
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
                     ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
+                        self?.restartObservingRuuviTagLastRecord(for: ruuviTagSensor)
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
@@ -532,7 +533,12 @@ extension CardsPresenter {
                     || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
                 }),
                let record = anyRecord {
-                viewModel.update(record)
+                let sensorSettings = self?.sensorSettingsList
+                    .first(where: {
+                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                    })
+                viewModel.update(record.with(sensorSettings: sensorSettings))
             }
         }
     }
