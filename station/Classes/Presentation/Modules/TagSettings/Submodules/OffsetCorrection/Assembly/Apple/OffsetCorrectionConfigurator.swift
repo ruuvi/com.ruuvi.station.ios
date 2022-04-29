@@ -22,6 +22,7 @@ class OffsetCorrectionConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
+        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
         view.output = presenter
