@@ -34,6 +34,8 @@ struct CardsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var isCloud: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
+    var rhAlertLowerBound: Observable<Double?> = Observable<Double?>()
+    var rhAlertUpperBound: Observable<Double?> = Observable<Double?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
     var isChartAvailable: Observable<Bool?> = Observable<Bool?>(false)

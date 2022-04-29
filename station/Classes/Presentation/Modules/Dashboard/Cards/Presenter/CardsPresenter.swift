@@ -381,6 +381,10 @@ extension CardsPresenter {
             }
             viewModel.alertState.value = alertService
                 .hasRegistrations(for: ruuviTag) ? .registered : .empty
+            viewModel.rhAlertLowerBound.value = alertService
+                .lowerRelativeHumidity(for: ruuviTag)
+            viewModel.rhAlertUpperBound.value = alertService
+                .upperRelativeHumidity(for: ruuviTag)
             ruuviStorage.readLast(ruuviTag).on { record in
                 if let record = record {
                     viewModel.update(record)
@@ -864,8 +868,14 @@ extension CardsPresenter {
                                     }).forEach({ (viewModel) in
                                         if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                                             viewModel.alertState.value = .registered
+                                            viewModel.rhAlertLowerBound.value = sSelf.alertService
+                                                .lowerRelativeHumidity(for: physicalSensor)
+                                            viewModel.rhAlertUpperBound.value = sSelf.alertService
+                                                .upperRelativeHumidity(for: physicalSensor)
                                         } else {
                                             viewModel.alertState.value = .empty
+                                            viewModel.rhAlertLowerBound.value = 0
+                                            viewModel.rhAlertUpperBound.value = 100
                                         }
                                     })
                                 }
