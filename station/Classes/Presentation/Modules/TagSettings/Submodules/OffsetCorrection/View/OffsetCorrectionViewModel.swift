@@ -59,7 +59,7 @@ class OffsetCorrectionViewModel {
                 self.correctedValue.value = value
             }
         }
-        self.updateAt.value = Date()
+        self.updateAt.value = ruuviTagRecord.date
     }
 
     func update(sensorSettings: SensorSettings) {

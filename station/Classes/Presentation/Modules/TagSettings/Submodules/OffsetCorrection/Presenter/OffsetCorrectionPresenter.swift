@@ -5,6 +5,7 @@ import RuuviService
 import RuuviLocal
 import RuuviStorage
 import RuuviPresenters
+import RuuviReactor
 
 final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     weak var view: OffsetCorrectionViewInput!
@@ -14,9 +15,11 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var errorPresenter: ErrorPresenter!
     var ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration!
     var ruuviStorage: RuuviStorage!
+    var ruuviReactor: RuuviReactor!
     var settings: RuuviLocalSettings!
 
     private var ruuviTagObserveToken: ObservationToken?
+    private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
 
     private var temperatureUnitSettingToken: NSObjectProtocol?
     private var humidityUnitSettingToken: NSObjectProtocol?
@@ -144,13 +147,26 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         guard let luid = self.ruuviTag.luid?.value else {
             return
         }
-        ruuviTagObserveToken?.invalidate()
-        ruuviTagObserveToken = foreground.observe(self, uuid: luid) { [weak self] (_, device) in
-            if let ruuviTag = device.ruuvi?.tag {
-                self?.lastSensorRecord = ruuviTag
-                self?.view.viewModel.update(
-                    ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings).with(source: .advertisement)
-                )
+        if !(settings.cloudModeEnabled && ruuviTag.isCloud) {
+            ruuviTagObserveToken?.invalidate()
+            ruuviTagObserveToken = foreground.observe(self, uuid: luid) { [weak self] (_, device) in
+                if let ruuviTag = device.ruuvi?.tag {
+                    self?.lastSensorRecord = ruuviTag
+                    self?.view.viewModel.update(
+                        ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings).with(source: .advertisement)
+                    )
+                }
+            }
+        } else {
+            ruuviTagObserveLastRecordToken?.invalidate()
+            ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(ruuviTag) { [weak self] (changes) in
+                if case .update(let anyRecord) = changes,
+                   let record = anyRecord {
+                    self?.lastSensorRecord = record
+                    self?.view.viewModel.update(
+                        ruuviTagRecord: record.with(sensorSettings: self?.sensorSettings).with(source: .ruuviNetwork)
+                    )
+                }
             }
         }
     }
