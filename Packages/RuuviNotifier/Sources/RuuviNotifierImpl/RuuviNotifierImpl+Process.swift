@@ -285,7 +285,6 @@ extension RuuviNotifierImpl {
         if case .movement(let last) = ruuviAlertService.alert(for: luid.value, of: movement),
             let movementCounter = record.movementCounter {
             let isGreater = movementCounter > last
-            print("dekhi", trigger)
             if trigger {
                 if isGreater {
                     DispatchQueue.main.async { [weak self] in

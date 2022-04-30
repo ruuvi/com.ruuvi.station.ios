@@ -331,15 +331,15 @@ PODS:
     - RuuviStorage
     - RuuviVirtual
   - RuuviNotification/Tests (0.0.1)
-  - RuuviNotifier (0.0.2):
-    - RuuviNotifier/Contract (= 0.0.2)
-  - RuuviNotifier/Contract (0.0.2)
-  - RuuviNotifier/Impl (0.0.2):
+  - RuuviNotifier (0.0.1):
+    - RuuviNotifier/Contract (= 0.0.1)
+  - RuuviNotifier/Contract (0.0.1)
+  - RuuviNotifier/Impl (0.0.1):
     - RuuviNotification
     - RuuviNotifier/Contract
     - RuuviOntology
     - RuuviVirtual
-  - RuuviNotifier/Tests (0.0.2)
+  - RuuviNotifier/Tests (0.0.1)
   - RuuviOnboard (0.0.2):
     - RuuviOnboard/RuuviOnboard (= 0.0.2)
   - RuuviOnboard/RuuviOnboard (0.0.2):
@@ -836,7 +836,7 @@ SPEC CHECKSUMS:
   RuuviLocationPicker: ec6fb89f5b0a5ff85d00036a2847e0ffac3b9076
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
-  RuuviNotifier: b68db257db5a8adc349a8dc54caa850bc7f4d9b1
+  RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
   RuuviOnboard: c313151167bbd590c0b01794809567d8c672989f
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
