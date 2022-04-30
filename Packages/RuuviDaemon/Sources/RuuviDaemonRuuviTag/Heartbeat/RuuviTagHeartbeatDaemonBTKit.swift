@@ -184,9 +184,10 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     sensorSettings = settings
                 }
                 observer.alertHandler.process(
-                    heartbeat: ruuviTag
+                    record: ruuviTag
                         .with(sensorSettings: sensorSettings)
-                        .with(source: .heartbeat)
+                        .with(source: .heartbeat),
+                    trigger: true
                 )
                 if observer.settings.saveHeartbeats {
                     let uuid = ruuviTag.uuid
