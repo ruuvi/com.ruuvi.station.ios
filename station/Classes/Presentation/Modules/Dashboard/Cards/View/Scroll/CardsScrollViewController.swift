@@ -372,15 +372,12 @@ extension CardsScrollViewController {
                 let offsetedValue = self?.measurementService.double(for: value,
                                                                     temperature: temperature,
                                                                     isDecimal: true) {
-                let rh = offsetedValue*100
                 if let rhAlertUpperBound = viewModel.rhAlertUpperBound.value,
-                   let rhAlertLowerBound = viewModel.rhAlertLowerBound.value {
-                    if rh >= rhAlertUpperBound || rh >= 100
-                        || rh <= rhAlertLowerBound || rh <= 0 {
-                        humidityWarning?.isHidden = false
-                    } else {
-                        humidityWarning?.isHidden = true
-                    }
+                   let rhAlertLowerBound = viewModel.rhAlertLowerBound.value,
+                   let alertState = viewModel.alertState.value,
+                   (alertState == .registered || alertState == .firing),
+                   offsetedValue > rhAlertUpperBound || offsetedValue < rhAlertLowerBound {
+                    humidityWarning?.isHidden = false
                 } else {
                     humidityWarning?.isHidden = true
                 }
