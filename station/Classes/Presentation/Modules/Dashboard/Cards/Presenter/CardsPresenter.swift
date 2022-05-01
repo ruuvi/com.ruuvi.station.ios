@@ -341,7 +341,7 @@ extension CardsPresenter: CardsRouterDelegate {
 extension CardsPresenter: RuuviNotifierObserver {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         viewModels
-            .filter({ $0.luid.value?.value == uuid })
+            .filter({ $0.luid.value?.value == uuid ||  $0.mac.value?.value == uuid})
             .forEach({
                 let newValue: AlertState = isTriggered ? .firing : .registered
                 if newValue != $0.alertState.value {
@@ -362,6 +362,7 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
+    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
@@ -381,9 +382,22 @@ extension CardsPresenter {
             }
             viewModel.alertState.value = alertService
                 .hasRegistrations(for: ruuviTag) ? .registered : .empty
-            ruuviStorage.readLast(ruuviTag).on { record in
+            viewModel.rhAlertLowerBound.value = alertService
+                .lowerRelativeHumidity(for: ruuviTag)
+            viewModel.rhAlertUpperBound.value = alertService
+                .upperRelativeHumidity(for: ruuviTag)
+            
+            ruuviStorage.readLast(ruuviTag).on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
+                    if viewModel.luid.value != nil {
+                        self?.alertHandler.process(record: record, trigger: false)
+                    } else {
+                        guard let macId = viewModel.mac.value else {
+                            return
+                        }
+                        self?.alertHandler.processNetwork(record: record, trigger: false, for: macId)
+                    }
                 }
             }
             return viewModel
@@ -479,11 +493,11 @@ extension CardsPresenter {
                                     ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
                                     || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                                 })
-                            viewModel.update(
-                                ruuviTag
-                                    .with(source: .advertisement)
-                                    .with(sensorSettings: sensorSettings)
-                            )
+                            let record = ruuviTag
+                                .with(source: .advertisement)
+                                .with(sensorSettings: sensorSettings)
+                            viewModel.update(record)
+                            self?.alertHandler.process(record: record, trigger: false)
                         }
                     })
                 }
@@ -498,6 +512,7 @@ extension CardsPresenter {
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
                     ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
+                        self?.restartObservingRuuviTagLastRecord(for: ruuviTagSensor)
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
@@ -532,7 +547,22 @@ extension CardsPresenter {
                     || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
                 }),
                let record = anyRecord {
-                viewModel.update(record)
+                let sensorSettings = self?.sensorSettingsList
+                    .first(where: {
+                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                    })
+                let sensorRecord = record.with(sensorSettings: sensorSettings)
+                viewModel.update(sensorRecord)
+
+                if viewModel.luid.value != nil {
+                    self?.alertHandler.process(record: sensorRecord, trigger: false)
+                } else {
+                    guard let macId = viewModel.mac.value else {
+                        return
+                    }
+                    self?.alertHandler.processNetwork(record: sensorRecord, trigger: false, for: macId)
+                }
             }
         }
     }
@@ -858,8 +888,14 @@ extension CardsPresenter {
                                     }).forEach({ (viewModel) in
                                         if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                                             viewModel.alertState.value = .registered
+                                            viewModel.rhAlertLowerBound.value = sSelf.alertService
+                                                .lowerRelativeHumidity(for: physicalSensor)
+                                            viewModel.rhAlertUpperBound.value = sSelf.alertService
+                                                .upperRelativeHumidity(for: physicalSensor)
                                         } else {
                                             viewModel.alertState.value = .empty
+                                            viewModel.rhAlertLowerBound.value = 0
+                                            viewModel.rhAlertUpperBound.value = 100
                                         }
                                     })
                                 }
@@ -879,9 +915,11 @@ extension CardsPresenter {
                          })
     }
     private func startListeningToRuuviTagsAlertStatus() {
-        ruuviTags.forEach({
-            if let uuid = $0.luid?.value {
-                alertHandler.subscribe(self, to: uuid)
+        ruuviTags.forEach({ (ruuviTag) in
+            if let luid = ruuviTag.luid {
+                alertHandler.subscribe(self, to: luid.value)
+            } else if let macId = ruuviTag.macId {
+                alertHandler.subscribe(self, to: macId.value)
             }
         })
     }

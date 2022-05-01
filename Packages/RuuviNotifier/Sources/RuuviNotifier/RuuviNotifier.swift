@@ -3,9 +3,9 @@ import RuuviOntology
 import RuuviVirtual
 
 public protocol RuuviNotifier {
-    func process(heartbeat ruuviTag: RuuviTagSensorRecord)
+    func process(record ruuviTag: RuuviTagSensorRecord, trigger: Bool)
     func process(data: VirtualData, for sensor: VirtualSensor)
-    func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
+    func processNetwork(record: RuuviTagSensorRecord, trigger: Bool, for identifier: MACIdentifier)
 
     func subscribe<T: RuuviNotifierObserver>(_ observer: T, to uuid: String)
     func isSubscribed<T: RuuviNotifierObserver>(_ observer: T, to uuid: String) -> Bool
