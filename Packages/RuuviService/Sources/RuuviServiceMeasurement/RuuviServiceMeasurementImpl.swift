@@ -167,11 +167,11 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
                 : (value * 100)
                     .round(to: numberFormatter.maximumFractionDigits)
         case .gm3:
-            return humidity.converted(to: .absolute)
+            return humidityWithTemperature.converted(to: .absolute)
                 .value
                 .round(to: numberFormatter.maximumFractionDigits)
         case .dew:
-            let dp = try? humidity.dewPoint(temperature: temperature)
+            let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
             return dp?.converted(to: settings.temperatureUnit.unitTemperature)
                 .value
                 .round(to: numberFormatter.maximumFractionDigits)
