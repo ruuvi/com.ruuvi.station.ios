@@ -7,4 +7,5 @@ public protocol RuuviOnboard: AnyObject {
 
 public protocol RuuviOnboardOutput: AnyObject {
     func ruuviOnboardDidFinish(_ ruuviOnboard: RuuviOnboard)
+    func ruuviOnboardDidShowSignIn(_ ruuviOnboard: RuuviOnboard)
 }

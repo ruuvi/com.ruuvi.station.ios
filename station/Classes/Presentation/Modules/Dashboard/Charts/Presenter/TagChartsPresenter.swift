@@ -132,12 +132,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
         interactor.restartObservingTags()
         handleClearSyncButtons()
         syncChartViews()
+        stopGattSync()
     }
 
     func viewWillDisappear() {
         stopObservingBluetoothState()
         interactor.stopObservingTags()
         interactor.stopObservingRuuviTagsData()
+        stopGattSync()
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
@@ -207,6 +209,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
                 self?.errorPresenter.present(error: error)
             }
         }, completion: nil)
+    }
+
+    func viewDidTriggerStopSync(for viewModel: TagChartsViewModel) {
+        stopGattSync()
     }
 
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
@@ -280,7 +286,12 @@ extension TagChartsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
-        router.openRuuviWebsite()
+        router.openRuuviProductsPage()
+    }
+
+    func menu(module: MenuModuleInput, didSelectGetRuuviGateway sender: Any?) {
+        module.dismiss()
+        router.openRuuviGatewayPage()
     }
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
@@ -313,7 +324,7 @@ extension TagChartsPresenter: SignInModuleOutput {
 // MARK: - RuuviNotifierObserver
 extension TagChartsPresenter: RuuviNotifierObserver {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
-        guard uuid == viewModel.uuid.value else { return }
+        guard uuid == viewModel.uuid.value || uuid == viewModel.mac.value else { return }
         let newValue: AlertState = isTriggered ? .firing : .registered
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue
@@ -367,6 +378,14 @@ extension TagChartsPresenter {
         viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag) ? .registered : .empty
         self.viewModel = viewModel
     }
+
+    private func stopGattSync() {
+        interactor.stopSyncRecords()
+            .on(success: { [weak self] _ in
+                self?.view.setSyncProgressViewHidden()
+            })
+    }
+
     private func restartObservingData() {
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingData()

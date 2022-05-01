@@ -9,8 +9,6 @@ extension Notification.Name {
     public static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
     public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
     public static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
-    public static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
-    public static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
     public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
     public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
@@ -35,15 +33,12 @@ public protocol RuuviLocalSettings {
     var alertsMuteIntervalMinutes: Int { get set }
     var saveHeartbeats: Bool { get set }
     var saveHeartbeatsIntervalMinutes: Int { get set }
-    var readRSSI: Bool { get set }
-    var readRSSIIntervalSeconds: Int { get set }
     var webPullIntervalMinutes: Int { get set }
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
-    var tagsSorting: [String] { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }

@@ -34,6 +34,8 @@ struct CardsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var isCloud: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
+    var rhAlertLowerBound: Observable<Double?> = Observable<Double?>()
+    var rhAlertUpperBound: Observable<Double?> = Observable<Double?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
     var isChartAvailable: Observable<Bool?> = Observable<Bool?>(false)
@@ -124,19 +126,6 @@ struct CardsViewModel {
         date.value = Date()
         movementCounter.value = ruuviTag.movementCounter
         source.value = ruuviTag.source
-    }
-
-    func update(rssi: Int?, animated: Bool = false) {
-        if rssi == nil {
-            self.rssi.value = rssi
-        }
-        guard let lastUpdateRssiTime = lastUpdateRssi.value,
-            CFAbsoluteTimeGetCurrent() - lastUpdateRssiTime > 1 else {
-            return
-        }
-        self.lastUpdateRssi.value = CFAbsoluteTimeGetCurrent()
-        self.animateRSSI.value = animated
-        self.rssi.value = rssi
     }
 }
 
