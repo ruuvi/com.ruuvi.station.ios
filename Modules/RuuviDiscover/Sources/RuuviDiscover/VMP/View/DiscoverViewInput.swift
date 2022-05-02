@@ -6,7 +6,6 @@ import RuuviLocalization
 
 protocol DiscoverViewInput: UIViewController, Localizable {
     var ruuviTags: [DiscoverRuuviTagViewModel] { get set }
-    var persistedSensors: [RuuviTagSensor] { get set }
     var virtualTags: [DiscoverVirtualTagViewModel] { get set }
     var savedWebTagProviders: [VirtualProvider] { get set }
     var isBluetoothEnabled: Bool { get set }
