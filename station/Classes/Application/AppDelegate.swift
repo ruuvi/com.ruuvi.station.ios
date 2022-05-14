@@ -112,3 +112,14 @@ extension AppDelegate {
         return true
     }
 }
+
+// MARK: - Widget Deeplink Handler
+extension AppDelegate {
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        let macId = url.absoluteString
+        appStateService.applicationDidOpenWithWidgetDeepLink(app, macId: macId)
+        return true
+    }
+}

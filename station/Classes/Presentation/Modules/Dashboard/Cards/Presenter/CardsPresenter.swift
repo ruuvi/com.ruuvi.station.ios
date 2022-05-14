@@ -68,6 +68,11 @@ class CardsPresenter: CardsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var universalLinkObservationToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
+    private var temperatureUnitToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
+    private var pressureUnitToken: NSObjectProtocol?
+    private var languageToken: NSObjectProtocol?
+    private var widgetDeepLinkToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -83,6 +88,7 @@ class CardsPresenter: CardsModuleInput {
     }
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
+    private let appGroupDefaults = UserDefaults(suiteName: "group.com.ruuvi.station.widgets")
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -109,6 +115,11 @@ class CardsPresenter: CardsModuleInput {
         lnmDidReceiveToken?.invalidate()
         universalLinkObservationToken?.invalidate()
         cloudModeToken?.invalidate()
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        pressureUnitToken?.invalidate()
+        languageToken?.invalidate()
+        widgetDeepLinkToken?.invalidate()
     }
 }
 
@@ -124,12 +135,15 @@ extension CardsPresenter: CardsViewOutput {
         startObservingAlertChanges()
         startObservingLocalNotificationsManager()
         startObservingCloudModeNotification()
+        startListeningToSettings()
+        startObservingWidgetDeepLink()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
     func viewWillAppear() {
         startObservingUniversalLinks()
         startObservingBluetoothState()
+        syncAppSettingsToAppGroupContainer()
     }
     
     func viewWillDisappear() {
@@ -421,6 +435,7 @@ extension CardsPresenter {
             self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
         }
     }
+
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
         return viewModels.sorted(by: {
             // Sort sensors by name alphabetically
@@ -431,6 +446,39 @@ extension CardsPresenter {
             }
         })
     }
+
+    private func syncAppSettingsToAppGroupContainer() {
+        let languageKey = "languageKey"
+        appGroupDefaults?.set(settings.language.rawValue, forKey: languageKey)
+    
+        let temperatureUnitKey = "temperatureUnitKey"
+        var temperatureUnitInt: Int = 2
+        switch settings.temperatureUnit {
+        case .kelvin:
+            temperatureUnitInt = 1
+        case .celsius:
+            temperatureUnitInt = 2
+        case .fahrenheit:
+            temperatureUnitInt = 3
+        }
+        appGroupDefaults?.set(temperatureUnitInt, forKey: temperatureUnitKey)
+        
+        var humidityUnitInt: Int = 0
+        switch settings.humidityUnit {
+        case .percent:
+            humidityUnitInt = 0
+        case .gm3:
+            humidityUnitInt = 1
+        case .dew:
+            humidityUnitInt = 2
+        }
+        let humidityUnitKey = "humidityUnitKey"
+        appGroupDefaults?.set(humidityUnitInt, forKey: humidityUnitKey)
+    
+        let pressureUnitKey = "pressureUnitKey"
+        appGroupDefaults?.set(settings.pressureUnit.hashValue, forKey: pressureUnitKey)
+    }
+
     private func configureInitialChart(from viewModel: CardsViewModel) {
         if let sensor = ruuviTags
             .first(where: {
@@ -1015,6 +1063,57 @@ extension CardsPresenter {
             }
         }
         viewModels = vms
+    }
+    
+    private func startListeningToSettings() {
+        temperatureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        }
+        humidityUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+        pressureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+        languageToken = NotificationCenter
+            .default
+            .addObserver(forName: .LanguageDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+    }
+    
+    private func startObservingWidgetDeepLink() {
+        languageToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidOpenWithWidgetDeepLink,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+                if let userInfo = notification.userInfo,
+                   let macId = userInfo[WidgetDeepLinkMacIdKey.macId] as? String,
+                   let index = self?.viewModels.firstIndex(where: { viewModel in
+                       viewModel.mac.value?.value == macId
+                   }) {
+                    self?.view.scroll(to: index)
+                }
+            })
     }
 }
 // swiftlint:enable file_length trailing_whitespace
