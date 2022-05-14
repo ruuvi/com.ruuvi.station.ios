@@ -3,6 +3,8 @@ import Foundation
 public enum Constants: String {
     case appGroupBundleId = "group.com.ruuvi.station.widgets"
 
+    case ruuviCloudBaseURL = "https://network.ruuvi.com"
+
     case simpleWidgetKindId = "ruuvi.simpleWidget"
     case simpleWidgetDisplayName = "Ruuvi Widget"
 

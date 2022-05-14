@@ -19,7 +19,7 @@ private final class NetworkingAssembly: Assembly {
 
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
-            let baseUrlString: String = "https://network.ruuvi.com"
+            let baseUrlString: String = Constants.ruuviCloudBaseURL.rawValue
             let baseUrl = URL(string: baseUrlString)!
             let cloud = r.resolve(RuuviCloudFactory.self)!.create(
                 baseUrl: baseUrl,
