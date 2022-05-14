@@ -99,6 +99,24 @@ def shared_pods
   pod 'iOSDFULibrary'
 end
 
+def widget_pods
+  pod 'Swinject'
+  pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
+  pod 'BTKit', '~> 0.4.1'
+  pod 'FutureX'
+  pod 'GRDB.swift', '~> 4.14.0'
+  pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
+  pod 'Localize-Swift'
+  pod 'Realm'
+  pod 'RealmSwift'
+  pod 'RuuviUser', :path => 'Packages/RuuviUser/RuuviUser.podspec', :testspecs => ['Tests']
+  pod 'RuuviUser/Coordinator', :path => 'Packages/RuuviUser/RuuviUser.podspec'
+  pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
+  pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
+  pod 'KeychainAccess'
+  pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
+end
+
 target 'station' do
   shared_pods
 end
@@ -106,6 +124,14 @@ end
 target 'station_dev' do
   shared_pods
   pod 'FLEX', :configurations => ['Debug']
+end
+
+target 'station_widgets' do
+  widget_pods
+end
+
+target 'station_intents' do
+  widget_pods
 end
 
 target 'stationTests' do
@@ -119,6 +145,8 @@ post_install do |installer|
     target.build_configurations.each do |config|
       if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 13.0
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+        config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
+        config.build_settings['SWIFT_SUPPRESS_WARNINGS'] = "YES"
       end
     end
   end

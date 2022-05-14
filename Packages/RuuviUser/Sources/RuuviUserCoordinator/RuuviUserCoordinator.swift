@@ -1,5 +1,6 @@
 import Foundation
 import RuuviUser
+import WidgetKit
 
 final class RuuviUserCoordinator: RuuviUser {
     var apiKey: String? {
@@ -24,11 +25,13 @@ final class RuuviUserCoordinator: RuuviUser {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: isAuthorizedUDKey)
+            appGroupDefaults?.set(newValue, forKey: isAuthorizedUDKey)
         }
     }
 
     private var keychainService: KeychainService
     private let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
+    private let appGroupDefaults = UserDefaults(suiteName: "group.com.ruuvi.station.widgets")
 
     init(keychainService: KeychainService) {
         self.keychainService = keychainService
