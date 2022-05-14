@@ -5,6 +5,9 @@ import RuuviUser
 #if canImport(RuuviAnalytics)
 import RuuviAnalytics
 #endif
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 class AppStateServiceImpl: AppStateService {
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
@@ -63,6 +66,9 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.stop()
+            if #available(iOS 14.0, *) {
+                WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+            }
         }
         propertiesDaemon.stop()
         pullWebDaemon.stop()
@@ -87,5 +93,11 @@ class AppStateServiceImpl: AppStateService {
 
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
         universalLinkCoordinator.processUniversalLink(url: url)
+    }
+
+    func applicationDidOpenWithWidgetDeepLink(_ application: UIApplication, macId: String) {
+        NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
+                                        object: nil,
+                                        userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
     }
 }
