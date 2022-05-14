@@ -83,7 +83,9 @@ platform :ios do
       export_options: {
         method: "ad-hoc",
         provisioningProfiles: {
-          "com.ruuvi.station" => "match AdHoc com.ruuvi.station"
+          "com.ruuvi.station" => "match AdHoc com.ruuvi.station",
+          "com.ruuvi.station.widgets" => "match AdHoc com.ruuvi.station.widgets",
+          "com.ruuvi.station.intents" => "match AdHoc com.ruuvi.station.intents"
         }
       }
     )
@@ -147,7 +149,9 @@ platform :ios do
       export_options: {
         method: "appstore",
         provisioningProfiles: {
-          "com.ruuvi.station" => "match AppStore com.ruuvi.station"
+          "com.ruuvi.station" => "match AppStore com.ruuvi.station",
+          "com.ruuvi.station.widgets" => "match AppStore com.ruuvi.station.widgets",
+          "com.ruuvi.station.intents" => "match AppStore com.ruuvi.station.intents"
         }
       }
     )
