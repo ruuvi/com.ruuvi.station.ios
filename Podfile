@@ -5,6 +5,13 @@ inhibit_all_warnings!
 
 install! 'cocoapods', :disable_input_output_paths => true
 
+def ruuvi_ontology
+  pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
+  pod 'RuuviOntology/Contract', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
+  pod 'RuuviOntology/SQLite', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
+  pod 'RuuviOntology/Realm', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
+end
+
 def shared_pods
   pod 'BTKit', '~> 0.4.1'
   pod 'Firebase'
@@ -34,7 +41,6 @@ def shared_pods
   # packages
   pod 'RuuviAnalytics', :path => 'Packages/RuuviAnalytics/RuuviAnalytics.podspec', :testspecs => ['Tests']
   pod 'RuuviAnalytics/Impl', :path => 'Packages/RuuviAnalytics/RuuviAnalytics.podspec'
-  pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
   pod 'RuuviContext', :path => 'Packages/RuuviContext/RuuviContext.podspec'
   pod 'RuuviCore', :path => 'Packages/RuuviCore/RuuviCore.podspec', :testspecs => ['Tests']
   pod 'RuuviCore/Image', :path => 'Packages/RuuviCore/RuuviCore.podspec'
@@ -101,7 +107,6 @@ end
 
 def widget_pods
   pod 'Swinject'
-  pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
   pod 'BTKit', '~> 0.4.1'
   pod 'FutureX'
   pod 'GRDB.swift', '~> 4.14.0'
@@ -118,23 +123,28 @@ def widget_pods
 end
 
 target 'station' do
+  ruuvi_ontology
   shared_pods
 end
 
 target 'station_dev' do
+  ruuvi_ontology
   shared_pods
   pod 'FLEX', :configurations => ['Debug']
 end
 
 target 'station_widgets' do
+  ruuvi_ontology
   widget_pods
 end
 
 target 'station_intents' do
+  ruuvi_ontology
   widget_pods
 end
 
 target 'stationTests' do
+  ruuvi_ontology
   shared_pods
   pod 'Nimble'
   pod 'Quick'
