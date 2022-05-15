@@ -448,6 +448,9 @@ extension CardsPresenter {
     }
 
     private func syncAppSettingsToAppGroupContainer() {
+        let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
+        appGroupDefaults?.set(ruuviUser.isAuthorized, forKey: isAuthorizedUDKey)
+        
         let languageKey = "languageKey"
         appGroupDefaults?.set(settings.language.rawValue, forKey: languageKey)
     
