@@ -643,6 +643,9 @@ DEPENDENCIES:
   - RuuviOnboard (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
   - RuuviOnboard/Tests (from `Modules/RuuviOnboard/RuuviOnboard.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
+  - RuuviOntology/Contract (from `Packages/RuuviOntology/RuuviOntology.podspec`)
+  - RuuviOntology/Realm (from `Packages/RuuviOntology/RuuviOntology.podspec`)
+  - RuuviOntology/SQLite (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPool (from `Packages/RuuviPool/RuuviPool.podspec`)
@@ -857,6 +860,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 70d3f21c8a29bc0236bcdd879bb588c009809ad6
+PODFILE CHECKSUM: d6cbbda3493ca11805eeab53a3cdef0dc18e3d43
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.2
