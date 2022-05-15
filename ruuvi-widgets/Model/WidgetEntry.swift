@@ -28,6 +28,6 @@ extension WidgetEntry {
                            tag: .preview,
                            record: nil,
                            settings: nil,
-                           config: configuration)
+                           config: authorized ? configuration : .preview)
     }
 }
