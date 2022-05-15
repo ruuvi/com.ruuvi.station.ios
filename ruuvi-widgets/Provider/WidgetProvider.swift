@@ -21,7 +21,7 @@ final class WidgetProvider: IntentTimelineProvider {
     func getTimeline(for configuration: RuuviTagSelectionIntent,
                      in context: Context,
                      completion: @escaping (Timeline<WidgetEntry>) -> Void) {
-        guard networkManager.isConnected else {
+        guard networkManager.isConnected, viewModel.isAuthorized() else {
             return emptyTimeline(for: configuration,
                                  completion: completion)
         }
