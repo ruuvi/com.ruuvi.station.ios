@@ -14,6 +14,7 @@ public final class WidgetViewModel: ObservableObject {
     init() {
         ruuviUser = widgetAssembly.resolve(RuuviUser.self)
         ruuviCloud = widgetAssembly.resolve(RuuviCloud.self)
+        setWidgetLanguage()
     }
 }
 
@@ -102,6 +103,10 @@ extension WidgetViewModel {
         let settings = getAppSettings()
         return sensor.unit(from: settings)
     }
+
+    public func locale() -> Locale {
+        return .init(identifier: Localize.currentLanguage())
+    }
 }
 
 // MARK: - Private methods
@@ -111,12 +116,21 @@ extension WidgetViewModel {
         let temperatureUnit = temperatureUnit(from: appGroupDefaults)
         let humidityUnit = humidityUnit(from: appGroupDefaults)
         let pressureUnit = pressureUnit(from: appGroupDefaults)
-        let language = language(from: appGroupDefaults)
-        Localize.setCurrentLanguage(language.rawValue)
+        let language = getAppLanguage()
         return MeasurementServiceSettings(temperatureUnit: temperatureUnit,
                                           humidityUnit: humidityUnit,
                                           pressureUnit: pressureUnit,
                                           language: language)
+    }
+
+    private func getAppLanguage() -> Language {
+        let language = language(from: appGroupDefaults)
+        return language
+    }
+
+    private func setWidgetLanguage() {
+        let language = getAppLanguage()
+        Localize.setCurrentLanguage(language.rawValue)
     }
 
     private func language(from defaults: UserDefaults?) -> Language {

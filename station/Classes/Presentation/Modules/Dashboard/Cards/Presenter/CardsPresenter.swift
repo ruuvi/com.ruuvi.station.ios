@@ -15,6 +15,9 @@ import RuuviNotifier
 import RuuviDaemon
 import RuuviPresenters
 import RuuviUser
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -480,6 +483,11 @@ extension CardsPresenter {
     
         let pressureUnitKey = "pressureUnitKey"
         appGroupDefaults?.set(settings.pressureUnit.hashValue, forKey: pressureUnitKey)
+        
+        // Reload widget
+        if #available(iOS 14.0, *) {
+            WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        }
     }
 
     private func configureInitialChart(from viewModel: CardsViewModel) {
