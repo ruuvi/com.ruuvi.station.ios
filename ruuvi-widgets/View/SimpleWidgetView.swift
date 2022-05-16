@@ -16,6 +16,7 @@ struct SimpleWidgetView: View {
                         .foregroundColor(Color.logoColor)
                     Spacer()
                     Text(entry.record?.date ?? Date(), style: .time)
+                        .environment(\.locale, viewModel.locale())
                         .foregroundColor(Color.sensorNameColor1)
                         .font(.custom(Constants.muliRegular.rawValue, size: 10, relativeTo: .body))
                         .minimumScaleFactor(0.5)

@@ -58,7 +58,7 @@ extension WidgetProvider {
                                       authorized: viewModel.isAuthorized())
         entries.append(entry)
         let timeline = Timeline(entries: entries,
-                                policy: .after(Date().addingTimeInterval(5 * 60)))
+                                policy: .atEnd)
         return completion(timeline)
     }
 
@@ -76,7 +76,7 @@ extension WidgetProvider {
                                 settings: settings,
                                 config: configuration)
         entries.append(entry)
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let timeline = Timeline(entries: entries, policy: .after(Date().addingTimeInterval(5 * 60)))
         completion(timeline)
     }
 }
