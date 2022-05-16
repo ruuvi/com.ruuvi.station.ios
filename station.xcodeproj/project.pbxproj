@@ -589,6 +589,7 @@
 		34D458E52821A06E00EA9F93 /* station_intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34D458E92821A07600EA9F93 /* station_widgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34D459042821A45700EA9F93 /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D491281EBFD9008A8698 /* RuuviWidgetsConfiguration.intentdefinition */; };
+		34F266A52832489900AE79D9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
@@ -4206,6 +4207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34F266A52832489900AE79D9 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
