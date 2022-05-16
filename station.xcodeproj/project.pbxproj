@@ -589,6 +589,7 @@
 		34D458E52821A06E00EA9F93 /* station_intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34D458E92821A07600EA9F93 /* station_widgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34D459042821A45700EA9F93 /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D491281EBFD9008A8698 /* RuuviWidgetsConfiguration.intentdefinition */; };
+		34F266A52832489900AE79D9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
@@ -4206,6 +4207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34F266A52832489900AE79D9 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5467,7 +5469,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -5476,7 +5478,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5495,7 +5497,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -5504,7 +5506,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5525,7 +5527,7 @@
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
@@ -5537,7 +5539,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -5560,7 +5562,7 @@
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
@@ -5572,7 +5574,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5592,7 +5594,7 @@
 				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = intents/Info.plist;
@@ -5604,7 +5606,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -5625,7 +5627,7 @@
 				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = intents/Info.plist;
@@ -5637,7 +5639,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5775,7 +5777,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5816,7 +5818,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5835,7 +5837,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 295;
+				CURRENT_PROJECT_VERSION = 296;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5843,7 +5845,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
