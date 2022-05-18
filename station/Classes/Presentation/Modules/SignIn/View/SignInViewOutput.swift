@@ -4,5 +4,5 @@ protocol SignInViewOutput {
     func viewDidLoad()
     func viewDidClose()
     func viewDidTapSubmitButton()
-    func viewDidTapEnterCodeManually()
+    func viewDidTapEnterCodeManually(code: String)
 }

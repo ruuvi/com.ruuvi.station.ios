@@ -1,28 +1,35 @@
 import UIKit
+import RuuviUser
 
 protocol RuuviOnboardPagesViewControllerOutput: AnyObject {
     func ruuviOnboardPages(_ viewController: RuuviOnboardPagesViewController, didFinish sender: Any?)
+    func ruuviOnboardCloudSignIn(_ viewController: RuuviOnboardPagesViewController, didPresentSignIn sender: Any?)
 }
 
 final class RuuviOnboardPagesViewController: UIViewController {
     var output: RuuviOnboardPagesViewControllerOutput?
+    var ruuviUser: RuuviUser?
 
     init() {
-        self.pageController = UIPageViewController(
+        pageController = UIPageViewController(
             transitionStyle: .scroll,
             navigationOrientation: .horizontal,
             options: nil
         )
-        self.backgroundImageView = Self.makeBackgroundImageView()
-        self.overlayImageView = Self.makeOverlayImageView()
-        self.logoImageView = Self.makeLogoImageView()
+        backgroundImageView = Self.makeBackgroundImageView()
+        overlayImageView = Self.makeOverlayImageView()
+        logoImageView = Self.makeLogoImageView()
         super.init(nibName: nil, bundle: nil)
-        self.pageController.dataSource = self
-        self.pageController.delegate = self
+        pageController.dataSource = self
+        pageController.delegate = self
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -31,6 +38,22 @@ final class RuuviOnboardPagesViewController: UIViewController {
         styleViews()
         layoutViews()
         setupPages()
+        startObservingUserSignedInNotification()
+    }
+
+    private func startObservingUserSignedInNotification() {
+        NotificationCenter
+            .default
+            .addObserver(forName: .RuuviUserDidAuthorized,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.navigateToStartPage()
+            })
+    }
+
+    private func navigateToStartPage() {
+        pageController.goToNextPage()
     }
 
     private let pageController: UIPageViewController
@@ -111,17 +134,54 @@ final class RuuviOnboardPagesViewController: UIViewController {
         )
         controllers.append(alerts)
 
+        let cloud = RuuviOnboardCloudSigninViewController()
+        cloud.delegate = self
+        cloud.ruuviUser = ruuviUser
+        controllers.append(cloud)
+
         let start = RuuviOnboardStartViewController()
         start.delegate = self
         controllers.append(start)
 
         pageController.setViewControllers([controllers[0]], direction: .forward, animated: false)
     }
+
+    private func showSkipConfirmationDialog() {
+        let title = "RuuviOnboard.Cloud.Skip.title".localized(for: Self.self)
+        let message = "RuuviOnboard.Cloud.Benefits.message"
+            .localized(for: Self.self)
+            .replacingOccurrences(of: "\\n\\n",
+                                  with: "\n\n")
+        let skipActionTitle = "RuuviOnboard.Cloud.Skip.Yes.title".localized(for: Self.self).uppercased()
+        let goBackActionTitle = "RuuviOnboard.Cloud.Skip.GoBack.title".localized(for: Self.self).uppercased()
+        let skipAction = UIAlertAction(title: skipActionTitle,
+                                       style: .default,
+                                       handler: nil)
+        let goBackAction = UIAlertAction(title: goBackActionTitle,
+                                         style: .default,
+                                         handler: { [weak self] _ in
+            guard let sSelf = self else {
+                return
+            }
+            sSelf.output?.ruuviOnboardCloudSignIn(sSelf, didPresentSignIn: nil)
+        })
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.setMessageAlignment(.left)
+        alert.addAction(goBackAction)
+        alert.addAction(skipAction)
+        present(alert, animated: true)
+    }
 }
 
 extension RuuviOnboardPagesViewController: RuuviOnboardStartViewControllerDelegate {
     func ruuviOnboardStart(_ viewController: RuuviOnboardStartViewController, didFinish sender: Any?) {
         output?.ruuviOnboardPages(self, didFinish: nil)
+    }
+}
+
+extension RuuviOnboardPagesViewController: RuuviOnboardCloudSigninViewControllerDelegate {
+    func ruuviOnboardShowSignIn(_ viewController: RuuviOnboardCloudSigninViewController, didShowSignIn sender: Any?) {
+        output?.ruuviOnboardCloudSignIn(self, didPresentSignIn: nil)
     }
 }
 
@@ -163,7 +223,27 @@ extension RuuviOnboardPagesViewController: UIPageViewControllerDelegate {
     }
 
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
-        return 0
+        if let currentVC = pageViewController.viewControllers?.first,
+           let index = controllers.firstIndex(of: currentVC) {
+            return index
+        } else {
+            return 0
+        }
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            didFinishAnimating finished: Bool,
+                            previousViewControllers: [UIViewController],
+                            transitionCompleted completed: Bool) {
+        guard completed,
+              let currentVC = pageViewController.viewControllers?.first,
+              let index = controllers.firstIndex(of: currentVC) else { return }
+        if index == controllers.count - 1 {
+            guard let ruuviUser = ruuviUser, !ruuviUser.isAuthorized else {
+                return
+            }
+            showSkipConfirmationDialog()
+        }
     }
 }
 
@@ -185,5 +265,18 @@ extension RuuviOnboardPagesViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }
+}
+
+extension UIPageViewController {
+    func goToNextPage() {
+       guard let currentViewController = self.viewControllers?.first else {
+           return
+       }
+       guard let nextViewController = dataSource?.pageViewController(self,
+                                                                     viewControllerAfter: currentViewController) else {
+           return
+       }
+       setViewControllers([nextViewController], direction: .forward, animated: false, completion: nil)
     }
 }

@@ -64,8 +64,8 @@ extension SignInPresenter: SignInViewOutput {
         }
     }
 
-    func viewDidTapEnterCodeManually() {
-        router.openEmailConfirmation(output: self)
+    func viewDidTapEnterCodeManually(code: String) {
+        verify(code)
     }
 }
 
@@ -106,15 +106,19 @@ extension SignInPresenter {
             viewModel.submitButtonText.value = "SignIn.RequestCode".localized()
             viewModel.errorLabelText.value = nil
             viewModel.canPopViewController.value = false
-            viewModel.textContentType.value = .emailAddress
             viewModel.inputText.value = ruuviUser.email
+            viewModel.showEmailField.value = true
+            viewModel.showCodeField.value = false
+            viewModel.showUnderline.value = true
         case .enterVerificationCode(let code):
             viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
             viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
-            viewModel.placeholder.value = "SignIn.CodeHint".localized()
+            viewModel.placeholder.value = nil
             viewModel.submitButtonText.value = "SignIn.SubmitCode".localized()
             viewModel.errorLabelText.value = nil
-            viewModel.textContentType.value = .name
+            viewModel.showEmailField.value = false
+            viewModel.showCodeField.value = true
+            viewModel.showUnderline.value = false
             if let code = code {
                 viewModel.canPopViewController.value = false
                 processCode(code)
@@ -268,6 +272,7 @@ extension SignInPresenter {
     }
 
     private func processCode(_ code: String) {
+        view.fromDeepLink = true
         viewModel.inputText.value = code
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750), execute: { [weak self] in
             self?.verify(code)

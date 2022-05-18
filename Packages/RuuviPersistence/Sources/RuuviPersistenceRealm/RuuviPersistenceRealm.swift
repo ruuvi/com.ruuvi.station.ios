@@ -192,7 +192,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                     isConnectable: ruuviTagRealm.isConnectable,
                     name: ruuviTagRealm.name,
                     isClaimed: false,
-                    isOwner: false,
+                    isOwner: ruuviTagRealm.isOwner,
                     owner: ruuviTagRealm.owner,
                     isCloudSensor: ruuviTagRealm.isCloudSensor
                 ).any
@@ -217,7 +217,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                     isConnectable: ruuviTagRealm.isConnectable,
                     name: ruuviTagRealm.name,
                     isClaimed: false,
-                    isOwner: false,
+                    isOwner: ruuviTagRealm.isOwner,
                     owner: ruuviTagRealm.owner,
                     isCloudSensor: ruuviTagRealm.isCloudSensor
                 ).any
