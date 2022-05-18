@@ -3,6 +3,7 @@ import SwiftUI
 import Combine
 import RuuviOntology
 import RuuviPool
+import RuuviStorage
 import RuuviLocal
 import RuuviDaemon
 import RuuviPresenters
@@ -23,6 +24,7 @@ final class DFUPresenter: DFUModuleInput {
     private let interactor: DFUInteractorInput
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
+    private let ruuviStorage: RuuviStorage
     private let settings: RuuviLocalSettings
     private let propertiesDaemon: RuuviTagPropertiesDaemon
     private let activityPresenter: ActivityPresenter
@@ -31,6 +33,7 @@ final class DFUPresenter: DFUModuleInput {
         interactor: DFUInteractorInput,
         ruuviTag: RuuviTagSensor,
         ruuviPool: RuuviPool,
+        ruuviStorage: RuuviStorage,
         settings: RuuviLocalSettings,
         propertiesDaemon: RuuviTagPropertiesDaemon,
         activityPresenter: ActivityPresenter
@@ -38,6 +41,7 @@ final class DFUPresenter: DFUModuleInput {
         self.interactor = interactor
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
+        self.ruuviStorage = ruuviStorage
         self.settings = settings
         self.propertiesDaemon = propertiesDaemon
         self.activityPresenter = activityPresenter
@@ -45,6 +49,7 @@ final class DFUPresenter: DFUModuleInput {
             interactor: interactor,
             ruuviTag: ruuviTag,
             ruuviPool: ruuviPool,
+            ruuviStorage: ruuviStorage,
             settings: settings,
             propertiesDaemon: propertiesDaemon,
             activityPresenter: activityPresenter

@@ -3581,7 +3581,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0E6BAECB23856A01003A2D4C /* Build configuration list for PBXNativeTarget "station" */;
 			buildPhases = (
-				07AB6D8FF75421DFDBFFA81D /* Assets Catalog Compiler */,
+				6AF1D979072D4CD950FFA81D /* Compile Cocoa Frameworks */,
 				31884FB725C74449002BC63F /* SwiftGen */,
 				0E6BAD7823856A01003A2D4C /* Sources */,
 				0E6BAEA623856A01003A2D4C /* Frameworks */,
@@ -3773,7 +3773,7 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 
-	07AB6D8FF75421DFDBFFA81D /* Assets Catalog Compiler */ = {
+	6AF1D979072D4CD950FFA81D /* Compile Cocoa Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3782,7 +3782,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Assets Catalog Compiler";
+			name = "Compile Cocoa Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -3794,6 +3794,10 @@
 echo \"\" 
 	";			
 		};
+	
+
+	
+
 	
 
 	

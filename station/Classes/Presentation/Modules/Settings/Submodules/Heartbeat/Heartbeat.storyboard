@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8hB-Vn-evN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8hB-Vn-evN">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Heartbeat View Controller-->
         <scene sceneID="jku-f8-uQj">
             <objects>
                 <viewController storyboardIdentifier="HeartbeatViewController" id="8hB-Vn-evN" customClass="HeartbeatViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
@@ -30,7 +31,8 @@
                                 </connections>
                             </containerView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="vso-Qy-ULO"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="kjx-Fi-b2F" firstAttribute="trailing" secondItem="vso-Qy-ULO" secondAttribute="trailing" id="0Vy-MN-gZj"/>
                             <constraint firstItem="vso-Qy-ULO" firstAttribute="bottom" secondItem="kjx-Fi-b2F" secondAttribute="bottom" id="9BC-dy-bEK"/>
@@ -41,7 +43,6 @@
                             <constraint firstItem="Ef3-zd-fTi" firstAttribute="top" secondItem="vso-Qy-ULO" secondAttribute="top" id="kyX-HX-TI8"/>
                             <constraint firstItem="Ef3-zd-fTi" firstAttribute="leading" secondItem="vso-Qy-ULO" secondAttribute="leading" id="vjt-bw-tPZ"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="vso-Qy-ULO"/>
                     </view>
                     <connections>
                         <outlet property="listContainer" destination="Ef3-zd-fTi" id="aIE-qB-jMD"/>
@@ -64,7 +65,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="2Jo-6y-F3p">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection id="Jw2-0e-Fb3">
                                 <cells>
@@ -76,7 +77,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Logging Interval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iA0-et-Kck">
-                                                    <rect key="frame" x="20" y="11.5" width="163" height="21"/>
+                                                    <rect key="frame" x="20" y="11.5" width="162" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -126,66 +127,6 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection id="L61-RB-ire">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="zlg-m3-lMO">
-                                        <rect key="frame" x="0.0" y="141" width="414" height="43.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zlg-m3-lMO" id="TYa-Pp-TDj">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Read RSSI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NnL-pS-q9A">
-                                                    <rect key="frame" x="20" y="11.5" width="79" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Plu-mi-GS2">
-                                                    <rect key="frame" x="343" y="6.5" width="51" height="31"/>
-                                                    <connections>
-                                                        <action selector="readRSSISwitchValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="CnS-4f-LNZ"/>
-                                                    </connections>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="Plu-mi-GS2" secondAttribute="trailing" constant="22" id="1Vt-HP-2hh"/>
-                                                <constraint firstItem="NnL-pS-q9A" firstAttribute="centerY" secondItem="TYa-Pp-TDj" secondAttribute="centerY" id="gHi-rH-UkS"/>
-                                                <constraint firstItem="Plu-mi-GS2" firstAttribute="centerY" secondItem="TYa-Pp-TDj" secondAttribute="centerY" id="nmu-wO-VsB"/>
-                                                <constraint firstItem="NnL-pS-q9A" firstAttribute="leading" secondItem="TYa-Pp-TDj" secondAttribute="leading" constant="20" id="wcm-dV-Y3e"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="3Q0-mk-7J7">
-                                        <rect key="frame" x="0.0" y="184.5" width="414" height="43.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Q0-mk-7J7" id="sv7-4r-K3r">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="every 5 sec" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yxy-st-6TT">
-                                                    <rect key="frame" x="20" y="11.5" width="88" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="2OU-eF-5jo">
-                                                    <rect key="frame" x="300" y="6" width="94" height="32"/>
-                                                    <connections>
-                                                        <action selector="readRSSIIntervalStepperValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="iGS-Yh-Si6"/>
-                                                    </connections>
-                                                </stepper>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="2OU-eF-5jo" firstAttribute="centerY" secondItem="sv7-4r-K3r" secondAttribute="centerY" id="5uR-g2-YbD"/>
-                                                <constraint firstAttribute="trailing" secondItem="2OU-eF-5jo" secondAttribute="trailing" constant="20" id="R4s-Rz-Bnq"/>
-                                                <constraint firstItem="yxy-st-6TT" firstAttribute="centerY" secondItem="sv7-4r-K3r" secondAttribute="centerY" id="poS-oE-ksV"/>
-                                                <constraint firstItem="yxy-st-6TT" firstAttribute="leading" secondItem="sv7-4r-K3r" secondAttribute="leading" constant="20" id="zn8-bg-sll"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="ybW-bv-0sg" id="KM3-ob-SDt"/>
@@ -193,10 +134,6 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="readRSSIIntervalLabel" destination="yxy-st-6TT" id="12R-m6-Y3X"/>
-                        <outlet property="readRSSIIntervalStepper" destination="2OU-eF-5jo" id="AEW-JH-URV"/>
-                        <outlet property="readRSSISwitch" destination="Plu-mi-GS2" id="BBN-Fr-oF0"/>
-                        <outlet property="readRSSITitleLabel" destination="NnL-pS-q9A" id="WMD-sM-J9V"/>
                         <outlet property="saveHeartbeatsIntervalLabel" destination="DWd-Xv-XbX" id="9Mx-qB-FD3"/>
                         <outlet property="saveHeartbeatsIntervalStepper" destination="NlI-i8-HBY" id="4Qp-bf-Vpy"/>
                         <outlet property="saveHeartbeatsSwitch" destination="UL9-Dl-fMv" id="c3F-Zg-cej"/>
@@ -216,4 +153,12 @@
             <point key="canvasLocation" x="-83" y="-145"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="groupTableViewBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
