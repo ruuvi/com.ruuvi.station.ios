@@ -506,4 +506,8 @@ RuuviTag-sensorn är redo att användas!";
 "Settings.Label.CloudMode" = "Molnläge";
 "Settings.Label.CloudMode.description" = "Uppdatera närliggande molnregistrerade sensorer endast från molnet genom att inte lyssna på deras Bluetooth-meddelanden och endast ta emot varningar via e-post. Kräver en Ruuvi Gateway.";
 "TagSettings.Connection.description" = "Sensorn kan inte anslutas till via Bluetooth när molnläget är aktivt. Du kan återaktivera Bluetooth-anslutning för molnsensorerna genom att inaktivera molnläget i appinställningarna.";
+"Widgets.Loading.message" = "laddar...";
 "Cards.Movements.title" = "rörelser";
+"Widgets.Description.message" = "Skapa widgets av dina favorit Ruuvi-sensorer. Widgetdatan kommer från Ruuvi Cloud och kräver en Ruuvi Gateway-router.";
+"Widgets.Unauthorized.message" = "Logga in för att använda widgeten.";
+"Widgets.Unconfigured.message" = "Tryck och håll ned för att redigera widgeten.";
