@@ -5,7 +5,7 @@ import RuuviLocal
 final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let syncStatusPrefix = "RuuviLocalSyncStateUserDefaults.syncState."
     private let syncDatePrefix = "RuuviLocalSyncStateUserDefaults.syncDate."
-    private let latestSyncDateUDKey = "RuuviLocalSyncStateUserDefaults.latestSyncDate."
+    private let gattSyncDatePrefix = "RuuviLocalSyncStateUserDefaults.gattSyncDate."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
     func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier) {
@@ -49,15 +49,6 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?) {
         guard let macId = macId else { return }
         UserDefaults.standard.set(date, forKey: syncDatePrefix + macId.mac)
-        if let date = date {
-            if let latestSyncDate = latestSyncDate {
-                if date > latestSyncDate {
-                    self.latestSyncDate = date
-                }
-            } else {
-                self.latestSyncDate = date
-            }
-        }
     }
 
     func getSyncDate(for macId: MACIdentifier?) -> Date? {
@@ -65,8 +56,15 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
         return UserDefaults.standard.value(forKey: syncDatePrefix + macId.mac) as? Date
     }
 
-    @UserDefault("RuuviLocalSyncStateUserDefaults.latestSyncDate", defaultValue: nil)
-    var latestSyncDate: Date?
+    func setGattSyncDate(_ date: Date?, for macId: MACIdentifier?) {
+        guard let macId = macId else { return }
+        UserDefaults.standard.set(date, forKey: gattSyncDatePrefix + macId.mac)
+    }
+
+    func getGattSyncDate(for macId: MACIdentifier?) -> Date? {
+        guard let macId = macId else { assertionFailure(); return nil }
+        return UserDefaults.standard.value(forKey: gattSyncDatePrefix + macId.mac) as? Date
+    }
 
     @UserDefault("RuuviLocalSyncStateUserDefaults.syncStatus", defaultValue: 0)
     private var syncStatusInt: Int
