@@ -12,5 +12,4 @@ protocol MenuViewOutput {
     func viewDidSelectSettings()
     func viewDidSelectFeedback()
     func viewDidSelectAccountCell()
-    func viewDidTapSyncButton()
 }
