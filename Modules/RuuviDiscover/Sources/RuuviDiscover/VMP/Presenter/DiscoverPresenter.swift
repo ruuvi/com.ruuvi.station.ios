@@ -47,7 +47,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     }
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
-            view?.persistedSensors = persistedSensors
+            updateViewDevices()
         }
     }
     private var reloadTimer: Timer?
@@ -277,7 +277,7 @@ extension DiscoverPresenter {
     }
 
     private func updateViewDevices() {
-        view?.ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
+        let ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
             if let persistedRuuviTag = persistedSensors
                 .first(where: { $0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any }) {
                 return DiscoverRuuviTagViewModel(
@@ -299,5 +299,29 @@ extension DiscoverPresenter {
                 )
             }
         }
+        view?.ruuviTags = visibleTags(ruuviTags: ruuviTags)
+    }
+
+    private func visibleTags(ruuviTags: [DiscoverRuuviTagViewModel]) -> [DiscoverRuuviTagViewModel] {
+        let filtered = ruuviTags.filter({ tag in
+            !persistedSensors.contains(where: { persistedTag in
+                if let tagLuid = tag.luid?.value,
+                    let persistedTagLuid = persistedTag.luid?.value {
+                    return tagLuid == persistedTagLuid
+                } else if let tagMacId = tag.mac, let persistedTagMacId = persistedTag.macId?.value {
+                    return tagMacId == persistedTagMacId
+                } else {
+                    return true
+                }
+            })
+        }).sorted(by: {
+            if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
+                return rssi0 > rssi1
+            } else {
+                return false
+            }
+        })
+
+        return filtered
     }
 }

@@ -207,6 +207,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
             if let luid = sSelf.ruuviTag.luid {
                 sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
+                sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
                 sSelf.settings.removeFirmwareVersion(for: luid)
             }
         }, failure: { [weak self] error in
