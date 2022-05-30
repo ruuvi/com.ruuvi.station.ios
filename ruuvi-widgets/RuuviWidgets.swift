@@ -1,7 +1,6 @@
 import WidgetKit
 import SwiftUI
 import Intents
-import Localize_Swift
 
 @available(iOS 14.0, *)
 struct RuuviWidgetEntryView: View {
@@ -37,7 +36,7 @@ struct RuuviWidgets: Widget {
                 .environment(\.locale, viewModel.locale())
         }
                             .configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
-                            .description("Widgets.Description.message".localized())
+                            .description(LocalizedStringKey("Widgets.Description.message"))
                             .supportedFamilies([.systemSmall])
     }
 }
