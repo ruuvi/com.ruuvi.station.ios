@@ -96,3 +96,9 @@ extension Optional where Wrapped == String {
         return self ?? ""
     }
 }
+
+extension String {
+    var localized: String {
+        return NSLocalizedString(self, comment: "")
+    }
+}
