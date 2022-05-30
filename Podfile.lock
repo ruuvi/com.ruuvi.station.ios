@@ -278,12 +278,12 @@ PODS:
     - RuuviService
     - RuuviVirtual
   - RuuviDiscover/Tests (0.0.1)
-  - RuuviLocal (0.0.1):
-    - RuuviLocal/Contract (= 0.0.1)
-  - RuuviLocal/Contract (0.0.1):
+  - RuuviLocal (0.0.2):
+    - RuuviLocal/Contract (= 0.0.2)
+  - RuuviLocal/Contract (0.0.2):
     - FutureX
     - RuuviOntology
-  - RuuviLocal/UserDefaults (0.0.1):
+  - RuuviLocal/UserDefaults (0.0.2):
     - FutureX
     - RuuviLocal/Contract
     - RuuviOntology
@@ -830,7 +830,7 @@ SPEC CHECKSUMS:
   RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
   RuuviDiscover: 1e6354187fbf85c84a752408577f977375696ab2
-  RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
+  RuuviLocal: f3879be64900ea9de25844e596c5509073547130
   RuuviLocalization: 17e59877c53b8578b73498aa016c81cac61cfe16
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviLocationPicker: ec6fb89f5b0a5ff85d00036a2847e0ffac3b9076

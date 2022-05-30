@@ -21,24 +21,14 @@ class MenuPresenter: MenuModuleInput {
         }
     }
 
-    private var timer: Timer?
-    private var lastSyncDate: CFAbsoluteTime!
-    private var syncNotificationToken: NSObjectProtocol?
-
     private weak var output: MenuModuleOutput?
 
     func configure(output: MenuModuleOutput) {
         self.output = output
-        startObservingAppState()
     }
 
     func dismiss() {
         router.dismiss()
-    }
-
-    deinit {
-        syncNotificationToken?.invalidate()
-        timer?.invalidate()
     }
 }
 
@@ -92,89 +82,16 @@ extension MenuPresenter: MenuViewOutput {
             output?.menu(module: self, didSelectSignIn: nil)
         }
     }
-
-    func viewDidTapSyncButton() {
-        timer?.invalidate()
-        viewModel?.isSyncing.value = true
-        lastSyncDate = CFAbsoluteTimeGetCurrent()
-        cloudSyncService.syncAll()
-            .on(completion: { [weak self] in
-                if let lastSyncDate = self?.lastSyncDate {
-                    let syncLength: CFAbsoluteTime = CFAbsoluteTimeGetCurrent() - lastSyncDate
-                    let deadline = max(2.0 - syncLength, 0.0)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(deadline * 1000))) {
-                        self?.viewModel?.isSyncing.value = false
-                    }
-                } else {
-                    self?.viewModel?.isSyncing.value = false
-                }
-                self?.createLastUpdateTimer()
-            })
-    }
 }
 
 extension MenuPresenter {
-    private func startObservingAppState() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(syncViewModel),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(invalidateTimer),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
-        syncNotificationToken = NotificationCenter
-            .default
-            .addObserver(forName: .NetworkSyncDidChangeCommonStatus,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] notification in
-            guard let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus else {
-                return
-            }
-            if status == .syncing {
-                self?.invalidateTimer()
-                self?.viewModel?.isSyncing.value = true
-                self?.lastSyncDate = CFAbsoluteTimeGetCurrent()
-            } else {
-                self?.viewModel?.isSyncing.value = false
-                self?.setSyncStatus()
-                self?.createLastUpdateTimer()
-            }
-        })
-    }
 
-    @objc private func syncViewModel() {
+    private func syncViewModel() {
         let viewModel = MenuViewModel()
         if ruuviUser.isAuthorized {
             viewModel.username.value = ruuviUser.email
         }
-        viewModel.isSyncing.value = localSyncState.syncStatus == .syncing
         self.viewModel = viewModel
-        guard localSyncState.syncStatus != .syncing else {
-            return
-        }
-        setSyncStatus()
-        createLastUpdateTimer()
-    }
-
-    @objc private func invalidateTimer() {
-        timer?.invalidate()
-    }
-
-    private func setSyncStatus() {
-        let prefix = "Synchronized".localized()
-        if let date = localSyncState.latestSyncDate?.ruuviAgo(prefix: prefix) {
-            viewModel?.status.value = date
-        } else {
-            viewModel?.status.value = localSyncState.latestSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
-        }
-    }
-
-    private func createLastUpdateTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
-            self?.setSyncStatus()
-        })
     }
 
     private func createSignOutAlert() {
