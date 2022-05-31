@@ -120,6 +120,9 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Tau";
 "Settings.SectionHeader.Application.title" = "ANWENDUNG";
 "Settings.Label.Language.text" = "Sprache";
+"Settings.Language.Dialog.title" = "Sprache auswählen";
+"Settings.Language.Dialog.message" = "Open settings and tap Language to change language of the app.
+If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Vordergrund";
 "Settings.Label.Defaults" = "Standardeinstellungen";
 "Settings.Label.Heartbeat" = "Hintergrund";

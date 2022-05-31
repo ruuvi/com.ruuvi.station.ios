@@ -13,4 +13,5 @@ protocol SettingsViewOutput {
     func viewDidTapOnExperimental()
     func viewDidTriggerShake()
     func viewCloudModeDidChange(isOn: Bool)
+    func viewDidSelectChangeLanguage()
 }

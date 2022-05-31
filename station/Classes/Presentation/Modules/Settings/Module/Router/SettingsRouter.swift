@@ -8,14 +8,6 @@ class SettingsRouter: SettingsRouterInput {
         try! transitionHandler.closeCurrentModule().perform()
     }
 
-    func openLanguage() {
-        let factory = StoryboardFactory(storyboardName: "Language")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: LanguageModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .perform()
-    }
-
     func openDefaults() {
         let factory = StoryboardFactory(storyboardName: "Defaults")
         try! transitionHandler
