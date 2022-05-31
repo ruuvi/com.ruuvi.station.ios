@@ -120,6 +120,9 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
 "Settings.SectionHeader.Application.title" = "OHJELMA";
 "Settings.Label.Language.text" = "Kieli";
+"Settings.Language.Dialog.title" = "Valitse kieli";
+"Settings.Language.Dialog.message" = "Avaa asetukset ja napauta Kieli vaihtaaksesi sovelluksen kieltä.
+Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintään yksi ensisijainen kieli on valittuna järjestelmäasetuksissa: Asetukset -> Yleiset -> Kieli ja alue.";
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
@@ -506,4 +509,8 @@ RuuviTag on valmis käyttöön!";
 "Settings.Label.CloudMode" = "Pilvitila";
 "Settings.Label.CloudMode.description" = "Päivitä lähellä olevat pilveen rekisteröidyt anturit ainoastaan pilvestä ja vastaanota ainoastaan sähköpostihälytyksiä hylkäämällä niiden Bluetooth-viestit. Vaatii Ruuvi Gateway -reitittimen.";
 "TagSettings.Connection.description" = "Anturiin ei voida yhdistää Bluetoothilla sovelluksen pilvitilan ollessa aktiivinen. Voit ottaa pilvianturiesi Bluetoothin takaisin käyttöön sammuttamalla pilvitilan sovelluksen asetussivulta.";
+"Widgets.Loading.message" = "ladataan...";
 "Cards.Movements.title" = "liikettä";
+"Widgets.Description.message" = "Luo widgettejä Ruuvi-antureistasi. Widgetit päivittyvät Ruuvin pilvipalvelun kautta ja vaativat toimiakseen Ruuvi Gateway -reitittimen.";
+"Widgets.Unauthorized.message" = "Kirjaudu sisään käyttääksesi widgettiä.";
+"Widgets.Unconfigured.message" = "Paina pitkään muokataksesi widgettiä.";

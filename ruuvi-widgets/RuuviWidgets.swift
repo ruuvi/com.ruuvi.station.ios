@@ -1,7 +1,6 @@
 import WidgetKit
 import SwiftUI
 import Intents
-import Localize_Swift
 
 @available(iOS 14.0, *)
 struct RuuviWidgetEntryView: View {
@@ -28,15 +27,16 @@ struct RuuviWidgetEntryView: View {
 @main
 struct RuuviWidgets: Widget {
     let kind: String = Constants.simpleWidgetKindId.rawValue
-    // swiftlint:disable line_length
+    let viewModel = WidgetViewModel()
     var body: some WidgetConfiguration {
         IntentConfiguration(kind: kind,
                             intent: RuuviTagSelectionIntent.self,
                             provider: WidgetProvider()) { entry in
             RuuviWidgetEntryView(entry: entry)
+                .environment(\.locale, viewModel.locale())
         }
                             .configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
-                            .description("Create widgets of your favourite Ruuvi sensors. Widgets update from Ruuvi Cloud. Ruuvi Gateway router is required.")
+                            .description(LocalizedStringKey("Widgets.Description.message"))
                             .supportedFamilies([.systemSmall])
     }
 }

@@ -120,6 +120,9 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Rosée";
 "Settings.SectionHeader.Application.title" = "APPLICATION";
 "Settings.Label.Language.text" = "Langue";
+"Settings.Language.Dialog.title" = "Choisissez une Langue";
+"Settings.Language.Dialog.message" = "Open settings and tap Language to change language of the app.
+If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Premier plan";
 "Settings.Label.Defaults" = "Paramètres d'usine";
 "Settings.Label.Heartbeat" = "Tâches d'arrière plan";
@@ -506,5 +509,9 @@ RuuviTag est prêt à être utilisé !";
 "Settings.Label.CloudMode" = "Statut du cloud";
 "Settings.Label.CloudMode.description" = "Mettre à jour les capteurs à proximité associés au cloud seulement pour recevoir seulement des alertes par mail en rejetant les messages Bluetooth. Nécessite le routeur Ruuvi Gateway";
 "TagSettings.Connection.description" = "Impossible de se connecter au capteur tant que le statut du cloud est actif. Vous pouvez modifier le statut dans les paramètres de l'application.";
+"Widgets.Loading.message" = "Chargement...";
 "Cards.Movements.title" = "mouvements";
+"Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from Ruuvi Cloud. Ruuvi Gateway router is required.";
+"Widgets.Unauthorized.message" = "Sign in to use the widget.";
+"Widgets.Unconfigured.message" = "Force tap to edit the widget.";
 

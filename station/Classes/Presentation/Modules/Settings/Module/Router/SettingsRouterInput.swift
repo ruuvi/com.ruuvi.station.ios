@@ -2,7 +2,6 @@ import Foundation
 
 protocol SettingsRouterInput {
     func dismiss()
-    func openLanguage()
     func openDefaults()
     func openHeartbeat()
     func openChart()

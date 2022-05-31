@@ -3,7 +3,7 @@ import SwiftUI
 struct UnauthorizedView: View {
     var body: some View {
         VStack {
-            Text("Sign in to use the widget.")
+            Text("Widgets.Unauthorized.message".localized)
                 .font(.custom(Constants.muliBold.rawValue,
                               size: 16,
                               relativeTo: .headline))

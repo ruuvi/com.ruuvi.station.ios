@@ -108,6 +108,19 @@ extension SettingsTableViewController: SettingsViewInput {
         updateUILanguage()
         tableView.reloadData()
     }
+
+    func viewDidShowLanguageChangeDialog() {
+        let title = "Settings.Language.Dialog.title".localized()
+        let message = "Settings.Language.Dialog.message".localized()
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let cancelTitle = "Cancel".localized()
+        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: nil))
+        let settingsTitle = "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title".localized()
+        alert.addAction(UIAlertAction(title: settingsTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidSelectChangeLanguage()
+        }))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - IBActions

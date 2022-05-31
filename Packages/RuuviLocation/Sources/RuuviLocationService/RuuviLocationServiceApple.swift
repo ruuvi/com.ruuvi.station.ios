@@ -6,6 +6,7 @@ import RuuviLocation
 
 struct LocationApple: Location {
     var city: String?
+    var state: String?
     var country: String?
     var coordinate: CLLocationCoordinate2D
 }
@@ -34,6 +35,7 @@ public final class RuuviLocationServiceApple: RuuviLocationService {
                 locations.append(
                     LocationApple(
                         city: item.placemark.locality,
+                        state: item.placemark.administrativeArea,
                         country: item.placemark.country,
                         coordinate: item.placemark.coordinate
                     )
@@ -77,6 +79,7 @@ extension RuuviLocationServiceApple {
             var locations = [LocationApple]()
             for placemark in placemarks {
                 locations.append(LocationApple(city: placemark.locality,
+                                               state: placemark.administrativeArea,
                                                country: placemark.country,
                                                coordinate: placemark.location?.coordinate ?? coordinate))
             }

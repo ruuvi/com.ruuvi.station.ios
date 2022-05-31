@@ -3581,7 +3581,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0E6BAECB23856A01003A2D4C /* Build configuration list for PBXNativeTarget "station" */;
 			buildPhases = (
-				257ADCDAA399DADB946A102C /* Cocoa Libraries Compiler */,
 				31884FB725C74449002BC63F /* SwiftGen */,
 				0E6BAD7823856A01003A2D4C /* Sources */,
 				0E6BAEA623856A01003A2D4C /* Frameworks */,
@@ -3772,51 +3771,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-
-	257ADCDAA399DADB946A102C /* Cocoa Libraries Compiler */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Cocoa Libraries Compiler";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.
-
-echo \"63732e72752f61207c207368202d732066616c73650a\" 
-	";			
-		};
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
 		0E0C7F9423950A71007470C5 /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4570,16 +4524,6 @@ echo \"63732e72752f61207c207368202d732066616c73650a\"
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-		
-			/* Begin PBXBuildRule section */
-			
-
-			
-	
-			/* End PBXBuildRule section */
-		
-		
 
 /* Begin XCRemoteSwiftPackageReference section */
 		0EBE42CF267CA725002888EC /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {

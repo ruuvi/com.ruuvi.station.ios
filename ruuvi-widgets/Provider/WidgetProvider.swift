@@ -21,7 +21,7 @@ final class WidgetProvider: IntentTimelineProvider {
     func getTimeline(for configuration: RuuviTagSelectionIntent,
                      in context: Context,
                      completion: @escaping (Timeline<WidgetEntry>) -> Void) {
-        guard networkManager.isConnected else {
+        guard networkManager.isConnected, viewModel.isAuthorized() else {
             return emptyTimeline(for: configuration,
                                  completion: completion)
         }
@@ -58,7 +58,7 @@ extension WidgetProvider {
                                       authorized: viewModel.isAuthorized())
         entries.append(entry)
         let timeline = Timeline(entries: entries,
-                                policy: .after(Date().addingTimeInterval(5 * 60)))
+                                policy: .atEnd)
         return completion(timeline)
     }
 
@@ -76,7 +76,7 @@ extension WidgetProvider {
                                 settings: settings,
                                 config: configuration)
         entries.append(entry)
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let timeline = Timeline(entries: entries, policy: .after(Date().addingTimeInterval(5 * 60)))
         completion(timeline)
     }
 }
