@@ -9,8 +9,8 @@
 "RuuviOnboard.Cloud.subtitle.signed" = "Great! You already signed in!";
 "RuuviOnboard.Cloud.SignIn.title" = "Einloggen";
 "RuuviOnboard.Cloud.Details.title" = "Details";
-"RuuviOnboard.CloudSignIn.Benefits.title" = "Ruuvi Cloud";
-"RuuviOnboard.CloudSignIn.Benefits.message" = "Vorteile:\\n\\n ● Sensornamen, Hintergrundbilder, Offsets und Alarmeinstellungen werden sicher in der Cloud gespeichert\\n\\n ● Fernzugriff auf Sensoren über das Internet (erfordert ein Ruuvi Gateway)\\n\\n ● Teilen Sie Sensoren mit Freunden und Familie (erfordert ein Ruuvi Gateway)\\n\\n ● Sehen Sie bis zu 2 Jahre Geschichtsdaten auf station.ruuvi.com (erfordert ein Ruuvi-Gateway)";
+"RuuviOnboard.Cloud.Benefits.title" = "Ruuvi Cloud";
+"RuuviOnboard.Cloud.Benefits.message" = "Vorteile:\\n\\n ● Sensornamen, Hintergrundbilder, Offsets und Alarmeinstellungen werden sicher in der Cloud gespeichert\\n\\n ● Fernzugriff auf Sensoren über das Internet (erfordert ein Ruuvi Gateway)\\n\\n ● Teilen Sie Sensoren mit Freunden und Familie (erfordert ein Ruuvi Gateway)\\n\\n ● Sehen Sie bis zu 2 Jahre Geschichtsdaten auf station.ruuvi.com (erfordert ein Ruuvi-Gateway)";
 "RuuviOnboard.Cloud.Close.title" = "Schließen";
 "RuuviOnboard.Cloud.Skip.title" = "Are you sure want to skip sign in?";
 "RuuviOnboard.Cloud.Skip.Yes.title" = "Yes, skip";
