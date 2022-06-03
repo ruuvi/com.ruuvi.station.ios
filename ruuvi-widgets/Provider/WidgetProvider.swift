@@ -76,7 +76,7 @@ extension WidgetProvider {
                                 settings: settings,
                                 config: configuration)
         entries.append(entry)
-        let timeline = Timeline(entries: entries, policy: .after(Date().addingTimeInterval(5 * 60)))
+        let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
 }
