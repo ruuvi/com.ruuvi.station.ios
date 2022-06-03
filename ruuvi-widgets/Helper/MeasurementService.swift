@@ -133,7 +133,7 @@ extension MeasurementService {
 extension MeasurementService {
     private func formattedValue(from value: Double?) -> String {
         guard let value = value,
-              let formattedValue =  numberFormatter.string(from: value.nsNumber) else {
+              let formattedValue = numberFormatter.string(from: value.nsNumber) else {
             return emptyValueString
         }
         return formattedValue
