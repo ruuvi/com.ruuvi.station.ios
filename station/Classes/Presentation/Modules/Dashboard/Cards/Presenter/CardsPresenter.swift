@@ -75,6 +75,7 @@ class CardsPresenter: CardsModuleInput {
     private var humidityUnitToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
     private var languageToken: NSObjectProtocol?
+    private var systemLanguageChangeToken: NSObjectProtocol?
     private var widgetDeepLinkToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
@@ -122,6 +123,7 @@ class CardsPresenter: CardsModuleInput {
         humidityUnitToken?.invalidate()
         pressureUnitToken?.invalidate()
         languageToken?.invalidate()
+        systemLanguageChangeToken?.invalidate()
         widgetDeepLinkToken?.invalidate()
     }
 }
@@ -453,9 +455,6 @@ extension CardsPresenter {
     private func syncAppSettingsToAppGroupContainer() {
         let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
         appGroupDefaults?.set(ruuviUser.isAuthorized, forKey: isAuthorizedUDKey)
-        
-        let languageKey = "languageKey"
-        appGroupDefaults?.set(settings.language.rawValue, forKey: languageKey)
     
         let temperatureUnitKey = "temperatureUnitKey"
         var temperatureUnitInt: Int = 2
@@ -1108,6 +1107,13 @@ extension CardsPresenter {
                          using: { [weak self] _ in
                 self?.syncAppSettingsToAppGroupContainer()
         })
+        
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(systemLocaleDidChange),
+                         name: NSLocale.currentLocaleDidChangeNotification,
+                         object: nil)
     }
     
     private func startObservingWidgetDeepLink() {
@@ -1125,6 +1131,10 @@ extension CardsPresenter {
                     self?.view.scroll(to: index)
                 }
             })
+    }
+    
+    @objc private func systemLocaleDidChange() {
+        syncAppSettingsToAppGroupContainer()
     }
 }
 // swiftlint:enable file_length trailing_whitespace

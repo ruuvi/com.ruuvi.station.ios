@@ -14,7 +14,7 @@ public final class WidgetViewModel: ObservableObject {
     init() {
         ruuviUser = widgetAssembly.resolve(RuuviUser.self)
         ruuviCloud = widgetAssembly.resolve(RuuviCloud.self)
-        setWidgetLanguage()
+//        setWidgetLanguage()
     }
 }
 
@@ -105,7 +105,7 @@ extension WidgetViewModel {
     }
 
     public func locale() -> Locale {
-        return .init(identifier: Localize.currentLanguage())
+        return getLanguage().locale
     }
 }
 
@@ -116,31 +116,19 @@ extension WidgetViewModel {
         let temperatureUnit = temperatureUnit(from: appGroupDefaults)
         let humidityUnit = humidityUnit(from: appGroupDefaults)
         let pressureUnit = pressureUnit(from: appGroupDefaults)
-        let language = getAppLanguage()
         return MeasurementServiceSettings(temperatureUnit: temperatureUnit,
                                           humidityUnit: humidityUnit,
                                           pressureUnit: pressureUnit,
-                                          language: language)
+                                          language: getLanguage())
     }
 
-    private func getAppLanguage() -> Language {
-        let language = language(from: appGroupDefaults)
-        return language
-    }
-
-    private func setWidgetLanguage() {
-        let language = getAppLanguage()
-        Localize.setCurrentLanguage(language.rawValue)
-    }
-
-    private func language(from defaults: UserDefaults?) -> Language {
-        if let savedCode = defaults?.string(forKey: Constants.languageKey.rawValue) {
-            return Language(rawValue: savedCode) ?? .english
-        } else if let regionCode = Locale.current.languageCode {
-            return Language(rawValue: regionCode) ?? .english
-        } else {
+    private func getLanguage() -> Language {
+        let languageCode = Bundle.main.preferredLocalizations[0]
+        guard
+              let language = Language(rawValue: languageCode) else {
             return .english
         }
+        return language
     }
 
     private func temperatureUnit(from defaults: UserDefaults?) -> UnitTemperature {

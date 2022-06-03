@@ -38,6 +38,7 @@ struct SimpleWidgetView: View {
                         Text(viewModel.getValue(from: entry.record,
                                       settings: entry.settings,
                                       config: entry.config))
+                            .environment(\.locale, viewModel.locale())
                             .foregroundColor(.bodyTextColor)
                             .font(.custom(Constants.oswaldBold.rawValue,
                                           size: 36,

@@ -22,7 +22,7 @@ extension WidgetSensorEnum {
         case .pressure:
             return settings.pressureUnit.symbol
         case .movement_counter:
-            return "Cards.Movements.title".localized() // Localise this
+            return "Cards.Movements.title".localized
         case .battery_voltage:
             return "v"
         case .acceleration_x,
