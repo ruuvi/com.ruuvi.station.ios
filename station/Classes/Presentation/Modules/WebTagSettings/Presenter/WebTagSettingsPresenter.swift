@@ -389,6 +389,7 @@ extension WebTagSettingsPresenter {
                 }
             case .update(let sensor):
                 if sensor.id == id {
+                    self?.virtualSensor = sensor
                     self?.syncViewModel()
                 }
             case .error(let error):
