@@ -8,6 +8,7 @@ import RuuviVirtual
 import RuuviPresenters
 import RuuviUser
 import RuuviStorage
+import UIKit
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
@@ -121,7 +122,14 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTapOnLanguage() {
-        router.openLanguage()
+        view.viewDidShowLanguageChangeDialog()
+    }
+
+    func viewDidSelectChangeLanguage() {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        UIApplication.shared.open(settingsURL)
     }
 
     func viewDidTapOnDefaults() {

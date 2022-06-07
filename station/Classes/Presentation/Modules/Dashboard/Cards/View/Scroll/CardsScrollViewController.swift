@@ -111,11 +111,12 @@ extension CardsScrollViewController: CardsViewInput {
             case .ruuvi:
                 let movementUpdate = movementUpdateBlock(for: viewModel, in: view)
                 view.movementCityLabel.bind(viewModel.movementCounter, block: movementUpdate)
+                view.movementCityTitleLbl.text = "Cards.Movements.title".localized()
             case .web:
                 let locationUpdate = locationUpdateBlock(for: viewModel)
                 view.movementCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
+                view.movementCityTitleLbl.text = nil
             }
-            view.movementCityTitleLbl.text = "Cards.Movements.title".localized()
         }
     }
 
@@ -431,7 +432,7 @@ extension CardsScrollViewController {
             if let location = location?.value {
                 label.text = location.city ?? location.country
             } else if let currentLocation = currentLocation {
-                label.text = currentLocation.city ?? currentLocation.country
+                label.text = currentLocation.description
             } else {
                 label.text = CardsScrollViewController.localizedCache.notAvailable
             }

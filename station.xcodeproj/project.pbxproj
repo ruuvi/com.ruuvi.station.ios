@@ -170,7 +170,6 @@
 		0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3122F057DD00BD4E9C /* WebTagSettingsRouter.swift */; };
 		0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10192384615400A9CBA6 /* DefaultsPresenter.swift */; };
 		0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E222B7C8C10015F9E0 /* SettingsPresenter.swift */; };
-		0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */; };
 		0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0A22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift */; };
 		0E8BD2D7238566AB008B31EF /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */; };
@@ -203,12 +202,10 @@
 		0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
 		0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F222B7D1900015F9E0 /* AboutViewInput.swift */; };
 		0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */; };
-		0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF071232007910025A191 /* LanguageTableViewController.swift */; };
 		0E8BD314238566AB008B31EF /* DefaultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */; };
 		0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100F23845FAE00A9CBA6 /* DefaultsViewModel.swift */; };
 		0E8BD317238566AB008B31EF /* TagChartsScrollConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D02333679800FFA577 /* TagChartsScrollConfigurator.swift */; };
 		0E8BD318238566AB008B31EF /* TemperatureUnit+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit+Localization.swift */; };
-		0E8BD319238566AB008B31EF /* LanguageViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06F232007740025A191 /* LanguageViewOutput.swift */; };
 		0E8BD31A238566AB008B31EF /* DefaultsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101D238461D400A9CBA6 /* DefaultsConfigurator.swift */; };
 		0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DFB22B3FFD90032F6CA /* MenuRouter.swift */; };
 		0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101B2384618700A9CBA6 /* DefaultsInitializer.swift */; };
@@ -222,7 +219,6 @@
 		0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */; };
 		0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */; };
 		0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB5A8D2381807500E78757 /* CardsScrollViewController.swift */; };
-		0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07A232008420025A191 /* LanguagePresenter.swift */; };
 		0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
 		0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5222F182AB00BD4E9C /* LocationPickerModuleInput.swift */; };
 		0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */; };
@@ -235,13 +231,10 @@
 		0E8BD353238566AB008B31EF /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABB9237598C600ED4629 /* RURangeSeekSlider.swift */; };
 		0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DDC22B3C2160032F6CA /* CardsModuleInput.swift */; };
-		0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */; };
-		0E8BD35A238566AB008B31EF /* LanguageModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF078232008140025A191 /* LanguageModuleInput.swift */; };
 		0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */; };
 		0E8BD35D238566AB008B31EF /* AboutModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FC22B7D2C90015F9E0 /* AboutModuleInput.swift */; };
 		0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */; };
 		0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF922B3FFBF0032F6CA /* MenuRouterInput.swift */; };
-		0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF076232007D80025A191 /* LanguageRouter.swift */; };
 		0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */; };
 		0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
 		0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
@@ -256,7 +249,6 @@
 		0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */; };
 		0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C6233366DC00FFA577 /* TagChartsRouterInput.swift */; };
 		0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD222B3BF180032F6CA /* CardsViewInput.swift */; };
-		0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
 		0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FA22B7D2990015F9E0 /* AboutRouter.swift */; };
 		0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C8233366F000FFA577 /* TagChartsRouter.swift */; };
 		0E8BD389238566AB008B31EF /* PhotoPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */; };
@@ -274,7 +266,6 @@
 		0E8BD39A238566AB008B31EF /* AppStateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302422D0B19600B52E39 /* AppStateService.swift */; };
 		0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0C22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift */; };
 		0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E722B7C92C0015F9E0 /* SettingsTableConfigurator.swift */; };
-		0E8BD3A0238566AB008B31EF /* LanguageTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */; };
 		0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F6122F193B300BD4E9C /* LocationPickerModuleOutput.swift */; };
 		0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F4722F181DA00BD4E9C /* LocationPickerViewInput.swift */; };
 		0E8BD3A5238566AB008B31EF /* SettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E522B7C8F20015F9E0 /* SettingsTableInitializer.swift */; };
@@ -289,7 +280,6 @@
 		0E8BD3B6238566AB008B31EF /* CardsScrollInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE722B3C2B60032F6CA /* CardsScrollInitializer.swift */; };
 		0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10112384605A00A9CBA6 /* DefaultsTableViewController.swift */; };
 		0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */; };
-		0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
 		0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D722B7C8060015F9E0 /* SettingsViewOutput.swift */; };
 		0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E022B7C8A90015F9E0 /* SettingsModuleInput.swift */; };
 		0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE922B3C2E60032F6CA /* CardsScrollConfigurator.swift */; };
@@ -312,7 +302,6 @@
 		0E8BD3EE238566AB008B31EF /* TagCharts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */; };
 		0E8BD3EF238566AB008B31EF /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */; };
-		0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0E8BD3F3238566AB008B31EF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E53A3F3232DFC6200ACED49 /* InfoPlist.strings */; };
 		0E8BD3F5238566AB008B31EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
 		0E8BD3F7238566AB008B31EF /* CardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* CardView.xib */; };
@@ -428,17 +417,6 @@
 		0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
 		0EB8ED482692018000C6B0FA /* RuuviColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB8ED462692018000C6B0FA /* RuuviColor.swift */; };
 		0EBAF065232002A00025A191 /* Language+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language+Localization.swift */; };
-		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
-		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
-		0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06F232007740025A191 /* LanguageViewOutput.swift */; };
-		0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF071232007910025A191 /* LanguageTableViewController.swift */; };
-		0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */; };
-		0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF076232007D80025A191 /* LanguageRouter.swift */; };
-		0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF078232008140025A191 /* LanguageModuleInput.swift */; };
-		0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07A232008420025A191 /* LanguagePresenter.swift */; };
-		0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */; };
-		0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */; };
-		0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -534,6 +512,7 @@
 		340BE39C27B54FEC006D6C34 /* String+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340BE39A27B54FEB006D6C34 /* String+Email.swift */; };
 		340BE39E27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
 		340BE39F27B56129006D6C34 /* ruuvi_logo_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */; };
+		341401EC282D03C8003DE721 /* MeasurementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341401EB282D03C8003DE721 /* MeasurementService.swift */; };
 		3414BFC82806D19C00C63BE9 /* RuuviCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414BFC72806D19C00C63BE9 /* RuuviCodeView.swift */; };
 		3414BFC92806D19C00C63BE9 /* RuuviCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414BFC72806D19C00C63BE9 /* RuuviCodeView.swift */; };
 		3414BFCB2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414BFCA2806D1B300C63BE9 /* RuuviCodeTextField.swift */; };
@@ -547,9 +526,48 @@
 		345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B727E0797000759B57 /* TagSettingsInteractor.swift */; };
 		3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
 		3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
+		3493385B282FAB0D009060E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
+		3493385D28300396009060E8 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493385C28300396009060E8 /* NetworkManager.swift */; };
+		3493385E28300679009060E8 /* MeasurementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341401EB282D03C8003DE721 /* MeasurementService.swift */; };
+		3493385F283006CB009060E8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4A1281ED018008A8698 /* Extensions.swift */; };
+		34933860283006F4009060E8 /* WidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4C5281EEC19008A8698 /* WidgetEntry.swift */; };
+		3493386328300A73009060E8 /* SimpleWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386228300A73009060E8 /* SimpleWidgetView.swift */; };
+		3493386528300ACC009060E8 /* UnauthorizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386428300ACC009060E8 /* UnauthorizedView.swift */; };
+		3493386728300B06009060E8 /* EmptyWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386628300B05009060E8 /* EmptyWidgetView.swift */; };
+		3493386C28300C49009060E8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386B28300C49009060E8 /* Constants.swift */; };
+		3493386D28300DC3009060E8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386B28300C49009060E8 /* Constants.swift */; };
+		3493386F283014A0009060E8 /* Model+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386E283014A0009060E8 /* Model+Extension.swift */; };
+		34933870283014A0009060E8 /* Model+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3493386E283014A0009060E8 /* Model+Extension.swift */; };
+		34933873283014F6009060E8 /* WidgetSensorEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34933872283014F6009060E8 /* WidgetSensorEnum.swift */; };
+		34933874283014F6009060E8 /* WidgetSensorEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34933872283014F6009060E8 /* WidgetSensorEnum.swift */; };
+		34A8D48B281EBFD9008A8698 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A8D48A281EBFD9008A8698 /* WidgetKit.framework */; };
+		34A8D48D281EBFD9008A8698 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A8D48C281EBFD9008A8698 /* SwiftUI.framework */; };
+		34A8D490281EBFD9008A8698 /* RuuviWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D48F281EBFD9008A8698 /* RuuviWidgets.swift */; };
+		34A8D493281EBFDB008A8698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D492281EBFDB008A8698 /* Assets.xcassets */; };
+		34A8D499281EBFDB008A8698 /* station_widgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34A8D4A2281ED018008A8698 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4A1281ED018008A8698 /* Extensions.swift */; };
+		34A8D4AA281ED046008A8698 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A4281ED046008A8698 /* Montserrat-Regular.ttf */; };
+		34A8D4AB281ED046008A8698 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A5281ED046008A8698 /* Montserrat-Bold.ttf */; };
+		34A8D4AC281ED046008A8698 /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A6281ED046008A8698 /* Muli-Regular.ttf */; };
+		34A8D4AD281ED046008A8698 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A7281ED046008A8698 /* Oswald-Bold.ttf */; };
+		34A8D4AE281ED046008A8698 /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A8281ED046008A8698 /* Oswald-ExtraLight.ttf */; };
+		34A8D4AF281ED046008A8698 /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A9281ED046008A8698 /* Muli-Bold.ttf */; };
+		34A8D4B7281EE5AE008A8698 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A8D4B6281EE5AE008A8698 /* Intents.framework */; };
+		34A8D4BA281EE5AE008A8698 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4B9281EE5AE008A8698 /* IntentHandler.swift */; };
+		34A8D4BE281EE5AE008A8698 /* station_intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34A8D4C4281EEBF8008A8698 /* WidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4C3281EEBF8008A8698 /* WidgetProvider.swift */; };
+		34A8D4C6281EEC19008A8698 /* WidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4C5281EEC19008A8698 /* WidgetEntry.swift */; };
+		34D458E028216B2200EA9F93 /* WidgetAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458DF28216B2200EA9F93 /* WidgetAssembly.swift */; };
+		34D458E228216C6900EA9F93 /* WidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458E128216C6900EA9F93 /* WidgetViewModel.swift */; };
+		34D458E328217BF600EA9F93 /* WidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458E128216C6900EA9F93 /* WidgetViewModel.swift */; };
+		34D458E428217C5900EA9F93 /* WidgetAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458DF28216B2200EA9F93 /* WidgetAssembly.swift */; };
+		34D458E52821A06E00EA9F93 /* station_intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34D458E92821A07600EA9F93 /* station_widgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34F266A52832489900AE79D9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
+		61E02A45E5B5666DBF1972A6 /* Pods_station_intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B004B50BE06AD9034B2EFCB4 /* Pods_station_intents.framework */; };
 		6204554EB76ED0EFDE0DC290 /* ShareRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -847,10 +865,43 @@
 		C8D6714C7E0237B74676EA08 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB40883B83C652584EBB9A /* SignInViewController.swift */; };
 		C9D6ACA6CB9694F6C33414CE /* ShareModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */; };
 		D037B55274A07756F884696B /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */; };
+		D54F2103EF7E3360E7D09BC4 /* Pods_station_widgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */; };
+		E186AB2B2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
+		E186AB2C2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
+		E186AB2D2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
+		E186AB2E2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
 		E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		34A8D497281EBFDB008A8698 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64333D1D20B0C45900CDF4B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34A8D488281EBFD9008A8698;
+			remoteInfo = "ruuvi-widgetsExtension";
+		};
+		34A8D4BC281EE5AE008A8698 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64333D1D20B0C45900CDF4B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34A8D4B4281EE5AE008A8698;
+			remoteInfo = intents;
+		};
+		34D458E62821A06E00EA9F93 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64333D1D20B0C45900CDF4B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34A8D4B4281EE5AE008A8698;
+			remoteInfo = station_intents;
+		};
+		34D458EA2821A07600EA9F93 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64333D1D20B0C45900CDF4B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34A8D488281EBFD9008A8698;
+			remoteInfo = station_widgets;
+		};
 		64333D3A20B0C45A00CDF4B6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 64333D1D20B0C45900CDF4B6 /* Project object */;
@@ -866,6 +917,33 @@
 			remoteInfo = station;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		34A8D49A281EBFDB008A8698 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				34A8D4BE281EE5AE008A8698 /* station_intents.appex in Embed App Extensions */,
+				34A8D499281EBFDB008A8698 /* station_widgets.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34D458E82821A06E00EA9F93 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				34D458E52821A06E00EA9F93 /* station_intents.appex in Embed App Extensions */,
+				34D458E92821A07600EA9F93 /* station_widgets.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0E00C4F02684D97B009B3C24 /* ExportHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportHeadersProvider.swift; sourceTree = "<group>"; };
@@ -1053,17 +1131,6 @@
 		0EB8ED422692005900C6B0FA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		0EB8ED462692018000C6B0FA /* RuuviColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviColor.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Language+Localization.swift"; sourceTree = "<group>"; };
-		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
-		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
-		0EBAF06F232007740025A191 /* LanguageViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewOutput.swift; sourceTree = "<group>"; };
-		0EBAF071232007910025A191 /* LanguageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewController.swift; sourceTree = "<group>"; };
-		0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageRouterInput.swift; sourceTree = "<group>"; };
-		0EBAF076232007D80025A191 /* LanguageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageRouter.swift; sourceTree = "<group>"; };
-		0EBAF078232008140025A191 /* LanguageModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageModuleInput.swift; sourceTree = "<group>"; };
-		0EBAF07A232008420025A191 /* LanguagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagePresenter.swift; sourceTree = "<group>"; };
-		0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableInitializer.swift; sourceTree = "<group>"; };
-		0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableConfigurator.swift; sourceTree = "<group>"; };
-		0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		0EBAF0832320120F0025A191 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -1139,6 +1206,7 @@
 		340BE38527B54F37006D6C34 /* OwnerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnerRouterInput.swift; sourceTree = "<group>"; };
 		340BE39A27B54FEB006D6C34 /* String+Email.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
 		340BE39D27B56128006D6C34 /* ruuvi_logo_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ruuvi_logo_splash.png; sourceTree = "<group>"; };
+		341401EB282D03C8003DE721 /* MeasurementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementService.swift; sourceTree = "<group>"; };
 		3414BFC72806D19C00C63BE9 /* RuuviCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCodeView.swift; sourceTree = "<group>"; };
 		3414BFCA2806D1B300C63BE9 /* RuuviCodeTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCodeTextField.swift; sourceTree = "<group>"; };
 		344A091527FB376100328F88 /* CustomXAxisRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomXAxisRenderer.swift; sourceTree = "<group>"; };
@@ -1147,14 +1215,47 @@
 		3451BD8427E0F9870065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3451BD8527E0F9880065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3490A4C227D9F2C70032BBAB /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
+		3493385C28300396009060E8 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		3493386228300A73009060E8 /* SimpleWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetView.swift; sourceTree = "<group>"; };
+		3493386428300ACC009060E8 /* UnauthorizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthorizedView.swift; sourceTree = "<group>"; };
+		3493386628300B05009060E8 /* EmptyWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyWidgetView.swift; sourceTree = "<group>"; };
+		3493386B28300C49009060E8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		3493386E283014A0009060E8 /* Model+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Extension.swift"; sourceTree = "<group>"; };
+		34933872283014F6009060E8 /* WidgetSensorEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSensorEnum.swift; sourceTree = "<group>"; };
+		34A8D489281EBFD9008A8698 /* station_widgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = station_widgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		34A8D48A281EBFD9008A8698 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		34A8D48C281EBFD9008A8698 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		34A8D48F281EBFD9008A8698 /* RuuviWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviWidgets.swift; sourceTree = "<group>"; };
+		34A8D492281EBFDB008A8698 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		34A8D494281EBFDB008A8698 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34A8D49E281EC2B6008A8698 /* ruuvi_widgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ruuvi_widgets.entitlements; sourceTree = "<group>"; };
+		34A8D4A1281ED018008A8698 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		34A8D4A4281ED046008A8698 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		34A8D4A5281ED046008A8698 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		34A8D4A6281ED046008A8698 /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
+		34A8D4A7281ED046008A8698 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Bold.ttf"; sourceTree = "<group>"; };
+		34A8D4A8281ED046008A8698 /* Oswald-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-ExtraLight.ttf"; sourceTree = "<group>"; };
+		34A8D4A9281ED046008A8698 /* Muli-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Bold.ttf"; sourceTree = "<group>"; };
+		34A8D4B5281EE5AE008A8698 /* station_intents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = station_intents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		34A8D4B6281EE5AE008A8698 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		34A8D4B9281EE5AE008A8698 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		34A8D4BB281EE5AE008A8698 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34A8D4C3281EEBF8008A8698 /* WidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetProvider.swift; sourceTree = "<group>"; };
+		34A8D4C5281EEC19008A8698 /* WidgetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetEntry.swift; sourceTree = "<group>"; };
+		34A8D4CA281FEF2E008A8698 /* station_intents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station_intents.entitlements; sourceTree = "<group>"; };
+		34D458DF28216B2200EA9F93 /* WidgetAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAssembly.swift; sourceTree = "<group>"; };
+		34D458E128216C6900EA9F93 /* WidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetViewModel.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
 		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
+		437F08C73081253CCDA3687A /* Pods-station_intents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_intents.debug.xcconfig"; path = "Target Support Files/Pods-station_intents/Pods-station_intents.debug.xcconfig"; sourceTree = "<group>"; };
+		47B3F8D904CAAB34D68A68DC /* Pods-station_widgets.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_widgets.release.xcconfig"; path = "Target Support Files/Pods-station_widgets/Pods-station_widgets.release.xcconfig"; sourceTree = "<group>"; };
 		4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewInput.swift; sourceTree = "<group>"; };
 		4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewOutput.swift; sourceTree = "<group>"; };
 		4E816312622E83E3B42001DC /* SignInRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouterInput.swift; sourceTree = "<group>"; };
 		50760BEF3DF7F0DC671A0D42 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareModuleOutput.swift; sourceTree = "<group>"; };
+		5C35D73AC96D7B6765529406 /* Pods-station_widgets.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_widgets.debug.xcconfig"; path = "Target Support Files/Pods-station_widgets/Pods-station_widgets.debug.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1322,10 +1423,16 @@
 		A9FC790D2579676E00F94604 /* UniversalLinkRouterImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalLinkRouterImpl.swift; sourceTree = "<group>"; };
 		A9FC79162579678D00F94604 /* UniversalLinkCoordinatormpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalLinkCoordinatormpl.swift; sourceTree = "<group>"; };
 		AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareConfigurator.swift; sourceTree = "<group>"; };
+		B004B50BE06AD9034B2EFCB4 /* Pods_station_intents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_intents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3426764B50E4E9CA2A27704 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
+		B5EE8D004C84A07188EF2E3A /* Pods-station_intents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_intents.release.xcconfig"; path = "Target Support Files/Pods-station_intents/Pods-station_intents.release.xcconfig"; sourceTree = "<group>"; };
 		BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareRouter.swift; sourceTree = "<group>"; };
 		CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharePresenter.swift; sourceTree = "<group>"; };
 		CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewOutput.swift; sourceTree = "<group>"; };
+		D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_widgets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E186AB2F2844A273004926FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/RuuviWidgetsConfiguration.intentdefinition; sourceTree = "<group>"; };
+		E186AB322844A27C004926FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RuuviWidgetsConfiguration.strings; sourceTree = "<group>"; };
+		E186AB342844A27E004926FC /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/RuuviWidgetsConfiguration.strings; sourceTree = "<group>"; };
 		E29B5190CB557178D11AB2CE /* SignInPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E6DB40883B83C652584EBB9A /* SignInViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		FC417B8977A47FFAE71585F0 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -1340,6 +1447,25 @@
 				0EE36EB1269DC71B0021B746 /* Algorithms in Frameworks */,
 				0EE36EB6269DC7E40021B746 /* Charts in Frameworks */,
 				73949279A33A1BF08159FE0E /* Pods_station_dev.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A8D486281EBFD9008A8698 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34A8D48D281EBFD9008A8698 /* SwiftUI.framework in Frameworks */,
+				34A8D48B281EBFD9008A8698 /* WidgetKit.framework in Frameworks */,
+				D54F2103EF7E3360E7D09BC4 /* Pods_station_widgets.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A8D4B2281EE5AE008A8698 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34A8D4B7281EE5AE008A8698 /* Intents.framework in Frameworks */,
+				61E02A45E5B5666DBF1972A6 /* Pods_station_intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2364,76 +2490,9 @@
 				A9828E54247BAC0700E7E9D4 /* Chart */,
 				0E8A100023845E1200A9CBA6 /* Defaults */,
 				0E84BF4F2397F24D00A37E1A /* Heartbeat */,
-				0EBAF066232005600025A191 /* Language */,
 				A91D02D92511207200694733 /* Selection */,
 			);
 			path = Submodules;
-			sourceTree = "<group>";
-		};
-		0EBAF066232005600025A191 /* Language */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF06B232006E00025A191 /* Language.storyboard */,
-				0EBAF06A232005740025A191 /* Assembly */,
-				0EBAF0692320056F0025A191 /* Presenter */,
-				0EBAF0682320056B0025A191 /* Router */,
-				0EBAF067232005670025A191 /* View */,
-			);
-			path = Language;
-			sourceTree = "<group>";
-		};
-		0EBAF067232005670025A191 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF073232007940025A191 /* Table */,
-				0EBAF06D232007510025A191 /* LanguageViewInput.swift */,
-				0EBAF06F232007740025A191 /* LanguageViewOutput.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		0EBAF0682320056B0025A191 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */,
-				0EBAF076232007D80025A191 /* LanguageRouter.swift */,
-			);
-			path = Router;
-			sourceTree = "<group>";
-		};
-		0EBAF0692320056F0025A191 /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF078232008140025A191 /* LanguageModuleInput.swift */,
-				0EBAF07A232008420025A191 /* LanguagePresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		0EBAF06A232005740025A191 /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF07C2320085F0025A191 /* Table */,
-			);
-			path = Assembly;
-			sourceTree = "<group>";
-		};
-		0EBAF073232007940025A191 /* Table */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */,
-				0EBAF071232007910025A191 /* LanguageTableViewController.swift */,
-			);
-			path = Table;
-			sourceTree = "<group>";
-		};
-		0EBAF07C2320085F0025A191 /* Table */ = {
-			isa = PBXGroup;
-			children = (
-				0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */,
-				0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */,
-			);
-			path = Table;
 			sourceTree = "<group>";
 		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
@@ -2720,6 +2779,11 @@
 				8018B7836CF8C748718825DD /* Pods_station.framework */,
 				9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */,
 				7097B76856D5F01896F963EC /* Pods_station_dev.framework */,
+				34A8D48A281EBFD9008A8698 /* WidgetKit.framework */,
+				34A8D48C281EBFD9008A8698 /* SwiftUI.framework */,
+				34A8D4B6281EE5AE008A8698 /* Intents.framework */,
+				D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */,
+				B004B50BE06AD9034B2EFCB4 /* Pods_station_intents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2791,6 +2855,117 @@
 			path = Interactor;
 			sourceTree = "<group>";
 		};
+		3493386128300A62009060E8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3493386228300A73009060E8 /* SimpleWidgetView.swift */,
+				3493386428300ACC009060E8 /* UnauthorizedView.swift */,
+				3493386628300B05009060E8 /* EmptyWidgetView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3493386828300C02009060E8 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				34D458DF28216B2200EA9F93 /* WidgetAssembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		3493386928300C21009060E8 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				34D458E128216C6900EA9F93 /* WidgetViewModel.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
+		3493386A28300C2A009060E8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				34A8D4C5281EEC19008A8698 /* WidgetEntry.swift */,
+				3493386E283014A0009060E8 /* Model+Extension.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		34933871283014E3009060E8 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				34933872283014F6009060E8 /* WidgetSensorEnum.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
+		34A8D48E281EBFD9008A8698 /* ruuvi-widgets */ = {
+			isa = PBXGroup;
+			children = (
+				34933871283014E3009060E8 /* Enum */,
+				3493386A28300C2A009060E8 /* Model */,
+				3493386928300C21009060E8 /* View Model */,
+				3493386828300C02009060E8 /* Assembly */,
+				3493386128300A62009060E8 /* View */,
+				34A8D4B0281EE0C1008A8698 /* Provider */,
+				34A8D4A0281ECFFB008A8698 /* Resources */,
+				34A8D49F281ECFF5008A8698 /* Helper */,
+				34A8D48F281EBFD9008A8698 /* RuuviWidgets.swift */,
+				E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */,
+				34A8D492281EBFDB008A8698 /* Assets.xcassets */,
+				34A8D494281EBFDB008A8698 /* Info.plist */,
+			);
+			path = "ruuvi-widgets";
+			sourceTree = "<group>";
+		};
+		34A8D49F281ECFF5008A8698 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				34A8D4A1281ED018008A8698 /* Extensions.swift */,
+				341401EB282D03C8003DE721 /* MeasurementService.swift */,
+				3493385C28300396009060E8 /* NetworkManager.swift */,
+				3493386B28300C49009060E8 /* Constants.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		34A8D4A0281ECFFB008A8698 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				34A8D4A3281ED01C008A8698 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		34A8D4A3281ED01C008A8698 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				34A8D4A5281ED046008A8698 /* Montserrat-Bold.ttf */,
+				34A8D4A4281ED046008A8698 /* Montserrat-Regular.ttf */,
+				34A8D4A9281ED046008A8698 /* Muli-Bold.ttf */,
+				34A8D4A6281ED046008A8698 /* Muli-Regular.ttf */,
+				34A8D4A7281ED046008A8698 /* Oswald-Bold.ttf */,
+				34A8D4A8281ED046008A8698 /* Oswald-ExtraLight.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		34A8D4B0281EE0C1008A8698 /* Provider */ = {
+			isa = PBXGroup;
+			children = (
+				34A8D4C3281EEBF8008A8698 /* WidgetProvider.swift */,
+			);
+			path = Provider;
+			sourceTree = "<group>";
+		};
+		34A8D4B8281EE5AE008A8698 /* intents */ = {
+			isa = PBXGroup;
+			children = (
+				34A8D4B9281EE5AE008A8698 /* IntentHandler.swift */,
+				34A8D4BB281EE5AE008A8698 /* Info.plist */,
+			);
+			path = intents;
+			sourceTree = "<group>";
+		};
 		3D930628B855379BB9A9B1FF /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
@@ -2809,6 +2984,10 @@
 				8825D89E1A7CB4BDC6D12038 /* Pods-stationTests.release.xcconfig */,
 				3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */,
 				85F06A44D8D006FBFB90ABE0 /* Pods-station_dev.release.xcconfig */,
+				5C35D73AC96D7B6765529406 /* Pods-station_widgets.debug.xcconfig */,
+				47B3F8D904CAAB34D68A68DC /* Pods-station_widgets.release.xcconfig */,
+				437F08C73081253CCDA3687A /* Pods-station_intents.debug.xcconfig */,
+				B5EE8D004C84A07188EF2E3A /* Pods-station_intents.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -2816,10 +2995,14 @@
 		64333D1C20B0C45900CDF4B6 = {
 			isa = PBXGroup;
 			children = (
+				34A8D4CA281FEF2E008A8698 /* station_intents.entitlements */,
+				34A8D49E281EC2B6008A8698 /* ruuvi_widgets.entitlements */,
 				A92C75DD24896B7400E332FE /* Fastlane */,
 				64333D2720B0C45900CDF4B6 /* station */,
 				64333D3C20B0C45A00CDF4B6 /* stationTests */,
 				64333D4720B0C45B00CDF4B6 /* stationUITests */,
+				34A8D48E281EBFD9008A8698 /* ruuvi-widgets */,
+				34A8D4B8281EE5AE008A8698 /* intents */,
 				64333D2620B0C45900CDF4B6 /* Products */,
 				62FD66A56B206724C5DE9CFE /* Pods */,
 				321CE77F6EB26F685032F835 /* Frameworks */,
@@ -2833,6 +3016,8 @@
 				64333D3920B0C45A00CDF4B6 /* stationTests.xctest */,
 				64333D4420B0C45B00CDF4B6 /* stationUITests.xctest */,
 				0E8BD404238566AB008B31EF /* station_dev.app */,
+				34A8D489281EBFD9008A8698 /* station_widgets.appex */,
+				34A8D4B5281EE5AE008A8698 /* station_intents.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3669,10 +3854,13 @@
 				A9AB575A2413CCEC006FD3D2 /* Fetch secrets */,
 				0E8301592393FC2B0003F2EF /* Swiftlint */,
 				A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */,
+				34A8D49A281EBFDB008A8698 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				34A8D498281EBFDB008A8698 /* PBXTargetDependency */,
+				34A8D4BD281EE5AE008A8698 /* PBXTargetDependency */,
 			);
 			name = station_dev;
 			packageProductDependencies = (
@@ -3682,6 +3870,42 @@
 			productName = station;
 			productReference = 0E8BD404238566AB008B31EF /* station_dev.app */;
 			productType = "com.apple.product-type.application";
+		};
+		34A8D488281EBFD9008A8698 /* station_widgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34A8D49D281EBFDB008A8698 /* Build configuration list for PBXNativeTarget "station_widgets" */;
+			buildPhases = (
+				617DFCDC39B3A39446D538AB /* [CP] Check Pods Manifest.lock */,
+				34A8D485281EBFD9008A8698 /* Sources */,
+				34A8D486281EBFD9008A8698 /* Frameworks */,
+				34A8D487281EBFD9008A8698 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = station_widgets;
+			productName = "ruuvi-widgetsExtension";
+			productReference = 34A8D489281EBFD9008A8698 /* station_widgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		34A8D4B4281EE5AE008A8698 /* station_intents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34A8D4BF281EE5AF008A8698 /* Build configuration list for PBXNativeTarget "station_intents" */;
+			buildPhases = (
+				067E08286183586536130F33 /* [CP] Check Pods Manifest.lock */,
+				34A8D4B1281EE5AE008A8698 /* Sources */,
+				34A8D4B2281EE5AE008A8698 /* Frameworks */,
+				34A8D4B3281EE5AE008A8698 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = station_intents;
+			productName = intents;
+			productReference = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		64333D2420B0C45900CDF4B6 /* station */ = {
 			isa = PBXNativeTarget;
@@ -3695,10 +3919,13 @@
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 				60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */,
 				A986147C248CD47A0030F197 /* Crashlytics */,
+				34D458E82821A06E00EA9F93 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				34D458E72821A06E00EA9F93 /* PBXTargetDependency */,
+				34D458EB2821A07600EA9F93 /* PBXTargetDependency */,
 			);
 			name = station;
 			packageProductDependencies = (
@@ -3753,10 +3980,16 @@
 		64333D1D20B0C45900CDF4B6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0930;
+				LastSwiftUpdateCheck = 1330;
 				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "Ruuvi Innovations Oy";
 				TargetAttributes = {
+					34A8D488281EBFD9008A8698 = {
+						CreatedOnToolsVersion = 13.3.1;
+					};
+					34A8D4B4281EE5AE008A8698 = {
+						CreatedOnToolsVersion = 13.3.1;
+					};
 					64333D2420B0C45900CDF4B6 = {
 						CreatedOnToolsVersion = 9.3.1;
 						SystemCapabilities = {
@@ -3802,6 +4035,8 @@
 				0E8BD2AC238566AB008B31EF /* station_dev */,
 				64333D3820B0C45A00CDF4B6 /* stationTests */,
 				64333D4320B0C45B00CDF4B6 /* stationUITests */,
+				34A8D488281EBFD9008A8698 /* station_widgets */,
+				34A8D4B4281EE5AE008A8698 /* station_intents */,
 			);
 		};
 /* End PBXProject section */
@@ -3831,7 +4066,6 @@
 				0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
 				340BE38727B54F37006D6C34 /* Owner.storyboard in Resources */,
-				0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */,
 				0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E8BD3F3238566AB008B31EF /* InfoPlist.strings in Resources */,
 				A9E5994125572CF700F9E5CC /* Share.storyboard in Resources */,
@@ -3851,6 +4085,29 @@
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				A9B5742D253B978D00DB7353 /* SignIn.storyboard in Resources */,
 				0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A8D487281EBFD9008A8698 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34A8D4AA281ED046008A8698 /* Montserrat-Regular.ttf in Resources */,
+				34A8D4AD281ED046008A8698 /* Oswald-Bold.ttf in Resources */,
+				34A8D4AE281ED046008A8698 /* Oswald-ExtraLight.ttf in Resources */,
+				34A8D493281EBFDB008A8698 /* Assets.xcassets in Resources */,
+				34A8D4AC281ED046008A8698 /* Muli-Regular.ttf in Resources */,
+				3493385B282FAB0D009060E8 /* Localizable.strings in Resources */,
+				34A8D4AF281ED046008A8698 /* Muli-Bold.ttf in Resources */,
+				34A8D4AB281ED046008A8698 /* Montserrat-Bold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A8D4B3281EE5AE008A8698 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34F266A52832489900AE79D9 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3878,7 +4135,6 @@
 				0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				340BE38627B54F37006D6C34 /* Owner.storyboard in Resources */,
-				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
 				0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */,
 				0E84BF552397F29800A37E1A /* Heartbeat.storyboard in Resources */,
 				A9E5994025572CF700F9E5CC /* Share.storyboard in Resources */,
@@ -3918,6 +4174,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		067E08286183586536130F33 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-station_intents-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		0E8301592393FC2B0003F2EF /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3989,6 +4267,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		617DFCDC39B3A39446D538AB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-station_widgets-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A96B1EF925A7208900D3ED9C /* SwiftGen */ = {
@@ -4178,6 +4478,7 @@
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
 				A9F4471724B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */,
+				E186AB2C2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				0EA511B9261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
@@ -4194,7 +4495,6 @@
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				663155FF2667F40C005B90A6 /* UpdateFirmwareRouterInput.swift in Sources */,
 				A91D02F52511207300694733 /* SelectionPresenter.swift in Sources */,
-				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */,
@@ -4261,14 +4561,12 @@
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
 				0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */,
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
-				0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */,
 				A9646470247BAE6B0001D55D /* ChartSettingsSwitchTableViewCell.swift in Sources */,
 				0E8BD314238566AB008B31EF /* DefaultsViewController.swift in Sources */,
 				66BC44AB2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */,
 				0E8BD317238566AB008B31EF /* TagChartsScrollConfigurator.swift in Sources */,
 				0E8BD318238566AB008B31EF /* TemperatureUnit+Localization.swift in Sources */,
-				0E8BD319238566AB008B31EF /* LanguageViewOutput.swift in Sources */,
 				0EB8ED2D268F111B00C6B0FA /* View+Any.swift in Sources */,
 				0E8BD31A238566AB008B31EF /* DefaultsConfigurator.swift in Sources */,
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
@@ -4311,7 +4609,6 @@
 				0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */,
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
 				0EF4E34126824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
-				0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */,
 				66718A56266A685700A380F8 /* DfuFlashViewOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0EB8ED37268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
@@ -4352,10 +4649,8 @@
 				3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */,
 				0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */,
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,
-				0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */,
 				0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0EB48D702619D50A008E0D2D /* FeatureToggle.swift in Sources */,
-				0E8BD35A238566AB008B31EF /* LanguageModuleInput.swift in Sources */,
 				340BE39527B54F38006D6C34 /* OwnerViewOutput.swift in Sources */,
 				663155ED2667F40C005B90A6 /* UpdateFirmwareAppleViewController.swift in Sources */,
 				0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */,
@@ -4369,7 +4664,6 @@
 				0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */,
 				0EA796822664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
-				0E8BD365238566AB008B31EF /* LanguageRouter.swift in Sources */,
 				0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */,
 				340BE39927B54F38006D6C34 /* OwnerRouterInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
@@ -4398,7 +4692,6 @@
 				0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */,
 				0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */,
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
-				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */,
 				66718A6D266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
@@ -4429,7 +4722,6 @@
 				A9646467247BAE6B0001D55D /* ChartSettingsViewInput.swift in Sources */,
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */,
-				0E8BD3A0238566AB008B31EF /* LanguageTableInitializer.swift in Sources */,
 				660EB2772669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */,
 				660EB27D2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
@@ -4464,7 +4756,6 @@
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
 				660EB2592669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
 				66718A69266A6CA700A380F8 /* DfuFilePickerPresenterSheet.swift in Sources */,
-				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
 				0E290A862660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
@@ -4521,6 +4812,45 @@
 				3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */,
 				2BB81E4733D8EC40BECC68EF /* ShareViewModel.swift in Sources */,
 				B2A3FB2578B246F6CBBF0CA9 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A8D485281EBFD9008A8698 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3493385D28300396009060E8 /* NetworkManager.swift in Sources */,
+				34D458E228216C6900EA9F93 /* WidgetViewModel.swift in Sources */,
+				E186AB2D2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
+				34A8D4A2281ED018008A8698 /* Extensions.swift in Sources */,
+				3493386328300A73009060E8 /* SimpleWidgetView.swift in Sources */,
+				34933873283014F6009060E8 /* WidgetSensorEnum.swift in Sources */,
+				3493386F283014A0009060E8 /* Model+Extension.swift in Sources */,
+				3493386528300ACC009060E8 /* UnauthorizedView.swift in Sources */,
+				34D458E028216B2200EA9F93 /* WidgetAssembly.swift in Sources */,
+				3493386C28300C49009060E8 /* Constants.swift in Sources */,
+				34A8D4C6281EEC19008A8698 /* WidgetEntry.swift in Sources */,
+				341401EC282D03C8003DE721 /* MeasurementService.swift in Sources */,
+				34A8D490281EBFD9008A8698 /* RuuviWidgets.swift in Sources */,
+				3493386728300B06009060E8 /* EmptyWidgetView.swift in Sources */,
+				34A8D4C4281EEBF8008A8698 /* WidgetProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A8D4B1281EE5AE008A8698 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34933874283014F6009060E8 /* WidgetSensorEnum.swift in Sources */,
+				34933870283014A0009060E8 /* Model+Extension.swift in Sources */,
+				34D458E328217BF600EA9F93 /* WidgetViewModel.swift in Sources */,
+				3493385F283006CB009060E8 /* Extensions.swift in Sources */,
+				34A8D4BA281EE5AE008A8698 /* IntentHandler.swift in Sources */,
+				34933860283006F4009060E8 /* WidgetEntry.swift in Sources */,
+				34D458E428217C5900EA9F93 /* WidgetAssembly.swift in Sources */,
+				E186AB2E2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
+				3493385E28300679009060E8 /* MeasurementService.swift in Sources */,
+				3493386D28300DC3009060E8 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4589,12 +4919,12 @@
 				0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
 				A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */,
+				E186AB2B2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				A91D02F72511207300694733 /* SelectionModuleInput.swift in Sources */,
 				A9FC78FF2579675100F94604 /* UniversalLinkRouter.swift in Sources */,
 				A9BB94CC2540AB610042B190 /* AlertViewModel.swift in Sources */,
 				0E97D79E268C884500FE9D5B /* DFUPresenter.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
-				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				663155E92667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
@@ -4670,7 +5000,6 @@
 				0EB8ED1A268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */,
 				345057B827E0797000759B57 /* TagSettingsInteractor.swift in Sources */,
-				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
@@ -4682,7 +5011,6 @@
 				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,
 				660EB26A2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit+Localization.swift in Sources */,
-				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
 				66BC449B2657AED400A03253 /* OffsetCorrectionConfigurator.swift in Sources */,
 				0E2B339E26A2BCBE00366B01 /* OnboardRouter.swift in Sources */,
@@ -4724,7 +5052,6 @@
 				0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */,
 				0EB8ED3F26916D1700C6B0FA /* LargeButtonStyle.swift in Sources */,
 				0EB8ED25268F083700C6B0FA /* DFUUIView.swift in Sources */,
-				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
 				663155EF2667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
 				660EB2582669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
@@ -4763,8 +5090,6 @@
 				0E25135F2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */,
 				663155E32667F40C005B90A6 /* UpdateFirmwarePresenter.swift in Sources */,
 				A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */,
-				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
-				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
 				0EA7AB7A2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
 				66BC44AA2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
@@ -4777,7 +5102,6 @@
 				A9B57449253B994700DB7353 /* SignInInitializer.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
-				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
 				0EE36E4226957E200021B746 /* LatestRelease.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
@@ -4806,7 +5130,6 @@
 				0E8FD0C7233366DC00FFA577 /* TagChartsRouterInput.swift in Sources */,
 				340BE39227B54F37006D6C34 /* OwnerViewController.swift in Sources */,
 				0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */,
-				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
 				0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */,
@@ -4835,7 +5158,6 @@
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
 				0E11D223267F2EC0002D0686 /* VirtualLocation+Localization.swift in Sources */,
 				A9FC790E2579676E00F94604 /* UniversalLinkRouterImpl.swift in Sources */,
-				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				A964647B247BAE6B0001D55D /* ChartSettingsConfigurator.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
@@ -4859,7 +5181,6 @@
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
 				660EB2672669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E11D226267F3100002D0686 /* RuuviVirtualError+LocalizedError.swift in Sources */,
-				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
@@ -4931,6 +5252,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		34A8D498281EBFDB008A8698 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34A8D488281EBFD9008A8698 /* station_widgets */;
+			targetProxy = 34A8D497281EBFDB008A8698 /* PBXContainerItemProxy */;
+		};
+		34A8D4BD281EE5AE008A8698 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34A8D4B4281EE5AE008A8698 /* station_intents */;
+			targetProxy = 34A8D4BC281EE5AE008A8698 /* PBXContainerItemProxy */;
+		};
+		34D458E72821A06E00EA9F93 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34A8D4B4281EE5AE008A8698 /* station_intents */;
+			targetProxy = 34D458E62821A06E00EA9F93 /* PBXContainerItemProxy */;
+		};
+		34D458EB2821A07600EA9F93 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34A8D488281EBFD9008A8698 /* station_widgets */;
+			targetProxy = 34D458EA2821A07600EA9F93 /* PBXContainerItemProxy */;
+		};
 		64333D3B20B0C45A00CDF4B6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 64333D2420B0C45900CDF4B6 /* station */;
@@ -4978,6 +5319,16 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E186AB2F2844A273004926FC /* Base */,
+				E186AB322844A27C004926FC /* en */,
+				E186AB342844A27E004926FC /* fi */,
+			);
+			name = RuuviWidgetsConfiguration.intentdefinition;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -4987,8 +5338,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -4998,12 +5349,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -5015,8 +5366,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -5026,12 +5377,146 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		34A8D49B281EBFDB008A8698 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C35D73AC96D7B6765529406 /* Pods-station_widgets.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Ruuvi Station";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Ruuvi Innovations Oy. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station.widgets";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		34A8D49C281EBFDB008A8698 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 47B3F8D904CAAB34D68A68DC /* Pods-station_widgets.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Ruuvi Station";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Ruuvi Innovations Oy. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station.widgets";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		34A8D4C0281EE5AF008A8698 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 437F08C73081253CCDA3687A /* Pods-station_intents.debug.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = intents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ruuvi Station";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Ruuvi Innovations Oy. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station.intents";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		34A8D4C1281EE5AF008A8698 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B5EE8D004C84A07188EF2E3A /* Pods-station_intents.release.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = intents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ruuvi Station";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Ruuvi Innovations Oy. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station.intents";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -5161,8 +5646,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -5204,12 +5689,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -5221,8 +5706,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -5231,12 +5716,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -5335,6 +5820,24 @@
 			buildConfigurations = (
 				0E8BD402238566AB008B31EF /* Debug */,
 				0E8BD403238566AB008B31EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		34A8D49D281EBFDB008A8698 /* Build configuration list for PBXNativeTarget "station_widgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34A8D49B281EBFDB008A8698 /* Debug */,
+				34A8D49C281EBFDB008A8698 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		34A8D4BF281EE5AF008A8698 /* Build configuration list for PBXNativeTarget "station_intents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34A8D4C0281EE5AF008A8698 /* Debug */,
+				34A8D4C1281EE5AF008A8698 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

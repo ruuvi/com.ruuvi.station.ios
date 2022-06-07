@@ -5,6 +5,9 @@ import RuuviService
 import RuuviUser
 import RuuviPresenters
 import RuuviDaemon
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 class SignInPresenter: NSObject {
     enum State {
@@ -182,6 +185,7 @@ extension SignInPresenter {
                 guard let sSelf = self else { return }
                 if sSelf.ruuviUser.email == result.email {
                     sSelf.ruuviUser.login(apiKey: result.apiKey)
+                    sSelf.reloadWidgets()
                     sSelf.state = .isSyncing
                     sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                         guard let ssSelf = sSelf else { return }
@@ -277,5 +281,11 @@ extension SignInPresenter {
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750), execute: { [weak self] in
             self?.verify(code)
         })
+    }
+
+    private func reloadWidgets() {
+        if #available(iOS 14.0, *) {
+            WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        }
     }
 }

@@ -115,14 +115,14 @@
                                 <constraint firstAttribute="width" constant="50" id="sOH-5Q-hpM"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Pk-nL-gnn">
+                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="0" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Pk-nL-gnn">
                             <rect key="frame" x="66" y="0.0" width="12.5" height="66"/>
                             <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5f5-3f-UcF">
-                            <rect key="frame" x="86.5" y="0.0" width="111" height="66"/>
+                        <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" verticalHuggingPriority="251" text="Movements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5f5-3f-UcF">
+                            <rect key="frame" x="86.5" y="0.0" width="193.5" height="66"/>
                             <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -131,6 +131,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="2Pk-nL-gnn" secondAttribute="bottom" id="5JX-Xx-Xbk"/>
+                        <constraint firstAttribute="trailing" secondItem="5f5-3f-UcF" secondAttribute="trailing" constant="8" id="6hV-bz-dFU"/>
                         <constraint firstItem="tnh-8q-eCb" firstAttribute="leading" secondItem="dj4-Ac-qjU" secondAttribute="leading" id="JPv-kp-vLh"/>
                         <constraint firstItem="2Pk-nL-gnn" firstAttribute="top" secondItem="dj4-Ac-qjU" secondAttribute="top" id="LIo-Z3-VCm"/>
                         <constraint firstItem="5f5-3f-UcF" firstAttribute="centerY" secondItem="dj4-Ac-qjU" secondAttribute="centerY" id="Lno-sD-Ep2"/>

@@ -120,6 +120,9 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
 "Settings.SectionHeader.Application.title" = "ПРИЛОЖЕНИЕ";
 "Settings.Label.Language.text" = "Язык";
+"Settings.Language.Dialog.title" = "Выберите Язык";
+"Settings.Language.Dialog.message" = "Open settings and tap Language to change language of the app.
+If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";

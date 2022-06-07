@@ -10,4 +10,5 @@ protocol SettingsViewInput: ViewInput {
     var experimentalFunctionsEnabled: Bool { get set }
     var cloudModeVisible: Bool { get set }
     var cloudModeEnabled: Bool { get set }
+    func viewDidShowLanguageChangeDialog()
 }
