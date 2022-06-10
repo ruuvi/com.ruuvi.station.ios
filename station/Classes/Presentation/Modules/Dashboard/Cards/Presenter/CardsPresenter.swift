@@ -385,7 +385,6 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
-    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
