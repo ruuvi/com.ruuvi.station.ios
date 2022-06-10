@@ -125,6 +125,39 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
+    func observeLastFromNetwork(_ ruuviTag: RuuviTagSensor,
+                                _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void)
+    -> RuuviReactorToken {
+        let sqliteOperation = sqlitePersistence.readLastFromNetwork(ruuviTag)
+        let realmOperation = realmPersistence.readLastFromNetwork(ruuviTag)
+        Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
+            let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
+            block(.update(result))
+        })
+        var recordCombine: RuuviTagLastRecordSubjectCombine
+        if let combine = lastRecordCombines[ruuviTag.id] {
+            recordCombine = combine
+        } else {
+            let combine = RuuviTagLastRecordSubjectCombine(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                sqlite: sqliteContext,
+                realm: realmContext
+            )
+            lastRecordCombines[ruuviTag.id] = combine
+            recordCombine = combine
+        }
+        let cancellable = recordCombine.subject.sink { (record) in
+            block(.update(record))
+        }
+        if !recordCombine.isServing {
+            recordCombine.start()
+        }
+        return RuuviReactorToken {
+            cancellable.cancel()
+        }
+    }
+
     func observe(_ ruuviTag: RuuviTagSensor,
                  _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void) -> RuuviReactorToken {
         sqlitePersistence.readSensorSettings(ruuviTag).on { [weak self] sqliteRecord in
