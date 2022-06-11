@@ -798,11 +798,13 @@ private final class BusinessAssembly: Assembly {
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let virtualPersistence = r.resolve(VirtualPersistence.self)!
             let settings = r.resolve(RuuviLocalSettings.self)!
+            let alertService = r.resolve(RuuviServiceAlert.self)!
             let service = RuuviAnalyticsImpl(
                 ruuviUser: ruuviUser,
                 ruuviStorage: ruuviStorage,
                 virtualPersistence: virtualPersistence,
-                settings: settings
+                settings: settings,
+                alertService: alertService
             )
             return service
         }

@@ -20,4 +20,5 @@ final class AppAssemblyConstants {
 
     static let openWeatherMapApiKey = networkingPlist.OpenWeatherMapAPIKey
     static let ruuviCloudUrl = networkingPlist.RuuviCloudURL
+    static let simpleWidgetKindId = "ruuvi.simpleWidget"
 }
