@@ -311,4 +311,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                       userInfo: nil)
         }
     }
+
+    @UserDefault("SettingsUserDefaults.useSimpleWidget", defaultValue: true)
+    var useSimpleWidget: Bool
 }
