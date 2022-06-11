@@ -42,6 +42,7 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.start()
         backgroundTaskService.register()
         backgroundProcessService.register()
+        observeWidgetKind()
         #if canImport(RuuviAnalytics)
         DispatchQueue.main.async {
             self.userPropertiesService.update()
@@ -67,7 +68,7 @@ class AppStateServiceImpl: AppStateService {
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.stop()
             if #available(iOS 14.0, *) {
-                WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+                WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.simpleWidgetKindId)
             }
         }
         propertiesDaemon.stop()
@@ -99,5 +100,17 @@ class AppStateServiceImpl: AppStateService {
         NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
                                         object: nil,
                                         userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
+    }
+}
+
+extension AppStateServiceImpl {
+    fileprivate func observeWidgetKind() {
+        if #available(iOS 14.0, *) {
+            WidgetCenter.shared.getCurrentConfigurations { [weak self] widgetInfos in
+                guard case .success(let infos) = widgetInfos else { return }
+                let simpleWidgets = infos.filter({ $0.kind == AppAssemblyConstants.simpleWidgetKindId })
+                self?.settings.useSimpleWidget = simpleWidgets.count > 0
+            }
+        }
     }
 }
