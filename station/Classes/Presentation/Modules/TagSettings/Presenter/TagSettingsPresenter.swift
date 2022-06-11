@@ -478,10 +478,6 @@ extension TagSettingsPresenter {
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
 
-        if settings.cloudModeEnabled && ruuviTag.isCloud {
-            viewModel.source.value = .ruuviNetwork
-        }
-
         if featureToggleService.isEnabled(.updateFirmware) && ruuviTag.isOwner {
             if (viewModel.source.value == .advertisement || viewModel.source.value == .heartbeat)
                 || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
@@ -775,7 +771,7 @@ extension TagSettingsPresenter {
         guard let luid = ruuviTag.luid else {
             return
         }
-        guard !(settings.cloudModeEnabled && ruuviTag.isCloud) && ruuviTag.isOwner else {
+        guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else {
             return
         }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in

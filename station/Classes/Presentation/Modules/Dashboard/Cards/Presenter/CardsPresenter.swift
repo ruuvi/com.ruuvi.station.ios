@@ -551,7 +551,6 @@ extension CardsPresenter {
         for viewModel in viewModels {
             if !(settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                 if viewModel.type == .ruuvi,
-                   viewModel.isOwner.value.bound,
                    let luid = viewModel.luid.value {
                     advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
                         if let ruuviTag = device.ruuvi?.tag,
@@ -610,13 +609,8 @@ extension CardsPresenter {
             // Pull last record from network if cloud mode is on
             restartObservingLastRecordFromNetwork(for: sensor)
         } else {
-            // Pull last record from all records if sensors is owned
-            // Pull last network record if sensor is shared
-            if sensor.isOwner {
-                restartObservingRuuviTagLastRecordFromAll(for: sensor)
-            } else {
-                restartObservingLastRecordFromNetwork(for: sensor)
-            }
+            // Pull last record from all records
+            restartObservingRuuviTagLastRecordFromAll(for: sensor)
         }
     }
 
