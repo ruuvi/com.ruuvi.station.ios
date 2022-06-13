@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Tarkista päivitykset";
 "Cards.Connected.title" = "Yhdistetty";
 "Cards.Error.ReverseGeocodingFailed.message" = "Virtuaalisen anturin tietojen lataaminen epäonnistui. Maantieteellisten koordinaattien käänteishaun toimintaraja ylittyi.";
+"Cards.UpdatedLabel.NoData.message" = "Ei tietoja viimeiseltä 10 päivältä.";
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
 "CoreError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
 "CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";

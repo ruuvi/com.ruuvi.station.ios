@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Visa uppdateringsinstruktioner";
 "Cards.Connected.title" = "Ansluten";
 "Cards.Error.ReverseGeocodingFailed.message" = "Det gick inte att ladda data för Virtual Sensor. Gränsen för geokodöverföring överskriden.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
 "CoreError.failedToGetPngRepresentation" = "Det gick inte att få PNG-representation";
 "CoreError.failedToGetDocumentsDirectory" = "Det gick inte att hämta bakgrundskatalog";
 "CoreError.failedToGetCurrentLocation" = "Det gick inte att få aktuell plats";

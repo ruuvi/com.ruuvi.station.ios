@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Überprüfe auf Updates";
 "Cards.Connected.title" = "Verbunden";
 "Cards.Error.ReverseGeocodingFailed.message" = "Fehler beim Laden der Daten für den virtuellen Sensor. Das Betriebslimit für umgekehrte Geokodierung wurde überschritten.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
 "CoreError.failedToGetPngRepresentation" = "PNG-Darstellung konnte nicht abgerufen werden";
 "CoreError.failedToGetDocumentsDirectory" = "Fehler beim Abrufen des Hintergrundverzeichnisses";
 "CoreError.failedToGetCurrentLocation" = "Fehler beim Abrufen des aktuellen Standorts";

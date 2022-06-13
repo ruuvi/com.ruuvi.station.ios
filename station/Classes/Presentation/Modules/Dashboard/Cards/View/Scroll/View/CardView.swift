@@ -110,7 +110,7 @@ class CardView: UIView {
                let date = self?.updatedAt?.ruuviAgo() {
                 self?.updatedLabel.text = date
             } else {
-                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "N/A".localized()
+                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
             }
         })
     }

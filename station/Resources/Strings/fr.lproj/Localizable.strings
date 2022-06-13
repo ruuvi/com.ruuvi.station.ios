@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Check for update";
 "Cards.Connected.title" = "Connecté";
 "Cards.Error.ReverseGeocodingFailed.message" = "Echec du téléchargement des données de l'appareil.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
 "CoreError.failedToGetPngRepresentation" = "Echec de la représentation PNG";
 "CoreError.failedToGetDocumentsDirectory" = "Répertoire d'arrière-plan introuvable";
 "CoreError.failedToGetCurrentLocation" = "Position introuvable";
