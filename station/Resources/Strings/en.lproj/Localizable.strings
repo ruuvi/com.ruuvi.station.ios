@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Check for update";
 "Cards.Connected.title" = "Connected";
 "Cards.Error.ReverseGeocodingFailed.message" = "Failed to load data for Virtual Sensor. Reverse geocode operation limit exceeded.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
 "CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
 "CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
 "CoreError.failedToGetCurrentLocation" = "Failed to get current location";

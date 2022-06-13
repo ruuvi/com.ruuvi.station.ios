@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Check for update";
 "Cards.Connected.title" = "Соединен";
 "Cards.Error.ReverseGeocodingFailed.message" = "Не удалось загрузить данные для виртуального сенсора. Превышен лимит операций обратного геокодирования.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
 "CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
 "CoreError.failedToGetCurrentLocation" = "Не удалось получить текущее месторасположение";
