@@ -69,10 +69,6 @@ class TagChartsInteractor {
             chartModules.append(module)
         })
 
-        if let luid = ruuviTagSensor.luid {
-            settings.setTagChartOnForeground(for: luid, value: true)
-        }
-
         presenter.interactorDidUpdate(sensor: ruuviTagSensor)
     }
 }
@@ -138,9 +134,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         chartModules = []
         timer?.invalidate()
         timer = nil
-        if let luid = ruuviTagSensor.luid {
-            settings.setTagChartOnForeground(for: luid, value: false)
-        }
     }
 
     func export() -> Future<URL, RUError> {
@@ -260,8 +253,7 @@ extension TagChartsInteractor: TagChartModuleOutput {
 // MARK: - Private
 extension TagChartsInteractor {
     private func restartScheduler() {
-        guard let luid = ruuviTagSensor.luid else { return }
-        let timerInterval = settings.tagChartOnForeground(for: luid) ? 2 : settings.chartIntervalSeconds
+        let timerInterval = settings.appIsOnForeground ? 2 : settings.chartIntervalSeconds
         timer?.invalidate()
         timer = Timer.scheduledTimer(
             withTimeInterval: TimeInterval(timerInterval),
@@ -285,7 +277,7 @@ extension TagChartsInteractor {
     }
 
     private func fetchLast() {
-        guard let lastDate = lastMeasurement?.date, let luid = ruuviTagSensor.luid else {
+        guard let lastDate = lastMeasurement?.date else {
             return
         }
         let interval = TimeInterval(settings.chartIntervalSeconds)
@@ -296,7 +288,7 @@ extension TagChartsInteractor {
             var lastResults: [RuuviMeasurement] = []
             var lastMeasurementDate: Date = lastDate
             results.forEach({
-                if sSelf.settings.tagChartOnForeground(for: luid) {
+                if sSelf.settings.appIsOnForeground {
                     lastResults.append($0.measurement)
                 } else {
                     if $0.date >= lastMeasurementDate.addingTimeInterval(interval) {

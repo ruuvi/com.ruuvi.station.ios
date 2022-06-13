@@ -38,16 +38,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.removeObject(forKey: firmwareVersionPrefix + luid.value)
     }
 
-    // Store Chart Foreground State
-    private let chartOnForegroundPrefix = "SettingsUserDefaults.chartOnForeground"
-    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool {
-        return UserDefaults.standard.value(forKey: chartOnForegroundPrefix + luid.value) as? Bool ?? false
-    }
-
-    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool) {
-        UserDefaults.standard.set(value, forKey: chartOnForegroundPrefix + luid.value)
-    }
-
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
@@ -314,4 +304,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.useSimpleWidget", defaultValue: true)
     var useSimpleWidget: Bool
+
+    @UserDefault("SettingsUserDefaults.appIsOnForeground", defaultValue: false)
+    var appIsOnForeground: Bool
 }
