@@ -45,6 +45,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     sSelf.propertiesService.removeImage(for: sensor)
                     sSelf.localIDs.clear(sensor: sensor)
                     sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
+                    sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
                     Future.zip([deleteSensorOperation, deleteRecordsOperation])
                         .on(success: { _ in
                             promise.succeed(value: true)

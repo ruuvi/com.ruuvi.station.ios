@@ -176,7 +176,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         }
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
-        var syncFrom = localSyncState.getSyncDate(for: ruuviTagSensor.macId)
+        var syncFrom = localSyncState.getGattSyncDate(for: ruuviTagSensor.macId)
         let historyLength = Calendar.current.date(
             byAdding: .hour,
             value: -settings.dataPruningOffsetHours,
@@ -185,7 +185,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         if syncFrom == nil {
             syncFrom = historyLength
         } else if let from = syncFrom, let history = historyLength, from < history {
-            syncFrom = historyLength
+            syncFrom = history
         }
 
         let op = gattService.syncLogs(uuid: luid.value,
@@ -196,7 +196,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
-            self?.localSyncState.setSyncDate(Date(), for: self?.ruuviTagSensor.macId)
+            self?.localSyncState.setGattSyncDate(Date(), for: self?.ruuviTagSensor.macId)
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: .ruuviService(error))
@@ -226,6 +226,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                 promise.fail(error: .ruuviService(error))
             }, completion: { [weak self] in
                 self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
+                self?.localSyncState.setGattSyncDate(nil, for: self?.ruuviTagSensor.macId)
                 self?.clearChartsAndRestartObserving()
                 promise.succeed(value: ())
             })
