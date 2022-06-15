@@ -69,7 +69,7 @@
                                                 <constraint firstAttribute="height" constant="34" id="62B-EZ-38I"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <textInputTraits key="textInputTraits" textContentType="email"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                         </textField>
                                     </subviews>
                                     <constraints>
