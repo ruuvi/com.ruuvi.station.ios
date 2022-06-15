@@ -512,6 +512,8 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Connection.description" = "Anturiin ei voida yhdistää Bluetoothilla sovelluksen pilvitilan ollessa aktiivinen. Voit ottaa pilvianturiesi Bluetoothin takaisin käyttöön sammuttamalla pilvitilan sovelluksen asetussivulta.";
 "Widgets.Loading.message" = "ladataan...";
 "Cards.Movements.title" = "liikettä";
+"TagSettings.BatteryStatusLabel.Replace.message" = "Vaihda paristo!";
+"TagSettings.BatteryStatusLabel.Ok.message" = "Paristo OK";
 "Widgets.Description.message" = "Luo widgettejä Ruuvi-antureistasi. Widgetit päivittyvät Ruuvin pilvipalvelun kautta ja vaativat toimiakseen Ruuvi Gateway -reitittimen.";
 "Widgets.Unauthorized.message" = "Kirjaudu sisään käyttääksesi widgettiä.";
 "Widgets.Unconfigured.message" = "Paina pitkään muokataksesi widgettiä.";

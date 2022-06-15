@@ -13,6 +13,7 @@ struct TagSettingsViewModel {
     let temperature: Observable<Temperature?> = Observable<Temperature?>()
     let humidityOffset: Observable<Double?> = Observable<Double?>()
     let voltage: Observable<Double?> = Observable<Double?>()
+    let batteryNeedsReplacement: Observable<Bool?> = Observable<Bool?>()
     let accelerationX: Observable<Double?> = Observable<Double?>()
     let accelerationY: Observable<Double?> = Observable<Double?>()
     let accelerationZ: Observable<Double?> = Observable<Double?>()
@@ -106,6 +107,9 @@ struct TagSettingsViewModel {
         measurementSequenceNumber.value = record.measurementSequenceNumber
         txPower.value = record.txPower
         source.value = record.source
+        let batteryStatusProvider = RuuviTagBatteryStatusProvider()
+        batteryNeedsReplacement.value = batteryStatusProvider.batteryNeedsReplacement(temperature: record.temperature,
+                                                                          voltage: record.voltage)
     }
 
     func reset() {
