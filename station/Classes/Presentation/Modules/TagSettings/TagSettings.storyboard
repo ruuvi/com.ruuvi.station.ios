@@ -1121,12 +1121,20 @@ IMAGE</string>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Battery Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hpu-8d-drA">
+                                                    <rect key="frame" x="215.5" y="11.5" width="108.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Wim-BP-74w" firstAttribute="centerY" secondItem="nYr-wu-aMZ" secondAttribute="centerY" id="1vn-5U-VEZ"/>
                                                 <constraint firstAttribute="trailing" secondItem="0QS-Je-2os" secondAttribute="trailing" constant="16" id="5bn-CM-jjR"/>
                                                 <constraint firstItem="Wim-BP-74w" firstAttribute="leading" secondItem="nYr-wu-aMZ" secondAttribute="leading" constant="20" id="E4y-gR-lZg"/>
+                                                <constraint firstItem="0QS-Je-2os" firstAttribute="leading" secondItem="hpu-8d-drA" secondAttribute="trailing" constant="16" id="XAW-Uh-ts2"/>
                                                 <constraint firstItem="0QS-Je-2os" firstAttribute="centerY" secondItem="nYr-wu-aMZ" secondAttribute="centerY" id="nce-Ed-dWC"/>
+                                                <constraint firstItem="hpu-8d-drA" firstAttribute="centerY" secondItem="nYr-wu-aMZ" secondAttribute="centerY" id="tLY-6P-vLK"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -1407,6 +1415,7 @@ IMAGE</string>
                         <outlet property="accelerationZValueLabel" destination="Chd-Uf-uiU" id="XBV-24-uzu"/>
                         <outlet property="backgroundImageLabel" destination="K60-4C-oF8" id="PW8-0e-kwo"/>
                         <outlet property="backgroundImageView" destination="PPK-KZ-0TC" id="1NZ-SW-ZHa"/>
+                        <outlet property="batteryStatusLabel" destination="hpu-8d-drA" id="cqZ-zp-NiA"/>
                         <outlet property="batteryVoltageTitleLabel" destination="Wim-BP-74w" id="6Vj-s0-VH2"/>
                         <outlet property="connectStatusLabel" destination="j9c-gN-4Da" id="5ZL-zl-roh"/>
                         <outlet property="connectionAlertDescriptionCell" destination="SHq-wf-GdC" id="jdS-2I-0Ez"/>

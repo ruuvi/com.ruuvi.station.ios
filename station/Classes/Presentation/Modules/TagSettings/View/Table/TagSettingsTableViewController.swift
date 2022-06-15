@@ -89,6 +89,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
     @IBOutlet weak var accelerationZValueLabel: UILabel!
+    @IBOutlet weak var batteryStatusLabel: UILabel!
     @IBOutlet weak var voltageValueLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
     @IBOutlet weak var rssiValueLabel: UILabel!
@@ -844,6 +845,16 @@ extension TagSettingsTableViewController {
                 label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
             } else {
                 label.text = emptyValueString.localized()
+            }
+        }
+
+        batteryStatusLabel.bind(viewModel.batteryNeedsReplacement) { label, needsReplacement in
+            if let needsReplacement = needsReplacement, needsReplacement {
+                label.text = "(\("TagSettings.BatteryStatusLabel.Replace.message".localized()))"
+                label.textColor = .red
+            } else {
+                label.text = "(\("TagSettings.BatteryStatusLabel.Ok.message".localized()))"
+                label.textColor = .green
             }
         }
 

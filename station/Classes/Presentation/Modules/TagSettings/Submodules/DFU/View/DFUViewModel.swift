@@ -95,18 +95,14 @@ final class DFUViewModel: ObservableObject {
     }
 
     func checkBatteryState(completion: @escaping(Bool) -> Void ) {
+        let batteryStatusProvider = RuuviTagBatteryStatusProvider()
         ruuviStorage
             .readLast(ruuviTag)
             .on(success: { record in
-                if let temperature = record?.temperature?.value, let voltage = record?.voltage?.value {
-                    if (temperature < -20 && voltage < 2) ||
-                        (temperature < 0 && voltage < 2.3) ||
-                        (temperature >= 0 && voltage < 2.5) {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
-                }
+                let batteryNeedsReplacement = batteryStatusProvider
+                    .batteryNeedsReplacement(temperature: record?.temperature,
+                                             voltage: record?.voltage)
+                completion(batteryNeedsReplacement)
             }, failure: { _ in
                 completion(false)
             })
