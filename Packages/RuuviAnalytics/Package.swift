@@ -15,12 +15,13 @@ let package = Package(
             targets: ["RuuviAnalyticsImpl"])
     ],
     dependencies: [
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "8.2.0")),
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "9.0.0")),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviVirtual"),
-        .package(path: "../RuuviUser")
+        .package(path: "../RuuviUser"),
+	     .package(path: "../RuuviService/Alert")
     ],
     targets: [
         .target(
@@ -35,7 +36,8 @@ let package = Package(
                 "RuuviStorage",
                 "RuuviOntology",
                 "RuuviVirtual",
-                "RuuviUser"
+                "RuuviUser",
+		         "RuuviService/Alert"
             ]),
         .testTarget(
             name: "RuuviAnalyticsTests",

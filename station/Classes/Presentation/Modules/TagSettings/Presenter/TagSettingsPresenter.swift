@@ -457,8 +457,8 @@ extension TagSettingsPresenter {
             viewModel.name.value = ruuviTag.name
         }
 
-        viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil
-        viewModel.isConnectionSectionEnabled.value = !(ruuviTag.isCloud && settings.cloudModeEnabled)
+        viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil && ruuviTag.isOwner
+        viewModel.isConnectionSectionEnabled.value = !(ruuviTag.isCloud && settings.cloudModeEnabled && ruuviTag.isOwner)
         viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -478,11 +478,7 @@ extension TagSettingsPresenter {
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
 
-        if settings.cloudModeEnabled && ruuviTag.isCloud {
-            viewModel.source.value = .ruuviNetwork
-        }
-
-        if featureToggleService.isEnabled(.updateFirmware) {
+        if featureToggleService.isEnabled(.updateFirmware) && ruuviTag.isOwner {
             if (viewModel.source.value == .advertisement || viewModel.source.value == .heartbeat)
                 || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
                 viewModel.canShowUpdateFirmware.value = true
@@ -771,6 +767,7 @@ extension TagSettingsPresenter {
     }
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
         guard let luid = ruuviTag.luid else {
             return
         }
@@ -782,7 +779,7 @@ extension TagSettingsPresenter {
                 self?.sync(device: tag, source: .advertisement)
             }
         })
-        heartbeatToken?.invalidate()
+
         heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag, source: .heartbeat)
@@ -819,7 +816,7 @@ extension TagSettingsPresenter {
         if connectionState, device.isConnectable {
             if !viewModel.isConnectable.value.bound {
                 let isConnectable = device.isConnectable && device.luid != nil
-                viewModel.isConnectable.value = isConnectable && !(ruuviTag.isCloud && settings.cloudModeEnabled)
+                viewModel.isConnectable.value = isConnectable && !(ruuviTag.isCloud && settings.cloudModeEnabled) && ruuviTag.isOwner
             }
         } else if connectionState, !device.isConnectable {
             if viewModel.isConnectable.value.bound {
@@ -840,8 +837,10 @@ extension TagSettingsPresenter {
         reloadMutedTill()
 
         if viewModel.canShowUpdateFirmware.value == false
+            && ruuviTag.isOwner
             && featureToggleService.isEnabled(.updateFirmware) {
-            if (source == .advertisement || source == .heartbeat) || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
+            if (source == .advertisement || source == .heartbeat)
+                || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
                 viewModel.canShowUpdateFirmware.value = true
             }
         }

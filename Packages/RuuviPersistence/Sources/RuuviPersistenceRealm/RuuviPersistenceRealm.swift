@@ -440,24 +440,9 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date", ascending: false)
                 .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
-                let lastRecordResult = RuuviTagSensorRecordStruct(
-                    luid: luid,
-                    date: lastRecord.date,
-                    source: lastRecord.source,
-                    macId: nil,
-                    rssi: lastRecord.rssi.value,
-                    temperature: lastRecord.unitTemperature,
-                    humidity: lastRecord.unitHumidity,
-                    pressure: lastRecord.unitPressure,
-                    acceleration: lastRecord.acceleration,
-                    voltage: lastRecord.unitVoltage,
-                    movementCounter: lastRecord.movementCounter.value,
-                    measurementSequenceNumber: sequenceNumber,
-                    txPower: lastRecord.txPower.value,
-                    temperatureOffset: lastRecord.temperatureOffset,
-                    humidityOffset: lastRecord.humidityOffset,
-                    pressureOffset: lastRecord.pressureOffset
-                )
+                let lastRecordResult = self.constructRecordStruct(from: lastRecord,
+                                                                  luid: luid,
+                                                                  sequenceNumber: sequenceNumber)
                 promise.succeed(value: lastRecordResult)
             } else {
                 promise.succeed(value: nil)
@@ -465,6 +450,32 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
+
+    public func readLastFromNetwork(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?,
+                                                                            RuuviPersistenceError> {
+        let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
+        guard ruuviTag.macId == nil,
+            let luid = ruuviTag.luid else {
+            promise.succeed(value: nil)
+            return promise.future
+        }
+        context.bgWorker.enqueue {
+            if let lastRecord = self.context.bg.objects(RuuviTagDataRealm.self)
+                .filter("ruuviTag.uuid == %@ AND ruuviTag.source == ruuviNetwork", luid.value)
+                .sorted(byKeyPath: "date", ascending: false)
+                .first {
+                let sequenceNumber = lastRecord.measurementSequenceNumber.value
+                let lastRecordResult = self.constructRecordStruct(from: lastRecord,
+                                                                  luid: luid,
+                                                                  sequenceNumber: sequenceNumber)
+                promise.succeed(value: lastRecordResult)
+            } else {
+                promise.succeed(value: nil)
+            }
+        }
+        return promise.future
+    }
+
     public func getStoredTagsCount() -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
         context.bgWorker.enqueue {
@@ -610,6 +621,29 @@ extension RuuviPersistenceRealm {
         Crashlytics.crashlytics().log("\(method)(line: \(line)")
         Crashlytics.crashlytics().record(error: error)
         #endif
+    }
+    private func constructRecordStruct(from lastRecord: RuuviTagDataRealm,
+                                       luid: LocalIdentifier,
+                                       sequenceNumber: Int?) -> RuuviTagSensorRecordStruct {
+        let lastRecordResult = RuuviTagSensorRecordStruct(
+            luid: luid,
+            date: lastRecord.date,
+            source: lastRecord.source,
+            macId: nil,
+            rssi: lastRecord.rssi.value,
+            temperature: lastRecord.unitTemperature,
+            humidity: lastRecord.unitHumidity,
+            pressure: lastRecord.unitPressure,
+            acceleration: lastRecord.acceleration,
+            voltage: lastRecord.unitVoltage,
+            movementCounter: lastRecord.movementCounter.value,
+            measurementSequenceNumber: sequenceNumber,
+            txPower: lastRecord.txPower.value,
+            temperatureOffset: lastRecord.temperatureOffset,
+            humidityOffset: lastRecord.humidityOffset,
+            pressureOffset: lastRecord.pressureOffset
+        )
+        return lastRecordResult
     }
 }
 // swiftlint:enable file_length
