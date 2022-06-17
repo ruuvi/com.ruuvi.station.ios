@@ -30,12 +30,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
     }
 
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String) {
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String?) {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
-    }
-
-    func removeFirmwareVersion(for luid: LocalIdentifier) {
-        UserDefaults.standard.removeObject(forKey: firmwareVersionPrefix + luid.value)
     }
 
     var language: Language {

@@ -208,7 +208,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             if let luid = sSelf.ruuviTag.luid {
                 sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
                 sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
-                sSelf.settings.removeFirmwareVersion(for: luid)
+                sSelf.settings.setFirmwareVersion(for: luid, value: nil)
             }
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
