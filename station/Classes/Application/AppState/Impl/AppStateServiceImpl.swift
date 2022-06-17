@@ -48,6 +48,7 @@ class AppStateServiceImpl: AppStateService {
         DispatchQueue.main.async {
             self.userPropertiesService.update()
         }
+        settings.appOpenedCount += 1
         #endif
     }
 

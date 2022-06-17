@@ -436,6 +436,7 @@ extension CardsPresenter {
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags {
             self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
+            self.askAppStoreReview(with: viewModels.count)
         }
     }
 
@@ -1174,6 +1175,20 @@ extension CardsPresenter {
     
     @objc private func systemLocaleDidChange() {
         syncAppSettingsToAppGroupContainer()
+    }
+
+    fileprivate func askAppStoreReview(with sensorsCount: Int) {
+        guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,
+              bundleName != "station_dev" else {
+            return
+        }
+        guard let dayDifference = Calendar.current.dateComponents([.day],
+                                                               from: FileManager().appInstalledDate,
+                                                               to: Date()).day, dayDifference > 7,
+              sensorsCount > 0 else {
+            return
+        }
+        AppStoreReviewHelper.askForReview(settings: settings)
     }
 }
 // swiftlint:enable file_length trailing_whitespace

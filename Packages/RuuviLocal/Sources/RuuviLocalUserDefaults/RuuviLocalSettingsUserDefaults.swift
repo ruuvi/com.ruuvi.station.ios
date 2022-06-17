@@ -303,4 +303,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.appIsOnForeground", defaultValue: false)
     var appIsOnForeground: Bool
+
+    @UserDefault("SettingsUserDefaults.appOpenedCount", defaultValue: 0)
+    var appOpenedCount: Int
 }

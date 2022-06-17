@@ -45,6 +45,7 @@ public protocol RuuviLocalSettings {
     var cloudModeEnabled: Bool { get set }
     var useSimpleWidget: Bool { get set }
     var appIsOnForeground: Bool { get set }
+    var appOpenedCount: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
