@@ -868,6 +868,10 @@
 		D54F2103EF7E3360E7D09BC4 /* Pods_station_widgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */; };
 		E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
+		E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */; };
+		E16051EA285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */; };
+		E16051EC285CBA57003FCA70 /* FileManager+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051EB285CBA57003FCA70 /* FileManager+Date.swift */; };
+		E16051ED285CBA57003FCA70 /* FileManager+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051EB285CBA57003FCA70 /* FileManager+Date.swift */; };
 		E186AB2B2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
 		E186AB2C2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
 		E186AB2D2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E186AB302844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition */; };
@@ -1433,6 +1437,8 @@
 		CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewOutput.swift; sourceTree = "<group>"; };
 		D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_widgets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBatteryStatusProvider.swift; sourceTree = "<group>"; };
+		E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
+		E16051EB285CBA57003FCA70 /* FileManager+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Date.swift"; sourceTree = "<group>"; };
 		E186AB2F2844A273004926FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/RuuviWidgetsConfiguration.intentdefinition; sourceTree = "<group>"; };
 		E186AB322844A27C004926FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RuuviWidgetsConfiguration.strings; sourceTree = "<group>"; };
 		E186AB342844A27E004926FC /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/RuuviWidgetsConfiguration.strings; sourceTree = "<group>"; };
@@ -1767,6 +1773,7 @@
 				0E92A94B2686339300187E4F /* Structs */,
 				0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */,
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
+				E16051EB285CBA57003FCA70 /* FileManager+Date.swift */,
 				66718A6B266BD0E800A380F8 /* Color+Ruuvi.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
 				0EF4E33F26824EF500D83CC7 /* DfuFirmware+Log.swift */,
@@ -2304,6 +2311,7 @@
 			isa = PBXGroup;
 			children = (
 				0E25135E2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift */,
+				E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */,
 				0E00C4F02684D97B009B3C24 /* ExportHeadersProvider.swift */,
 				0E0501202685E895007060C4 /* HeartbeatDaemonTitles.swift */,
 				E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */,
@@ -4603,6 +4611,7 @@
 				0E8BD330238566AB008B31EF /* AboutInitializer.swift in Sources */,
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
 				A907BB1224AE620D009DA3DB /* UIWindow+Orientation.swift in Sources */,
+				E16051EA285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */,
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				66718A41266A685700A380F8 /* DfuFlashModuleInput.swift in Sources */,
@@ -4722,6 +4731,7 @@
 				66718A3E266A685700A380F8 /* DfuFlashConfigurator.swift in Sources */,
 				0E8BD398238566AB008B31EF /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E8BD399238566AB008B31EF /* AppAssembly.swift in Sources */,
+				E16051ED285CBA57003FCA70 /* FileManager+Date.swift in Sources */,
 				0E8BD39A238566AB008B31EF /* AppStateService.swift in Sources */,
 				A9646467247BAE6B0001D55D /* ChartSettingsViewInput.swift in Sources */,
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
@@ -5088,6 +5098,7 @@
 				340BE38C27B54F37006D6C34 /* OwnerPresenter.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */,
+				E16051EC285CBA57003FCA70 /* FileManager+Date.swift in Sources */,
 				0EA796892664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				660EB27C2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* CardsModuleInput.swift in Sources */,
@@ -5096,6 +5107,7 @@
 				663155E32667F40C005B90A6 /* UpdateFirmwarePresenter.swift in Sources */,
 				A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */,
 				0EA7AB7A2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
+				E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */,
 				66BC44AA2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
