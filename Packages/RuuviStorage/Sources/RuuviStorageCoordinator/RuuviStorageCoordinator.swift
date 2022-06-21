@@ -123,6 +123,24 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
+    func readLastFromNetwork(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError> {
+        let promise = Promise<RuuviTagSensorRecord?, RuuviStorageError>()
+        if ruuviTag.macId != nil {
+            sqlite.readLastFromNetwork(ruuviTag).on(success: { record in
+                promise.succeed(value: record)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        } else {
+            realm.readLastFromNetwork(ruuviTag).on(success: { record in
+                promise.succeed(value: record)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        }
+        return promise.future
+    }
+
     func getStoredTagsCount() -> Future<Int, RuuviStorageError> {
         let promise = Promise<Int, RuuviStorageError>()
         let sqliteOperation = sqlite.getStoredTagsCount()

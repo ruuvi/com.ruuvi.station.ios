@@ -83,7 +83,6 @@ class CardView: UIView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        updateSyncLabel(with: syncStatus)
         UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse], animations: { [weak self] in
             self?.humidityWarningImageView.alpha = 0.0
         })

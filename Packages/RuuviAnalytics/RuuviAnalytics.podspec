@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'RuuviAnalytics'
-  s.version          = '0.0.2'
+  s.version          = '0.0.3'
   s.summary          = 'Ruuvi Analytics'
   s.homepage         = 'https://ruuvi.com'
   s.author           = { 'Rinat Enikeev' => 'rinat@ruuvi.com' }
@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.requires_arc     = true
   s.ios.deployment_target = '10.0'
   s.swift_version    = '5.0'
+  s.static_framework = true
 
   s.default_subspecs = 'Contract'
 
@@ -20,11 +21,13 @@ Pod::Spec.new do |s|
 
   s.subspec 'Impl' do |ss|
     ss.source_files = 'Sources/RuuviAnalyticsImpl/**/*.{h,m,swift}', 'Sources/RuuviAnalyticsImpl/*.{h,m,swift}'
+    ss.dependency 'Firebase'
     ss.dependency 'RuuviAnalytics/Contract'
     ss.dependency 'RuuviStorage'
     ss.dependency 'RuuviLocal'
     ss.dependency 'RuuviVirtual'
     ss.dependency 'RuuviUser'
+    ss.dependency 'RuuviService/Alert'
   end
 
   s.test_spec 'Tests' do |test_spec|

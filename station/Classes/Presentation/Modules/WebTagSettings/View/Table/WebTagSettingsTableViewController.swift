@@ -13,7 +13,6 @@ private enum WebTagSettingsTableSection: Int {
 class WebTagSettingsTableViewController: UITableViewController {
     var output: WebTagSettingsViewOutput!
 
-    @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var locationCell: UITableViewCell!
@@ -22,15 +21,11 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var clearLocationButtonWidth: NSLayoutConstraint!
     @IBOutlet weak var backgroundImageLabel: UILabel!
     @IBOutlet weak var tagNameTitleLabel: UILabel!
+    @IBOutlet weak var tagNameValueLabel: UILabel!
     @IBOutlet weak var removeThisWebTagButton: UIButton!
     @IBOutlet weak var locationTitleLabel: UILabel!
 
-    var isNameChangedEnabled: Bool = true {
-        didSet {
-            updateUIIsNameChangeEnabled()
-        }
-    }
-
+    var isNameChangedEnabled: Bool = true
     var viewModel = WebTagSettingsViewModel() {
         didSet {
             bindViewModel()
@@ -39,6 +34,8 @@ class WebTagSettingsTableViewController: UITableViewController {
 
     private let alertsSectionHeaderReuseIdentifier = "WebTagSettingsAlertsHeaderFooterView"
     private let alertOffString = "WebTagSettings.Alerts.Off"
+    /// The limit for the tag name is 32 characters
+    private let tagNameCharaterLimit: Int = 32
 }
 
 // MARK: - WebTagSettingsViewInput
@@ -106,12 +103,6 @@ extension WebTagSettingsTableViewController {
         output.viewDidAskToSelectBackground(sourceView: sender)
     }
 
-    @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
-        if let name = tagNameTextField.text {
-            output.viewDidChangeTag(name: name)
-        }
-    }
-
     @IBAction func removeThisWebTagButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRemoveWebTag()
     }
@@ -127,25 +118,11 @@ extension WebTagSettingsTableViewController {
         super.viewDidLoad()
         setupLocalization()
         bindViewModel()
-        updateUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
-    }
-}
-
-// MARK: - Update UI
-extension WebTagSettingsTableViewController {
-    private func updateUI() {
-        updateUIIsNameChangeEnabled()
-    }
-
-    private func updateUIIsNameChangeEnabled() {
-        if isViewLoaded {
-            tagNameTextField.isEnabled = isNameChangedEnabled
-        }
     }
 }
 
@@ -158,7 +135,8 @@ extension WebTagSettingsTableViewController {
         }
         switch cell {
         case tagNameCell:
-            tagNameTextField.becomeFirstResponder()
+            guard isNameChangedEnabled else { return }
+            showSensorNameRenameDialog(name: viewModel.name.value)
         case locationCell:
             output.viewDidAskToSelectLocation()
         default:
@@ -191,6 +169,43 @@ extension WebTagSettingsTableViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return false
     }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn
+                   range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let text = textField.text else {
+            return true
+        }
+        let limit = text.utf16.count + string.utf16.count - range.length
+        if limit <= tagNameCharaterLimit {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+// MARK: - Sensor name rename dialog
+extension WebTagSettingsTableViewController {
+    private func showSensorNameRenameDialog(name: String?) {
+        var textField = UITextField()
+        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
+                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+                                      preferredStyle: .alert)
+        alert.addTextField { alertTextField in
+            alertTextField.delegate = self
+            alertTextField.text = name
+            textField = alertTextField
+        }
+        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+            guard let name = textField.text, !name.isEmpty else { return }
+            self?.output.viewDidChangeTag(name: name)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 // MARK: - Bindings
@@ -198,7 +213,7 @@ extension WebTagSettingsTableViewController {
 
     private func bindViewModel() {
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
-        tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+        tagNameValueLabel.bind(viewModel.name) { $0.text = $1?.trimmingCharacters(in: .whitespacesAndNewlines) }
         let clearButton = clearLocationButton
         let clearWidth = clearLocationButtonWidth
         locationValueLabel.bind(viewModel.location, block: { [weak clearButton, weak clearWidth] label, location in

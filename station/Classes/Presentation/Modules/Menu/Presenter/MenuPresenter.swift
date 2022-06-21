@@ -3,6 +3,9 @@ import RuuviService
 import RuuviLocal
 import RuuviUser
 import RuuviPresenters
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
@@ -105,6 +108,7 @@ extension MenuPresenter {
             sSelf.authService.logout()
                 .on(success: { [weak sSelf] _ in
                     sSelf?.dismiss()
+                    sSelf?.reloadWidgets()
                 }, failure: { [weak sSelf] error in
                     sSelf?.errorPresenter.present(error: error)
                 })
@@ -118,5 +122,11 @@ extension MenuPresenter {
                                                          style: .alert,
                                                          actions: actions)
         alertPresenter.showAlert(alertViewModel)
+    }
+
+    private func reloadWidgets() {
+        if #available(iOS 14.0, *) {
+            WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        }
     }
 }

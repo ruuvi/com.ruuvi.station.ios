@@ -33,6 +33,7 @@ public final class WebTagLocationRealm: Object {
     let webTags = LinkingObjects(fromType: WebTagRealm.self, property: "location")
 
     @objc public dynamic var city: String?
+    @objc public dynamic var state: String?
     @objc public dynamic var country: String?
     @objc public dynamic var latitude: Double = 0
     @objc public dynamic var longitude: Double = 0
@@ -45,6 +46,7 @@ public final class WebTagLocationRealm: Object {
     public convenience init(location: Location) {
         self.init()
         city = location.city
+        state = location.state
         country = location.country
         latitude = location.coordinate.latitude
         longitude = location.coordinate.longitude
@@ -56,6 +58,7 @@ extension WebTagLocationRealm {
     public var location: Location {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         return LocationWebTag(city: city,
+                              state: state,
                               country: country,
                               coordinate: coordinate)
     }
@@ -63,6 +66,7 @@ extension WebTagLocationRealm {
 
 private struct LocationWebTag: Location {
     var city: String?
+    var state: String?
     var country: String?
     var coordinate: CLLocationCoordinate2D
 }

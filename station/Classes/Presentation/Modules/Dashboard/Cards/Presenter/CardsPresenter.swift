@@ -15,6 +15,9 @@ import RuuviNotifier
 import RuuviDaemon
 import RuuviPresenters
 import RuuviUser
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -68,6 +71,12 @@ class CardsPresenter: CardsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var universalLinkObservationToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
+    private var temperatureUnitToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
+    private var pressureUnitToken: NSObjectProtocol?
+    private var languageToken: NSObjectProtocol?
+    private var systemLanguageChangeToken: NSObjectProtocol?
+    private var widgetDeepLinkToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -83,6 +92,7 @@ class CardsPresenter: CardsModuleInput {
     }
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
+    private let appGroupDefaults = UserDefaults(suiteName: "group.com.ruuvi.station.widgets")
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -109,6 +119,12 @@ class CardsPresenter: CardsModuleInput {
         lnmDidReceiveToken?.invalidate()
         universalLinkObservationToken?.invalidate()
         cloudModeToken?.invalidate()
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        pressureUnitToken?.invalidate()
+        languageToken?.invalidate()
+        systemLanguageChangeToken?.invalidate()
+        widgetDeepLinkToken?.invalidate()
     }
 }
 
@@ -124,12 +140,16 @@ extension CardsPresenter: CardsViewOutput {
         startObservingAlertChanges()
         startObservingLocalNotificationsManager()
         startObservingCloudModeNotification()
+        startListeningToSettings()
+        startObservingWidgetDeepLink()
+        handleCloudModeState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
     func viewWillAppear() {
         startObservingUniversalLinks()
         startObservingBluetoothState()
+        syncAppSettingsToAppGroupContainer()
     }
     
     func viewWillDisappear() {
@@ -149,7 +169,8 @@ extension CardsPresenter: CardsViewOutput {
             if let luid = viewModel.luid.value {
                 if settings.keepConnectionDialogWasShown(for: luid)
                     || background.isConnected(uuid: luid.value)
-                    || viewModel.isConnectable.value == false
+                    || !viewModel.isConnectable.value.bound
+                    || !viewModel.isOwner.value.bound
                     || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                     openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
                 } else {
@@ -171,7 +192,8 @@ extension CardsPresenter: CardsViewOutput {
         if let luid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: luid)
                 || background.isConnected(uuid: luid.value)
-                || viewModel.isConnectable.value == false
+                || !viewModel.isConnectable.value.bound
+                || !viewModel.isOwner.value.bound
                 || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                 configureInitialChart(from: viewModel)
                 router.openTagCharts()
@@ -228,6 +250,7 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerFirmwareUpdateDialog(for viewModel: CardsViewModel) {
         guard let luid = viewModel.luid.value,
               let version = viewModel.version.value, version < 5,
+              viewModel.isOwner.value.bound,
               featureToggleService.isEnabled(.legacyFirmwareUpdatePopup) else { return }
         if !settings.firmwareUpdateDialogWasShown(for: luid) {
             view.showFirmwareUpdateDialog(for: viewModel)
@@ -362,7 +385,6 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
-    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
@@ -386,20 +408,15 @@ extension CardsPresenter {
                 .lowerRelativeHumidity(for: ruuviTag)
             viewModel.rhAlertUpperBound.value = alertService
                 .upperRelativeHumidity(for: ruuviTag)
-            
-            ruuviStorage.readLast(ruuviTag).on { [weak self] record in
+            // swiftlint:disable:next line_length
+            let op = (settings.cloudModeEnabled && ruuviTag.isCloud) ? ruuviStorage.readLastFromNetwork(ruuviTag) : (ruuviTag.isOwner ? ruuviStorage.readLast(ruuviTag) : ruuviStorage.readLastFromNetwork(ruuviTag))
+            op.on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
-                    if viewModel.luid.value != nil {
-                        self?.alertHandler.process(record: record, trigger: false)
-                    } else {
-                        guard let macId = viewModel.mac.value else {
-                            return
-                        }
-                        self?.alertHandler.processNetwork(record: record, trigger: false, for: macId)
-                    }
+                    self?.processAlert(record: record, viewModel: viewModel)
                 }
             }
+
             return viewModel
         })
         let virtualViewModels = virtualSensors.compactMap({ virtualSensor -> CardsViewModel in
@@ -421,6 +438,18 @@ extension CardsPresenter {
             self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
         }
     }
+
+    private func processAlert(record: RuuviTagSensorRecord, viewModel: CardsViewModel) {
+        if viewModel.luid.value != nil {
+            alertHandler.process(record: record, trigger: false)
+        } else {
+            guard let macId = viewModel.mac.value else {
+                return
+            }
+            alertHandler.processNetwork(record: record, trigger: false, for: macId)
+        }
+    }
+
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
         return viewModels.sorted(by: {
             // Sort sensors by name alphabetically
@@ -431,6 +460,44 @@ extension CardsPresenter {
             }
         })
     }
+
+    private func syncAppSettingsToAppGroupContainer() {
+        let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
+        appGroupDefaults?.set(ruuviUser.isAuthorized, forKey: isAuthorizedUDKey)
+    
+        let temperatureUnitKey = "temperatureUnitKey"
+        var temperatureUnitInt: Int = 2
+        switch settings.temperatureUnit {
+        case .kelvin:
+            temperatureUnitInt = 1
+        case .celsius:
+            temperatureUnitInt = 2
+        case .fahrenheit:
+            temperatureUnitInt = 3
+        }
+        appGroupDefaults?.set(temperatureUnitInt, forKey: temperatureUnitKey)
+        
+        var humidityUnitInt: Int = 0
+        switch settings.humidityUnit {
+        case .percent:
+            humidityUnitInt = 0
+        case .gm3:
+            humidityUnitInt = 1
+        case .dew:
+            humidityUnitInt = 2
+        }
+        let humidityUnitKey = "humidityUnitKey"
+        appGroupDefaults?.set(humidityUnitInt, forKey: humidityUnitKey)
+    
+        let pressureUnitKey = "pressureUnitKey"
+        appGroupDefaults?.set(settings.pressureUnit.hashValue, forKey: pressureUnitKey)
+        
+        // Reload widget
+        if #available(iOS 14.0, *) {
+            WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        }
+    }
+
     private func configureInitialChart(from viewModel: CardsViewModel) {
         if let sensor = ruuviTags
             .first(where: {
@@ -458,7 +525,7 @@ extension CardsPresenter {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
-            ruuviTags.filter({ !(settings.cloudModeEnabled && $0.isCloud) })
+            ruuviTags.filter({ !(settings.cloudModeEnabled && $0.isCloud) && $0.isOwner })
                 .contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
         }.forEach { (luid) in
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
@@ -512,7 +579,6 @@ extension CardsPresenter {
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
                     ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
-                        self?.restartObservingRuuviTagLastRecord(for: ruuviTagSensor)
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
@@ -537,8 +603,41 @@ extension CardsPresenter {
             }
         }
     }
+
     private func restartObservingRuuviTagLastRecord(for sensor: AnyRuuviTagSensor) {
+        if settings.cloudModeEnabled && sensor.isCloud {
+            // Pull last record from network if cloud mode is on
+            restartObservingLastRecordFromNetwork(for: sensor)
+        } else {
+            // Pull last record from all records
+            restartObservingRuuviTagLastRecordFromAll(for: sensor)
+        }
+    }
+
+    private func restartObservingLastRecordFromNetwork(for sensor: RuuviTagSensor) {
         ruuviTagObserveLastRecordToken?.invalidate()
+        ruuviTagObserveLastRecordToken = ruuviReactor.observeLastFromNetwork(sensor) { [weak self] (changes) in
+            if case .update(let anyRecord) = changes,
+               let viewModel = self?.viewModels
+                .first(where: {
+                    ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
+                    || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
+                }),
+               let record = anyRecord {
+                let sensorSettings = self?.sensorSettingsList
+                    .first(where: {
+                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                    })
+                let sensorRecord = record.with(sensorSettings: sensorSettings)
+                viewModel.update(sensorRecord)
+
+                self?.processAlert(record: sensorRecord, viewModel: viewModel)
+            }
+        }
+    }
+    private func restartObservingRuuviTagLastRecordFromAll(for sensor: RuuviTagSensor) {
+        ruuviTagObserveLastRecordToken = nil
         ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                let viewModel = self?.viewModels
@@ -555,14 +654,7 @@ extension CardsPresenter {
                 let sensorRecord = record.with(sensorSettings: sensorSettings)
                 viewModel.update(sensorRecord)
 
-                if viewModel.luid.value != nil {
-                    self?.alertHandler.process(record: sensorRecord, trigger: false)
-                } else {
-                    guard let macId = viewModel.mac.value else {
-                        return
-                    }
-                    self?.alertHandler.processNetwork(record: sensorRecord, trigger: false, for: macId)
-                }
+                self?.processAlert(record: sensorRecord, viewModel: viewModel)
             }
         }
     }
@@ -606,7 +698,7 @@ extension CardsPresenter {
                         }) {
                     sSelf.virtualSensors[index] = sensor
                     sSelf.syncViewModels()
-                    sSelf.restartObserveRuuviTagAdvertisements()
+                    sSelf.restartObservingVirtualSensorsData()
                 }
             case .insert(let sensor):
                 sSelf.virtualSensors.append(sensor)
@@ -635,14 +727,14 @@ extension CardsPresenter {
                 let isInitialLoad = sSelf.ruuviTags.count == 0
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
-                if isInitialLoad, let firstTag = ruuviTags.first {
-                    sSelf.tagCharts?.configure(ruuviTag: firstTag)
-                    sSelf.restartObservingRuuviTagLastRecord(for: firstTag)
-                }
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
+                if isInitialLoad, let firstTag = ruuviTags.first {
+                    sSelf.tagCharts?.configure(ruuviTag: firstTag)
+                    sSelf.restartObservingRuuviTagLastRecord(for: firstTag)
+                }
                 if let viewModel = sSelf.viewModels.first {
                     sSelf.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
                 }
@@ -995,7 +1087,12 @@ extension CardsPresenter {
         // Stop listening to advertisements and heartbeats
         observeRuuviTags()
         // Update viewmodel data source to ruuvi network from heartbeats/advertisements
-        updateViewModelsSource()
+        syncViewModels()
+        //
+        if view.currentPage < ruuviTags.count {
+            let tag = ruuviTags[view.currentPage]
+            restartObservingRuuviTagLastRecord(for: tag)
+        }
     }
 
     private func removeConnectionsForCloudTags() {
@@ -1015,6 +1112,68 @@ extension CardsPresenter {
             }
         }
         viewModels = vms
+    }
+    
+    private func startListeningToSettings() {
+        temperatureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        }
+        humidityUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+        pressureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+        languageToken = NotificationCenter
+            .default
+            .addObserver(forName: .LanguageDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+        
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(systemLocaleDidChange),
+                         name: NSLocale.currentLocaleDidChangeNotification,
+                         object: nil)
+    }
+    
+    private func startObservingWidgetDeepLink() {
+        languageToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidOpenWithWidgetDeepLink,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+                if let userInfo = notification.userInfo,
+                   let macId = userInfo[WidgetDeepLinkMacIdKey.macId] as? String,
+                   let index = self?.viewModels.firstIndex(where: { viewModel in
+                       viewModel.mac.value?.value == macId
+                   }) {
+                    self?.view.scroll(to: index)
+                }
+            })
+    }
+    
+    @objc private func systemLocaleDidChange() {
+        syncAppSettingsToAppGroupContainer()
     }
 }
 // swiftlint:enable file_length trailing_whitespace
