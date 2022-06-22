@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Tarkista päivitykset";
 "Cards.Connected.title" = "Yhdistetty";
 "Cards.Error.ReverseGeocodingFailed.message" = "Virtuaalisen anturin tietojen lataaminen epäonnistui. Maantieteellisten koordinaattien käänteishaun toimintaraja ylittyi.";
+"Cards.UpdatedLabel.NoData.message" = "Ei tietoja viimeiseltä 10 päivältä.";
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
 "CoreError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
 "CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";
@@ -120,6 +121,9 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
 "Settings.SectionHeader.Application.title" = "OHJELMA";
 "Settings.Label.Language.text" = "Kieli";
+"Settings.Language.Dialog.title" = "Valitse kieli";
+"Settings.Language.Dialog.message" = "Avaa asetukset ja napauta Kieli vaihtaaksesi sovelluksen kieltä.
+Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintään yksi ensisijainen kieli on valittuna järjestelmäasetuksissa: Asetukset -> Yleiset -> Kieli ja alue.";
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
@@ -181,7 +185,7 @@
 "TagSettings.Alerts.Pressure.description" = "Hälytä, mikäli ilmanpaine %.0f tai yli %.0f";
 "TagSettings.Alerts.Connection.description" = "Hälytä, mikäli yhteys muodostettu/yhteys menetetty";
 "TagSettings.ConnectionAlert.title" = "Yhteys";
-"TagSettings.SectionHeader.Firmware.title" = "LAITEOHJELMISTO";
+"TagSettings.SectionHeader.Firmware.title" = "Laiteohjelmisto";
 "TagSettings.Firmware.CurrentVersion" = "Nykyinen versio";
 "TagSettings.Firmware.CurrentVersion.VeryOld" = "Hyvin vanha";
 "TagSettings.Firmware.UpdateFirmware" = "Päivitä";
@@ -237,7 +241,7 @@
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "TagSettings.Alerts.Off" = "Pois käytöstä";
 "TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle %.0f tai yli %.0f";
-"TagSettings.Label.alerts.text" = "HÄLYTYKSET";
+"TagSettings.Label.alerts.text" = "Hälytykset";
 "TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
 "TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibroi";
@@ -255,20 +259,20 @@
 "TagCharts.Export.title" = "VIE";
 "h" = "t";
 "About.AboutHelp.contents" = "Ruuvi Station on helppokäyttöinen sovellus Ruuvin tuotteiden hallinnointiin. Aloita lisäämällä antureita.";
-"About.AboutHelp.header" = "TIETOA / APUA";
+"About.AboutHelp.header" = "Tietoa / Apua";
 "About.MeasurementsCount.text" = "Paikallisesti tallennettujen mittausten lukumäärä: %d";
 "About.DatabaseSize.text" = "Tietokannan koko: %@";
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: ruuvi.com/fi/blogi\nRuuvi Twitter: twitter.com/ruuvicom";
-"About.More.header" = "LUE LISÄÄ";
+"About.More.header" = "Lue lisää";
 "About.OpenSource.contents" = "Kuten muutkin Ruuvin tuotteet, myös Ruuvi Station perustuu avoimeen lähdekoodiin: github.com/ruuvi";
-"About.OpenSource.header" = "AVOIN LÄHDEKOODI";
+"About.OpenSource.header" = "Avoin lähdekoodi";
 "About.OperationsManual.contents" = "Olemme suunnitelleet ohjelman ja laitteemme mahdollisimman helppokäyttöisiksi, mutta myös ohjeet ovat saatavilla osoitteessa ruuvi.com/fi/tuki";
-"About.OperationsManual.header" = "KÄYTTÖOHJE";
+"About.OperationsManual.header" = "Käyttöohje";
 "About.Privacy.contents" = "Sovelluksen käyttäminen vaatii Ruuvin käyttöehtojen hyväksymisen: ruuvi.com/terms";
-"About.Privacy.header" = "TIETOSUOJAKÄYTÄNTÖ";
+"About.Privacy.header" = "Tietosuojakäytäntö";
 "About.TagsCount.text" = "Havaitut anturit: %d";
 "About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset: ruuvi.com/fi/tuki";
-"About.Troubleshooting.header" = "VIANETSINTÄ";
+"About.Troubleshooting.header" = "Vianetsintä";
 "Interval.Hour.string" = "tuntia";
 "Interval.Days.string" = "päivää";
 "TagSettings.AirHumidityAlert.title" = "Ilmankosteus (%@)";
@@ -284,7 +288,7 @@
 "Menu.Label.BuyRuuviGateway.text" = "Osta Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Lähetä palautetta";
 "min" = "min";
-"TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
+"TagSettings.Label.moreInfo.text" = "Lisätietoa";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "No" = "Ei";
 "OK" = "OK";
@@ -315,7 +319,7 @@
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.ChooseTemperatureUnit.text" = "Valitse sovelluksessa käytettävä lämpötilayksikkö";
 "dBm" = "dBm";
-"TagCharts.Sync.title" = "SYNKRONOI";
+"TagCharts.Sync.title" = "Synkronoi";
 "TagCharts.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
 "WebTagSettings.Label.TagName.text" = "Anturin nimi";
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";

@@ -28,6 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Visa uppdateringsinstruktioner";
 "Cards.Connected.title" = "Ansluten";
 "Cards.Error.ReverseGeocodingFailed.message" = "Det gick inte att ladda data för Virtual Sensor. Gränsen för geokodöverföring överskriden.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
 "CoreError.failedToGetPngRepresentation" = "Det gick inte att få PNG-representation";
 "CoreError.failedToGetDocumentsDirectory" = "Det gick inte att hämta bakgrundskatalog";
 "CoreError.failedToGetCurrentLocation" = "Det gick inte att få aktuell plats";
@@ -120,6 +121,9 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
 "Settings.SectionHeader.Application.title" = "APPLIKATION";
 "Settings.Label.Language.text" = "Språk";
+"Settings.Language.Dialog.title" = "Välj språk";
+"Settings.Language.Dialog.message" = "Open settings and tap Language to change language of the app.
+If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
@@ -181,7 +185,7 @@
 "TagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
-"TagSettings.SectionHeader.Firmware.title" = "PROGRAMVARA";
+"TagSettings.SectionHeader.Firmware.title" = "Programvara";
 "TagSettings.Firmware.CurrentVersion" = "Nuvarande version";
 "TagSettings.Firmware.CurrentVersion.VeryOld" = "Väldigt gammal";
 "TagSettings.Firmware.UpdateFirmware" = "Uppdatera";
@@ -237,7 +241,7 @@
 "LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
 "TagSettings.Alerts.Off" = "Av";
 "TagSettings.Alerts.Temperature.description" = "Alarmera när mindre än %.0f eller mer än %.0f";
-"TagSettings.Label.alerts.text" = "ALARM";
+"TagSettings.Label.alerts.text" = "Alarm";
 "TagSettings.backgroundImageLabel.text" = "BAKGRUNDSBILD";
 "TagSettings.batteryVoltageTitleLabel.text" = "Batterispänning";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibrera";
@@ -255,20 +259,20 @@
 "TagCharts.Export.title" = "EXPORTERA";
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi State är en lättanvänt och kraftfullt program för Ruuvi sensorer. Sätt igång genom att lägga till sensorer.";
-"About.AboutHelp.header" = "OM / HJÄLP";
+"About.AboutHelp.header" = "Om / Hjälp";
 "About.MeasurementsCount.text" = "Sparade mätningar: %d";
 "About.DatabaseSize.text" = "Databasens storlek: %@";
 "About.More.contents" = "Ruuvis hemsida: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: ruuvi.com/blog\nRuuvi Twitter: twitter.com/ruuvicom";
-"About.More.header" = "LÄS MER";
+"About.More.header" = "Läs mer";
 "About.OpenSource.contents" = "Likt Ruuvi sensor är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
-"About.OpenSource.header" = "ÖPPEN KÄLLKOD";
+"About.OpenSource.header" = "Öppen källkod";
 "About.OperationsManual.contents" = "Vi har designat appen så att den ska vara självförklarande men det finns också heltäckande manualer för både Ruuvi sensorer och Ruuvi Station: ruuvi.com/support";
-"About.OperationsManual.header" = "BRUKSANVISNING";
+"About.OperationsManual.header" = "Bruksanvisning";
 "About.Privacy.contents" = "Användning av applikationen kräver godkännande av användarvillkoren\nruuvi.com/terms";
-"About.Privacy.header" = "INTEGRITETSPOLICY";
+"About.Privacy.header" = "Integritetspolicy";
 "About.TagsCount.text" = "Upptäckta sensorer: %d";
 "About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/support";
-"About.Troubleshooting.header" = "FELSÖKNING";
+"About.Troubleshooting.header" = "Felsökning";
 "Interval.Hour.string" = "Timmar";
 "Interval.Days.string" = "Dagar";
 "TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
@@ -284,7 +288,7 @@
 "Menu.Label.BuyRuuviGateway.text" = "Köp Ruuvi Gateway";
 "Menu.Label.Feedback.text" = "Skicka Feedback";
 "min" = "min";
-"TagSettings.Label.moreInfo.text" = "MER INFO";
+"TagSettings.Label.moreInfo.text" = "Mer info";
 "TagSettings.SectionHeader.Name.title" = "NAMN";
 "No" = "Nej";
 "OK" = "OK";
@@ -315,7 +319,7 @@
 "Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
 "Settings.ChooseTemperatureUnit.text" = "Välj den temperaturenhet som du vill ska visas";
 "dBm" = "dBm";
-"TagCharts.Sync.title" = "SYNK";
+"TagCharts.Sync.title" = "Synk";
 "TagCharts.SyncConfirmationDialog.message" = "Ladda ner historik-data från sensorn?";
 "WebTagSettings.Label.TagName.text" = "Sensornamn";
 "TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";

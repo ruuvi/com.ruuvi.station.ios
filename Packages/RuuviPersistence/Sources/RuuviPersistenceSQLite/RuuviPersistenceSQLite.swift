@@ -286,6 +286,43 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func readLastFromNetwork(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?,
+                                                                            RuuviPersistenceError> {
+        let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
+        readQueue.async { [weak self] in
+            do {
+                var sqliteRecord: Record?
+                try self?.database.dbPool.read { db in
+                    let request = Record.order(Record.dateColumn.desc)
+                        .filter(
+                            ((ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
+                            || (ruuviTag.macId?.value != nil && Record.macColumn == ruuviTag.macId?.value))
+                            && Record.sourceColumn == RuuviTagSensorRecordSource.ruuviNetwork.rawValue)
+                    sqliteRecord = try request.fetchOne(db)
+                }
+
+                if sqliteRecord == nil {
+                    try self?.database.dbPool.read { db in
+                        let request = Record.order(Record.dateColumn.desc)
+                            .filter(
+                                ((ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
+                                || (ruuviTag.macId?.value != nil && Record.macColumn == ruuviTag.macId?.value))
+                                && (Record.sourceColumn == RuuviTagSensorRecordSource.advertisement.rawValue ||
+                                Record.sourceColumn == RuuviTagSensorRecordSource.heartbeat.rawValue))
+                        sqliteRecord = try request.fetchOne(db)
+                    }
+                }
+
+                promise.succeed(value: sqliteRecord)
+
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
     public func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)

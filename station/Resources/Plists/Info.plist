@@ -24,7 +24,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>304</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
@@ -49,6 +49,10 @@
 	<string>Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Ruuvi Station needs to access your camera roll to enable selecting the background for the sensor.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>RuuviTagSelectionIntent</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Oswald-Bold.ttf</string>
