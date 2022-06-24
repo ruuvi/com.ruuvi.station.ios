@@ -15,6 +15,10 @@ public protocol RuuviPool {
     @discardableResult
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError>
     @discardableResult
+    func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError>
+    @discardableResult
+    func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError>
+    @discardableResult
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError>
     @discardableResult
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError>

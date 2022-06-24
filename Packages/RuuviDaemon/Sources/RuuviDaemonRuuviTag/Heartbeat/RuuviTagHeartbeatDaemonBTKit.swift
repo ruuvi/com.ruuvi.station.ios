@@ -9,7 +9,7 @@ import RuuviService
 import RuuviNotification
 import RuuviNotifier
 import RuuviDaemon
-
+// swiftlint:disable file_length
 public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHeartbeatDaemon {
     private let background: BTBackground
     private let localNotificationsManager: RuuviNotificationLocal
@@ -191,25 +191,21 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 )
                 if observer.settings.saveHeartbeats {
                     let uuid = ruuviTag.uuid
-                    // If the app is on foreground store all advertisements
+                    // If the app is on foreground store all heartbeats
                     // Otherwise respect the settings
                     guard let luid = ruuviTag.luid else { return }
                     // swiftlint:disable:next line_length
                     let interval = observer.settings.appIsOnForeground ? 2 : (observer.settings.saveHeartbeatsIntervalMinutes * 60)
                     if let date = observer.savedDate[uuid] {
                         if Date().timeIntervalSince(date) > TimeInterval(interval) {
-                            observer.ruuviPool.create(
-                                ruuviTag
-                                    .with(source: .heartbeat)
-                            )
-                            observer.savedDate[uuid] = Date()
+                            self.createRecords(observer: observer,
+                                               ruuviTag: ruuviTag,
+                                               uuid: uuid)
                         }
                     } else {
-                        observer.ruuviPool.create(
-                            ruuviTag
-                                .with(source: .heartbeat)
-                        )
-                        observer.savedDate[uuid] = Date()
+                        self.createRecords(observer: observer,
+                                           ruuviTag: ruuviTag,
+                                           uuid: uuid)
                     }
                 }
             }
@@ -235,6 +231,38 @@ extension RuuviTagHeartbeatDaemonBTKit {
             case .failure(let error):
                 observer.post(error: .btkit(error))
             }
+        }
+    }
+
+    private func createRecords(observer: RuuviTagHeartbeatDaemonBTKit,
+                               ruuviTag: RuuviTag,
+                               uuid: String) {
+        self.createRecord(observer: observer, ruuviTag: ruuviTag)
+        self.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
+        observer.savedDate[uuid] = Date()
+    }
+
+    private func createRecord(observer: RuuviTagHeartbeatDaemonBTKit,
+                              ruuviTag: RuuviTag) {
+        observer.ruuviPool.create(
+            ruuviTag
+                .with(source: .heartbeat)
+        )
+    }
+
+    private func createLastRecord(observer: RuuviTagHeartbeatDaemonBTKit,
+                                  ruuviTag: RuuviTag,
+                                  uuid: String) {
+        if let tag = ruuviTags.first(where: { $0.luid?.value == uuid }) {
+            ruuviStorage.readLatest(tag).on(success: { localRecord in
+                let record = ruuviTag.with(source: .heartbeat)
+                if let localRecord = localRecord,
+                   record.macId?.value == localRecord.macId?.value {
+                    observer.ruuviPool.updateLast(record)
+                } else {
+                    observer.ruuviPool.createLast(record)
+                }
+            })
         }
     }
 }

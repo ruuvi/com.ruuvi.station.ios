@@ -46,6 +46,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var ruuviUser: RuuviUser!
     var featureToggleService: FeatureToggleService!
+    var cloudSyncDaemon: RuuviDaemonCloudSync!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
@@ -77,6 +78,7 @@ class CardsPresenter: CardsModuleInput {
     private var languageToken: NSObjectProtocol?
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var widgetDeepLinkToken: NSObjectProtocol?
+    private var networkSyncNotificationToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -143,6 +145,7 @@ extension CardsPresenter: CardsViewOutput {
         startListeningToSettings()
         startObservingWidgetDeepLink()
         handleCloudModeState()
+        observeNetworkSyncFinishState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -397,8 +400,8 @@ extension CardsPresenter {
                 })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-            } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
+            } else if ruuviTag.macId != nil {
+                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus()
                 viewModel.isConnected.value = false
             } else {
                 assertionFailure()
@@ -409,8 +412,7 @@ extension CardsPresenter {
                 .lowerRelativeHumidity(for: ruuviTag)
             viewModel.rhAlertUpperBound.value = alertService
                 .upperRelativeHumidity(for: ruuviTag)
-            // swiftlint:disable:next line_length
-            let op = (settings.cloudModeEnabled && ruuviTag.isCloud) ? ruuviStorage.readLastFromNetwork(ruuviTag) : (ruuviTag.isOwner ? ruuviStorage.readLast(ruuviTag) : ruuviStorage.readLastFromNetwork(ruuviTag))
+            let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
@@ -607,40 +609,8 @@ extension CardsPresenter {
     }
 
     private func restartObservingRuuviTagLastRecord(for sensor: AnyRuuviTagSensor) {
-        if settings.cloudModeEnabled && sensor.isCloud {
-            // Pull last record from network if cloud mode is on
-            restartObservingLastRecordFromNetwork(for: sensor)
-        } else {
-            // Pull last record from all records
-            restartObservingRuuviTagLastRecordFromAll(for: sensor)
-        }
-    }
-
-    private func restartObservingLastRecordFromNetwork(for sensor: RuuviTagSensor) {
-        ruuviTagObserveLastRecordToken?.invalidate()
-        ruuviTagObserveLastRecordToken = ruuviReactor.observeLastFromNetwork(sensor) { [weak self] (changes) in
-            if case .update(let anyRecord) = changes,
-               let viewModel = self?.viewModels
-                .first(where: {
-                    ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
-                    || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
-                }),
-               let record = anyRecord {
-                let sensorSettings = self?.sensorSettingsList
-                    .first(where: {
-                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
-                    })
-                let sensorRecord = record.with(sensorSettings: sensorSettings)
-                viewModel.update(sensorRecord)
-
-                self?.processAlert(record: sensorRecord, viewModel: viewModel)
-            }
-        }
-    }
-    private func restartObservingRuuviTagLastRecordFromAll(for sensor: RuuviTagSensor) {
         ruuviTagObserveLastRecordToken = nil
-        ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
+        ruuviTagObserveLastRecordToken = ruuviReactor.observeLatest(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                let viewModel = self?.viewModels
                 .first(where: {
@@ -660,6 +630,7 @@ extension CardsPresenter {
             }
         }
     }
+
     private func restartObservingVirtualSensorsData() {
         virtualSensorsDataTokens.forEach({ $0.invalidate() })
         virtualSensorsDataTokens.removeAll()
@@ -1078,19 +1049,23 @@ extension CardsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                // Do something here
                 self?.handleCloudModeState()
             })
     }
 
+    /// The method handles all the operations when cloud mode toggle is turned on/off
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
         // Stop listening to advertisements and heartbeats
         observeRuuviTags()
-        // Update viewmodel data source to ruuvi network from heartbeats/advertisements
+        // Sync with cloud if cloud mode is turned on
+        if settings.cloudModeEnabled {
+            cloudSyncDaemon.refreshImmediately()
+        }
+
         syncViewModels()
-        //
+        // Restart observing last data point for the visible card
         if view.currentPage < ruuviTags.count {
             let tag = ruuviTags[view.currentPage]
             restartObservingRuuviTagLastRecord(for: tag)
@@ -1104,16 +1079,24 @@ extension CardsPresenter {
             connectionPersistence.setKeepConnection(false, for: luid)
         }
     }
+
+    private func observeNetworkSyncFinishState() {
+        networkSyncNotificationToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidFinish,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] notification in
+                guard let sensors = notification
+                    .userInfo?[NetworkSyncStatusKey.sensors] as? [RuuviCloudSensorDense] else {
+                    return
+                }
+                self?.updateViewModels(with: sensors)
+            })
+    }
     
-    private func updateViewModelsSource() {
-        let vms = viewModels
-        guard settings.cloudModeEnabled else { return }
-        vms.indices.forEach {
-            if vms[$0].luid.value != nil && vms[$0].isCloud.value.bound {
-                vms[$0].source.value = .ruuviNetwork
-            }
-        }
-        viewModels = vms
+    private func updateViewModels(with sensors: [RuuviCloudSensorDense]) {
+
     }
     
     private func startListeningToSettings() {

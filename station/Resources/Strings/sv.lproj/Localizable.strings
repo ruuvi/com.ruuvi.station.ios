@@ -242,7 +242,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Alerts.Off" = "Av";
 "TagSettings.Alerts.Temperature.description" = "Alarmera när mindre än %.0f eller mer än %.0f";
 "TagSettings.Label.alerts.text" = "Alarm";
-"TagSettings.backgroundImageLabel.text" = "BAKGRUNDSBILD";
+"TagSettings.backgroundImageLabel.text" = "Bakgrundsbild";
 "TagSettings.batteryVoltageTitleLabel.text" = "Batterispänning";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibrera";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibrerad: %@";

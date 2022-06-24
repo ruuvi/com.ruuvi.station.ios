@@ -147,6 +147,54 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
+    public func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        assert(record.macId == nil)
+        context.bgWorker.enqueue {
+            do {
+                if let ruuviTag = self.context.bg.object(
+                    ofType: RuuviTagRealm.self,
+                    forPrimaryKey: record.luid?.value ?? record.id
+                ) {
+                    let data = RuuviTagLatestDataRealm(ruuviTag: ruuviTag, record: record)
+                    try self.context.bg.write {
+                        self.context.bg.add(data, update: .all)
+                    }
+                    promise.succeed(value: true)
+                } else {
+                    promise.fail(error: .failedToFindRuuviTag)
+                }
+            } catch {
+                promise.fail(error: .realm(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        context.bgWorker.enqueue {
+            do {
+                if let ruuviTag = self.context.bg.object(
+                    ofType: RuuviTagRealm.self,
+                    forPrimaryKey: record.luid?.value ?? record.id
+                ) {
+                    let data = RuuviTagLatestDataRealm(ruuviTag: ruuviTag, record: record)
+                    try self.context.bg.write {
+                        self.context.bg.add(data, update: .modified)
+                    }
+                    promise.succeed(value: true)
+                } else {
+                    promise.fail(error: .failedToFindRuuviTag)
+                }
+            } catch {
+                self.reportToCrashlytics(error: error)
+                promise.fail(error: .realm(error))
+            }
+        }
+        return promise.future
+    }
+
     public func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         context.bgWorker.enqueue {
@@ -427,6 +475,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
+
     public func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
         let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
@@ -451,8 +500,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    public func readLastFromNetwork(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?,
-                                                                            RuuviPersistenceError> {
+    public func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
         let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
             let luid = ruuviTag.luid else {
@@ -460,8 +508,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             return promise.future
         }
         context.bgWorker.enqueue {
-            if let lastRecord = self.context.bg.objects(RuuviTagDataRealm.self)
-                .filter("ruuviTag.uuid == %@ AND ruuviTag.source == ruuviNetwork", luid.value)
+            if let lastRecord = self.context.bg.objects(RuuviTagLatestDataRealm.self)
+                .filter("ruuviTag.uuid == %@", luid.value)
                 .sorted(byKeyPath: "date", ascending: false)
                 .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
@@ -484,6 +532,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
+
     public func getStoredMeasurementsCount() -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
         context.bgWorker.enqueue {
@@ -623,6 +672,30 @@ extension RuuviPersistenceRealm {
         #endif
     }
     private func constructRecordStruct(from lastRecord: RuuviTagDataRealm,
+                                       luid: LocalIdentifier,
+                                       sequenceNumber: Int?) -> RuuviTagSensorRecordStruct {
+        let lastRecordResult = RuuviTagSensorRecordStruct(
+            luid: luid,
+            date: lastRecord.date,
+            source: lastRecord.source,
+            macId: nil,
+            rssi: lastRecord.rssi.value,
+            temperature: lastRecord.unitTemperature,
+            humidity: lastRecord.unitHumidity,
+            pressure: lastRecord.unitPressure,
+            acceleration: lastRecord.acceleration,
+            voltage: lastRecord.unitVoltage,
+            movementCounter: lastRecord.movementCounter.value,
+            measurementSequenceNumber: sequenceNumber,
+            txPower: lastRecord.txPower.value,
+            temperatureOffset: lastRecord.temperatureOffset,
+            humidityOffset: lastRecord.humidityOffset,
+            pressureOffset: lastRecord.pressureOffset
+        )
+        return lastRecordResult
+    }
+
+    private func constructRecordStruct(from lastRecord: RuuviTagLatestDataRealm,
                                        luid: LocalIdentifier,
                                        sequenceNumber: Int?) -> RuuviTagSensorRecordStruct {
         let lastRecordResult = RuuviTagSensorRecordStruct(

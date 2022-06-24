@@ -136,6 +136,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
+        syncLast()
         let sensors = syncSensors()
         let settings = syncSettings()
         let alerts = syncAlerts()
@@ -347,5 +348,49 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         }
         syncRecordsQueue.addOperation(operation)
         return promise.future
+    }
+
+    private func syncLast() {
+        ruuviLocalSyncState.setSyncStatus(.syncing)
+        ruuviCloud.loadSensorsDense(for: nil,
+                                         measurements: true,
+                                         sharedToOthers: nil,
+                                         sharedToMe: true,
+                                    alerts: nil).on(success: { [weak self] sensors in
+            self?.post(sensors: sensors)
+            for sensor in sensors {
+                self?.ruuviStorage.readLatest(sensor.sensor.ruuviTagSensor).on(success: { localRecord in
+                    if let cloudRecord = sensor.record,
+                        let localRecord = localRecord,
+                       cloudRecord.macId?.value == localRecord.macId?.value {
+                        self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
+                            self?.ruuviLocalSyncState.setSyncStatus(.complete)
+                        }, failure: { _ in
+                            self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                        })
+                    } else {
+                        if let cloudRecord = sensor.record {
+                            self?.ruuviPool.createLast(cloudRecord).on(success: { _ in
+                                self?.ruuviLocalSyncState.setSyncStatus(.complete)
+                            }, failure: { _ in
+                                self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                            })
+                        }
+                    }
+                }, failure: { _ in
+                    self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                })
+            }
+        })
+    }
+
+    private func post(sensors: [RuuviCloudSensorDense]) {
+        DispatchQueue.main.async {
+            NotificationCenter
+                .default
+                .post(name: .NetworkSyncDidFinish, object: nil, userInfo: [
+                    NetworkSyncStatusKey.sensors: sensors
+                ])
+        }
     }
 }

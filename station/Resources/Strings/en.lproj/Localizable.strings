@@ -242,7 +242,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Alerts.Off" = "Off";
 "TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Label.alerts.text" = "Alerts";
-"TagSettings.backgroundImageLabel.text" = "BACKGROUND\nIMAGE";
+"TagSettings.backgroundImageLabel.text" = "Background\nimage";
 "TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";
 "HumidityCalibration.Button.Calibrate.title" = "Calibrate";
 "HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";

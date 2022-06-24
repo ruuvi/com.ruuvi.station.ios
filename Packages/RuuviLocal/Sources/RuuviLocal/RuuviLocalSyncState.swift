@@ -11,16 +11,18 @@ public enum NetworkSyncStatus: Int {
 public enum NetworkSyncStatusKey: String {
     case mac
     case status
+    case sensors
 }
 
 extension Notification.Name {
     public static let NetworkSyncDidChangeStatus = Notification.Name("NetworkPersistence.DidChangeStatus")
+    public static let NetworkSyncDidFinish = Notification.Name("NetworkPersistence.SyncDidFinish")
     public static let NetworkSyncDidChangeCommonStatus = Notification.Name("NetworkPersistence.DidChangeCommonStatus")
 }
 
 public protocol RuuviLocalSyncState {
-    func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier)
-    func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus
+    func setSyncStatus(_ status: NetworkSyncStatus)
+    func getSyncStatus() -> NetworkSyncStatus
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?)
     func getSyncDate(for macId: MACIdentifier?) -> Date?
     func setGattSyncDate(_ date: Date?, for macId: MACIdentifier?)

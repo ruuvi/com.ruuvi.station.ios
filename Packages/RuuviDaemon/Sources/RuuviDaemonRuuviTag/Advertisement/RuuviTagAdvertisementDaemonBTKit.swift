@@ -218,11 +218,12 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
-        let sensorSettings = self.sensorSettingsList
-            .first(where: {
-                    ($0.luid?.any != nil && $0.luid?.any == record.luid?.any)
-                        || ($0.macId?.any != nil && $0.macId?.any == record.macId?.any)
-            })
+        createRecord(with: record, uuid: uuid)
+        createLatestRecord(with: record, uuid: uuid)
+        savedDate[uuid] = Date()
+    }
+
+    private func createRecord(with record: RuuviTag, uuid: String) {
         ruuviPool.create(
             record
                 .with(source: .advertisement)
@@ -238,6 +239,19 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
             }
             self?.post(error: .ruuviPool(error))
         })
-        savedDate[uuid] = Date()
+    }
+
+    private func createLatestRecord(with record: RuuviTag, uuid: String) {
+        if let ruuviTag = ruuviTags.first(where: { $0.luid?.value == uuid }) {
+            ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
+                let record = record.with(source: .advertisement)
+                if let localRecord = localRecord,
+                   record.macId?.value == localRecord.macId?.value {
+                    self?.ruuviPool.updateLast(record)
+                } else {
+                    self?.ruuviPool.createLast(record)
+                }
+            })
+        }
     }
 }
