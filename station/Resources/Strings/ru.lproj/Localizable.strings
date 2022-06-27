@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
 "Defaults.Interval.Hour.string" = "ч";
 "Defaults.ChartDurationHours.title" = "Размер Графиков";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Количество запусков приложения, чтобы запросить обзор в первый раз";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Запросить отзыв, если запуск приложения делится на";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";

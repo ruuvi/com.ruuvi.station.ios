@@ -47,6 +47,8 @@ public protocol RuuviLocalSettings {
     var useSimpleWidget: Bool { get set }
     var appIsOnForeground: Bool { get set }
     var appOpenedCount: Int { get set }
+    var appOpenedInitialCountToAskReview: Int { get set }
+    var appOpenedCountDivisibleToAskReview: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

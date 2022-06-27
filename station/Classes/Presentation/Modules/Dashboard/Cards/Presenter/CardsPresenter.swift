@@ -1137,10 +1137,6 @@ extension CardsPresenter {
     }
 
     fileprivate func askAppStoreReview(with sensorsCount: Int) {
-        guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,
-              bundleName != "station_dev" else {
-            return
-        }
         guard let dayDifference = Calendar.current.dateComponents([.day],
                                                                from: FileManager().appInstalledDate,
                                                                to: Date()).day, dayDifference > 7,

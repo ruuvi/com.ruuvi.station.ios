@@ -306,4 +306,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.appOpenedCount", defaultValue: 0)
     var appOpenedCount: Int
+
+    /// If app launch count is hit to this value for the first time, ask for review
+    @UserDefault("SettingsUserDefaults.appOpenedInitialCountToAskReview", defaultValue: 50)
+    var appOpenedInitialCountToAskReview: Int
+
+    /// App launch count is divisible by this, ask for review
+    @UserDefault("SettingsUserDefaults.appOpenedCountDivisibleToAskReview", defaultValue: 100)
+    var appOpenedCountDivisibleToAskReview: Int
 }

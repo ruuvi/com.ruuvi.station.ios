@@ -13,4 +13,5 @@ enum DefaultsIntegerUnit {
     case hours
     case minutes
     case seconds
+    case decimal
 }

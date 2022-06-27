@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Poistojen tuntisiirtymä";
 "Defaults.Interval.Hour.string" = "t";
 "Defaults.ChartDurationHours.title" = "Historian kesto";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Sovelluksen käynnistyskerrat, kun pyydetään tarkistusta ensimmäistä kertaa";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Pyydä tarkistusta, onko sovelluksen käynnistys jaettavissa";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
