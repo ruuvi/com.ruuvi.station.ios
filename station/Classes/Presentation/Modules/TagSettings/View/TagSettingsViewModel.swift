@@ -107,6 +107,7 @@ struct TagSettingsViewModel {
         measurementSequenceNumber.value = record.measurementSequenceNumber
         txPower.value = record.txPower
         source.value = record.source
+        rssi.value = record.rssi
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
         batteryNeedsReplacement.value = batteryStatusProvider.batteryNeedsReplacement(temperature: record.temperature,
                                                                           voltage: record.voltage)

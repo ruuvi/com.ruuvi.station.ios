@@ -24,6 +24,14 @@ public protocol RuuviCloud {
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult
+    func loadSensorsDense(for sensor: RuuviTagSensor?,
+                          measurements: Bool?,
+                          sharedToOthers: Bool?,
+                          sharedToMe: Bool?,
+                          alerts: Bool?
+    ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
+
+    @discardableResult
     func loadRecords(
         macId: MACIdentifier,
         since: Date,

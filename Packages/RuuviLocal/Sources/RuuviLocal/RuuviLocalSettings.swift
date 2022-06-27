@@ -14,6 +14,7 @@ extension Notification.Name {
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
+    public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
 }
 
 public protocol RuuviLocalSettings {

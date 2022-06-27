@@ -242,7 +242,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "TagSettings.Alerts.Off" = "Pois käytöstä";
 "TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle %.0f tai yli %.0f";
 "TagSettings.Label.alerts.text" = "Hälytykset";
-"TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
+"TagSettings.backgroundImageLabel.text" = "Taustakuva";
 "TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibroi";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibroitu: %@";
