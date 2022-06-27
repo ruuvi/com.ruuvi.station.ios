@@ -30,22 +30,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
     }
 
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String) {
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String?) {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
-    }
-
-    func removeFirmwareVersion(for luid: LocalIdentifier) {
-        UserDefaults.standard.removeObject(forKey: firmwareVersionPrefix + luid.value)
-    }
-
-    // Store Chart Foreground State
-    private let chartOnForegroundPrefix = "SettingsUserDefaults.chartOnForeground"
-    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool {
-        return UserDefaults.standard.value(forKey: chartOnForegroundPrefix + luid.value) as? Bool ?? false
-    }
-
-    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool) {
-        UserDefaults.standard.set(value, forKey: chartOnForegroundPrefix + luid.value)
     }
 
     var language: Language {
@@ -314,4 +300,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.useSimpleWidget", defaultValue: true)
     var useSimpleWidget: Bool
+
+    @UserDefault("SettingsUserDefaults.appIsOnForeground", defaultValue: false)
+    var appIsOnForeground: Bool
+
+    @UserDefault("SettingsUserDefaults.appOpenedCount", defaultValue: 0)
+    var appOpenedCount: Int
+
+    /// If app launch count is hit to this value for the first time, ask for review
+    @UserDefault("SettingsUserDefaults.appOpenedInitialCountToAskReview", defaultValue: 50)
+    var appOpenedInitialCountToAskReview: Int
+
+    /// App launch count is divisible by this, ask for review
+    @UserDefault("SettingsUserDefaults.appOpenedCountDivisibleToAskReview", defaultValue: 100)
+    var appOpenedCountDivisibleToAskReview: Int
 }

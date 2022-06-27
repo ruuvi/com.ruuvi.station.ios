@@ -16,7 +16,7 @@ public protocol RuuviReactor {
         _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
     ) -> RuuviReactorToken
 
-    func observeLastFromNetwork(
+    func observeLatest(
         _ ruuviTag: RuuviTagSensor,
         _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
     ) -> RuuviReactorToken

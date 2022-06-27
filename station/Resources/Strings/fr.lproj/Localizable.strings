@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Décalage";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Durée de l'historique";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Nombre de lancements d'applications pour demander un examen pour la première fois";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Demander un avis si le lancement de l'application est divisible par";
 "DiscoverTable.SectionTitle.WebTags" = "Capteurs virtuels";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth désactivé";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station a besoin du Bluetooth pour fonctionner. Activez-le dans les paramètres de votre appareil.";
@@ -242,7 +244,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Alerts.Off" = "Désactivé";
 "TagSettings.Alerts.Temperature.description" = "Notifier si la valeur est inférieure à %.0f ou supérieure à %.0f";
 "TagSettings.Label.alerts.text" = "Notifications";
-"TagSettings.backgroundImageLabel.text" = "FOND D'ÉCRAN";
+"TagSettings.backgroundImageLabel.text" = "Fond d'écran";
 "TagSettings.batteryVoltageTitleLabel.text" = "Tension de la pile";
 "HumidityCalibration.Button.Calibrate.title" = "Calibrer";
 "HumidityCalibration.lastCalibrationDate.format" = "Calibré : %@";
@@ -512,6 +514,8 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Connection.description" = "Impossible de se connecter au capteur tant que le statut du cloud est actif. Vous pouvez modifier le statut dans les paramètres de l'application.";
 "Widgets.Loading.message" = "Chargement...";
 "Cards.Movements.title" = "mouvements";
+"TagSettings.BatteryStatusLabel.Replace.message" = "Replace battery!";
+"TagSettings.BatteryStatusLabel.Ok.message" = "Battery OK";
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from Ruuvi Cloud. Ruuvi Gateway router is required.";
 "Widgets.Unauthorized.message" = "Sign in to use the widget.";
 "Widgets.Unconfigured.message" = "Force tap to edit the widget.";

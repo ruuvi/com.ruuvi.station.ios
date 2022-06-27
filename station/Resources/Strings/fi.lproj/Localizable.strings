@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Poistojen tuntisiirtymä";
 "Defaults.Interval.Hour.string" = "t";
 "Defaults.ChartDurationHours.title" = "Historian kesto";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Sovelluksen käynnistyskerrat, kun pyydetään tarkistusta ensimmäistä kertaa";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Pyydä tarkistusta, onko sovelluksen käynnistys jaettavissa";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
@@ -242,7 +244,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "TagSettings.Alerts.Off" = "Pois käytöstä";
 "TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle %.0f tai yli %.0f";
 "TagSettings.Label.alerts.text" = "Hälytykset";
-"TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
+"TagSettings.backgroundImageLabel.text" = "Taustakuva";
 "TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibroi";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibroitu: %@";
@@ -512,6 +514,8 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Connection.description" = "Anturiin ei voida yhdistää Bluetoothilla sovelluksen pilvitilan ollessa aktiivinen. Voit ottaa pilvianturiesi Bluetoothin takaisin käyttöön sammuttamalla pilvitilan sovelluksen asetussivulta.";
 "Widgets.Loading.message" = "ladataan...";
 "Cards.Movements.title" = "liikettä";
+"TagSettings.BatteryStatusLabel.Replace.message" = "Vaihda paristo!";
+"TagSettings.BatteryStatusLabel.Ok.message" = "Paristo OK";
 "Widgets.Description.message" = "Luo widgettejä Ruuvi-antureistasi. Widgetit päivittyvät Ruuvin pilvipalvelun kautta ja vaativat toimiakseen Ruuvi Gateway -reitittimen.";
 "Widgets.Unauthorized.message" = "Kirjaudu sisään käyttääksesi widgettiä.";
 "Widgets.Unconfigured.message" = "Paina pitkään muokataksesi widgettiä.";

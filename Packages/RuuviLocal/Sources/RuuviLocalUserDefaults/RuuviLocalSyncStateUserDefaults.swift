@@ -8,13 +8,12 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let gattSyncDatePrefix = "RuuviLocalSyncStateUserDefaults.gattSyncDate."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
-    func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier) {
-        UserDefaults.standard.set(status.rawValue, forKey: syncStatusPrefix + macId.mac)
+    func setSyncStatus(_ status: NetworkSyncStatus) {
+        UserDefaults.standard.set(status.rawValue, forKey: syncStatusPrefix)
         DispatchQueue.main.async {
             NotificationCenter
                 .default
                 .post(name: .NetworkSyncDidChangeStatus, object: nil, userInfo: [
-                    NetworkSyncStatusKey.mac: macId,
                     NetworkSyncStatusKey.status: status
                 ])
         }
@@ -22,27 +21,21 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
         case .complete, .onError:
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1),
                                           execute: { [weak self] in
-                self?.setSyncStatus(.none, for: macId)
+                self?.setSyncStatus(.none)
             })
         case .syncing:
             DispatchQueue.main.async { [weak self] in
-                if self?.syncingEnqueue.isEmpty ?? false {
-                    self?.syncStatus = .syncing
-                }
-                self?.syncingEnqueue.append(macId.any)
+                self?.syncStatus = .syncing
             }
         case .none:
             DispatchQueue.main.async { [weak self] in
-                self?.syncingEnqueue.removeAll(where: {$0 == macId.any})
-                if self?.syncingEnqueue.isEmpty ?? false {
-                    self?.syncStatus = .none
-                }
+                self?.syncStatus = .none
             }
         }
     }
 
-    func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus {
-        let value = UserDefaults.standard.integer(forKey: syncStatusPrefix + macId.mac)
+    func getSyncStatus() -> NetworkSyncStatus {
+        let value = UserDefaults.standard.integer(forKey: syncStatusPrefix)
         return NetworkSyncStatus(rawValue: value) ?? .none
     }
 

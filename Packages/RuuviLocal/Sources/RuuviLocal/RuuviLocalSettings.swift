@@ -14,6 +14,7 @@ extension Notification.Name {
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
+    public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
 }
 
 public protocol RuuviLocalSettings {
@@ -44,6 +45,10 @@ public protocol RuuviLocalSettings {
     var experimentalFeaturesEnabled: Bool { get set }
     var cloudModeEnabled: Bool { get set }
     var useSimpleWidget: Bool { get set }
+    var appIsOnForeground: Bool { get set }
+    var appOpenedCount: Int { get set }
+    var appOpenedInitialCountToAskReview: Int { get set }
+    var appOpenedCountDivisibleToAskReview: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
@@ -52,9 +57,5 @@ public protocol RuuviLocalSettings {
     func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
 
     func firmwareVersion(for luid: LocalIdentifier) -> String?
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String)
-    func removeFirmwareVersion(for luid: LocalIdentifier)
-
-    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool
-    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool)
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String?)
 }

@@ -19,8 +19,8 @@ extension Notification.Name {
 }
 
 public protocol RuuviLocalSyncState {
-    func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier)
-    func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus
+    func setSyncStatus(_ status: NetworkSyncStatus)
+    func getSyncStatus() -> NetworkSyncStatus
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?)
     func getSyncDate(for macId: MACIdentifier?) -> Date?
     func setGattSyncDate(_ date: Date?, for macId: MACIdentifier?)

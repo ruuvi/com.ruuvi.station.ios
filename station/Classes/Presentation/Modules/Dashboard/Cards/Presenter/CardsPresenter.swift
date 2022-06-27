@@ -46,6 +46,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var ruuviUser: RuuviUser!
     var featureToggleService: FeatureToggleService!
+    var cloudSyncDaemon: RuuviDaemonCloudSync!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
@@ -77,6 +78,7 @@ class CardsPresenter: CardsModuleInput {
     private var languageToken: NSObjectProtocol?
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var widgetDeepLinkToken: NSObjectProtocol?
+    private var calibrationSettingsToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -125,6 +127,7 @@ class CardsPresenter: CardsModuleInput {
         languageToken?.invalidate()
         systemLanguageChangeToken?.invalidate()
         widgetDeepLinkToken?.invalidate()
+        calibrationSettingsToken?.invalidate()
     }
 }
 
@@ -143,6 +146,7 @@ extension CardsPresenter: CardsViewOutput {
         startListeningToSettings()
         startObservingWidgetDeepLink()
         handleCloudModeState()
+        startObserveCalibrationSettingsChange()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -385,6 +389,7 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
+    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
@@ -396,8 +401,8 @@ extension CardsPresenter {
                 })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-            } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
+            } else if ruuviTag.macId != nil {
+                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus()
                 viewModel.isConnected.value = false
             } else {
                 assertionFailure()
@@ -408,8 +413,7 @@ extension CardsPresenter {
                 .lowerRelativeHumidity(for: ruuviTag)
             viewModel.rhAlertUpperBound.value = alertService
                 .upperRelativeHumidity(for: ruuviTag)
-            // swiftlint:disable:next line_length
-            let op = (settings.cloudModeEnabled && ruuviTag.isCloud) ? ruuviStorage.readLastFromNetwork(ruuviTag) : (ruuviTag.isOwner ? ruuviStorage.readLast(ruuviTag) : ruuviStorage.readLastFromNetwork(ruuviTag))
+            let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
@@ -436,6 +440,7 @@ extension CardsPresenter {
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags {
             self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
+            self.askAppStoreReview(with: viewModels.count)
         }
     }
 
@@ -605,40 +610,8 @@ extension CardsPresenter {
     }
 
     private func restartObservingRuuviTagLastRecord(for sensor: AnyRuuviTagSensor) {
-        if settings.cloudModeEnabled && sensor.isCloud {
-            // Pull last record from network if cloud mode is on
-            restartObservingLastRecordFromNetwork(for: sensor)
-        } else {
-            // Pull last record from all records
-            restartObservingRuuviTagLastRecordFromAll(for: sensor)
-        }
-    }
-
-    private func restartObservingLastRecordFromNetwork(for sensor: RuuviTagSensor) {
-        ruuviTagObserveLastRecordToken?.invalidate()
-        ruuviTagObserveLastRecordToken = ruuviReactor.observeLastFromNetwork(sensor) { [weak self] (changes) in
-            if case .update(let anyRecord) = changes,
-               let viewModel = self?.viewModels
-                .first(where: {
-                    ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
-                    || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
-                }),
-               let record = anyRecord {
-                let sensorSettings = self?.sensorSettingsList
-                    .first(where: {
-                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
-                    })
-                let sensorRecord = record.with(sensorSettings: sensorSettings)
-                viewModel.update(sensorRecord)
-
-                self?.processAlert(record: sensorRecord, viewModel: viewModel)
-            }
-        }
-    }
-    private func restartObservingRuuviTagLastRecordFromAll(for sensor: RuuviTagSensor) {
         ruuviTagObserveLastRecordToken = nil
-        ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
+        ruuviTagObserveLastRecordToken = ruuviReactor.observeLatest(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                let viewModel = self?.viewModels
                 .first(where: {
@@ -658,6 +631,7 @@ extension CardsPresenter {
             }
         }
     }
+
     private func restartObservingVirtualSensorsData() {
         virtualSensorsDataTokens.forEach({ $0.invalidate() })
         virtualSensorsDataTokens.removeAll()
@@ -1076,22 +1050,19 @@ extension CardsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                // Do something here
                 self?.handleCloudModeState()
             })
     }
 
+    /// The method handles all the operations when cloud mode toggle is turned on/off
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
         // Stop listening to advertisements and heartbeats
         observeRuuviTags()
-        // Update viewmodel data source to ruuvi network from heartbeats/advertisements
-        syncViewModels()
-        //
-        if view.currentPage < ruuviTags.count {
-            let tag = ruuviTags[view.currentPage]
-            restartObservingRuuviTagLastRecord(for: tag)
+        // Sync with cloud if cloud mode is turned on
+        if settings.cloudModeEnabled {
+            cloudSyncDaemon.refreshRecords(latestOnly: false)
         }
     }
 
@@ -1102,18 +1073,7 @@ extension CardsPresenter {
             connectionPersistence.setKeepConnection(false, for: luid)
         }
     }
-    
-    private func updateViewModelsSource() {
-        let vms = viewModels
-        guard settings.cloudModeEnabled else { return }
-        vms.indices.forEach {
-            if vms[$0].luid.value != nil && vms[$0].isCloud.value.bound {
-                vms[$0].source.value = .ruuviNetwork
-            }
-        }
-        viewModels = vms
-    }
-    
+
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default
@@ -1174,6 +1134,31 @@ extension CardsPresenter {
     
     @objc private func systemLocaleDidChange() {
         syncAppSettingsToAppGroupContainer()
+    }
+
+    fileprivate func askAppStoreReview(with sensorsCount: Int) {
+        guard let dayDifference = Calendar.current.dateComponents([.day],
+                                                               from: FileManager().appInstalledDate,
+                                                               to: Date()).day, dayDifference > 7,
+              sensorsCount > 0 else {
+            return
+        }
+        AppStoreReviewHelper.askForReview(settings: settings)
+    }
+
+    private func startObserveCalibrationSettingsChange() {
+        calibrationSettingsToken = NotificationCenter
+            .default
+            .addObserver(forName: .SensorCalibrationDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                if sSelf.view.currentPage < sSelf.ruuviTags.count {
+                    let tag = sSelf.ruuviTags[sSelf.view.currentPage]
+                    sSelf.restartObservingRuuviTagLastRecord(for: tag)
+                }
+            })
     }
 }
 // swiftlint:enable file_length trailing_whitespace

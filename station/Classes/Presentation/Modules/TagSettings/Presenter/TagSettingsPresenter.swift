@@ -208,7 +208,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             if let luid = sSelf.ruuviTag.luid {
                 sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
                 sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
-                sSelf.settings.removeFirmwareVersion(for: luid)
+                sSelf.settings.setFirmwareVersion(for: luid, value: nil)
             }
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
@@ -752,7 +752,7 @@ extension TagSettingsPresenter {
 
     private func startObservingRuuviTagSensor(ruuviTag: RuuviTagSensor) {
         ruuviTagSensorRecordToken?.invalidate()
-        ruuviTagSensorRecordToken = ruuviReactor.observeLast(ruuviTag, { [weak self] (changes) in
+        ruuviTagSensorRecordToken = ruuviReactor.observeLatest(ruuviTag, { [weak self] (changes) in
             switch changes {
             case .update(let record):
                 if let lastRecord = record {
@@ -1098,7 +1098,7 @@ extension TagSettingsPresenter {
             guard let strongSelf = self else {
                 return
             }
-            observer.ruuviStorage.readLast(strongSelf.ruuviTag).on(success: { record in
+            observer.ruuviStorage.readLatest(strongSelf.ruuviTag).on(success: { record in
                 let last = record?.movementCounter ?? 0
                 let type: AlertType = .movement(last: last)
                 let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
@@ -1335,7 +1335,7 @@ extension TagSettingsPresenter {
     }
 
     private func checkLastRecord() {
-        ruuviStorage.readLast(ruuviTag).on(success: { [weak self] record in
+        ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
             self?.lastMeasurement = record
         })
     }
