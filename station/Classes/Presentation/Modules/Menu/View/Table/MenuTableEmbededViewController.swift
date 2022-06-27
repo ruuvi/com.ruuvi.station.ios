@@ -2,7 +2,11 @@ import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
 
-    var viewModel: MenuViewModel?
+    var viewModel: MenuViewModel? {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     var output: MenuViewOutput!
     var isNetworkHidden: Bool = false
 

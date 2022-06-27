@@ -78,7 +78,6 @@ class CardsPresenter: CardsModuleInput {
     private var languageToken: NSObjectProtocol?
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var widgetDeepLinkToken: NSObjectProtocol?
-    private var networkSyncNotificationToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -145,7 +144,6 @@ extension CardsPresenter: CardsViewOutput {
         startListeningToSettings()
         startObservingWidgetDeepLink()
         handleCloudModeState()
-        observeNetworkSyncFinishState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -1061,14 +1059,7 @@ extension CardsPresenter {
         observeRuuviTags()
         // Sync with cloud if cloud mode is turned on
         if settings.cloudModeEnabled {
-            cloudSyncDaemon.refreshImmediately()
-        }
-
-        syncViewModels()
-        // Restart observing last data point for the visible card
-        if view.currentPage < ruuviTags.count {
-            let tag = ruuviTags[view.currentPage]
-            restartObservingRuuviTagLastRecord(for: tag)
+            cloudSyncDaemon.refreshRecords(latestOnly: false)
         }
     }
 
@@ -1080,25 +1071,6 @@ extension CardsPresenter {
         }
     }
 
-    private func observeNetworkSyncFinishState() {
-        networkSyncNotificationToken = NotificationCenter
-            .default
-            .addObserver(forName: .NetworkSyncDidFinish,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] notification in
-                guard let sensors = notification
-                    .userInfo?[NetworkSyncStatusKey.sensors] as? [RuuviCloudSensorDense] else {
-                    return
-                }
-                self?.updateViewModels(with: sensors)
-            })
-    }
-    
-    private func updateViewModels(with sensors: [RuuviCloudSensorDense]) {
-
-    }
-    
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default

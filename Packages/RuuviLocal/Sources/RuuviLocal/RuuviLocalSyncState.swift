@@ -11,12 +11,10 @@ public enum NetworkSyncStatus: Int {
 public enum NetworkSyncStatusKey: String {
     case mac
     case status
-    case sensors
 }
 
 extension Notification.Name {
     public static let NetworkSyncDidChangeStatus = Notification.Name("NetworkPersistence.DidChangeStatus")
-    public static let NetworkSyncDidFinish = Notification.Name("NetworkPersistence.SyncDidFinish")
     public static let NetworkSyncDidChangeCommonStatus = Notification.Name("NetworkPersistence.DidChangeCommonStatus")
 }
 

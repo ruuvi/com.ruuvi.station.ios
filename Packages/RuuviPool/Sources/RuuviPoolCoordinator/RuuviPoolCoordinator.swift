@@ -179,6 +179,18 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func deleteLast(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        let sqliteOperation = sqlite.deleteLatest(ruuviTagId)
+        let realmOpearion = realm.deleteLatest(ruuviTagId)
+        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         let sqliteRecords = records.filter({ $0.macId != nil })

@@ -338,6 +338,23 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func deleteLatest(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        do {
+            var deletedCount = 0
+            let request = RecordLatest
+                .filter(RecordLatest.luidColumn == ruuviTagId || RecordLatest.macColumn == ruuviTagId)
+            try database.dbPool.write { db in
+                deletedCount = try request.deleteAll(db)
+            }
+            promise.succeed(value: deletedCount > 0)
+        } catch {
+            reportToCrashlytics(error: error)
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
     public func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)

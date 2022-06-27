@@ -32,7 +32,9 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     private var savedDate = [String: Date]() // [luid: date]
     private var ruuviTagsToken: RuuviReactorToken?
     private var sensorSettingsTokens = [String: RuuviReactorToken]()
+    private var cloudModeOnToken: NSObjectProtocol?
 
+    // swiftlint:disable:next function_body_length
     public init(
         background: BTBackground,
         localNotificationsManager: RuuviNotificationLocal,
@@ -91,6 +93,14 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                                               modes: [RunLoop.Mode.default.rawValue])
                             }
                          })
+        cloudModeOnToken = NotificationCenter
+            .default
+            .addObserver(forName: .CloudModeDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.handleRuuviTagsChange()
+            }
     }
 
     deinit {
@@ -100,6 +110,9 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
         }
         if let connectionRemovedToken = connectionRemovedToken {
             NotificationCenter.default.removeObserver(connectionRemovedToken)
+        }
+        if let cloudModeOnToken = cloudModeOnToken {
+            NotificationCenter.default.removeObserver(cloudModeOnToken)
         }
     }
 
@@ -237,17 +250,19 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func createRecords(observer: RuuviTagHeartbeatDaemonBTKit,
                                ruuviTag: RuuviTag,
                                uuid: String) {
-        self.createRecord(observer: observer, ruuviTag: ruuviTag)
-        self.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
+        self.createRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
         observer.savedDate[uuid] = Date()
     }
 
     private func createRecord(observer: RuuviTagHeartbeatDaemonBTKit,
-                              ruuviTag: RuuviTag) {
+                              ruuviTag: RuuviTag,
+                              uuid: String) {
         observer.ruuviPool.create(
             ruuviTag
                 .with(source: .heartbeat)
-        )
+        ).on(success: { [weak self] _ in
+            self?.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
+        })
     }
 
     private func createLastRecord(observer: RuuviTagHeartbeatDaemonBTKit,

@@ -108,6 +108,7 @@ extension MenuPresenter {
             sSelf.authService.logout()
                 .on(success: { [weak sSelf] _ in
                     sSelf?.dismiss()
+                    sSelf?.syncViewModel()
                     sSelf?.reloadWidgets()
                 }, failure: { [weak sSelf] error in
                     sSelf?.errorPresenter.present(error: error)

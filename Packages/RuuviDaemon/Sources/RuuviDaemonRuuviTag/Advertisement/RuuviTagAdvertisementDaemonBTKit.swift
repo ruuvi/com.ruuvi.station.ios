@@ -22,6 +22,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var sensorSettingsList = [SensorSettings]()
     private var savedDate = [String: Date]() // uuid:date
     private var isOnToken: NSObjectProtocol?
+    private var cloudModeOnToken: NSObjectProtocol?
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
@@ -43,6 +44,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
         sensorSettingsTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.removeAll()
+        if let cloudModeOnToken = cloudModeOnToken {
+            NotificationCenter.default.removeObserver(cloudModeOnToken)
+        }
     }
 
     public init(
@@ -69,6 +73,15 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 } else {
                     sSelf.stop()
                 }
+            }
+
+        cloudModeOnToken = NotificationCenter
+            .default
+            .addObserver(forName: .CloudModeDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.restartObserving()
             }
     }
 
@@ -219,7 +232,6 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
         createRecord(with: record, uuid: uuid)
-        createLatestRecord(with: record, uuid: uuid)
         savedDate[uuid] = Date()
     }
 
@@ -227,7 +239,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         ruuviPool.create(
             record
                 .with(source: .advertisement)
-        ).on(failure: { [weak self] error in
+        ).on(success: { _ in
+            self.createLatestRecord(with: record, uuid: uuid)
+        }, failure: { [weak self] error in
             if case RuuviPoolError.ruuviPersistence(let persistenceError) = error {
                 switch persistenceError {
                 case .failedToFindRuuviTag:

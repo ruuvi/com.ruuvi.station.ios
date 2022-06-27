@@ -308,10 +308,11 @@ extension DiscoverPresenter {
                 if let tagLuid = tag.luid?.value,
                     let persistedTagLuid = persistedTag.luid?.value {
                     return tagLuid == persistedTagLuid
-                } else if let tagMacId = tag.mac, let persistedTagMacId = persistedTag.macId?.value {
+                } else if let tagMacId = tag.mac,
+                            let persistedTagMacId = persistedTag.macId?.value {
                     return tagMacId == persistedTagMacId
                 } else {
-                    return true
+                    return false
                 }
             })
         }).sorted(by: {
