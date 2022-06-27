@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Décalage";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Durée de l'historique";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Nombre de lancements d'applications pour demander un examen pour la première fois";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Demander un avis si le lancement de l'application est divisible par";
 "DiscoverTable.SectionTitle.WebTags" = "Capteurs virtuels";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth désactivé";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station a besoin du Bluetooth pour fonctionner. Activez-le dans les paramètres de votre appareil.";

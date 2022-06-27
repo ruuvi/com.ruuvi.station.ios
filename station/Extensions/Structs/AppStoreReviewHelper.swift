@@ -5,9 +5,9 @@ import RuuviLocal
 struct AppStoreReviewHelper {
     static func askForReview(settings: RuuviLocalSettings) {
         switch settings.appOpenedCount {
-        case 50:
+        case settings.appOpenedInitialCountToAskReview:
             SKStoreReviewController.requestReview()
-        case _ where settings.appOpenedCount%100 == 0:
+        case _ where settings.appOpenedCount%settings.appOpenedCountDivisibleToAskReview == 0:
             SKStoreReviewController.requestReview()
         default:
             break

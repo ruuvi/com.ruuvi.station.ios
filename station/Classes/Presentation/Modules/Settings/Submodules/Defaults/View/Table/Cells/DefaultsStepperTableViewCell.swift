@@ -23,8 +23,15 @@ class DefaultsStepperTableViewCell: UITableViewCell {
             unitString = "Defaults.Interval.Min.string".localized()
         case .seconds:
             unitString = "Defaults.Interval.Sec.string".localized()
+        case .decimal:
+            unitString = ""
         }
-        titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"
+        switch unit {
+        case .hours, .minutes, .seconds:
+            titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"
+        case .decimal:
+            titleLabel.text = prefix + " " + "(" + "\(result)" + ")"
+        }
         delegate?.defaultsStepper(cell: self, didChange: result)
     }
 }

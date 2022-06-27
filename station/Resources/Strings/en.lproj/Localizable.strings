@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Chart Duration";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "App launch count to ask for review for the first time";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Ask review if app launch divisible by";
 "DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs Bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";

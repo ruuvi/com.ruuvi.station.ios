@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Versatzstunden beschneiden";
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartDurationHours.title" = "Diagrammdauer";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Anzahl der App-Starts, um zum ersten Mal eine Überprüfung anzufordern";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Überprüfung fragen, ob App-Start teilbar durch";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuelle Sensoren";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ist nicht aktiviert";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Die Ruuvi Station benötigt Bluetooth, um die Sensoren zu verbinden. Gehen Sie zu Einstellungen und schalten Sie Bluetooth ein.";
