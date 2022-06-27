@@ -78,6 +78,7 @@ class CardsPresenter: CardsModuleInput {
     private var languageToken: NSObjectProtocol?
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var widgetDeepLinkToken: NSObjectProtocol?
+    private var calibrationSettingsToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             syncViewModels()
@@ -126,6 +127,7 @@ class CardsPresenter: CardsModuleInput {
         languageToken?.invalidate()
         systemLanguageChangeToken?.invalidate()
         widgetDeepLinkToken?.invalidate()
+        calibrationSettingsToken?.invalidate()
     }
 }
 
@@ -144,6 +146,7 @@ extension CardsPresenter: CardsViewOutput {
         startListeningToSettings()
         startObservingWidgetDeepLink()
         handleCloudModeState()
+        startObserveCalibrationSettingsChange()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -1145,6 +1148,21 @@ extension CardsPresenter {
             return
         }
         AppStoreReviewHelper.askForReview(settings: settings)
+    }
+
+    private func startObserveCalibrationSettingsChange() {
+        calibrationSettingsToken = NotificationCenter
+            .default
+            .addObserver(forName: .SensorCalibrationDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                if sSelf.view.currentPage < sSelf.ruuviTags.count {
+                    let tag = sSelf.ruuviTags[sSelf.view.currentPage]
+                    sSelf.restartObservingRuuviTagLastRecord(for: tag)
+                }
+            })
     }
 }
 // swiftlint:enable file_length trailing_whitespace

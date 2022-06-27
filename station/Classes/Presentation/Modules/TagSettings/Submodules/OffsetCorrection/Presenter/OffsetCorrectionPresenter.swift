@@ -118,6 +118,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
                         ruuviTagRecord: lastRecord.with(sensorSettings: settings)
                     )
                 }
+                self?.notifyCalibrationSettingsUpdate()
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
@@ -138,9 +139,16 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
                             .with(sensorSettings: sensorSettings)
                     )
                 }
+                self?.notifyCalibrationSettingsUpdate()
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
+    }
+
+    private func notifyCalibrationSettingsUpdate() {
+        NotificationCenter.default.post(name: .SensorCalibrationDidChange,
+                                         object: self,
+                                         userInfo: nil)
     }
 
     private func observeRuuviTagUpdate() {
