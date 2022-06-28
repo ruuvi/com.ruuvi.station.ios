@@ -87,6 +87,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var backgroundToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
     private var exportFileUrl: URL?
+    private var previousAdvertisementSequence: Int?
     private var lastMeasurement: RuuviTagSensorRecord? {
         didSet {
             syncOffsetCorrection()
@@ -776,15 +777,31 @@ extension TagSettingsPresenter {
         }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.sync(device: tag, source: .advertisement)
+                self?.handleMeasurementPoint(tag: tag, source: .advertisement)
             }
         })
 
         heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.sync(device: tag, source: .heartbeat)
+                self?.handleMeasurementPoint(tag: tag, source: .heartbeat)
             }
         })
+    }
+
+    private func handleMeasurementPoint(tag: RuuviTag, source: RuuviTagSensorRecordSource) {
+        // RuuviTag with data format 5 or above has the measurements sequence number
+        if tag.version >= 5 {
+            if previousAdvertisementSequence != nil {
+                if tag.measurementSequenceNumber != previousAdvertisementSequence {
+                    sync(device: tag, source: source)
+                    previousAdvertisementSequence = nil
+                }
+            } else {
+                previousAdvertisementSequence = tag.measurementSequenceNumber
+            }
+        } else {
+            sync(device: tag, source: source)
+        }
     }
 
     // swiftlint:disable:next function_body_length
