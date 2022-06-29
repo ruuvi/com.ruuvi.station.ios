@@ -8,20 +8,21 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let gattSyncDatePrefix = "RuuviLocalSyncStateUserDefaults.gattSyncDate."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
-    func setSyncStatus(_ status: NetworkSyncStatus) {
-        UserDefaults.standard.set(status.rawValue, forKey: syncStatusPrefix)
+    func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier) {
+        UserDefaults.standard.set(status.rawValue, forKey: syncStatusPrefix + macId.mac)
         DispatchQueue.main.async {
             NotificationCenter
                 .default
                 .post(name: .NetworkSyncDidChangeStatus, object: nil, userInfo: [
-                    NetworkSyncStatusKey.status: status
+                    NetworkSyncStatusKey.status: status,
+                    NetworkSyncStatusKey.mac: macId
                 ])
         }
         switch status {
         case .complete, .onError:
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1),
                                           execute: { [weak self] in
-                self?.setSyncStatus(.none)
+                self?.setSyncStatus(.none, for: macId)
             })
         case .syncing:
             DispatchQueue.main.async { [weak self] in
@@ -34,8 +35,8 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
         }
     }
 
-    func getSyncStatus() -> NetworkSyncStatus {
-        let value = UserDefaults.standard.integer(forKey: syncStatusPrefix)
+    func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus {
+        let value = UserDefaults.standard.integer(forKey: syncStatusPrefix + macId.mac)
         return NetworkSyncStatus(rawValue: value) ?? .none
     }
 

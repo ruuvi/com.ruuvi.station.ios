@@ -314,7 +314,7 @@ extension TagChartsInteractor {
         let op = ruuviStorage.read(
             ruuviTagSensor.id,
             after: date,
-            with: TimeInterval(settings.chartIntervalSeconds)
+            with: TimeInterval(2)
         )
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
