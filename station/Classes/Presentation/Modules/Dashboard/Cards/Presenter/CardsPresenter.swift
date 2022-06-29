@@ -401,8 +401,8 @@ extension CardsPresenter {
                 })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-            } else if ruuviTag.macId != nil {
-                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus()
+            } else if let macId = ruuviTag.macId {
+                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
             } else {
                 assertionFailure()

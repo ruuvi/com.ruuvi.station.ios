@@ -117,7 +117,6 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
-        startListeningToSettings()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
         startObservingDidConnectDisconnectNotifications()
@@ -127,6 +126,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewWillAppear() {
+        startListeningToSettings()
         startObservingBluetoothState()
         startListeningToAlertStatus()
         tryToShowSwipeUpHint()
@@ -459,6 +459,7 @@ extension TagChartsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
                 self?.restartObservingData()
+                self?.interactor.notifySettingsChanged()
             })
     }
 
