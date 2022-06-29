@@ -169,9 +169,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 promise.succeed(value: true)
             })
         } else {
-            let sensors = syncSensors()
+            let syncAll = syncAll()
             let latestRecords = syncLatestRecord()
-            sensors.on(success: { _ in
+            syncAll.on(success: { _ in
                 latestRecords.on(success: { _ in
                     promise.succeed(value: true)
                 })
@@ -351,7 +351,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     private func syncLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        ruuviLocalSyncState.setSyncStatus(.syncing)
+        ruuviStorage.readAll().on(success: { [weak self] localSensors in
+            for sensor in localSensors {
+                if let macId = sensor.macId, sensor.isCloud {
+                    self?.ruuviLocalSyncState.setSyncStatus(.syncing, for: macId)
+                }
+            }
+        })
         ruuviCloud.loadSensorsDense(for: nil,
                                          measurements: true,
                                          sharedToOthers: nil,
@@ -363,25 +369,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         let localRecord = localRecord,
                        cloudRecord.macId?.value == localRecord.macId?.value {
                         self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
-                            self?.ruuviLocalSyncState.setSyncStatus(.complete)
+                            self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
                             promise.succeed(value: true)
                         }, failure: { error in
-                            self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                            self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
                             promise.fail(error: .ruuviPool(error))
                         })
                     } else {
                         if let cloudRecord = sensor.record {
                             self?.ruuviPool.createLast(cloudRecord).on(success: { _ in
-                                self?.ruuviLocalSyncState.setSyncStatus(.complete)
+                                self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
                                 promise.succeed(value: true)
                             }, failure: { error in
-                                self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                                self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
                                 promise.fail(error: .ruuviPool(error))
                             })
                         }
                     }
                 }, failure: { error in
-                    self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                    self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
                     promise.fail(error: .ruuviStorage(error))
                 })
             }
