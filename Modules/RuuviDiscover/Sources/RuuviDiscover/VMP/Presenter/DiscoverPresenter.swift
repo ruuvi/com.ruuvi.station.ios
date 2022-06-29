@@ -249,7 +249,7 @@ extension DiscoverPresenter {
     private func startScanning() {
         scanToken = foreground.scan(self) { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
-                // when mode is changed, the device dhould be replaced
+                // when mode is changed, the device should be replaced
                 if let sameUUID = observer.ruuviTags.first(where: { $0.uuid == ruuviTag.uuid }), sameUUID != ruuviTag {
                     observer.ruuviTags.remove(sameUUID)
                 }
@@ -278,26 +278,14 @@ extension DiscoverPresenter {
 
     private func updateViewDevices() {
         let ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
-            if let persistedRuuviTag = persistedSensors
-                .first(where: { $0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any }) {
-                return DiscoverRuuviTagViewModel(
-                    luid: ruuviTag.luid?.any,
-                    isConnectable: ruuviTag.isConnectable,
-                    rssi: ruuviTag.rssi,
-                    mac: ruuviTag.mac,
-                    name: persistedRuuviTag.name,
-                    logo: ruuviLogoImage
-                )
-            } else {
-                return DiscoverRuuviTagViewModel(
-                    luid: ruuviTag.luid?.any,
-                    isConnectable: ruuviTag.isConnectable,
-                    rssi: ruuviTag.rssi,
-                    mac: ruuviTag.mac,
-                    name: nil,
-                    logo: ruuviLogoImage
-                )
-            }
+            return DiscoverRuuviTagViewModel(
+                luid: ruuviTag.luid?.any,
+                isConnectable: ruuviTag.isConnectable,
+                rssi: ruuviTag.rssi,
+                mac: ruuviTag.mac,
+                name: nil,
+                logo: ruuviLogoImage
+            )
         }
         view?.ruuviTags = visibleTags(ruuviTags: ruuviTags)
     }
