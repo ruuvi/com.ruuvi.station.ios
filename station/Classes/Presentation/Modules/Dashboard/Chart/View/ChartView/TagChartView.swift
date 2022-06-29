@@ -138,13 +138,13 @@ class TagChartView: LineChartView {
         viewPortHandler.setMaximumScaleY(30)
 
         leftAxis.labelPosition = .outsideChart
-        leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+        leftAxis.labelFont = .systemFont(ofSize: 8, weight: .regular)
         leftAxis.setLabelCount(5, force: true)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
         leftAxis.minWidth = 40.0
         leftAxis.maxWidth = 40.0
-        leftAxis.xOffset = 10.0
+        leftAxis.xOffset = 8.0
 
         rightAxis.enabled = true
         rightAxis.labelPosition = .outsideChart

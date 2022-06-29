@@ -63,6 +63,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
+    private var calibrationSettingsToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var ruuviTag: AnyRuuviTagSensor! {
@@ -97,6 +98,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         chartIntervalDidChangeToken?.invalidate()
         chartDurationHourDidChangeToken?.invalidate()
         chartDrawDotsDidChangeToken?.invalidate()
+        calibrationSettingsToken?.invalidate()
     }
 
     func configure(output: TagChartsModuleOutput) {
@@ -450,6 +452,14 @@ extension TagChartsPresenter {
                          using: { [weak self] _ in
             self?.interactor.notifyDownsamleOnDidChange()
         })
+        calibrationSettingsToken = NotificationCenter
+            .default
+            .addObserver(forName: .SensorCalibrationDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.restartObservingData()
+            })
     }
 
     private func startObservingBackgroundChanges() {
