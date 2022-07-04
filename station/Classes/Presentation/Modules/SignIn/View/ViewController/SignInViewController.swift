@@ -37,7 +37,6 @@ class SignInViewController: UIViewController {
         super.viewDidLoad()
         setupRuuviCodeView()
         setupLocalization()
-        addTapGesture()
         output.viewDidLoad()
     }
 
@@ -92,6 +91,10 @@ extension SignInViewController: SignInViewInput {
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
+    }
+
+    func showInvalidTokenEntered() {
+        ruuviCodeView.reset()
     }
 }
 
@@ -178,15 +181,6 @@ extension SignInViewController {
         ruuviCodeView.heightAnchor.constraint(equalTo: textTextField.heightAnchor).isActive = true
         ruuviCodeView.centerXAnchor.constraint(equalTo: textTextField.centerXAnchor).isActive = true
         ruuviCodeView.centerYAnchor.constraint(equalTo: textTextField.centerYAnchor).isActive = true
-    }
-
-    private func addTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
-        view.addGestureRecognizer(tapGesture)
-    }
-
-    @objc private func didTapView(_ sender: UITapGestureRecognizer) {
-        view.endEditing(true)
     }
 
     private func bindViewModel() {
