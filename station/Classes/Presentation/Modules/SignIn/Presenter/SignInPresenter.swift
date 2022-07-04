@@ -187,7 +187,7 @@ extension SignInPresenter {
                     sSelf.ruuviUser.login(apiKey: result.apiKey)
                     sSelf.reloadWidgets()
                     sSelf.state = .isSyncing
-                    sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
+                    sSelf.cloudSyncService.syncAllRecords(latestOnly: false).on(success: { [weak sSelf] _ in
                         guard let ssSelf = sSelf else { return }
                         ssSelf.activityPresenter.decrement()
                         ssSelf.cloudSyncDaemon.start()
@@ -208,6 +208,7 @@ extension SignInPresenter {
                 }
             }, failure: { [weak self] (error) in
                 self?.activityPresenter.decrement()
+                self?.view.showInvalidTokenEntered()
                 self?.errorPresenter.present(error: error)
             })
     }
