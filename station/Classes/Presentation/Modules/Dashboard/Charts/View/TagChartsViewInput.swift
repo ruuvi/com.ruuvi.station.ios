@@ -7,7 +7,7 @@ protocol TagChartsViewInput: ViewInput {
     var viewIsVisible: Bool { get }
     func setupChartViews(chartViews: [TagChartView])
     func showBluetoothDisabled()
-    func handleClearSyncButtons(cloudSensor: Bool, sharedSensor: Bool, isSyncing: Bool)
+    func handleClearSyncButtons(cloudSensor: Bool, isSyncing: Bool)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel)
     func setSyncProgressViewHidden()

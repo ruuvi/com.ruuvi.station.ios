@@ -1058,11 +1058,9 @@ extension CardsPresenter {
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
-        // Stop listening to advertisements and heartbeats
-        observeRuuviTags()
         // Sync with cloud if cloud mode is turned on
         if settings.cloudModeEnabled {
-            cloudSyncDaemon.refreshRecords(latestOnly: false)
+            cloudSyncDaemon.refreshLatestRecord()
         }
     }
 

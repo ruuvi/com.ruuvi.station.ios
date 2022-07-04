@@ -82,14 +82,14 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     /// 2: Clear and Sync button should be hidden for shared sensors
     /// 3: The only case these buttons are shown are when the last stored data is from the cloud
     /// no sync process running in the background
-    func handleClearSyncButtons(cloudSensor: Bool, sharedSensor: Bool, isSyncing: Bool) {
+    func handleClearSyncButtons(cloudSensor: Bool, isSyncing: Bool) {
         if isSyncing {
             hideUtilButtons()
             syncStatusLabel.isHidden = false
             syncStatusLabel.text = "TagCharts.Status.Serving".localized()
             return
         }
-        if sharedSensor || cloudSensor {
+        if cloudSensor {
             hideUtilButtons()
             syncStatusLabel.isHidden = true
         } else {

@@ -8,7 +8,7 @@ import RuuviPool
 import RuuviLocal
 import RuuviRepository
 import RuuviService
-
+// swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviStorage: RuuviStorage
@@ -162,21 +162,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    public func syncAllRecords(latestOnly: Bool) -> Future<Bool, RuuviServiceError> {
+    public func refreshLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        if latestOnly {
-            syncLatestRecord().on(success: { _ in
+        syncLatestRecord().on(success: { _ in
+            promise.succeed(value: true)
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    public func syncAllRecords() -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        let syncAll = syncAll()
+        let latestRecords = syncLatestRecord()
+        syncAll.on(success: { _ in
+            latestRecords.on(success: { _ in
                 promise.succeed(value: true)
             })
-        } else {
-            let syncAll = syncAll()
-            let latestRecords = syncLatestRecord()
-            syncAll.on(success: { _ in
-                latestRecords.on(success: { _ in
-                    promise.succeed(value: true)
-                })
-            })
-        }
+        })
         return promise.future
     }
 
@@ -389,6 +392,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }, failure: { error in
                     self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
                     promise.fail(error: .ruuviStorage(error))
+                })
+                // Store the latest record to the records table if it's not already stored
+                self?.ruuviStorage.readLast(sensor.sensor.ruuviTagSensor).on(success: { [weak self] localRecord in
+                    if let cloudRecord = sensor.record,
+                       let localRecord = localRecord,
+                       cloudRecord.measurementSequenceNumber != localRecord.measurementSequenceNumber {
+                        self?.ruuviPool.create(cloudRecord)
+                    }
                 })
             }
         })
