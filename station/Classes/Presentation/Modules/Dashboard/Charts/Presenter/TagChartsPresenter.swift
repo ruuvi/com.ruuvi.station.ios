@@ -64,6 +64,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
     private var calibrationSettingsToken: NSObjectProtocol?
+    private var cloudModeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var ruuviTag: AnyRuuviTagSensor! {
@@ -99,6 +100,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         chartDurationHourDidChangeToken?.invalidate()
         chartDrawDotsDidChangeToken?.invalidate()
         calibrationSettingsToken?.invalidate()
+        cloudModeToken?.invalidate()
     }
 
     func configure(output: TagChartsModuleOutput) {
@@ -123,6 +125,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingLocalNotificationsManager()
         startObservingSensorSettingsChanges()
         startObservingCloudSyncNotification()
+        startObservingCloudModeNotification()
     }
 
     func viewWillAppear() {
@@ -149,7 +152,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func handleClearSyncButtons() {
         view.handleClearSyncButtons(cloudSensor: settings.cloudModeEnabled && viewModel.isCloud.value.bound,
-                                    sharedSensor: !ruuviTag.isOwner,
                                     isSyncing: interactor.isSyncingRecords())
     }
 
@@ -596,6 +598,18 @@ extension TagChartsPresenter {
             }
             self?.interactor.restartObservingData()
         })
+    }
+
+    private func startObservingCloudModeNotification() {
+        cloudModeToken?.invalidate()
+        cloudModeToken = NotificationCenter
+            .default
+            .addObserver(forName: .CloudModeDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.handleClearSyncButtons()
+            })
     }
 }
 // swiftlint:enable file_length
