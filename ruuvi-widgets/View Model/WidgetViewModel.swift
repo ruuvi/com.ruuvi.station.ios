@@ -21,36 +21,16 @@ public final class WidgetViewModel: ObservableObject {
 // MARK: - Network calls
 extension WidgetViewModel {
 
-    public func fetchRuuviTags(completion: @escaping ([AnyCloudSensor]) -> Void) {
+    public func fetchRuuviTags(completion: @escaping ([RuuviCloudSensorDense]) -> Void) {
         guard isAuthorized() else {
             return
         }
-        ruuviCloud.loadSensors().on(success: { sensors in
-            completion(sensors)
-        })
-    }
-
-    public func fetchRuuviTagRecords(sensor: RuuviTagSensor,
-                                     completion: @escaping (RuuviTagSensorRecord?) -> Void) {
-        guard isAuthorized() else {
-            return
-        }
-        let offset = -TimeInterval(5 * 60)
-        let since = Date(timeIntervalSinceNow: offset)
-        guard let macId = sensor.macId else {
-            return
-        }
-        let op = ruuviCloud.loadRecords(macId: macId, since: since, until: nil)
-        op.on(success: { loadedRecords in
-            if let lastRecord = loadedRecords.sorted(by: { first, second in
-                first.date > second.date
-            }).first {
-                completion(lastRecord)
-            } else {
-                completion(nil)
-            }
-        }, failure: { _ in
-            completion(nil)
+        ruuviCloud.loadSensorsDense(for: nil,
+                                    measurements: true,
+                                    sharedToOthers: nil,
+                                    sharedToMe: true, alerts: nil).on(success: { sensors in
+            let sensorsWithRecord = sensors.filter({ $0.record != nil })
+            completion(sensorsWithRecord)
         })
     }
 }
