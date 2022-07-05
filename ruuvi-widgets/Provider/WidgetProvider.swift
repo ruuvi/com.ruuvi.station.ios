@@ -29,22 +29,20 @@ final class WidgetProvider: IntentTimelineProvider {
             guard let sSelf = self else { return }
             guard let configuredTag = configuration.ruuviWidgetTag,
                     let tag = tags.first(where: { result in
-                        result.id == configuredTag.identifier
+                        result.sensor.id == configuredTag.identifier
                     }) else {
                 return sSelf.emptyTimeline(for: configuration,
                                     completion: completion)
             }
 
-            sSelf.viewModel.fetchRuuviTagRecords(sensor: tag.ruuviTagSensor) { record in
-                guard let record = record else {
-                    return sSelf.emptyTimeline(for: configuration,
-                                               completion: completion)
-                }
-                sSelf.timeline(from: tag,
-                               configuration: configuration,
-                               record: record,
-                               completion: completion)
+            guard let record = tag.record else {
+                return sSelf.emptyTimeline(for: configuration,
+                                           completion: completion)
             }
+            sSelf.timeline(from: tag.sensor.any,
+                           configuration: configuration,
+                           record: record,
+                           completion: completion)
         })
     }
 }
