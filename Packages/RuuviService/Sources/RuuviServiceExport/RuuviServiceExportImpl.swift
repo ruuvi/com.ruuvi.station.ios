@@ -87,7 +87,7 @@ extension RuuviServiceExportImpl {
                 let headersString = self.headersProvider.getHeaders(units)
                     .joined(separator: ",")
 
-                var csvText = "\(ruuviTag.name)\n" + headersString + "\n"
+                var csvText = headersString + "\n"
 
                 func toString(_ value: Double?, format: String) -> String {
                     guard let v = value else {

@@ -558,7 +558,7 @@ private final class BusinessAssembly: Assembly {
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
                 headersProvider: ExportHeadersProvider(),
-                emptyValueString: "N/A".localized(),
+                emptyValueString: "",
                 ruuviLocalSettings: localSettings
             )
             return service
