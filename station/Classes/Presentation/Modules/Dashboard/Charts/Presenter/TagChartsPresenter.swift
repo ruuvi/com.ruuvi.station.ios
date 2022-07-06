@@ -63,7 +63,6 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
-    private var calibrationSettingsToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
@@ -99,7 +98,6 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         chartIntervalDidChangeToken?.invalidate()
         chartDurationHourDidChangeToken?.invalidate()
         chartDrawDotsDidChangeToken?.invalidate()
-        calibrationSettingsToken?.invalidate()
         cloudModeToken?.invalidate()
     }
 
@@ -454,15 +452,6 @@ extension TagChartsPresenter {
                          using: { [weak self] _ in
             self?.interactor.notifyDownsamleOnDidChange()
         })
-        calibrationSettingsToken = NotificationCenter
-            .default
-            .addObserver(forName: .SensorCalibrationDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                self?.restartObservingData()
-                self?.interactor.notifySettingsChanged()
-            })
     }
 
     private func startObservingBackgroundChanges() {
@@ -562,8 +551,10 @@ extension TagChartsPresenter {
             switch reactorChange {
             case .update(let settings):
                 self.sensorSettings = settings
+                self.reloadChartsWithSensorSettingsChanges(with: settings)
             case .insert(let sensorSettings):
                 self.sensorSettings = sensorSettings
+                self.reloadChartsWithSensorSettingsChanges(with: sensorSettings)
             default: break
             }
         })
@@ -610,6 +601,11 @@ extension TagChartsPresenter {
                          using: { [weak self] _ in
                 self?.handleClearSyncButtons()
             })
+    }
+
+    private func reloadChartsWithSensorSettingsChanges(with settings: SensorSettings) {
+        interactor.notifySensorSettingsChanged(settings: settings)
+        interactor.notifySettingsChanged()
     }
 }
 // swiftlint:enable file_length

@@ -19,6 +19,7 @@ protocol TagChartsInteractorInput: AnyObject {
     func isSyncingRecords() -> Bool
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
     func notifySettingsChanged()
+    func notifySensorSettingsChanged(settings: SensorSettings)
     func notifyDownsamleOnDidChange()
     func notifyDidLocalized()
 }
