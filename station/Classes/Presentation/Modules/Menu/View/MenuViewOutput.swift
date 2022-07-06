@@ -7,6 +7,7 @@ protocol MenuViewOutput {
     func viewDidTapOnDimmingView()
     func viewDidSelectAddRuuviTag()
     func viewDidSelectAbout()
+    func viewDidSelectWhatToMeasure()
     func viewDidSelectGetMoreSensors()
     func viewDidSelectGetRuuviGateway()
     func viewDidSelectSettings()

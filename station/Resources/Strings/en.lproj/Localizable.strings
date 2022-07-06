@@ -287,7 +287,11 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
 "Menu.Label.AppSettings.text" = "App Settings";
 "Menu.Label.GetMoreSensors.text" = "Buy Ruuvi Sensors";
+"Menu.BuySensors.URL" = "https://ruuvi.com/products";
 "Menu.Label.BuyRuuviGateway.text" = "Buy Ruuvi Gateway";
+"Menu.BuyGateway.URL" = "https://ruuvi.com/gateway";
+"Menu.Label.WhatToMeasure.text" = "What to measure with Ruuvi?";
+"Menu.Measure.URL" = "https://ruuvi.com/ideas/";
 "Menu.Label.Feedback.text" = "Send Feedback";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "More info";

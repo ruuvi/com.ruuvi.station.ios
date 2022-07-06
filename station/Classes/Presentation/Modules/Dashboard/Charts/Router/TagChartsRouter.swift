@@ -49,12 +49,25 @@ class TagChartsRouter: TagChartsRouterInput {
             .perform()
     }
 
+    func openWhatToMeasurePage() {
+        guard let url = URL(string: "Menu.Measure.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     func openRuuviProductsPage() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com/products")!, options: [:], completionHandler: nil)
+        guard let url = URL(string: "Menu.BuySensors.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviGatewayPage() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com/gateway")!, options: [:], completionHandler: nil)
+        guard let url = URL(string: "Menu.BuyGateway.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     // swiftlint:disable:next function_parameter_count
