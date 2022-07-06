@@ -558,7 +558,7 @@ private final class BusinessAssembly: Assembly {
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
                 headersProvider: ExportHeadersProvider(),
-                emptyValueString: "N/A".localized(),
+                emptyValueString: "",
                 ruuviLocalSettings: localSettings
             )
             return service
@@ -813,6 +813,7 @@ private final class BusinessAssembly: Assembly {
             let coordinator = UniversalLinkCoordinatorImpl()
             let router = UniversalLinkRouterImpl()
             coordinator.ruuviUser = r.resolve(RuuviUser.self)
+            coordinator.settings = r.resolve(RuuviLocalSettings.self)
             coordinator.router = router
             return coordinator
         })

@@ -6,12 +6,12 @@ struct RuuviTagBatteryStatusProvider {
                                  voltage: Voltage?) -> Bool {
         if let temperature = temperature?.value,
             let voltage = voltage?.value {
-            if (temperature < -20 && voltage < 2) ||
-                (temperature < 0 && voltage < 2.3) ||
-                (temperature >= 0 && voltage < 2.5) {
-                return true
+            if temperature < 0 && temperature >= -20 {
+                return voltage < 2.3
+            } else if temperature < -20 {
+                return voltage < 2
             } else {
-                return false
+                return voltage < 2.5
             }
         } else {
             return false

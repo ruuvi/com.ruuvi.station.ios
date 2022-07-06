@@ -81,7 +81,6 @@ class CardsPresenter: CardsModuleInput {
     private var calibrationSettingsToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
-            syncViewModels()
             startListeningToWebTagsAlertStatus()
         }
     }
@@ -159,7 +158,7 @@ extension CardsPresenter: CardsViewOutput {
     func viewWillDisappear() {
         stopObservingBluetoothState()
     }
-    
+
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
@@ -289,6 +288,20 @@ extension CardsPresenter: CardsViewOutput {
                 tagCharts?.configure(ruuviTag: sensor)
         } 
     }
+
+    func viewDidSetOpeningCard() {
+        if let index = viewModels.firstIndex(where: {
+            settings.cardToOpenFromWidget() != nil && $0.mac.value?.value == settings.cardToOpenFromWidget()
+        }) {
+            scrollAndObserveCard(for: index)
+        }
+    }
+
+    private func scrollAndObserveCard(for index: Int) {
+        view.scroll(to: index, immediately: true, animated: false)
+        viewDidScroll(to: viewModels[index])
+        settings.setCardToOpenFromWidget(for: nil)
+    }
 }
 
 // MARK: - MenuModuleOutput
@@ -306,6 +319,11 @@ extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
         module.dismiss()
         router.openAbout()
+    }
+
+    func menu(module: MenuModuleInput, didSelectWhatToMeasure sender: Any?) {
+        module.dismiss()
+        router.openWhatToMeasurePage()
     }
     
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
@@ -676,13 +694,11 @@ extension CardsPresenter {
                 }
             case .insert(let sensor):
                 sSelf.virtualSensors.append(sensor)
+                sSelf.syncViewModels()
                 if let index = sSelf.viewModels.firstIndex(where: { $0.id.value == sensor.id }) {
                     sSelf.view.scroll(to: index)
                 }
-                if !sSelf.settings.cardsSwipeHintWasShown, sSelf.viewModels.count > 1 {
-                    sSelf.view.showSwipeLeftRightHint()
-                    sSelf.settings.cardsSwipeHintWasShown = true
-                }
+                sSelf.showCardSwipeHint()
                 sSelf.restartObservingVirtualSensorsData()
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
@@ -725,10 +741,7 @@ extension CardsPresenter {
                     sSelf.view.scroll(to: index)
                     sSelf.restartObservingRuuviTagLastRecord(for: sensor)
                     sSelf.tagCharts?.configure(ruuviTag: sensor)
-                    if !sSelf.settings.cardsSwipeHintWasShown, sSelf.viewModels.count > 1 {
-                        sSelf.view.showSwipeLeftRightHint()
-                        sSelf.settings.cardsSwipeHintWasShown = true
-                    }
+                    sSelf.showCardSwipeHint()
                 }
             case .delete(let sensor):
                 sSelf.ruuviTags.removeAll(where: { $0.id == sensor.id })
@@ -1058,11 +1071,9 @@ extension CardsPresenter {
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
-        // Stop listening to advertisements and heartbeats
-        observeRuuviTags()
         // Sync with cloud if cloud mode is turned on
         if settings.cloudModeEnabled {
-            cloudSyncDaemon.refreshRecords(latestOnly: false)
+            cloudSyncDaemon.refreshLatestRecord()
         }
     }
 
@@ -1114,7 +1125,7 @@ extension CardsPresenter {
                          name: NSLocale.currentLocaleDidChangeNotification,
                          object: nil)
     }
-    
+
     private func startObservingWidgetDeepLink() {
         languageToken = NotificationCenter
             .default
@@ -1127,7 +1138,7 @@ extension CardsPresenter {
                    let index = self?.viewModels.firstIndex(where: { viewModel in
                        viewModel.mac.value?.value == macId
                    }) {
-                    self?.view.scroll(to: index)
+                    self?.scrollAndObserveCard(for: index)
                 }
             })
     }
@@ -1159,6 +1170,13 @@ extension CardsPresenter {
                     sSelf.restartObservingRuuviTagLastRecord(for: tag)
                 }
             })
+    }
+    
+    private func showCardSwipeHint() {
+        if !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
+            view.showSwipeLeftRightHint()
+            settings.cardsSwipeHintWasShown = true
+        }
     }
 }
 // swiftlint:enable file_length trailing_whitespace

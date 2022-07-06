@@ -102,3 +102,22 @@ extension String {
         return NSLocalizedString(self, comment: "")
     }
 }
+
+// MARK: - DateFormatter
+extension DateFormatter {
+    static let widgetDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+
+        let dateString = formatter.string(from: Date())
+        let amRange = dateString.range(of: formatter.amSymbol)
+        let pmRange = dateString.range(of: formatter.pmSymbol)
+
+        let is12HFormat = !(pmRange == nil && amRange == nil)
+
+        formatter.dateFormat = is12HFormat ? "h:mm a": "hh:mm"
+        return formatter
+    }()
+}

@@ -24,7 +24,7 @@ class CardsScrollViewController: UIViewController {
 
     var viewModels = [CardsViewModel]() {
         didSet {
-            updateUIViewModels()
+            updateUI()
         }
     }
 
@@ -243,7 +243,6 @@ extension CardsScrollViewController {
 extension CardsScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateUI()
         configureViews()
         setupLocalization()
         setupNoSensorsLabelTapGesture()
@@ -684,6 +683,9 @@ extension CardsScrollViewController {
                                                             attribute: .trailing,
                                                             multiplier: 1.0,
                                                             constant: 0.0))
+                if views.count == viewModels.count {
+                    output.viewDidSetOpeningCard()
+                }
             }
         }
     }

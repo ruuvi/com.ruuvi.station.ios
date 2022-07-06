@@ -47,6 +47,13 @@ extension RuuviCodeView {
     func ruuviCode() -> String {
         return codeEntries.map({ $0.text ?? "" }).joined(separator: "")
     }
+
+    // Activate last field if invalid code is entered
+    func reset() {
+        codeEntries.removeAll()
+        arrangedSubviews.forEach { $0.removeFromSuperview() }
+        setupRuuviCodeFields()
+    }
 }
 
 // MARK: - Private methods
@@ -68,10 +75,14 @@ extension RuuviCodeView {
     private func setupRuuviCodeFields() {
         for index in 0..<entriesCount {
             let field = RuuviCodeTextField()
+            field.tag = index
             setupRuuviCodeField(field)
             codeEntries.append(field)
             index != 0 ? (field.previousEntry = codeEntries[index-1]) : (field.previousEntry = nil)
             index != 0 ? (codeEntries[index-1].nextEntry = field) : ()
+        }
+        if codeEntries.count > 0 {
+            codeEntries[0].layer.borderColor = activeBorderColor.cgColor
         }
     }
 
@@ -90,7 +101,7 @@ extension RuuviCodeView {
         textField.layer.cornerRadius = 5
         textField.layer.borderWidth = 2
         textField.layer.borderColor = inactiveBorderColor.cgColor
-        textField.autocorrectionType = .yes
+        textField.autocorrectionType = .no
         textField.tintColor = .clear
         textField.placeholder = "\u{2022}"
     }
@@ -121,7 +132,9 @@ extension RuuviCodeView: UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        validateRuuviCodeEntries()
+        if textField.tag == codeEntries.count - 1 {
+            validateRuuviCodeEntries()
+        }
         textField.layer.borderColor = inactiveBorderColor.cgColor
     }
 

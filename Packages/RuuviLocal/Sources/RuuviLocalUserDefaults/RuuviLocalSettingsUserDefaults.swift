@@ -314,4 +314,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     /// App launch count is divisible by this, ask for review
     @UserDefault("SettingsUserDefaults.appOpenedCountDivisibleToAskReview", defaultValue: 100)
     var appOpenedCountDivisibleToAskReview: Int
+
+    private let cardToOpenFromWidgetKey = "SettingsUserDefaults.cardToOpenFromWidgetKey"
+    func cardToOpenFromWidget() -> String? {
+        UserDefaults.standard.value(forKey: cardToOpenFromWidgetKey) as? String
+    }
+    func setCardToOpenFromWidget(for macId: String?) {
+        UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
+    }
 }

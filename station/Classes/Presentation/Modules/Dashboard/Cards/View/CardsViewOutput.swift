@@ -7,6 +7,7 @@ protocol CardsViewOutput {
     func viewDidTriggerAddSensors()
     func viewDidTriggerMenu()
     func viewDidScroll(to viewModel: CardsViewModel)
+    func viewDidSetOpeningCard()
     func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool)
     func viewDidTriggerChart(for viewModel: CardsViewModel)
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel)
