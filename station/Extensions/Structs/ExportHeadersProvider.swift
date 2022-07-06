@@ -15,14 +15,14 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
                 ? String(format: dewPointFormat, units.temperatureUnit.symbol)
                 : String(format: humidityFormat, units.humidityUnit.symbol),
             String(format: pressureFormat, units.pressureUnit.symbol),
-            "RSSI",
-            "ExportService.AccelerationX".localized(),
-            "ExportService.AccelerationY".localized(),
-            "ExportService.AccelerationZ".localized(),
+            "RSSI" + " (\("dBm".localized()))",
+            "ExportService.AccelerationX".localized() + " (\("g".localized()))",
+            "ExportService.AccelerationY".localized() + " (\("g".localized()))",
+            "ExportService.AccelerationZ".localized() + " (\("g".localized()))",
             "ExportService.Voltage".localized(),
-            "ExportService.MovementCounter".localized(),
+            "ExportService.MovementCounter".localized() + " (\("Cards.Movements.title".localized()))",
             "ExportService.MeasurementSequenceNumber".localized(),
-            "ExportService.TXPower".localized()
+            "ExportService.TXPower".localized() + " (\("dBm".localized()))"
         ]
     }
 }
