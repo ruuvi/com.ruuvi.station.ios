@@ -360,6 +360,12 @@ extension TagChartsInteractor {
         })
     }
 
+    func notifySensorSettingsChanged(settings: SensorSettings) {
+        chartModules.forEach({
+            $0.notifySensorSettingsChanged(settings: settings)
+        })
+    }
+
     func notifyDidLocalized() {
         chartModules.forEach({
             $0.localize()
