@@ -101,9 +101,7 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidOpenWithWidgetDeepLink(_ application: UIApplication, macId: String) {
-        NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
-                                        object: nil,
-                                        userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
+        universalLinkCoordinator.processWidgetLink(macId: macId)
     }
 }
 
