@@ -287,7 +287,11 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
 "Menu.Label.AppSettings.text" = "Asetukset";
 "Menu.Label.GetMoreSensors.text" = "Osta Ruuvi-antureita";
+"Menu.BuySensors.URL" = "https://ruuvi.com/fi/tuotteet";
 "Menu.Label.BuyRuuviGateway.text" = "Osta Ruuvi Gateway";
+"Menu.BuyGateway.URL" = "https://ruuvi.com/fi/gateway";
+"Menu.Label.WhatToMeasure.text" = "Mitä mitata Ruuvilla?";
+"Menu.Measure.URL" = "https://ruuvi.com/fi/ideat";
 "Menu.Label.Feedback.text" = "Lähetä palautetta";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "Lisätietoa";

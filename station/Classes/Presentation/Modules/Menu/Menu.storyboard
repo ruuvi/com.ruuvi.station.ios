@@ -163,7 +163,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="MSw-2s-WWi">
-                            <rect key="frame" x="0.0" y="371.5" width="414" height="44"/>
+                            <rect key="frame" x="0.0" y="415" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
@@ -238,8 +238,25 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="XGm-sP-Ekg" style="IBUITableViewCellStyleDefault" id="Q41-gm-NmA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="iak-g7-esw" style="IBUITableViewCellStyleDefault" id="bFa-8B-o3r">
                                         <rect key="frame" x="0.0" y="218.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bFa-8B-o3r" id="bnf-UM-io2">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="What to measure with Ruuvi?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iak-g7-esw">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="XGm-sP-Ekg" style="IBUITableViewCellStyleDefault" id="Q41-gm-NmA">
+                                        <rect key="frame" x="0.0" y="262" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Q41-gm-NmA" id="cn3-sV-9s1">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -256,7 +273,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="CdH-uD-ata" style="IBUITableViewCellStyleDefault" id="co1-UM-VDy">
-                                        <rect key="frame" x="0.0" y="262" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="305.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="co1-UM-VDy" id="sqS-xl-oHW">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -273,7 +290,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="4pY-bW-sTg" userLabel="SignIn">
-                                        <rect key="frame" x="0.0" y="305.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="349" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4pY-bW-sTg" id="LWZ-nI-0bk">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -301,6 +318,7 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="WhatToMeasureCell" destination="bFa-8B-o3r" id="nq4-f5-6TK"/>
                         <outlet property="aboutCell" destination="5jP-lL-ZsG" id="Fn2-zH-noK"/>
                         <outlet property="aboutHelpLabel" destination="vBO-sF-6UM" id="UOa-EJ-On5"/>
                         <outlet property="accountAuthLabel" destination="aXb-tc-Q6M" id="Vd0-yh-1wO"/>
@@ -315,6 +333,7 @@
                         <outlet property="getMoreSensorsCell" destination="Q41-gm-NmA" id="yQD-Eu-H6g"/>
                         <outlet property="getMoreSensorsLabel" destination="XGm-sP-Ekg" id="cdM-jH-MGT"/>
                         <outlet property="settingsCell" destination="Whs-Vz-g1g" id="A61-3K-Zae"/>
+                        <outlet property="whatToMeasureLabel" destination="iak-g7-esw" id="UiP-l5-OVu"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W7Q-dC-60Y" userLabel="First Responder" sceneMemberID="firstResponder"/>

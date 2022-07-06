@@ -13,16 +13,18 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     @IBOutlet weak var feedbackCell: UITableViewCell!
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!
     @IBOutlet weak var aboutCell: UITableViewCell!
+    @IBOutlet weak var WhatToMeasureCell: UITableViewCell!
     @IBOutlet weak var getMoreSensorsCell: UITableViewCell!
+    @IBOutlet weak var buyRuuviGatewayCell: UITableViewCell!
     @IBOutlet weak var settingsCell: UITableViewCell!
+    @IBOutlet weak var accountCell: UITableViewCell!
     @IBOutlet weak var feedbackLabel: UILabel!
     @IBOutlet weak var addANewSensorLabel: UILabel!
     @IBOutlet weak var appSettingsLabel: UILabel!
     @IBOutlet weak var aboutHelpLabel: UILabel!
+    @IBOutlet weak var whatToMeasureLabel: UILabel!
     @IBOutlet weak var getMoreSensorsLabel: UILabel!
-    @IBOutlet weak var buyRuuviGatewayCell: UITableViewCell!
     @IBOutlet weak var buyRuuviGatewayLabel: UILabel!
-    @IBOutlet weak var accountCell: UITableViewCell!
     @IBOutlet weak var accountAuthLabel: UILabel!
 }
 
@@ -32,6 +34,7 @@ extension MenuTableEmbededViewController {
         addANewSensorLabel.text = "Menu.Label.AddAnNewSensor.text".localized()
         appSettingsLabel.text = "Menu.Label.AppSettings.text".localized()
         aboutHelpLabel.text = "Menu.Label.AboutHelp.text".localized()
+        whatToMeasureLabel.text = "Menu.Label.WhatToMeasure.text".localized()
         getMoreSensorsLabel.text = "Menu.Label.GetMoreSensors.text".localized()
         buyRuuviGatewayLabel.text = "Menu.Label.BuyRuuviGateway.text".localized()
         feedbackLabel.text = "Menu.Label.Feedback.text".localized()
@@ -73,6 +76,8 @@ extension MenuTableEmbededViewController {
                 output.viewDidSelectAddRuuviTag()
             case aboutCell:
                 output.viewDidSelectAbout()
+            case WhatToMeasureCell:
+                output.viewDidSelectWhatToMeasure()
             case getMoreSensorsCell:
                 output.viewDidSelectGetMoreSensors()
             case buyRuuviGatewayCell:

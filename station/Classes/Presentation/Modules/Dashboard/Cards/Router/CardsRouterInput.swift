@@ -7,6 +7,7 @@ protocol CardsRouterInput {
     func openDiscover()
     func openSettings()
     func openAbout()
+    func openWhatToMeasurePage()
     func openRuuviProductsPage()
     func openRuuviGatewayPage()
     func openSignIn(output: SignInModuleOutput)

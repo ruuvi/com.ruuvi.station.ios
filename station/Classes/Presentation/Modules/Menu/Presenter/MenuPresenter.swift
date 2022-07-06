@@ -62,6 +62,10 @@ extension MenuPresenter: MenuViewOutput {
         output?.menu(module: self, didSelectAbout: nil)
     }
 
+    func viewDidSelectWhatToMeasure() {
+        output?.menu(module: self, didSelectWhatToMeasure: nil)
+    }
+
     func viewDidSelectGetMoreSensors() {
         output?.menu(module: self, didSelectGetMoreSensors: nil)
     }
