@@ -1,14 +1,16 @@
 import Foundation
 import RuuviLocal
+import RuuviService
 
-class SelectionTableConfigurator {
-    func configure(view: SelectionTableViewController) {
+class UnitSettingsTableConfigurator {
+    func configure(view: UnitSettingsTableViewController) {
         let r = AppAssembly.shared.assembler.resolver
-        let router = SelectionRouter()
+        let router = UnitSettingsRouter()
         router.transitionHandler = view
 
-        let presenter = SelectionPresenter()
+        let presenter = UnitSettingsPresenter()
         presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
         presenter.view = view
         presenter.router = router
 

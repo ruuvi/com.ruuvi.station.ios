@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviLocal
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
@@ -83,6 +83,32 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.humidityAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    private var humidityAccuracyInt: Int
+
+    var humidityAccuracy: MeasurementAccuracyType {
+        get {
+            switch humidityAccuracyInt {
+            case 0:
+                return .zero
+            case 1:
+                return .one
+            case 2:
+                return .two
+            default:
+                return .two
+            }
+        }
+        set {
+            humidityAccuracyInt = newValue.value
+            NotificationCenter
+                .default
+                .post(name: .HumidityAccuracyDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
     var temperatureUnit: TemperatureUnit {
         get {
             switch temperatureUnitInt {
@@ -116,6 +142,32 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.temperatureAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    private var temperatureAccuracyInt: Int
+
+    var temperatureAccuracy: MeasurementAccuracyType {
+        get {
+            switch temperatureAccuracyInt {
+            case 0:
+                return .zero
+            case 1:
+                return .one
+            case 2:
+                return .two
+            default:
+                return .two
+            }
+        }
+        set {
+            temperatureAccuracyInt = newValue.value
+            NotificationCenter
+                .default
+                .post(name: .TemperatureAccuracyDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
     var pressureUnit: UnitPressure {
         get {
             switch pressureUnitInt {
@@ -132,6 +184,32 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             NotificationCenter
                 .default
                 .post(name: .PressureUnitDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.pressureAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    private var pressureAccuracyInt: Int
+
+    var pressureAccuracy: MeasurementAccuracyType {
+        get {
+            switch pressureAccuracyInt {
+            case 0:
+                return .zero
+            case 1:
+                return .one
+            case 2:
+                return .two
+            default:
+                return .two
+            }
+        }
+        set {
+            pressureAccuracyInt = newValue.value
+            NotificationCenter
+                .default
+                .post(name: .PressureUnitAccuracyChange,
                       object: self,
                       userInfo: nil)
         }
