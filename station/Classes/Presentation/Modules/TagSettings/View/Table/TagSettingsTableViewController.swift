@@ -849,12 +849,13 @@ extension TagSettingsTableViewController {
         }
 
         batteryStatusLabel.bind(viewModel.batteryNeedsReplacement) { label, needsReplacement in
-            if let needsReplacement = needsReplacement, needsReplacement {
-                label.text = "(\("TagSettings.BatteryStatusLabel.Replace.message".localized()))"
-                label.textColor = .red
+            if let needsReplacement = needsReplacement {
+                label.isHidden = false
+                // swiftlint:disable:next line_length
+                label.text = needsReplacement ? "(\("TagSettings.BatteryStatusLabel.Replace.message".localized()))" : "(\("TagSettings.BatteryStatusLabel.Ok.message".localized()))"
+                label.textColor = needsReplacement ? .red : .green
             } else {
-                label.text = "(\("TagSettings.BatteryStatusLabel.Ok.message".localized()))"
-                label.textColor = .green
+                label.isHidden = true
             }
         }
 
