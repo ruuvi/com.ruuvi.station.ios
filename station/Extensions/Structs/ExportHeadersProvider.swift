@@ -9,7 +9,6 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
         let humidityFormat = "ExportService.Humidity".localized()
         return [
             "ExportService.Date".localized(),
-            "ExportService.ISO8601".localized(),
             String(format: tempFormat, units.temperatureUnit.symbol),
             units.humidityUnit == .dew
                 ? String(format: dewPointFormat, units.temperatureUnit.symbol)
