@@ -29,15 +29,6 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.RuuviServiceExportImpl.queue", qos: .userInitiated)
 
-    private let iso8601: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.calendar = Calendar(identifier: .iso8601)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
-        return formatter
-    }()
-
     public func csvLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
@@ -99,7 +90,6 @@ extension RuuviServiceExportImpl {
                 for log in records {
                     autoreleasepool {
                         let date = dateFormatter.string(from: log.date)
-                        let iso = self.iso8601.string(from: log.date)
 
                         let t = self.measurementService.double(for: log.temperature)
                         let temperature: String = toString(t, format: "%.2f")
@@ -152,7 +142,6 @@ extension RuuviServiceExportImpl {
                             txPower = self.emptyValueString
                         }
                         let newLine = "\(date)" + ","
-                            + "\(iso)" + ","
                             + "\(temperature)" + ","
                             + "\(humidity)" + ","
                             + "\(pressure)" + ","
