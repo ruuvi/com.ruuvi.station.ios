@@ -124,4 +124,17 @@ extension String {
     public var ruuviCloudApiSettingChartViewPeriod: Int? {
         return Int(self)
     }
+
+    public var ruuviCloudApiSettingsMeasurementAccuracyUnit: MeasurementAccuracyType {
+        switch self {
+        case "0":
+            return .zero
+        case "1":
+            return .one
+        case "2":
+            return .two
+        default:
+            return .two
+        }
+    }
 }

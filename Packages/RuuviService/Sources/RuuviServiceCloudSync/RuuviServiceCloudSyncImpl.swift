@@ -57,6 +57,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
+    // swiftlint:disable:next cyclomatic_complexity
     public func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
@@ -66,13 +67,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
                 }
+                if let accuracyTemperature = cloudSettings.accuracyTemperature,
+                   accuracyTemperature != sSelf.ruuviLocalSettings.temperatureAccuracy {
+                    sSelf.ruuviLocalSettings.temperatureAccuracy = accuracyTemperature
+                }
                 if let unitHumidity = cloudSettings.unitHumidity,
                    unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
                     sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
                 }
+                if let accuracyHumidity = cloudSettings.accuracyHumidity,
+                   accuracyHumidity != sSelf.ruuviLocalSettings.humidityAccuracy {
+                    sSelf.ruuviLocalSettings.humidityAccuracy = accuracyHumidity
+                }
                 if let unitPressure = cloudSettings.unitPressure,
                    unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
+                }
+                if let accuracyPressure = cloudSettings.accuracyPressure,
+                   accuracyPressure != sSelf.ruuviLocalSettings.pressureAccuracy {
+                    sSelf.ruuviLocalSettings.pressureAccuracy = accuracyPressure
                 }
                 if let chartShowAllData = cloudSettings.chartShowAllPoints,
                    chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
@@ -86,7 +99,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
                     sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
                 }
-
                 if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
                    cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
                     sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
