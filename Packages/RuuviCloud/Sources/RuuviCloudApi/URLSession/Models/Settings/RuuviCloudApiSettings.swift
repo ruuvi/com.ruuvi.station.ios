@@ -3,8 +3,11 @@ import RuuviOntology
 
 public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case unitTemperature = "UNIT_TEMPERATURE"
+    case accuracyTemperature = "ACCURACY_TEMPERATURE"
     case unitHumidity = "UNIT_HUMIDITY"
+    case accuracyHumidity = "ACCURACY_HUMIDITY"
     case unitPressure = "UNIT_PRESSURE"
+    case accuracyPressure = "ACCURACY_PRESSURE"
     case chartViewPeriod = "CHART_VIEW_PERIOD"
     case chartShowAllPoints = "CHART_SHOW_ALL_POINTS"
     case chartDrawDots = "CHART_DRAW_DOTS"
@@ -54,7 +57,7 @@ extension UnitPressure {
 }
 
 extension Int {
-    public var chartDurationSettingString: String {
+    public var ruuviCloudApiSettingString: String {
         return String(self)
     }
 }

@@ -6,5 +6,5 @@ protocol SettingsRouterInput {
     func openHeartbeat()
     func openChart()
     func openFeatureToggles()
-    func openSelection(with viewModel: SelectionViewModel, output: SelectionModuleOutput?)
+    func openUnitSettings(with viewModel: UnitSettingsViewModel, output: UnitSettingsModuleOutput?)
 }

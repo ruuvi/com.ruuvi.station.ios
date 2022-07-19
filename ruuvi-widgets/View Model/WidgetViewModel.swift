@@ -94,11 +94,17 @@ extension WidgetViewModel {
 
     private func getAppSettings() -> MeasurementServiceSettings {
         let temperatureUnit = temperatureUnit(from: appGroupDefaults)
+        let temperatureAccuracy = temperatureAccuracy(from: appGroupDefaults)
         let humidityUnit = humidityUnit(from: appGroupDefaults)
+        let humidityAccuracy = humidityAccuracy(from: appGroupDefaults)
         let pressureUnit = pressureUnit(from: appGroupDefaults)
+        let pressureAccuracy = pressureAccuracy(from: appGroupDefaults)
         return MeasurementServiceSettings(temperatureUnit: temperatureUnit,
+                                          temperatureAccuracy: temperatureAccuracy,
                                           humidityUnit: humidityUnit,
+                                          humidityAccuracy: humidityAccuracy,
                                           pressureUnit: pressureUnit,
+                                          pressureAccuracy: pressureAccuracy,
                                           language: getLanguage())
     }
 
@@ -125,6 +131,20 @@ extension WidgetViewModel {
         }
     }
 
+    private func temperatureAccuracy(from defaults: UserDefaults?) -> MeasurementAccuracyType {
+        let temperatureAccuracyKeyId = defaults?.integer(forKey: Constants.temperatureAccuracyKey.rawValue)
+        switch temperatureAccuracyKeyId {
+        case 0:
+            return .zero
+        case 1:
+            return .one
+        case 2:
+            return .two
+        default:
+            return .two
+        }
+    }
+
     private func humidityUnit(from defaults: UserDefaults?) -> HumidityUnit {
         let humidityUnitId = defaults?.integer(forKey: Constants.humidityUnitKey.rawValue)
         switch humidityUnitId {
@@ -139,6 +159,20 @@ extension WidgetViewModel {
         }
     }
 
+    private func humidityAccuracy(from defaults: UserDefaults?) -> MeasurementAccuracyType {
+        let humidityAccuracyKeyId = defaults?.integer(forKey: Constants.humidityAccuracyKey.rawValue)
+        switch humidityAccuracyKeyId {
+        case 0:
+            return .zero
+        case 1:
+            return .one
+        case 2:
+            return .two
+        default:
+            return .two
+        }
+    }
+
     private func pressureUnit(from defaults: UserDefaults?) -> UnitPressure {
         let pressureUnitId = defaults?.integer(forKey: Constants.pressureUnitKey.rawValue)
         switch pressureUnitId {
@@ -148,6 +182,20 @@ extension WidgetViewModel {
             return .millimetersOfMercury
         default:
             return .hectopascals
+        }
+    }
+
+    private func pressureAccuracy(from defaults: UserDefaults?) -> MeasurementAccuracyType {
+        let pressureAccuracyId = defaults?.integer(forKey: Constants.pressureAccuracyKey.rawValue)
+        switch pressureAccuracyId {
+        case 0:
+            return .zero
+        case 1:
+            return .one
+        case 2:
+            return .two
+        default:
+            return .two
         }
     }
 }

@@ -11,8 +11,11 @@ public enum Constants: String {
     case isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
     case languageKey = "languageKey"
     case temperatureUnitKey = "temperatureUnitKey"
+    case temperatureAccuracyKey = "temperatureAccuracyKey"
     case humidityUnitKey = "humidityUnitKey"
+    case humidityAccuracyKey = "humidityAccuracyKey"
     case pressureUnitKey = "pressureUnitKey"
+    case pressureAccuracyKey = "pressureAccuracyKey"
 
     case ruuviLogo = "ruuvi_logo"
 

@@ -3,8 +3,11 @@ import RuuviOntology
 
 extension Notification.Name {
     public static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
+    public static let TemperatureAccuracyDidChange = Notification.Name("Settings.TemperatureAccuracyDidChange")
     public static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
+    public static let HumidityAccuracyDidChange = Notification.Name("Settings.HumidityAccuracyDidChange")
     public static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
+    public static let PressureUnitAccuracyChange = Notification.Name("Settings.PressureUnitAccuracyChange")
     public static let LanguageDidChange = Notification.Name("LanguageDidChange")
     public static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
     public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
@@ -19,8 +22,11 @@ extension Notification.Name {
 
 public protocol RuuviLocalSettings {
     var temperatureUnit: TemperatureUnit { get set }
+    var temperatureAccuracy: MeasurementAccuracyType { get set }
     var humidityUnit: HumidityUnit { get set }
+    var humidityAccuracy: MeasurementAccuracyType { get set }
     var pressureUnit: UnitPressure { get set }
+    var pressureAccuracy: MeasurementAccuracyType { get set }
     var welcomeShown: Bool { get set }
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }

@@ -13,6 +13,24 @@ class SelectionTableViewController: UITableViewController {
         }
     }
 
+    var temperatureUnit: TemperatureUnit = .celsius {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
+    var humidityUnit: HumidityUnit = .percent {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
+    var pressureUnit: UnitPressure = .hectopascals {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
     private let cellReuseIdentifier = "SelectionTableViewCellReuseIdentifier"
 }
 
@@ -27,6 +45,7 @@ extension SelectionTableViewController: SelectionViewInput {
 extension SelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        output.viewDidLoad()
         updateUI()
         setupLocalization()
     }
@@ -45,12 +64,35 @@ extension SelectionTableViewController {
                                      for: indexPath) as? SelectionTableViewCell else {
             return .init()
         }
-        if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
-            cell.nameLabel.text = String(format: item.title, settings.temperatureUnit.symbol)
+
+        if viewModel?.unitSettingsType == .accuracy,
+            let item = item as? MeasurementAccuracyType {
+            let titleProvider = MeasurementAccuracyTitles()
+            let title = titleProvider.formattedTitle(type: item, settings: settings)
+            switch viewModel?.measurementType {
+            case .temperature:
+                cell.nameLabel.text = title + " " + temperatureUnit.symbol
+            case .humidity:
+                if humidityUnit == .dew {
+                    cell.nameLabel.text = title + " " + temperatureUnit.symbol
+                } else {
+                    cell.nameLabel.text = title + " " + humidityUnit.symbol
+                }
+            case .pressure:
+                cell.nameLabel.text = title + " " + pressureUnit.symbol
+            default:
+                cell.nameLabel.text = "N/A".localized()
+            }
+            cell.accessoryType = title == viewModel?.selection ? .checkmark : .none
         } else {
-            cell.nameLabel.text = item.title
+            if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
+                cell.nameLabel.text = String(format: item.title, settings.temperatureUnit.symbol)
+            } else {
+                cell.nameLabel.text = item.title
+            }
+            cell.accessoryType = item.title == viewModel?.selection ? .checkmark : .none
         }
-        cell.accessoryType = item.title == viewModel?.selection ? .checkmark : .none
+
         return cell
     }
 }

@@ -90,10 +90,19 @@ public protocol RuuviCloud {
     func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError>
 
     @discardableResult
+    func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+
+    @discardableResult
     func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError>
 
     @discardableResult
+    func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+
+    @discardableResult
     func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError>
+
+    @discardableResult
+    func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
 
     @discardableResult
     func set(showAllData: Bool) -> Future<Bool, RuuviCloudError>

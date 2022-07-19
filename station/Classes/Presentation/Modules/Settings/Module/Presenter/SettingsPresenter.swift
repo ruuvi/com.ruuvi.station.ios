@@ -34,10 +34,7 @@ class SettingsPresenter: SettingsModuleInput {
 
 extension SettingsPresenter: SettingsViewOutput {
     func viewDidLoad() {
-        view.temperatureUnit = settings.temperatureUnit
-        view.humidityUnit = settings.humidityUnit
         view.language = settings.language
-        view.pressureUnit = settings.pressureUnit
 
         languageToken = NotificationCenter
             .default
@@ -84,11 +81,10 @@ extension SettingsPresenter: SettingsViewOutput {
             .fahrenheit,
             .kelvin
         ]
-        let viewModel = SelectionViewModel(title: "Settings.Label.TemperatureUnit.text".localized(),
-                                           items: selectionItems,
-                                           description: "Settings.ChooseTemperatureUnit.text".localized(),
-                                           selection: settings.temperatureUnit.title)
-        router.openSelection(with: viewModel, output: self)
+        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Temperature".localized(),
+                                              items: selectionItems,
+                                              measurementType: .temperature)
+        router.openUnitSettings(with: viewModel, output: nil)
     }
 
     func viewDidTapHumidityUnit() {
@@ -97,11 +93,10 @@ extension SettingsPresenter: SettingsViewOutput {
             .gm3,
             .dew
         ]
-        let viewModel = SelectionViewModel(title: "Settings.Label.HumidityUnit.text".localized(),
-                                           items: selectionItems,
-                                           description: "Settings.ChooseHumidityUnit.text".localized(),
-                                           selection: settings.humidityUnit.title)
-        router.openSelection(with: viewModel, output: self)
+        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Humidity".localized(),
+                                              items: selectionItems,
+                                              measurementType: .humidity)
+        router.openUnitSettings(with: viewModel, output: nil)
     }
 
     func viewDidTapOnPressure() {
@@ -110,11 +105,10 @@ extension SettingsPresenter: SettingsViewOutput {
             .inchesOfMercury,
             .millimetersOfMercury
         ]
-        let viewModel = SelectionViewModel(title: "Settings.Label.PressureUnit.text".localized(),
-                                           items: selectionItems,
-                                           description: "Settings.ChoosePressureUnit.text".localized(),
-                                           selection: settings.pressureUnit.title)
-        router.openSelection(with: viewModel, output: self)
+        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Pressure".localized(),
+                                              items: selectionItems,
+                                              measurementType: .pressure)
+        router.openUnitSettings(with: viewModel, output: nil)
     }
 
     func viewDidTriggerClose() {
@@ -159,23 +153,5 @@ extension SettingsPresenter: SettingsViewOutput {
     func viewCloudModeDidChange(isOn: Bool) {
         settings.cloudModeEnabled = isOn
         ruuviAppSettingsService.set(cloudMode: isOn)
-    }
-}
-extension SettingsPresenter: SelectionModuleOutput {
-    func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol) {
-        switch item {
-        case let temperatureUnit as TemperatureUnit:
-            ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
-            view.temperatureUnit = temperatureUnit
-        case let humidityUnit as HumidityUnit:
-            ruuviAppSettingsService.set(humidityUnit: humidityUnit)
-            view.humidityUnit = humidityUnit
-        case let pressureUnit as UnitPressure:
-            ruuviAppSettingsService.set(pressureUnit: pressureUnit)
-            view.pressureUnit = pressureUnit
-        default:
-            break
-        }
-        module.dismiss()
     }
 }
