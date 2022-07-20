@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -228,6 +229,7 @@
                     <navigationItem key="navigationItem" title="Settings" id="zVX-j9-FXb">
                         <barButtonItem key="backBarButtonItem" title=" " id="hHD-hc-87e"/>
                         <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="lsn-T2-IDJ">
+                            <color key="tintColor" systemColor="labelColor"/>
                             <connections>
                                 <action selector="closeBarButtonItemAction:" destination="Vxh-DE-JMT" id="Woh-5e-gHl"/>
                             </connections>
@@ -287,6 +289,9 @@
         <image name="dismiss-modal-icon" width="17" height="17"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

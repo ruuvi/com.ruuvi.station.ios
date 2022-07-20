@@ -3,6 +3,7 @@ import UIKit
 class AboutViewController: UIViewController {
     var output: AboutViewOutput!
 
+    @IBOutlet weak var headerTitleLabel: UILabel!
     @IBOutlet weak var aboutTextView: UITextView!
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var addedTagsLabel: UILabel!
@@ -11,10 +12,6 @@ class AboutViewController: UIViewController {
 
     private let twoNewlines = "\n\n"
     private let fourNewlines = "\n\n\n\n"
-
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
-    }
 
     var viewModel: AboutViewModel = AboutViewModel()
 }
@@ -83,6 +80,7 @@ extension AboutViewController: UITextViewDelegate {
 // MARK: - View configuration
 extension AboutViewController {
     private func configureViews() {
+        headerTitleLabel.text = "About.AboutHelp.header".localized()
         configureTextView()
         bindViewModel()
     }
@@ -104,7 +102,7 @@ extension AboutViewController {
 
     private func configureTextView() {
 
-        let text = "About.AboutHelp.header".localized() + twoNewlines +
+        let text =
             "About.AboutHelp.contents".localized() + fourNewlines +
             "About.OperationsManual.header".localized() + twoNewlines +
             "About.OperationsManual.contents".localized() + fourNewlines +
@@ -121,12 +119,11 @@ extension AboutViewController {
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
 
         // make headers bold
-        let makeBold = ["About.AboutHelp.header".localized(),
-                        "About.OperationsManual.header".localized(),
+        let makeBold = ["About.OperationsManual.header".localized(),
                         "About.Troubleshooting.header".localized(),
                         "About.OpenSource.header".localized(),
                         "About.More.header".localized()]
-        let boldFont = UIFont(name: "Montserrat-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
+        let boldFont = UIFont(name: "Muli-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
@@ -141,7 +138,7 @@ extension AboutViewController {
 
         // make text color white
         attrString.addAttribute(.foregroundColor,
-                                value: UIColor.white,
+                                value: UIColor.label,
                                 range: NSRange(location: 0, length: attrString.length))
 
         aboutTextView.attributedText = attrString
