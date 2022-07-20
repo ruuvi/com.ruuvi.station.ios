@@ -648,6 +648,7 @@ extension CardsScrollViewController {
 extension CardsScrollViewController {
     private func updateUI() {
         updateUIViewModels()
+        showNoSensorsAddedMessage(show: viewModels.isEmpty)
     }
 
     private func updateUIViewModels() {

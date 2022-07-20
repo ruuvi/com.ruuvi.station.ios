@@ -364,6 +364,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return promise.future
     }
 
+    // swiftlint:disable:next function_body_length
     private func syncLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
@@ -379,17 +380,26 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                          sharedToMe: true,
                                     alerts: nil).on(success: { [weak self] sensors in
             for sensor in sensors {
-                self?.ruuviStorage.readLatest(sensor.sensor.ruuviTagSensor).on(success: { localRecord in
+                self?.ruuviStorage.readLatest(sensor.sensor.ruuviTagSensor).on(success: { [weak self] localRecord in
+                    guard let sSelf = self else { return }
                     if let cloudRecord = sensor.record,
                         let localRecord = localRecord,
                        cloudRecord.macId?.value == localRecord.macId?.value {
-                        self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
-                            self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
-                            promise.succeed(value: true)
-                        }, failure: { error in
-                            self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
-                            promise.fail(error: .ruuviPool(error))
-                        })
+
+                        let storeCloudPointCloudModeOn = sSelf.ruuviLocalSettings.cloudModeEnabled
+                        let storeCloudPointCloudModeOff = !sSelf.ruuviLocalSettings.cloudModeEnabled &&
+                        (localRecord.source == .advertisement || localRecord.source == .heartbeat) &&
+                        (cloudRecord.date > localRecord.date)
+
+                        if storeCloudPointCloudModeOn || storeCloudPointCloudModeOff {
+                            self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
+                                self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
+                                promise.succeed(value: true)
+                            }, failure: { error in
+                                self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
+                                promise.fail(error: .ruuviPool(error))
+                            })
+                        }
                     } else {
                         if let cloudRecord = sensor.record {
                             self?.ruuviPool.createLast(cloudRecord).on(success: { _ in
