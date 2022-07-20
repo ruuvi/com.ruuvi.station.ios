@@ -9,11 +9,6 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Muli-Regular.ttf">
-            <string>Muli-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--About View Controller-->
         <scene sceneID="izz-TU-3SU">
@@ -27,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="1036"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pyx-d9-7cb">
-                                        <rect key="frame" x="12" y="12" width="390" height="667"/>
+                                        <rect key="frame" x="16" y="12" width="382" height="687"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" name="LogoColor"/>
                                         <attributedString key="attributedText">
@@ -194,44 +189,44 @@ Cg
                                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added tags" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Dj-qjx">
-                                        <rect key="frame" x="16" y="703.5" width="382" height="16.5"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="13"/>
+                                        <rect key="frame" x="20" y="723" width="374" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stored measurements" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nhq-tg-RXR">
-                                        <rect key="frame" x="16" y="720" width="382" height="16.5"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="13"/>
+                                        <rect key="frame" x="20" y="739" width="374" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cl-Gj-SSM">
-                                        <rect key="frame" x="16" y="736.5" width="382" height="16.5"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="13"/>
+                                        <rect key="frame" x="20" y="755" width="374" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZT-Oy-FFh">
-                                        <rect key="frame" x="16" y="687" width="382" height="16.5"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="13"/>
+                                        <rect key="frame" x="20" y="707" width="374" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="YZT-Oy-FFh" firstAttribute="top" secondItem="pyx-d9-7cb" secondAttribute="bottom" constant="8" id="6RU-zH-7zv"/>
-                                    <constraint firstItem="YZT-Oy-FFh" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="16" id="7ia-Cl-8qc"/>
+                                    <constraint firstItem="YZT-Oy-FFh" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="20" id="7ia-Cl-8qc"/>
                                     <constraint firstItem="pyx-d9-7cb" firstAttribute="top" secondItem="zKU-NK-qkw" secondAttribute="top" constant="12" id="7w3-un-PIq"/>
                                     <constraint firstItem="pyx-d9-7cb" firstAttribute="centerX" secondItem="zKU-NK-qkw" secondAttribute="centerX" id="Bkn-XT-2gJ"/>
-                                    <constraint firstItem="Nhq-tg-RXR" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="16" id="LY1-d5-a7p"/>
-                                    <constraint firstAttribute="trailing" secondItem="Nhq-tg-RXR" secondAttribute="trailing" constant="16" id="MtL-b3-Hid"/>
-                                    <constraint firstItem="8cl-Gj-SSM" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="16" id="N67-Ym-QIz"/>
-                                    <constraint firstAttribute="trailing" secondItem="8cl-Gj-SSM" secondAttribute="trailing" constant="16" id="RFj-fa-bTb"/>
+                                    <constraint firstItem="Nhq-tg-RXR" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="20" id="LY1-d5-a7p"/>
+                                    <constraint firstAttribute="trailing" secondItem="Nhq-tg-RXR" secondAttribute="trailing" constant="20" id="MtL-b3-Hid"/>
+                                    <constraint firstItem="8cl-Gj-SSM" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="20" id="N67-Ym-QIz"/>
+                                    <constraint firstAttribute="trailing" secondItem="8cl-Gj-SSM" secondAttribute="trailing" constant="20" id="RFj-fa-bTb"/>
                                     <constraint firstAttribute="bottom" secondItem="8cl-Gj-SSM" secondAttribute="bottom" constant="20" id="SsX-SV-NFY"/>
                                     <constraint firstItem="8cl-Gj-SSM" firstAttribute="top" secondItem="Nhq-tg-RXR" secondAttribute="bottom" id="V9J-KO-ART"/>
-                                    <constraint firstAttribute="trailing" secondItem="YZT-Oy-FFh" secondAttribute="trailing" constant="16" id="gru-mO-X4V"/>
-                                    <constraint firstItem="DQc-Dj-qjx" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="16" id="pOW-hz-qdt"/>
-                                    <constraint firstAttribute="trailing" secondItem="pyx-d9-7cb" secondAttribute="trailing" constant="12" id="qCC-St-INA"/>
-                                    <constraint firstItem="pyx-d9-7cb" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="12" id="tdd-g4-rqM"/>
+                                    <constraint firstAttribute="trailing" secondItem="YZT-Oy-FFh" secondAttribute="trailing" constant="20" id="gru-mO-X4V"/>
+                                    <constraint firstItem="DQc-Dj-qjx" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="20" id="pOW-hz-qdt"/>
+                                    <constraint firstAttribute="trailing" secondItem="pyx-d9-7cb" secondAttribute="trailing" constant="16" id="qCC-St-INA"/>
+                                    <constraint firstItem="pyx-d9-7cb" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="16" id="tdd-g4-rqM"/>
                                     <constraint firstItem="Nhq-tg-RXR" firstAttribute="top" secondItem="DQc-Dj-qjx" secondAttribute="bottom" id="ubU-Hy-f2g"/>
                                     <constraint firstItem="DQc-Dj-qjx" firstAttribute="top" secondItem="YZT-Oy-FFh" secondAttribute="bottom" id="uw4-Uv-VI3"/>
-                                    <constraint firstAttribute="trailing" secondItem="DQc-Dj-qjx" secondAttribute="trailing" constant="16" id="xwl-fW-iSD"/>
+                                    <constraint firstAttribute="trailing" secondItem="DQc-Dj-qjx" secondAttribute="trailing" constant="20" id="xwl-fW-iSD"/>
                                 </constraints>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWL-lH-VPV">

@@ -114,22 +114,21 @@ extension AboutViewController {
             "About.More.contents".localized() + "\n"
 
         let attrString = NSMutableAttributedString(string: text)
-        let muliRegular = UIFont(name: "Muli-Regular", size: 16.0) ?? UIFont.systemFont(ofSize: 16)
         let range = NSString(string: attrString.string).range(of: attrString.string)
-        attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
+        attrString.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 16), range: range)
 
         // make headers bold
         let makeBold = ["About.OperationsManual.header".localized(),
                         "About.Troubleshooting.header".localized(),
                         "About.OpenSource.header".localized(),
                         "About.More.header".localized()]
-        let boldFont = UIFont(name: "Muli-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
+        let boldFont = UIFont.systemFont(ofSize: 16, weight: .bold)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
         }
         // reduce the linespacing below the titles
-        let smallFont = UIFont(name: "Muli-Bold", size: 8) ?? UIFont.systemFont(ofSize: 8)
+        let smallFont = UIFont.systemFont(ofSize: 8)
         for range in attrString.string.ranges(of: "\n") {
             attrString.addAttribute(NSAttributedString.Key.font,
                                     value: smallFont,

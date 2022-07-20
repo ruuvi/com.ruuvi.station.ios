@@ -8,11 +8,6 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Montserrat-Bold.ttf">
-            <string>Montserrat-Bold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Navigation Controller-->
         <scene sceneID="cbS-Ew-9uE">
@@ -21,6 +16,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1wh-Tm-wzm">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" systemColor="labelColor"/>
                     </navigationBar>
                     <connections>
                         <segue destination="oSZ-yy-qSu" kind="relationship" relationship="rootViewController" id="r7u-wn-VXa"/>
@@ -48,7 +44,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gDO-61-Z4Q">
-                                        <rect key="frame" x="20" y="172" width="374" height="464"/>
+                                        <rect key="frame" x="20" y="171" width="374" height="466"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zZu-em-u8P">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="172"/>
@@ -97,9 +93,9 @@ Network</string>
                                                 <color key="highlightedColor" systemColor="labelColor"/>
                                             </label>
                                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pNT-Eq-mH2">
-                                                <rect key="frame" x="113" y="422" width="148" height="42"/>
+                                                <rect key="frame" x="110" y="422" width="154" height="44"/>
                                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                 <inset key="contentEdgeInsets" minX="16" minY="12" maxX="16" maxY="12"/>
                                                 <state key="normal" title="Request a Code">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -176,6 +172,7 @@ Network</string>
                     </view>
                     <navigationItem key="navigationItem" title="Sign in" id="LAA-Ka-wRV">
                         <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="cc4-dQ-UOV">
+                            <color key="tintColor" systemColor="labelColor"/>
                             <connections>
                                 <action selector="didTapCloseButton:" destination="oSZ-yy-qSu" id="ppK-8s-0vy"/>
                             </connections>

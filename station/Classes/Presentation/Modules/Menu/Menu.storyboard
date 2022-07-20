@@ -15,6 +15,7 @@
                 <navigationController navigationBarHidden="YES" id="JPa-wO-DcD" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="x8C-8z-hyC">
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" systemColor="labelColor"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Ta4-x1-hx1" kind="relationship" relationship="rootViewController" id="G2e-T9-zIQ"/>
@@ -344,6 +345,9 @@
     <resources>
         <image name="gradient_layer" width="359" height="641"/>
         <image name="ruuvi_logo_" width="379" height="101"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
