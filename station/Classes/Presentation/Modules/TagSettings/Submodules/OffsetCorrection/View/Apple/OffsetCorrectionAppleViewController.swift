@@ -127,7 +127,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         // make text color gray
         attrString.addAttribute(.foregroundColor,
-            value: UIColor.darkGray,
+            value: UIColor.secondaryLabel,
             range: NSRange(location: 0, length: attrString.length))
 
         descriptionTextView.attributedText = attrString

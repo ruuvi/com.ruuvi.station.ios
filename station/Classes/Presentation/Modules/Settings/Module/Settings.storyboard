@@ -275,6 +275,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6X1-LP-kkX">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" systemColor="labelColor"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Vxh-DE-JMT" kind="relationship" relationship="rootViewController" id="xcN-fc-M4T"/>

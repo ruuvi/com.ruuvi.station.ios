@@ -157,7 +157,7 @@ extension ShareViewController {
         let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
         let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
-        cell.descriptionLabel.textColor = .darkGray
+        cell.descriptionLabel.textColor = .secondaryLabel
         return cell
     }
 

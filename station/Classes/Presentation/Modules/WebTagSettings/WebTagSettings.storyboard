@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21179.7" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D1d-zv-30m">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D1d-zv-30m">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21169.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -154,13 +155,13 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oqj-rp-dBd">
-                            <rect key="frame" x="0.0" y="456.5" width="414" height="100"/>
+                            <rect key="frame" x="0.0" y="444.5" width="414" height="100"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="udR-S3-e8A">
-                                    <rect key="frame" x="88" y="8" width="238" height="43"/>
+                                    <rect key="frame" x="89.5" y="8" width="235" height="44"/>
                                     <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                     <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
                                     <state key="normal" title="REMOVE THIS WEB TAG"/>
                                     <userDefinedRuntimeAttributes>
@@ -183,20 +184,20 @@ IMAGE</string>
                             <tableViewSection headerTitle="NAME" id="4cd-hG-tmM">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" id="BTP-u1-TlO">
-                                        <rect key="frame" x="0.0" y="295.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="289.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BTP-u1-TlO" id="hCO-18-McB">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="385.5" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="keP-rd-zwz">
-                                                    <rect key="frame" x="20" y="11.5" width="262.5" height="21"/>
+                                                    <rect key="frame" x="20" y="11.5" width="264.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a4h-f8-Akw">
-                                                    <rect key="frame" x="298.5" y="11.5" width="77" height="21"/>
+                                                    <rect key="frame" x="300.5" y="11.5" width="77" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -216,7 +217,7 @@ IMAGE</string>
                             <tableViewSection headerTitle="MORE INFO" id="gbe-iT-FAt">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="hQf-Gu-PPo">
-                                        <rect key="frame" x="0.0" y="395" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="383" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hQf-Gu-PPo" id="5Sv-7R-KLh">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -269,6 +270,7 @@ IMAGE</string>
                     </tableView>
                     <navigationItem key="navigationItem" title="Web Tag Settings" id="60f-mZ-Uba">
                         <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="1wp-cO-Jg3">
+                            <color key="tintColor" systemColor="labelColor"/>
                             <connections>
                                 <action selector="dismissBarButtonItemAction:" destination="NzI-p7-FEP" id="3Cc-5O-3Sg"/>
                             </connections>
@@ -323,6 +325,9 @@ IMAGE</string>
         <image name="tag_bg_layer" width="960" height="1440"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>
