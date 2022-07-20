@@ -241,7 +241,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-bluetooth" translatesAutoresizingMaskIntoConstraints="NO" id="bU0-QC-VES">
-                    <rect key="frame" x="287" y="503" width="17" height="28"/>
+                    <rect key="frame" x="287" y="507" width="17" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="B5Z-4B-naY"/>
+                    </constraints>
                 </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="27w-ik-OkD"/>
