@@ -415,8 +415,6 @@ extension CardsPresenter: TagSettingsModuleOutput {
 extension CardsPresenter {
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
-        // Show no sensor text initially
-        view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
 
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
