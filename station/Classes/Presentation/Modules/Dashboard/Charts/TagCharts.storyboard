@@ -34,6 +34,10 @@
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag_bg_layer" translatesAutoresizingMaskIntoConstraints="NO" id="BaO-7f-YjR">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UBW-93-H4J" userLabel="Black overlay">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo_" translatesAutoresizingMaskIntoConstraints="NO" id="YoH-aD-scc">
                                 <rect key="frame" x="64" y="13" width="124" height="24"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -245,9 +249,11 @@
                             <constraint firstItem="Acs-0n-bAk" firstAttribute="bottom" secondItem="7JW-Bt-vav" secondAttribute="bottom" id="5L9-uN-Ylf"/>
                             <constraint firstItem="BaO-7f-YjR" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="6fA-hV-6DD"/>
                             <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="top" secondItem="Hho-MY-BeM" secondAttribute="bottom" constant="8" id="6wG-3v-tvU"/>
+                            <constraint firstItem="UBW-93-H4J" firstAttribute="leading" secondItem="7JW-Bt-vav" secondAttribute="leading" id="7tR-OQ-LEa"/>
                             <constraint firstItem="yVc-EN-JgQ" firstAttribute="leading" secondItem="7JW-Bt-vav" secondAttribute="leading" constant="8" id="9LS-ky-gzT"/>
                             <constraint firstItem="yVc-EN-JgQ" firstAttribute="top" secondItem="7JW-Bt-vav" secondAttribute="top" constant="8" id="9SC-IC-hIu"/>
                             <constraint firstAttribute="trailing" secondItem="HDU-IT-z0E" secondAttribute="trailing" id="D40-F1-SHr"/>
+                            <constraint firstAttribute="bottom" secondItem="UBW-93-H4J" secondAttribute="bottom" id="FFV-Mu-bAh"/>
                             <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="trailing" secondItem="7JW-Bt-vav" secondAttribute="trailing" id="HXD-e1-BzR"/>
                             <constraint firstItem="Acs-0n-bAk" firstAttribute="leading" secondItem="7JW-Bt-vav" secondAttribute="leading" id="KOg-NT-uCF"/>
                             <constraint firstItem="YoH-aD-scc" firstAttribute="leading" secondItem="yVc-EN-JgQ" secondAttribute="trailing" constant="20" id="Pkx-Sv-RWl"/>
@@ -256,6 +262,7 @@
                             <constraint firstItem="fr6-UZ-XyS" firstAttribute="centerY" secondItem="xLk-w7-fy6" secondAttribute="centerY" id="TEQ-Ns-78E"/>
                             <constraint firstItem="wUs-Ho-ico" firstAttribute="centerY" secondItem="jBR-5N-L14" secondAttribute="centerY" id="V0M-fo-rnw"/>
                             <constraint firstItem="7JW-Bt-vav" firstAttribute="trailing" secondItem="Acs-0n-bAk" secondAttribute="trailing" id="VSJ-IA-TKd"/>
+                            <constraint firstItem="UBW-93-H4J" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="YKi-eW-tbB"/>
                             <constraint firstItem="Hho-MY-BeM" firstAttribute="top" secondItem="YoH-aD-scc" secondAttribute="bottom" constant="21" id="aQ9-qc-E00"/>
                             <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="leading" secondItem="7JW-Bt-vav" secondAttribute="leading" id="boM-YJ-rfA"/>
                             <constraint firstItem="APW-oc-hoK" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="c3E-vy-tTt"/>
@@ -283,6 +290,7 @@
                             <constraint firstItem="BaO-7f-YjR" firstAttribute="trailing" secondItem="ceB-eX-jxA" secondAttribute="trailing" id="x1P-9J-TrA"/>
                             <constraint firstItem="HDU-IT-z0E" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="xht-Av-Kdt"/>
                             <constraint firstItem="cpa-Qi-Dhz" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="yXK-px-bhV"/>
+                            <constraint firstItem="7JW-Bt-vav" firstAttribute="trailing" secondItem="UBW-93-H4J" secondAttribute="trailing" id="yz8-DI-YQ6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Ruuvi Station" id="Jh2-HP-UF6">
