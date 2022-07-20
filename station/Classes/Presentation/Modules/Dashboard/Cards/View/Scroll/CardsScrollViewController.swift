@@ -562,7 +562,7 @@ extension CardsScrollViewController {
             if let state = state {
                 switch state {
                 case .empty:
-                    imageView.alpha = 1.0
+                    imageView.alpha = 0.5
                     imageView.image = self?.alertOffImage
                 case .registered:
                     imageView.alpha = 1.0
@@ -648,6 +648,7 @@ extension CardsScrollViewController {
 extension CardsScrollViewController {
     private func updateUI() {
         updateUIViewModels()
+        showNoSensorsAddedMessage(show: viewModels.isEmpty)
     }
 
     private func updateUIViewModels() {

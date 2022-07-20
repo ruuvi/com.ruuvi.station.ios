@@ -7,10 +7,19 @@ public protocol RuuviServiceAppSettings {
     func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError>
 
     @discardableResult
+    func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+
+    @discardableResult
     func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError>
 
     @discardableResult
+    func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+
+    @discardableResult
     func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError>
+
+    @discardableResult
+    func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
 
     @discardableResult
     func set(showAllData: Bool) -> Future<Bool, RuuviServiceError>

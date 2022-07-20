@@ -91,6 +91,26 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .accuracyTemperature,
+            value: temperatureAccuracy.value.ruuviCloudApiSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: temperatureAccuracy)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
         let promise = Promise<HumidityUnit, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
@@ -111,6 +131,26 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .accuracyHumidity,
+            value: humidityAccuracy.value.ruuviCloudApiSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: humidityAccuracy)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
         let promise = Promise<UnitPressure, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
@@ -124,6 +164,26 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: pressureUnit)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .accuracyPressure,
+            value: pressureAccuracy.value.ruuviCloudApiSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: pressureAccuracy)
             }, failure: { error in
                 promise.fail(error: .api(error))
             })
@@ -179,7 +239,7 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartViewPeriod,
-            value: chartDuration.chartDurationSettingString
+            value: chartDuration.ruuviCloudApiSettingString
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPB-2U-HF7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OPB-2U-HF7">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -35,11 +36,13 @@
                     <navigationItem key="navigationItem" id="W5P-a6-meh">
                         <leftBarButtonItems>
                             <barButtonItem image="dismiss-modal-icon" id="Al3-SL-ppI">
+                                <color key="tintColor" systemColor="labelColor"/>
                                 <connections>
                                     <action selector="dismissBarButtonItemAction:" destination="OPB-2U-HF7" id="uXb-h8-bKC"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="location-picker-pin-icon" id="pxn-fh-ZoR">
+                                <color key="tintColor" systemColor="labelColor"/>
                                 <connections>
                                     <action selector="pinBarButtonItemAction:" destination="OPB-2U-HF7" id="edP-gp-esz"/>
                                 </connections>
@@ -47,11 +50,13 @@
                         </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="Done" style="done" id="Ljc-6U-rzS">
+                                <color key="tintColor" systemColor="labelColor"/>
                                 <connections>
                                     <action selector="doneBarButtonItemAction:" destination="OPB-2U-HF7" id="Xj8-1V-zD2"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Cancel" id="cj0-Kv-aTM">
+                                <color key="tintColor" systemColor="labelColor"/>
                                 <connections>
                                     <action selector="cancelBarButtonItemAction:" destination="OPB-2U-HF7" id="vZJ-El-UJK"/>
                                 </connections>
@@ -73,5 +78,8 @@
     <resources>
         <image name="dismiss-modal-icon" width="17" height="17"/>
         <image name="location-picker-pin-icon" width="25" height="25"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -4,18 +4,27 @@ import RuuviOntology
 
 public struct MeasurementServiceSettings {
     public let temperatureUnit: UnitTemperature
+    public let temperatureAccuracy: MeasurementAccuracyType
     public let humidityUnit: HumidityUnit
+    public let humidityAccuracy: MeasurementAccuracyType
     public let pressureUnit: UnitPressure
+    public let pressureAccuracy: MeasurementAccuracyType
     public let language: Language
 
     public init(
         temperatureUnit: UnitTemperature,
+        temperatureAccuracy: MeasurementAccuracyType,
         humidityUnit: HumidityUnit,
+        humidityAccuracy: MeasurementAccuracyType,
         pressureUnit: UnitPressure,
+        pressureAccuracy: MeasurementAccuracyType,
         language: Language
     ) {
         self.temperatureUnit = temperatureUnit
+        self.temperatureAccuracy = temperatureAccuracy
         self.humidityUnit = humidityUnit
+        self.humidityAccuracy = humidityAccuracy
+        self.pressureAccuracy = pressureAccuracy
         self.pressureUnit = pressureUnit
         self.language = language
     }
@@ -25,12 +34,33 @@ final class MeasurementService: NSObject {
 
     public var settings: MeasurementServiceSettings
 
-    private var numberFormatter: NumberFormatter {
+    private var commonFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.locale = settings.language.locale
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
+        return formatter
+    }
+
+    private var temperatureFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = settings.language.locale
+        formatter.numberStyle = .decimal
+        return formatter
+    }
+
+    private var humidityFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = settings.language.locale
+        formatter.numberStyle = .decimal
+        return formatter
+    }
+
+    private var pressureFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = settings.language.locale
+        formatter.numberStyle = .decimal
         return formatter
     }
 
@@ -52,8 +82,10 @@ extension MeasurementService {
         let value = temperature
             .converted(to: settings.temperatureUnit)
             .value
-            .round(to: numberFormatter.maximumFractionDigits)
-        return formattedValue(from: value)
+            .round(to: settings.temperatureAccuracy.value)
+        temperatureFormatter.maximumFractionDigits = settings.temperatureAccuracy.value
+        temperatureFormatter.minimumFractionDigits = settings.temperatureAccuracy.value
+        return formattedValue(from: value, formatter: temperatureFormatter)
     }
 
     public func pressure(for pressure: Pressure?) -> String {
@@ -63,8 +95,10 @@ extension MeasurementService {
         let value = pressure
             .converted(to: settings.pressureUnit)
             .value
-            .round(to: numberFormatter.maximumFractionDigits)
-        return formattedValue(from: value)
+            .round(to: settings.pressureAccuracy.value)
+        pressureFormatter.maximumFractionDigits = settings.pressureAccuracy.value
+        pressureFormatter.minimumFractionDigits = settings.pressureAccuracy.value
+        return formattedValue(from: value, formatter: pressureFormatter)
     }
 
     public func voltage(for voltage: Voltage?) -> String {
@@ -74,8 +108,8 @@ extension MeasurementService {
         let value = voltage
             .converted(to: .volts)
             .value
-            .round(to: numberFormatter.maximumFractionDigits)
-        return formattedValue(from: value)
+            .round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
     }
 
     public func humidity(for humidity: Humidity?,
@@ -97,29 +131,30 @@ extension MeasurementService {
             let value = humidityWithTemperature.value
             humidityValue = isDecimal
             ? value
-                .round(to: numberFormatter.maximumFractionDigits)
+                .round(to: settings.humidityAccuracy.value)
             : (value * 100)
-                .round(to: numberFormatter.maximumFractionDigits)
+                .round(to: settings.humidityAccuracy.value)
         case .gm3:
             humidityValue = humidityWithTemperature.converted(to: .absolute)
                 .value
-                .round(to: numberFormatter.maximumFractionDigits)
+                .round(to: settings.humidityAccuracy.value)
         case .dew:
             let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
             humidityValue = dp?.converted(to: settings.temperatureUnit)
                 .value
-                .round(to: numberFormatter.maximumFractionDigits)
+                .round(to: settings.humidityAccuracy.value)
         }
-
-        return formattedValue(from: humidityValue)
+        humidityFormatter.maximumFractionDigits = settings.humidityAccuracy.value
+        humidityFormatter.minimumFractionDigits = settings.humidityAccuracy.value
+        return formattedValue(from: humidityValue, formatter: humidityFormatter)
     }
 
     public func acceleration(for acceleration: Double?) -> String {
         guard let acceleration = acceleration else {
             return emptyValueString
         }
-        let value = acceleration.round(to: numberFormatter.maximumFractionDigits)
-        return formattedValue(from: value)
+        let value = acceleration.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
     }
 
     public func movements(for movements: Int?) -> String {
@@ -131,9 +166,10 @@ extension MeasurementService {
 }
 // MARK: - MeasurementService Helper methods
 extension MeasurementService {
-    private func formattedValue(from value: Double?) -> String {
+    private func formattedValue(from value: Double?,
+                                formatter: NumberFormatter) -> String {
         guard let value = value,
-              let formattedValue = numberFormatter.string(from: value.nsNumber) else {
+              let formattedValue = formatter.string(from: value.nsNumber) else {
             return emptyValueString
         }
         return formattedValue

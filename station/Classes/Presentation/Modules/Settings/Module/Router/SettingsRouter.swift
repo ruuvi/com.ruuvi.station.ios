@@ -50,10 +50,10 @@ class SettingsRouter: SettingsRouterInput {
         }
     }
 
-    func openSelection(with viewModel: SelectionViewModel, output: SelectionModuleOutput?) {
-        let factory = StoryboardFactory(storyboardName: "Selection")
+    func openUnitSettings(with viewModel: UnitSettingsViewModel, output: UnitSettingsModuleOutput?) {
+        let factory = StoryboardFactory(storyboardName: "UnitSettings")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: SelectionModuleInput.self)
+            .forStoryboard(factory: factory, to: UnitSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
                 module.configure(viewModel: viewModel, output: output)

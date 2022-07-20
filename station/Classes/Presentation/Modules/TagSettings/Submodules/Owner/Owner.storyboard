@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Montserrat-Bold.ttf">
-            <string>Montserrat-Bold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Owner View Controller-->
         <scene sceneID="s0d-6b-0kx">
@@ -29,7 +24,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="474"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sa5-R9-s2b">
-                                                <rect key="frame" x="20" y="20" width="280" height="382"/>
+                                                <rect key="frame" x="16" y="20" width="288" height="382"/>
                                                 <string key="text">Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.
 
 Benefits:
@@ -46,13 +41,13 @@ Benefits:
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TMq-hd-Z5t">
-                                                <rect key="frame" x="57" y="422" width="206" height="44"/>
+                                                <rect key="frame" x="58" y="422" width="204" height="44"/>
                                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="44" id="74S-Kg-20W"/>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="Swd-IT-Bfy"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                 <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
                                                 <state key="normal" title="CLAIM OWNERSHIP"/>
                                                 <userDefinedRuntimeAttributes>
@@ -70,9 +65,9 @@ Benefits:
                                             <constraint firstItem="TMq-hd-Z5t" firstAttribute="top" secondItem="sa5-R9-s2b" secondAttribute="bottom" constant="20" id="173-LK-zTr"/>
                                             <constraint firstItem="sa5-R9-s2b" firstAttribute="top" secondItem="Snr-bv-x2g" secondAttribute="top" constant="20" id="1Pj-SM-cjo"/>
                                             <constraint firstItem="TMq-hd-Z5t" firstAttribute="centerX" secondItem="Snr-bv-x2g" secondAttribute="centerX" id="AUG-Jj-oR9"/>
-                                            <constraint firstAttribute="trailing" secondItem="sa5-R9-s2b" secondAttribute="trailing" constant="20" id="Fcg-Nk-4rZ"/>
+                                            <constraint firstAttribute="trailing" secondItem="sa5-R9-s2b" secondAttribute="trailing" constant="16" id="Fcg-Nk-4rZ"/>
                                             <constraint firstAttribute="bottom" secondItem="TMq-hd-Z5t" secondAttribute="bottom" constant="8" id="KQV-qY-c8Z"/>
-                                            <constraint firstItem="sa5-R9-s2b" firstAttribute="leading" secondItem="Snr-bv-x2g" secondAttribute="leading" constant="20" id="hzA-fI-W8D"/>
+                                            <constraint firstItem="sa5-R9-s2b" firstAttribute="leading" secondItem="Snr-bv-x2g" secondAttribute="leading" constant="16" id="hzA-fI-W8D"/>
                                         </constraints>
                                     </view>
                                 </subviews>

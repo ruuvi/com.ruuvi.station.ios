@@ -39,7 +39,7 @@ class UpdateFirmwareAppleViewController: UIViewController, UpdateFirmwareViewInp
         }
 
         attrString.addAttribute(.foregroundColor,
-                                value: UIColor.darkGray,
+                                value: UIColor.secondaryLabel,
                                 range: NSRange(location: 0, length: attrString.length))
 
         descriptionTextView.attributedText = attrString

@@ -57,6 +57,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
+    // swiftlint:disable:next cyclomatic_complexity
     public func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
@@ -66,13 +67,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
                 }
+                if let accuracyTemperature = cloudSettings.accuracyTemperature,
+                   accuracyTemperature != sSelf.ruuviLocalSettings.temperatureAccuracy {
+                    sSelf.ruuviLocalSettings.temperatureAccuracy = accuracyTemperature
+                }
                 if let unitHumidity = cloudSettings.unitHumidity,
                    unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
                     sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
                 }
+                if let accuracyHumidity = cloudSettings.accuracyHumidity,
+                   accuracyHumidity != sSelf.ruuviLocalSettings.humidityAccuracy {
+                    sSelf.ruuviLocalSettings.humidityAccuracy = accuracyHumidity
+                }
                 if let unitPressure = cloudSettings.unitPressure,
                    unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
+                }
+                if let accuracyPressure = cloudSettings.accuracyPressure,
+                   accuracyPressure != sSelf.ruuviLocalSettings.pressureAccuracy {
+                    sSelf.ruuviLocalSettings.pressureAccuracy = accuracyPressure
                 }
                 if let chartShowAllData = cloudSettings.chartShowAllPoints,
                    chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
@@ -86,7 +99,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
                     sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
                 }
-
                 if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
                    cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
                     sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
@@ -352,6 +364,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return promise.future
     }
 
+    // swiftlint:disable:next function_body_length
     private func syncLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
@@ -367,17 +380,26 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                          sharedToMe: true,
                                     alerts: nil).on(success: { [weak self] sensors in
             for sensor in sensors {
-                self?.ruuviStorage.readLatest(sensor.sensor.ruuviTagSensor).on(success: { localRecord in
+                self?.ruuviStorage.readLatest(sensor.sensor.ruuviTagSensor).on(success: { [weak self] localRecord in
+                    guard let sSelf = self else { return }
                     if let cloudRecord = sensor.record,
                         let localRecord = localRecord,
                        cloudRecord.macId?.value == localRecord.macId?.value {
-                        self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
-                            self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
-                            promise.succeed(value: true)
-                        }, failure: { error in
-                            self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
-                            promise.fail(error: .ruuviPool(error))
-                        })
+
+                        let storeCloudPointCloudModeOn = sSelf.ruuviLocalSettings.cloudModeEnabled
+                        let storeCloudPointCloudModeOff = !sSelf.ruuviLocalSettings.cloudModeEnabled &&
+                        (localRecord.source == .advertisement || localRecord.source == .heartbeat) &&
+                        (cloudRecord.date > localRecord.date)
+
+                        if storeCloudPointCloudModeOn || storeCloudPointCloudModeOff {
+                            self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
+                                self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
+                                promise.succeed(value: true)
+                            }, failure: { error in
+                                self?.ruuviLocalSyncState.setSyncStatus(.onError, for: sensor.sensor.id.mac)
+                                promise.fail(error: .ruuviPool(error))
+                            })
+                        }
                     } else {
                         if let cloudRecord = sensor.record {
                             self?.ruuviPool.createLast(cloudRecord).on(success: { _ in

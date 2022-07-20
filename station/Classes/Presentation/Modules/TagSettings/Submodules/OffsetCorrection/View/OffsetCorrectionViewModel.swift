@@ -2,6 +2,7 @@ import UIKit
 import BTKit
 import Humidity
 import RuuviOntology
+import RuuviLocal
 
 class OffsetCorrectionViewModel {
     var type: OffsetCorrectionType = .temperature
@@ -28,6 +29,7 @@ class OffsetCorrectionViewModel {
     }
 
     var hasOffsetValue: Observable<Bool?> = Observable<Bool?>(false)
+    var humidityAccuracy: Int = 2
 
     init() {
         type = .pressure
@@ -35,9 +37,11 @@ class OffsetCorrectionViewModel {
     }
 
     convenience init(type: OffsetCorrectionType,
+                     settings: RuuviLocalSettings,
                      sensorSettings: SensorSettings) {
         self.init()
         self.type = type
+        self.update(settings: settings)
         self.update(sensorSettings: sensorSettings)
     }
 
@@ -80,5 +84,9 @@ class OffsetCorrectionViewModel {
         } else {
             self.hasOffsetValue.value = false
         }
+    }
+
+    func update(settings: RuuviLocalSettings) {
+        humidityAccuracy = settings.humidityAccuracy.value
     }
 }

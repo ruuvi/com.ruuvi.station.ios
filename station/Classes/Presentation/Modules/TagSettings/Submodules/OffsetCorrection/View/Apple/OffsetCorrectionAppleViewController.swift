@@ -68,7 +68,8 @@ class OffsetCorrectionAppleViewController: UIViewController {
         originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
+                // swiftlint:disable:next line_length
+                label.text = "\((value.bound * 100).round(to: self?.viewModel.humidityAccuracy ?? 2).clean)\("%".localized())"
             case .pressure:
                 label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
             default:
@@ -96,7 +97,8 @@ class OffsetCorrectionAppleViewController: UIViewController {
         correctedValueLabel.bind(viewModel.correctedValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
+                // swiftlint:disable:next line_length
+                label.text = "\((value.bound * 100).round(to: self?.viewModel.humidityAccuracy ?? 2).clean)\("%".localized())"
             case .pressure:
                 label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
             default:
@@ -125,7 +127,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         // make text color gray
         attrString.addAttribute(.foregroundColor,
-            value: UIColor.darkGray,
+            value: UIColor.secondaryLabel,
             range: NSRange(location: 0, length: attrString.length))
 
         descriptionTextView.attributedText = attrString

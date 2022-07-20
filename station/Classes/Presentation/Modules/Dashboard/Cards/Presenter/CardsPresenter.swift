@@ -73,8 +73,11 @@ class CardsPresenter: CardsModuleInput {
     private var universalLinkObservationToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
     private var temperatureUnitToken: NSObjectProtocol?
+    private var temperatureAccuracyToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
+    private var humidityAccuracyToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
+    private var pressureAccuracyToken: NSObjectProtocol?
     private var languageToken: NSObjectProtocol?
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var widgetDeepLinkToken: NSObjectProtocol?
@@ -121,8 +124,11 @@ class CardsPresenter: CardsModuleInput {
         universalLinkObservationToken?.invalidate()
         cloudModeToken?.invalidate()
         temperatureUnitToken?.invalidate()
+        temperatureAccuracyToken?.invalidate()
         humidityUnitToken?.invalidate()
+        humidityAccuracyToken?.invalidate()
         pressureUnitToken?.invalidate()
+        pressureAccuracyToken?.invalidate()
         languageToken?.invalidate()
         systemLanguageChangeToken?.invalidate()
         widgetDeepLinkToken?.invalidate()
@@ -409,6 +415,7 @@ extension CardsPresenter: TagSettingsModuleOutput {
 extension CardsPresenter {
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
+
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
@@ -454,7 +461,6 @@ extension CardsPresenter {
             return viewModel
         })
         viewModels = reorder(ruuviViewModels + virtualViewModels)
-        // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags {
             self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
@@ -488,6 +494,7 @@ extension CardsPresenter {
         let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
         appGroupDefaults?.set(ruuviUser.isAuthorized, forKey: isAuthorizedUDKey)
     
+        // Temperature
         let temperatureUnitKey = "temperatureUnitKey"
         var temperatureUnitInt: Int = 2
         switch settings.temperatureUnit {
@@ -499,7 +506,12 @@ extension CardsPresenter {
             temperatureUnitInt = 3
         }
         appGroupDefaults?.set(temperatureUnitInt, forKey: temperatureUnitKey)
+
+        let temperatureAccuracyKey = "temperatureAccuracyKey"
+        appGroupDefaults?.set(settings.temperatureAccuracy.value, forKey: temperatureAccuracyKey)
         
+        // Humidity
+        let humidityUnitKey = "humidityUnitKey"
         var humidityUnitInt: Int = 0
         switch settings.humidityUnit {
         case .percent:
@@ -509,11 +521,17 @@ extension CardsPresenter {
         case .dew:
             humidityUnitInt = 2
         }
-        let humidityUnitKey = "humidityUnitKey"
         appGroupDefaults?.set(humidityUnitInt, forKey: humidityUnitKey)
     
+        let humidityAccuracyKey = "humidityAccuracyKey"
+        appGroupDefaults?.set(settings.humidityAccuracy.value, forKey: humidityAccuracyKey)
+    
+        // Pressure
         let pressureUnitKey = "pressureUnitKey"
         appGroupDefaults?.set(settings.pressureUnit.hashValue, forKey: pressureUnitKey)
+
+        let pressureAccuracyKey = "pressureAccuracyKey"
+        appGroupDefaults?.set(settings.pressureAccuracy.value, forKey: pressureAccuracyKey)
         
         // Reload widget
         if #available(iOS 14.0, *) {
@@ -1085,10 +1103,18 @@ extension CardsPresenter {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        }
+        temperatureAccuracyToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureAccuracyDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
                 self?.syncAppSettingsToAppGroupContainer()
@@ -1101,9 +1127,25 @@ extension CardsPresenter {
                          using: { [weak self] _ in
                 self?.syncAppSettingsToAppGroupContainer()
         })
+        humidityAccuracyToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityAccuracyDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
         pressureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.syncAppSettingsToAppGroupContainer()
+        })
+        pressureAccuracyToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitAccuracyChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in

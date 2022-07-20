@@ -1,5 +1,5 @@
 import Foundation
 
 protocol SelectionModuleOutput {
-    func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol)
+    func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol, type: UnitSettingsType)
 }

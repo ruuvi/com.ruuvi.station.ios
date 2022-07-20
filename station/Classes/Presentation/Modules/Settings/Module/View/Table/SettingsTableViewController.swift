@@ -10,15 +10,12 @@ class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
     @IBOutlet weak var temperatureTitleLabel: UILabel!
-    @IBOutlet weak var temperatureSubtitleLabel: UILabel!
     @IBOutlet weak var temperatureCell: UITableViewCell!
 
     @IBOutlet weak var humidityTitleLabel: UILabel!
-    @IBOutlet weak var humiditySubtitleLabel: UILabel!
     @IBOutlet weak var humidityCell: UITableViewCell!
 
     @IBOutlet weak var pressureTitleLabel: UILabel!
-    @IBOutlet weak var pressureSubitleLabel: UILabel!
     @IBOutlet weak var pressureCell: UITableViewCell!
 
     @IBOutlet weak var heartbeatTitleLabel: UILabel!
@@ -44,21 +41,6 @@ class SettingsTableViewController: UITableViewController {
     private let showDefaults = false
     #endif
 
-    var temperatureUnit: TemperatureUnit = .celsius {
-        didSet {
-            updateUITemperatureUnit()
-        }
-    }
-    var humidityUnit: HumidityUnit = .percent {
-        didSet {
-            updateUIHumidityUnit()
-        }
-    }
-    var pressureUnit: UnitPressure = .hectopascals {
-        didSet {
-            updateUIPressureUnit()
-        }
-    }
     var language: Language = .english {
         didSet {
             updateUILanguage()
@@ -90,16 +72,9 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = "Settings.navigationItem.title".localized()
-        temperatureTitleLabel.text = "Settings.Label.TemperatureUnit.text".localized()
-        temperatureSubtitleLabel.text = temperatureUnit.title
-        humidityTitleLabel.text = "Settings.Label.HumidityUnit.text".localized()
-        if humidityUnit == .dew {
-            humiditySubtitleLabel.text = String(format: humidityUnit.title, temperatureUnit.symbol)
-        } else {
-            humiditySubtitleLabel.text = humidityUnit.title
-        }
-        pressureTitleLabel.text = "Settings.Label.PressureUnit.text".localized()
-        pressureSubitleLabel.text = pressureUnit.title
+        temperatureTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
+        humidityTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
+        pressureTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
@@ -221,8 +196,8 @@ extension SettingsTableViewController {
 // MARK: - Update UI
 extension SettingsTableViewController {
     private func updateUI() {
-        updateUITemperatureUnit()
-        updateUIHumidityUnit()
+//        updateUITemperatureUnit()
+//        updateUIHumidityUnit()
         updateUILanguage()
         updateTableIfLoaded()
     }
@@ -236,31 +211,6 @@ extension SettingsTableViewController {
     private func updateUILanguage() {
         if isViewLoaded {
             languageValueLabel.text = language.name
-        }
-    }
-
-    private func updateUITemperatureUnit() {
-        if isViewLoaded {
-            if humidityUnit == .dew {
-                updateUIHumidityUnit()
-            }
-            temperatureSubtitleLabel.text = temperatureUnit.title
-        }
-    }
-
-    private func updateUIHumidityUnit() {
-        if isViewLoaded {
-            if humidityUnit == .dew {
-                humiditySubtitleLabel.text = String(format: humidityUnit.title, temperatureUnit.symbol)
-            } else {
-                humiditySubtitleLabel.text = humidityUnit.title
-            }
-        }
-    }
-
-    private func updateUIPressureUnit() {
-        if isViewLoaded {
-            pressureSubitleLabel.text = pressureUnit.title
         }
     }
 
