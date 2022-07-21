@@ -47,6 +47,11 @@ extension MenuTableEmbededViewController {
         super.viewDidLoad()
         setupLocalization()
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        output.viewDidAppear()
+    }
 }
 
 // MARK: - UITableViewDelegate
