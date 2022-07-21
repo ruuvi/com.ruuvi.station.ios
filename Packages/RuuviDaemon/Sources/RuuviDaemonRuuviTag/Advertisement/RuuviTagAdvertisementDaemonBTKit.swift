@@ -81,6 +81,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                          object: nil,
                          queue: .main) { [weak self] _ in
                 guard let sSelf = self else { return }
+                sSelf.reloadSensorSettings()
                 sSelf.restartObserving()
             }
     }
@@ -148,7 +149,10 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         sensorSettingsTokens.removeAll()
 
         for ruuviTag in ruuviTags {
-            guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else { continue }
+            let shouldAvoidObserving = settings.cloudModeEnabled && ruuviTag.isCloud
+            if shouldAvoidObserving {
+                continue
+            }
             guard let luid = ruuviTag.luid else { continue }
             observeTokens.append(foreground.observe(self,
                                                     uuid: luid.value,
