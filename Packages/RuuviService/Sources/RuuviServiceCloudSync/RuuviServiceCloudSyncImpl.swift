@@ -390,8 +390,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         let storeCloudPointCloudModeOff = !sSelf.ruuviLocalSettings.cloudModeEnabled &&
                         (localRecord.source == .advertisement || localRecord.source == .heartbeat) &&
                         (cloudRecord.date > localRecord.date)
+                        let storeCloudPointForSharedSensor = localRecord.source == .ruuviNetwork
 
-                        if storeCloudPointCloudModeOn || storeCloudPointCloudModeOff {
+                        if storeCloudPointCloudModeOn || storeCloudPointCloudModeOff || storeCloudPointForSharedSensor {
                             self?.ruuviPool.updateLast(cloudRecord).on(success: { _ in
                                 self?.ruuviLocalSyncState.setSyncStatus(.complete, for: sensor.sensor.id.mac)
                                 promise.succeed(value: true)

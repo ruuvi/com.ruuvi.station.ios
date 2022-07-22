@@ -18,7 +18,7 @@ class TagSettingsMoreInfoHeaderFooterView: UITableViewHeaderFooterView, Localiza
 
     func localize() {
         noValuesLabel.text = "TagSettings.Label.noValues.text".localized()
-        moreInfoLabel.text = "TagSettings.Label.moreInfo.text".localized()
+        moreInfoLabel.text = "TagSettings.Label.moreInfo.text".localized().uppercased()
     }
 
     @IBAction func noValuesButtonTouchUpInside(_ sender: UIButton) {
