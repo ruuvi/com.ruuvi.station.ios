@@ -18,7 +18,7 @@ class TagSettingsAlertsHeaderFooterView: UITableViewHeaderFooterView, Localizabl
 
     func localize() {
         disabledLabel.text = "TagSettings.Label.disabled.text".localized()
-        alertsLabel.text = "TagSettings.Label.alerts.text".localized()
+        alertsLabel.text = "TagSettings.Label.alerts.text".localized().uppercased()
     }
 
     @IBAction func disabledButtonTouchUpInside(_ sender: UIButton) {
