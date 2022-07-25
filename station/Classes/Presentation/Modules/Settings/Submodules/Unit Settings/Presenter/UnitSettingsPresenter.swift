@@ -9,12 +9,28 @@ class UnitSettingsPresenter {
     var settings: RuuviLocalSettings!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
 
+    private var temperatureUnitToken: NSObjectProtocol?
+    private var temperatureAccuracyToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
+    private var humidityAccuracyToken: NSObjectProtocol?
+    private var pressureUnitToken: NSObjectProtocol?
+    private var pressureAccuracyToken: NSObjectProtocol?
+
     private var viewModel: UnitSettingsViewModel? {
         didSet {
             view.viewModel = viewModel
         }
     }
     var output: UnitSettingsModuleOutput?
+
+    deinit {
+        temperatureUnitToken?.invalidate()
+        temperatureAccuracyToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        humidityAccuracyToken?.invalidate()
+        pressureUnitToken?.invalidate()
+        pressureAccuracyToken?.invalidate()
+    }
 }
 extension UnitSettingsPresenter: UnitSettingsModuleInput {
     func configure(viewModel: UnitSettingsViewModel, output: UnitSettingsModuleOutput?) {
@@ -29,12 +45,8 @@ extension UnitSettingsPresenter: UnitSettingsModuleInput {
 
 extension UnitSettingsPresenter: UnitSettingsViewOutput {
     func viewDidLoad() {
-        view.temperatureUnit = settings.temperatureUnit
-        view.humidityUnit = settings.humidityUnit
-        view.pressureUnit = settings.pressureUnit
-        view.temperatureAccuracy = settings.temperatureAccuracy
-        view.humidityAccuracy = settings.humidityAccuracy
-        view.pressureAccuracy = settings.pressureAccuracy
+        updateUnits()
+        observeUnitChanges()
     }
 
     func viewDidSelect(type: UnitSettingsType) {
@@ -164,5 +176,63 @@ extension UnitSettingsPresenter {
                                   selection: selection,
                                   measurementType: measurementType,
                                   unitSettingsType: .accuracy)
+    }
+
+    private func observeUnitChanges() {
+        temperatureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.updateUnits()
+        }
+        temperatureAccuracyToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureAccuracyDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.updateUnits()
+        }
+        humidityUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.updateUnits()
+        })
+        humidityAccuracyToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityAccuracyDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.updateUnits()
+        })
+        pressureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.updateUnits()
+        })
+        pressureAccuracyToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitAccuracyChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.updateUnits()
+        })
+    }
+
+    private func updateUnits() {
+        view.temperatureUnit = settings.temperatureUnit
+        view.humidityUnit = settings.humidityUnit
+        view.pressureUnit = settings.pressureUnit
+        view.temperatureAccuracy = settings.temperatureAccuracy
+        view.humidityAccuracy = settings.humidityAccuracy
+        view.pressureAccuracy = settings.pressureAccuracy
     }
 }

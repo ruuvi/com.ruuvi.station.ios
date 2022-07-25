@@ -202,11 +202,16 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         if settings.appIsOnForeground {
             if let date = savedDate[uuid] {
                 if previousAdvertisementSequence != nil {
-                    if wrapper.device.measurementSequenceNumber != previousAdvertisementSequence {
+                    if let next = wrapper.device.measurementSequenceNumber,
+                        let previous = previousAdvertisementSequence, next > previous {
                         persist(wrapper.device, uuid)
                         previousAdvertisementSequence = nil
                     }
                 } else {
+                    // Tags with data format 3 doesn't sent duplicates packets*
+                    if wrapper.device.version == 3 {
+                        persist(wrapper.device, uuid)
+                    }
                     previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
                 }
             } else {

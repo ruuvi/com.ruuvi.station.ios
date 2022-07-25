@@ -337,7 +337,7 @@ extension CardsScrollViewController {
     private func pressureUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Pressure?) -> Void {
         return { [weak self] label, pressure in
             view.hidePressureView = pressure == nil
-            label.text = self?.measurementService?.string(for: pressure)
+            label.text = self?.measurementService?.string(for: pressure, allowSettings: true)
         }
     }
 
@@ -385,7 +385,7 @@ extension CardsScrollViewController {
                 humidityWarning?.isHidden = true
             }
             view.hideHumidityView = value == nil
-            label.text = self?.measurementService.string(for: value, temperature: temperature)
+            label.text = self?.measurementService.string(for: value, temperature: temperature, allowSettings: true)
         }
         return humidityBlock
     }

@@ -45,7 +45,6 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
         self.view.viewModel = {
             let vm = OffsetCorrectionViewModel(
                 type: type,
-                settings: settings,
                 sensorSettings: self.sensorSettings
             )
             ruuviStorage.readLatest(ruuviTag).on {[weak self] record in
@@ -163,7 +162,8 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
                 if let ruuviTag = device.ruuvi?.tag {
                     self?.lastSensorRecord = ruuviTag
                     self?.view.viewModel.update(
-                        ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings).with(source: .advertisement)
+                        ruuviTagRecord: ruuviTag.with(sensorSettings:
+                                                        self?.sensorSettings).with(source: .advertisement)
                     )
                 }
             }
