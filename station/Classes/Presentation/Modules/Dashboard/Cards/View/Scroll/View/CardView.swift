@@ -35,7 +35,11 @@ class CardView: UIView {
     @IBOutlet weak var movementCounterView: UIView!
     @IBOutlet weak var movementCounterViewHeight: NSLayoutConstraint!
 
-    var updatedAt: Date?
+    var updatedAt: Date? {
+        didSet {
+            startTimer()
+        }
+    }
     var isConnected: Bool?
     var networkTagMacId: MACIdentifier? {
         didSet {
