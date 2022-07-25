@@ -68,12 +68,13 @@ class OffsetCorrectionAppleViewController: UIViewController {
         originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                // swiftlint:disable:next line_length
-                label.text = "\((value.bound * 100).round(to: self?.viewModel.humidityAccuracy ?? 2).clean)\("%".localized())"
+                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
             case .pressure:
-                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
+                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
+                                                             allowSettings: false)
             default:
-                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
+                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius),
+                                                             allowSettings: false)
             }
         }
         originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] _, date in
@@ -97,12 +98,13 @@ class OffsetCorrectionAppleViewController: UIViewController {
         correctedValueLabel.bind(viewModel.correctedValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                // swiftlint:disable:next line_length
-                label.text = "\((value.bound * 100).round(to: self?.viewModel.humidityAccuracy ?? 2).clean)\("%".localized())"
+                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
             case .pressure:
-                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
+                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
+                                                             allowSettings: false)
             default:
-                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
+                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius),
+                                                             allowSettings: false)
             }
         }
     }

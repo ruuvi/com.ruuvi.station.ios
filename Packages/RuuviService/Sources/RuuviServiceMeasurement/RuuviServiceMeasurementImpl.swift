@@ -141,23 +141,33 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         return temperature
             .converted(to: units.temperatureUnit)
             .value
-            .round(to: settings.temperatureAccuracy.value)
+            .round(to: commonNumberFormatter.maximumFractionDigits)
     }
 
-    public func string(for temperature: Temperature?) -> String {
+    public func string(for temperature: Temperature?, allowSettings: Bool) -> String {
         guard let temperature = temperature else {
             return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
         let number = NSNumber(value: value)
+
+        var numberFormatter = NumberFormatter()
+        var measurementFormatter = MeasurementFormatter()
+        if allowSettings {
+            numberFormatter = tempereatureNumberFormatter
+            measurementFormatter = temperatureFormatter
+        } else {
+            numberFormatter = commonNumberFormatter
+            measurementFormatter = commonFormatter
+        }
         if temperatureFormatter.unitStyle == .medium,
            settings.language == .english,
-           let valueString = tempereatureNumberFormatter.string(from: number) {
+           let valueString = numberFormatter.string(from: number) {
             return String(format: "%@\(String.nbsp)%@",
                           valueString,
                           units.temperatureUnit.symbol)
         } else {
-            return temperatureFormatter.string(from: temperature.converted(to: units.temperatureUnit))
+            return measurementFormatter.string(from: temperature.converted(to: units.temperatureUnit))
         }
     }
 
@@ -178,15 +188,20 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         if units.pressureUnit == .inchesOfMercury {
             return pressureValue
         } else {
-            return pressureValue.round(to: settings.pressureAccuracy.value)
+            return pressureValue.round(to: commonNumberFormatter.maximumFractionDigits)
         }
     }
 
-    public func string(for pressure: Pressure?) -> String {
+    public func string(for pressure: Pressure?,
+                       allowSettings: Bool) -> String {
         guard let pressure = pressure else {
             return emptyValueString
         }
-        return pressureFormatter.string(from: pressure.converted(to: units.pressureUnit))
+        if allowSettings {
+            return pressureFormatter.string(from: pressure.converted(to: units.pressureUnit))
+        } else {
+            return commonFormatter.string(from: pressure.converted(to: units.pressureUnit))
+        }
     }
 
     public func double(for voltage: Voltage) -> Double {
@@ -215,23 +230,24 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             let value = humidityWithTemperature.value
             return isDecimal
             ? value
-                .round(to: settings.humidityAccuracy.value)
+                .round(to: commonNumberFormatter.maximumFractionDigits)
             : (value * 100)
-                .round(to: settings.humidityAccuracy.value)
+                .round(to: commonNumberFormatter.maximumFractionDigits)
         case .gm3:
             return humidityWithTemperature.converted(to: .absolute)
                 .value
-                .round(to: settings.humidityAccuracy.value)
+                .round(to: commonNumberFormatter.maximumFractionDigits)
         case .dew:
             let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
             return dp?.converted(to: settings.temperatureUnit.unitTemperature)
                 .value
-                .round(to: settings.humidityAccuracy.value)
+                .round(to: commonNumberFormatter.maximumFractionDigits)
         }
     }
 
     public func string(for humidity: Humidity?,
-                       temperature: Temperature?) -> String {
+                       temperature: Temperature?,
+                       allowSettings: Bool) -> String {
         guard let humidity = humidity,
               let temperature = temperature else {
             return emptyValueString
@@ -241,6 +257,11 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             value: humidity.value,
             unit: .relative(temperature: temperature)
         )
+        if allowSettings {
+            humidityFormatter.numberFormatter = humidityNumberFormatter
+        } else {
+            humidityFormatter.numberFormatter = commonNumberFormatter
+        }
         switch units.humidityUnit {
         case .percent:
             return humidityFormatter.string(from: humidityWithTemperature)
@@ -248,7 +269,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return humidityFormatter.string(from: humidityWithTemperature.converted(to: .absolute))
         case .dew:
             let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
-            return string(for: dp)
+            return string(for: dp, allowSettings: allowSettings)
         }
     }
 }
@@ -303,7 +324,7 @@ extension RuuviServiceMeasurementImpl {
         return string(for: Temperature(
             temperatureOffsetCorrection(for: temperature),
             unit: units.temperatureUnit
-        ))
+        ), allowSettings: false)
     }
 
     public func humidityOffsetCorrection(for humidity: Double) -> Double {
@@ -311,7 +332,7 @@ extension RuuviServiceMeasurementImpl {
     }
 
     public func humidityOffsetCorrectionString(for humidity: Double) -> String {
-        return humidityFormatter.string(
+        return commonFormatter.string(
             from: Humidity(value: humidityOffsetCorrection(for: humidity),
                            unit: UnitHumidity.relative(temperature: Temperature(value: 0.0,
                                                                                 unit: UnitTemperature.celsius)))
@@ -326,7 +347,7 @@ extension RuuviServiceMeasurementImpl {
         return string(for: Pressure(
             pressureOffsetCorrection(for: pressure),
             unit: units.pressureUnit
-        ))
+        ), allowSettings: false)
     }
 }
 
@@ -335,12 +356,12 @@ extension String {
 }
 
 public extension Double {
+    var stringValue: String {
+        return String(self)
+    }
     func round(to places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
         let rounded = (self * divisor).rounded(.toNearestOrAwayFromZero) / divisor
         return rounded
-    }
-    var clean: String {
-        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
 }
