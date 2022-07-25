@@ -850,6 +850,10 @@ extension TagSettingsPresenter {
         if let rssi = device.rssi {
             viewModel.rssi.value = rssi
         }
+
+        viewModel.humidityOffsetCorrectionVisible.value = !(device.humidity == nil)
+        viewModel.pressureOffsetCorrectionVisible.value = !(device.pressure == nil)
+
         viewModel.updateRecord(record)
         reloadMutedTill()
 
