@@ -29,7 +29,7 @@ public protocol RuuviServiceMeasurement {
     func updateUnits()
 
     func double(for temperature: Temperature) -> Double
-    func string(for temperature: Temperature?) -> String
+    func string(for temperature: Temperature?, allowSettings: Bool) -> String
     func stringWithoutSign(for temperature: Temperature?) -> String
 
     func double(for humidity: Humidity,
@@ -37,9 +37,10 @@ public protocol RuuviServiceMeasurement {
                 isDecimal: Bool) -> Double?
 
     func string(for humidity: Humidity?,
-                temperature: Temperature?) -> String
+                temperature: Temperature?,
+                allowSettings: Bool) -> String
     func double(for pressure: Pressure) -> Double
-    func string(for pressure: Pressure?) -> String
+    func string(for pressure: Pressure?, allowSettings: Bool) -> String
     func double(for voltage: Voltage) -> Double
     func string(for voltage: Voltage?) -> String
 
