@@ -906,6 +906,8 @@
 		E1CD7810287830BF00F1F0EB /* UnitSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD780E287830BF00F1F0EB /* UnitSettingsRouterInput.swift */; };
 		E1CD78122878379C00F1F0EB /* UnitSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD78112878379C00F1F0EB /* UnitSettingsTableViewCell.swift */; };
 		E1CD78132878379C00F1F0EB /* UnitSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD78112878379C00F1F0EB /* UnitSettingsTableViewCell.swift */; };
+		E1FC104C28908FDB008F3AE8 /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FC104B28908FDB008F3AE8 /* YAxisValueFormatter.swift */; };
+		E1FC104D28908FDB008F3AE8 /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FC104B28908FDB008F3AE8 /* YAxisValueFormatter.swift */; };
 		E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
 /* End PBXBuildFile section */
 
@@ -1487,6 +1489,7 @@
 		E1CD780B287830B100F1F0EB /* UnitSettingsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsRouter.swift; sourceTree = "<group>"; };
 		E1CD780E287830BF00F1F0EB /* UnitSettingsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsRouterInput.swift; sourceTree = "<group>"; };
 		E1CD78112878379C00F1F0EB /* UnitSettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		E1FC104B28908FDB008F3AE8 /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E29B5190CB557178D11AB2CE /* SignInPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E6DB40883B83C652584EBB9A /* SignInViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		FC417B8977A47FFAE71585F0 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -3687,6 +3690,7 @@
 				344A091527FB376100328F88 /* CustomXAxisRenderer.swift */,
 				A907A1D62460376600041F6E /* TagChartViewModel.swift */,
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
+				E1FC104B28908FDB008F3AE8 /* YAxisValueFormatter.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -4843,6 +4847,7 @@
 				0E8BD37C238566AB008B31EF /* ViewInput.swift in Sources */,
 				0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */,
 				0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */,
+				E1FC104D28908FDB008F3AE8 /* YAxisValueFormatter.swift in Sources */,
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */,
@@ -5334,6 +5339,7 @@
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
 				E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */,
+				E1FC104C28908FDB008F3AE8 /* YAxisValueFormatter.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				A90E169C24606ABF00631E6C /* TagChartsInteractor.swift in Sources */,
 				A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */,

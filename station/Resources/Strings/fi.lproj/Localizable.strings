@@ -136,7 +136,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "TagCharts.NoChartData.text" = "Tietoja ei ole saatavilla";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
-"TagCharts.Clear.title" = "PYYHI";
+"TagCharts.Clear.title" = "Pyyhi";
 "TagCharts.SyncConfirmationDialog.title" = "Oletko varma?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";

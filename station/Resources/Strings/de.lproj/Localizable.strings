@@ -136,7 +136,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagCharts.NoChartData.text" = "Keine Kartendaten verfügbar";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ist nicht aktiviert";
 "TagCharts.BluetoothDisabledAlert.message" = "Die Ruuvi Station benötigt Bluetooth, um Sensoren zu verbinden. Gehen Sie zu Einstellungen und schalten Sie Bluetooth ein.";
-"TagCharts.Clear.title" = "LÖSCHEN";
+"TagCharts.Clear.title" = "Löschen";
 "TagCharts.SyncConfirmationDialog.title" = "Sind Sie sicher?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Löschen";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Sind Sie sicher?";
