@@ -37,11 +37,8 @@ class MenuPresenter: MenuModuleInput {
 
 extension MenuPresenter: MenuViewOutput {
 
-    func viewDidLoad() {
+    func viewWillAppear() {
         syncViewModel()
-    }
-
-    func viewDidAppear() {
         view.isNetworkHidden = !featureToggleService.isEnabled(.network)
     }
 

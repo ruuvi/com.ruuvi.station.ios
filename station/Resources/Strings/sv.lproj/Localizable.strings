@@ -28,7 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Visa uppdateringsinstruktioner";
 "Cards.Connected.title" = "Ansluten";
 "Cards.Error.ReverseGeocodingFailed.message" = "Det gick inte att ladda data för Virtual Sensor. Gränsen för geokodöverföring överskriden.";
-"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
+"Cards.UpdatedLabel.NoData.message" = "Ingen data under de senaste 10 dagarna.";
 "CoreError.failedToGetPngRepresentation" = "Det gick inte att få PNG-representation";
 "CoreError.failedToGetDocumentsDirectory" = "Det gick inte att hämta bakgrundskatalog";
 "CoreError.failedToGetCurrentLocation" = "Det gick inte att få aktuell plats";
@@ -124,8 +124,8 @@
 "Settings.SectionHeader.Application.title" = "APPLIKATION";
 "Settings.Label.Language.text" = "Språk";
 "Settings.Language.Dialog.title" = "Välj språk";
-"Settings.Language.Dialog.message" = "Open settings and tap Language to change language of the app.
-If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
+"Settings.Language.Dialog.message" = "Öppna inställningar och tryck på Språk för att ändra språket i appen.
+Om du inte kan se språkalternativet i inställningarna, se till att du har lagt till minst ett föredraget språk i systeminställningarna: Inställningar -> Allmänt -> Språk och region .";
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
@@ -136,7 +136,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagCharts.NoChartData.text" = "Ingen histogram data";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station behöver Bluetooth för att lyssna efter sensorer. Gå till Inställningar och aktivera Bluetooth.";
-"TagCharts.Clear.title" = "RENSA";
+"TagCharts.Clear.title" = "Rensa";
 "TagCharts.SyncConfirmationDialog.title" = "Är du säker?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Radera";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Är du säker?";
@@ -523,9 +523,9 @@ RuuviTag-sensorn är redo att användas!";
 "Widgets.Description.message" = "Skapa widgets av dina favorit Ruuvi-sensorer. Widgetdatan kommer från Ruuvi Cloud och kräver en Ruuvi Gateway-router.";
 "Widgets.Unauthorized.message" = "Logga in för att använda widgeten.";
 "Widgets.Unconfigured.message" = "Tryck och håll ned för att redigera widgeten.";
-"Settings.Temperature.Resolution.title" = "Temperature resolution";
-"Settings.Humidity.Resolution.title" = "Humidity resolution";
-"Settings.Pressure.Resolution.title" = "Pressure resolution";
-"Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history graphs or alerts.";
-"Settings.Measurement.Unit.title" = "Unit";
-"Settings.Measurement.Resolution.title" = "Resolution";
+"Settings.Temperature.Resolution.title" = "Temperaturupplösning";
+"Settings.Humidity.Resolution.title" = "Fuktighetsupplösning";
+"Settings.Pressure.Resolution.title" = "Tryckupplösning";
+"Settings.Measurement.Resolution.description" = "Välj hur exakt du vill se sensorernas livemätvärden i appen. Den här inställningen påverkar inte histogram eller varningar.";
+"Settings.Measurement.Unit.title" = "Enhet";
+"Settings.Measurement.Resolution.title" = "Upplösning";

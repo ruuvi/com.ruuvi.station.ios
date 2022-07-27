@@ -136,7 +136,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagCharts.NoChartData.text" = "Informations indisponibles";
 "TagCharts.BluetoothDisabledAlert.title" = "Le Bluetooth n'est pas activé";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station a besoin du Bluetooth pour fonctionner. Veuillez l'activer dans les paramètres de votre appareil.";
-"TagCharts.Clear.title" = "EFFACER";
+"TagCharts.Clear.title" = "Effacer";
 "TagCharts.SyncConfirmationDialog.title" = "Êtes-vous sûr ?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Supprimer";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Êtes-vous sûr ?";
@@ -526,7 +526,7 @@ RuuviTag est prêt à être utilisé !";
 "Settings.Temperature.Resolution.title" = "Temperature resolution";
 "Settings.Humidity.Resolution.title" = "Humidity resolution";
 "Settings.Pressure.Resolution.title" = "Pressure resolution";
-"Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history graphs or alerts.";
+"Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history charts or alerts.";
 "Settings.Measurement.Unit.title" = "Unit";
 "Settings.Measurement.Resolution.title" = "Resolution";
 

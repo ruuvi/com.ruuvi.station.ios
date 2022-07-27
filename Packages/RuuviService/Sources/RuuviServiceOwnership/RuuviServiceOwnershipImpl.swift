@@ -178,8 +178,9 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         let entity = pool.create(sensor)
-        let record = pool.create(record)
-        Future.zip(entity, record).on(success: { _ in
+        let recordEntity = pool.create(record)
+        let recordLast = pool.createLast(record)
+        Future.zip(entity, recordEntity, recordLast).on(success: { _ in
             promise.succeed(value: sensor.any)
         }, failure: { error in
             promise.fail(error: .ruuviPool(error))
@@ -192,6 +193,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         let deleteTagOperation = pool.delete(sensor)
         let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
+        let deleteLastRecordOperation = pool.deleteLast(sensor.id)
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
         if let macId = sensor.macId,
@@ -204,7 +206,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         }
         propertiesService.removeImage(for: sensor)
         localIDs.clear(sensor: sensor)
-        Future.zip([deleteTagOperation, deleteRecordsOperation])
+        Future.zip([deleteTagOperation, deleteRecordsOperation, deleteLastRecordOperation])
             .on(success: { _ in
                 if let unclaimOperation = unclaimOperation {
                     unclaimOperation.on()

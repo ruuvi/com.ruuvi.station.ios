@@ -11,4 +11,5 @@ public enum RuuviTagAdvertisementDaemonDidFailKey: String {
 public protocol RuuviTagAdvertisementDaemon {
     func start()
     func stop()
+    func restart()
 }
