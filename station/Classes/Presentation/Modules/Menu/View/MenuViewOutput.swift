@@ -3,8 +3,7 @@ import Foundation
 protocol MenuViewOutput {
     var userIsAuthorized: Bool { get }
     var userEmail: String? { get }
-    func viewDidLoad()
-    func viewDidAppear()
+    func viewWillAppear()
     func viewDidTapOnDimmingView()
     func viewDidSelectAddRuuviTag()
     func viewDidSelectAbout()

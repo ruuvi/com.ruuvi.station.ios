@@ -34,7 +34,6 @@ extension MenuTableViewController {
         localize()
         configureViews()
         updateUI()
-        output.viewDidLoad()
     }
 }
 
