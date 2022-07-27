@@ -526,6 +526,6 @@ Your RuuviTag sensor is ready for use!";
 "Settings.Temperature.Resolution.title" = "Temperature resolution";
 "Settings.Humidity.Resolution.title" = "Humidity resolution";
 "Settings.Pressure.Resolution.title" = "Pressure resolution";
-"Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history graphs or alerts.";
+"Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history charts or alerts.";
 "Settings.Measurement.Unit.title" = "Unit";
 "Settings.Measurement.Resolution.title" = "Resolution";
