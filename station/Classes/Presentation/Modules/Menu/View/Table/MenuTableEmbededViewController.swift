@@ -48,9 +48,9 @@ extension MenuTableEmbededViewController {
         setupLocalization()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        output.viewDidAppear()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
     }
 }
 
