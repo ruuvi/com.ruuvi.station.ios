@@ -136,7 +136,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
-"TagCharts.Clear.title" = "ОЧИСТИТЬ";
+"TagCharts.Clear.title" = "Очистить";
 "TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";

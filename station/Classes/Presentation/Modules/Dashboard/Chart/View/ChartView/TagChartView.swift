@@ -131,7 +131,6 @@ class TagChartView: LineChartView {
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 1
-        xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
         xAxis.yOffset = 10.0
         viewPortHandler.setMaximumScaleX(5000)
@@ -187,6 +186,7 @@ extension TagChartView: TagChartViewInput {
 
     func localize() {
         xAxis.valueFormatter = DateValueFormatter(with: settings.language.locale)
+        leftAxis.valueFormatter = YAxisValueFormatter(with: settings.language.locale)
     }
 
     func clearChartData() {

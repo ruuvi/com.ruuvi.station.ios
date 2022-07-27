@@ -37,7 +37,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
 
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
             if let updateAt = self?.updatedAt {
-                self?.originalValueUpdateTimeLabel.text = updateAt.ruuviAgo()
+                self?.originalValueUpdateTimeLabel.text = "(\(updateAt.ruuviAgo()))"
             }
         })
         bindViewModel()
@@ -77,9 +77,10 @@ class OffsetCorrectionAppleViewController: UIViewController {
                                                              allowSettings: false)
             }
         }
-        originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] _, date in
+        originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] label, date in
             if let date = date {
                 self?.updatedAt = date
+                label.text = "(\(date.ruuviAgo()))"
             }
         }
         offsetValueLabel.bind(viewModel.offsetCorrectionValue) { [weak self] label, value in

@@ -121,6 +121,11 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 modes: [RunLoop.Mode.default.rawValue])
     }
 
+    public func restart() {
+        stop()
+        start()
+    }
+
     @objc private func stopDaemon() {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
