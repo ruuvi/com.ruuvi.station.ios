@@ -526,6 +526,6 @@ RuuviTag-sensorn är redo att användas!";
 "Settings.Temperature.Resolution.title" = "Temperaturupplösning";
 "Settings.Humidity.Resolution.title" = "Fuktighetsupplösning";
 "Settings.Pressure.Resolution.title" = "Tryckupplösning";
-"Settings.Measurement.Resolution.description" = "Välj hur exakt du vill se sensorernas livemätvärden i appen. Den här inställningen påverkar inte grafer eller varningar.";
+"Settings.Measurement.Resolution.description" = "Välj hur exakt du vill se sensorernas livemätvärden i appen. Den här inställningen påverkar inte histogram eller varningar.";
 "Settings.Measurement.Unit.title" = "Enhet";
 "Settings.Measurement.Resolution.title" = "Upplösning";
