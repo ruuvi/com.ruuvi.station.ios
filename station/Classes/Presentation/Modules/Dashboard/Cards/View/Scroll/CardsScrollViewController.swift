@@ -564,6 +564,7 @@ extension CardsScrollViewController {
                 case .empty:
                     imageView.alpha = 0.5
                     imageView.image = self?.alertOffImage
+                    imageView.layer.removeAllAnimations()
                 case .registered:
                     imageView.alpha = 1.0
                     imageView.image = self?.alertOnImage
@@ -736,13 +737,15 @@ extension CardsScrollViewController {
             let view = views[i]
             let imageView = view.alertImageView
             if let state = viewModel.alertState.value {
-                imageView?.alpha = 1.0
                 switch state {
                 case .empty:
+                    imageView?.alpha = 0.5
                     imageView?.image = alertOffImage
                 case .registered:
+                    imageView?.alpha = 1.0
                     imageView?.image = alertOnImage
                 case .firing:
+                    imageView?.alpha = 1.0
                     imageView?.image = alertActiveImage
                     imageView?.layer.removeAllAnimations()
                     UIView.animate(withDuration: 0.5,
