@@ -269,7 +269,15 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return humidityFormatter.string(from: humidityWithTemperature.converted(to: .absolute))
         case .dew:
             let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
-            return string(for: dp, allowSettings: allowSettings)
+            let humidityValue = dp?.converted(to: settings.temperatureUnit.unitTemperature)
+                .value
+                .round(to: settings.humidityAccuracy.value)
+            guard let humidityValue = humidityValue else {
+                return emptyValueString
+            }
+            return humidityValue.formattedStringValue(places:
+                                                        settings.humidityAccuracy.value)
+            + " " + settings.temperatureUnit.symbol
         }
     }
 }
@@ -358,6 +366,9 @@ extension String {
 public extension Double {
     var stringValue: String {
         return String(self)
+    }
+    func formattedStringValue(places: Int) -> String {
+        return String(format: "%.\(places)f", self)
     }
     func round(to places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
