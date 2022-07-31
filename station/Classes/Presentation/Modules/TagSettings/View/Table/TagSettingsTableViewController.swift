@@ -487,15 +487,15 @@ extension TagSettingsTableViewController {
             let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
             return showOffsetCorrection ? super.tableView(tableView, heightForHeaderInSection: section) : 0.01
         case .moreInfo:
-            return 44
+            return 32
         case .alerts:
-            return TagSettingsTableSection.showAlerts(for: viewModel) ? 44 : .leastNormalMagnitude
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? 32 : .leastNormalMagnitude
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
-                ? 44 : .leastNormalMagnitude
+                ? 32 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }

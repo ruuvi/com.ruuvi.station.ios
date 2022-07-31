@@ -527,5 +527,5 @@ RuuviTag on valmis käyttöön!";
 "Settings.Humidity.Resolution.title" = "Kosteuden resoluutio";
 "Settings.Pressure.Resolution.title" = "Paineen resoluutio";
 "Settings.Measurement.Resolution.description" = "Valitse kuinka suurella tarkkuudella haluat mittaustietojen näkyvän sovelluksessa. Tämä asetus ei vaikuta historiatietoihin tai hälytyksiin.";
-"Settings.Measurement.Unit.title" = "Unit";
-"Settings.Measurement.Resolution.title" = "Resolution";
+"Settings.Measurement.Unit.title" = "Yksikkö";
+"Settings.Measurement.Resolution.title" = "Resoluutio";
