@@ -363,6 +363,7 @@ extension TagChartsScrollViewController {
                 case .empty:
                     imageView.alpha = 0.5
                     imageView.image = self?.alertOffImage
+                    imageView.layer.removeAllAnimations()
                 case .registered:
                     imageView.alpha = 1.0
                     imageView.image = self?.alertOnImage
