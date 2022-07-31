@@ -122,7 +122,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" verticalHuggingPriority="251" text="Movements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5f5-3f-UcF">
-                            <rect key="frame" x="86.5" y="0.0" width="193.5" height="66"/>
+                            <rect key="frame" x="82.5" y="0.0" width="197.5" height="66"/>
                             <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -137,7 +137,7 @@
                         <constraint firstItem="5f5-3f-UcF" firstAttribute="centerY" secondItem="dj4-Ac-qjU" secondAttribute="centerY" id="Lno-sD-Ep2"/>
                         <constraint firstItem="tnh-8q-eCb" firstAttribute="top" secondItem="dj4-Ac-qjU" secondAttribute="top" constant="8" id="S6H-Mq-3jK"/>
                         <constraint firstItem="2Pk-nL-gnn" firstAttribute="leading" secondItem="tnh-8q-eCb" secondAttribute="trailing" constant="16" id="Trx-ay-EMs"/>
-                        <constraint firstItem="5f5-3f-UcF" firstAttribute="leading" secondItem="2Pk-nL-gnn" secondAttribute="trailing" constant="8" id="U1q-Lh-fI8"/>
+                        <constraint firstItem="5f5-3f-UcF" firstAttribute="leading" secondItem="2Pk-nL-gnn" secondAttribute="trailing" constant="4" id="U1q-Lh-fI8"/>
                         <constraint firstItem="5f5-3f-UcF" firstAttribute="top" secondItem="dj4-Ac-qjU" secondAttribute="top" id="cNn-gm-Brt"/>
                         <constraint firstAttribute="bottom" secondItem="tnh-8q-eCb" secondAttribute="bottom" constant="8" id="gM8-FA-0AQ"/>
                         <constraint firstAttribute="height" constant="66" id="ntO-RZ-1MM"/>
