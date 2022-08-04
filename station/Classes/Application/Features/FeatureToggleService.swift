@@ -18,9 +18,25 @@ public final class FeatureToggleService {
     var fallbackProvider: FeatureToggleProvider!
     var localProvider: LocalFeatureToggleProvider!
 
-    private var remoteToggles: [FeatureToggle] = []
+    private var remoteToggles: [FeatureToggle] {
+        get {
+            if let storedRemoteToggles = UserDefaults.standard.object(forKey: remoteTogglesUDKey) as? Data,
+               let toggles = try? JSONDecoder().decode([FeatureToggle].self, from: storedRemoteToggles) {
+                return toggles
+            } else {
+                return []
+            }
+        }
+        set {
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(newValue) {
+                UserDefaults.standard.set(encoded, forKey: remoteTogglesUDKey)
+            }
+        }
+    }
     private var localToggles: [FeatureToggle] = []
     private let sourceUDKey = "FeatureToggleService.sourceUDKey"
+    private let remoteTogglesUDKey = "FeatureToggleService.remoteTogglesUDKey"
 
     public func fetchFeatureToggles() {
         firebaseProvider.fetchFeatureToggles { [weak self] fetchedFeatureToggles in

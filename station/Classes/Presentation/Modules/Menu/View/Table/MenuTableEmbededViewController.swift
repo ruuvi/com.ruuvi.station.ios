@@ -8,7 +8,11 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
         }
     }
     var output: MenuViewOutput!
-    var isNetworkHidden: Bool = false
+    var isNetworkHidden: Bool = false {
+        didSet {
+            tableView.reloadData()
+        }
+    }
 
     @IBOutlet weak var feedbackCell: UITableViewCell!
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!
