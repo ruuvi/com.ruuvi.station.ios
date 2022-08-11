@@ -391,7 +391,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
 
             for sensor in sensors {
-                let updateLatestRecord = sSelf.updateLatestRecord(ruuviTag: sensor.sensor.ruuviTagSensor,
+                sSelf.updateLatestRecord(ruuviTag: sensor.sensor.ruuviTagSensor,
                                                                   cloudRecord: sensor.record).on(completion: {
                     sSelf.addLatestRecordToHistory(ruuviTag: sensor.sensor.ruuviTagSensor,
                                                    cloudRecord: sensor.record).on(completion: {
