@@ -443,6 +443,17 @@ extension CardsPresenter {
                 if let record = record {
                     viewModel.update(record)
                     self?.processAlert(record: record, viewModel: viewModel)
+                } else {
+                    // If the latest data table doesn't have any data by any chance,
+                    // Try to get the data from the records table. This is implemented as a safety layer.
+                    // This will be removed in future updates
+                    self?.ruuviStorage.readLast(ruuviTag).on(success: { record in
+                        guard let record = record else {
+                            return
+                        }
+                        viewModel.update(record)
+                        self?.processAlert(record: record, viewModel: viewModel)
+                    })
                 }
             }
 
