@@ -427,7 +427,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 record.macId?.value == cloudRecord.macId?.value {
                 // Store cloud point only if the cloud data is newer than the local data
                 let isMeasurementNew = cloudRecord.date > record.date
-                if isMeasurementNew {
+                if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
                     sSelf.ruuviPool.updateLast(cloudRecord).on(success: { _ in
                         sSelf.ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
                         promise.succeed(value: true)
@@ -470,10 +470,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         }
 
         ruuviStorage.readLast(ruuviTag).on(success: { [weak self] record in
+            guard let sSelf = self else { return }
             if let record = record {
                 let isMeasurementNew = cloudRecord.date > record.date
-                if isMeasurementNew {
-                    self?.ruuviPool.create(cloudRecord).on(completion: {
+                if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
+                    sSelf.ruuviPool.create(cloudRecord).on(completion: {
                         promise.succeed(value: true)
                     })
                 } else {

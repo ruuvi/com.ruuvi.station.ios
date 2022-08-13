@@ -81,7 +81,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                          object: nil,
                          queue: .main) { [weak self] _ in
                 guard let sSelf = self else { return }
-                sSelf.restart()
+                sSelf.restartObserving()
             }
     }
 
