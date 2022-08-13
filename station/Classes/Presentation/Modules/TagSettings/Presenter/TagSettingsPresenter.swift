@@ -67,6 +67,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             viewModel.humidity.value = humidity
         }
     }
+    private var rssi: Int? {
+        didSet {
+            viewModel.rssi.value = rssi
+        }
+    }
     private var viewModel: TagSettingsViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -125,6 +130,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     func configure(ruuviTag: RuuviTagSensor,
                    temperature: Temperature?,
                    humidity: Humidity?,
+                   rssi: Int?,
                    sensor: SensorSettings?,
                    output: TagSettingsModuleOutput,
                    scrollToAlert: Bool) {
@@ -132,6 +138,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         self.output = output
         self.temperature = temperature
         self.humidity = humidity
+        self.rssi = rssi
         self.ruuviTag = ruuviTag
         self.scrollToAlert = scrollToAlert
 

@@ -368,10 +368,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private func syncLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
 
+        // Set cloud sensors in syncing state
+        // Skip the sensors if not claimed or claimed and cloud mode is turned off
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
             for sensor in localSensors {
-                if let macId = sensor.macId {
+                let skip = !sensor.isClaimed ||
+                            (sensor.isOwner && sensor.isClaimed && !sSelf.ruuviLocalSettings.cloudModeEnabled)
+                if let macId = sensor.macId, !skip {
                     sSelf.ruuviLocalSyncState.setSyncStatus(.syncing, for: macId)
                 }
             }

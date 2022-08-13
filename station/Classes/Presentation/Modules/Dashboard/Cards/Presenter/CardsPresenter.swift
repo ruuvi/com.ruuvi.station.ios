@@ -1062,6 +1062,7 @@ extension CardsPresenter {
                 ruuviTag: ruuviTag,
                 temperature: viewModel.temperature.value,
                 humidity: humidity,
+                rssi: viewModel.rssi.value,
                 sensorSettings: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)

@@ -171,6 +171,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
+                                   rssi: interactor.lastMeasurement?.rssi,
                                    sensor: sensorSettings,
                                    output: self,
                                    scrollToAlert: scrollToAlert)
