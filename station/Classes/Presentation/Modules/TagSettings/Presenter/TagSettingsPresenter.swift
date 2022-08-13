@@ -486,12 +486,8 @@ extension TagSettingsPresenter {
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
 
-        if featureToggleService.isEnabled(.updateFirmware) && ruuviTag.isOwner {
-            if (viewModel.source.value == .advertisement || viewModel.source.value == .heartbeat)
-                || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
-                viewModel.canShowUpdateFirmware.value = true
-            }
-        }
+        // Firmware update section
+        handleFirmwareUpdateSection()
 
         syncAlerts()
     }
@@ -785,35 +781,37 @@ extension TagSettingsPresenter {
         }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.handleMeasurementPoint(tag: tag, source: .advertisement)
+                self?.handleMeasurementPoint(tag: tag, luid: luid, source: .advertisement)
             }
         })
 
         heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.handleMeasurementPoint(tag: tag, source: .heartbeat)
+                self?.handleMeasurementPoint(tag: tag, luid: luid, source: .heartbeat)
             }
         })
     }
 
-    private func handleMeasurementPoint(tag: RuuviTag, source: RuuviTagSensorRecordSource) {
+    private func handleMeasurementPoint(tag: RuuviTag,
+                                        luid: LocalIdentifier,
+                                        source: RuuviTagSensorRecordSource) {
         // RuuviTag with data format 5 or above has the measurements sequence number
         if tag.version >= 5 {
             if previousAdvertisementSequence != nil {
                 if tag.measurementSequenceNumber != previousAdvertisementSequence {
-                    sync(device: tag, source: source)
+                    sync(device: tag, luid: luid, source: source)
                     previousAdvertisementSequence = nil
                 }
             } else {
                 previousAdvertisementSequence = tag.measurementSequenceNumber
             }
         } else {
-            sync(device: tag, source: source)
+            sync(device: tag, luid: luid, source: source)
         }
     }
 
     // swiftlint:disable:next function_body_length
-    private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
+    private func sync(device: RuuviTag, luid: LocalIdentifier, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.plus(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
             luid: device.luid,
@@ -842,13 +840,15 @@ extension TagSettingsPresenter {
         // FW v3+ tags returns connectable 'true' in advertisement source when not connected.
         // FW v3+ tags returns connectable 'false' in advertisement source when connected.
         // FW v3+ tags returns connectable 'true' in heartbeat source when connected.
-        
+
         // Known Issue: If same tag is attempted to be connected to two different device at the same
         // Or toggling the connection in both device simlataneously for the same tag the 'keep connection'
-        // section might get hidded for a split second after turning on the toggle. 
+        // section might get hidded for a split second after turning on the toggle.
 
-        // Todo: Check firmware version here from local db
-        if device.version >= 5 {
+        // If the firmware version returns nil that means it's an old firmware less than v3.
+        // This refers to the fact that those tags do not have the capabilities for the connection
+        let fwVersion = settings.firmwareVersion(for: luid)
+        if fwVersion != nil {
             if device.isConnected {
                 viewModel.isConnected.value = device.isConnected
                 if source == .heartbeat {
@@ -879,15 +879,6 @@ extension TagSettingsPresenter {
 
         viewModel.updateRecord(record)
         reloadMutedTill()
-
-        if viewModel.canShowUpdateFirmware.value == false
-            && ruuviTag.isOwner
-            && featureToggleService.isEnabled(.updateFirmware) {
-            if (source == .advertisement || source == .heartbeat)
-                || ( ruuviTag.luid != nil && ruuviTag.isCloud && settings.cloudModeEnabled) {
-                viewModel.canShowUpdateFirmware.value = true
-            }
-        }
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
@@ -1384,6 +1375,13 @@ extension TagSettingsPresenter {
         })
     }
 
+    private func handleFirmwareUpdateSection() {
+        let isFWFeatureEnabled = featureToggleService.isEnabled(.updateFirmware)
+        let isTagAvailableLocally = ruuviTag.luid != nil && ruuviTag.isOwner
+        if !viewModel.canShowUpdateFirmware.value.bound {
+            viewModel.canShowUpdateFirmware.value = isFWFeatureEnabled && isTagAvailableLocally
+        }
+    }
     /// Notify the DFU screen after successful migration of the database
     private func notifyFirmwareUpdate() {
         if let luid = ruuviTag.luid {
