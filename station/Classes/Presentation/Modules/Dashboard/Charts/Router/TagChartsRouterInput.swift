@@ -17,6 +17,7 @@ protocol TagChartsRouterInput {
         ruuviTag: RuuviTagSensor,
         temperature: Temperature?,
         humidity: Humidity?,
+        rssi: Int?,
         sensor: SensorSettings?,
         output: TagSettingsModuleOutput,
         scrollToAlert: Bool

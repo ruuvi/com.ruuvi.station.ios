@@ -54,6 +54,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         rssi: Int?,
                          sensorSettings: SensorSettings?,
                          output: TagSettingsModuleOutput,
                          scrollToAlert: Bool) {
@@ -64,6 +65,7 @@ class CardsRouter: NSObject, CardsRouterInput {
                 module.configure(ruuviTag: ruuviTag,
                                  temperature: temperature,
                                  humidity: humidity,
+                                 rssi: rssi,
                                  sensor: sensorSettings,
                                  output: output,
                                  scrollToAlert: scrollToAlert)

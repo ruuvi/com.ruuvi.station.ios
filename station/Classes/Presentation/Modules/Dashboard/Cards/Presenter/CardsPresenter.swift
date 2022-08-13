@@ -601,25 +601,27 @@ extension CardsPresenter {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
-            if !(settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
-                if viewModel.type == .ruuvi,
-                   let luid = viewModel.luid.value {
-                    advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
-                        if let ruuviTag = device.ruuvi?.tag,
-                           let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                            let sensorSettings = self?.sensorSettingsList
-                                .first(where: {
-                                    ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
-                                })
-                            let record = ruuviTag
-                                .with(source: .advertisement)
-                                .with(sensorSettings: sensorSettings)
-                            viewModel.update(record)
-                            self?.alertHandler.process(record: record, trigger: false)
-                        }
-                    })
-                }
+            let shouldAvoidObserving = settings.cloudModeEnabled && viewModel.isCloud.value.bound
+            if shouldAvoidObserving {
+                continue
+            }
+            if viewModel.type == .ruuvi,
+               let luid = viewModel.luid.value {
+                advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
+                    if let ruuviTag = device.ruuvi?.tag,
+                       let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
+                        let sensorSettings = self?.sensorSettingsList
+                            .first(where: {
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                            })
+                        let record = ruuviTag
+                            .with(source: .advertisement)
+                            .with(sensorSettings: sensorSettings)
+                        viewModel.update(record)
+                        self?.alertHandler.process(record: record, trigger: false)
+                    }
+                })
             }
         }
     }
@@ -1062,6 +1064,7 @@ extension CardsPresenter {
                 ruuviTag: ruuviTag,
                 temperature: viewModel.temperature.value,
                 humidity: humidity,
+                rssi: viewModel.rssi.value,
                 sensorSettings: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
@@ -1104,6 +1107,9 @@ extension CardsPresenter {
         if settings.cloudModeEnabled {
             cloudSyncDaemon.refreshLatestRecord()
         }
+        // Restart observing
+        restartObserveRuuviTagAdvertisements()
+        observeRuuviTagHeartbeats()
     }
 
     private func removeConnectionsForCloudTags() {
