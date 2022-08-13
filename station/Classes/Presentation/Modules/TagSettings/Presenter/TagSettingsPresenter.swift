@@ -779,7 +779,8 @@ extension TagSettingsPresenter {
         guard let luid = ruuviTag.luid else {
             return
         }
-        guard !(settings.cloudModeEnabled && ruuviTag.isCloud) else {
+        let skip = settings.cloudModeEnabled && ruuviTag.isCloud
+        guard !skip else {
             return
         }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
@@ -836,21 +837,36 @@ extension TagSettingsPresenter {
             viewModel.version.value = device.version
         }
 
-        let connectionState = !device.isConnected && viewModel.isConnectable.value != device.isConnectable
-        if connectionState, device.isConnectable {
-            if !viewModel.isConnectable.value.bound {
-                let isConnectable = device.isConnectable && device.luid != nil
-                viewModel.isConnectable.value = isConnectable && !(ruuviTag.isCloud && settings.cloudModeEnabled) && ruuviTag.isOwner
+        // Some important notes:
+        // FW v2.5.9 DF3 and DF5 tags always returns connectable 'false' and source is always advertisement.
+        // FW v3+ tags returns connectable 'true' in advertisement source when not connected.
+        // FW v3+ tags returns connectable 'false' in advertisement source when connected.
+        // FW v3+ tags returns connectable 'true' in heartbeat source when connected.
+        
+        // Known Issue: If same tag is attempted to be connected to two different device at the same
+        // Or toggling the connection in both device simlataneously for the same tag the 'keep connection'
+        // section might get hidded for a split second after turning on the toggle. 
+
+        // Todo: Check firmware version here from local db
+        if device.version >= 5 {
+            if device.isConnected {
+                viewModel.isConnected.value = device.isConnected
+                if source == .heartbeat {
+                    viewModel.isConnectable.value = device.isConnectable
+                } else {
+                    viewModel.isConnectable.value = device.isConnected
+                }
+            } else {
+                viewModel.isConnectable.value = device.isConnectable
             }
-        } else if connectionState, !device.isConnectable {
-            if viewModel.isConnectable.value.bound {
-                viewModel.isConnectable.value = false
+        } else {
+            guard !device.isConnected else {
+                return
             }
+            viewModel.isConnected.value = false
+            viewModel.isConnectable.value = false
         }
 
-        if viewModel.isConnected.value != device.isConnected {
-            viewModel.isConnected.value = device.isConnected
-        }
         if let mac = device.mac {
             viewModel.mac.value = mac
         }
