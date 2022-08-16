@@ -149,6 +149,8 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2-format krävs";
 "TagSettings.UpdateFirmware.Alert.message" = "Värden som saknas kan bara visas i nyare enhetsmjukvara med RAWv2-format.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Läs mer";
+"TagSettings.AbortSync.Alert.message" = "History downloading via Bluetooth connection is in progress. Please wait.";
+"TagSettings.AbortSync.Button.title" = "Abort downloading";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Luftfuktigheten är justerad";
 "TagSettings.HumidityIsClipped.Alert.message" = "Fuktighetsvärdet efter kalibreringen är större än 100%. Detta är inte rimligt, så det maximala värdet visas som 100%.";

@@ -74,6 +74,7 @@ class TagChartsRouter: TagChartsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         rssi: Int?,
                          sensor: SensorSettings?,
                          output: TagSettingsModuleOutput,
                          scrollToAlert: Bool) {
@@ -84,6 +85,7 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(ruuviTag: ruuviTag,
                                  temperature: temperature,
                                  humidity: humidity,
+                                 rssi: rssi,
                                  sensor: sensor,
                                  output: output,
                                  scrollToAlert: scrollToAlert)

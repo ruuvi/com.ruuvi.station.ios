@@ -139,11 +139,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewWillDisappear() {
-        stopObservingBluetoothState()
-        interactor.stopObservingTags()
-        interactor.stopObservingRuuviTagsData()
-        stopGattSync()
+        // Not implemented
     }
+
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
     }
@@ -162,7 +160,12 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
-        router.dismiss()
+        if interactor.isSyncingRecords() {
+            view.showSyncAbortAlert()
+        } else {
+            stopRunningProcesses()
+            router.dismiss()
+        }
     }
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel, scrollToAlert: Bool) {
@@ -171,6 +174,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
+                                   rssi: interactor.lastMeasurement?.rssi,
                                    sensor: sensorSettings,
                                    output: self,
                                    scrollToAlert: scrollToAlert)
@@ -233,6 +237,11 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLocalized() {
         interactor.notifyDidLocalized()
+    }
+
+    func viewDidConfirmAbortSync() {
+        stopRunningProcesses()
+        router.dismiss()
     }
 }
 // MARK: - TagChartsInteractorOutput
@@ -611,6 +620,13 @@ extension TagChartsPresenter {
     private func reloadChartsWithSensorSettingsChanges(with settings: SensorSettings) {
         interactor.notifySensorSettingsChanged(settings: settings)
         interactor.notifySettingsChanged()
+    }
+
+    private func stopRunningProcesses() {
+        stopObservingBluetoothState()
+        interactor.stopObservingTags()
+        interactor.stopObservingRuuviTagsData()
+        stopGattSync()
     }
 }
 // swiftlint:enable file_length

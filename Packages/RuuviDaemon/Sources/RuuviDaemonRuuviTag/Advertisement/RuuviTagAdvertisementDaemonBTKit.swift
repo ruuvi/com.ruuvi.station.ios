@@ -26,7 +26,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
-    private var previousAdvertisementSequence: Int?
+    private var advertisementSequence = [String: Int?]() // uuid: int
 
     @objc private class RuuviTagWrapper: NSObject {
         var device: RuuviTag
@@ -81,7 +81,6 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                          object: nil,
                          queue: .main) { [weak self] _ in
                 guard let sSelf = self else { return }
-                sSelf.reloadSensorSettings()
                 sSelf.restartObserving()
             }
     }
@@ -205,23 +204,16 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         // Otherwise respect the settings
         guard let luid = wrapper.device.luid else { return }
         if settings.appIsOnForeground {
-            if let date = savedDate[uuid] {
-                if previousAdvertisementSequence != nil {
-                    if let next = wrapper.device.measurementSequenceNumber,
-                        let previous = previousAdvertisementSequence, next > previous {
-                        persist(wrapper.device, uuid)
-                        previousAdvertisementSequence = nil
-                    }
-                } else {
-                    // Tags with data format 3 doesn't sent duplicates packets*
-                    if wrapper.device.version == 3 {
-                        persist(wrapper.device, uuid)
-                    }
-                    previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
+            if let previous = advertisementSequence[uuid], let previous = previous {
+                if let next = wrapper.device.measurementSequenceNumber, next > previous {
+                    persist(wrapper.device, uuid)
                 }
             } else {
-                persist(wrapper.device, uuid)
-                previousAdvertisementSequence = wrapper.device.measurementSequenceNumber
+                // Tags with data format 3 doesn't sent duplicates packets*
+                if wrapper.device.version == 3 {
+                    persist(wrapper.device, uuid)
+                }
+                advertisementSequence[uuid] = wrapper.device.measurementSequenceNumber
             }
         } else {
             if let date = savedDate[uuid] {
@@ -247,6 +239,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private func persist(_ record: RuuviTag, _ uuid: String) {
         createRecord(with: record, uuid: uuid)
         savedDate[uuid] = Date()
+        advertisementSequence[uuid] = nil
     }
 
     private func createRecord(with record: RuuviTag, uuid: String) {
@@ -254,7 +247,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
             record
                 .with(source: .advertisement)
         ).on(success: { _ in
-            self.createLatestRecord(with: record, uuid: uuid)
+            self.createLatestRecord(with: record)
         }, failure: { [weak self] error in
             if case RuuviPoolError.ruuviPersistence(let persistenceError) = error {
                 switch persistenceError {
@@ -269,16 +262,22 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         })
     }
 
-    private func createLatestRecord(with record: RuuviTag, uuid: String) {
-        if let ruuviTag = ruuviTags.first(where: { $0.luid?.value == uuid }) {
+    private func createLatestRecord(with record: RuuviTag) {
+        if let ruuviTag = ruuviTags.first(where: {
+            if let luid = $0.luid?.value, let recordLuid = record.luid?.value,
+               luid == recordLuid {
+                return true
+            } else {
+                return false
+            }
+        }) {
             ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
-                let record = record.with(source: .advertisement)
-                if let localRecord = localRecord,
-                   record.macId?.value == localRecord.macId?.value {
-                    self?.ruuviPool.updateLast(record)
-                } else {
+                let advertisement = record.with(source: .advertisement)
+                guard localRecord != nil else {
                     self?.ruuviPool.createLast(record)
+                    return
                 }
+                self?.ruuviPool.updateLast(advertisement)
             })
         }
     }

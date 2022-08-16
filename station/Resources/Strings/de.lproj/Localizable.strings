@@ -149,6 +149,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2-Modus ist erforderlich";
 "TagSettings.UpdateFirmware.Alert.message" = "Um fehlende Werte anzuzeigen:\n Wenn Sie die neueste Firmware verwenden, stellen Sie den RAWv2-Modus ein, indem Sie auf einem Sensor \"B\" drücken.\ oder aktualisieren Sie Ihren Sensor mit der neuesten Firmware.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Mehr erfahren";
+"TagSettings.AbortSync.Alert.message" = "History downloading via Bluetooth connection is in progress. Please wait.";
+"TagSettings.AbortSync.Button.title" = "Abort downloading";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Luftfeuchtigkeit wird angepasst";
 "TagSettings.HumidityIsClipped.Alert.message" = "Der Feuchtigkeitswert ist nach der Kalibrierung größer als 100,0 %. Dieser Wert ist nicht sinnvoll, daher wird der Wert auf 100,0 % angepasst.";

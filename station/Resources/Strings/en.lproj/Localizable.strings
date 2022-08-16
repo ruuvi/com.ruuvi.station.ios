@@ -149,6 +149,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2 mode is required";
 "TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on a sensor.\nOr update your sensor with the latest firmware.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Learn more";
+"TagSettings.AbortSync.Alert.message" = "History downloading via Bluetooth connection is in progress. Please wait.";
+"TagSettings.AbortSync.Button.title" = "Abort downloading";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%.";
