@@ -186,6 +186,18 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func showSwipeUpInstruction() {
         gestureInstructor.show(.swipeUp, after: 0.1)
     }
+
+    func showSyncAbortAlert() {
+        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
+        let message = "TagSettings.AbortSync.Alert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        let actionTitle = "TagSettings.AbortSync.Button.title".localized()
+        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmAbortSync()
+        }))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions
