@@ -149,6 +149,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.UpdateFirmware.Alert.title" = "Format RAWv2 nécessaire";
 "TagSettings.UpdateFirmware.Alert.message" = "L'affichage des informations manquantes n'est possible qu'avec la nouvelle version système.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Plus d'infos";
+"TagSettings.AbortSync.Alert.message" = "History downloading via Bluetooth connection is in progress. Please wait.";
+"TagSettings.AbortSync.Button.title" = "Abort downloading";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "L'hygromètre est calibré";
 "TagSettings.HumidityIsClipped.Alert.message" = "L'humidité est supérieure à 100.0% après calibrage. Cela n'a pas de sens, donc la valeur max affichée est 100%.";

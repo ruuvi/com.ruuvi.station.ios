@@ -149,6 +149,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.UpdateFirmware.Alert.title" = "Необходим Режим RAWv2";
 "TagSettings.UpdateFirmware.Alert.message" = "Для того, чтобы увидеть отсутствующие значения:\nЕсли вы используете последнюю прошивку, включите RAWv2 режим нажатием кнопки \"B\" на вашем сенсоре.\nИли обновите ваш сенсор с последней прошивкой.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Узнать больше";
+"TagSettings.AbortSync.Alert.message" = "History downloading via Bluetooth connection is in progress. Please wait.";
+"TagSettings.AbortSync.Button.title" = "Abort downloading";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
 "TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";

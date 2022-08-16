@@ -14,4 +14,5 @@ protocol TagChartsViewInput: ViewInput {
     func showFailedToSyncIn(connectionTimeout: TimeInterval)
     func showFailedToServeIn(serviceTimeout: TimeInterval)
     func showSwipeUpInstruction()
+    func showSyncAbortAlert()
 }
