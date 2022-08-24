@@ -149,8 +149,9 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2-formaatti vaaditaan";
 "TagSettings.UpdateFirmware.Alert.message" = "Puuttuvat arvot voidaan näyttää ainoastaan uudemmalla laiteohjelmistoversiolla.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Lue lisää";
-"TagSettings.AbortSync.Alert.message" = "Historian lataaminen Bluetooth-yhteydellä on käynnissä. Odota hetki.";
-"TagSettings.AbortSync.Button.title" = "Peruuta lataaminen";
+"TagCharts.Dismiss.Alert.message" = "Historian lataaminen Bluetooth-yhteydellä on käynnissä. Odota hetki.";
+"TagCharts.AbortSync.Alert.message" = "Historian lataaminen voi kestää pitkään Bluetooth-yhteyden laadusta riippuen. Odota hetki.";
+"TagCharts.AbortSync.Button.title" = "Peruuta lataaminen";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Kosteus on säädetty";
 "TagSettings.HumidityIsClipped.Alert.message" = "Kalibroinnin jälkeinen kosteusarvo on suurempi kuin 100%. Tämä ei käy järkeen, joten maksimiarvona näytetään 100%.";
