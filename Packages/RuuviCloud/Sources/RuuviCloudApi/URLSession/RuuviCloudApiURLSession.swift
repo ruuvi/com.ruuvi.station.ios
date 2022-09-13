@@ -16,6 +16,7 @@ extension RuuviCloudApiURLSession {
         case uploadImage = "upload"
         case settings
         case sensors
+        case sensorsDense = "sensors-dense"
         case alerts
     }
 }
@@ -99,6 +100,16 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.sensors,
+                       with: requestModel,
+                       method: .get,
+                       authorization: authorization)
+    }
+
+    public func sensorsDense(
+        _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetSensorsDenseResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.sensorsDense,
                        with: requestModel,
                        method: .get,
                        authorization: authorization)

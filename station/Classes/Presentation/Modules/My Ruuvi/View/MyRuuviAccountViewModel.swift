@@ -1,5 +1,5 @@
 import Foundation
 
-struct MenuViewModel {
+struct MyRuuviAccountViewModel {
     let username: Observable<String?> = Observable<String?>()
 }

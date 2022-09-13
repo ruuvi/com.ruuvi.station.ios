@@ -14,7 +14,7 @@ struct TagChartsViewModel {
     var mac: Observable<String?> = Observable<String?>()
     var name: Observable<String?> = Observable<String?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
-    var isConnectable: Observable<Bool?> = Observable<Bool?>()
+    var isConnectable: Observable<Bool?> = Observable<Bool?>(false)
     var isCloud: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var isConnected: Observable<Bool?> = Observable<Bool?>()

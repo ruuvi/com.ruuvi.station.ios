@@ -15,6 +15,7 @@
                 <navigationController navigationBarHidden="YES" id="JPa-wO-DcD" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="x8C-8z-hyC">
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" systemColor="labelColor"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Ta4-x1-hx1" kind="relationship" relationship="rootViewController" id="G2e-T9-zIQ"/>
@@ -81,36 +82,6 @@
                                     <segue destination="Idp-Td-ufs" kind="embed" identifier="EmbedMenuTableEmbededViewControllerSegueIdentifier" id="0xk-TQ-TAu"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ew-Bj-Hn4">
-                                <rect key="frame" x="0.0" y="804" width="414" height="92"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="Eba-HB-9ze">
-                                        <rect key="frame" x="16" y="16" width="382" height="34"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OiX-6j-CQJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="3.5" height="17"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                <color key="textColor" systemColor="secondaryLabelColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i6k-hS-nEp">
-                                                <rect key="frame" x="0.0" y="17" width="8" height="17"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" systemColor="secondaryLabelColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <viewLayoutGuide key="safeArea" id="nGZ-xt-lWI"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstItem="nGZ-xt-lWI" firstAttribute="bottom" secondItem="Eba-HB-9ze" secondAttribute="bottom" constant="8" id="NsG-Id-jJO"/>
-                                    <constraint firstItem="Eba-HB-9ze" firstAttribute="top" secondItem="nGZ-xt-lWI" secondAttribute="top" constant="16" id="PtN-WX-OMR"/>
-                                    <constraint firstItem="Eba-HB-9ze" firstAttribute="leading" secondItem="nGZ-xt-lWI" secondAttribute="leading" constant="16" id="m0R-bX-Ja0"/>
-                                    <constraint firstItem="nGZ-xt-lWI" firstAttribute="trailing" secondItem="Eba-HB-9ze" secondAttribute="trailing" constant="16" id="tRT-d1-51O"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="O77-q7-b35"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -120,11 +91,8 @@
                             <constraint firstItem="uaL-Iv-OL5" firstAttribute="top" secondItem="hoE-CN-rWB" secondAttribute="top" id="RX8-mq-ebx"/>
                             <constraint firstItem="uaL-Iv-OL5" firstAttribute="leading" secondItem="hoE-CN-rWB" secondAttribute="leading" id="bsZ-yK-WO8"/>
                             <constraint firstItem="bEW-LA-DOE" firstAttribute="leading" secondItem="hoE-CN-rWB" secondAttribute="leading" id="fPh-UC-Imt"/>
-                            <constraint firstItem="3ew-Bj-Hn4" firstAttribute="trailing" secondItem="O77-q7-b35" secondAttribute="trailing" id="g3F-n7-8x3"/>
-                            <constraint firstItem="3ew-Bj-Hn4" firstAttribute="leading" secondItem="O77-q7-b35" secondAttribute="leading" id="hbM-uH-PBb"/>
                             <constraint firstItem="bEW-LA-DOE" firstAttribute="top" secondItem="uaL-Iv-OL5" secondAttribute="bottom" id="k3R-Jk-QF6"/>
                             <constraint firstItem="bEW-LA-DOE" firstAttribute="trailing" secondItem="hoE-CN-rWB" secondAttribute="trailing" id="kxP-yP-8gu"/>
-                            <constraint firstAttribute="bottom" secondItem="3ew-Bj-Hn4" secondAttribute="bottom" id="ljL-rk-KHE"/>
                             <constraint firstAttribute="bottom" secondItem="bEW-LA-DOE" secondAttribute="bottom" id="wZZ-mo-dOU"/>
                         </constraints>
                         <variation key="default">
@@ -139,11 +107,6 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="3SK-i2-Y7s"/>
-                    <connections>
-                        <outlet property="loggedInLabel" destination="OiX-6j-CQJ" id="jGj-WQ-PPC"/>
-                        <outlet property="networkContainer" destination="3ew-Bj-Hn4" id="Lky-z7-KQu"/>
-                        <outlet property="usernameLabel" destination="i6k-hS-nEp" id="LhB-fc-Ksh"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="INW-hX-gVH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="88o-5U-I22" customClass="MenuTableInitializer" customModule="station" customModuleProvider="target">
@@ -163,7 +126,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="MSw-2s-WWi">
-                            <rect key="frame" x="0.0" y="371.5" width="414" height="44"/>
+                            <rect key="frame" x="0.0" y="415" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
@@ -238,8 +201,25 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="XGm-sP-Ekg" style="IBUITableViewCellStyleDefault" id="Q41-gm-NmA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="iak-g7-esw" style="IBUITableViewCellStyleDefault" id="bFa-8B-o3r">
                                         <rect key="frame" x="0.0" y="218.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bFa-8B-o3r" id="bnf-UM-io2">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="What to measure with Ruuvi?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iak-g7-esw">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="XGm-sP-Ekg" style="IBUITableViewCellStyleDefault" id="Q41-gm-NmA">
+                                        <rect key="frame" x="0.0" y="262" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Q41-gm-NmA" id="cn3-sV-9s1">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -256,7 +236,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="CdH-uD-ata" style="IBUITableViewCellStyleDefault" id="co1-UM-VDy">
-                                        <rect key="frame" x="0.0" y="262" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="305.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="co1-UM-VDy" id="sqS-xl-oHW">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -273,7 +253,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="4pY-bW-sTg" userLabel="SignIn">
-                                        <rect key="frame" x="0.0" y="305.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="349" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4pY-bW-sTg" id="LWZ-nI-0bk">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -301,6 +281,7 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="WhatToMeasureCell" destination="bFa-8B-o3r" id="nq4-f5-6TK"/>
                         <outlet property="aboutCell" destination="5jP-lL-ZsG" id="Fn2-zH-noK"/>
                         <outlet property="aboutHelpLabel" destination="vBO-sF-6UM" id="UOa-EJ-On5"/>
                         <outlet property="accountAuthLabel" destination="aXb-tc-Q6M" id="Vd0-yh-1wO"/>
@@ -315,6 +296,7 @@
                         <outlet property="getMoreSensorsCell" destination="Q41-gm-NmA" id="yQD-Eu-H6g"/>
                         <outlet property="getMoreSensorsLabel" destination="XGm-sP-Ekg" id="cdM-jH-MGT"/>
                         <outlet property="settingsCell" destination="Whs-Vz-g1g" id="A61-3K-Zae"/>
+                        <outlet property="whatToMeasureLabel" destination="iak-g7-esw" id="UiP-l5-OVu"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W7Q-dC-60Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -325,8 +307,8 @@
     <resources>
         <image name="gradient_layer" width="359" height="641"/>
         <image name="ruuvi_logo_" width="379" height="101"/>
-        <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

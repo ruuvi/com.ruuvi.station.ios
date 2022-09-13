@@ -54,6 +54,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         rssi: Int?,
                          sensorSettings: SensorSettings?,
                          output: TagSettingsModuleOutput,
                          scrollToAlert: Bool) {
@@ -64,6 +65,7 @@ class CardsRouter: NSObject, CardsRouterInput {
                 module.configure(ruuviTag: ruuviTag,
                                  temperature: temperature,
                                  humidity: humidity,
+                                 rssi: rssi,
                                  sensor: sensorSettings,
                                  output: output,
                                  scrollToAlert: scrollToAlert)
@@ -93,12 +95,25 @@ class CardsRouter: NSObject, CardsRouterInput {
         transitionHandler.present(tagCharts, animated: true)
     }
 
+    func openWhatToMeasurePage() {
+        guard let url = URL(string: "Menu.Measure.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     func openRuuviProductsPage() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com/products")!, options: [:], completionHandler: nil)
+        guard let url = URL(string: "Menu.BuySensors.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviGatewayPage() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com/gateway")!, options: [:], completionHandler: nil)
+        guard let url = URL(string: "Menu.BuyGateway.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openSignIn(output: SignInModuleOutput) {
@@ -124,6 +139,13 @@ class CardsRouter: NSObject, CardsRouterInput {
             .navigationController?
             .presentationController?
             .delegate = self
+    }
+
+    func openMyRuuviAccount() {
+        let factory = StoryboardFactory(storyboardName: "MyRuuvi")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: MyRuuviAccountModuleInput.self)
+            .perform()
     }
 
 }

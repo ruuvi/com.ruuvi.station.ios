@@ -1,5 +1,6 @@
 import UIKit
 import RuuviUser
+import RuuviLocal
 
 enum UniversalLinkType: String {
     case verify = "/verify"
@@ -15,6 +16,7 @@ enum UniversalLinkType: String {
 class UniversalLinkCoordinatorImpl {
     var ruuviUser: RuuviUser!
     var router: UniversalLinkRouter!
+    var settings: RuuviLocalSettings!
 
     private var urlComponents: URLComponents!
 }
@@ -29,6 +31,13 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
         }
         self.urlComponents = urlComponents
         detectViewController(for: path)
+    }
+
+    func processWidgetLink(macId: String) {
+        settings.setCardToOpenFromWidget(for: macId)
+        NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
+                                        object: nil,
+                                        userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
     }
 }
 

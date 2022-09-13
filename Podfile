@@ -13,7 +13,7 @@ def ruuvi_ontology
 end
 
 def shared_pods
-  pod 'BTKit', '~> 0.4.1'
+  pod 'BTKit', :git => 'https://github.com/ruuvi/BTKit.git'
   pod 'Firebase'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
@@ -107,7 +107,7 @@ end
 
 def widget_pods
   pod 'Swinject'
-  pod 'BTKit', '~> 0.4.1'
+  pod 'BTKit', :git => 'https://github.com/ruuvi/BTKit.git'
   pod 'FutureX'
   pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'

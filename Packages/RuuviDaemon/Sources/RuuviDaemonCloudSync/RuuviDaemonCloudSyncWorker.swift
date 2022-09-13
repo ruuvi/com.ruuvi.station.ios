@@ -53,6 +53,10 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
 
     @objc
     func refreshImmediately() {
-        cloudSyncService.syncAll()
+        cloudSyncService.syncAllRecords()
+    }
+
+    func refreshLatestRecord() {
+        cloudSyncService.refreshLatestRecord()
     }
 }

@@ -18,7 +18,9 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildChartIntervalSeconds(),
                            buildChartDurationHours(),
                            saveAdvertisementsInterval(),
-                           buildSaveAndLoadFromWebIntervalMinutues()]
+                           buildSaveAndLoadFromWebIntervalMinutues(),
+                           buildAskForReviewFirstTime(),
+                           buildAskForReviewLater()]
     }
 }
 
@@ -170,5 +172,29 @@ extension DefaultsPresenter {
             observer.settings.webTagDaemonIntervalMinutes = interval.bound
         }
         return webSaveAndLoadInterval
+    }
+
+    private func buildAskForReviewFirstTime() -> DefaultsViewModel {
+        let askForReviewAtLaunch = DefaultsViewModel()
+        askForReviewAtLaunch.title = "Defaults.AppLaunchRequiredForReview.Count.title".localized()
+        askForReviewAtLaunch.integer.value = settings.appOpenedInitialCountToAskReview
+        askForReviewAtLaunch.unit = .decimal
+
+        bind(askForReviewAtLaunch.integer, fire: false) { observer, interval in
+            observer.settings.appOpenedInitialCountToAskReview = interval.bound
+        }
+        return askForReviewAtLaunch
+    }
+
+    private func buildAskForReviewLater() -> DefaultsViewModel {
+        let askForReviewAtLaunch = DefaultsViewModel()
+        askForReviewAtLaunch.title = "Defaults.AskReviewIfLaunchDivisibleBy.Count.title".localized()
+        askForReviewAtLaunch.integer.value = settings.appOpenedCountDivisibleToAskReview
+        askForReviewAtLaunch.unit = .decimal
+
+        bind(askForReviewAtLaunch.integer, fire: false) { observer, interval in
+            observer.settings.appOpenedCountDivisibleToAskReview = interval.bound
+        }
+        return askForReviewAtLaunch
     }
 }

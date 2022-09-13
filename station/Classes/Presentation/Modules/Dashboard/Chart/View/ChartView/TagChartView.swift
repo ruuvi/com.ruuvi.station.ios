@@ -131,20 +131,19 @@ class TagChartView: LineChartView {
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 1
-        xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
         xAxis.yOffset = 10.0
         viewPortHandler.setMaximumScaleX(5000)
         viewPortHandler.setMaximumScaleY(30)
 
         leftAxis.labelPosition = .outsideChart
-        leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+        leftAxis.labelFont = .systemFont(ofSize: 8, weight: .regular)
         leftAxis.setLabelCount(5, force: true)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
         leftAxis.minWidth = 40.0
         leftAxis.maxWidth = 40.0
-        leftAxis.xOffset = 10.0
+        leftAxis.xOffset = 8.0
 
         rightAxis.enabled = true
         rightAxis.labelPosition = .outsideChart
@@ -187,6 +186,7 @@ extension TagChartView: TagChartViewInput {
 
     func localize() {
         xAxis.valueFormatter = DateValueFormatter(with: settings.language.locale)
+        leftAxis.valueFormatter = YAxisValueFormatter(with: settings.language.locale)
     }
 
     func clearChartData() {

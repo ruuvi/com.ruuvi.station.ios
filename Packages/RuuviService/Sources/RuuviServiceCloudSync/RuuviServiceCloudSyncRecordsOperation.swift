@@ -13,7 +13,6 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
     private var until: Date?
     private var ruuviCloud: RuuviCloud
     private var ruuviRepository: RuuviRepository
-    private var syncState: RuuviLocalSyncState
     private var ruuviLocalIDs: RuuviLocalIDs
 
     init(sensor: RuuviTagSensor,
@@ -29,7 +28,6 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
         self.until = until
         self.ruuviCloud = ruuviCloud
         self.ruuviRepository = ruuviRepository
-        self.syncState = syncState
         self.ruuviLocalIDs = ruuviLocalIDs
     }
 
@@ -40,12 +38,10 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
             return
         }
         let op = ruuviCloud.loadRecords(macId: macId, since: since, until: until)
-        syncState.setSyncStatus(.syncing, for: macId)
         op.on(success: { [weak self] loadedRecords in
             guard let sSelf = self else { return }
             guard !loadedRecords.isEmpty else {
                 sSelf.state = .finished
-                sSelf.syncState.setSyncStatus(.complete, for: macId)
                 return
             }
             let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map({ record in
@@ -64,18 +60,15 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
             persist.on(success: { [weak sSelf] _ in
                 guard let ssSelf = sSelf else { return }
                 ssSelf.records = recordsWithLuid
-                ssSelf.syncState.setSyncStatus(.complete, for: macId)
                 ssSelf.state = .finished
             }, failure: { [weak sSelf] error in
                 guard let ssSelf = sSelf else { return }
                 ssSelf.error = .ruuviRepository(error)
-                ssSelf.syncState.setSyncStatus(.onError, for: macId)
                 ssSelf.state = .finished
             })
         }, failure: { [weak self] error in
             guard let sSelf = self else { return }
             sSelf.error = .ruuviCloud(error)
-            sSelf.syncState.setSyncStatus(.onError, for: macId)
             sSelf.state = .finished
         })
     }

@@ -14,8 +14,8 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
             NotificationCenter
                 .default
                 .post(name: .NetworkSyncDidChangeStatus, object: nil, userInfo: [
-                    NetworkSyncStatusKey.mac: macId,
-                    NetworkSyncStatusKey.status: status
+                    NetworkSyncStatusKey.status: status,
+                    NetworkSyncStatusKey.mac: macId
                 ])
         }
         switch status {
@@ -26,17 +26,11 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
             })
         case .syncing:
             DispatchQueue.main.async { [weak self] in
-                if self?.syncingEnqueue.isEmpty ?? false {
-                    self?.syncStatus = .syncing
-                }
-                self?.syncingEnqueue.append(macId.any)
+                self?.syncStatus = .syncing
             }
         case .none:
             DispatchQueue.main.async { [weak self] in
-                self?.syncingEnqueue.removeAll(where: {$0 == macId.any})
-                if self?.syncingEnqueue.isEmpty ?? false {
-                    self?.syncStatus = .none
-                }
+                self?.syncStatus = .none
             }
         }
     }

@@ -78,18 +78,18 @@ extension TagChartsScrollViewController: TagChartsViewInput {
 
     /// This method requires more context
     /// 1: Clear and Sync button should not be visible and
-    /// the status should be visible is a sync progress is already running in the background
+    /// the status should be visible if a sync progress is already running in the background
     /// 2: Clear and Sync button should be hidden for shared sensors
     /// 3: The only case these buttons are shown are when the last stored data is from the cloud
     /// no sync process running in the background
-    func handleClearSyncButtons(cloudSensor: Bool, sharedSensor: Bool, isSyncing: Bool) {
+    func handleClearSyncButtons(connectable: Bool, isSyncing: Bool) {
         if isSyncing {
             hideUtilButtons()
             syncStatusLabel.isHidden = false
             syncStatusLabel.text = "TagCharts.Status.Serving".localized()
             return
         }
-        if sharedSensor || cloudSensor {
+        if !connectable {
             hideUtilButtons()
             syncStatusLabel.isHidden = true
         } else {
@@ -185,6 +185,19 @@ extension TagChartsScrollViewController: TagChartsViewInput {
 
     func showSwipeUpInstruction() {
         gestureInstructor.show(.swipeUp, after: 0.1)
+    }
+
+    func showSyncAbortAlert(dismiss: Bool) {
+        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
+        let message = dismiss ? "TagCharts.Dismiss.Alert.message".localized() :
+                                "TagCharts.AbortSync.Alert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        let actionTitle = "TagCharts.AbortSync.Button.title".localized()
+        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmAbortSync(dismiss: dismiss)
+        }))
+        present(alertVC, animated: true)
     }
 }
 
@@ -361,8 +374,9 @@ extension TagChartsScrollViewController {
             if let state = state {
                 switch state {
                 case .empty:
-                    imageView.alpha = 1.0
+                    imageView.alpha = 0.5
                     imageView.image = self?.alertOffImage
+                    imageView.layer.removeAllAnimations()
                 case .registered:
                     imageView.alpha = 1.0
                     imageView.image = self?.alertOnImage

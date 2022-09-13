@@ -35,7 +35,11 @@ class CardView: UIView {
     @IBOutlet weak var movementCounterView: UIView!
     @IBOutlet weak var movementCounterViewHeight: NSLayoutConstraint!
 
-    var updatedAt: Date?
+    var updatedAt: Date? {
+        didSet {
+            startTimer()
+        }
+    }
     var isConnected: Bool?
     var networkTagMacId: MACIdentifier? {
         didSet {
@@ -110,7 +114,7 @@ class CardView: UIView {
                let date = self?.updatedAt?.ruuviAgo() {
                 self?.updatedLabel.text = date
             } else {
-                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "N/A".localized()
+                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
             }
         })
     }
@@ -122,13 +126,13 @@ class CardView: UIView {
                          object: nil,
                          queue: .main,
                          using: { [weak self] notification in
-            guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                  let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                  mac.any == macId else {
-                return
-            }
-            self?.updateSyncLabel(with: status)
-        })
+                guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                      let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                      mac.any == macId else {
+                    return
+                }
+                self?.updateSyncLabel(with: status)
+            })
     }
 
     private func updateSyncLabel(with status: NetworkSyncStatus) {

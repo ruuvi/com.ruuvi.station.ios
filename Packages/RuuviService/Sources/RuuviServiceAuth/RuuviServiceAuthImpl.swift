@@ -42,11 +42,12 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                 localSensors.filter({ $0.isClaimed || $0.isCloud }).forEach { sensor in
                     let deleteSensorOperation = sSelf.pool.delete(sensor)
                     let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
+                    let deleteLatestRecordOperation = sSelf.pool.deleteLast(sensor.id)
                     sSelf.propertiesService.removeImage(for: sensor)
                     sSelf.localIDs.clear(sensor: sensor)
                     sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
                     sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
-                    Future.zip([deleteSensorOperation, deleteRecordsOperation])
+                    Future.zip([deleteSensorOperation, deleteRecordsOperation, deleteLatestRecordOperation])
                         .on(success: { _ in
                             promise.succeed(value: true)
                         }, failure: { error in

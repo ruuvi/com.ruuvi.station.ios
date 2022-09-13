@@ -7,7 +7,6 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviCore
 import RuuviPresenters
 
@@ -28,10 +27,8 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var router: AnyObject?
     weak var output: RuuviDiscoverOutput?
 
-    var virtualReactor: VirtualReactor!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
-    var virtualService: VirtualService!
     var foreground: BTForeground!
     var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
@@ -40,11 +37,6 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 
     private weak var view: DiscoverViewInput?
     private var ruuviTags = Set<RuuviTag>()
-    private var persistedVirtualSensors: [VirtualTagSensor]! {
-        didSet {
-            view?.savedWebTagProviders = persistedVirtualSensors.map({ $0.provider })
-        }
-    }
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
             updateViewDevices()
@@ -54,17 +46,14 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var scanToken: ObservationToken?
     private var stateToken: ObservationToken?
     private var lostToken: ObservationToken?
-    private var virtualReactorToken: VirtualReactorToken?
     private var persistedReactorToken: RuuviReactorToken?
     private lazy var ruuviLogoImage = UIImage.named("ruuvi_logo", for: Self.self)
-    private var lastSelectedWebTag: DiscoverVirtualTagViewModel?
 
     deinit {
         reloadTimer?.invalidate()
         scanToken?.invalidate()
         stateToken?.invalidate()
         lostToken?.invalidate()
-        virtualReactorToken?.invalidate()
         persistedReactorToken?.invalidate()
     }
 }
@@ -72,21 +61,6 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        let current = DiscoverVirtualTagViewModel(
-            provider: .openWeatherMap,
-            locationType: .current,
-            icon: UIImage.named("icon-webtag-current", for: Self.self)
-        )
-        let manual = DiscoverVirtualTagViewModel(
-            provider: .openWeatherMap,
-            locationType: .manual,
-            icon: UIImage.named("icon-webtag-map", for: Self.self)
-        )
-        if virtualService.isCurrentLocationVirtualTagExists {
-            view?.virtualTags = [manual]
-        } else {
-            view?.virtualTags = [manual, current]
-        }
         view?.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
         if !(view?.isBluetoothEnabled ?? false)
             && foreground.bluetoothState != .unknown {
@@ -96,7 +70,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
         view?.isCloseEnabled = true
 
         startObservingPersistedRuuviSensors()
-        startObservingPersistedWebTags()
     }
 
     func viewWillAppear() {
@@ -127,81 +100,13 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
 
-    func viewDidChoose(webTag: DiscoverVirtualTagViewModel) {
-        switch webTag.locationType {
-        case .current:
-            if permissionsManager.isLocationPermissionGranted {
-                persistWebTag(with: webTag.provider)
-            } else {
-                permissionsManager.requestLocationPermission { [weak self] (granted) in
-                    if granted {
-                        self?.persistWebTag(with: webTag.provider)
-                    } else {
-                        self?.permissionPresenter.presentNoLocationPermission()
-                    }
-                }
-            }
-        case .manual:
-            lastSelectedWebTag = webTag
-            output?.ruuviDiscoverWantsPickLocation(self)
-        }
-    }
-
     func viewDidTriggerClose() {
         output?.ruuviDiscoverWantsClose(self)
     }
-
-    func viewDidTapOnWebTagInfo() {
-        view?.showWebTagInfoDialog()
-    }
 }
-
- extension DiscoverPresenter {
-    func onDidPick(location: Location) {
-        guard let webTag = lastSelectedWebTag else { return }
-        virtualService.add(provider: webTag.provider, location: location)
-            .on(success: { [weak self] virtualSensor in
-                guard let sSelf = self else { return }
-                sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-        lastSelectedWebTag = nil
-    }
- }
 
 // MARK: - Private
 extension DiscoverPresenter {
-    private func persistWebTag(with provider: VirtualProvider) {
-        let operation = virtualService.add(
-            provider: provider,
-            name: VirtualLocation.current.title
-        )
-        operation.on(success: { [weak self] virtualSensor in
-            guard let sSelf = self else { return }
-            sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func startObservingPersistedWebTags() {
-        virtualReactorToken?.invalidate()
-        virtualReactorToken = virtualReactor.observe { [weak self] change in
-            switch change {
-            case .initial(let persistedVirtualSensors):
-                self?.persistedVirtualSensors = persistedVirtualSensors
-            case .insert(let addedPersistedVirtualSensor):
-                self?.persistedVirtualSensors.append(addedPersistedVirtualSensor)
-            case .delete(let deletedPersistedVirtualSensor):
-                self?.persistedVirtualSensors.removeAll(where: { $0.id == deletedPersistedVirtualSensor.id })
-            case .error(let error):
-                self?.errorPresenter.present(error: error)
-            case .update:
-                break
-            }
-        }
-    }
 
     private func startObservingPersistedRuuviSensors() {
         persistedReactorToken = ruuviReactor.observe({ [weak self] (change) in
@@ -249,7 +154,7 @@ extension DiscoverPresenter {
     private func startScanning() {
         scanToken = foreground.scan(self) { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
-                // when mode is changed, the device dhould be replaced
+                // when mode is changed, the device should be replaced
                 if let sameUUID = observer.ruuviTags.first(where: { $0.uuid == ruuviTag.uuid }), sameUUID != ruuviTag {
                     observer.ruuviTags.remove(sameUUID)
                 }
@@ -278,26 +183,14 @@ extension DiscoverPresenter {
 
     private func updateViewDevices() {
         let ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
-            if let persistedRuuviTag = persistedSensors
-                .first(where: { $0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any }) {
-                return DiscoverRuuviTagViewModel(
-                    luid: ruuviTag.luid?.any,
-                    isConnectable: ruuviTag.isConnectable,
-                    rssi: ruuviTag.rssi,
-                    mac: ruuviTag.mac,
-                    name: persistedRuuviTag.name,
-                    logo: ruuviLogoImage
-                )
-            } else {
-                return DiscoverRuuviTagViewModel(
-                    luid: ruuviTag.luid?.any,
-                    isConnectable: ruuviTag.isConnectable,
-                    rssi: ruuviTag.rssi,
-                    mac: ruuviTag.mac,
-                    name: nil,
-                    logo: ruuviLogoImage
-                )
-            }
+            return DiscoverRuuviTagViewModel(
+                luid: ruuviTag.luid?.any,
+                isConnectable: ruuviTag.isConnectable,
+                rssi: ruuviTag.rssi,
+                mac: ruuviTag.mac,
+                name: nil,
+                logo: ruuviLogoImage
+            )
         }
         view?.ruuviTags = visibleTags(ruuviTags: ruuviTags)
     }
@@ -308,10 +201,11 @@ extension DiscoverPresenter {
                 if let tagLuid = tag.luid?.value,
                     let persistedTagLuid = persistedTag.luid?.value {
                     return tagLuid == persistedTagLuid
-                } else if let tagMacId = tag.mac, let persistedTagMacId = persistedTag.macId?.value {
+                } else if let tagMacId = tag.mac,
+                            let persistedTagMacId = persistedTag.macId?.value {
                     return tagMacId == persistedTagMacId
                 } else {
-                    return true
+                    return false
                 }
             })
         }).sorted(by: {

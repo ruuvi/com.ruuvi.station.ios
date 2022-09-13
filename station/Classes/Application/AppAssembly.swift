@@ -558,7 +558,7 @@ private final class BusinessAssembly: Assembly {
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
                 headersProvider: ExportHeadersProvider(),
-                emptyValueString: "N/A".localized(),
+                emptyValueString: "",
                 ruuviLocalSettings: localSettings
             )
             return service
@@ -813,6 +813,7 @@ private final class BusinessAssembly: Assembly {
             let coordinator = UniversalLinkCoordinatorImpl()
             let router = UniversalLinkRouterImpl()
             coordinator.ruuviUser = r.resolve(RuuviUser.self)
+            coordinator.settings = r.resolve(RuuviLocalSettings.self)
             coordinator.router = router
             return coordinator
         })
@@ -886,10 +887,8 @@ private final class CoreAssembly: Assembly {
 private final class ModulesAssembly: Assembly {
     func assemble(container: Container) {
         container.register(RuuviDiscover.self) { r in
-            let virtualReactor = r.resolve(VirtualReactor.self)!
             let errorPresenter = r.resolve(ErrorPresenter.self)!
             let activityPresenter = r.resolve(ActivityPresenter.self)!
-            let virtualService = r.resolve(VirtualService.self)!
             let permissionsManager = r.resolve(RuuviCorePermission.self)!
             let permissionPresenter = r.resolve(PermissionPresenter.self)!
             let foreground = r.resolve(BTForeground.self)!
@@ -898,10 +897,8 @@ private final class ModulesAssembly: Assembly {
 
             let factory = RuuviDiscoverFactory()
             let dependencies = RuuviDiscoverDependencies(
-                virtualReactor: virtualReactor,
                 errorPresenter: errorPresenter,
                 activityPresenter: activityPresenter,
-                virtualService: virtualService,
                 permissionsManager: permissionsManager,
                 permissionPresenter: permissionPresenter,
                 foreground: foreground,
