@@ -10,4 +10,5 @@ protocol MenuModuleOutput: AnyObject {
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?)
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?)
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?)
+    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount sender: Any?)
 }

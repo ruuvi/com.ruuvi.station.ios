@@ -141,6 +141,13 @@ class CardsRouter: NSObject, CardsRouterInput {
             .delegate = self
     }
 
+    func openMyRuuviAccount() {
+        let factory = StoryboardFactory(storyboardName: "MyRuuvi")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: MyRuuviAccountModuleInput.self)
+            .perform()
+    }
+
 }
 
 extension CardsRouter: DiscoverRouterDelegate {

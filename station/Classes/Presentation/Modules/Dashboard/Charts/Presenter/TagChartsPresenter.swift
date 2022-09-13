@@ -48,6 +48,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         }
     }
     private var output: TagChartsModuleOutput?
+    private var advertisementToken: ObservationToken?
+    private var heartbeatToken: ObservationToken?
     private var stateToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
@@ -85,6 +87,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     }
     deinit {
         stateToken?.invalidate()
+        advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
         temperatureUnitToken?.invalidate()
         humidityUnitToken?.invalidate()
         pressureUnitToken?.invalidate()
@@ -127,13 +131,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewWillAppear() {
+        startObservingRuuviTag()
         startListeningToSettings()
         startObservingBluetoothState()
         startListeningToAlertStatus()
         tryToShowSwipeUpHint()
         restartObservingData()
         interactor.restartObservingTags()
-        handleClearSyncButtons()
+        handleClearSyncButtons(connectable: false)
         syncChartViews()
         stopGattSync()
     }
@@ -146,8 +151,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view?.setupChartViews(chartViews: interactor.chartViews)
     }
 
-    func handleClearSyncButtons() {
-        view.handleClearSyncButtons(cloudSensor: settings.cloudModeEnabled && viewModel.isCloud.value.bound,
+    func handleClearSyncButtons(connectable: Bool) {
+        view.handleClearSyncButtons(connectable: connectable,
                                     isSyncing: interactor.isSyncingRecords())
     }
 
@@ -161,7 +166,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
         if interactor.isSyncingRecords() {
-            view.showSyncAbortAlert()
+            view.showSyncAbortAlert(dismiss: true)
         } else {
             stopRunningProcesses()
             router.dismiss()
@@ -218,7 +223,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerStopSync(for viewModel: TagChartsViewModel) {
-        stopGattSync()
+        view.showSyncAbortAlert(dismiss: false)
     }
 
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
@@ -239,9 +244,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
         interactor.notifyDidLocalized()
     }
 
-    func viewDidConfirmAbortSync() {
-        stopRunningProcesses()
-        router.dismiss()
+    func viewDidConfirmAbortSync(dismiss: Bool) {
+        if dismiss {
+            stopRunningProcesses()
+            router.dismiss()
+        } else {
+            stopGattSync()
+        }
     }
 }
 // MARK: - TagChartsInteractorOutput
@@ -328,6 +337,11 @@ extension TagChartsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
         module.dismiss()
     }
+
+    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount sender: Any?) {
+        module.dismiss()
+        router.openMyRuuviAccount()
+    }
 }
 
 // MARK: - SignInModuleOutput
@@ -400,6 +414,48 @@ extension TagChartsPresenter {
             .on(success: { [weak self] _ in
                 self?.view.setSyncProgressViewHidden()
             })
+    }
+
+    private func startObservingRuuviTag() {
+        advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
+        guard let luid = ruuviTag.luid else {
+            return
+        }
+        advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
+            if let tag = device.ruuvi?.tag {
+                self?.sync(device: tag, source: .advertisement)
+            }
+        })
+
+        heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
+            if let tag = device.ruuvi?.tag {
+                self?.sync(device: tag, source: .heartbeat)
+            }
+        })
+    }
+
+    private func sync(device: RuuviTag,
+                      source: RuuviTagSensorRecordSource) {
+        if device.isConnected {
+            if source == .heartbeat {
+                if viewModel.isConnectable.value != device.isConnectable {
+                    viewModel.isConnectable.value = device.isConnectable
+                }
+            } else {
+                if viewModel.isConnectable.value != device.isConnected {
+                    viewModel.isConnectable.value = device.isConnected
+                }
+            }
+        } else {
+            if viewModel.isConnectable.value != device.isConnectable {
+                viewModel.isConnectable.value = device.isConnectable
+            }
+        }
+
+        let connectable = viewModel.isConnectable.value.bound &&
+                          !settings.cloudModeEnabled
+        handleClearSyncButtons(connectable: connectable)
     }
 
     private func restartObservingData() {
@@ -613,7 +669,12 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.handleClearSyncButtons()
+                guard let sSelf = self else {
+                    return
+                }
+                let connectable = sSelf.viewModel.isConnectable.value.bound &&
+                                  !sSelf.settings.cloudModeEnabled
+                sSelf.handleClearSyncButtons(connectable: connectable)
             })
     }
 
@@ -623,6 +684,8 @@ extension TagChartsPresenter {
     }
 
     private func stopRunningProcesses() {
+        advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
         stopObservingBluetoothState()
         interactor.stopObservingTags()
         interactor.stopObservingRuuviTagsData()

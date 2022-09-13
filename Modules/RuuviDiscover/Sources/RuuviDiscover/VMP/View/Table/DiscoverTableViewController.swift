@@ -6,19 +6,13 @@ import RuuviLocalization
 import RuuviBundleUtils
 
 enum DiscoverTableSection {
-    case webTag
     case device
     case noDevices
 
-    static var count = 2 // displayed simultaneously
+    static var count = 1 // displayed simultaneously
 
-    static func section(for index: Int, deviceCount: Int) -> DiscoverTableSection {
-        switch index {
-        case 0:
-            return .webTag
-        default:
-            return deviceCount > 0 ? .device : .noDevices
-        }
+    static func section(for deviceCount: Int) -> DiscoverTableSection {
+        return deviceCount > 0 ? .device : .noDevices
     }
 }
 
@@ -33,21 +27,6 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
 
     private var alertVC: UIAlertController?
-
-    var virtualTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]()
-    var savedWebTagProviders: [VirtualProvider] = [VirtualProvider]() {
-        didSet {
-            shownVirtualTags = virtualTags
-                .filter({
-                    if hideAlreadyAddedWebProviders {
-                        return !savedWebTagProviders.contains($0.provider)
-                    } else {
-                        return true
-                    }
-                })
-                .sorted(by: { $0.locationType.title < $1.locationType.title })
-        }
-    }
 
     var ruuviTags: [DiscoverRuuviTagViewModel] = [DiscoverRuuviTagViewModel]() {
         didSet {
@@ -69,12 +48,6 @@ class DiscoverTableViewController: UITableViewController {
 
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
-    private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
-    private var shownVirtualTags: [DiscoverVirtualTagViewModel] = [DiscoverVirtualTagViewModel]() {
-        didSet {
-            updateTableView()
-        }
-    }
 }
 
 // MARK: - DiscoverViewInput
@@ -141,10 +114,8 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let section = DiscoverTableSection.section(for: section, deviceCount: ruuviTags.count)
+        let section = DiscoverTableSection.section(for: ruuviTags.count)
         switch section {
-        case .webTag:
-            return shownVirtualTags.count
         case .device:
             return ruuviTags.count
         case .noDevices:
@@ -153,13 +124,8 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: ruuviTags.count)
+        let section = DiscoverTableSection.section(for: ruuviTags.count)
         switch section {
-        case .webTag:
-            let cell = tableView.dequeueReusableCell(with: DiscoverWebTagTableViewCell.self, for: indexPath)
-            let tag = shownVirtualTags[indexPath.row]
-            configure(cell: cell, with: tag)
-            return cell
         case .device:
             let cell = tableView.dequeueReusableCell(with: DiscoverDeviceTableViewCell.self, for: indexPath)
             let tag = ruuviTags[indexPath.row]
@@ -179,12 +145,8 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: ruuviTags.count)
+        let sectionType = DiscoverTableSection.section(for: ruuviTags.count)
         switch sectionType {
-        case .webTag:
-            if indexPath.row < shownVirtualTags.count {
-                output.viewDidChoose(webTag: shownVirtualTags[indexPath.row])
-            }
         case .device:
             if indexPath.row < ruuviTags.count {
                 let device = ruuviTags[indexPath.row]
@@ -196,35 +158,11 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: ruuviTags.count)
-        if sectionType == .webTag {
-            return 60
-        } else {
-            return super.tableView(tableView, heightForHeaderInSection: section)
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 40
     }
 
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: ruuviTags.count)
-        if sectionType == .webTag {
-            // swiftlint:disable force_cast
-            let header = tableView
-                .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
-                as! DiscoverWebTagsInfoHeaderFooterView
-            // swiftlint:enable force_cast
-            header.delegate = self
-            return header
-        } else {
-            return nil
-        }
-    }
-
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: ruuviTags.count)
+        let sectionType = DiscoverTableSection.section(for: ruuviTags.count)
         switch sectionType {
         case .device:
             return ruuviTags.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
@@ -236,19 +174,8 @@ extension DiscoverTableViewController {
     }
 }
 
-// MARK: - DiscoverWebTagsInfoHeaderFooterViewDelegate
-extension DiscoverTableViewController: DiscoverWebTagsInfoHeaderFooterViewDelegate {
-    func discoverWebTagsInfo(headerView: DiscoverWebTagsInfoHeaderFooterView, didTapOnInfo button: UIButton) {
-        output.viewDidTapOnWebTagInfo()
-    }
-}
-
 // MARK: - Cell configuration
 extension DiscoverTableViewController {
-    private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverVirtualTagViewModel) {
-        cell.nameLabel.text = tag.locationType.title
-        cell.iconImageView.image = tag.icon
-    }
 
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverRuuviTagViewModel) {
 
@@ -280,8 +207,6 @@ extension DiscoverTableViewController {
 
     private func configureTableView() {
         tableView.rowHeight = 44
-        let nib = UINib.nibName("DiscoverWebTagsInfoHeaderFooterView", for: Self.self)
-        tableView.register(nib, forHeaderFooterViewReuseIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
     }
 
     private func configureBTDisabledImageView() {

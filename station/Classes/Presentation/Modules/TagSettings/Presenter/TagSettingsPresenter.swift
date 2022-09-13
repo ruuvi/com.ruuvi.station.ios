@@ -1384,16 +1384,16 @@ extension TagSettingsPresenter {
     }
     /// Notify the DFU screen after successful migration of the database
     private func notifyFirmwareUpdate() {
-        if let luid = ruuviTag.luid {
-            connectionPersistence.setKeepConnection(true, for: luid)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
-            NotificationCenter
-                .default
-                .post(name: .RuuviTagMigrationDidComplete,
-                      object: nil,
-                      userInfo: nil)
-        })
+//        if let luid = ruuviTag.luid {
+//            connectionPersistence.setKeepConnection(true, for: luid)
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
+//            NotificationCenter
+//                .default
+//                .post(name: .RuuviTagMigrationDidComplete,
+//                      object: nil,
+//                      userInfo: nil)
+//        })
     }
 }
 

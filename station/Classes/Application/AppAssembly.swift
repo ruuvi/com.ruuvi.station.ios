@@ -887,10 +887,8 @@ private final class CoreAssembly: Assembly {
 private final class ModulesAssembly: Assembly {
     func assemble(container: Container) {
         container.register(RuuviDiscover.self) { r in
-            let virtualReactor = r.resolve(VirtualReactor.self)!
             let errorPresenter = r.resolve(ErrorPresenter.self)!
             let activityPresenter = r.resolve(ActivityPresenter.self)!
-            let virtualService = r.resolve(VirtualService.self)!
             let permissionsManager = r.resolve(RuuviCorePermission.self)!
             let permissionPresenter = r.resolve(PermissionPresenter.self)!
             let foreground = r.resolve(BTForeground.self)!
@@ -899,10 +897,8 @@ private final class ModulesAssembly: Assembly {
 
             let factory = RuuviDiscoverFactory()
             let dependencies = RuuviDiscoverDependencies(
-                virtualReactor: virtualReactor,
                 errorPresenter: errorPresenter,
                 activityPresenter: activityPresenter,
-                virtualService: virtualService,
                 permissionsManager: permissionsManager,
                 permissionPresenter: permissionPresenter,
                 foreground: foreground,
