@@ -496,6 +496,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "DFUUIView.startTitle" = "Start the update";
 "DFUUIView.doNotCloseTitle" = "Не закрывайте приложение и не отключайте сенсор во время обновления.";
 "DFUUIView.successfulTitle" = "Обновление успешно завершено";
+"DFUUIView.DBMigration.Error.message" = "Updating was successful, but an unexpected database migration error occurred. To continue using this sensor, please remove it from the app and then add it again.";
 "RuuviDfuError.failedToConstructUUID" = "Не удалось создать UUID";
 "SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
 "SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
@@ -532,3 +533,5 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history charts or alerts.";
 "Settings.Measurement.Unit.title" = "Unit";
 "Settings.Measurement.Resolution.title" = "Resolution";
+"MyRuuvi.Settings.DeleteAccount.title" = "Delete Account";
+"MyRuuvi.Settings.DeleteAccount.Confirmation.message" = "A confirmation is sent to your email. To proceed with the deletion, please check your inbox and follow the instructions.";
