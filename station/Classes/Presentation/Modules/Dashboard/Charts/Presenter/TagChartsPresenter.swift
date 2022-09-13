@@ -337,6 +337,11 @@ extension TagChartsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
         module.dismiss()
     }
+
+    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount sender: Any?) {
+        module.dismiss()
+        router.openMyRuuviAccount()
+    }
 }
 
 // MARK: - SignInModuleOutput

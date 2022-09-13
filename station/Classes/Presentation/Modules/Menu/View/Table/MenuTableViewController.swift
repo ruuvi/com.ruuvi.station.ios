@@ -6,17 +6,6 @@ class MenuTableViewController: UIViewController {
     var isNetworkHidden: Bool = false {
         didSet {
             embeded?.isNetworkHidden = isNetworkHidden
-            updateUIIsNetworkHidden()
-        }
-    }
-
-    @IBOutlet weak var loggedInLabel: UILabel!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var networkContainer: UIView!
-
-    var viewModel: MenuViewModel? {
-        didSet {
-            bindViewModel()
         }
     }
 
@@ -33,7 +22,6 @@ extension MenuTableViewController {
         super.viewDidLoad()
         localize()
         configureViews()
-        updateUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -53,18 +41,6 @@ extension MenuTableViewController {
 }
 
 extension MenuTableViewController {
-    private func updateUI() {
-        updateUIIsNetworkHidden()
-    }
-
-    private func updateUIIsNetworkHidden() {
-        if isViewLoaded {
-            networkContainer.isHidden = isNetworkHidden
-        }
-    }
-}
-
-extension MenuTableViewController {
     private func configureViews() {
         configurePanToDismissGesture()
     }
@@ -76,18 +52,6 @@ extension MenuTableViewController {
             exitPanGesture.addTarget(transitioningDelegate.dismiss,
                                      action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
             view.addGestureRecognizer(exitPanGesture)
-        }
-    }
-
-    private func bindViewModel() {
-        guard let viewModel = viewModel, isViewLoaded else {
-            return
-        }
-        usernameLabel.bind(viewModel.username) { label, username in
-            label.text = username
-        }
-        loggedInLabel.bind(viewModel.username) { label, username in
-            label.text = username == nil ? nil : "Menu.LoggedIn.title".localized()
         }
     }
 }

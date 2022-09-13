@@ -351,12 +351,19 @@ extension CardsPresenter: MenuModuleOutput {
                                                 body: "\n\n" + summary)
         }
     }
+
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
         module.dismiss()
         router.openSignIn(output: self)
     }
+
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
         module.dismiss()
+    }
+    
+    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount sender: Any?) {
+        module.dismiss()
+        router.openMyRuuviAccount()
     }
 }
 

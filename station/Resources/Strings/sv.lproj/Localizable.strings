@@ -296,6 +296,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "Menu.Label.WhatToMeasure.text" = "Vad ska man mäta med Ruuvi?";
 "Menu.Measure.URL" = "https://ruuvi.com/ideas";
 "Menu.Label.Feedback.text" = "Skicka Feedback";
+"Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "Mer info";
 "TagSettings.SectionHeader.Name.title" = "NAMN";

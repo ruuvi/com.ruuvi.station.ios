@@ -296,6 +296,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.WhatToMeasure.text" = "What to measure with Ruuvi?";
 "Menu.Measure.URL" = "https://ruuvi.com/ideas/";
 "Menu.Label.Feedback.text" = "Send Feedback";
+"Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "More info";
 "TagSettings.SectionHeader.Name.title" = "NAME";
@@ -512,7 +513,7 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.confirmSharedTagRemovalDialog.message" = "If you remove the sensor, the owner of the sensor will be notified and you cannot access the sensor anymore.";
 "TagSettings.General.Owner.none" = "No owner";
 "TagSettings.Share.title" = "Share";
-"Menu.LoggedIn.title" = "Logged in:";
+"Menu.LoggedIn.title" = "Signed in:";
 "Interval.Day.string" = "Day";
 "TagSettings.tagNameTitleLabel.rename.text" = "Your sensors will be in alphabetical order.";
 "DFUUIView.lowBattery.warning.message" = "Sensor's battery voltage seems to be low and the firmware update process may fail. We recommend to replace the battery before updating.";

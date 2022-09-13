@@ -296,6 +296,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "Menu.Label.WhatToMeasure.text" = "Mitä mitata Ruuvilla?";
 "Menu.Measure.URL" = "https://ruuvi.com/fi/ideat";
 "Menu.Label.Feedback.text" = "Lähetä palautetta";
+"Menu.Label.MyRuuviAccount.text" = "Minun Ruuvi-tili";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "Lisätietoa";
 "TagSettings.SectionHeader.Name.title" = "NIMI";

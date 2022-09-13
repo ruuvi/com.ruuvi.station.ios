@@ -26,6 +26,7 @@ protocol TagChartsRouterInput {
         sensor: VirtualTagSensor,
         temperature: Temperature?
     )
+    func openMyRuuviAccount()
 }
 extension TagChartsRouterInput {
     func dismiss() {

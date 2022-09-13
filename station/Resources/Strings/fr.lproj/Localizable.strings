@@ -296,6 +296,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.WhatToMeasure.text" = "Que mesurer avec Ruuvi?";
 "Menu.Measure.URL" = "https://ruuvi.com/ideas";
 "Menu.Label.Feedback.text" = "Donnez-nous votre avis!";
+"Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "Plus d'infos";
 "TagSettings.SectionHeader.Name.title" = "NOM";

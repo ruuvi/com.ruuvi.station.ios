@@ -112,6 +112,13 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(with: .enterEmail, output: output)
             })
     }
+
+    func openMyRuuviAccount() {
+        let factory = StoryboardFactory(storyboardName: "MyRuuvi")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: MyRuuviAccountModuleInput.self)
+            .perform()
+    }
 }
 
 extension TagChartsRouter: DiscoverRouterDelegate {
