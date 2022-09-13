@@ -27,4 +27,5 @@ protocol CardsRouterInput {
         temperature: Temperature?
     )
     func openTagCharts()
+    func openMyRuuviAccount()
 }

@@ -1,12 +1,6 @@
 import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
-
-    var viewModel: MenuViewModel? {
-        didSet {
-            tableView.reloadData()
-        }
-    }
     var output: MenuViewOutput!
     var isNetworkHidden: Bool = false {
         didSet {
@@ -73,7 +67,7 @@ extension MenuTableEmbededViewController {
                             forRowAt indexPath: IndexPath) {
         if cell == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
-                ? "Menu.SignOut.text".localized()
+            ? "Menu.Label.MyRuuviAccount.text".localized()
                 : "SignIn.Title.text".localized()
         }
     }
