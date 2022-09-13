@@ -5,13 +5,12 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
     func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String] {
         let tempFormat = "ExportService.Temperature".localized()
         let pressureFormat = "ExportService.Pressure".localized()
-        let dewPointFormat = "ExportService.DewPoint".localized()
         let humidityFormat = "ExportService.Humidity".localized()
         return [
             "ExportService.Date".localized(),
             String(format: tempFormat, units.temperatureUnit.symbol),
             units.humidityUnit == .dew
-                ? String(format: dewPointFormat, units.temperatureUnit.symbol)
+                ? String(format: humidityFormat, units.temperatureUnit.symbol)
                 : String(format: humidityFormat, units.humidityUnit.symbol),
             String(format: pressureFormat, units.pressureUnit.symbol),
             "RSSI" + " (\("dBm".localized()))",

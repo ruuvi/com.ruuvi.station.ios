@@ -5,7 +5,5 @@ protocol DiscoverViewOutput {
     func viewWillAppear()
     func viewWillDisappear()
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String)
-    func viewDidChoose(webTag: DiscoverVirtualTagViewModel)
     func viewDidTriggerClose()
-    func viewDidTapOnWebTagInfo()
 }
