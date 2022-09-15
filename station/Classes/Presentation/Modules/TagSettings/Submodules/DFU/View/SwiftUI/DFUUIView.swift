@@ -27,6 +27,8 @@ struct DFUUIView: View {
         let startTitle = "DFUUIView.startTitle".localized()
         let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized()
         let successfulTitle = "DFUUIView.successfulTitle".localized()
+        let errorTitle = "ErrorPresenterAlert.Error".localized()
+        let dbMigrationErrorTitle = "DFUUIView.DBMigration.Error.message".localized()
     }
 
     private let texts = Texts()
@@ -38,10 +40,17 @@ struct DFUUIView: View {
                 .navigationBarTitle(
                     texts.navigationTitle
                 )
+                .alert(isPresented: $viewModel.isMigrationFailed) {
+                    Alert(title: Text(texts.errorTitle),
+                          message: Text(texts.dbMigrationErrorTitle),
+                          dismissButton: .cancel(Text(texts.okTitle)))
+                }
         }
-        .onAppear { self.viewModel.send(event: .onAppear) }
-        .onReceive(.RuuviTagMigrationDidComplete) { _ in
-            self.viewModel.isLoading = false
+        .onAppear {
+            self.viewModel.send(event: .onAppear)
+        }
+        .onDisappear {
+            self.viewModel.restartPropertiesDaemon()
         }
     }
 

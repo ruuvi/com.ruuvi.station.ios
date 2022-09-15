@@ -13,4 +13,5 @@ protocol TagChartModuleInput: AnyObject {
     func reloadChart()
     func localize()
     func notifySettingsChanged()
+    func notifySensorSettingsChanged(settings: SensorSettings)
 }

@@ -51,6 +51,8 @@
 "Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
 "Defaults.Interval.Hour.string" = "ч";
 "Defaults.ChartDurationHours.title" = "Размер Графиков";
+"Defaults.AppLaunchRequiredForReview.Count.title" = "Количество запусков приложения, чтобы запросить обзор в первый раз";
+"Defaults.AskReviewIfLaunchDivisibleBy.Count.title" = "Запросить отзыв, если запуск приложения делится на";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
@@ -134,7 +136,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
-"TagCharts.Clear.title" = "ОЧИСТИТЬ";
+"TagCharts.Clear.title" = "Очистить";
 "TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
@@ -147,6 +149,9 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.UpdateFirmware.Alert.title" = "Необходим Режим RAWv2";
 "TagSettings.UpdateFirmware.Alert.message" = "Для того, чтобы увидеть отсутствующие значения:\nЕсли вы используете последнюю прошивку, включите RAWv2 режим нажатием кнопки \"B\" на вашем сенсоре.\nИли обновите ваш сенсор с последней прошивкой.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Узнать больше";
+"TagCharts.Dismiss.Alert.message" = "History downloading via Bluetooth connection is in progress. Please wait.";
+"TagCharts.AbortSync.Alert.message" = "Sometimes history downloading is slow due to the Bluetooth connectivity. Please wait a moment.";
+"TagCharts.AbortSync.Button.title" = "Abort downloading";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
 "TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";
@@ -242,7 +247,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Alerts.Off" = "Отключено";
 "TagSettings.Alerts.Temperature.description" = "Уведомление если меньше %.0f или больше %.0f";
 "TagSettings.Label.alerts.text" = "Уведомления";
-"TagSettings.backgroundImageLabel.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
+"TagSettings.backgroundImageLabel.text" = "Фоновое\nизображение";
 "TagSettings.batteryVoltageTitleLabel.text" = "Напряжение Батареи";
 "HumidityCalibration.Button.Calibrate.title" = "Калибровать";
 "HumidityCalibration.lastCalibrationDate.format" = "Откалибровано: %@";
@@ -285,8 +290,13 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
 "Menu.Label.AppSettings.text" = "Настройки";
 "Menu.Label.GetMoreSensors.text" = "Купить датчики Ruuvi";
+"Menu.BuySensors.URL" = "https://ruuvi.com/products";
 "Menu.Label.BuyRuuviGateway.text" = "Купить Ruuvi Gateway";
+"Menu.BuyGateway.URL" = "https://ruuvi.com/gateway";
+"Menu.Label.WhatToMeasure.text" = "Что измерять с помощью Ruuvi?";
+"Menu.Measure.URL" = "https://ruuvi.com/ideas";
 "Menu.Label.Feedback.text" = "Отправить Отзыв";
+"Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "мин";
 "TagSettings.Label.moreInfo.text" = "Дополнительно";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
@@ -487,6 +497,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "DFUUIView.startTitle" = "Start the update";
 "DFUUIView.doNotCloseTitle" = "Не закрывайте приложение и не отключайте сенсор во время обновления.";
 "DFUUIView.successfulTitle" = "Обновление успешно завершено";
+"DFUUIView.DBMigration.Error.message" = "Updating was successful, but an unexpected database migration error occurred. To continue using this sensor, please remove it from the app and then add it again.";
 "RuuviDfuError.failedToConstructUUID" = "Не удалось создать UUID";
 "SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
 "SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
@@ -512,6 +523,16 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Connection.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";
 "Widgets.Loading.message" = "загрузка...";
 "Cards.Movements.title" = "движений";
+"TagSettings.BatteryStatusLabel.Replace.message" = "Замените батарею!";
+"TagSettings.BatteryStatusLabel.Ok.message" = "Батарея OK";
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from Ruuvi Cloud. Ruuvi Gateway router is required.";
 "Widgets.Unauthorized.message" = "Sign in to use the widget.";
 "Widgets.Unconfigured.message" = "Force tap to edit the widget.";
+"Settings.Temperature.Resolution.title" = "Temperature resolution";
+"Settings.Humidity.Resolution.title" = "Humidity resolution";
+"Settings.Pressure.Resolution.title" = "Pressure resolution";
+"Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see sensors live measurement values in the app. This setting doesn't affect history charts or alerts.";
+"Settings.Measurement.Unit.title" = "Unit";
+"Settings.Measurement.Resolution.title" = "Resolution";
+"MyRuuvi.Settings.DeleteAccount.title" = "Delete Account";
+"MyRuuvi.Settings.DeleteAccount.Confirmation.message" = "A confirmation is sent to your email. To proceed with the deletion, please check your inbox and follow the instructions.";

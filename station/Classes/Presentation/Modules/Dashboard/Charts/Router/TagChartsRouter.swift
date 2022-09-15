@@ -49,18 +49,32 @@ class TagChartsRouter: TagChartsRouterInput {
             .perform()
     }
 
+    func openWhatToMeasurePage() {
+        guard let url = URL(string: "Menu.Measure.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     func openRuuviProductsPage() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com/products")!, options: [:], completionHandler: nil)
+        guard let url = URL(string: "Menu.BuySensors.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviGatewayPage() {
-        UIApplication.shared.open(URL(string: "https://ruuvi.com/gateway")!, options: [:], completionHandler: nil)
+        guard let url = URL(string: "Menu.BuyGateway.URL".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     // swiftlint:disable:next function_parameter_count
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         rssi: Int?,
                          sensor: SensorSettings?,
                          output: TagSettingsModuleOutput,
                          scrollToAlert: Bool) {
@@ -71,6 +85,7 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(ruuviTag: ruuviTag,
                                  temperature: temperature,
                                  humidity: humidity,
+                                 rssi: rssi,
                                  sensor: sensor,
                                  output: output,
                                  scrollToAlert: scrollToAlert)
@@ -96,6 +111,13 @@ class TagChartsRouter: TagChartsRouterInput {
             .then({ (module) -> Any? in
                 module.configure(with: .enterEmail, output: output)
             })
+    }
+
+    func openMyRuuviAccount() {
+        let factory = StoryboardFactory(storyboardName: "MyRuuvi")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: MyRuuviAccountModuleInput.self)
+            .perform()
     }
 }
 

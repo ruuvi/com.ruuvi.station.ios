@@ -128,7 +128,7 @@ Pod::Spec.new do |s|
   s.subspec 'GATT' do |ss|
     ss.source_files = 'Sources/RuuviServiceGATT/**/*.{h,m,swift}', 'Sources/RuuviServiceGATT/*.{h,m,swift}'
     ss.dependency 'RuuviService/Contract'
-    ss.dependency 'BTKit', '~> 0.4.1'
+    ss.dependency 'BTKit'
     ss.dependency 'FutureX'
     ss.dependency 'RuuviOntology'
     ss.dependency 'RuuviPool'

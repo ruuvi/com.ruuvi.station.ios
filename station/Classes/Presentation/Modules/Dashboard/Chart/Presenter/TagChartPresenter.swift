@@ -99,6 +99,10 @@ extension TagChartPresenter: TagChartModuleInput {
         configureViewModel(viewModel)
         createChartData()
     }
+
+    func notifySensorSettingsChanged(settings: SensorSettings) {
+        self.sensorSettings = settings
+    }
 }
 
 extension TagChartPresenter: TagChartViewOutput {

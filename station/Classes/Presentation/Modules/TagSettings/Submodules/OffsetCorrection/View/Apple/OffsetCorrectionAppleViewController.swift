@@ -37,7 +37,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
 
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
             if let updateAt = self?.updatedAt {
-                self?.originalValueUpdateTimeLabel.text = updateAt.ruuviAgo()
+                self?.originalValueUpdateTimeLabel.text = "(\(updateAt.ruuviAgo()))"
             }
         })
         bindViewModel()
@@ -70,14 +70,17 @@ class OffsetCorrectionAppleViewController: UIViewController {
             case .humidity:
                 label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
             case .pressure:
-                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
+                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
+                                                             allowSettings: false)
             default:
-                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
+                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius),
+                                                             allowSettings: false)
             }
         }
-        originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] _, date in
+        originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] label, date in
             if let date = date {
                 self?.updatedAt = date
+                label.text = "(\(date.ruuviAgo()))"
             }
         }
         offsetValueLabel.bind(viewModel.offsetCorrectionValue) { [weak self] label, value in
@@ -98,9 +101,11 @@ class OffsetCorrectionAppleViewController: UIViewController {
             case .humidity:
                 label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
             case .pressure:
-                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
+                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
+                                                             allowSettings: false)
             default:
-                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
+                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius),
+                                                             allowSettings: false)
             }
         }
     }
@@ -125,7 +130,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         // make text color gray
         attrString.addAttribute(.foregroundColor,
-            value: UIColor.darkGray,
+            value: UIColor.secondaryLabel,
             range: NSRange(location: 0, length: attrString.length))
 
         descriptionTextView.attributedText = attrString

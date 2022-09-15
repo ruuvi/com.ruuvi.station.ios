@@ -33,6 +33,7 @@ extension DefaultsTableViewController {
         return viewModels.count
     }
 
+    // swiftlint:disable:next function_body_length
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
         if let boolean = viewModel.boolean.value {
@@ -56,15 +57,28 @@ extension DefaultsTableViewController {
             switch viewModel.unit {
             case .hours:
                 unitString = "Defaults.Interval.Hour.string".localized()
+                cell.stepper.stepValue = 1
             case .minutes:
                 unitString = "Defaults.Interval.Min.string".localized()
+                cell.stepper.stepValue = 5
             case .seconds:
                 unitString = "Defaults.Interval.Sec.string".localized()
+                cell.stepper.stepValue = 30
+            case .decimal:
+                unitString = ""
+                cell.stepper.stepValue = 5
+                cell.stepper.minimumValue = 5
             }
             cell.unit = viewModel.unit
-            cell.titleLabel.text = title + " "
-                + "(" + "\(viewModel.integer.value.bound)" + " "
+            let result = viewModel.integer.value.bound
+            switch viewModel.unit {
+            case .hours, .minutes, .seconds:
+                cell.titleLabel.text = title + " "
+                + "(" + "\(result)" + " "
                 + unitString + ")"
+            case .decimal:
+                cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
+            }
             cell.prefix = title
             cell.stepper.value = Double(viewModel.integer.value.bound)
             cell.delegate = self

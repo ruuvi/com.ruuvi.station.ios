@@ -148,6 +148,10 @@ extension SQLiteGRDBDatabase {
                 t.add(column: RuuviTagSQLite.firmwareVersionColumn.name, .text)
             })
         }
+        // v8
+        migrator.registerMigration("Create RuuviTagLatestDataSQLite table") { db in
+            try RuuviTagLatestDataSQLite.createTable(in: db)
+        }
 
         try migrator.migrate(dbPool)
     }

@@ -42,11 +42,13 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.start()
         backgroundTaskService.register()
         backgroundProcessService.register()
+        settings.appIsOnForeground = true
         observeWidgetKind()
         #if canImport(RuuviAnalytics)
         DispatchQueue.main.async {
             self.userPropertiesService.update()
         }
+        settings.appOpenedCount += 1
         #endif
     }
 
@@ -75,6 +77,7 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.stop()
         backgroundTaskService.schedule()
         backgroundProcessService.schedule()
+        settings.appIsOnForeground = false
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -90,6 +93,7 @@ class AppStateServiceImpl: AppStateService {
         }
         propertiesDaemon.start()
         pullWebDaemon.start()
+        settings.appIsOnForeground = true
     }
 
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
@@ -97,9 +101,7 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidOpenWithWidgetDeepLink(_ application: UIApplication, macId: String) {
-        NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
-                                        object: nil,
-                                        userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
+        universalLinkCoordinator.processWidgetLink(macId: macId)
     }
 }
 

@@ -7,21 +7,30 @@ import RuuviStorage
 import RuuviLocal
 import RuuviDaemon
 import RuuviPresenters
+import BTKit
+import RuuviPersistence
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published var downloadProgress: Double = 0
     @Published var flashProgress: Double = 0
+    @Published var isMigrationFailed: Bool = false
 
     private var bag = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event, Never>()
     private let interactor: DFUInteractorInput
+    private let foreground: BTForeground!
+    private let idPersistence: RuuviLocalIDs
+    private let realmPersistence: RuuviPersistence
+    private let sqiltePersistence: RuuviPersistence
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
     private let ruuviStorage: RuuviStorage
     private let settings: RuuviLocalSettings
     private let propertiesDaemon: RuuviTagPropertiesDaemon
     private let activityPresenter: ActivityPresenter
+    private var ruuviTagObserveToken: ObservationToken?
+    private var isMigrating: Bool = false
 
     var isLoading: Bool = false {
         didSet {
@@ -29,8 +38,22 @@ final class DFUViewModel: ObservableObject {
         }
     }
 
+    private class RuuviTagPropertiesDaemonPair: NSObject {
+        var ruuviTag: AnyRuuviTagSensor
+        var device: RuuviTag
+
+        init(ruuviTag: AnyRuuviTagSensor, device: RuuviTag) {
+            self.ruuviTag = ruuviTag
+            self.device = device
+        }
+    }
+
     init(
         interactor: DFUInteractorInput,
+        foreground: BTForeground,
+        idPersistence: RuuviLocalIDs,
+        realmPersistence: RuuviPersistence,
+        sqiltePersistence: RuuviPersistence,
         ruuviTag: RuuviTagSensor,
         ruuviPool: RuuviPool,
         ruuviStorage: RuuviStorage,
@@ -39,6 +62,10 @@ final class DFUViewModel: ObservableObject {
         activityPresenter: ActivityPresenter
     ) {
         self.interactor = interactor
+        self.foreground = foreground
+        self.idPersistence = idPersistence
+        self.realmPersistence = realmPersistence
+        self.sqiltePersistence = sqiltePersistence
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
         self.ruuviStorage = ruuviStorage
@@ -66,6 +93,11 @@ final class DFUViewModel: ObservableObject {
 
     deinit {
         bag.removeAll()
+        ruuviTagObserveToken?.invalidate()
+    }
+
+    func restartPropertiesDaemon() {
+        propertiesDaemon.start()
     }
 
     func send(event: Event) {
@@ -76,11 +108,11 @@ final class DFUViewModel: ObservableObject {
         guard let luid = ruuviTag.luid else { return }
         let firmwareVersion = latestRelease.version.replace("Ruuvi FW ", with: "")
         settings.setFirmwareVersion(for: luid, value: firmwareVersion)
-        isLoading = true
         // If the tag is stored on realm then migration needed
         // Usually tags without macId are stored in the realm database
         // For tags with macId don't need migration
         if ruuviTag.macId != nil {
+            isLoading = true
             ruuviPool.update(ruuviTag
                 .with(isConnectable: true)
                 .with(firmwareVersion: firmwareVersion))
@@ -90,23 +122,161 @@ final class DFUViewModel: ObservableObject {
                 self?.isLoading = false
             })
         } else {
-            propertiesDaemon.start()
+            isLoading = true
+            propertiesDaemon.stop()
+            startObserving()
         }
     }
 
-    func checkBatteryState(completion: @escaping(Bool) -> Void ) {
-        ruuviStorage
-            .readLast(ruuviTag)
-            .on(success: { record in
-                if let temperature = record?.temperature?.value, let voltage = record?.voltage?.value {
-                    if (temperature < -20 && voltage < 2) ||
-                        (temperature < 0 && voltage < 2.3) ||
-                        (temperature >= 0 && voltage < 2.5) {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
+    private func startObserving() {
+        guard let luid = ruuviTag.luid else {
+            isLoading = false
+            return
+        }
+        ruuviTagObserveToken?.invalidate()
+        ruuviTagObserveToken = foreground.observe(self,
+                                                uuid: luid.value,
+                                                options: [.callbackQueue(.untouch)]) {
+            [weak self] (_, device) in
+            guard let sSelf = self else { return }
+            if let tag = device.ruuvi?.tag {
+                guard !sSelf.isMigrating else {
+                    return
                 }
+                sSelf.ruuviTagObserveToken?.invalidate()
+                sSelf.isMigrating = true
+                let pair = RuuviTagPropertiesDaemonPair(ruuviTag: sSelf.ruuviTag.any, device: tag)
+                sSelf.tryToMigrate(pair: pair)
+            }
+        }
+    }
+
+    // MARK: - Migration starts
+    @objc private func tryToMigrate(pair: RuuviTagPropertiesDaemonPair) {
+        if let mac = pair.device.mac {
+            moveTagToSqlite(mac: mac.mac, pair: pair)
+        }
+    }
+
+    /// This method creates the updated instance of the Ruuvi Tag after firmware update.
+    private func moveTagToSqlite(mac: MACIdentifier,
+                                 pair: RuuviTagPropertiesDaemonPair) {
+        sqiltePersistence.create(
+            pair.ruuviTag
+                .with(macId: mac)
+                .with(isConnectable: true)
+                .with(version: pair.device.version)
+                .with(isOwner: true)
+        ).on(success: { [weak self] _ in
+            self?.moveLatestRecordToSqlite(mac: mac, pair: pair)
+        }, failure: { [weak self] _ in
+            self?.notifyMigrationError()
+        })
+    }
+
+    /// This method fetches the latest record from the Realm and creates the same record to SQLite.
+    /// If there's no record move to the next step.
+    private func moveLatestRecordToSqlite(mac: MACIdentifier,
+                                          pair: RuuviTagPropertiesDaemonPair) {
+        realmPersistence.readLatest(pair.ruuviTag).on(success: { [weak self] record in
+            // If there's no record move to next action
+            guard let record = record else {
+                self?.moveRecordsHistoryToSqlite(mac: mac, pair: pair)
+                return
+            }
+            self?.sqiltePersistence.createLast(record.with(macId: mac)).on(success: { [weak self] _ in
+                self?.moveRecordsHistoryToSqlite(mac: mac, pair: pair)
+            }, failure: { [weak self] _ in
+                self?.notifyMigrationError()
+            })
+        }, failure: { [weak self] _ in
+            self?.notifyMigrationError()
+        })
+    }
+
+    /// This method fetches the all the records from the Realm and creates the same records to SQLite.
+    /// If there are no records move to the next step.
+    private func moveRecordsHistoryToSqlite(mac: MACIdentifier,
+                                            pair: RuuviTagPropertiesDaemonPair) {
+
+        realmPersistence.readAll(pair.device.uuid).on(success: { [weak self] realmRecords in
+            guard realmRecords.count > 0 else {
+                self?.moveSettingsToSqlite(mac: mac, pair: pair)
+                return
+            }
+            let records = realmRecords.map({ $0.with(macId: mac) })
+            self?.sqiltePersistence.create(records).on(success: { _ in
+                self?.idPersistence.set(mac: mac, for: pair.device.uuid.luid)
+                self?.moveSettingsToSqlite(mac: mac, pair: pair)
+            }, failure: { [weak self] _ in
+                self?.notifyMigrationError()
+            })
+        }, failure: { [weak self] _ in
+            self?.notifyMigrationError()
+        })
+    }
+
+    /// This method fetches the sensor settings from the Realm and creates the same sensor settings record to SQLite.
+    /// If there's no record move to the next step.
+    private func moveSettingsToSqlite(mac: MACIdentifier,
+                                      pair: RuuviTagPropertiesDaemonPair) {
+        realmPersistence.readSensorSettings(pair.ruuviTag.withoutMac())
+            .on(success: { [weak self] sensorSettings in
+                if let withMacSettings = sensorSettings?.with(macId: mac) {
+                    self?.sqiltePersistence.save(sensorSettings: withMacSettings)
+                        .on(success: { _ in
+                            self?.deleteRealmRecords(pair: pair)
+                        }, failure: { [weak self] _ in
+                            self?.notifyMigrationError()
+                        })
+                } else {
+                    self?.deleteRealmRecords(pair: pair)
+                }
+            }, failure: { [weak self] _ in
+                self?.notifyMigrationError()
+            })
+    }
+
+    /// Delete all the records related to the tag on RealmDB.
+    /// If these delete operations are not completed return migration error because these redundant data
+    /// will cause unexpected behaviour.
+    private func deleteRealmRecords(pair: RuuviTagPropertiesDaemonPair) {
+        realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { [weak self] _ in
+            self?.realmPersistence.deleteLatest(pair.device.uuid).on(success: { _ in
+                self?.realmPersistence.delete(pair.ruuviTag.withoutMac()).on(success: { _ in
+                    self?.realmPersistence.deleteOffsetCorrection(ruuviTag:
+                                                                    pair.ruuviTag.withoutMac()).on(completion: {
+                        self?.isMigrating = false
+                        self?.isLoading = false
+                    })
+                }, failure: { [weak self] _ in
+                    self?.notifyMigrationError()
+                })
+            }, failure: { [weak self] _ in
+                self?.notifyMigrationError()
+            })
+        }, failure: { [weak self] _ in
+            self?.notifyMigrationError()
+        })
+    }
+
+    private func notifyMigrationError() {
+        isMigrating = false
+        isLoading = false
+        isMigrationFailed = true
+    }
+
+    // Migration ends
+
+    func checkBatteryState(completion: @escaping(Bool) -> Void ) {
+        let batteryStatusProvider = RuuviTagBatteryStatusProvider()
+        ruuviStorage
+            .readLatest(ruuviTag)
+            .on(success: { record in
+                let batteryNeedsReplacement = batteryStatusProvider
+                    .batteryNeedsReplacement(temperature: record?.temperature,
+                                             voltage: record?.voltage)
+                completion(batteryNeedsReplacement)
             }, failure: { _ in
                 completion(false)
             })

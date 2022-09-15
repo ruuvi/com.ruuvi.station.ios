@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviLocal
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
@@ -30,22 +30,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
     }
 
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String) {
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String?) {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
-    }
-
-    func removeFirmwareVersion(for luid: LocalIdentifier) {
-        UserDefaults.standard.removeObject(forKey: firmwareVersionPrefix + luid.value)
-    }
-
-    // Store Chart Foreground State
-    private let chartOnForegroundPrefix = "SettingsUserDefaults.chartOnForeground"
-    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool {
-        return UserDefaults.standard.value(forKey: chartOnForegroundPrefix + luid.value) as? Bool ?? false
-    }
-
-    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool) {
-        UserDefaults.standard.set(value, forKey: chartOnForegroundPrefix + luid.value)
     }
 
     var language: Language {
@@ -97,6 +83,32 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.humidityAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    private var humidityAccuracyInt: Int
+
+    var humidityAccuracy: MeasurementAccuracyType {
+        get {
+            switch humidityAccuracyInt {
+            case 0:
+                return .zero
+            case 1:
+                return .one
+            case 2:
+                return .two
+            default:
+                return .two
+            }
+        }
+        set {
+            humidityAccuracyInt = newValue.value
+            NotificationCenter
+                .default
+                .post(name: .HumidityAccuracyDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
     var temperatureUnit: TemperatureUnit {
         get {
             switch temperatureUnitInt {
@@ -130,6 +142,32 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.temperatureAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    private var temperatureAccuracyInt: Int
+
+    var temperatureAccuracy: MeasurementAccuracyType {
+        get {
+            switch temperatureAccuracyInt {
+            case 0:
+                return .zero
+            case 1:
+                return .one
+            case 2:
+                return .two
+            default:
+                return .two
+            }
+        }
+        set {
+            temperatureAccuracyInt = newValue.value
+            NotificationCenter
+                .default
+                .post(name: .TemperatureAccuracyDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
     var pressureUnit: UnitPressure {
         get {
             switch pressureUnitInt {
@@ -146,6 +184,32 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             NotificationCenter
                 .default
                 .post(name: .PressureUnitDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.pressureAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    private var pressureAccuracyInt: Int
+
+    var pressureAccuracy: MeasurementAccuracyType {
+        get {
+            switch pressureAccuracyInt {
+            case 0:
+                return .zero
+            case 1:
+                return .one
+            case 2:
+                return .two
+            default:
+                return .two
+            }
+        }
+        set {
+            pressureAccuracyInt = newValue.value
+            NotificationCenter
+                .default
+                .post(name: .PressureUnitAccuracyChange,
                       object: self,
                       userInfo: nil)
         }
@@ -314,4 +378,26 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.useSimpleWidget", defaultValue: true)
     var useSimpleWidget: Bool
+
+    @UserDefault("SettingsUserDefaults.appIsOnForeground", defaultValue: false)
+    var appIsOnForeground: Bool
+
+    @UserDefault("SettingsUserDefaults.appOpenedCount", defaultValue: 0)
+    var appOpenedCount: Int
+
+    /// If app launch count is hit to this value for the first time, ask for review
+    @UserDefault("SettingsUserDefaults.appOpenedInitialCountToAskReview", defaultValue: 50)
+    var appOpenedInitialCountToAskReview: Int
+
+    /// App launch count is divisible by this, ask for review
+    @UserDefault("SettingsUserDefaults.appOpenedCountDivisibleToAskReview", defaultValue: 100)
+    var appOpenedCountDivisibleToAskReview: Int
+
+    private let cardToOpenFromWidgetKey = "SettingsUserDefaults.cardToOpenFromWidgetKey"
+    func cardToOpenFromWidget() -> String? {
+        UserDefaults.standard.value(forKey: cardToOpenFromWidgetKey) as? String
+    }
+    func setCardToOpenFromWidget(for macId: String?) {
+        UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
+    }
 }

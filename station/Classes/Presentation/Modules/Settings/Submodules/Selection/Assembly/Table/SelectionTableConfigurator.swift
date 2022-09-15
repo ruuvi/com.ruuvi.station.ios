@@ -8,6 +8,7 @@ class SelectionTableConfigurator {
         router.transitionHandler = view
 
         let presenter = SelectionPresenter()
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.view = view
         presenter.router = router
 

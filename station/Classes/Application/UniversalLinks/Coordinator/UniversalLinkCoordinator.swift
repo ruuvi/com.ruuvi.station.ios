@@ -11,4 +11,5 @@ public enum WidgetDeepLinkMacIdKey: String {
 
 protocol UniversalLinkCoordinator: AnyObject {
     func processUniversalLink(url: URL)
+    func processWidgetLink(macId: String)
 }

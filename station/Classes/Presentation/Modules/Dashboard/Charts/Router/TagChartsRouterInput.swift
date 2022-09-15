@@ -7,6 +7,7 @@ protocol TagChartsRouterInput {
     func openDiscover()
     func openSettings()
     func openAbout()
+    func openWhatToMeasurePage()
     func openRuuviProductsPage()
     func openRuuviGatewayPage()
     func openSignIn(output: SignInModuleOutput)
@@ -16,6 +17,7 @@ protocol TagChartsRouterInput {
         ruuviTag: RuuviTagSensor,
         temperature: Temperature?,
         humidity: Humidity?,
+        rssi: Int?,
         sensor: SensorSettings?,
         output: TagSettingsModuleOutput,
         scrollToAlert: Bool
@@ -24,6 +26,7 @@ protocol TagChartsRouterInput {
         sensor: VirtualTagSensor,
         temperature: Temperature?
     )
+    func openMyRuuviAccount()
 }
 extension TagChartsRouterInput {
     func dismiss() {

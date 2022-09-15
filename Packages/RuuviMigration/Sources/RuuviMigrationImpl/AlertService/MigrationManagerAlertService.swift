@@ -236,7 +236,7 @@ extension MigrationManagerAlertService {
         for sensor: RuuviTagSensor,
         complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
     ) {
-        ruuviStorage.readLast(sensor)
+        ruuviStorage.readLatest(sensor)
             .on(success: { record in
                 complete((sensor, record?.temperature))
             }, failure: { _ in

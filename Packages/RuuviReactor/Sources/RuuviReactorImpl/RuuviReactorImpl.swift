@@ -39,6 +39,7 @@ class RuuviReactorImpl: RuuviReactor {
     )
     private lazy var recordCombines = [String: RuuviTagRecordSubjectCombine]()
     private lazy var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
+    private lazy var latestRecordCombines = [String: RuuviTagLatestRecordSubjectCombine]()
     private lazy var sensorSettingsCombines = [String: SensorSettingsCombine]()
 
     func observe(_ luid: LocalIdentifier,
@@ -93,6 +94,7 @@ class RuuviReactorImpl: RuuviReactor {
             delete.cancel()
         }
     }
+
     func observeLast(_ ruuviTag: RuuviTagSensor,
                      _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLast(ruuviTag)
@@ -125,26 +127,25 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLastFromNetwork(_ ruuviTag: RuuviTagSensor,
-                                _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void)
-    -> RuuviReactorToken {
-        let sqliteOperation = sqlitePersistence.readLastFromNetwork(ruuviTag)
-        let realmOperation = realmPersistence.readLastFromNetwork(ruuviTag)
+    func observeLatest(_ ruuviTag: RuuviTagSensor,
+                       _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken {
+        let sqliteOperation = sqlitePersistence.readLatest(ruuviTag)
+        let realmOperation = realmPersistence.readLatest(ruuviTag)
         Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
             let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
             block(.update(result))
         })
-        var recordCombine: RuuviTagLastRecordSubjectCombine
-        if let combine = lastRecordCombines[ruuviTag.id] {
+        var recordCombine: RuuviTagLatestRecordSubjectCombine
+        if let combine = latestRecordCombines[ruuviTag.id] {
             recordCombine = combine
         } else {
-            let combine = RuuviTagLastRecordSubjectCombine(
+            let combine = RuuviTagLatestRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
                 sqlite: sqliteContext,
                 realm: realmContext
             )
-            lastRecordCombines[ruuviTag.id] = combine
+            latestRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
         }
         let cancellable = recordCombine.subject.sink { (record) in

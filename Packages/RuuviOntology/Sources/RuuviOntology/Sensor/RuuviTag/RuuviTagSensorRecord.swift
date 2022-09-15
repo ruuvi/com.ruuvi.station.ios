@@ -45,6 +45,17 @@ extension RuuviTagSensorRecord {
         }
     }
 
+    public var uuid: String {
+        if let macId = macId,
+            !macId.value.isEmpty {
+            return macId.value
+        } else if let luid = luid {
+            return luid.value
+        } else {
+            fatalError()
+        }
+    }
+
     public var any: AnyRuuviTagSensorRecord {
         return AnyRuuviTagSensorRecord(object: self)
     }
