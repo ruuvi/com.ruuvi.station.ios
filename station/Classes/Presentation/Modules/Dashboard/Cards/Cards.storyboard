@@ -30,7 +30,7 @@
                                 </connections>
                             </scrollView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo_" translatesAutoresizingMaskIntoConstraints="NO" id="HLP-h6-z2n">
-                                <rect key="frame" x="60" y="13" width="110" height="22"/>
+                                <rect key="frame" x="68" y="13" width="110" height="22"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="HVh-SA-VNX"/>
@@ -38,7 +38,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QWq-xL-Hcm">
-                                <rect key="frame" x="8" y="8" width="32" height="32"/>
+                                <rect key="frame" x="16" y="8" width="32" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="ISJ-of-POL"/>
                                     <constraint firstAttribute="height" constant="32" id="ZyK-u5-2Tv"/>
@@ -74,7 +74,7 @@
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="W5Z-O7-utY"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="d9J-0G-FsY"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="feH-91-mwv"/>
-                            <constraint firstItem="QWq-xL-Hcm" firstAttribute="leading" secondItem="cQV-kG-itc" secondAttribute="leading" constant="8" id="fhL-7b-Yzk"/>
+                            <constraint firstItem="QWq-xL-Hcm" firstAttribute="leading" secondItem="cQV-kG-itc" secondAttribute="leading" constant="16" id="fhL-7b-Yzk"/>
                             <constraint firstItem="Q4Z-hl-NNi" firstAttribute="centerX" secondItem="Gfm-eP-ACx" secondAttribute="centerX" id="lCN-cV-EwC"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="ns4-Pg-hDK"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="smU-BS-OQh"/>
