@@ -1,12 +1,12 @@
 import Foundation
 import RuuviOntology
 
-protocol TagChartsModuleInput: AnyObject {
-    func configure(output: TagChartsModuleOutput)
+protocol TagChartsViewModuleInput: AnyObject {
+    func configure(output: TagChartsViewModuleOutput)
     func configure(ruuviTag: AnyRuuviTagSensor)
     func dismiss(completion: (() -> Void)?)
 }
-extension TagChartsModuleInput {
+extension TagChartsViewModuleInput {
     func dismiss() {
         dismiss(completion: nil)
     }

@@ -245,7 +245,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "LocalNotificationsManager.HighTemperature.title" = "För hög temperatur!";
 "LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
 "TagSettings.Alerts.Off" = "Av";
-"TagSettings.Alerts.Temperature.description" = "Alarmera när mindre än {%.0f^%1$s} eller mer än {%.0f^%2$s}";
+"TagSettings.Alerts.Temperature.description" = "Alarmera när mindre än %0.f eller mer än %0.f";
 "TagSettings.Label.alerts.text" = "Alarm";
 "TagSettings.backgroundImageLabel.text" = "Bakgrundsbild";
 "TagSettings.batteryVoltageTitleLabel.text" = "Batterispänning";

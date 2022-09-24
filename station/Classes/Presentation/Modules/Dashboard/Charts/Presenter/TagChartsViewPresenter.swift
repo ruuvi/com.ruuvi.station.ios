@@ -14,10 +14,23 @@ import RuuviNotification
 import RuuviNotifier
 import RuuviPresenters
 
-class TagChartsPresenter: NSObject, TagChartsModuleInput {
+class TagChartViewData: NSObject {
+    var chartType: MeasurementType
+    var chartData: LineChartData?
+
+    init(chartType: MeasurementType,
+         chartData: LineChartData?) {
+        self.chartType = chartType
+        self.chartData = chartData
+    }
+}
+
+class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
+
     weak var view: TagChartsViewInput!
-    var router: TagChartsRouterInput!
-    var interactor: TagChartsInteractorInput!
+
+    var router: TagChartsViewRouterInput!
+    var interactor: TagChartsViewInteractorInput!
 
     var errorPresenter: ErrorPresenter!
     var settings: RuuviLocalSettings!
@@ -28,6 +41,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var alertPresenter: AlertPresenter!
     var mailComposerPresenter: MailComposerPresenter!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
+    var measurementService: RuuviServiceMeasurement!
 
     var alertService: RuuviServiceAlert!
     var alertHandler: RuuviNotifier!
@@ -47,7 +61,8 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
             }
         }
     }
-    private var output: TagChartsModuleOutput?
+
+    private var output: TagChartsViewModuleOutput?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var stateToken: ObservationToken?
@@ -68,6 +83,15 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var cloudModeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
+
+    private lazy var queue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        queue.name = "com.ruuvi.station.TagChartsPresenter.\("temp")"
+        queue.qualityOfService = .userInteractive
+        return queue
+    }()
+
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -85,6 +109,13 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
             self.view.viewModel = self.viewModel
         }
     }
+
+    var ruuviTagData: [RuuviMeasurement] = []
+
+    private var datasource: [TagChartViewData] = []
+    private var newpoints: [TagChartViewData] = []
+    private var chartModules: [MeasurementType] = []
+
     deinit {
         stateToken?.invalidate()
         advertisementToken?.invalidate()
@@ -105,7 +136,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         cloudModeToken?.invalidate()
     }
 
-    func configure(output: TagChartsModuleOutput) {
+    func configure(output: TagChartsViewModuleOutput) {
         self.output = output
     }
 
@@ -118,7 +149,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     }
 }
 
-extension TagChartsPresenter: TagChartsViewOutput {
+extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
         startObservingBackgroundChanges()
@@ -131,24 +162,20 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewWillAppear() {
+        observeLastOpenedChart()
         startObservingRuuviTag()
         startListeningToSettings()
         startObservingBluetoothState()
         startListeningToAlertStatus()
         tryToShowSwipeUpHint()
-        restartObservingData()
+        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingTags()
         handleClearSyncButtons(connectable: false)
-        syncChartViews()
         stopGattSync()
     }
 
     func viewWillDisappear() {
         // Not implemented
-    }
-
-    func syncChartViews() {
-        view?.setupChartViews(chartViews: interactor.chartViews)
     }
 
     func handleClearSyncButtons(connectable: Bool) {
@@ -240,10 +267,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
             })
     }
 
-    func viewDidLocalized() {
-        interactor.notifyDidLocalized()
-    }
-
     func viewDidConfirmAbortSync(dismiss: Bool) {
         if dismiss {
             stopRunningProcesses()
@@ -254,14 +277,20 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 }
 // MARK: - TagChartsInteractorOutput
-extension TagChartsPresenter: TagChartsInteractorOutput {
+extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
+    func createChartModules(from: [MeasurementType]) {
+        chartModules = from
+        view.createChartViews(from: chartModules)
+    }
+
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
-        self.ruuviTag = sensor
-        view?.setupChartViews(chartViews: interactor.chartViews)
+        ruuviTag = sensor
+        ruuviTagData = interactor.ruuviTagData
+        self.createChartData()
     }
 
     func interactorDidSyncComplete(_ recordsCount: Int) {
@@ -288,7 +317,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
 }
 
 // MARK: - MenuModuleOutput
-extension TagChartsPresenter: MenuModuleOutput {
+extension TagChartsViewPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
         router.openDiscover()
@@ -345,14 +374,14 @@ extension TagChartsPresenter: MenuModuleOutput {
 }
 
 // MARK: - SignInModuleOutput
-extension TagChartsPresenter: SignInModuleOutput {
+extension TagChartsViewPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         module.dismiss()
     }
 }
 
 // MARK: - RuuviNotifierObserver
-extension TagChartsPresenter: RuuviNotifierObserver {
+extension TagChartsViewPresenter: RuuviNotifierObserver {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         guard uuid == viewModel.uuid.value || uuid == viewModel.mac.value else { return }
         let newValue: AlertState = isTriggered ? .firing : .registered
@@ -363,7 +392,7 @@ extension TagChartsPresenter: RuuviNotifierObserver {
 }
 
 // MARK: - TagSettingsModuleOutput
-extension TagChartsPresenter: TagSettingsModuleOutput {
+extension TagChartsViewPresenter: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
                                  ruuviTag: RuuviTagSensor) {
         module.dismiss { [weak self] in
@@ -376,7 +405,18 @@ extension TagChartsPresenter: TagSettingsModuleOutput {
 }
 
 // MARK: - Private
-extension TagChartsPresenter {
+extension TagChartsViewPresenter {
+    private func observeLastOpenedChart() {
+        guard ruuviTag != nil else {
+            return
+        }
+        if let lastOpenedChart = settings.lastOpenedChart(),
+           lastOpenedChart != ruuviTag.id {
+            view.clearChartHistory()
+        }
+        settings.setLastOpenedChart(with: ruuviTag.id)
+    }
+
     private func tryToShowSwipeUpHint() {
         if UIWindow.isLandscape
             && !settings.tagChartsLandscapeSwipeInstructionWasShown {
@@ -458,10 +498,6 @@ extension TagChartsPresenter {
         handleClearSyncButtons(connectable: connectable)
     }
 
-    private func restartObservingData() {
-        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
-        interactor.restartObservingData()
-    }
     // swiftlint:disable:next function_body_length
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
@@ -470,7 +506,6 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main) { [weak self] _ in
             self?.interactor.restartObservingData()
-            self?.interactor.notifySettingsChanged()
         }
         humidityUnitToken = NotificationCenter
             .default
@@ -479,7 +514,6 @@ extension TagChartsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
             self?.interactor.restartObservingData()
-            self?.interactor.notifySettingsChanged()
         })
         pressureUnitToken = NotificationCenter
             .default
@@ -488,7 +522,6 @@ extension TagChartsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
             self?.interactor.restartObservingData()
-            self?.interactor.notifySettingsChanged()
         })
         downsampleDidChangeToken = NotificationCenter
             .default
@@ -496,7 +529,7 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.interactor.notifyDownsamleOnDidChange()
+                self?.interactor.restartObservingData()
         })
         chartIntervalDidChangeToken = NotificationCenter
             .default
@@ -504,7 +537,7 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.interactor.notifyDownsamleOnDidChange()
+                self?.interactor.restartObservingData()
         })
         chartDurationHourDidChangeToken = NotificationCenter
             .default
@@ -512,7 +545,7 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.interactor.notifyDownsamleOnDidChange()
+                self?.interactor.restartObservingData()
         })
         chartDrawDotsDidChangeToken = NotificationCenter
             .default
@@ -520,7 +553,7 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.interactor.notifyDownsamleOnDidChange()
+                self?.interactor.restartObservingData()
         })
     }
 
@@ -679,8 +712,7 @@ extension TagChartsPresenter {
     }
 
     private func reloadChartsWithSensorSettingsChanges(with settings: SensorSettings) {
-        interactor.notifySensorSettingsChanged(settings: settings)
-        interactor.notifySettingsChanged()
+        interactor.restartObservingData()
     }
 
     private func stopRunningProcesses() {
@@ -690,6 +722,167 @@ extension TagChartsPresenter {
         interactor.stopObservingTags()
         interactor.stopObservingRuuviTagsData()
         stopGattSync()
+    }
+}
+
+extension TagChartsViewPresenter {
+
+    func insertMeasurements(_ newValues: [RuuviMeasurement]) {
+        ruuviTagData = interactor.ruuviTagData
+
+        var temparatureData = [ChartDataEntry]()
+        var humidityData = [ChartDataEntry]()
+        var pressureData = [ChartDataEntry]()
+
+        for measurement in newValues {
+            // Temperature
+            if let temperatureEntry = chartEntry(for: measurement, type: .temperature) {
+                temparatureData.append(temperatureEntry)
+            }
+
+            // Humidty
+            if let humidityEntry = chartEntry(for: measurement, type: .humidity) {
+                humidityData.append(humidityEntry)
+            }
+
+            // Pressure
+            if let pressureEntry = chartEntry(for: measurement, type: .pressure) {
+                pressureData.append(pressureEntry)
+            }
+        }
+
+        view.updateChartViewData(temperatureEntries: temparatureData,
+                                 humidityEntries: humidityData,
+                                 pressureEntries: pressureData,
+                                 isFirstEntry: ruuviTagData.count == 1,
+                                 settings: settings)
+    }
+
+    private func createChartData() {
+
+        datasource.removeAll()
+
+        var temparatureData = [ChartDataEntry]()
+        var humidityData = [ChartDataEntry]()
+        var pressureData = [ChartDataEntry]()
+
+        for measurement in ruuviTagData {
+            // Temperature
+            if let temperatureEntry = chartEntry(for: measurement, type: .temperature) {
+                temparatureData.append(temperatureEntry)
+            }
+
+            // Humidty
+            if let humidityEntry = chartEntry(for: measurement, type: .humidity) {
+                humidityData.append(humidityEntry)
+            }
+
+            // Pressure
+            if let pressureEntry = chartEntry(for: measurement, type: .pressure) {
+                pressureData.append(pressureEntry)
+            }
+        }
+
+        // Create datasets only if collection has at least one chart entry
+        if temparatureData.count > 0 {
+            let temperatureDataSet = TagChartsHelper.newDataSet(entries: temparatureData)
+            let temperatureChartData = TagChartViewData(chartType: .temperature,
+                                                        chartData: LineChartData(dataSet: temperatureDataSet))
+            datasource.append(temperatureChartData)
+        }
+
+        if humidityData.count > 0 {
+            let humidityChartDataSet = TagChartsHelper.newDataSet(entries: humidityData)
+            let humidityChartData = TagChartViewData(chartType: .humidity,
+                                                        chartData: LineChartData(dataSet: humidityChartDataSet))
+            datasource.append(humidityChartData)
+        }
+
+        if pressureData.count > 0 {
+            let pressureChartDataSet = TagChartsHelper.newDataSet(entries: pressureData)
+            let pressureChartData = TagChartViewData(chartType: .pressure,
+                                                        chartData: LineChartData(dataSet: pressureChartDataSet))
+            datasource.append(pressureChartData)
+        }
+
+        view.setChartViewData(from: datasource, settings: settings)
+    }
+
+    // Draw dots is disabled for v1.3.0 onwards until further notice.
+    private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
+        if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
+            let count: Int
+            if let entriesCount = entriesCount {
+                count = entriesCount
+            } else {
+                count = dataSet.entries.count
+            }
+            switch count {
+            case 1:
+                dataSet.circleRadius = 6
+                dataSet.drawCirclesEnabled = true
+            default:
+                dataSet.circleRadius = 0.8
+                dataSet.drawCirclesEnabled = settings.chartDrawDotsOn
+            }
+        }
+    }
+
+    private func chartEntry(for data: RuuviMeasurement, type: MeasurementType) -> ChartDataEntry? {
+        var value: Double?
+        switch type {
+        case .temperature:
+            var temp: Temperature?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has temperature offset added, calculate and get original temp data
+            // 2: Apply current sensor settings
+            if let offset = data.temperatureOffset, offset != 0 {
+                temp = data.temperature?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                temp = data.temperature?.plus(sensorSettings: sensorSettings)
+            }
+            value = measurementService.double(for: temp) ?? 0
+        case .humidity:
+            var humidity: Humidity?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has humidity offset added, calculate and get original humidity data
+            // 2: Apply current sensor settings
+            if let offset = data.humidityOffset, offset != 0 {
+                humidity = data.humidity?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                humidity = data.humidity?.plus(sensorSettings: sensorSettings)
+            }
+            value = measurementService.double(for: humidity,
+                                                 temperature: data.temperature,
+                                              isDecimal: false)
+        case .pressure:
+            var pressure: Pressure?
+            // Backword compatibility for the users who used earlier versions than 0.7.7
+            // 1: If local record has pressure offset added, calculate and get original pressure data
+            // 2: Apply current sensor settings
+            if let offset = data.pressureOffset, offset != 0 {
+                pressure = data.pressure?
+                    .minus(value: offset)?
+                    .plus(sensorSettings: sensorSettings)
+            } else {
+                pressure = data.pressure?.plus(sensorSettings: sensorSettings)
+            }
+            if let value = measurementService.double(for: pressure) {
+                return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
+            } else {
+                return nil
+            }
+        default:
+            fatalError("before need implement chart with current type!")
+        }
+        guard let y = value else {
+            return nil
+        }
+        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: y)
     }
 }
 // swiftlint:enable file_length

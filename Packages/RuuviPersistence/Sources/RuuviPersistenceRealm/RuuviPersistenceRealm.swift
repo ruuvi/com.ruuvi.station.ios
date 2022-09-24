@@ -375,6 +375,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
+    public func readDownsampled(
+        _ ruuviTagId: String,
+        after date: Date,
+        with intervalMinutes: Int,
+        pick points: Double
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        // No need to implement since the RealmDB will be removed in the future.
+        return promise.future
+    }
+
     public func readLast(
         _ ruuviTagId: String,
         from: TimeInterval

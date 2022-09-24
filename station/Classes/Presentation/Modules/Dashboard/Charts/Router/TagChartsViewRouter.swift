@@ -3,7 +3,7 @@ import UIKit
 import RuuviOntology
 import RuuviVirtual
 
-class TagChartsRouter: TagChartsRouterInput {
+class TagChartsViewRouter: TagChartsViewRouterInput {
     weak var transitionHandler: UIViewController!
 
     private var menuTableTransition: MenuTableTransitioningDelegate!
@@ -121,7 +121,7 @@ class TagChartsRouter: TagChartsRouterInput {
     }
 }
 
-extension TagChartsRouter: DiscoverRouterDelegate {
+extension TagChartsViewRouter: DiscoverRouterDelegate {
     func discoverRouterWantsClose(_ router: DiscoverRouter) {
         router.viewController.dismiss(animated: true) { [weak self] in
             self?.dismiss()
