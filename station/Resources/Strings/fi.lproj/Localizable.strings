@@ -245,7 +245,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "TagSettings.Alerts.Off" = "Pois käytöstä";
-"TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle %.0f tai yli %.0f";
+"TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle {%.0f^%1$s} tai yli {%.0f^%2$s}";
 "TagSettings.Label.alerts.text" = "Hälytykset";
 "TagSettings.backgroundImageLabel.text" = "Taustakuva";
 "TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";
@@ -371,7 +371,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "TagSettings.ClaimTagButton.Claim" = "Vahvista omistajuus";
 "TagSettings.ClaimTagButton.Unclaim" = "Vapauta omistajuus";
 "TagSettings.ShareButton" = "Jaa";
-"Syncing..." = "Synkronoidaan...";
+"Syncing..." = "Ladataan historiaa pilvestä...";
 "Synchronized" = "Synkronoitu";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synkronoitu: %@";
 "MenuTableViewController.None" = "ei kirjautunut";
