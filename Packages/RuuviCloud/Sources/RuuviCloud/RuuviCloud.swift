@@ -21,6 +21,9 @@ public protocol RuuviCloud {
     func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError>
 
     @discardableResult
+    func deleteAccount(email: String) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult

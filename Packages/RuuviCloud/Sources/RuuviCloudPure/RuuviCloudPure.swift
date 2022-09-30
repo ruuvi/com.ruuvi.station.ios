@@ -545,6 +545,23 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
+    public func deleteAccount(email: String) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiAccountDeleteRequest(email: email)
+        api.deleteAccount(request,
+                          authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.email == email)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     public func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError> {
         let promise = Promise<[AnyCloudSensor], RuuviCloudError>()
         guard let apiKey = user.apiKey else {

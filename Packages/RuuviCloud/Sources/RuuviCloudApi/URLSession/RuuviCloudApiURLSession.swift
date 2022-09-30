@@ -6,6 +6,7 @@ extension RuuviCloudApiURLSession {
     private enum Routes: String {
         case register
         case verify
+        case deleteAccount = "request-delete"
         case claim
         case unclaim
         case share
@@ -53,6 +54,15 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.verify,
                        with: requestModel)
+    }
+
+    public func deleteAccount(_ requestModel: RuuviCloudApiAccountDeleteRequest,
+                              authorization: String) ->
+    Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.deleteAccount,
+                       with: requestModel,
+                       method: .post,
+                       authorization: authorization)
     }
 
     public func claim(
