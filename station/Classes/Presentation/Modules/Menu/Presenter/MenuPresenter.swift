@@ -31,9 +31,7 @@ class MenuPresenter: MenuModuleInput {
 
 extension MenuPresenter: MenuViewOutput {
 
-    func viewWillAppear() {
-        view.isNetworkHidden = !featureToggleService.isEnabled(.network)
-    }
+    func viewWillAppear() {}
 
     var userIsAuthorized: Bool {
         return ruuviUser.isAuthorized

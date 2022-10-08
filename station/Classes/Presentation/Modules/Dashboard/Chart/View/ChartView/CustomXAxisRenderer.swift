@@ -34,8 +34,8 @@ public class CustomXAxisRenderer: XAxisRenderer {
         let timeZoneOffset = (interval > 10800) ? offset : 0
 
         // swiftlint:disable line_length
-        var firstPoint = ((from + min).toLong() / interval) * interval - from.toLong() - Int64(timeZoneOffset) - 2 * interval + (timeZoneOffset == 0 ? 0 : 3600)
-        var lastPoint =  ((from + max).toLong() / interval) * interval - from.toLong() - Int64(timeZoneOffset) + 2 * interval + (timeZoneOffset == 0 ? 0 : 3600)
+        var firstPoint = ((from + min).toLong() / interval) * interval - from.toLong() - Int64(timeZoneOffset) - 2 * interval
+        var lastPoint =  ((from + max).toLong() / interval) * interval - from.toLong() - Int64(timeZoneOffset) + 2 * interval
         // swiftlint:enable line_length
 
         if range.toLong() < interval {

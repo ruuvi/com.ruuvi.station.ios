@@ -245,7 +245,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "LocalNotificationsManager.HighTemperature.title" = "Temperature is too high!";
 "LocalNotificationsManager.LowTemperature.title" = "Temperature is too low!";
 "TagSettings.Alerts.Off" = "Off";
-"TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.Alerts.Temperature.description" = "Alert when less than {%.0f^%1$s} or more than {%.0f^%2$s}";
 "TagSettings.Label.alerts.text" = "Alerts";
 "TagSettings.backgroundImageLabel.text" = "Background\nimage";
 "TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";
@@ -371,7 +371,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.ClaimTagButton.Claim" = "Claim ownership";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim ownership";
 "TagSettings.ShareButton" = "Share";
-"Syncing..." = "Syncing...";
+"Syncing..." = "Loading history from the cloud...";
 "Synchronized" = "Synchronised";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synchronised: %@";
 "MenuTableViewController.None" = "none";
