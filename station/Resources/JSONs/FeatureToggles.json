@@ -1,10 +1,6 @@
 {
    "featureToggles":[
       {
-         "feature":"ios_network",
-         "enabled":false
-      },
-      {
          "feature":"ios_update_firmware",
          "enabled":false
       },
