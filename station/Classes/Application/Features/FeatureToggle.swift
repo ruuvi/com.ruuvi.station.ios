@@ -1,7 +1,6 @@
 import Foundation
 
 public enum Feature: String, CaseIterable, Codable {
-    case network = "ios_network"
     case updateFirmware = "ios_update_firmware"
     case legacyFirmwareUpdatePopup = "ios_legacy_fw_update_dialog"
 }

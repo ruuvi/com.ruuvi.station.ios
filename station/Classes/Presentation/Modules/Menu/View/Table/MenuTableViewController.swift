@@ -3,12 +3,6 @@ import UIKit
 class MenuTableViewController: UIViewController {
     var output: MenuViewOutput!
 
-    var isNetworkHidden: Bool = false {
-        didSet {
-            embeded?.isNetworkHidden = isNetworkHidden
-        }
-    }
-
     private var embeded: MenuTableEmbededViewController?
 }
 
