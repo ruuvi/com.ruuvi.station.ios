@@ -8,8 +8,8 @@ import RuuviLocal
 import RuuviPool
 import RuuviService
 
-class TagChartsInteractor {
-    weak var presenter: TagChartsInteractorOutput!
+class TagChartsViewInteractor {
+    weak var presenter: TagChartsViewInteractorOutput!
     var gattService: GATTService!
     var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
@@ -23,57 +23,23 @@ class TagChartsInteractor {
     var localSyncState: RuuviLocalSyncState!
 
     var lastMeasurement: RuuviMeasurement?
+    var ruuviTagData: [RuuviMeasurement] = []
+
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var timer: Timer?
-    var chartModules: [TagChartModuleInput] = []
-    private var ruuviTagData: [RuuviMeasurement] = [] {
-        didSet {
-            if let last = ruuviTagData.last {
-                lastMeasurement = last
-            } else if let last = oldValue.last {
-                lastMeasurement = last
-            } else if let last = lastMeasurement,
-                ruuviTagData.isEmpty {
-                ruuviTagData.append(last)
-            }
-        }
-    }
-    private lazy var queue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        return queue
-    }()
     private var sensors: [AnyRuuviTagSensor] = []
+
+    private let highDensityIntervalMinutes: Int = 15
+    private let maximumPointsCount: Double = 3000.0
+    private let minimumDownsampleThreshold: Int = 1000
 
     deinit {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
     }
-
-    /// This method creates the chart modules for each sensors i.e. Temperature, Humidity, and Pressure
-    /// The missing sensors do not return any chart
-    func createChartModules() {
-        chartModules = []
-        var chartsCases = MeasurementType.chartsCases
-        if let last = ruuviTagData.last {
-            if last.humidity == nil {
-                chartsCases.remove(at: 1)
-            } else if last.pressure == nil {
-                chartsCases.remove(at: 2)
-            }
-        }
-        chartsCases.forEach({
-            let viewModel = TagChartViewModel(type: $0)
-            let module = TagChartAssembler.createModule()
-            module.configure(viewModel, sensorSettings: sensorSettings, output: self, luid: ruuviTagSensor.luid)
-            chartModules.append(module)
-        })
-
-        presenter.interactorDidUpdate(sensor: ruuviTagSensor)
-    }
 }
 // MARK: - TagChartsInteractorInput
-extension TagChartsInteractor: TagChartsInteractorInput {
+extension TagChartsViewInteractor: TagChartsViewInteractorInput {
     func restartObservingTags() {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = ruuviReactor.observe({ [weak self] change in
@@ -83,7 +49,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                 if let id = self?.ruuviTagSensor.id,
                    let sensor = sensors.first(where: {$0.id == id}) {
                     self?.ruuviTagSensor = sensor
-                    self?.presenter.interactorDidUpdate(sensor: sensor)
                 }
             case .insert(let sensor):
                 self?.sensors.append(sensor)
@@ -110,8 +75,11 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
-        fetchAll { [weak self] in
-            self?.createChartModules()
+        restartScheduler()
+        fetchLast()
+        fetchPoints { [weak self] in
+            guard let self = self else { return }
+            self.presenter.interactorDidUpdate(sensor: self.ruuviTagSensor)
         }
     }
 
@@ -119,19 +87,15 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         sensorSettings = settings
     }
 
-    var chartViews: [TagChartView] {
-         return chartModules.map({$0.chartView})
-    }
-
     func restartObservingData() {
-        fetchAll { [weak self] in
+        ruuviTagData.removeAll()
+        fetchPoints { [weak self] in
             self?.restartScheduler()
             self?.reloadCharts()
         }
     }
 
     func stopObservingRuuviTagsData() {
-        chartModules = []
         timer?.invalidate()
         timer = nil
     }
@@ -220,38 +184,15 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             }, completion: { [weak self] in
                 self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
                 self?.localSyncState.setGattSyncDate(nil, for: self?.ruuviTagSensor.macId)
-                self?.clearChartsAndRestartObserving()
+                self?.restartObservingData()
                 promise.succeed(value: ())
             })
         return promise.future
     }
-
-    func notifyDownsamleOnDidChange() {
-        self.clearChartsAndRestartObserving()
-    }
 }
-// MARK: - TagChartModuleOutput
-extension TagChartsInteractor: TagChartModuleOutput {
-    var dataSource: [RuuviMeasurement] {
-        return ruuviTagData
-    }
 
-    func chartViewDidChangeViewPort(_ chartView: TagChartView) {
-        chartViews.filter({ $0 != chartView }).forEach { otherChart in
-            let sourceMatrix = chartView.viewPortHandler.touchMatrix
-            var targetMatrix = otherChart.viewPortHandler.touchMatrix
-            targetMatrix.a = sourceMatrix.a
-            targetMatrix.tx = sourceMatrix.tx
-            otherChart.viewPortHandler.refresh(
-                newMatrix: targetMatrix,
-                chart: otherChart,
-                invalidate: true
-            )
-        }
-    }
-}
 // MARK: - Private
-extension TagChartsInteractor {
+extension TagChartsViewInteractor {
     private func restartScheduler() {
         let timerInterval = settings.appIsOnForeground ? 2 : settings.chartIntervalSeconds
         timer?.invalidate()
@@ -259,7 +200,7 @@ extension TagChartsInteractor {
             withTimeInterval: TimeInterval(timerInterval),
             repeats: true,
             block: { [weak self] (_) in
-                self?.fetchLast()
+                self?.fetchLastFromDate()
                 self?.removeFirst()
         })
     }
@@ -273,39 +214,68 @@ extension TagChartsInteractor {
         ) ?? Date.distantPast
         let prunedResults = self.ruuviTagData.filter({ $0.date < cropDate})
         self.ruuviTagData.removeFirst(prunedResults.count)
-        self.removeMeasurements(prunedResults)
     }
 
     private func fetchLast() {
-        guard let lastDate = lastMeasurement?.date else {
+        guard ruuviTagSensor != nil else {
             return
         }
-        let interval = TimeInterval(settings.chartIntervalSeconds)
-        let op = ruuviStorage.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
-        op.on(success: { [weak self] (results) in
-            guard results.count > 0 else { return }
+        let op = ruuviStorage.readLatest(ruuviTagSensor)
+        op.on(success: { [weak self] (record) in
+            guard let record = record else { return }
             guard let sSelf = self else { return }
-            var lastResults: [RuuviMeasurement] = []
-            var lastMeasurementDate: Date = lastDate
-            results.forEach({
-                if sSelf.settings.appIsOnForeground {
-                    lastResults.append($0.measurement)
-                } else {
-                    if $0.date >= lastMeasurementDate.addingTimeInterval(interval) {
-                        lastMeasurementDate = $0.date
-                        lastResults.append($0.measurement)
-                    }
-                }
-            })
-            sSelf.lastMeasurement = lastResults.last
-            sSelf.ruuviTagData.append(contentsOf: lastResults)
-            sSelf.insertMeasurements(lastResults)
+            sSelf.lastMeasurement = record.measurement
+            var chartsCases = MeasurementType.chartsCases
+            if record.humidity == nil {
+                chartsCases.remove(at: 1)
+            } else if record.pressure == nil {
+                chartsCases.remove(at: 2)
+            }
+            sSelf.presenter.createChartModules(from: chartsCases)
         }, failure: {[weak self] (error) in
             self?.presenter.interactorDidError(.ruuviStorage(error))
         })
     }
 
-    private func fetchAll(_ competion: (() -> Void)? = nil) {
+    private func fetchLastFromDate() {
+        guard let lastDate = lastMeasurement?.date else {
+            return
+        }
+        let op = ruuviStorage.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
+        op.on(success: { [weak self] (results) in
+            guard results.count > 0,
+            let last = results.last else { return }
+            guard let sSelf = self else { return }
+            sSelf.lastMeasurement = last.measurement
+            sSelf.ruuviTagData.append(last.measurement)
+            sSelf.insertMeasurements([last.measurement])
+        }, failure: {[weak self] (error) in
+            self?.presenter.interactorDidError(.ruuviStorage(error))
+        })
+    }
+
+    private func fetchPoints(_ completion: (() -> Void)? = nil) {
+        if settings.chartDownsamplingOn {
+            fetchAll { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                if self.ruuviTagData.count < self.minimumDownsampleThreshold {
+                    completion?()
+                } else {
+                    self.fetchDownSampled(completion)
+                }
+            }
+        } else {
+            fetchAll(completion)
+        }
+    }
+
+    private func fetchAll(_ completion: (() -> Void)? = nil) {
+        guard ruuviTagSensor != nil else {
+            return
+        }
+
         let date = Calendar.current.date(
             byAdding: .hour,
             value: -settings.chartDurationHours,
@@ -320,55 +290,38 @@ extension TagChartsInteractor {
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
             self?.presenter.interactorDidError(.ruuviStorage(error))
+        }, completion: completion)
+    }
+
+    private func fetchDownSampled(_ competion: (() -> Void)? = nil) {
+        guard ruuviTagSensor != nil else {
+            return
+        }
+
+        let date = Calendar.current.date(
+            byAdding: .hour,
+            value: -settings.chartDurationHours,
+            to: Date()
+        ) ?? Date.distantPast
+        let op = ruuviStorage.readDownsampled(
+            ruuviTagSensor.id,
+            after: date,
+            with: highDensityIntervalMinutes,
+            pick: maximumPointsCount
+        )
+        op.on(success: { [weak self] (results) in
+            self?.ruuviTagData = results.map({ $0.measurement })
+        }, failure: {[weak self] (error) in
+            self?.presenter.interactorDidError(.ruuviStorage(error))
         }, completion: competion)
     }
 
     // MARK: - Charts
-    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
-        let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
-        ruuviTagData.append(contentsOf: newValues)
-        insertMeasurements(newValues)
-    }
-
-    private func clearChartsAndRestartObserving() {
-        ruuviTagData = []
-        reloadCharts()
-        restartObservingData()
-    }
-
     private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
-        chartModules.forEach({
-            $0.insertMeasurements(newValues)
-        })
-    }
-
-    private func removeMeasurements(_ oldValues: [RuuviMeasurement]) {
-        chartModules.forEach({
-            $0.removeMeasurements(oldValues)
-        })
+        presenter.insertMeasurements(newValues)
     }
 
     private func reloadCharts() {
-        chartModules.forEach({
-            $0.reloadChart()
-        })
-    }
-
-    func notifySettingsChanged() {
-        chartModules.forEach({
-            $0.notifySettingsChanged()
-        })
-    }
-
-    func notifySensorSettingsChanged(settings: SensorSettings) {
-        chartModules.forEach({
-            $0.notifySensorSettingsChanged(settings: settings)
-        })
-    }
-
-    func notifyDidLocalized() {
-        chartModules.forEach({
-            $0.localize()
-        })
+        presenter.interactorDidUpdate(sensor: ruuviTagSensor)
     }
 }

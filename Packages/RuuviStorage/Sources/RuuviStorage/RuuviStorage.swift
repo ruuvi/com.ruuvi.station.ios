@@ -9,6 +9,12 @@ public protocol RuuviStorage {
         after date: Date,
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
+    func readDownsampled(
+        _ id: String,
+        after date: Date,
+        with intervalMinutes: Int,
+        pick points: Double
+    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
     func readOne(_ id: String) -> Future<AnyRuuviTagSensor, RuuviStorageError>
     func readAll(_ id: String) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
     func readAll(_ id: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError>

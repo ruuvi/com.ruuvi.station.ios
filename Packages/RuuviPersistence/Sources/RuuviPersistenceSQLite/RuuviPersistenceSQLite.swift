@@ -245,6 +245,51 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func readDownsampled(
+        _ ruuviTagId: String,
+        after date: Date,
+        with intervalMinutes: Int,
+        pick points: Double
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
+        let highDensityDate = Calendar.current.date(byAdding: .minute,
+                                                    value: -intervalMinutes,
+                                                    to: Date()) ?? Date()
+        let pruningInterval =
+            (highDensityDate.timeIntervalSince1970 - date.timeIntervalSince1970) / points
+
+        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+
+        readQueue.async { [weak self] in
+            var sqliteEntities = [RuuviTagSensorRecord]()
+            do {
+                try self?.database.dbPool.read { db in
+                    let request = """
+                    SELECT
+                        *
+                    FROM  ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    AND rtsr.date < ?
+                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(pruningInterval))
+                    UNION ALL
+                    SELECT * FROM  ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    ORDER BY date
+                    """
+                    sqliteEntities = try Record.fetchAll(
+                        db,
+                        sql: request,
+                        arguments: [date, highDensityDate, highDensityDate]
+                    )
+                }
+                promise.succeed(value: sqliteEntities.map({ $0.any }))
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
     public func readAll(
         _ ruuviTagId: String,
         with interval: TimeInterval
@@ -282,9 +327,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             var sqliteEntities = [RuuviTagSensorRecord]()
             do {
                 try self?.database.dbPool.read { db in
-                    let request = RecordLatest.order(RecordLatest.dateColumn)
-                        .filter((RecordLatest.luidColumn == ruuviTagId || RecordLatest.macColumn == ruuviTagId)
-                                    && RecordLatest.dateColumn > Date(timeIntervalSince1970: from))
+                    let request = Record.order(Record.dateColumn)
+                        .filter((Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
+                                    && Record.dateColumn > Date(timeIntervalSince1970: from))
                     sqliteEntities = try request.fetchAll(db)
                 }
                 promise.succeed(value: sqliteEntities.map({ $0.any }))

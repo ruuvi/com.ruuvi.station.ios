@@ -2,7 +2,7 @@ import UIKit
 import RuuviOntology
 import RuuviVirtual
 
-protocol TagChartsRouterInput {
+protocol TagChartsViewRouterInput {
     func dismiss(completion: (() -> Void)?)
     func openDiscover()
     func openSettings()
@@ -28,7 +28,7 @@ protocol TagChartsRouterInput {
     )
     func openMyRuuviAccount()
 }
-extension TagChartsRouterInput {
+extension TagChartsViewRouterInput {
     func dismiss() {
         dismiss(completion: nil)
     }

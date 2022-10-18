@@ -245,7 +245,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "TagSettings.Alerts.Off" = "Pois käytöstä";
-"TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle {%.0f^%1$s} tai yli {%.0f^%2$s}";
+"TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle %0.f tai yli %0.f";
 "TagSettings.Label.alerts.text" = "Hälytykset";
 "TagSettings.backgroundImageLabel.text" = "Taustakuva";
 "TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";

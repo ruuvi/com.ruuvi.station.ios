@@ -400,4 +400,14 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func setCardToOpenFromWidget(for macId: String?) {
         UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
     }
+
+    // Experiments
+    private let lastOpenedChartKey = "SettingsUserDefaults.lastOpenedChart"
+    func lastOpenedChart() -> String? {
+        UserDefaults.standard.value(forKey: lastOpenedChartKey) as? String
+    }
+
+    func setLastOpenedChart(with id: String) {
+        UserDefaults.standard.set(id, forKey: lastOpenedChartKey)
+    }
 }

@@ -19,7 +19,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
 
     func configure() {
         let sections: [ChartSettingsSection] = [
-            buildDisplayAllDataSection(), buildDrawDotsSection(), buildChartHistorySection()
+            buildDisplayAllDataSection(), buildChartHistorySection()
         ]
         viewModel = ChartSettingsViewModel(sections: sections)
     }
@@ -33,6 +33,8 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
         )
     }
 
+    // Draw dots feature is disabled from v1.3.0 onwards to
+    // maintain better performance until we find a better approach to do it.
     private func buildDrawDotsSection() -> ChartSettingsSection {
         return ChartSettingsSection(
             note: "ChartSettings.DrawDots.description".localized(),
@@ -64,7 +66,9 @@ extension ChartSettingsPresenter: ChartSettingsViewOutput {
         // If there's a timer running it refers that user changed the chart duration value
         // and before leaving the screen it is necessary to sync the value to the cloud
         if timer != nil {
-            syncChartDuratingSettings()
+            DispatchQueue.main.async { [weak self] in
+                self?.syncChartDuratingSettings()
+            }
         }
     }
 }
