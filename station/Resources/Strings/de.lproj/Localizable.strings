@@ -245,7 +245,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "LocalNotificationsManager.HighTemperature.title" = "Temperatur ist zu hoch!";
 "LocalNotificationsManager.LowTemperature.title" = "Temperatur zu niedrig!";
 "TagSettings.Alerts.Off" = "Aus";
-"TagSettings.Alerts.Temperature.description" = "Warnung bei weniger als {%.0f^%1$s} oder mehr als {%.0f^%2$s}";
+"TagSettings.Alerts.Temperature.description" = "Warnung bei weniger als %0.f oder mehr als %0.f";
 "TagSettings.Label.alerts.text" = "Warnungen";
 "TagSettings.backgroundImageLabel.text" = "Hintergrund bild";
 "TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";

@@ -11,8 +11,8 @@
         {% for item in document.data["translations"] %}
           {% if item["ident_ios"] != "" %}
             {% set localizeKey %}{{item["ident_ios"]}}{% endset %}
-            {% set defaultLocalizeValue %}{{item["en"]|replace:"{%@^%1$s}","%@"|replace:"{%.0f^%1$,d}","%.0f"|replace:"{%d^%1$,d}","%d"|replace:"{%d^%2$,d}","%d"|replace:"{%.0f^%2$,d}","%.0f"}}{% endset %}
-            {% set localizeValue %}{{item["ru"]|replace:"{%@^%1$s}","%@"|replace:"{%.0f^%1$,d}","%.0f"|replace:"{%d^%1$,d}","%d"|replace:"{%d^%2$,d}","%d"|replace:"{%.0f^%2$,d}","%.0f"}}{% endset %}
+            {% set defaultLocalizeValue %}{{item["en"]|replace:"{%@^%1$s}","%@"|replace:"{%.0f^%1$,d}","%.0f"|replace:"{%d^%1$,d}","%d"|replace:"{%d^%2$,d}","%d"|replace:"{%.0f^%2$,d}","%.0f"|replace:"{%.0f^%1$s}","%0.f" | replace:"{%.0f^%2$s}","%0.f"}}{% endset %}
+            {% set localizeValue %}{{item["ru"]|replace:"{%@^%1$s}","%@"|replace:"{%.0f^%1$,d}","%.0f"|replace:"{%d^%1$,d}","%d"|replace:"{%d^%2$,d}","%d"|replace:"{%.0f^%2$,d}","%.0f"|replace:"{%.0f^%1$s}","%0.f" | replace:"{%.0f^%2$s}","%0.f"}}{% endset %}
             {% if not localizeValue %}
 "{{localizeKey}}" = "{{defaultLocalizeValue}}";
             {% else %}

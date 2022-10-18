@@ -3,8 +3,8 @@ import Future
 import BTKit
 import RuuviOntology
 
-protocol TagChartsInteractorInput: AnyObject {
-    var chartViews: [TagChartView] { get }
+protocol TagChartsViewInteractorInput: AnyObject {
+    var ruuviTagData: [RuuviMeasurement] { get }
     var lastMeasurement: RuuviMeasurement? { get }
     func configure(withTag ruuviTag: AnyRuuviTagSensor,
                    andSettings settings: SensorSettings?)
@@ -18,8 +18,4 @@ protocol TagChartsInteractorInput: AnyObject {
     func stopSyncRecords() -> Future<Bool, RUError>
     func isSyncingRecords() -> Bool
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
-    func notifySettingsChanged()
-    func notifySensorSettingsChanged(settings: SensorSettings)
-    func notifyDownsamleOnDidChange()
-    func notifyDidLocalized()
 }

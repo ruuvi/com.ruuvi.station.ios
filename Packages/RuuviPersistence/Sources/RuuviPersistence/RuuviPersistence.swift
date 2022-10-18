@@ -33,6 +33,13 @@ public protocol RuuviPersistence {
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
 
+    func readDownsampled(
+        _ ruuviTagId: String,
+        after date: Date,
+        with intervalMinutes: Int,
+        pick points: Double
+    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
+
     func readSensorSettings(
         _ ruuviTag: RuuviTagSensor
     ) -> Future<SensorSettings?, RuuviPersistenceError>
