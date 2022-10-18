@@ -110,8 +110,6 @@ extension FLEXFeatureTogglesViewController {
 extension FLEXFeatureTogglesViewController {
     private static func title(for feature: Feature) -> String {
         switch feature {
-        case .network:
-            return "Network"
         case .updateFirmware:
             return "Update Firmware"
         case .legacyFirmwareUpdatePopup:

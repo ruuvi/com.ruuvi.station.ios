@@ -2,6 +2,8 @@ import Foundation
 import RuuviUser
 import RuuviService
 import RuuviPresenters
+import RuuviCloud
+
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
@@ -9,10 +11,12 @@ import WidgetKit
 final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     weak var view: MyRuuviAccountViewInput!
     var router: MyRuuviAccountRouterInput!
+    var ruuviCloud: RuuviCloud!
     var ruuviUser: RuuviUser!
     var authService: RuuviServiceAuth!
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
+    var activityPresenter: ActivityPresenter!
 }
 
 // MARK: - MyRuuviAccountViewOutput
@@ -22,7 +26,16 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     }
 
     func viewDidTapDeleteButton() {
-        view.viewDidShowAccountDeletionConfirmation()
+        guard let email = ruuviUser.email else { return }
+        activityPresenter.increment()
+        ruuviCloud.deleteAccount(email: email).on(success: {
+            [weak self] _ in
+            self?.view.viewDidShowAccountDeletionConfirmation()
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        }, completion: { [weak self] in
+            self?.activityPresenter.decrement()
+        })
     }
 
     func viewDidTapSignoutButton() {

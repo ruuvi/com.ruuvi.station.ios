@@ -93,7 +93,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }
                 if let chartDrawDots = cloudSettings.chartDrawDots,
                    chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
-                    sSelf.ruuviLocalSettings.chartDrawDotsOn = chartDrawDots
+                    // Draw dots feature is disabled from v1.3.0 onwards to
+                    // maintain better performance until we find a better approach to do it.
+                    sSelf.ruuviLocalSettings.chartDrawDotsOn = false
                 }
                 if let chartViewPeriod = cloudSettings.chartViewPeriod,
                    (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
