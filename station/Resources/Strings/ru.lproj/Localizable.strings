@@ -28,7 +28,7 @@
 "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title" = "Check for update";
 "Cards.Connected.title" = "Соединен";
 "Cards.Error.ReverseGeocodingFailed.message" = "Не удалось загрузить данные для виртуального сенсора. Превышен лимит операций обратного геокодирования.";
-"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days.";
+"Cards.UpdatedLabel.NoData.message" = "No data in last 10 days";
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
 "CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
 "CoreError.failedToGetCurrentLocation" = "Не удалось получить текущее месторасположение";
@@ -95,9 +95,9 @@
 "Heartbeat.Interval.Sec.string" = "сек";
 "Heartbeat.Interval.All.string" = "Все";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Вы уверены?";
-"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Вы собираетесь очистить смещение для влажности. Вы не сможете откатить изменения. Нажмите \"Подтвердить\" для продолжения";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Вы собираетесь очистить смещение для влажности. Вы не сможете откатить изменения. Нажмите \"Подтвердить\" для продолжения.";
 "HumidityCalibration.CalibrationConfirmationAlert.title" = "Вы уверены?";
-"HumidityCalibration.CalibrationConfirmationAlert.message" = "Вы собираетесь откалибровать смещение для влажности. Нажмите \"Подтвердить\" для продолжения";
+"HumidityCalibration.CalibrationConfirmationAlert.message" = "Вы собираетесь откалибровать смещение для влажности. Нажмите \"Подтвердить\" для продолжения.";
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
@@ -113,7 +113,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
 "PermissionPresenter.settings" = "Настройки";
-"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию.";
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
 "PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
 "PhotoPicker.Sheet.camera" = "Сделать фото";
@@ -129,7 +129,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
-"OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
+"OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
 "OWMError.invalidApiKey" = "Некорректный API-ключ";
@@ -302,7 +302,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "No" = "Нет";
 "OK" = "OK";
-"Cards.NoSensors.title" = "Нет добавленных датчиков,\nнажмите чтобы добавить";
+"Cards.NoSensors.title" = "Нет добавленных датчиков\nнажмите чтобы добавить";
 "TagSettings.PressureAlert.title" = "Атмосферное Давление (%@)";
 "UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
 "hPa" = "гПа";
@@ -321,13 +321,13 @@ If you cannot see the Language option in the settings, make sure that you have a
 "ChartSettings.DrawDots.description" = "Маленькие точки помогут точно понять когда были получены данные";
 "Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
 "ChartSettings.Duration.title" = "Диапазон отображения графиков";
-"ChartSettings.Duration.description" = "Установите диапазон для отображения на графиках от 1-го до 10-ти дней";
+"ChartSettings.Duration.description" = "Установите диапазон для отображения на графиках от 1-го до 10-ти дней.";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
 "Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
 "Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
-"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения";
+"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения.";
 "Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
-"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения";
+"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения.";
 "dBm" = "дБм";
 "TagCharts.Sync.title" = "Скачать";
 "TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
@@ -452,7 +452,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "UpdateFirmware.SetDfu.content" = "Осторожно откройте RuuviTag пальцами или отверткой.\n\nВведите RuuviTag в режим обновления прошивки, зажав кнопку B и нажав на кнопку перезагрузки R. Красная лампочка загорится и будет продолжать гореть. Если на вашем устройстве только одна кнопка, зажмите ее на 10 секунд.";
 "UpdateFirmware.NextButton.title" = "ДАЛЕЕ";
 "DfuDevicesScanner.Title.text" = "Устройства";
-"DfuDevicesScanner.Description.text" = "Найдите и выберите сенсор \"RuuviBoot\"";
+"DfuDevicesScanner.Description.text" = "Найдите и выберите сенсор \"RuuviBoot\".";
 "DfuDevicesScanner.NoDevice.text" = "(Bluetooth устройства не найдены)";
 "DfuDevicesScanner.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DfuDevicesScanner.BluetoothDisabledAlert.title" = "Bluetooth выключен";
@@ -465,7 +465,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "DfuFlash.Steps.Uploading.text" = "Загружаю";
 "DfuFlash.Steps.Completed.text" = "Успешно";
 "DfuFlash.OpenDocumentPicker.title" = "ОТКРЫТЬ ФАЙЛ";
-"DfuFlash.FirmwareSelectionGuide.text" = "Выберите ранее загруженный ZIP файл";
+"DfuFlash.FirmwareSelectionGuide.text" = "Выберите ранее загруженный ZIP файл.";
 "DfuFlash.Firmware.FileName.text" = "Имя Файла";
 "DfuFlash.Firmware.Parts.text" = "Части";
 "DfuFlash.Firmware.Size.text" = "Размер";
@@ -481,7 +481,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "DFUUIView.navigationTitle" = "Обновление Прошивки";
 "DFUUIView.latestTitle" = "Доступная версия прошивки Ruuvi:";
 "DFUUIView.currentTitle" = "Текущая версия:";
-"DFUUIView.notReportingDescription" = "Ваш сенсор не возвращает версию прошивки. Вероятно, на нем установлена старая версия прошивки и обновление рекомендовано";
+"DFUUIView.notReportingDescription" = "Ваш сенсор не возвращает версию прошивки. Вероятно, на нем установлена старая версия прошивки и обновление рекомендовано.";
 "DFUUIView.alreadyOnLatest" = "Последняя версия прошивки уже установлена, обновление не требуется";
 "DFUUIView.startUpdateProcess" = "Начать процесс обновления";
 "DFUUIView.downloadingTitle" = "Идет скачивание обновления прошивки...";
@@ -500,7 +500,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "DFUUIView.DBMigration.Error.message" = "Updating was successful, but an unexpected database migration error occurred. To continue using this sensor, please remove it from the app and then add it again.";
 "RuuviDfuError.failedToConstructUUID" = "Не удалось создать UUID";
 "SignIn.EmailMismatch.Alert.message" = "Вы запросили код для %@, но использовали код для %@. Пожалуйста, убадитесь в том, что вы используете код из %@";
-"SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова";
+"SignIn.EmailMissing.Alert.message" = "Почтовый адрес, который вы использовали для входа, не был сохранен. Пожалуйста, попробуйте войти снова.";
 "TagSettings.RemoveThisSensor.title" = "Удалить датчик";
 "Share.Success.message" = "Успешно поделились данными датчика";
 "TagSettings.SectionHeader.General.title" = "Основное";
