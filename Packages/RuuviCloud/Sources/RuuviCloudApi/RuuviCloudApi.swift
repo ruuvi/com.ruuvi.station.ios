@@ -14,6 +14,11 @@ public protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiVerifyRequest
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError>
 
+    func deleteAccount(
+        _ requestModel: RuuviCloudApiAccountDeleteRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError>
+
     func claim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String

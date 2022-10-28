@@ -2,11 +2,6 @@ import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     var output: MenuViewOutput!
-    var isNetworkHidden: Bool = false {
-        didSet {
-            tableView.reloadData()
-        }
-    }
 
     @IBOutlet weak var feedbackCell: UITableViewCell!
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!
@@ -55,11 +50,7 @@ extension MenuTableEmbededViewController {
 // MARK: - UITableViewDelegate
 extension MenuTableEmbededViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isNetworkHidden {
-            return super.tableView(tableView, numberOfRowsInSection: section) - 1
-        } else {
-            return super.tableView(tableView, numberOfRowsInSection: section)
-        }
+        return super.tableView(tableView, numberOfRowsInSection: section)
     }
 
     override func tableView(_ tableView: UITableView,

@@ -70,11 +70,10 @@ class CardsScrollConfigurator {
         view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // swiftlint:disable force_cast
-        let tagCharts = UIStoryboard(name: "TagCharts",
-                                     bundle: .main)
-                                    .instantiateInitialViewController() as! TagChartsScrollViewController
+        let tagCharts = TagChartsViewController()
+        TagChartsViewConfigurator().configure(view: tagCharts)
         tagCharts.modalPresentationStyle = .custom
-        let tagChartsPresenter = tagCharts.output as! TagChartsModuleInput
+        let tagChartsPresenter = tagCharts.output as! TagChartsViewModuleInput
         // swiftlint:enable force_cast
         tagChartsPresenter.configure(output: presenter)
         presenter.tagCharts = tagChartsPresenter
@@ -83,8 +82,6 @@ class CardsScrollConfigurator {
         let chartsTransition = TagChartsTransitioningDelegate(manager: chartsManager)
         router.tagChartsTransitioningDelegate = chartsTransition
         tagCharts.transitioningDelegate = chartsTransition
-
-        tagCharts.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
 
         router.tagCharts = tagCharts
 

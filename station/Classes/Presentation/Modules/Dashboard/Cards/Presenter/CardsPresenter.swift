@@ -47,7 +47,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviUser: RuuviUser!
     var featureToggleService: FeatureToggleService!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
-    weak var tagCharts: TagChartsModuleInput?
+    weak var tagCharts: TagChartsViewModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
     private var virtualSensorsToken: VirtualReactorToken?
@@ -196,7 +196,7 @@ extension CardsPresenter: CardsViewOutput {
             )
         }
     }
-    
+
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: luid)
@@ -375,13 +375,13 @@ extension CardsPresenter: SignInModuleOutput {
 }
 
 // MARK: - TagChartsModuleOutput
-extension CardsPresenter: TagChartsModuleOutput {
-    func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
+extension CardsPresenter: TagChartsViewModuleOutput {
+    func tagCharts(module: TagChartsViewModuleInput, didScrollTo uuid: String) {
         if let index = viewModels.firstIndex(where: { $0.luid.value?.value == uuid }) {
             view.scroll(to: index, immediately: true, animated: false)
         }
     }
-    func tagChartsDidDeleteTag(module: TagChartsModuleInput) {
+    func tagChartsDidDeleteTag(module: TagChartsViewModuleInput) {
         module.dismiss(completion: { [weak self] in
             self?.startObservingRuuviTags()
         })

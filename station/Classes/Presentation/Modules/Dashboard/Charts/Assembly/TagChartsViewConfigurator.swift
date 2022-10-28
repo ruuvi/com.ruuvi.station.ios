@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 import BTKit
 import RuuviStorage
 import RuuviReactor
@@ -8,13 +9,13 @@ import RuuviService
 import RuuviNotifier
 import RuuviPresenters
 
-class TagChartsScrollConfigurator {
-    func configure(view: TagChartsScrollViewController) {
+class TagChartsViewConfigurator {
+    func configure(view: TagChartsViewController) {
         let r = AppAssembly.shared.assembler.resolver
 
-        let interactor = TagChartsInteractor()
-        let presenter = TagChartsPresenter()
-        let router = TagChartsRouter()
+        let interactor = TagChartsViewInteractor()
+        let presenter = TagChartsViewPresenter()
+        let router = TagChartsViewRouter()
 
         router.transitionHandler = view
 
@@ -28,6 +29,7 @@ class TagChartsScrollConfigurator {
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
+        presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.alertHandler = r.resolve(RuuviNotifier.self)
         presenter.foreground = r.resolve(BTForeground.self)
