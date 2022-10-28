@@ -508,7 +508,7 @@
 		34A8D48D281EBFD9008A8698 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A8D48C281EBFD9008A8698 /* SwiftUI.framework */; };
 		34A8D490281EBFD9008A8698 /* RuuviWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D48F281EBFD9008A8698 /* RuuviWidgets.swift */; };
 		34A8D493281EBFDB008A8698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D492281EBFDB008A8698 /* Assets.xcassets */; };
-		34A8D499281EBFDB008A8698 /* station_widgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34A8D499281EBFDB008A8698 /* station_widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34A8D4A2281ED018008A8698 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4A1281ED018008A8698 /* Extensions.swift */; };
 		34A8D4AA281ED046008A8698 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A4281ED046008A8698 /* Montserrat-Regular.ttf */; };
 		34A8D4AB281ED046008A8698 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A5281ED046008A8698 /* Montserrat-Bold.ttf */; };
@@ -518,15 +518,15 @@
 		34A8D4AF281ED046008A8698 /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34A8D4A9281ED046008A8698 /* Muli-Bold.ttf */; };
 		34A8D4B7281EE5AE008A8698 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A8D4B6281EE5AE008A8698 /* Intents.framework */; };
 		34A8D4BA281EE5AE008A8698 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4B9281EE5AE008A8698 /* IntentHandler.swift */; };
-		34A8D4BE281EE5AE008A8698 /* station_intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34A8D4BE281EE5AE008A8698 /* station_intents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34A8D4C4281EEBF8008A8698 /* WidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4C3281EEBF8008A8698 /* WidgetProvider.swift */; };
 		34A8D4C6281EEC19008A8698 /* WidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A8D4C5281EEC19008A8698 /* WidgetEntry.swift */; };
 		34D458E028216B2200EA9F93 /* WidgetAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458DF28216B2200EA9F93 /* WidgetAssembly.swift */; };
 		34D458E228216C6900EA9F93 /* WidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458E128216C6900EA9F93 /* WidgetViewModel.swift */; };
 		34D458E328217BF600EA9F93 /* WidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458E128216C6900EA9F93 /* WidgetViewModel.swift */; };
 		34D458E428217C5900EA9F93 /* WidgetAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D458DF28216B2200EA9F93 /* WidgetAssembly.swift */; };
-		34D458E52821A06E00EA9F93 /* station_intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		34D458E92821A07600EA9F93 /* station_widgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34D458E52821A06E00EA9F93 /* station_intents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D4B5281EE5AE008A8698 /* station_intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34D458E92821A07600EA9F93 /* station_widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 34A8D489281EBFD9008A8698 /* station_widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34F266A52832489900AE79D9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
@@ -963,28 +963,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		34A8D49A281EBFDB008A8698 /* Embed App Extensions */ = {
+		34A8D49A281EBFDB008A8698 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				34A8D4BE281EE5AE008A8698 /* station_intents.appex in Embed App Extensions */,
-				34A8D499281EBFDB008A8698 /* station_widgets.appex in Embed App Extensions */,
+				34A8D4BE281EE5AE008A8698 /* station_intents.appex in Embed Foundation Extensions */,
+				34A8D499281EBFDB008A8698 /* station_widgets.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34D458E82821A06E00EA9F93 /* Embed App Extensions */ = {
+		34D458E82821A06E00EA9F93 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				34D458E52821A06E00EA9F93 /* station_intents.appex in Embed App Extensions */,
-				34D458E92821A07600EA9F93 /* station_widgets.appex in Embed App Extensions */,
+				34D458E52821A06E00EA9F93 /* station_intents.appex in Embed Foundation Extensions */,
+				34D458E92821A07600EA9F93 /* station_widgets.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -3990,7 +3990,7 @@
 				A9AB575A2413CCEC006FD3D2 /* Fetch secrets */,
 				0E8301592393FC2B0003F2EF /* Swiftlint */,
 				A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */,
-				34A8D49A281EBFDB008A8698 /* Embed App Extensions */,
+				34A8D49A281EBFDB008A8698 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -4055,7 +4055,7 @@
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 				60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */,
 				A986147C248CD47A0030F197 /* Crashlytics */,
-				34D458E82821A06E00EA9F93 /* Embed App Extensions */,
+				34D458E82821A06E00EA9F93 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -4117,7 +4117,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = "Ruuvi Innovations Oy";
 				TargetAttributes = {
 					34A8D488281EBFD9008A8698 = {
