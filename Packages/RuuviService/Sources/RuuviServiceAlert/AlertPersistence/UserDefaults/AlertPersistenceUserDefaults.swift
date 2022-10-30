@@ -177,20 +177,31 @@ class AlertPersistenceUserDefaults: AlertPersistence {
 
     func unregister(type: AlertType, for uuid: String) {
         switch type {
-        case .temperature:
+        case .temperature(let lower, let upper):
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
-        case .relativeHumidity:
+            prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+        case .relativeHumidity(let lower, let upper):
             prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
-        case .humidity:
+            prefs.set(lower, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+        case .humidity(let lower, let upper):
             prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
-        case .dewPoint:
+            prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        case .dewPoint(let lower, let upper):
             prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
-        case .pressure:
+            prefs.set(lower, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
+        case .pressure(let lower, let upper):
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
-        case .movement:
+        case .movement(let last):
             prefs.set(false, forKey: movementAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(last, forKey: movementAlertCounterUDPrefix + uuid)
         }
     }
 
