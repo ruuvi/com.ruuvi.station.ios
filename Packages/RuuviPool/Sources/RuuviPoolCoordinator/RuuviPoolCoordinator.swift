@@ -129,6 +129,68 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        if record.macId != nil {
+            sqlite.createLast(record).on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        } else if let luid = record.luid,
+                  let macId = idPersistence.mac(for: luid) {
+            sqlite.createLast(record.with(macId: macId)).on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        } else {
+            realm.createLast(record).on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        }
+        return promise.future
+    }
+
+    func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        if record.macId != nil {
+            sqlite.updateLast(record).on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        } else if let luid = record.luid,
+                  let macId = idPersistence.mac(for: luid) {
+            sqlite.updateLast(record.with(macId: macId)).on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        } else {
+            realm.updateLast(record).on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        }
+        return promise.future
+    }
+
+    func deleteLast(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        let sqliteOperation = sqlite.deleteLatest(ruuviTagId)
+        let realmOpearion = realm.deleteLatest(ruuviTagId)
+        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         let sqliteRecords = records.filter({ $0.macId != nil })

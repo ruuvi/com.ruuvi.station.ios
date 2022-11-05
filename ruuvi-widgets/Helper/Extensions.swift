@@ -69,7 +69,12 @@ extension HumidityUnit {
 extension Double {
     func round(to places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
-        return (self * divisor).rounded() / divisor
+        let rounded = (self * divisor).rounded(.toNearestOrAwayFromZero) / divisor
+        return rounded
+    }
+
+    var clean: String {
+        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
 
     var value: String {
@@ -101,4 +106,23 @@ extension String {
     var localized: String {
         return NSLocalizedString(self, comment: "")
     }
+}
+
+// MARK: - DateFormatter
+extension DateFormatter {
+    static let widgetDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+
+        let dateString = formatter.string(from: Date())
+        let amRange = dateString.range(of: formatter.amSymbol)
+        let pmRange = dateString.range(of: formatter.pmSymbol)
+
+        let is12HFormat = !(pmRange == nil && amRange == nil)
+
+        formatter.dateFormat = is12HFormat ? "h:mm a": "hh:mm"
+        return formatter
+    }()
 }

@@ -6,6 +6,7 @@ extension RuuviCloudApiURLSession {
     private enum Routes: String {
         case register
         case verify
+        case deleteAccount = "request-delete"
         case claim
         case unclaim
         case share
@@ -16,6 +17,7 @@ extension RuuviCloudApiURLSession {
         case uploadImage = "upload"
         case settings
         case sensors
+        case sensorsDense = "sensors-dense"
         case alerts
     }
 }
@@ -52,6 +54,15 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.verify,
                        with: requestModel)
+    }
+
+    public func deleteAccount(_ requestModel: RuuviCloudApiAccountDeleteRequest,
+                              authorization: String) ->
+    Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.deleteAccount,
+                       with: requestModel,
+                       method: .post,
+                       authorization: authorization)
     }
 
     public func claim(
@@ -99,6 +110,16 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.sensors,
+                       with: requestModel,
+                       method: .get,
+                       authorization: authorization)
+    }
+
+    public func sensorsDense(
+        _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetSensorsDenseResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.sensorsDense,
                        with: requestModel,
                        method: .get,
                        authorization: authorization)

@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KfP-FV-34v">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KfP-FV-34v">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Montserrat-Bold.ttf">
-            <string>Montserrat-Bold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Offset Correction Apple View Controller-->
         <scene sceneID="9eu-CR-bnL">
             <objects>
-                <viewController storyboardIdentifier="OffsetCorrectionAppleViewController" id="KfP-FV-34v" customClass="OffsetCorrectionAppleViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OffsetCorrectionAppleViewController" id="KfP-FV-34v" customClass="OffsetCorrectionAppleViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ydf-Ep-WgR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gvZ-Yz-kax">
-                                <rect key="frame" x="20" y="54" width="374" height="568"/>
+                                <rect key="frame" x="16" y="54" width="382" height="568"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="tintColor" red="0.41568627450000001" green="0.91764705879999997" blue="0.88235294119999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" name="LogoColor"/>
                                 <attributedString key="attributedText">
                                     <fragment>
                                         <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -39,12 +35,12 @@
                                 <dataDetectorType key="dataDetectorTypes" link="YES"/>
                             </textView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FcC-2E-zgW">
-                                <rect key="frame" x="57" y="799" width="300" height="43"/>
+                                <rect key="frame" x="58" y="798" width="298" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I2d-ql-qUs">
-                                        <rect key="frame" x="0.0" y="0.0" width="140" height="43"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="139" height="44"/>
                                         <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                         <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
                                         <state key="normal" title="CALIBRATE"/>
                                         <userDefinedRuntimeAttributes>
@@ -57,9 +53,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="30C-Ra-WkM">
-                                        <rect key="frame" x="160" y="0.0" width="140" height="43"/>
+                                        <rect key="frame" x="159" y="0.0" width="139" height="44"/>
                                         <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                         <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
                                         <state key="normal" title="CLEAR"/>
                                         <userDefinedRuntimeAttributes>
@@ -85,19 +81,19 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Original measured value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gG-zY-0LU">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="24"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uUo-hF-EOG">
                                                 <rect key="frame" x="0.0" y="34" width="93" height="29"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(0 s ago)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2De-5r-q5T">
                                                 <rect key="frame" x="101" y="39.5" width="72" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -119,19 +115,19 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Corrected value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rq3-OO-vf6">
                                                 <rect key="frame" x="0.0" y="5" width="374" height="24"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vpt-LL-XXT">
                                                 <rect key="frame" x="0.0" y="39" width="93" height="29"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Offset 24.79ºC)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XeT-G6-sH9">
                                                 <rect key="frame" x="101" y="44.5" width="135.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -156,10 +152,10 @@
                         <constraints>
                             <constraint firstItem="Z0U-sh-7he" firstAttribute="bottom" secondItem="jzm-U7-UUX" secondAttribute="top" constant="220" id="IgB-PN-isX"/>
                             <constraint firstItem="FcC-2E-zgW" firstAttribute="centerX" secondItem="Z0U-sh-7he" secondAttribute="centerX" id="UNv-pZ-3B0"/>
-                            <constraint firstItem="gvZ-Yz-kax" firstAttribute="leading" secondItem="Z0U-sh-7he" secondAttribute="leading" constant="20" id="fa7-p5-cSd"/>
+                            <constraint firstItem="gvZ-Yz-kax" firstAttribute="leading" secondItem="Z0U-sh-7he" secondAttribute="leading" constant="16" id="fa7-p5-cSd"/>
                             <constraint firstItem="Z0U-sh-7he" firstAttribute="trailing" secondItem="jzm-U7-UUX" secondAttribute="trailing" constant="20" id="gAi-aQ-kHN"/>
                             <constraint firstItem="jzm-U7-UUX" firstAttribute="top" secondItem="gvZ-Yz-kax" secondAttribute="bottom" constant="20" id="hGR-LN-WPN"/>
-                            <constraint firstItem="Z0U-sh-7he" firstAttribute="trailing" secondItem="gvZ-Yz-kax" secondAttribute="trailing" constant="20" id="kab-Jz-vuu"/>
+                            <constraint firstItem="Z0U-sh-7he" firstAttribute="trailing" secondItem="gvZ-Yz-kax" secondAttribute="trailing" constant="16" id="kab-Jz-vuu"/>
                             <constraint firstItem="Z0U-sh-7he" firstAttribute="bottom" secondItem="FcC-2E-zgW" secondAttribute="bottom" constant="20" id="l6i-pi-6VR"/>
                             <constraint firstItem="gvZ-Yz-kax" firstAttribute="top" secondItem="Z0U-sh-7he" secondAttribute="top" constant="10" id="nKd-JY-3aQ"/>
                             <constraint firstItem="jzm-U7-UUX" firstAttribute="leading" secondItem="Z0U-sh-7he" secondAttribute="leading" constant="20" id="yqJ-3X-7Ye"/>
@@ -179,7 +175,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sva-h6-V3c" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="hqu-sp-Jfv" customClass="OffsetCorrectionAppleInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                <customObject id="hqu-sp-Jfv" customClass="OffsetCorrectionAppleInitializer" customModule="station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="KfP-FV-34v" id="kKB-cp-gKX"/>
                     </connections>
@@ -189,8 +185,14 @@
         </scene>
     </scenes>
     <resources>
+        <namedColor name="LogoColor">
+            <color red="0.29019607843137257" green="0.78823529411764703" blue="0.72941176470588232" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

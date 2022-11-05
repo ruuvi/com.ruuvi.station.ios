@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.subspec 'Mappers' do |ss|
     ss.source_files = 'Sources/RuuviOntologyMappers/**/*.{h,m,swift}', 'Sources/RuuviOntologyMappers/*.{h,m,swift}'
     ss.dependency 'RuuviOntology/Contract'
-    ss.dependency 'BTKit', '~> 0.4.1'
+    ss.dependency 'BTKit'
     ss.dependency 'Humidity'
   end
 

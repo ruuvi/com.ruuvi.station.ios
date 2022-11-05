@@ -3,8 +3,11 @@ import RuuviOntology
 
 extension Notification.Name {
     public static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
+    public static let TemperatureAccuracyDidChange = Notification.Name("Settings.TemperatureAccuracyDidChange")
     public static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
+    public static let HumidityAccuracyDidChange = Notification.Name("Settings.HumidityAccuracyDidChange")
     public static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
+    public static let PressureUnitAccuracyChange = Notification.Name("Settings.PressureUnitAccuracyChange")
     public static let LanguageDidChange = Notification.Name("LanguageDidChange")
     public static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
     public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
@@ -14,12 +17,16 @@ extension Notification.Name {
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
+    public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
 }
 
 public protocol RuuviLocalSettings {
     var temperatureUnit: TemperatureUnit { get set }
+    var temperatureAccuracy: MeasurementAccuracyType { get set }
     var humidityUnit: HumidityUnit { get set }
+    var humidityAccuracy: MeasurementAccuracyType { get set }
     var pressureUnit: UnitPressure { get set }
+    var pressureAccuracy: MeasurementAccuracyType { get set }
     var welcomeShown: Bool { get set }
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
@@ -44,6 +51,10 @@ public protocol RuuviLocalSettings {
     var experimentalFeaturesEnabled: Bool { get set }
     var cloudModeEnabled: Bool { get set }
     var useSimpleWidget: Bool { get set }
+    var appIsOnForeground: Bool { get set }
+    var appOpenedCount: Int { get set }
+    var appOpenedInitialCountToAskReview: Int { get set }
+    var appOpenedCountDivisibleToAskReview: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
@@ -52,9 +63,12 @@ public protocol RuuviLocalSettings {
     func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
 
     func firmwareVersion(for luid: LocalIdentifier) -> String?
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String)
-    func removeFirmwareVersion(for luid: LocalIdentifier)
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String?)
 
-    func tagChartOnForeground(for luid: LocalIdentifier) -> Bool
-    func setTagChartOnForeground(for luid: LocalIdentifier, value: Bool)
+    func cardToOpenFromWidget() -> String?
+    func setCardToOpenFromWidget(for macId: String?)
+
+    // Experiments
+    func lastOpenedChart() -> String?
+    func setLastOpenedChart(with id: String)
 }

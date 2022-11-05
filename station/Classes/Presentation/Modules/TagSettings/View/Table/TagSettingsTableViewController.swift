@@ -89,6 +89,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
     @IBOutlet weak var accelerationZValueLabel: UILabel!
+    @IBOutlet weak var batteryStatusLabel: UILabel!
     @IBOutlet weak var voltageValueLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
     @IBOutlet weak var rssiValueLabel: UILabel!
@@ -486,15 +487,15 @@ extension TagSettingsTableViewController {
             let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
             return showOffsetCorrection ? super.tableView(tableView, heightForHeaderInSection: section) : 0.01
         case .moreInfo:
-            return 44
+            return 32
         case .alerts:
-            return TagSettingsTableSection.showAlerts(for: viewModel) ? 44 : .leastNormalMagnitude
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? 32 : .leastNormalMagnitude
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
         case .firmware:
             return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
-                ? 44 : .leastNormalMagnitude
+                ? 32 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -802,6 +803,14 @@ extension TagSettingsTableViewController {
             tableView.reloadData()
         }
 
+        tableView.bind(viewModel.humidityOffsetCorrectionVisible) { tableView, _ in
+            tableView.reloadData()
+        }
+
+        tableView.bind(viewModel.pressureOffsetCorrectionVisible) { tableView, _ in
+            tableView.reloadData()
+        }
+
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         uploadBackgroundIndicatorView.bind(viewModel.isUploadingBackground) { v, isUploading in
             if let isUploading = isUploading {
@@ -844,6 +853,17 @@ extension TagSettingsTableViewController {
                 label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
             } else {
                 label.text = emptyValueString.localized()
+            }
+        }
+
+        batteryStatusLabel.bind(viewModel.batteryNeedsReplacement) { label, needsReplacement in
+            if let needsReplacement = needsReplacement {
+                label.isHidden = false
+                // swiftlint:disable:next line_length
+                label.text = needsReplacement ? "(\("TagSettings.BatteryStatusLabel.Replace.message".localized()))" : "(\("TagSettings.BatteryStatusLabel.Ok.message".localized()))"
+                label.textColor = needsReplacement ? .red : .green
+            } else {
+                label.isHidden = true
             }
         }
 

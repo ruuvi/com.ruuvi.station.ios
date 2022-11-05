@@ -7,6 +7,8 @@ import RuuviStorage
 import RuuviLocal
 import RuuviDaemon
 import RuuviPresenters
+import BTKit
+import RuuviPersistence
 
 final class DFUPresenter: DFUModuleInput {
     var viewController: UIViewController {
@@ -22,6 +24,10 @@ final class DFUPresenter: DFUModuleInput {
     private weak var weakView: UIViewController?
     private let viewModel: DFUViewModel
     private let interactor: DFUInteractorInput
+    private let foreground: BTForeground!
+    private let idPersistence: RuuviLocalIDs
+    private let realmPersistence: RuuviPersistence
+    private let sqiltePersistence: RuuviPersistence
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
     private let ruuviStorage: RuuviStorage
@@ -32,6 +38,10 @@ final class DFUPresenter: DFUModuleInput {
     init(
         interactor: DFUInteractorInput,
         ruuviTag: RuuviTagSensor,
+        foreground: BTForeground,
+        idPersistence: RuuviLocalIDs,
+        realmPersistence: RuuviPersistence,
+        sqiltePersistence: RuuviPersistence,
         ruuviPool: RuuviPool,
         ruuviStorage: RuuviStorage,
         settings: RuuviLocalSettings,
@@ -39,6 +49,10 @@ final class DFUPresenter: DFUModuleInput {
         activityPresenter: ActivityPresenter
     ) {
         self.interactor = interactor
+        self.foreground = foreground
+        self.idPersistence = idPersistence
+        self.realmPersistence = realmPersistence
+        self.sqiltePersistence = sqiltePersistence
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
         self.ruuviStorage = ruuviStorage
@@ -47,6 +61,10 @@ final class DFUPresenter: DFUModuleInput {
         self.activityPresenter = activityPresenter
         self.viewModel = DFUViewModel(
             interactor: interactor,
+            foreground: foreground,
+            idPersistence: idPersistence,
+            realmPersistence: realmPersistence,
+            sqiltePersistence: sqiltePersistence,
             ruuviTag: ruuviTag,
             ruuviPool: ruuviPool,
             ruuviStorage: ruuviStorage,

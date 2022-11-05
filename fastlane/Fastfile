@@ -75,6 +75,8 @@ platform :ios do
 
     configuration = SCHEME == "station" ? "Release" : "Debug"
     match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
+    match(type: "adhoc", app_identifier: "com.ruuvi.station.widgets", readonly: true)
+    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
@@ -141,6 +143,8 @@ platform :ios do
     set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
 
     match(type: "appstore", app_identifier: "com.ruuvi.station", readonly: true)
+    match(type: "appstore", app_identifier: "com.ruuvi.station.widgets", readonly: true)
+    match(type: "appstore", app_identifier: "com.ruuvi.station.intents", readonly: true)
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",

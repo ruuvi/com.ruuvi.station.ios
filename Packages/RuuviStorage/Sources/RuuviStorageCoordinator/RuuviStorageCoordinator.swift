@@ -78,6 +78,24 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
+    func readDownsampled(
+        _ id: String,
+        after date: Date,
+        with intervalMinutes: Int,
+        pick points: Double
+    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
+        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
+        let sqliteOperation = sqlite.readDownsampled(id, after: date,
+                                                     with: intervalMinutes,
+                                                     pick: points)
+        sqliteOperation.on(success: { sqliteEntities in
+            promise.succeed(value: sqliteEntities)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     func readAll(
         _ id: String,
         with interval: TimeInterval
@@ -123,16 +141,16 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
-    func readLastFromNetwork(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError> {
+    func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError> {
         let promise = Promise<RuuviTagSensorRecord?, RuuviStorageError>()
         if ruuviTag.macId != nil {
-            sqlite.readLastFromNetwork(ruuviTag).on(success: { record in
+            sqlite.readLatest(ruuviTag).on(success: { record in
                 promise.succeed(value: record)
             }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))
             })
         } else {
-            realm.readLastFromNetwork(ruuviTag).on(success: { record in
+            realm.readLatest(ruuviTag).on(success: { record in
                 promise.succeed(value: record)
             }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))

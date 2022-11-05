@@ -24,7 +24,7 @@ class CardsScrollViewController: UIViewController {
 
     var viewModels = [CardsViewModel]() {
         didSet {
-            updateUIViewModels()
+            updateUI()
         }
     }
 
@@ -243,7 +243,6 @@ extension CardsScrollViewController {
 extension CardsScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateUI()
         configureViews()
         setupLocalization()
         setupNoSensorsLabelTapGesture()
@@ -338,7 +337,7 @@ extension CardsScrollViewController {
     private func pressureUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Pressure?) -> Void {
         return { [weak self] label, pressure in
             view.hidePressureView = pressure == nil
-            label.text = self?.measurementService?.string(for: pressure)
+            label.text = self?.measurementService?.string(for: pressure, allowSettings: true)
         }
     }
 
@@ -386,7 +385,7 @@ extension CardsScrollViewController {
                 humidityWarning?.isHidden = true
             }
             view.hideHumidityView = value == nil
-            label.text = self?.measurementService.string(for: value, temperature: temperature)
+            label.text = self?.measurementService.string(for: value, temperature: temperature, allowSettings: true)
         }
         return humidityBlock
     }
@@ -563,8 +562,9 @@ extension CardsScrollViewController {
             if let state = state {
                 switch state {
                 case .empty:
-                    imageView.alpha = 1.0
+                    imageView.alpha = 0.5
                     imageView.image = self?.alertOffImage
+                    imageView.layer.removeAllAnimations()
                 case .registered:
                     imageView.alpha = 1.0
                     imageView.image = self?.alertOnImage
@@ -649,6 +649,7 @@ extension CardsScrollViewController {
 extension CardsScrollViewController {
     private func updateUI() {
         updateUIViewModels()
+        showNoSensorsAddedMessage(show: viewModels.isEmpty)
     }
 
     private func updateUIViewModels() {
@@ -684,6 +685,9 @@ extension CardsScrollViewController {
                                                             attribute: .trailing,
                                                             multiplier: 1.0,
                                                             constant: 0.0))
+                if views.count == viewModels.count {
+                    output.viewDidSetOpeningCard()
+                }
             }
         }
     }
@@ -733,13 +737,15 @@ extension CardsScrollViewController {
             let view = views[i]
             let imageView = view.alertImageView
             if let state = viewModel.alertState.value {
-                imageView?.alpha = 1.0
                 switch state {
                 case .empty:
+                    imageView?.alpha = 0.5
                     imageView?.image = alertOffImage
                 case .registered:
+                    imageView?.alpha = 1.0
                     imageView?.image = alertOnImage
                 case .firing:
+                    imageView?.alpha = 1.0
                     imageView?.image = alertActiveImage
                     imageView?.layer.removeAllAnimations()
                     UIView.animate(withDuration: 0.5,

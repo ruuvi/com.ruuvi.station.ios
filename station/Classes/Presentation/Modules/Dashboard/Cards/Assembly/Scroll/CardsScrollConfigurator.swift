@@ -10,6 +10,7 @@ import RuuviCore
 import RuuviNotifier
 import RuuviPresenters
 import RuuviUser
+import RuuviDaemon
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -47,6 +48,7 @@ class CardsScrollConfigurator {
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
+        presenter.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
         router.delegate = presenter
 
         // swiftlint:disable force_cast
@@ -68,11 +70,10 @@ class CardsScrollConfigurator {
         view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // swiftlint:disable force_cast
-        let tagCharts = UIStoryboard(name: "TagCharts",
-                                     bundle: .main)
-                                    .instantiateInitialViewController() as! TagChartsScrollViewController
+        let tagCharts = TagChartsViewController()
+        TagChartsViewConfigurator().configure(view: tagCharts)
         tagCharts.modalPresentationStyle = .custom
-        let tagChartsPresenter = tagCharts.output as! TagChartsModuleInput
+        let tagChartsPresenter = tagCharts.output as! TagChartsViewModuleInput
         // swiftlint:enable force_cast
         tagChartsPresenter.configure(output: presenter)
         presenter.tagCharts = tagChartsPresenter
@@ -81,8 +82,6 @@ class CardsScrollConfigurator {
         let chartsTransition = TagChartsTransitioningDelegate(manager: chartsManager)
         router.tagChartsTransitioningDelegate = chartsTransition
         tagCharts.transitioningDelegate = chartsTransition
-
-        tagCharts.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
 
         router.tagCharts = tagCharts
 

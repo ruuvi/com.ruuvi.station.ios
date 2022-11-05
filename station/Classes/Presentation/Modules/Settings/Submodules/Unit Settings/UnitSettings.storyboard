@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WCe-hN-x4S">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20037"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Unit Settings Table View Controller-->
+        <scene sceneID="zfO-4s-MR6">
+            <objects>
+                <tableViewController storyboardIdentifier="UnitSettingsTableViewController" id="WCe-hN-x4S" customClass="UnitSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="ano-6B-oKH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="unitSettingsCellReuseIdentifier" id="TG0-4r-iMX" customClass="UnitSettingsTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="49.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TG0-4r-iMX" id="Chc-D6-eJ3">
+                                    <rect key="frame" x="0.0" y="0.0" width="385.5" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EgL-RE-Qh2">
+                                            <rect key="frame" x="20" y="11.5" width="33" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubl-wq-gsw">
+                                            <rect key="frame" x="335.5" y="11.5" width="42" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ubl-wq-gsw" firstAttribute="centerY" secondItem="Chc-D6-eJ3" secondAttribute="centerY" id="OGf-GH-QLg"/>
+                                        <constraint firstItem="EgL-RE-Qh2" firstAttribute="leading" secondItem="Chc-D6-eJ3" secondAttribute="leading" constant="20" id="ZuP-wn-Dc7"/>
+                                        <constraint firstItem="ubl-wq-gsw" firstAttribute="trailing" secondItem="Chc-D6-eJ3" secondAttribute="trailingMargin" id="gGU-oI-xwj"/>
+                                        <constraint firstItem="EgL-RE-Qh2" firstAttribute="centerY" secondItem="Chc-D6-eJ3" secondAttribute="centerY" id="vJo-Vs-4BW"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="titleLbl" destination="EgL-RE-Qh2" id="wBB-RZ-n7o"/>
+                                    <outlet property="valueLbl" destination="ubl-wq-gsw" id="dhP-Mv-2mF"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="WCe-hN-x4S" id="7II-d3-N2c"/>
+                            <outlet property="delegate" destination="WCe-hN-x4S" id="KD1-f6-cLq"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9pw-VO-9QD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="Pl3-MN-QTt" customClass="UnitSettingsTableInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="WCe-hN-x4S" id="Fr0-hn-6yL"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-404.34782608695656" y="133.92857142857142"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="groupTableViewBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

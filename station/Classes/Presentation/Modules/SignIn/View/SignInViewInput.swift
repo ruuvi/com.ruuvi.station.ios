@@ -5,4 +5,5 @@ protocol SignInViewInput: ViewInput {
     var fromDeepLink: Bool { get set }
     func showEmailsAreDifferent(requestedEmail: String, validatedEmail: String)
     func showFailedToGetRequestedEmail()
+    func showInvalidTokenEntered()
 }

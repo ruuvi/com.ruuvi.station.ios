@@ -14,6 +14,11 @@ public protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiVerifyRequest
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError>
 
+    func deleteAccount(
+        _ requestModel: RuuviCloudApiAccountDeleteRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError>
+
     func claim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String
@@ -38,6 +43,11 @@ public protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError>
+
+    func sensorsDense(
+        _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetSensorsDenseResponse, RuuviCloudApiError>
 
     func user(
         authorization: String

@@ -8,7 +8,7 @@ import RuuviPool
 import RuuviLocal
 import RuuviRepository
 import RuuviService
-
+// swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviStorage: RuuviStorage
@@ -57,6 +57,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
+    // swiftlint:disable:next cyclomatic_complexity
     public func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
@@ -66,13 +67,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
                 }
+                if let accuracyTemperature = cloudSettings.accuracyTemperature,
+                   accuracyTemperature != sSelf.ruuviLocalSettings.temperatureAccuracy {
+                    sSelf.ruuviLocalSettings.temperatureAccuracy = accuracyTemperature
+                }
                 if let unitHumidity = cloudSettings.unitHumidity,
                    unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
                     sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
                 }
+                if let accuracyHumidity = cloudSettings.accuracyHumidity,
+                   accuracyHumidity != sSelf.ruuviLocalSettings.humidityAccuracy {
+                    sSelf.ruuviLocalSettings.humidityAccuracy = accuracyHumidity
+                }
                 if let unitPressure = cloudSettings.unitPressure,
                    unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
+                }
+                if let accuracyPressure = cloudSettings.accuracyPressure,
+                   accuracyPressure != sSelf.ruuviLocalSettings.pressureAccuracy {
+                    sSelf.ruuviLocalSettings.pressureAccuracy = accuracyPressure
                 }
                 if let chartShowAllData = cloudSettings.chartShowAllPoints,
                    chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
@@ -80,13 +93,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }
                 if let chartDrawDots = cloudSettings.chartDrawDots,
                    chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
-                    sSelf.ruuviLocalSettings.chartDrawDotsOn = chartDrawDots
+                    // Draw dots feature is disabled from v1.3.0 onwards to
+                    // maintain better performance until we find a better approach to do it.
+                    sSelf.ruuviLocalSettings.chartDrawDotsOn = false
                 }
                 if let chartViewPeriod = cloudSettings.chartViewPeriod,
                    (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
                     sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
                 }
-
                 if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
                    cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
                     sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
@@ -162,20 +176,23 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    public func syncAllRecords() -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
-        let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
-        ruuviStorage.readAll().on(success: { [weak self] localSensors in
-            guard let sSelf = self else { return }
-            let syncs = localSensors
-                .filter({ $0.isCloud })
-                .map({ sSelf.sync(sensor: $0) })
-            Future.zip(syncs).on(success: { remoteSensorRecords in
-                promise.succeed(value: remoteSensorRecords.reduce([], +))
-            }, failure: { error in
-                promise.fail(error: error)
+    public func refreshLatestRecord() -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        syncLatestRecord().on(success: { _ in
+            promise.succeed(value: true)
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    public func syncAllRecords() -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        let syncAll = syncAll()
+        let latestRecords = syncLatestRecord()
+        syncAll.on(success: { _ in
+            latestRecords.on(completion: {
+                promise.succeed(value: true)
             })
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
         })
         return promise.future
     }
@@ -346,6 +363,129 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
         }
         syncRecordsQueue.addOperation(operation)
+        return promise.future
+    }
+
+    /// This method pulls the latest measurements from cloud and syncs it to the latest and records table.
+    private func syncLatestRecord() -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+
+        // Set cloud sensors in syncing state
+        // Skip the sensors if not claimed or claimed and cloud mode is turned off
+        ruuviStorage.readAll().on(success: { [weak self] localSensors in
+            guard let sSelf = self else { return }
+            for sensor in localSensors {
+                let skip = !sensor.isClaimed ||
+                            (sensor.isOwner && sensor.isClaimed && !sSelf.ruuviLocalSettings.cloudModeEnabled)
+                if let macId = sensor.macId, !skip {
+                    sSelf.ruuviLocalSyncState.setSyncStatus(.syncing, for: macId)
+                }
+            }
+        })
+
+        // Fetch data from the dense endpoint
+        ruuviCloud.loadSensorsDense(for: nil,
+                                         measurements: true,
+                                         sharedToOthers: nil,
+                                         sharedToMe: true,
+                                    alerts: nil).on(success: { [weak self] sensors in
+            guard let sSelf = self else { return }
+
+            guard sensors.count > 0 else {
+                promise.succeed(value: false)
+                return
+            }
+
+            for sensor in sensors {
+                sSelf.updateLatestRecord(ruuviTag: sensor.sensor.ruuviTagSensor,
+                                                                  cloudRecord: sensor.record).on(completion: {
+                    sSelf.addLatestRecordToHistory(ruuviTag: sensor.sensor.ruuviTagSensor,
+                                                   cloudRecord: sensor.record).on(completion: {
+                        promise.succeed(value: true)
+                    })
+                })
+            }
+        })
+        return promise.future
+    }
+
+    /// This method updates the latest data table if a record already exists for the mac address.
+    /// Otherwise it creates a new record.
+    private func updateLatestRecord(ruuviTag: RuuviTagSensor,
+                                    cloudRecord: RuuviTagSensorRecord?)
+    -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        guard let cloudRecord = cloudRecord else {
+            // If there's no cloud record return
+            // It is possible that a sensor doesn't have a record if it's a few years old
+            ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
+            promise.succeed(value: false)
+            return promise.future
+        }
+        ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
+            guard let sSelf = self else { return }
+            // If the latest table already have a data point for the mac update that record
+            if let record = record,
+                record.macId?.value == cloudRecord.macId?.value {
+                // Store cloud point only if the cloud data is newer than the local data
+                let isMeasurementNew = cloudRecord.date > record.date
+                if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
+                    sSelf.ruuviPool.updateLast(cloudRecord).on(success: { _ in
+                        sSelf.ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        sSelf.ruuviLocalSyncState.setSyncStatus(.onError, for: ruuviTag.id.mac)
+                        promise.fail(error: .ruuviPool(error))
+                    })
+                } else {
+                    sSelf.ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
+                    promise.succeed(value: false)
+                }
+            } else {
+                // If no record found, create a new record
+                self?.ruuviPool.createLast(cloudRecord).on(success: { [weak self] _ in
+                    self?.ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
+                    promise.succeed(value: true)
+                }, failure: { [weak self] error in
+                    self?.ruuviLocalSyncState.setSyncStatus(.onError, for: ruuviTag.id.mac)
+                    promise.fail(error: .ruuviPool(error))
+                })
+            }
+        }, failure: { [weak self] error in
+            self?.ruuviLocalSyncState.setSyncStatus(.onError, for: ruuviTag.id.mac)
+            promise.fail(error: .ruuviStorage(error))
+        })
+
+        return promise.future
+    }
+
+    /// This method writes the latest data point to the history/records table
+    private func addLatestRecordToHistory(ruuviTag: RuuviTagSensor,
+                                          cloudRecord: RuuviTagSensorRecord?)
+    -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        guard let cloudRecord = cloudRecord else {
+            // If there's no cloud record return
+            // It is possible that a sensor doesn't have a record if it's a few years old
+            promise.succeed(value: false)
+            return promise.future
+        }
+
+        ruuviStorage.readLast(ruuviTag).on(success: { [weak self] record in
+            guard let sSelf = self else { return }
+            if let record = record {
+                let isMeasurementNew = cloudRecord.date > record.date
+                if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
+                    sSelf.ruuviPool.create(cloudRecord).on(completion: {
+                        promise.succeed(value: true)
+                    })
+                } else {
+                    promise.succeed(value: false)
+                }
+            } else {
+                promise.succeed(value: false)
+            }
+        })
         return promise.future
     }
 }

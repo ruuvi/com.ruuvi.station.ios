@@ -3,23 +3,6 @@ import UIKit
 class MenuTableViewController: UIViewController {
     var output: MenuViewOutput!
 
-    var isNetworkHidden: Bool = false {
-        didSet {
-            embeded?.isNetworkHidden = isNetworkHidden
-            updateUIIsNetworkHidden()
-        }
-    }
-
-    @IBOutlet weak var loggedInLabel: UILabel!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var networkContainer: UIView!
-
-    var viewModel: MenuViewModel? {
-        didSet {
-            bindViewModel()
-        }
-    }
-
     private var embeded: MenuTableEmbededViewController?
 }
 
@@ -33,8 +16,11 @@ extension MenuTableViewController {
         super.viewDidLoad()
         localize()
         configureViews()
-        updateUI()
-        output.viewDidLoad()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
     }
 }
 
@@ -44,18 +30,6 @@ extension MenuTableViewController {
         if segue.identifier == "EmbedMenuTableEmbededViewControllerSegueIdentifier" {
             embeded = segue.destination as? MenuTableEmbededViewController
             embeded?.output = output
-        }
-    }
-}
-
-extension MenuTableViewController {
-    private func updateUI() {
-        updateUIIsNetworkHidden()
-    }
-
-    private func updateUIIsNetworkHidden() {
-        if isViewLoaded {
-            networkContainer.isHidden = isNetworkHidden
         }
     }
 }
@@ -72,18 +46,6 @@ extension MenuTableViewController {
             exitPanGesture.addTarget(transitioningDelegate.dismiss,
                                      action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
             view.addGestureRecognizer(exitPanGesture)
-        }
-    }
-
-    private func bindViewModel() {
-        guard let viewModel = viewModel, isViewLoaded else {
-            return
-        }
-        usernameLabel.bind(viewModel.username) { label, username in
-            label.text = username
-        }
-        loggedInLabel.bind(viewModel.username) { label, username in
-            label.text = username == nil ? nil : "Menu.LoggedIn.title".localized()
         }
     }
 }
