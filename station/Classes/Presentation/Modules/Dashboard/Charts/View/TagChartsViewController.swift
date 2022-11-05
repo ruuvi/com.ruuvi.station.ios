@@ -95,6 +95,17 @@ class TagChartsViewController: UIViewController {
         return label
     }()
 
+    lazy var noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Cards.UpdatedLabel.NoData.message".localized()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        let font = UIFont(name: "Montserrat-Bold", size: 14)
+        label.font = font ?? UIFont.systemFont(ofSize: 14, weight: .bold)
+        return label
+    }()
+
     lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.backgroundColor = .clear
@@ -338,6 +349,14 @@ class TagChartsViewController: UIViewController {
         pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
         pressureChartViewHeight.isActive = true
         pressureChartView.chartDelegate = self
+
+        view.addSubview(noDataLabel)
+        noDataLabel.anchor(top: nil,
+                           leading: view.safeLeftAnchor,
+                           bottom: nil,
+                           trailing: view.safeRightAnchor)
+        noDataLabel.centerYInSuperview()
+        noDataLabel.alpha = 0
 
     }
 
@@ -716,7 +735,16 @@ extension TagChartsViewController {
         }
     }
 
-    private func updateChartsCollectionConstaints(from: [MeasurementType], withAnimation: Bool = false) {
+    // swiftlint:disable:next cyclomatic_complexity
+    private func updateChartsCollectionConstaints(from: [MeasurementType],
+                                                  withAnimation: Bool = false) {
+
+        if from.count == 0 {
+            noDataLabel.alpha = 1
+            return
+        }
+
+        noDataLabel.alpha = 0
         chartViews.removeAll()
         view.setNeedsLayout()
         view.layoutIfNeeded()
