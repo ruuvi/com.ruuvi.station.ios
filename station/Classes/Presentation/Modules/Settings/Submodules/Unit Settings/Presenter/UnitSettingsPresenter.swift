@@ -133,7 +133,7 @@ extension UnitSettingsPresenter {
         case .pressure:
             return SelectionViewModel(title: "Settings.Label.PressureUnit.text".localized(),
                                       items: viewModel.items,
-                                      description: "Settings.ChooseOressureUnit.text".localized(),
+                                      description: "Settings.ChoosePressureUnit.text".localized(),
                                       selection: settings.pressureUnit.title,
                                       measurementType: viewModel.measurementType,
                                       unitSettingsType: .unit)
