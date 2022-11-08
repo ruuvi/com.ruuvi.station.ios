@@ -38,10 +38,6 @@ enum TagSettingsTableSection: Int {
         return viewModel?.canShareTag.value == true
     }
 
-    static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
-        return viewModel?.canShowUpdateFirmware.value ?? false
-    }
-
     static func showOffsetCorrection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isOwner.value == true
     }
@@ -434,8 +430,7 @@ extension TagSettingsTableViewController {
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
         case .firmware:
-            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
-                ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
+            return "TagSettings.SectionHeader.Firmware.title".localized()
         case .remove:
             return "TagSettings.SectionHeader.Remove.title".localized()
         default:
@@ -486,16 +481,13 @@ extension TagSettingsTableViewController {
             // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
             let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
             return showOffsetCorrection ? super.tableView(tableView, heightForHeaderInSection: section) : 0.01
-        case .moreInfo:
+        case .moreInfo, .firmware:
             return 32
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel) ? 32 : .leastNormalMagnitude
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
-        case .firmware:
-            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
-                ? 32 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -539,8 +531,7 @@ extension TagSettingsTableViewController {
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .firmware:
-            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
-                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+            return super.tableView(tableView, numberOfRowsInSection: section)
         default:
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
@@ -796,10 +787,6 @@ extension TagSettingsTableViewController {
         }
 
         tableView.bind(viewModel.humidityUnit) { tableView, _ in
-            tableView.reloadData()
-        }
-
-        tableView.bind(viewModel.canShowUpdateFirmware) { tableView, _ in
             tableView.reloadData()
         }
 

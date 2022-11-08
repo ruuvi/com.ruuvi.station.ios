@@ -86,8 +86,6 @@ struct TagSettingsViewModel {
     let humidityOffsetCorrectionVisible: Observable<Bool?> = Observable<Bool?>()
     let pressureOffsetCorrectionVisible: Observable<Bool?> = Observable<Bool?>()
 
-    let canShowUpdateFirmware: Observable<Bool?> = Observable<Bool?>(false)
-
     let isAlertsEnabled: Observable<Bool?> = Observable<Bool?>(false)
 
     let isAlertsVisible: Observable<Bool?> = Observable<Bool?>(false)
