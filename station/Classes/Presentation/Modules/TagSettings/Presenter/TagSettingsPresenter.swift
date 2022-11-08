@@ -486,9 +486,6 @@ extension TagSettingsPresenter {
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
 
-        // Firmware update section
-        handleFirmwareUpdateSection()
-
         syncAlerts()
     }
 
@@ -1374,13 +1371,6 @@ extension TagSettingsPresenter {
         })
     }
 
-    private func handleFirmwareUpdateSection() {
-        let isFWFeatureEnabled = featureToggleService.isEnabled(.updateFirmware)
-        let isTagAvailableLocally = ruuviTag.luid != nil && ruuviTag.isOwner
-        if !viewModel.canShowUpdateFirmware.value.bound {
-            viewModel.canShowUpdateFirmware.value = isFWFeatureEnabled && isTagAvailableLocally
-        }
-    }
 }
 
 extension TagSettingsPresenter: UIDocumentPickerDelegate {
