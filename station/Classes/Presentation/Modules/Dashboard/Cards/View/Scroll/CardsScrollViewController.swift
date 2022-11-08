@@ -362,30 +362,12 @@ extension CardsScrollViewController {
     }
 
     private func humidityUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Humidity?) -> Void {
-        let humidityWarning = view.humidityWarningImageView
         let humidityBlock: ((UILabel, Humidity?) -> Void) = {
-            [weak self,
-            weak humidityWarning] label, value in
-            let temperature = viewModel.temperature.value
-            if self?.measurementService.units.humidityUnit == .percent,
-                let temperature = temperature,
-                let offsetedValue = self?.measurementService.double(for: value,
-                                                                    temperature: temperature,
-                                                                    isDecimal: true) {
-                if let rhAlertUpperBound = viewModel.rhAlertUpperBound.value,
-                   let rhAlertLowerBound = viewModel.rhAlertLowerBound.value,
-                   let alertState = viewModel.alertState.value,
-                   (alertState == .registered || alertState == .firing),
-                   offsetedValue > rhAlertUpperBound || offsetedValue < rhAlertLowerBound {
-                    humidityWarning?.isHidden = false
-                } else {
-                    humidityWarning?.isHidden = true
-                }
-            } else {
-                humidityWarning?.isHidden = true
-            }
+            [weak self] label, value in
             view.hideHumidityView = value == nil
-            label.text = self?.measurementService.string(for: value, temperature: temperature, allowSettings: true)
+            label.text = self?.measurementService.string(for: value,
+                                                         temperature: viewModel.temperature.value,
+                                                         allowSettings: true)
         }
         return humidityBlock
     }
