@@ -8,14 +8,14 @@ class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
 
     func configure() {
         let viewModel = HeartbeatViewModel()
-        viewModel.saveHeartbeats.value = settings.saveHeartbeats
-        viewModel.saveHeartbeatsInterval.value = settings.saveHeartbeatsIntervalMinutes
+        viewModel.bgScanningState.value = settings.saveHeartbeats
+        viewModel.bgScanningInterval.value = settings.saveHeartbeatsIntervalMinutes
 
-        bind(viewModel.saveHeartbeats, fire: false) { observer, saveHeartbeats in
+        bind(viewModel.bgScanningState, fire: false) { observer, saveHeartbeats in
             observer.settings.saveHeartbeats = saveHeartbeats.bound
         }
 
-        bind(viewModel.saveHeartbeatsInterval, fire: false) { observer, saveHeartbeatsInterval in
+        bind(viewModel.bgScanningInterval, fire: false) { observer, saveHeartbeatsInterval in
             observer.settings.saveHeartbeatsIntervalMinutes = saveHeartbeatsInterval.bound
         }
 

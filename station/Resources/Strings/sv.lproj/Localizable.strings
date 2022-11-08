@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Version";
-"Background.navigationItem.title" = "Bakgrund";
 "Background.PresentNotifications.title" = "Visa Notifikationer";
 "Background.KeepConnection.title" = "Håll Anslutningen";
-"Background.SaveHeartbeats.title" = "Datalagringsintervall";
 "Background.Interval.Every.string" = "varje";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Läs RSSI";
@@ -87,8 +85,6 @@
 "ForegroundRow.webTags.title" = "Ladda och spara från webben";
 "ForegroundRow.webTags.section" = "VIRTUELLA SENSORER";
 "Foreground.Interval.All.string" = "Alla";
-"Heartbeat.navigationItem.title" = "Bakgrund";
-"Heartbeat.SaveHeartbeats.title" = "Dataloggningsintervall";
 "Heartbeat.Interval.Every.string" = "varje";
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Läs RSSI";
@@ -128,7 +124,6 @@
 Om du inte kan se språkalternativet i inställningarna, se till att du har lagt till minst ett föredraget språk i systeminställningarna: Inställningar -> Allmänt -> Språk och region.";
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
-"Settings.Label.Heartbeat" = "Bakgrundsprocesser";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data";
 "OWMError.apiLimitExceeded" = "API gräns överskriden";
 "OWMError.notAHttpResponse" = "Ingen HTTP respons";
@@ -314,6 +309,8 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "Welcome.scan.title" = "SKANNA";
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Inställningar";
+"Settings.BackgroundScanning.title" = "Bakgrundsskanning";
+"Settings.BackgroundScanning.interval" = "Dataloggningsintervall";
 "Settings.Label.Chart" = "Historik";
 "ChartSettings.AllPoints.title" = "Visa all insamlad data i graferna";
 "ChartSettings.AllPoints.description" = "Den här funktionen kan göra appen laddar historik långsammare";

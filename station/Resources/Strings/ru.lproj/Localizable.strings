@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Версия";
-"Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
 "Background.KeepConnection.title" = "Держать Соединение";
-"Background.SaveHeartbeats.title" = "Сохранять Данные";
 "Background.Interval.Every.string" = "каждые";
 "Background.Interval.Min.string" = "мин";
 "Background.readRSSITitle.title" = "Считывать RSSI";
@@ -87,8 +85,6 @@
 "ForegroundRow.webTags.title" = "Загружать из интернета";
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
 "Foreground.Interval.All.string" = "Все";
-"Heartbeat.navigationItem.title" = "Фоновый Режим";
-"Heartbeat.SaveHeartbeats.title" = "Сохранять Данные";
 "Heartbeat.Interval.Every.string" = "каждые";
 "Heartbeat.Interval.Min.string" = "мин";
 "Heartbeat.readRSSITitle.title" = "Считывать RSSI";
@@ -128,7 +124,6 @@
 If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
-"Settings.Label.Heartbeat" = "Фоновый Режим";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
@@ -314,6 +309,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
 "Background.Interval.Sec.string" = "сек";
 "Settings.navigationItem.title" = "Настройки";
+"Settings.BackgroundScanning.title" = "Сканирование в фоне";
+"Settings.BackgroundScanning.interval" = "Интервал сканирования";
 "Settings.Label.Chart" = "Настройки графиков";
 "ChartSettings.AllPoints.title" = "Отображать все данные";
 "ChartSettings.AllPoints.description" = "Это может привести к медленному обновлению графиков";

@@ -1,10 +1,14 @@
 import Foundation
 
 class HeartbeatViewModel {
-    var saveHeartbeats = Observable<Bool?>()
-    var saveHeartbeatsInterval = Observable<Int?>(1)
+    var bgScanningState = Observable<Bool?>()
+    var bgScanningInterval = Observable<Int?>(1)
 
-    var saveHeartbeatsTitle: String {
-        return "Heartbeat.SaveHeartbeats.title".localized()
+    var bgScanningTitle: String {
+        return "Settings.BackgroundScanning.title".localized()
+    }
+
+    var bgScanningIntervalTitle: String {
+        return "Settings.BackgroundScanning.interval".localized()
     }
 }

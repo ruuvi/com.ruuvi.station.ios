@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Version";
-"Background.navigationItem.title" = "Background";
 "Background.PresentNotifications.title" = "Show Notifications";
 "Background.KeepConnection.title" = "Keep the Connection";
-"Background.SaveHeartbeats.title" = "Data Logging Interval";
 "Background.Interval.Every.string" = "every";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Read RSSI";
@@ -87,8 +85,6 @@
 "ForegroundRow.webTags.title" = "Load and save from web";
 "ForegroundRow.webTags.section" = "VIRTUAL SENSORS";
 "Foreground.Interval.All.string" = "All";
-"Heartbeat.navigationItem.title" = "Background";
-"Heartbeat.SaveHeartbeats.title" = "Data Logging Interval";
 "Heartbeat.Interval.Every.string" = "every";
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Read RSSI";
@@ -128,7 +124,6 @@
 If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
-"Settings.Label.Heartbeat" = "Background";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response";
 "OWMError.apiLimitExceeded" = "API limit exceeded";
 "OWMError.notAHttpResponse" = "Not an HTTP response";
@@ -314,6 +309,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Welcome.scan.title" = "SCAN";
 "Background.Interval.Sec.string" = "sec";
 "Settings.navigationItem.title" = "Settings";
+"Settings.BackgroundScanning.title" = "Background Scanning";
+"Settings.BackgroundScanning.interval" = "Data logging interval";
 "Settings.Label.Chart" = "Chart Settings";
 "ChartSettings.AllPoints.title" = "Display all data in chart";
 "ChartSettings.AllPoints.description" = "Enabling it may cause charts to update slowly";
@@ -481,7 +478,7 @@ Your RuuviTag sensor is ready for use!";
 "DFUUIView.navigationTitle" = "Firmware Update";
 "DFUUIView.latestTitle" = "Latest available Ruuvi Firmware version:";
 "DFUUIView.currentTitle" = "Current version:";
-"DFUUIView.notReportingDescription" = "Your sensor doesn't report its current firmware version. This means that it's probably running an old firmware version and updating it is recommended.";
+"DFUUIView.notReportingDescription" = "Your sensor doesn't report its current firmware version. Either you're not in its Bluetooth range, it's connected to another phone, or it's running a very old firmware version.";
 "DFUUIView.alreadyOnLatest" = "You are running the latest firmware version, no need to update";
 "DFUUIView.startUpdateProcess" = "Start update process";
 "DFUUIView.downloadingTitle" = "Downloading the latest firmware to be updated...";

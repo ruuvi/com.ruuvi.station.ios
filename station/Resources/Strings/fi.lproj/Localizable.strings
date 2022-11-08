@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Versio";
-"Background.navigationItem.title" = "Taustaprosessit";
 "Background.PresentNotifications.title" = "Näytä ilmoituksia";
 "Background.KeepConnection.title" = "Säilytä yhteys";
-"Background.SaveHeartbeats.title" = "Historian tallennusväli";
 "Background.Interval.Every.string" = "joka";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Lue RSSI";
@@ -87,8 +85,6 @@
 "ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 "Foreground.Interval.All.string" = "Kaikki";
-"Heartbeat.navigationItem.title" = "Taustaprosessit";
-"Heartbeat.SaveHeartbeats.title" = "Historian tallennusväli";
 "Heartbeat.Interval.Every.string" = "joka";
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Lue RSSI";
@@ -128,7 +124,6 @@
 Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintään yksi ensisijainen kieli on valittuna järjestelmäasetuksissa: Asetukset -> Yleiset -> Kieli ja alue.";
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
-"Settings.Label.Heartbeat" = "Taustaprosessit";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui";
 "OWMError.apiLimitExceeded" = "API-raja ylittyi";
 "OWMError.notAHttpResponse" = "Vastaus ei ole HTTP-muodossa";
@@ -314,6 +309,8 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "Welcome.scan.title" = "SKANNAA";
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Asetukset";
+"Settings.BackgroundScanning.title" = "Taustaskannaus";
+"Settings.BackgroundScanning.interval" = "Historiatietojen tallennusväli";
 "Settings.Label.Chart" = "Historiatietojen asetukset";
 "ChartSettings.AllPoints.title" = "Näytä kaikki kerätyt mittaukset";
 "ChartSettings.AllPoints.description" = "Ominaisuuden käyttäminen saattaa hidastaa historiatietojen päivittymistä";
@@ -481,7 +478,7 @@ RuuviTag on valmis käyttöön!";
 "DFUUIView.navigationTitle" = "Laiteohjelmiston päivitys";
 "DFUUIView.latestTitle" = "Uusin saatavilla oleva Ruuvi-laiteohjelmisto:";
 "DFUUIView.currentTitle" = "Nykyinen versio:";
-"DFUUIView.notReportingDescription" = "Laitteessa oleva laiteohjelmisto ei ilmoita nykyistä versiota. Kyseessä on todennäköisesti vanha laiteohjelmisto ja sen päivittäminen on suositeltavaa.";
+"DFUUIView.notReportingDescription" = "Laitteessa oleva laiteohjelmisto ei ilmoita nykyistä versiota. Joko et ole sen Bluetooth-kuuluvuusalueella, se on samanaikaisesti yhteydessä toiseen puhelimeen tai kyseessä on hyvin vanha laiteohjelmisto.";
 "DFUUIView.alreadyOnLatest" = "Laitteessa on jo viimeisin saatavilla oleva laiteohjelmisto";
 "DFUUIView.startUpdateProcess" = "Siirry päivittämään";
 "DFUUIView.downloadingTitle" = "Ladataan viimeisin laiteohjelmisto päivitystä varten...";
