@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Version";
-"Background.navigationItem.title" = "Hintergrund";
 "Background.PresentNotifications.title" = "Zeige Benachrichtigungen";
 "Background.KeepConnection.title" = " Verbindung behalten";
-"Background.SaveHeartbeats.title" = "Datenprotokollierungsintervall";
 "Background.Interval.Every.string" = "Jeder";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Lese RSSI";
@@ -87,8 +85,6 @@
 "ForegroundRow.webTags.title" = "Laden und speichern aus dem Web";
 "ForegroundRow.webTags.section" = "VIRTUELLE SENSOREN";
 "Foreground.Interval.All.string" = "Alle";
-"Heartbeat.navigationItem.title" = "Hintergrund";
-"Heartbeat.SaveHeartbeats.title" = "Datenprotokollierungsintervall";
 "Heartbeat.Interval.Every.string" = "jeder";
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Lese RSSI";
@@ -128,7 +124,6 @@
 If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Vordergrund";
 "Settings.Label.Defaults" = "Standardeinstellungen";
-"Settings.Label.Heartbeat" = "Hintergrund";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Fehler beim Parsen der Open Weather Map-Antwort";
 "OWMError.apiLimitExceeded" = "API-Limit überschritten";
 "OWMError.notAHttpResponse" = "Keine HTTP-Antwort";
@@ -314,6 +309,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Welcome.scan.title" = "SCANNEN";
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Einstellungen";
+"Settings.BackgroundScanning.title" = "Scannen im Hintergrund";
+"Settings.BackgroundScanning.interval" = "Datenprotokollierungsintervall";
 "Settings.Label.Chart" = "Diagramm Einstellungen";
 "ChartSettings.AllPoints.title" = "Alle Daten im Diagramm anzeigen";
 "ChartSettings.AllPoints.description" = "Die Aktivierung kann dazu führen, dass Diagramme langsam aktualisiert werden";

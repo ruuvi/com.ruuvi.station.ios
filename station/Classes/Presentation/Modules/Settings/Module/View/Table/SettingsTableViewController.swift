@@ -77,7 +77,7 @@ extension SettingsTableViewController: SettingsViewInput {
         pressureTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
-        heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
+        heartbeatTitleLabel.text = "Settings.BackgroundScanning.title".localized()
         chartTitleLabel.text = "Settings.Label.Chart".localized()
         cloudModeTitleLabel.text = "Settings.Label.CloudMode".localized()
         updateUILanguage()

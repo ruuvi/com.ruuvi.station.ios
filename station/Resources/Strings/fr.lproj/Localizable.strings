@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Version";
-"Background.navigationItem.title" = "Tâches en arrière plan";
 "Background.PresentNotifications.title" = "Voir les notifications";
 "Background.KeepConnection.title" = "Maintenir la connexion";
-"Background.SaveHeartbeats.title" = "Intervalle de sauvegarde";
 "Background.Interval.Every.string" = "Chaque";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Lire RSSI";
@@ -87,8 +85,6 @@
 "ForegroundRow.webTags.title" = "Télécharger et enregistrer depuis internet";
 "ForegroundRow.webTags.section" = "CAPTEURS VIRTUELS";
 "Foreground.Interval.All.string" = "Tous";
-"Heartbeat.navigationItem.title" = "Tâches d'arrière plan";
-"Heartbeat.SaveHeartbeats.title" = "Intervalle d'enregistrement";
 "Heartbeat.Interval.Every.string" = "toutes les";
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Lire RSSI";
@@ -128,7 +124,6 @@
 If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Premier plan";
 "Settings.Label.Defaults" = "Paramètres d'usine";
-"Settings.Label.Heartbeat" = "Tâches d'arrière plan";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Echec lors de l'ajout de la réponse Weather Map";
 "OWMError.apiLimitExceeded" = "Limite API dépassée";
 "OWMError.notAHttpResponse" = "La réponse n'est pas au format HTTP";
@@ -314,6 +309,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Welcome.scan.title" = "BALAYAGE EN COURS";
 "Background.Interval.Sec.string" = "sec";
 "Settings.navigationItem.title" = "Réglages";
+"Settings.BackgroundScanning.title" = "Réglages du balayage en arrière-plan";
+"Settings.BackgroundScanning.interval" = "Intervalle d'acquisition des données";
 "Settings.Label.Chart" = "Paramètres de l'histogramme";
 "ChartSettings.AllPoints.title" = "Afficher toutes les données mesurées";
 "ChartSettings.AllPoints.description" = "L'utilisation de cette fonction peut ralentir la mise à jour de l'histogramme";

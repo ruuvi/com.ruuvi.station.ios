@@ -9,15 +9,15 @@ struct HeartbeatList: View {
 
     var body: some View {
         VStack {
-            Toggle(isOn: self.$env.viewModel.saveHeartbeats.value.bound) {
-                Text(self.env.viewModel.saveHeartbeatsTitle)
+            Toggle(isOn: self.$env.viewModel.bgScanningState.value.bound) {
+                Text(self.env.viewModel.bgScanningTitle)
             }
 
-            if self.env.viewModel.saveHeartbeats.value.bound {
+            if self.env.viewModel.bgScanningState.value.bound {
                 Stepper("Heartbeat.Interval.Every.string".localized()
-                    + " " + "\(self.env.viewModel.saveHeartbeatsInterval.value.bound)"
+                    + " " + "\(self.env.viewModel.bgScanningInterval.value.bound)"
                     + " " + "Heartbeat.Interval.Min.string".localized(),
-                        value: self.$env.viewModel.saveHeartbeatsInterval.value.bound,
+                        value: self.$env.viewModel.bgScanningInterval.value.bound,
                         in: 0...3600)
             }
         }
