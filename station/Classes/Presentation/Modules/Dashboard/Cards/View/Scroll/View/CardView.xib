@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -58,25 +58,15 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-warning" translatesAutoresizingMaskIntoConstraints="NO" id="XbS-ri-gks">
-                            <rect key="frame" x="169.5" y="23" width="20" height="20"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="20" id="H3Q-6I-Mh2"/>
-                                <constraint firstAttribute="height" constant="20" id="bax-Wg-VRT"/>
-                            </constraints>
-                        </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="XbS-ri-gks" firstAttribute="centerY" secondItem="MDw-rW-72R" secondAttribute="centerY" id="HPn-Yn-Co8"/>
                         <constraint firstItem="XwV-cb-60i" firstAttribute="leading" secondItem="pP4-3S-qyE" secondAttribute="trailing" constant="16" id="N7e-hU-aaV"/>
                         <constraint firstAttribute="bottom" secondItem="pP4-3S-qyE" secondAttribute="bottom" constant="8" id="Qmm-yo-Bqt"/>
                         <constraint firstItem="XwV-cb-60i" firstAttribute="centerY" secondItem="MDw-rW-72R" secondAttribute="centerY" id="UUC-hu-9BM"/>
                         <constraint firstItem="pP4-3S-qyE" firstAttribute="leading" secondItem="MDw-rW-72R" secondAttribute="leading" id="gkj-gI-Mnx"/>
                         <constraint firstItem="pP4-3S-qyE" firstAttribute="top" secondItem="MDw-rW-72R" secondAttribute="top" constant="8" id="mlZ-aD-Co0"/>
                         <constraint firstAttribute="height" constant="66" id="ofB-ay-g10"/>
-                        <constraint firstItem="XbS-ri-gks" firstAttribute="leading" secondItem="XwV-cb-60i" secondAttribute="trailing" constant="16" id="vHg-7H-vkZ"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQm-7P-r6Y" userLabel="Pressure View">
@@ -313,7 +303,6 @@
                 <outlet property="humidityLabel" destination="XwV-cb-60i" id="ETY-XG-Dbv"/>
                 <outlet property="humidityView" destination="MDw-rW-72R" id="ToX-b5-6Bk"/>
                 <outlet property="humidityViewHeight" destination="ofB-ay-g10" id="wcL-O0-Vee"/>
-                <outlet property="humidityWarningImageView" destination="XbS-ri-gks" id="JVl-I2-kxW"/>
                 <outlet property="movementCityImageView" destination="tnh-8q-eCb" id="BHv-p6-C6H"/>
                 <outlet property="movementCityLabel" destination="2Pk-nL-gnn" id="fGI-Ty-sqh"/>
                 <outlet property="movementCityTitleLbl" destination="5f5-3f-UcF" id="BEG-2K-4s4"/>
@@ -339,7 +328,6 @@
         <image name="icon-measure-humidity" width="221" height="221"/>
         <image name="icon-measure-movement" width="53" height="53"/>
         <image name="icon-measure-pressure" width="221" height="221"/>
-        <image name="icon-warning" width="321" height="260"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>

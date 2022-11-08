@@ -84,14 +84,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
 
-    private lazy var queue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        queue.name = "com.ruuvi.station.TagChartsPresenter.\("temp")"
-        queue.qualityOfService = .userInteractive
-        return queue
-    }()
-
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()

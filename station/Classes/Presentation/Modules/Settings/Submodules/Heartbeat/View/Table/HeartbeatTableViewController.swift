@@ -39,7 +39,7 @@ extension HeartbeatTableViewController {
     @IBAction func bgScanningIntervalStepperValueChanged(_ sender: Any) {
         viewModel.bgScanningInterval.value = Int(bgScanningIntervalStepper.value)
     }
-    
+
     @IBAction func bgScanningSwitchValueChanged(_ sender: Any) {
         viewModel.bgScanningState.value = bgScanningSwitch.isOn
     }

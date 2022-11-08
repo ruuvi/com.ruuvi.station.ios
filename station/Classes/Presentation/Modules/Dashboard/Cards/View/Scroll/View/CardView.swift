@@ -15,7 +15,6 @@ class CardView: UIView {
     @IBOutlet weak var chartsButtonWidth: NSLayoutConstraint!
     @IBOutlet weak var alertImageView: UIImageView!
     @IBOutlet weak var alertView: UIView!
-    @IBOutlet weak var humidityWarningImageView: UIImageView!
     @IBOutlet weak var chartsButtonContainerView: UIView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -83,13 +82,6 @@ class CardView: UIView {
     deinit {
         notificationToken?.invalidate()
         timer?.invalidate()
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse], animations: { [weak self] in
-            self?.humidityWarningImageView.alpha = 0.0
-        })
     }
 
     @IBAction func alertBellButtonTouchUpInside(_ sender: Any) {
