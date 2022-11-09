@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import RuuviCloud
 import RuuviOntology
 import RuuviUser
@@ -14,7 +15,6 @@ public final class WidgetViewModel: ObservableObject {
     init() {
         ruuviUser = widgetAssembly.resolve(RuuviUser.self)
         ruuviCloud = widgetAssembly.resolve(RuuviCloud.self)
-//        setWidgetLanguage()
     }
 }
 
@@ -86,6 +86,40 @@ extension WidgetViewModel {
 
     public func locale() -> Locale {
         return getLanguage().locale
+    }
+
+    /// Returns value for inline widget
+    func getInlineWidgetValue(from entry: WidgetEntry) -> String {
+        let value = getValue(from: entry.record,
+                             settings: entry.settings,
+                             config: entry.config)
+        let unit = getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue))
+        return value + " " + unit
+    }
+
+    /// Returns SF Symbol based on sensor since we
+    /// can not use Image in inline widget
+    func symbol(from entry: WidgetEntry) -> Image {
+        guard let sensor = WidgetSensorEnum(rawValue: entry.config.sensor.rawValue) else {
+            return Image(systemName: "thermometer.medium.slash")
+        }
+        switch sensor {
+        case .temperature:
+            return Image(systemName: "thermometer.medium")
+        case .humidity:
+            return Image(systemName: "drop.circle")
+        case .pressure:
+            return Image(systemName: "wind.circle")
+        case .movement_counter:
+            return Image(systemName: "repeat.circle")
+        case .acceleration_x,
+                .acceleration_y,
+                .acceleration_z:
+            return Image(systemName: "move.3d")
+            
+        case .battery_voltage:
+            return Image(systemName: "bolt.circle.fill")
+        }
     }
 }
 

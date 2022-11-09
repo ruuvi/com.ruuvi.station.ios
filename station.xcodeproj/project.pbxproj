@@ -790,6 +790,9 @@
 		C9D6ACA6CB9694F6C33414CE /* ShareModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */; };
 		D037B55274A07756F884696B /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */; };
 		D54F2103EF7E3360E7D09BC4 /* Pods_station_widgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */; };
+		E1072687291C49E500247625 /* SimpleWidgetViewInline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */; };
+		E1117008291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */; };
+		E128160B292ABCFA008E9282 /* SimpleWidgetViewCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */; };
 		E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */; };
@@ -1440,6 +1443,9 @@
 		CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharePresenter.swift; sourceTree = "<group>"; };
 		CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewOutput.swift; sourceTree = "<group>"; };
 		D63A307EB55306A1D598FDAE /* Pods_station_widgets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_widgets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewInline.swift; sourceTree = "<group>"; };
+		E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewRectangle.swift; sourceTree = "<group>"; };
+		E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewCircular.swift; sourceTree = "<group>"; };
 		E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBatteryStatusProvider.swift; sourceTree = "<group>"; };
 		E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		E16051EB285CBA57003FCA70 /* FileManager+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Date.swift"; sourceTree = "<group>"; };
@@ -2875,6 +2881,9 @@
 			isa = PBXGroup;
 			children = (
 				3493386228300A73009060E8 /* SimpleWidgetView.swift */,
+				E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */,
+				E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */,
+				E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */,
 				3493386428300ACC009060E8 /* UnauthorizedView.swift */,
 				3493386628300B05009060E8 /* EmptyWidgetView.swift */,
 			);
@@ -5012,6 +5021,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3493385D28300396009060E8 /* NetworkManager.swift in Sources */,
+				E128160B292ABCFA008E9282 /* SimpleWidgetViewCircular.swift in Sources */,
 				34D458E228216C6900EA9F93 /* WidgetViewModel.swift in Sources */,
 				E186AB2D2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				34A8D4A2281ED018008A8698 /* Extensions.swift in Sources */,
@@ -5019,10 +5029,12 @@
 				34933873283014F6009060E8 /* WidgetSensorEnum.swift in Sources */,
 				3493386F283014A0009060E8 /* Model+Extension.swift in Sources */,
 				3493386528300ACC009060E8 /* UnauthorizedView.swift in Sources */,
+				E1117008291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift in Sources */,
 				34D458E028216B2200EA9F93 /* WidgetAssembly.swift in Sources */,
 				3493386C28300C49009060E8 /* Constants.swift in Sources */,
 				34A8D4C6281EEC19008A8698 /* WidgetEntry.swift in Sources */,
 				341401EC282D03C8003DE721 /* MeasurementService.swift in Sources */,
+				E1072687291C49E500247625 /* SimpleWidgetViewInline.swift in Sources */,
 				34A8D490281EBFD9008A8698 /* RuuviWidgets.swift in Sources */,
 				3493386728300B06009060E8 /* EmptyWidgetView.swift in Sources */,
 				34A8D4C4281EEBF8008A8698 /* WidgetProvider.swift in Sources */,
@@ -5609,7 +5621,6 @@
 			baseConfigurationReference = 5C35D73AC96D7B6765529406 /* Pods-station_widgets.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -5644,7 +5655,6 @@
 			baseConfigurationReference = 47B3F8D904CAAB34D68A68DC /* Pods-station_widgets.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

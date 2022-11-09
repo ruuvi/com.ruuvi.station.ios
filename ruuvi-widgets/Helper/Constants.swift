@@ -18,6 +18,7 @@ public enum Constants: String {
     case pressureAccuracyKey = "pressureAccuracyKey"
 
     case ruuviLogo = "ruuvi_logo"
+    case ruuviLogoEye = "eye_circle"
 
     case muliRegular = "Muli-Regular"
     case muliBold = "Muli-Bold"
