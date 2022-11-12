@@ -14,7 +14,6 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnTxPower()
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
-    func viewDidTapOnAlertsDisabledView()
     func viewDidAskToConnectFromAlertsDisabledDialog()
     func viewDidTapClaimButton()
     func viewDidTapShareButton()
@@ -33,4 +32,7 @@ protocol TagSettingsViewOutput {
 
     // Update firmware
     func viewDidTapOnUpdateFirmware()
+
+    // Connection
+    func viewDidTriggerKeepConnection(isOn: Bool)
 }

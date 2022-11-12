@@ -27,7 +27,6 @@ public enum LowHighNotificationType: String {
     case temperature
     case relativeHumidity
     case humidity
-    case dewPoint
     case pressure
 }
 

@@ -33,12 +33,6 @@ struct WebTagSettingsViewModel {
     let humidityUpperBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 40, unit: .absolute))
     let humidityAlertDescription: Observable<String?> = Observable<String?>()
 
-    let isDewPointAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let dewPointAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let dewPointLowerBound: Observable<Temperature?> = Observable<Temperature?>()
-    let dewPointUpperBound: Observable<Temperature?> = Observable<Temperature?>()
-    let dewPointAlertDescription: Observable<String?> = Observable<String?>()
-
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>()
