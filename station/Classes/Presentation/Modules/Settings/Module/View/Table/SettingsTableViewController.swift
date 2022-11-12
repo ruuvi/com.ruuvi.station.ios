@@ -46,11 +46,7 @@ class SettingsTableViewController: UITableViewController {
             updateUILanguage()
         }
     }
-    var isBackgroundVisible: Bool = false {
-        didSet {
-            updateTableIfLoaded()
-        }
-    }
+
     var experimentalFunctionsEnabled: Bool = false {
         didSet {
             updateTableIfLoaded()
@@ -138,8 +134,7 @@ extension SettingsTableViewController {
                 : 0
         }
         // Add the logic for the cloud mode cell here
-        if !isBackgroundVisible && cell == heartbeatCell ||
-            !showDefaults && cell == defaultsCell ||
+        if !showDefaults && cell == defaultsCell ||
             !cloudModeVisible && cell == cloudModeCell {
             return 0
         } else {
