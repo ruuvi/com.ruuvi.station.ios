@@ -175,7 +175,7 @@ extension CardsScrollViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
-        let message = "Cards.KeepConnectionDialog.Settings.message".localized()
+        let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
