@@ -24,10 +24,8 @@ class SettingsPresenter: SettingsModuleInput {
     var ruuviStorage: RuuviStorage!
 
     private var languageToken: NSObjectProtocol?
-    private var ruuviTagsToken: RuuviReactorToken?
     private var sensors: [AnyRuuviTagSensor] = []
     deinit {
-        ruuviTagsToken?.invalidate()
         languageToken?.invalidate()
     }
 }
@@ -45,26 +43,6 @@ extension SettingsPresenter: SettingsViewOutput {
             self?.view.language = self?.settings.language ?? .english
         })
 
-        ruuviTagsToken?.invalidate()
-        // TODO: this logic doesn't hide the background if no connectable tags, fix it
-        ruuviTagsToken = ruuviReactor.observe({ [weak self] change in
-            guard let sSelf = self else { return }
-            switch change {
-            case .initial(let sensors):
-                guard let sSelf = self else { return }
-                let sensors = sensors.reordered()
-                sSelf.sensors = sensors
-                let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
-                sSelf.view.isBackgroundVisible = containsConnectable
-            case .insert(let sensor):
-                sSelf.sensors.append(sensor)
-                sSelf.view.isBackgroundVisible = sSelf.view.isBackgroundVisible || sensor.isConnectable
-            case .error(let error):
-                sSelf.errorPresenter.present(error: error)
-            default:
-                break
-            }
-        })
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
         ruuviStorage.readAll().on(success: { [weak self] tags in
             guard let sSelf = self else { return }
