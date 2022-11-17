@@ -157,6 +157,7 @@ post_install do |installer|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
         config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
         config.build_settings['SWIFT_SUPPRESS_WARNINGS'] = "YES"
+        config.build_settings["DEVELOPMENT_TEAM"] = "4MUYJ4YYH4"
       end
     end
   end

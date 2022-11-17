@@ -10,10 +10,11 @@ class HeartbeatTableViewController: UITableViewController {
         }
     }
 
-    @IBOutlet weak var saveHeartbeatsTitleLabel: UILabel!
-    @IBOutlet weak var saveHeartbeatsSwitch: UISwitch!
-    @IBOutlet weak var saveHeartbeatsIntervalLabel: UILabel!
-    @IBOutlet weak var saveHeartbeatsIntervalStepper: UIStepper!
+    @IBOutlet weak var bgScanningTitleLabel: UILabel!
+    @IBOutlet weak var bgScanningSwitch: UISwitch!
+    @IBOutlet weak var bgScanningIntervalTitleLabel: UILabel!
+    @IBOutlet weak var bgScanningIntervalValueLabel: UILabel!
+    @IBOutlet weak var bgScanningIntervalStepper: UIStepper!
 
     private let everyString = "Heartbeat.Interval.Every.string"
 }
@@ -21,25 +22,26 @@ class HeartbeatTableViewController: UITableViewController {
 // MARK: - HeartbeatViewInput
 extension HeartbeatTableViewController: HeartbeatViewInput {
     func localize() {
-        saveHeartbeatsTitleLabel.text = viewModel.saveHeartbeatsTitle
-        if viewModel.saveHeartbeatsInterval.value.bound > 0 {
-            saveHeartbeatsIntervalLabel.text = everyString.localized()
-                + " " + "\(viewModel.saveHeartbeatsInterval.value.bound)"
+        bgScanningTitleLabel.text = viewModel.bgScanningTitle
+        bgScanningIntervalTitleLabel.text = viewModel.bgScanningIntervalTitle
+        if viewModel.bgScanningInterval.value.bound > 0 {
+            bgScanningIntervalValueLabel.text = everyString.localized()
+                + " " + "\(viewModel.bgScanningInterval.value.bound)"
                 + " " + "Heartbeat.Interval.Min.string".localized()
         } else {
-            saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.All.string".localized()
+            bgScanningIntervalValueLabel.text = "Heartbeat.Interval.All.string".localized()
         }
     }
 }
 
 // MARK: - IBActions
 extension HeartbeatTableViewController {
-    @IBAction func saveHeartbeatsIntervalStepperValueChanged(_ sender: Any) {
-        viewModel.saveHeartbeatsInterval.value = Int(saveHeartbeatsIntervalStepper.value)
+    @IBAction func bgScanningIntervalStepperValueChanged(_ sender: Any) {
+        viewModel.bgScanningInterval.value = Int(bgScanningIntervalStepper.value)
     }
 
-    @IBAction func saveHeartbeatsSwitchValueChanged(_ sender: Any) {
-        viewModel.saveHeartbeats.value = saveHeartbeatsSwitch.isOn
+    @IBAction func bgScanningSwitchValueChanged(_ sender: Any) {
+        viewModel.bgScanningState.value = bgScanningSwitch.isOn
     }
 }
 
@@ -58,11 +60,11 @@ extension HeartbeatTableViewController {
     private func bindViewModel() {
         if isViewLoaded {
 
-            saveHeartbeatsSwitch.bind(viewModel.saveHeartbeats) { (view, isOn) in
+            bgScanningSwitch.bind(viewModel.bgScanningState) { (view, isOn) in
                 view.isOn = isOn.bound
             }
             let every = everyString
-            saveHeartbeatsIntervalLabel.bind(viewModel.saveHeartbeatsInterval) { (label, interval) in
+            bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { (label, interval) in
                 if interval.bound > 0 {
                     label.text = every.localized()
                                 + " " + "\(interval.bound)"
@@ -71,8 +73,8 @@ extension HeartbeatTableViewController {
                     label.text = "Heartbeat.Interval.All.string".localized()
                 }
             }
-            saveHeartbeatsIntervalStepper.bind(viewModel.saveHeartbeatsInterval) { (stepper, saveHeartbeatsInterval) in
-                stepper.value = Double(saveHeartbeatsInterval.bound)
+            bgScanningIntervalStepper.bind(viewModel.bgScanningInterval) { (stepper, interval) in
+                stepper.value = Double(interval.bound)
             }
         }
     }

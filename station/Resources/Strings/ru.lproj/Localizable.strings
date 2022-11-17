@@ -7,10 +7,8 @@
 "N/A" = "-";
 "g" = "g";
 "About.Version.text" = "Версия";
-"Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
 "Background.KeepConnection.title" = "Держать Соединение";
-"Background.SaveHeartbeats.title" = "Сохранять Данные";
 "Background.Interval.Every.string" = "каждые";
 "Background.Interval.Min.string" = "мин";
 "Background.readRSSITitle.title" = "Считывать RSSI";
@@ -20,7 +18,6 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
 "Cards.KeepConnectionDialog.message" = "На вашем устройстве установлена прошивка, поддерживающая соединение. Хотите поддерживать соединение активным для этого устройства в фоновом режиме? Это позволит использовать графики и уведомления даже когда приложение закрыто.";
-"Cards.KeepConnectionDialog.Settings.message" = "This setting enables alerts for this sensor and allows collecting data from sensor locally while app is running in background.";
 "Cards.KeepConnectionDialog.Dismiss.title" = "Закрыть";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
 "Cards.LegacyFirmwareUpdateDialog.message" = "Seems that your sensor is using an old firmware software version. To access new features such as history graphs, alerts and cloud services, updating is mandatory.";
@@ -87,8 +84,6 @@
 "ForegroundRow.webTags.title" = "Загружать из интернета";
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
 "Foreground.Interval.All.string" = "Все";
-"Heartbeat.navigationItem.title" = "Фоновый Режим";
-"Heartbeat.SaveHeartbeats.title" = "Сохранять Данные";
 "Heartbeat.Interval.Every.string" = "каждые";
 "Heartbeat.Interval.Min.string" = "мин";
 "Heartbeat.readRSSITitle.title" = "Считывать RSSI";
@@ -128,7 +123,6 @@
 If you cannot see the Language option in the settings, make sure that you have at least one preferred language added in system settings: Settings -> General -> Language & Region.";
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
-"Settings.Label.Heartbeat" = "Фоновый Режим";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
@@ -171,8 +165,13 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.SectionHeader.Remove.title" = "УДАЛИТЬ";
 "TagSettings.Label.noValues.text" = "НЕТ ЗНАЧЕНИЙ?";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
-"TagSettings.SectionHeader.Connection.title" = "СОЕДИНЕНИЕ";
-"TagSettings.KeepConnection.title" = "Держать Соединение";
+"TagSettings.SectionHeader.BTConnection.title" = "BLUETOOTH СОЕДИНЕНИЕ";
+"TagSettings.PairAndBackgroundScan.Unpaired.title" = "Pair and use background scan";
+"TagSettings.PairAndBackgroundScan.Pairing.title" = "Connecting to the sensor";
+"TagSettings.PairAndBackgroundScan.Paired.title" = "Paired and background scan on";
+"TagSettings.PairAndBackgroundScan.description" = "Alerts are not available over Bluetooth connection if background scanning is not enabled. Only one iOS device can be paired to Ruuvi sensor at a time.";
+"TagSettings.PairError.CloudMode.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";
+"TagSettings.PairError.Timeout.description" = "The sensor may be out of range or paired to another iOS device. Please unpair first or bring the sensor to the range and try again.";
 "TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
@@ -181,9 +180,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Уведомления недоступны поскольку девайс не подсоединен и нет разрешения на показ уведомлений. Пожалуйста, сперва соединитесь с устройством.";
 "TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Соединиться";
 "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Уведомления недоступны поскольку вы не подсоединены к устройству.";
-"TagSettings.ConnectStatus.Connected" = "Соединен";
-"TagSettings.ConnectStatus.Connecting" = "Соединяюсь...";
 "TagSettings.Alert.CustomDescription.placeholder" = "Введите описание...";
+"TagSettings.Alert.CustomDescription.title" = "Описание уведомления";
 "TagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
@@ -314,6 +312,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
 "Background.Interval.Sec.string" = "сек";
 "Settings.navigationItem.title" = "Настройки";
+"Settings.BackgroundScanning.title" = "Сканирование в фоне";
+"Settings.BackgroundScanning.interval" = "Интервал сканирования";
 "Settings.Label.Chart" = "Настройки графиков";
 "ChartSettings.AllPoints.title" = "Отображать все данные";
 "ChartSettings.AllPoints.description" = "Это может привести к медленному обновлению графиков";
@@ -516,11 +516,12 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.LoggedIn.title" = "Пользователь:";
 "Interval.Day.string" = "день";
 "TagSettings.tagNameTitleLabel.rename.text" = "Датчики будут отсортированы в алфавитном порядке.";
+"On" = "Вкл";
+"Off" = "Выкл";
 "DFUUIView.lowBattery.warning.message" = "Уровень заряда батареи датчика слишком низкий и обновление прошивки может завершиться неудачей. Мы рекомендуем заменить батарейку перед обновлением.";
 "Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
 "Settings.Label.CloudMode" = "Режим облака";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
-"TagSettings.Connection.description" = "The sensor cannot be connected to via Bluetooth when the cloud mode is active. You can re-enable Bluetooth connection for the cloud sensors by disabling cloud mode in the app settings.";
 "Widgets.Loading.message" = "загрузка...";
 "Cards.Movements.title" = "движений";
 "TagSettings.BatteryStatusLabel.Replace.message" = "Замените батарею!";
@@ -536,3 +537,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Settings.Measurement.Resolution.title" = "Resolution";
 "MyRuuvi.Settings.DeleteAccount.title" = "Delete Account";
 "MyRuuvi.Settings.DeleteAccount.Confirmation.message" = "A confirmation is sent to your email. To proceed with the deletion, please check your inbox and follow the instructions.";
+"TagSettings.Alert.SetTemperature.title" = "Set temperature alert";
+"TagSettings.Alert.SetHumidity.title" = "Set humidity alert";
+"TagSettings.Alert.SetPressure.title" = "Set pressure alert";
+"TagSettings.AlertSettings.Dialog.Min" = "Min (%0.f)";
+"TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";

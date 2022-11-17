@@ -47,11 +47,13 @@ public protocol RuuviServiceMeasurement {
     func temperatureOffsetCorrection(for temperature: Double) -> Double
     func temperatureOffsetCorrectionString(for temperature: Double) -> String
 
-    func humidityOffsetCorrection(for temperature: Double) -> Double
-    func humidityOffsetCorrectionString(for temperature: Double) -> String
+    func humidityOffsetCorrection(for humidity: Double) -> Double
+    func humidityOffsetCorrectionString(for humidity: Double) -> String
 
-    func pressureOffsetCorrection(for temperature: Double) -> Double
-    func pressureOffsetCorrectionString(for temperature: Double) -> String
+    func pressureOffsetCorrection(for pressure: Double) -> Double
+    func pressureOffsetCorrectionString(for pressure: Double) -> String
+
+    func string(for measurement: Double?) -> String
 }
 
 extension RuuviServiceMeasurement {

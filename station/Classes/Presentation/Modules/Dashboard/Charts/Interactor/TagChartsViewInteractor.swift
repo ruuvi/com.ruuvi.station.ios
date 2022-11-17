@@ -222,8 +222,11 @@ extension TagChartsViewInteractor {
         }
         let op = ruuviStorage.readLatest(ruuviTagSensor)
         op.on(success: { [weak self] (record) in
-            guard let record = record else { return }
             guard let sSelf = self else { return }
+            guard let record = record else {
+                sSelf.presenter.createChartModules(from: [])
+                return
+            }
             sSelf.lastMeasurement = record.measurement
             var chartsCases = MeasurementType.chartsCases
             if record.humidity == nil {
