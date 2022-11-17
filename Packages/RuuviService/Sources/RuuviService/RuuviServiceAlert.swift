@@ -65,11 +65,6 @@ public protocol RuuviServiceAlertDeprecated {
     func upperHumidity(for uuid: String) -> Humidity?
     func humidityDescription(for uuid: String) -> String?
 
-    // dew point (celsius)
-    func lowerDewPointCelsius(for uuid: String) -> Double?
-    func upperDewPointCelsius(for uuid: String) -> Double?
-    func dewPointDescription(for uuid: String) -> String?
-
     // pressure (hPa)
     func lowerPressure(for uuid: String) -> Double?
     func upperPressure(for uuid: String) -> Double?
@@ -109,14 +104,6 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func setUpper(humidity: Humidity?, for sensor: PhysicalSensor)
     func humidityDescription(for sensor: PhysicalSensor) -> String?
     func setHumidity(description: String?, for sensor: PhysicalSensor)
-
-    /// dew point (celsius)
-    func lowerDewPointCelsius(for sensor: PhysicalSensor) -> Double?
-    func setLowerDewPoint(celsius: Double?, for sensor: PhysicalSensor)
-    func upperDewPointCelsius(for sensor: PhysicalSensor) -> Double?
-    func setUpperDewPoint(celsius: Double?, for sensor: PhysicalSensor)
-    func dewPointDescription(for sensor: PhysicalSensor) -> String?
-    func setDewPoint(description: String?, for sensor: PhysicalSensor)
 
     /// pressure (hPa)
     func lowerPressure(for sensor: PhysicalSensor) -> Double?
@@ -167,14 +154,6 @@ public protocol RuuviServiceAlertVirtualSensor {
     func setUpper(humidity: Humidity?, for sensor: VirtualSensor)
     func humidityDescription(for sensor: VirtualSensor) -> String?
     func setHumidity(description: String?, for sensor: VirtualSensor)
-
-    /// dew point (celsius)
-    func lowerDewPointCelsius(for sensor: VirtualSensor) -> Double?
-    func setLowerDewPoint(celsius: Double?, for sensor: VirtualSensor)
-    func upperDewPointCelsius(for sensor: VirtualSensor) -> Double?
-    func setUpperDewPoint(celsius: Double?, for sensor: VirtualSensor)
-    func dewPointDescription(for sensor: VirtualSensor) -> String?
-    func setDewPoint(description: String?, for sensor: VirtualSensor)
 
     /// pressure (hPa)
     func lowerPressure(for sensor: VirtualSensor) -> Double?

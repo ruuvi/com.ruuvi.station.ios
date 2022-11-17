@@ -280,6 +280,14 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             + " " + settings.temperatureUnit.symbol
         }
     }
+
+    public func string(for measurement: Double?) -> String {
+        guard let measurement = measurement else {
+            return ""
+        }
+        let number = NSNumber(value: measurement)
+        return commonNumberFormatter.string(from: number) ?? ""
+    }
 }
 // MARK: - Private
 extension RuuviServiceMeasurementImpl {
