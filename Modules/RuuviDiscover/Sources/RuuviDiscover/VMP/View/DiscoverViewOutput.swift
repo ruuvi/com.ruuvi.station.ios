@@ -7,4 +7,5 @@ protocol DiscoverViewOutput {
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String)
     func viewDidTriggerClose()
     func viewDidTriggerDisabledBTRow()
+    func viewDidTriggerBuySensors()
 }

@@ -1,5 +1,5 @@
 "DiscoverTable.NavigationItem.title" = "Neuen Sensor hinzufügen";
-"DiscoverTable.GetMoreSensors.button.title" = "SENSOREN KAUFEN";
+"DiscoverTable.GetMoreSensors.button.title" = "Ruuvi Sensoren kaufen";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ist nicht aktiviert";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Die Ruuvi Station benötigt Bluetooth, um die Sensoren zu verbinden. Gehen Sie zu Einstellungen und schalten Sie Bluetooth ein.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuelle Sensoren zeigen öffentliche Wetterdaten an, die von lokalen Wetterstationen bereitgestellt werden.";
@@ -12,3 +12,4 @@
 "DiscoverTable.SectionTitle.WebTags" = "Virtuelle Sensoren";
 "WebTagLocationSource.current" = "Ihr Standort";
 "WebTagLocationSource.manual" = "Wählen Sie aus der Karte";
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
