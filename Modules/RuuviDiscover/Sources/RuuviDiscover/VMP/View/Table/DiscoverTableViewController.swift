@@ -61,10 +61,16 @@ extension DiscoverTableViewController: DiscoverViewInput {
         )
     }
 
-    func showBluetoothDisabled() {
+    func showBluetoothDisabled(userDeclined: Bool) {
         let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
         let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
-        showAlert(title: title, message: message)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+                                        style: .default, handler: { [weak self] _ in
+            self?.takeUserToBTSettings(userDeclined: userDeclined)
+        }))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
 
     func showWebTagInfoDialog() {
@@ -152,8 +158,10 @@ extension DiscoverTableViewController {
                 let device = ruuviTags[indexPath.row]
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
-        default:
-            break
+        case .noDevices:
+            if !isBluetoothEnabled {
+                output.viewDidTriggerDisabledBTRow()
+            }
         }
     }
 
@@ -253,6 +261,15 @@ extension DiscoverTableViewController {
             return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
                 + " " + (device.luid?.value.prefix(4) ?? "")
         }
+    }
+
+    private func takeUserToBTSettings(userDeclined: Bool) {
+        guard let url = URL(string: userDeclined ?
+                            UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+              UIApplication.shared.canOpenURL(url) else {
+            return
+        }
+        UIApplication.shared.open(url)
     }
 }
 // swiftlint:enable file_length

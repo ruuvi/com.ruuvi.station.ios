@@ -13,6 +13,7 @@ import RuuviVirtual
 import RuuviNotification
 import RuuviNotifier
 import RuuviPresenters
+import CoreBluetooth
 
 class TagChartViewData: NSObject {
     var chartType: MeasurementType
@@ -100,6 +101,16 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
         didSet {
             self.view.viewModel = self.viewModel
         }
+    }
+
+    private var isBluetoothPermissionGranted: Bool {
+        if #available(iOS 13.1, *) {
+            return CBCentralManager.authorization == .allowedAlways
+        } else if #available(iOS 13.0, *) {
+            return CBCentralManager().authorization == .allowedAlways
+        }
+        // Before iOS 13, Bluetooth permissions are not required
+        return true
     }
 
     var ruuviTagData: [RuuviMeasurement] = []
@@ -209,8 +220,8 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
         // Check bluetooth
-        guard foreground.bluetoothState == .poweredOn else {
-            view.showBluetoothDisabled()
+        guard foreground.bluetoothState == .poweredOn || !isBluetoothPermissionGranted  else {
+            view.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
             return
         }
         isSyncing = true
@@ -573,8 +584,8 @@ extension TagChartsViewPresenter {
 
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
-            if state != .poweredOn {
-                observer.view.showBluetoothDisabled()
+            if state != .poweredOn || !self.isBluetoothPermissionGranted {
+                observer.view.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
             }
         })
     }

@@ -9,6 +9,7 @@ import RuuviLocal
 import RuuviService
 import RuuviCore
 import RuuviPresenters
+import CoreBluetooth
 
 class DiscoverPresenter: NSObject, RuuviDiscover {
     var viewController: UIViewController {
@@ -48,6 +49,15 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var lostToken: ObservationToken?
     private var persistedReactorToken: RuuviReactorToken?
     private lazy var ruuviLogoImage = UIImage.named("ruuvi_logo", for: Self.self)
+    private var isBluetoothPermissionGranted: Bool {
+        if #available(iOS 13.1, *) {
+            return CBCentralManager.authorization == .allowedAlways
+        } else if #available(iOS 13.0, *) {
+            return CBCentralManager().authorization == .allowedAlways
+        }
+        // Before iOS 13, Bluetooth permissions are not required
+        return true
+    }
 
     deinit {
         reloadTimer?.invalidate()
@@ -62,9 +72,10 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
         view?.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
-        if !(view?.isBluetoothEnabled ?? false)
-            && foreground.bluetoothState != .unknown {
-            view?.showBluetoothDisabled()
+        if (!(view?.isBluetoothEnabled ?? false)
+            && foreground.bluetoothState != .unknown) ||
+            !isBluetoothPermissionGranted {
+            view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
         }
 
         view?.isCloseEnabled = true
@@ -103,6 +114,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidTriggerClose() {
         output?.ruuviDiscoverWantsClose(self)
     }
+
+    func viewDidTriggerDisabledBTRow() {
+        view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
+    }
 }
 
 // MARK: - Private
@@ -139,10 +154,10 @@ extension DiscoverPresenter {
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
             observer.view?.isBluetoothEnabled = state == .poweredOn
-            if state == .poweredOff {
+            if state == .poweredOff || !self.isBluetoothPermissionGranted {
                 observer.ruuviTags.removeAll()
                 observer.view?.ruuviTags = []
-                observer.view?.showBluetoothDisabled()
+                observer.view?.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
             }
         })
     }
