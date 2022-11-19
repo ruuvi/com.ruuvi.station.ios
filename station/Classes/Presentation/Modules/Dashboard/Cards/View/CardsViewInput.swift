@@ -6,7 +6,7 @@ protocol CardsViewInput: ViewInput {
     var currentPage: Int { get }
     func scroll(to index: Int, immediately: Bool, animated: Bool)
     func showNoSensorsAddedMessage(show: Bool)
-    func showBluetoothDisabled()
+    func showBluetoothDisabled(userDeclined: Bool)
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)

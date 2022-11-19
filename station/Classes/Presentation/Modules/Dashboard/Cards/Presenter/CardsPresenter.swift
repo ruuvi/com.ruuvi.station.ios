@@ -18,6 +18,7 @@ import RuuviUser
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
+import CoreBluetooth
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -97,6 +98,15 @@ class CardsPresenter: CardsModuleInput {
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
     private let appGroupDefaults = UserDefaults(suiteName: "group.com.ruuvi.station.widgets")
+    private var isBluetoothPermissionGranted: Bool {
+        if #available(iOS 13.1, *) {
+            return CBCentralManager.authorization == .allowedAlways
+        } else if #available(iOS 13.0, *) {
+            return CBCentralManager().authorization == .allowedAlways
+        }
+        // Before iOS 13, Bluetooth permissions are not required
+        return true
+    }
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -567,8 +577,8 @@ extension CardsPresenter {
     }
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
-            if state != .poweredOn {
-                observer.view.showBluetoothDisabled()
+            if state != .poweredOn || !self.isBluetoothPermissionGranted {
+                observer.view.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
             }
         })
     }
