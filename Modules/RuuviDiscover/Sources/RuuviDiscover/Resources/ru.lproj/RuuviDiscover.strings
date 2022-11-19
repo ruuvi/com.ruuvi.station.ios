@@ -1,5 +1,5 @@
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
-"DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
+"DiscoverTable.GetMoreSensors.button.title" = "Купить датчики Ruuvi";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
@@ -12,3 +12,4 @@
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";

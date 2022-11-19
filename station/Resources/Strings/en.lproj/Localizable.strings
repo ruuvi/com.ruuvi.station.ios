@@ -54,7 +54,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs Bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.NavigationItem.title" = "Add a New Sensor";
-"DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
+"DiscoverTable.GetMoreSensors.button.title" = "Buy Ruuvi Sensors";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors in Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
@@ -288,11 +288,11 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
 "Menu.Label.AppSettings.text" = "App Settings";
 "Menu.Label.GetMoreSensors.text" = "Buy Ruuvi Sensors";
-"Menu.BuySensors.URL" = "https://ruuvi.com/products";
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Buy Ruuvi Gateway";
-"Menu.BuyGateway.URL" = "https://ruuvi.com/gateway";
+"Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "What to measure with Ruuvi?";
-"Menu.Measure.URL" = "https://ruuvi.com/ideas/";
+"Menu.Measure.URL.IOS" = "https://ruuvi.com/ideas?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.Feedback.text" = "Send Feedback";
 "Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "min";

@@ -54,7 +54,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
-"DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
+"DiscoverTable.GetMoreSensors.button.title" = "Купить датчики Ruuvi";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
@@ -288,11 +288,11 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
 "Menu.Label.AppSettings.text" = "Настройки";
 "Menu.Label.GetMoreSensors.text" = "Купить датчики Ruuvi";
-"Menu.BuySensors.URL" = "https://ruuvi.com/products";
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Купить Ruuvi Gateway";
-"Menu.BuyGateway.URL" = "https://ruuvi.com/gateway";
+"Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "Что измерять с помощью Ruuvi?";
-"Menu.Measure.URL" = "https://ruuvi.com/ideas";
+"Menu.Measure.URL.IOS" = "https://ruuvi.com/ideas?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.Feedback.text" = "Отправить Отзыв";
 "Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "мин";

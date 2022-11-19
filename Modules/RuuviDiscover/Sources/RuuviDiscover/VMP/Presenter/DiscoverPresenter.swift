@@ -118,6 +118,12 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidTriggerDisabledBTRow() {
         view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
     }
+
+    func viewDidTriggerBuySensors() {
+        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized())
+        else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
 }
 
 // MARK: - Private
