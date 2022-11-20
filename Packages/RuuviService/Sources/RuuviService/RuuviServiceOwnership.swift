@@ -26,4 +26,7 @@ public protocol RuuviServiceOwnership {
 
     @discardableResult
     func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviServiceError>
+
+    @discardableResult
+    func checkOwner(macId: MACIdentifier) -> Future<String, RuuviServiceError>
 }
