@@ -180,6 +180,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
+        checkOwner()
     }
 
     func viewWillAppear() {
@@ -1337,6 +1338,31 @@ extension TagSettingsPresenter {
     private func invalidateTimer() {
         timer?.invalidate()
         timer = nil
+    }
+
+    private func checkOwner() {
+        guard let macId = ruuviTag.macId,
+              ruuviTag.owner == nil else {
+            return
+        }
+
+        // Check in every 15 days if the tag doesn't have any owner.
+        if let checkedDate = settings.ownerCheckDate(for: macId),
+           let days = checkedDate.numberOfDaysFromNow(), days < 15 {
+            return
+        }
+
+        ruuviOwnershipService.checkOwner(macId: macId)
+            .on(success: { [weak self] owner in
+                guard let self = self, !owner.isEmpty else {
+                    self?.settings.setOwnerCheckDate(for: macId, value: Date())
+                    return
+                }
+                self.viewModel.owner.value = owner
+                self.ruuviPool.update(self.ruuviTag
+                    .with(owner: owner)
+                    .with(isOwner: false))
+            })
     }
 
 }
