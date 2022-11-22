@@ -15,7 +15,7 @@ protocol TagChartsViewInput: ViewInput {
                              pressureEntries: [ChartDataEntry],
                              isFirstEntry: Bool,
                              settings: RuuviLocalSettings)
-    func showBluetoothDisabled()
+    func showBluetoothDisabled(userDeclined: Bool)
     func handleClearSyncButtons(connectable: Bool, isSyncing: Bool)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel)

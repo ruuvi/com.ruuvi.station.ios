@@ -67,15 +67,15 @@ class TagSettingsAlertHeaderCell: UITableViewCell {
 extension TagSettingsAlertHeaderCell {
     // swiftlint:disable:next function_body_length
     private func setUpUI() {
-        backgroundColor = .systemBackground
+        backgroundColor = .none
 
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor,
-                          leading: leadingAnchor,
+                          leading: self.safeLeftAnchor,
                           bottom: bottomAnchor,
                           trailing: nil,
                           padding: .init(top: 8,
-                                         left: 14,
+                                         left: 18,
                                          bottom: 8,
                                          right: 0))
 
@@ -106,7 +106,7 @@ extension TagSettingsAlertHeaderCell {
         isExpandedSwitch.anchor(top: nil,
                                 leading: mutedTillLabel.trailingAnchor,
                                 bottom: nil,
-                                trailing: trailingAnchor,
+                                trailing: self.safeRightAnchor,
                                 padding: .init(top: 0,
                                                left: 8,
                                                bottom: 0,

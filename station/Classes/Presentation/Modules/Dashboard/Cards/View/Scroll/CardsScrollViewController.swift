@@ -19,6 +19,7 @@ class CardsScrollViewController: UIViewController {
             measurementService?.add(self)
         }
     }
+
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var noSensorsLabel: UILabel!
 
@@ -128,10 +129,21 @@ extension CardsScrollViewController: CardsViewInput {
         present(alertVC, animated: true)
     }
 
-    func showBluetoothDisabled() {
+    func showBluetoothDisabled(userDeclined: Bool) {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
-        showAlert(title: title, message: message)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+                                        style: .default, handler: { _ in
+            guard let url = URL(string: userDeclined ?
+                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                  UIApplication.shared.canOpenURL(url) else {
+                return
+            }
+            UIApplication.shared.open(url)
+        }))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
 
     func showNoSensorsAddedMessage(show: Bool) {

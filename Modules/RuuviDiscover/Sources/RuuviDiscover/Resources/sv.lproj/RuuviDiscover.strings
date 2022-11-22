@@ -1,5 +1,5 @@
 "DiscoverTable.NavigationItem.title" = "Lägg till en ny sensor";
-"DiscoverTable.GetMoreSensors.button.title" = "KÖP SENSORER";
+"DiscoverTable.GetMoreSensors.button.title" = "Köp Ruuvi-sensorer";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station behöver bluetooth för att fungera. Gå till Inställningar och aktivera Bluetooth.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuella Sensorer visar offentlig väder data som upprätthålls av lokala väderstationer.";
@@ -12,4 +12,4 @@
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
 "WebTagLocationSource.current" = "Din plats";
 "WebTagLocationSource.manual" = "Välj från karta";
-
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";

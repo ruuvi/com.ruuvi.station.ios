@@ -178,25 +178,25 @@ PODS:
   - RuuviBundleUtils/RuuviBundleUtils (0.0.1):
     - Localize-Swift
   - RuuviBundleUtils/Tests (0.0.1)
-  - RuuviCloud (0.0.2):
-    - RuuviCloud/Contract (= 0.0.2)
-  - RuuviCloud/Api (0.0.2):
+  - RuuviCloud (0.0.3):
+    - RuuviCloud/Contract (= 0.0.3)
+  - RuuviCloud/Api (0.0.3):
     - BTKit
     - FutureX
     - RuuviCloud/Contract
     - RuuviOntology
     - RuuviOntology/Mappers
-  - RuuviCloud/Contract (0.0.2):
+  - RuuviCloud/Contract (0.0.3):
     - FutureX
     - RuuviOntology
     - RuuviUser
-  - RuuviCloud/Pure (0.0.2):
+  - RuuviCloud/Pure (0.0.3):
     - FutureX
     - RuuviCloud/Api
     - RuuviCloud/Contract
     - RuuviOntology
     - RuuviUser
-  - RuuviCloud/Tests (0.0.2)
+  - RuuviCloud/Tests (0.0.3)
   - RuuviContext (0.0.1):
     - RuuviContext/SQLite (= 0.0.1)
   - RuuviContext/Contract (0.0.1)
@@ -431,24 +431,24 @@ PODS:
     - RuuviRepository/Contract
     - RuuviStorage
   - RuuviRepository/Tests (0.0.1)
-  - RuuviService (0.0.1):
-    - RuuviService/Contract (= 0.0.1)
-  - RuuviService/Alert (0.0.1):
+  - RuuviService (0.0.2):
+    - RuuviService/Contract (= 0.0.2)
+  - RuuviService/Alert (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviOntology
     - RuuviService/Contract
-  - RuuviService/AppSettings (0.0.1):
+  - RuuviService/AppSettings (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviLocal
     - RuuviOntology
     - RuuviService/Contract
-  - RuuviService/Auth (0.0.1):
+  - RuuviService/Auth (0.0.2):
     - FutureX
     - RuuviService/Contract
     - RuuviUser
-  - RuuviService/CloudSync (0.0.1):
+  - RuuviService/CloudSync (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviLocal
@@ -457,16 +457,16 @@ PODS:
     - RuuviRepository
     - RuuviService/Contract
     - RuuviStorage
-  - RuuviService/Contract (0.0.1):
+  - RuuviService/Contract (0.0.2):
     - FutureX
     - RuuviOntology
-  - RuuviService/Export (0.0.1):
+  - RuuviService/Export (0.0.2):
     - FutureX
     - Humidity
     - RuuviOntology
     - RuuviService/Contract
     - RuuviStorage
-  - RuuviService/Factory (0.0.1):
+  - RuuviService/Factory (0.0.2):
     - FutureX
     - RuuviOntology
     - RuuviService/Alert
@@ -476,23 +476,23 @@ PODS:
     - RuuviService/Ownership
     - RuuviService/SensorProperties
     - RuuviService/SensorRecords
-  - RuuviService/GATT (0.0.1):
+  - RuuviService/GATT (0.0.2):
     - BTKit
     - FutureX
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
-  - RuuviService/Measurement (0.0.1):
+  - RuuviService/Measurement (0.0.2):
     - RuuviLocal
     - RuuviOntology
     - RuuviService/Contract
-  - RuuviService/OffsetCalibration (0.0.1):
+  - RuuviService/OffsetCalibration (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
-  - RuuviService/Ownership (0.0.1):
+  - RuuviService/Ownership (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviOntology
@@ -500,7 +500,7 @@ PODS:
     - RuuviService/Contract
     - RuuviStorage
     - RuuviUser
-  - RuuviService/SensorProperties (0.0.1):
+  - RuuviService/SensorProperties (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviCore
@@ -508,13 +508,13 @@ PODS:
     - RuuviPool
     - RuuviService/Contract
     - RuuviStorage
-  - RuuviService/SensorRecords (0.0.1):
+  - RuuviService/SensorRecords (0.0.2):
     - FutureX
     - RuuviLocal
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
-  - RuuviService/Tests (0.0.1)
+  - RuuviService/Tests (0.0.2)
   - RuuviStorage (0.0.1):
     - RuuviStorage/Contract (= 0.0.1)
   - RuuviStorage/Contract (0.0.1):
@@ -838,7 +838,7 @@ SPEC CHECKSUMS:
   RealmSwift: a0c30c1efc49e928a0a6f8fb141bb2629616d79b
   RuuviAnalytics: 1442f702d42ca8a7c4000394a534cd54bf5fd67a
   RuuviBundleUtils: 2bf9121120e2c0707449dd7cd2f013d2512bc9a0
-  RuuviCloud: be0929956fd9db6277a13df4460bb84023ffc8ab
+  RuuviCloud: 035d83852521fb1a5273ff6190c20949af0850aa
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
@@ -858,7 +858,7 @@ SPEC CHECKSUMS:
   RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
-  RuuviService: 109dc1ba70cc70296862f8be79cd9e205fd22971
+  RuuviService: 0975ab31c41c88ed78613d67d4bd67e75011b28d
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6

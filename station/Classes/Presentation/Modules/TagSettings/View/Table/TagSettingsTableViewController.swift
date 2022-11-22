@@ -4,8 +4,8 @@ import RangeSeekSlider
 import RuuviOntology
 import RuuviService
 
-// IMPORTANT:-
-// TODO: PRIOYONTO -> REFACTOR AND CLEAN THIS CLASS.
+// IMPORTANT: -
+// TODO: @prioyonto - CLEAN UP AND REAFCTOR THIS CLASS OVERALL.
 
 enum TagSettingsTableSection: Int {
     case image = 0
@@ -132,7 +132,7 @@ class TagSettingsTableViewController: UITableViewController {
         return UIStatusBarStyle.default
     }
 
-    private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
+    private let sectionHeaderReuseIdentifier = "TagSettingsSectionHeaderView"
     private let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
@@ -576,28 +576,6 @@ extension TagSettingsTableViewController {
     }
     // swiftlint:enable cyclomatic_complexity
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let section = TagSettingsTableSection.section(for: section)
-        switch section {
-        case .general:
-            return "TagSettings.SectionHeader.General.title".localized()
-        case .connection:
-            return "TagSettings.SectionHeader.BTConnection.title".localized()
-        case .alerts:
-            return "TagSettings.Label.alerts.text".localized().uppercased()
-        case .offsetCorrection:
-            // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
-            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
-            return showOffsetCorrection ? "TagSettings.SectionHeader.OffsetCorrection.Title".localized() : nil
-        case .firmware:
-            return "TagSettings.SectionHeader.Firmware.title".localized()
-        case .remove:
-            return "TagSettings.SectionHeader.Remove.title".localized()
-        default:
-            return nil
-        }
-    }
-
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         let section = TagSettingsTableSection.section(for: section)
         switch section {
@@ -610,36 +588,65 @@ extension TagSettingsTableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = TagSettingsTableSection.section(for: section)
+        guard let header = tableView
+            .dequeueReusableHeaderFooterView(withIdentifier: sectionHeaderReuseIdentifier)
+                as? TagSettingsSectionHeaderView
+        else {
+            return nil
+        }
+
         switch section {
+        case .general:
+            header.titleLabel.text = "TagSettings.SectionHeader.General.title".localized().capitalized
+            header.noValuesView.isHidden = true
+        case .connection:
+            header.titleLabel.text = "TagSettings.SectionHeader.BTConnection.title".localized().capitalized
+            header.noValuesView.isHidden = true
+        case .alerts:
+            header.titleLabel.text = "TagSettings.Label.alerts.text".localized().capitalized
+            header.noValuesView.isHidden = true
+        case .offsetCorrection:
+            let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
+            header.titleLabel.text = showOffsetCorrection ?
+                "TagSettings.SectionHeader.OffsetCorrection.Title".localized().capitalized : nil
+            header.noValuesView.isHidden = true
         case .moreInfo:
-            // swiftlint:disable force_cast
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier)
-                as! TagSettingsMoreInfoHeaderFooterView
-            // swiftlint:enable force_cast
+            header.titleLabel.text = "TagSettings.Label.moreInfo.text".localized().capitalized
             header.delegate = self
             header.noValuesView.isHidden = viewModel?.version.value == 5
-            return header
+        case .firmware:
+            header.titleLabel.text = "TagSettings.SectionHeader.Firmware.title".localized().capitalized
+            header.noValuesView.isHidden = true
+        case .remove:
+            header.titleLabel.text = "TagSettings.SectionHeader.Remove.title".localized().capitalized
+            header.noValuesView.isHidden = true
         default:
             return nil
         }
+        return header
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let defaultHeaderHeight: CGFloat = 32
         let s = TagSettingsTableSection.section(for: section)
         switch s {
         case .offsetCorrection:
             // Toggle it based on sensor owner, if user is sensor owner show it, otherwise hide
             let showOffsetCorrection = TagSettingsTableSection.showOffsetCorrection(for: viewModel)
-            return showOffsetCorrection ? super.tableView(tableView, heightForHeaderInSection: section) : 0.01
-        case .moreInfo, .alerts, .firmware:
-            return 32
+            return showOffsetCorrection ? defaultHeaderHeight : 0
         default:
-            return super.tableView(tableView, heightForHeaderInSection: section)
+            return defaultHeaderHeight
         }
     }
 
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return super.tableView(tableView, heightForHeaderInSection: section)
+        let sectionIdentifier = TagSettingsTableSection.section(for: section)
+        switch sectionIdentifier {
+        case .connection:
+            return super.tableView(tableView, heightForFooterInSection: section)
+        default:
+            return 0
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -718,9 +725,9 @@ extension TagSettingsTableViewController {
     }
 }
 
-// MARK: - TagSettingsMoreInfoHeaderFooterViewDelegate
-extension TagSettingsTableViewController: TagSettingsMoreInfoHeaderFooterViewDelegate {
-    func tagSettingsMoreInfo(headerView: TagSettingsMoreInfoHeaderFooterView, didTapOnInfo button: UIButton) {
+// MARK: - TagSettingsSectionHeaderViewDelegate
+extension TagSettingsTableViewController: TagSettingsSectionHeaderViewDelegate {
+    func didTapSectionHeaderMoreInfo(headerView: TagSettingsSectionHeaderView, didTapOnInfo button: UIButton) {
         output.viewDidTapOnNoValuesView()
     }
 }
@@ -834,8 +841,8 @@ extension TagSettingsTableViewController: TagSettingsAlertDetailsCellDelegate {
 // MARK: - View configuration
 extension TagSettingsTableViewController {
     private func configureViews() {
-        let moreInfoSectionNib = UINib(nibName: "TagSettingsMoreInfoHeaderFooterView", bundle: nil)
-        tableView.register(moreInfoSectionNib, forHeaderFooterViewReuseIdentifier: moreInfoSectionHeaderReuseIdentifier)
+        let moreInfoSectionNib = UINib(nibName: "TagSettingsSectionHeaderView", bundle: nil)
+        tableView.register(moreInfoSectionNib, forHeaderFooterViewReuseIdentifier: sectionHeaderReuseIdentifier)
         temperatureAlertHeaderCell.delegate = self
         temperatureAlertControlsCell.delegate = self
         rhAlertHeaderCell.delegate = self
@@ -1561,14 +1568,18 @@ extension TagSettingsTableViewController {
            let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
             var format = "TagSettings.Alerts.Temperature.description".localized()
             if l.value.decimalPoint > 0 {
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(l.value.decimalPoint)f")
+                let decimalPointToConsider = l.value.decimalPoint > 2 ? 2 : l.value.decimalPoint
+                format = format.replacingFirstOccurrence(of: "%0.f",
+                                                         with: "%0.\(decimalPointToConsider)f")
             }
 
             if u.value.decimalPoint > 0 {
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(u.value.decimalPoint)f")
+                let decimalPointToConsider = u.value.decimalPoint > 2 ? 2 : u.value.decimalPoint
+                format = format.replacingLastOccurrence(of: "%0.f",
+                                                        with: "%0.\(decimalPointToConsider)f")
             }
 
-            let message = String(format: format, l.value, u.value)
+            let message = String(format: format, l.value.round(to: 2), u.value.round(to: 2))
             temperatureAlertControlsCell.setAlertLimitDescription(with: message)
         }
     }
@@ -1600,13 +1611,15 @@ extension TagSettingsTableViewController {
            let u = viewModel?.relativeHumidityUpperBound.value {
             var format = "TagSettings.Alerts.Humidity.description".localized()
             if l.decimalPoint > 0 {
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(l.decimalPoint)f")
+                let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
+                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
 
             if u.decimalPoint > 0 {
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(u.decimalPoint)f")
+                let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
+                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l, u)
+            let message = String(format: format, l.round(to: 2), u.round(to: 2))
             rhAlertControlsCell.setAlertLimitDescription(with: message)
         }
     }
@@ -1665,13 +1678,15 @@ extension TagSettingsTableViewController {
             )
             var format = "TagSettings.Alerts.Pressure.description".localized()
             if l.decimalPoint > 0 {
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(l.decimalPoint)f")
+                let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
+                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
 
             if u.decimalPoint > 0 {
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(u.decimalPoint)f")
+                let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
+                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l, u)
+            let message = String(format: format, l.round(to: 2), u.round(to: 2))
             pressureAlertControlsCell.setAlertLimitDescription(with: message)
         }
     }

@@ -24,3 +24,10 @@ extension Date {
         return output
     }
 }
+
+extension Date {
+    func numberOfDaysFromNow() -> Int? {
+        let numberOfDays = Calendar.current.dateComponents([.day], from: self, to: Date())
+        return numberOfDays.day
+    }
+}

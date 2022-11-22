@@ -68,7 +68,9 @@ public protocol RuuviLocalSettings {
     func cardToOpenFromWidget() -> String?
     func setCardToOpenFromWidget(for macId: String?)
 
-    // Experiments
     func lastOpenedChart() -> String?
     func setLastOpenedChart(with id: String)
+
+    func setOwnerCheckDate(for macId: MACIdentifier, value: Date)
+    func ownerCheckDate(for macId: MACIdentifier) -> Date?
 }

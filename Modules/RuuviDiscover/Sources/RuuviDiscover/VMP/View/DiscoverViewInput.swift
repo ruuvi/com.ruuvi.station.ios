@@ -9,5 +9,5 @@ protocol DiscoverViewInput: UIViewController, Localizable {
     var isBluetoothEnabled: Bool { get set }
     var isCloseEnabled: Bool { get set }
 
-    func showBluetoothDisabled()
+    func showBluetoothDisabled(userDeclined: Bool)
 }
