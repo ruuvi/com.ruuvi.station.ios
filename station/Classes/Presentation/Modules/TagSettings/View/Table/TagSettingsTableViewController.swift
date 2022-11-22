@@ -4,6 +4,9 @@ import RangeSeekSlider
 import RuuviOntology
 import RuuviService
 
+// IMPORTANT: -
+// TODO: @prioyonto - CLEAN UP AND REAFCTOR THIS CLASS OVERALL.
+
 enum TagSettingsTableSection: Int {
     case image = 0
     case general = 1
@@ -1565,14 +1568,18 @@ extension TagSettingsTableViewController {
            let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
             var format = "TagSettings.Alerts.Temperature.description".localized()
             if l.value.decimalPoint > 0 {
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(l.value.decimalPoint)f")
+                let decimalPointToConsider = l.value.decimalPoint > 2 ? 2 : l.value.decimalPoint
+                format = format.replacingFirstOccurrence(of: "%0.f",
+                                                         with: "%0.\(decimalPointToConsider)f")
             }
 
             if u.value.decimalPoint > 0 {
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(u.value.decimalPoint)f")
+                let decimalPointToConsider = u.value.decimalPoint > 2 ? 2 : u.value.decimalPoint
+                format = format.replacingLastOccurrence(of: "%0.f",
+                                                        with: "%0.\(decimalPointToConsider)f")
             }
 
-            let message = String(format: format, l.value, u.value)
+            let message = String(format: format, l.value.round(to: 2), u.value.round(to: 2))
             temperatureAlertControlsCell.setAlertLimitDescription(with: message)
         }
     }
@@ -1604,13 +1611,15 @@ extension TagSettingsTableViewController {
            let u = viewModel?.relativeHumidityUpperBound.value {
             var format = "TagSettings.Alerts.Humidity.description".localized()
             if l.decimalPoint > 0 {
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(l.decimalPoint)f")
+                let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
+                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
 
             if u.decimalPoint > 0 {
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(u.decimalPoint)f")
+                let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
+                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l, u)
+            let message = String(format: format, l.round(to: 2), u.round(to: 2))
             rhAlertControlsCell.setAlertLimitDescription(with: message)
         }
     }
@@ -1669,13 +1678,15 @@ extension TagSettingsTableViewController {
             )
             var format = "TagSettings.Alerts.Pressure.description".localized()
             if l.decimalPoint > 0 {
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(l.decimalPoint)f")
+                let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
+                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
 
             if u.decimalPoint > 0 {
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(u.decimalPoint)f")
+                let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
+                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l, u)
+            let message = String(format: format, l.round(to: 2), u.round(to: 2))
             pressureAlertControlsCell.setAlertLimitDescription(with: message)
         }
     }

@@ -71,7 +71,7 @@ extension TagSettingsAlertHeaderCell {
 
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor,
-                          leading: leadingAnchor,
+                          leading: self.safeLeftAnchor,
                           bottom: bottomAnchor,
                           trailing: nil,
                           padding: .init(top: 8,
@@ -106,7 +106,7 @@ extension TagSettingsAlertHeaderCell {
         isExpandedSwitch.anchor(top: nil,
                                 leading: mutedTillLabel.trailingAnchor,
                                 bottom: nil,
-                                trailing: trailingAnchor,
+                                trailing: self.safeRightAnchor,
                                 padding: .init(top: 0,
                                                left: 8,
                                                bottom: 0,

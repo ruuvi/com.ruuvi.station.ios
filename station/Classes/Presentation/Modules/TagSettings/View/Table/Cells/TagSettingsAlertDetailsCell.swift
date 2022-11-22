@@ -124,9 +124,9 @@ extension TagSettingsAlertDetailsCell {
 
         addSubview(noticeView)
         noticeView.anchor(top: topAnchor,
-                          leading: leadingAnchor,
+                          leading: self.safeLeftAnchor,
                           bottom: nil,
-                          trailing: trailingAnchor)
+                          trailing: self.safeRightAnchor)
         noticeViewHeight = noticeView.heightAnchor.constraint(equalToConstant: 0)
         noticeViewHeight.isActive = true
 
@@ -141,13 +141,13 @@ extension TagSettingsAlertDetailsCell {
 
         addSubview(statusContainerView)
         statusContainerView.anchor(top: noticeView.bottomAnchor,
-                            leading: leadingAnchor,
-                            bottom: nil,
-                            trailing: trailingAnchor,
-                            padding: .init(top: 0,
-                                           left: 18,
-                                           bottom: 0,
-                                           right: 16),
+                                   leading: self.safeLeftAnchor,
+                                   bottom: nil,
+                                   trailing: self.safeRightAnchor,
+                                   padding: .init(top: 0,
+                                                  left: 18,
+                                                  bottom: 0,
+                                                  right: 16),
                                    size: .init(width: 0, height: 44))
 
         statusContainerView.addSubview(statusLabel)
@@ -168,32 +168,34 @@ extension TagSettingsAlertDetailsCell {
         statusSeparator.backgroundColor = .lightGray.withAlphaComponent(0.5)
         addSubview(statusSeparator)
         statusSeparator.anchor(top: statusContainerView.bottomAnchor,
-                               leading: leadingAnchor,
+                               leading: self.safeLeftAnchor,
                                bottom: nil,
-                               trailing: trailingAnchor,
+                               trailing: self.safeRightAnchor,
+                               padding: .init(top: 0, left: 16, bottom: 0, right: 16),
                                size: .init(width: 0, height: 0.5))
 
         addSubview(setCustomDescriptionView)
         setCustomDescriptionView.anchor(top: statusSeparator.bottomAnchor,
-                                        leading: leadingAnchor,
+                                        leading: self.safeLeftAnchor,
                                         bottom: nil,
-                                        trailing: trailingAnchor,
+                                        trailing: self.safeRightAnchor,
                                         size: .init(width: 0, height: 44))
 
         let customDescriptionSeparator = UIView()
         customDescriptionSeparator.backgroundColor = .lightGray.withAlphaComponent(0.5)
         addSubview(customDescriptionSeparator)
         customDescriptionSeparator.anchor(top: setCustomDescriptionView.bottomAnchor,
-                                          leading: leadingAnchor,
+                                          leading: self.safeLeftAnchor,
                                           bottom: nil,
-                                          trailing: trailingAnchor,
+                                          trailing: self.safeRightAnchor,
+                                          padding: .init(top: 0, left: 16, bottom: 0, right: 16),
                                           size: .init(width: 0, height: 0.5))
 
         addSubview(alertLimitDescriptionView)
         alertLimitDescriptionView.anchor(top: customDescriptionSeparator.bottomAnchor,
-                                         leading: leadingAnchor,
+                                         leading: self.safeLeftAnchor,
                                          bottom: nil,
-                                         trailing: trailingAnchor)
+                                         trailing: self.safeRightAnchor)
         alertLimitDescriptionViewHeight = alertLimitDescriptionView
             .heightAnchor
             .constraint(equalToConstant: 44)
@@ -201,9 +203,9 @@ extension TagSettingsAlertDetailsCell {
 
         addSubview(alertLimitSliderView)
         alertLimitSliderView.anchor(top: alertLimitDescriptionView.bottomAnchor,
-                                    leading: leadingAnchor,
+                                    leading: self.safeLeftAnchor,
                                     bottom: nil,
-                                    trailing: trailingAnchor,
+                                    trailing: self.safeRightAnchor,
                                     padding: .init(top: 0, left: 12, bottom: 8, right: 12))
         alertLimitSliderViewHeight = alertLimitDescriptionView
             .heightAnchor
@@ -212,9 +214,9 @@ extension TagSettingsAlertDetailsCell {
 
         addSubview(additionalTextView)
         additionalTextView.anchor(top: alertLimitSliderView.bottomAnchor,
-                                  leading: leadingAnchor,
-                                  bottom: bottomAnchor,
-                                  trailing: trailingAnchor)
+                                  leading: self.safeLeftAnchor,
+                                  bottom: self.safeBottomAnchor,
+                                  trailing: self.safeRightAnchor)
         additionalTextViewHeight = additionalTextView
             .heightAnchor
             .constraint(equalToConstant: 0)
