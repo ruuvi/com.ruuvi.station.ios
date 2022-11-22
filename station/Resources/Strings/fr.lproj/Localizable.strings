@@ -171,7 +171,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.PairAndBackgroundScan.Paired.title" = "Paired and background scan on";
 "TagSettings.PairAndBackgroundScan.description" = "Alerts are not available over Bluetooth connection if background scanning is not enabled. Only one iOS device can be paired to Ruuvi sensor at a time.";
 "TagSettings.PairError.CloudMode.description" = "Impossible de se connecter au capteur tant que le statut du cloud est actif. Vous pouvez modifier le statut dans les paramètres de l'application.";
-"TagSettings.PairError.Timeout.description" = "The sensor may be out of range or paired to another iOS device. Please unpair first or bring the sensor to the range and try again.";
+"TagSettings.PairError.Timeout.description" = "Connection timed out. Pairing was unsuccessful. Please try again.";
 "TagSettings.dataSourceTitleLabel.text" = "Données reçues via";
 "TagSettings.DataSource.Heartbeat.title" = "Cadence";
 "TagSettings.DataSource.Advertisement.title" = "Messages des capteurs";

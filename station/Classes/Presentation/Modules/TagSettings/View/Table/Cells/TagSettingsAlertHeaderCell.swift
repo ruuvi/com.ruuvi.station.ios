@@ -67,7 +67,7 @@ class TagSettingsAlertHeaderCell: UITableViewCell {
 extension TagSettingsAlertHeaderCell {
     // swiftlint:disable:next function_body_length
     private func setUpUI() {
-        backgroundColor = .systemBackground
+        backgroundColor = .none
 
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor,
@@ -75,7 +75,7 @@ extension TagSettingsAlertHeaderCell {
                           bottom: bottomAnchor,
                           trailing: nil,
                           padding: .init(top: 8,
-                                         left: 14,
+                                         left: 18,
                                          bottom: 8,
                                          right: 0))
 

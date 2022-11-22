@@ -166,12 +166,12 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "TagSettings.Label.noValues.text" = "EI ARVOJA?";
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
 "TagSettings.SectionHeader.BTConnection.title" = "BLUETOOTH YHTEYS";
-"TagSettings.PairAndBackgroundScan.Unpaired.title" = "Pair and use background scan";
-"TagSettings.PairAndBackgroundScan.Pairing.title" = "Connecting to the sensor";
-"TagSettings.PairAndBackgroundScan.Paired.title" = "Paired and background scan on";
-"TagSettings.PairAndBackgroundScan.description" = "Alerts are not available over Bluetooth connection if background scanning is not enabled. Only one iOS device can be paired to Ruuvi sensor at a time.";
+"TagSettings.PairAndBackgroundScan.Unpaired.title" = "Parita ja käytä taustaskannausta";
+"TagSettings.PairAndBackgroundScan.Pairing.title" = "Yhdistetään anturiin";
+"TagSettings.PairAndBackgroundScan.Paired.title" = "Paritettu ja taustaskannaus päällä";
+"TagSettings.PairAndBackgroundScan.description" = "Bluetooth-yhteyttä käyttävät hälytykset eivät ole käytettävissä silloin kun taustaskannausta ei ole otettu käyttöön. Ruuvi-anturi voidaan parittaa vain yhteen iOS-laitteeseen kerrallaan.";
 "TagSettings.PairError.CloudMode.description" = "Anturiin ei voida yhdistää Bluetoothilla sovelluksen pilvitilan ollessa aktiivinen. Voit ottaa pilvianturiesi Bluetoothin takaisin käyttöön sammuttamalla pilvitilan sovelluksen asetussivulta.";
-"TagSettings.PairError.Timeout.description" = "The sensor may be out of range or paired to another iOS device. Please unpair first or bring the sensor to the range and try again.";
+"TagSettings.PairError.Timeout.description" = "Yhteys aikakatkaistiin. Laiteparin muodostaminen epäonnistui. Yritä uudelleen.";
 "TagSettings.dataSourceTitleLabel.text" = "Datalähde";
 "TagSettings.DataSource.Heartbeat.title" = "Syke";
 "TagSettings.DataSource.Advertisement.title" = "Laiteilmoitus";
