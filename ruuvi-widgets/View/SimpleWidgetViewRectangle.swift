@@ -11,7 +11,7 @@ struct SimpleWidgetViewRectangle: View {
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: 12, height: 12)
 
                 Text(entry.record?.date ?? Date(), formatter: DateFormatter.widgetDateFormatter)
                     .environment(\.locale, viewModel.locale())
@@ -19,41 +19,53 @@ struct SimpleWidgetViewRectangle: View {
                                   size: 12,
                                   relativeTo: .body))
                     .minimumScaleFactor(0.5)
+                    .padding(.leading, -2)
 
                 Spacer()
-            }.padding(EdgeInsets(top: 4,
+            }.padding(EdgeInsets(top: 12,
                                  leading: 4,
-                                 bottom: -8,
-                                 trailing: 4))
+                                 bottom: -2,
+                                 trailing: 0))
 
             VStack {
                 Text(entry.tag.displayString.uppercased())
                     .font(.custom(Constants.muliBold.rawValue,
                                   size: 12,
-                                  relativeTo: .headline))
+                                  relativeTo: .subheadline))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .minimumScaleFactor(0.5)
+                    .padding(.leading, 4)
 
                 HStack(spacing: 2) {
+                    viewModel.symbol(from: entry)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 15, height: 15)
+                        .padding(.trailing, 2)
+
                     Text(viewModel.getValue(from: entry.record,
                                             settings: entry.settings,
                                             config: entry.config))
                     .environment(\.locale, viewModel.locale())
                     .foregroundColor(.bodyTextColor)
                     .font(.custom(Constants.oswaldBold.rawValue,
-                                  size: 32,
+                                  size: 28,
                                   relativeTo: .title))
                     .minimumScaleFactor(0.5)
                     Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                         .foregroundColor(Color.unitTextColor)
                         .font(.custom(Constants.oswaldBold.rawValue,
-                                      size: 20,
+                                      size: 16,
                                       relativeTo: .title3))
                         .baselineOffset(8)
                         .minimumScaleFactor(0.5)
                     Spacer()
-                }
-            }.padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
-        }.widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
+                }.padding(EdgeInsets(top: -10,
+                                     leading: 4,
+                                     bottom: 14,
+                                     trailing: 4))
+            }
+        }.edgesIgnoringSafeArea(.all)
+        .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
     }
 }
