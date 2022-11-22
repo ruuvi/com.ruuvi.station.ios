@@ -171,7 +171,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "TagSettings.PairAndBackgroundScan.Paired.title" = "Paired and background scan on";
 "TagSettings.PairAndBackgroundScan.description" = "Alerts are not available over Bluetooth connection if background scanning is not enabled. Only one iOS device can be paired to Ruuvi sensor at a time.";
 "TagSettings.PairError.CloudMode.description" = "Sensorn kan inte anslutas till via Bluetooth när molnläget är aktivt. Du kan återaktivera Bluetooth-anslutning för molnsensorerna genom att inaktivera molnläget i appinställningarna.";
-"TagSettings.PairError.Timeout.description" = "The sensor may be out of range or paired to another iOS device. Please unpair first or bring the sensor to the range and try again.";
+"TagSettings.PairError.Timeout.description" = "Connection timed out. Pairing was unsuccessful. Please try again.";
 "TagSettings.dataSourceTitleLabel.text" = "Data Mottagen Via";
 "TagSettings.DataSource.Heartbeat.title" = "Hjärtslag";
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";

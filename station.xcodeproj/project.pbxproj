@@ -111,8 +111,8 @@
 		0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
 		0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62299426AAA0570041DCDD /* DiscoverRouter.swift */; };
 		0E62299626AAA0570041DCDD /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62299426AAA0570041DCDD /* DiscoverRouter.swift */; };
-		0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
-		0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
+		0E62AEC922E065CC00A49BFB /* TagSettingsSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsSectionHeaderView.swift */; };
+		0E62AECB22E065F000A49BFB /* TagSettingsSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsSectionHeaderView.xib */; };
 		0E6C471723D305960016B46E /* StationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C471623D305960016B46E /* StationUITests.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
@@ -185,7 +185,7 @@
 		0E8BD302238566AB008B31EF /* CardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C522B7915C0015F9E0 /* CardsViewModel.swift */; };
 		0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */; };
 		0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */; };
-		0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
+		0E8BD308238566AB008B31EF /* TagSettingsSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsSectionHeaderView.swift */; };
 		0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
 		0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
 		0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F222B7D1900015F9E0 /* AboutViewInput.swift */; };
@@ -284,7 +284,7 @@
 		0E8BD3F8238566AB008B31EF /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF022B3FDE30032F6CA /* Menu.storyboard */; };
 		0E8BD3FA238566AB008B31EF /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20D022B7C6F30015F9E0 /* Settings.storyboard */; };
 		0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64678190225D02CE0072856A /* Muli-Bold.ttf */; };
-		0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
+		0E8BD3FC238566AB008B31EF /* TagSettingsSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsSectionHeaderView.xib */; };
 		0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E97D79B268C881300FE9D5B /* DFUModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97D79A268C881300FE9D5B /* DFUModuleInput.swift */; };
@@ -1083,8 +1083,8 @@
 		0E5C302422D0B19600B52E39 /* AppStateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateService.swift; sourceTree = "<group>"; };
 		0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateServiceImpl.swift; sourceTree = "<group>"; };
 		0E62299426AAA0570041DCDD /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
-		0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsMoreInfoHeaderFooterView.swift; sourceTree = "<group>"; };
-		0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsMoreInfoHeaderFooterView.xib; sourceTree = "<group>"; };
+		0E62AEC822E065CC00A49BFB /* TagSettingsSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsSectionHeaderView.swift; sourceTree = "<group>"; };
+		0E62AECA22E065F000A49BFB /* TagSettingsSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsSectionHeaderView.xib; sourceTree = "<group>"; };
 		0E6C471623D305960016B46E /* StationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationUITests.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
@@ -2768,8 +2768,8 @@
 		0EF4D0A522E0657F00947E04 /* SectionHeader */ = {
 			isa = PBXGroup;
 			children = (
-				0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */,
-				0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */,
+				0E62AEC822E065CC00A49BFB /* TagSettingsSectionHeaderView.swift */,
+				0E62AECA22E065F000A49BFB /* TagSettingsSectionHeaderView.xib */,
 			);
 			path = SectionHeader;
 			sourceTree = "<group>";
@@ -4257,7 +4257,7 @@
 				0EB48DE7261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */,
 				663155F92667F40C005B90A6 /* UpdateFirmware.storyboard in Resources */,
-				0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
+				0E8BD3FC238566AB008B31EF /* TagSettingsSectionHeaderView.xib in Resources */,
 				0E197C8223C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				A9B5742D253B978D00DB7353 /* SignIn.storyboard in Resources */,
@@ -4326,7 +4326,7 @@
 				0EB48DE6261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				663155F82667F40C005B90A6 /* UpdateFirmware.storyboard in Resources */,
-				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
+				0E62AECB22E065F000A49BFB /* TagSettingsSectionHeaderView.xib in Resources */,
 				0E197C8123C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				A9B5743E253B992B00DB7353 /* SignIn.storyboard in Resources */,
@@ -4733,7 +4733,7 @@
 				660EB2802669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
-				0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
+				0E8BD308238566AB008B31EF /* TagSettingsSectionHeaderView.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
 				E1ED426F28FF261D00302179 /* YAxisValueFormatter.swift in Sources */,
 				0EB8ED2A268F10E900C6B0FA /* Spinner.swift in Sources */,
@@ -5201,7 +5201,7 @@
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0EF4E33D26824ABD00D83CC7 /* RuuviDFUError+LocalizedError.swift in Sources */,
-				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
+				0E62AEC922E065CC00A49BFB /* TagSettingsSectionHeaderView.swift in Sources */,
 				3414BFCB2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */,
 				E16B8F4228D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				A98D3F0E256CBD600066588B /* ShareRouterInput.swift in Sources */,

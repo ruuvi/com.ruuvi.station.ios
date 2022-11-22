@@ -77,7 +77,6 @@ class TagSettingsAlertDetailsCell: UITableViewCell {
 
     lazy var additionalTextLabel: UILabel = {
         let label = UILabel()
-        label.text = "Addtional Text Goes Here"
         label.textAlignment = .right
         label.numberOfLines = 0
         label.textColor = .label
@@ -121,7 +120,7 @@ class TagSettingsAlertDetailsCell: UITableViewCell {
 extension TagSettingsAlertDetailsCell {
     // swiftlint:disable:next function_body_length
     private func setUpUI() {
-        backgroundColor = .clear
+        backgroundColor = .systemGroupedBackground
 
         addSubview(noticeView)
         noticeView.anchor(top: topAnchor,
@@ -132,7 +131,10 @@ extension TagSettingsAlertDetailsCell {
         noticeViewHeight.isActive = true
 
         noticeView.addSubview(noticeLabel)
-        noticeLabel.fillSuperview(padding: .init(top: 8, left: 16, bottom: 8, right: 16))
+        noticeLabel.fillSuperview(padding: .init(top: 8,
+                                                 left: 16,
+                                                 bottom: 8,
+                                                 right: 16))
 
         let statusContainerView = UIView()
         statusContainerView.backgroundColor = .clear
@@ -143,7 +145,7 @@ extension TagSettingsAlertDetailsCell {
                             bottom: nil,
                             trailing: trailingAnchor,
                             padding: .init(top: 0,
-                                           left: 14,
+                                           left: 18,
                                            bottom: 0,
                                            right: 16),
                                    size: .init(width: 0, height: 44))
