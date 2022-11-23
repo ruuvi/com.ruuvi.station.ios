@@ -8,6 +8,7 @@ import RuuviUser
 import RuuviCore
 import RuuviPresenters
 import RuuviPool
+import RuuviNotifier
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -40,11 +41,11 @@ class TagSettingsTableConfigurator {
         presenter.exportService = r.resolve(RuuviServiceExport.self)
         presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
-
+        presenter.alertHandler = r.resolve(RuuviNotifier.self)
         interactor.background = r.resolve(BTBackground.self)
         interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.interactor = interactor
-
+        
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
