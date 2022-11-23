@@ -65,7 +65,7 @@ extension RuuviServiceExportImpl {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd-HHmm"
         let date = dateFormatter.string(from: Date())
-        dateFormatter.dateFormat = "\"yyyy-MM-dd HH:mm:ss\""
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let group = DispatchGroup()
         let units = measurementService.units
         queue.async {
