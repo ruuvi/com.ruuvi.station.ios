@@ -12,6 +12,7 @@ import RuuviUser
 import RuuviCore
 import RuuviPresenters
 import RuuviPool
+import RuuviNotifier
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -42,6 +43,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var featureToggleService: FeatureToggleService!
     var exportService: RuuviServiceExport!
     var localSyncState: RuuviLocalSyncState!
+    var alertHandler: RuuviNotifier!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -168,6 +170,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingApplicationState()
         startObservingAlertChanges()
         startMutedTillTimer()
+        startListeningToRuuviTagsAlertStatus()
     }
 
     func dismiss(completion: (() -> Void)?) {
@@ -463,6 +466,14 @@ extension TagSettingsPresenter {
             }
     }
 
+    private func startListeningToRuuviTagsAlertStatus() {
+        if let luid = ruuviTag.luid {
+            alertHandler.subscribe(self, to: luid.value)
+        } else if let macId = ruuviTag.macId {
+            alertHandler.subscribe(self, to: macId.value)
+        }
+    }
+
     // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
@@ -561,6 +572,29 @@ extension TagSettingsPresenter {
             let isCo = isConnectable?.value ?? false
             let isEnabled = isPN && isCo
             observer.viewModel.isPNAlertsAvailiable.value = isEnabled
+        }
+
+        // isCloudAlertsAvailable
+        bind(viewModel.isNetworkConnected) { observer, isNetworkConnected in
+            let isCloud = isNetworkConnected ?? false
+            observer.viewModel.isCloudAlertsAvailable.value = isCloud
+        }
+
+        // isAlertsVisible
+        let isCloudAlertsAvailable = viewModel.isCloudAlertsAvailable
+
+        // isAlertsEnabled
+        bind(viewModel.isConnected) { [weak isCloudAlertsAvailable] observer, isConnected in
+            let isCl = isCloudAlertsAvailable?.value ?? false
+            let isCo = isConnected ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+        }
+
+        let isConnected = viewModel.isConnected
+        bind(viewModel.isCloudAlertsAvailable) { [weak isConnected] observer, isCloudAlertsAvailable in
+            let isCl = isCloudAlertsAvailable ?? false
+            let isCo = isConnected?.value ?? false
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo
         }
     }
 
@@ -1365,6 +1399,62 @@ extension TagSettingsPresenter {
             })
     }
 
+}
+
+// MARK: - RuuviNotifierObserver
+extension TagSettingsPresenter: RuuviNotifierObserver {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+        // No op here.
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    func ruuvi(notifier: RuuviNotifier,
+               alertType: AlertType,
+               isTriggered: Bool,
+               for uuid: String) {
+        if ruuviTag.luid?.value == uuid || ruuviTag.macId?.value == uuid {
+            let isTriggered = isTriggered && (viewModel.isAlertsEnabled.value ?? false)
+            switch alertType {
+            case .temperature:
+                let currentValue = viewModel.temperatureAlertState.value
+                let isOn = viewModel.isTemperatureAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.temperatureAlertState.value = newValue
+                }
+            case .relativeHumidity:
+                let currentValue = viewModel.relativeHumidityAlertState.value
+                let isOn = viewModel.isRelativeHumidityAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.relativeHumidityAlertState.value = newValue
+                }
+            case .pressure:
+                let currentValue = viewModel.pressureAlertState.value
+                let isOn = viewModel.isPressureAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.pressureAlertState.value = newValue
+                }
+            case .connection:
+                let currentValue = viewModel.connectionAlertState.value
+                let isOn = viewModel.isConnectionAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.pressureAlertState.value = newValue
+                }
+            case .movement:
+                let currentValue = viewModel.movementAlertState.value
+                let isOn = viewModel.isMovementAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.movementAlertState.value = newValue
+                }
+            default:
+                break
+            }
+        }
+    }
 }
 
 extension TagSettingsPresenter: UIDocumentPickerDelegate {

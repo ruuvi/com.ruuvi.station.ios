@@ -137,8 +137,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagCharts.Status.Disconnecting" = "Déconnexion...";
 "TagCharts.Status.Success" = "Succès";
 "TagCharts.Status.Error" = "Erreur";
-"TagCharts.FailedToSyncDialog.message" = "Délai de réponse dépassé. Synchronisation annullée.";
-"TagCharts.FailedToServeDialog.message" = "Délai de réponse dépassé. Synchronisation annullée.";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "Format RAWv2 nécessaire";
 "TagSettings.UpdateFirmware.Alert.message" = "L'affichage des informations manquantes n'est possible qu'avec la nouvelle version système.";
@@ -542,4 +540,6 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Alert.SetPressure.title" = "Set pressure alert";
 "TagSettings.AlertSettings.Dialog.Min" = "Min (%0.f)";
 "TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";
+"TagCharts.FailedToSyncDialog.message" = "Bluetooth history download failed. Check that you're within Bluetooth range, your sensor has firmware that supports downloading and that sensor is not simultaneously connected to another iOS device. Sensor connection is reserved for Ruuvi Station when using connected mode in iOS.";
+"TagCharts.TryAgain.title" = "Try again";
 

@@ -13,6 +13,19 @@ public protocol RuuviNotifier {
 
 public protocol RuuviNotifierObserver: AnyObject {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String)
+    // Optional method
+    func ruuvi(notifier: RuuviNotifier,
+               alertType: AlertType,
+               isTriggered: Bool,
+               for uuid: String)
+}
+
+extension RuuviNotifierObserver {
+    // Optional method implementation
+    public func ruuvi(notifier: RuuviNotifier,
+                      alertType: AlertType,
+                      isTriggered: Bool,
+                      for uuid: String) {}
 }
 
 public protocol RuuviNotifierTitles {

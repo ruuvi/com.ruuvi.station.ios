@@ -225,8 +225,6 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
             return
         }
         isSyncing = true
-        let connectionTimeout: TimeInterval = settings.connectionTimeout
-        let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
                 guard let syncing =  self?.isSyncing, syncing else {
@@ -238,17 +236,9 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         op.on(success: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
             self?.interactor.restartObservingData()
-        }, failure: { [weak self] error in
+        }, failure: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
-            if case .btkit(.logic(.connectionTimedOut)) = error {
-                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-            } else if case .ruuviService(.btkit(.logic(.connectionTimedOut))) = error {
-                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-            } else if case .btkit(.logic(.serviceTimedOut)) = error {
-                self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
-            } else {
-                self?.errorPresenter.present(error: error)
-            }
+            self?.view.showFailedToSyncIn()
         }, completion: nil)
     }
 

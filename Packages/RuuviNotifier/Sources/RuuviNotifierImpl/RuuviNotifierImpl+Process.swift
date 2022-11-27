@@ -5,7 +5,12 @@ import RuuviNotifier
 
 // MARK: - Process Physical Sensors
 extension RuuviNotifierImpl {
+    // swiftlint:disable:next function_body_length
     public func process(record record: RuuviTagSensorRecord, trigger: Bool) {
+        guard let luid = record.luid,
+                ruuviAlertService.hasRegistrations(for: record) else {
+            return
+        }
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -17,6 +22,7 @@ extension RuuviNotifierImpl {
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isTemperature
+                notify(alertType: type, uuid: luid.value, isTriggered: isTemperature)
             case .relativeHumidity:
                 let isRelativeHumidity = process(
                     relativeHumidity: record.humidity,
@@ -26,6 +32,7 @@ extension RuuviNotifierImpl {
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isRelativeHumidity
+                notify(alertType: type, uuid: luid.value, isTriggered: isRelativeHumidity)
             case .pressure:
                 let isPressure = process(
                     pressure: record.pressure,
@@ -34,11 +41,13 @@ extension RuuviNotifierImpl {
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isPressure
+                notify(alertType: type, uuid: luid.value, isTriggered: isPressure)
             case .movement:
                 let isMovement = process(movement: type,
                                          record: record,
                                          trigger: trigger)
                 isTriggered = isTriggered || isMovement
+                notify(alertType: type, uuid: luid.value, isTriggered: isMovement)
             default:
                 // do nothing, see RuuviTagHeartbeatDaemon
                 break
@@ -49,9 +58,7 @@ extension RuuviNotifierImpl {
             ruuviAlertService.setMovement(counter: movementCounter, for: record)
         }
 
-        if let luid = record.luid, ruuviAlertService.hasRegistrations(for: record) {
-            notify(uuid: luid.value, isTriggered: isTriggered)
-        }
+        notify(uuid: luid.value, isTriggered: isTriggered)
     }
 }
 
@@ -93,15 +100,19 @@ extension RuuviNotifierImpl {
 // MARK: - Process Network Sensors
 extension RuuviNotifierImpl {
     public func processNetwork(record: RuuviTagSensorRecord, trigger: Bool, for identifier: MACIdentifier) {
+        guard ruuviAlertService.hasRegistrations(for: record) else {
+            return
+        }
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                isTriggered = process(temperature: record.temperature,
+                let isTemperature = process(temperature: record.temperature,
                                       alertType: type,
                                       identifier: identifier,
                                       trigger: trigger)
-                    || isTriggered
+                isTriggered = isTriggered || isTemperature
+                notify(alertType: type, uuid: identifier.value, isTriggered: isTemperature)
             case .relativeHumidity:
                 let isRelativeHumidity = process(
                     relativeHumidity: record.humidity,
@@ -111,20 +122,20 @@ extension RuuviNotifierImpl {
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isRelativeHumidity
+                notify(alertType: type, uuid: identifier.value, isTriggered: isRelativeHumidity)
             case .pressure:
-                isTriggered = process(pressure: record.pressure,
+                let isPressure = process(pressure: record.pressure,
                                       alertType: type,
                                       identifier: identifier,
                                       trigger: trigger)
-                    || isTriggered
+                isTriggered = isTriggered || isPressure
+                notify(alertType: type, uuid: identifier.value, isTriggered: isPressure)
             default:
                 break
             }
         }
 
-        if ruuviAlertService.hasRegistrations(for: record) {
-            notify(uuid: identifier.value, isTriggered: isTriggered)
-        }
+        notify(uuid: identifier.value, isTriggered: isTriggered)
     }
 }
 // MARK: - Notify
@@ -139,6 +150,26 @@ extension RuuviNotifierImpl {
                             as? RuuviNotifierObserver {
                         observer.ruuvi(
                             notifier: sSelf,
+                            isTriggered: isTriggered,
+                            for: uuid
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private func notify(alertType: AlertType, uuid: String, isTriggered: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
+            if let observers = sSelf.observations[uuid] {
+                for i in 0..<observers.count {
+                    if let pointer = observers.pointer(at: i),
+                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                            as? RuuviNotifierObserver {
+                        observer.ruuvi(
+                            notifier: sSelf,
+                            alertType: alertType,
                             isTriggered: isTriggered,
                             for: uuid
                         )
