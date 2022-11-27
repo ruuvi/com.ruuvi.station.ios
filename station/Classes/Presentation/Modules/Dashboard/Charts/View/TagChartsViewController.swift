@@ -641,19 +641,16 @@ extension TagChartsViewController: TagChartsViewInput {
         showChartActionButtons()
     }
 
-    func showFailedToSyncIn(connectionTimeout: TimeInterval) {
-        let message = String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(),
-                                                       connectionTimeout)
+    func showFailedToSyncIn() {
+        let message = "TagCharts.FailedToSyncDialog.message".localized()
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
-
-    func showFailedToServeIn(serviceTimeout: TimeInterval) {
-        let message = String.localizedStringWithFormat("TagCharts.FailedToServeDialog.message".localized(),
-                                                       serviceTimeout)
-        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "TagCharts.TryAgain.title".localized(),
+                                        style: .default,
+                                        handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.output.viewDidTriggerSync(for: self.viewModel)
+        }))
         present(alertVC, animated: true)
     }
 

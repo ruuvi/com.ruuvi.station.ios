@@ -581,7 +581,6 @@ extension TagSettingsPresenter {
         }
 
         // isAlertsVisible
-        let isPNAlertsAvailiable = viewModel.isPNAlertsAvailiable
         let isCloudAlertsAvailable = viewModel.isCloudAlertsAvailable
 
         // isAlertsEnabled
@@ -590,7 +589,7 @@ extension TagSettingsPresenter {
             let isCo = isConnected ?? false
             observer.viewModel.isAlertsEnabled.value = isCl || isCo
         }
-        
+
         let isConnected = viewModel.isConnected
         bind(viewModel.isCloudAlertsAvailable) { [weak isConnected] observer, isCloudAlertsAvailable in
             let isCl = isCloudAlertsAvailable ?? false
