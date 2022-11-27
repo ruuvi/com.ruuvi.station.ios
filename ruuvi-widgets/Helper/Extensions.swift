@@ -149,7 +149,7 @@ extension DateFormatter {
 
         let is12HFormat = !(pmRange == nil && amRange == nil)
 
-        formatter.dateFormat = is12HFormat ? "h:mm a": "hh:mm"
+        formatter.dateFormat = is12HFormat ? "h:mm a": "HH:mm"
         return formatter
     }()
 }
