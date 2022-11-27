@@ -5,6 +5,9 @@ struct SimpleWidgetView: View {
     private let viewModel = WidgetViewModel()
     var entry: WidgetProvider.Entry
     var body: some View {
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+        }
         GeometryReader { geometry in
             VStack {
                 HStack {

@@ -116,7 +116,6 @@ extension WidgetViewModel {
                 .acceleration_y,
                 .acceleration_z:
             return Image(systemName: "move.3d")
-            
         case .battery_voltage:
             return Image(systemName: "bolt.circle.fill")
         }

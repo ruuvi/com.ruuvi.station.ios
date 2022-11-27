@@ -9,6 +9,9 @@ struct EmptyWidgetView: View {
     var entry: WidgetProvider.Entry
 
     var body: some View {
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+        }
         VStack {
             Text(entry.config.ruuviWidgetTag == nil ? texts.unconfigured.localized : texts.loading.localized)
                 .font(.custom(Constants.muliBold.rawValue,
