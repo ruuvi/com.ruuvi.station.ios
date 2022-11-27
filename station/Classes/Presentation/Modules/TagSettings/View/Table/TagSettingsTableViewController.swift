@@ -136,6 +136,7 @@ class TagSettingsTableViewController: UITableViewController {
     private let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
+    private let alertActiveImage = UIImage(named: "icon-alert-active")
 
     private static var localizedCache: LocalizedCache = LocalizedCache()
     /// The limit for the tag name is 32 characters
@@ -1150,6 +1151,30 @@ extension TagSettingsTableViewController {
             imageView.image = isOn.bound ? self?.alertOnImage : nil
         }
 
+        temperatureAlertHeaderCell.alertStateImageView.bind(viewModel.temperatureAlertState) {
+            [weak self] (imageView, state) in
+            imageView.layer.removeAllAnimations()
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.image = nil
+                case .registered:
+                    imageView.alpha = 1.0
+                    imageView.image = self?.alertOnImage
+                case .firing:
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
+                }
+            }
+        }
+
         temperatureAlertControlsCell.statusSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
             view.isOn = isOn.bound
         }
@@ -1218,6 +1243,30 @@ extension TagSettingsTableViewController {
             imageView.image = isOn.bound ? self?.alertOnImage : nil
         }
 
+        connectionAlertHeaderCell.alertStateImageView.bind(viewModel.connectionAlertState) {
+            [weak self] (imageView, state) in
+            imageView.layer.removeAllAnimations()
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.image = nil
+                case .registered:
+                    imageView.alpha = 1.0
+                    imageView.image = self?.alertOnImage
+                case .firing:
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
+                }
+            }
+        }
+
         connectionAlertControlsCell.statusSwitch.bind(viewModel.isConnectionAlertOn) { (view, isOn) in
             view.isOn = isOn.bound
         }
@@ -1274,6 +1323,30 @@ extension TagSettingsTableViewController {
             imageView.image = isOn.bound ? self?.alertOnImage : nil
         }
 
+        movementAlertHeaderCell.alertStateImageView.bind(viewModel.movementAlertState) {
+            [weak self] (imageView, state) in
+            imageView.layer.removeAllAnimations()
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.image = nil
+                case .registered:
+                    imageView.alpha = 1.0
+                    imageView.image = self?.alertOnImage
+                case .firing:
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
+                }
+            }
+        }
+
         movementAlertControlsCell.statusSwitch.bind(viewModel.isMovementAlertOn) { (view, isOn) in
             view.isOn = isOn.bound
         }
@@ -1318,6 +1391,30 @@ extension TagSettingsTableViewController {
         }
         pressureAlertHeaderCell.alertStateImageView.bind(viewModel.isPressureAlertOn) { [weak self] (imageView, isOn) in
             imageView.image = isOn.bound ? self?.alertOnImage : nil
+        }
+
+        pressureAlertHeaderCell.alertStateImageView.bind(viewModel.pressureAlertState) {
+            [weak self] (imageView, state) in
+            imageView.layer.removeAllAnimations()
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.image = nil
+                case .registered:
+                    imageView.alpha = 1.0
+                    imageView.image = self?.alertOnImage
+                case .firing:
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
+                }
+            }
         }
 
         pressureAlertControlsCell.statusSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
@@ -1369,6 +1466,7 @@ extension TagSettingsTableViewController {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindRhAlertCells() {
         guard isViewLoaded, let viewModel = viewModel  else { return }
 
@@ -1387,6 +1485,30 @@ extension TagSettingsTableViewController {
         rhAlertHeaderCell.alertStateImageView.bind(viewModel.isRelativeHumidityAlertOn) {
             [weak self] (imageView, isOn) in
             imageView.image = isOn.bound ? self?.alertOnImage : nil
+        }
+
+        rhAlertHeaderCell.alertStateImageView.bind(viewModel.relativeHumidityAlertState) {
+            [weak self] (imageView, state) in
+            imageView.layer.removeAllAnimations()
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.image = nil
+                case .registered:
+                    imageView.alpha = 1.0
+                    imageView.image = self?.alertOnImage
+                case .firing:
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
+                }
+            }
         }
 
         rhAlertControlsCell.statusSwitch.bind(viewModel.isRelativeHumidityAlertOn) { (view, isOn) in

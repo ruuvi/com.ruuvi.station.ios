@@ -38,6 +38,7 @@ struct TagSettingsViewModel {
     let temperatureLowerBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(-40, unit: .celsius))
     let temperatureUpperBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(85, unit: .celsius))
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
+    let temperatureAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let isRelativeHumidityAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
@@ -45,6 +46,7 @@ struct TagSettingsViewModel {
     let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
     let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>(100.0)
     let relativeHumidityAlertDescription: Observable<String?> = Observable<String?>()
+    let relativeHumidityAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let isHumidityAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
@@ -59,16 +61,19 @@ struct TagSettingsViewModel {
     let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(300, unit: .hectopascals))
     let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1100, unit: .hectopascals))
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
+    let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let isConnectionAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let connectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let connectionAlertDescription: Observable<String?> = Observable<String?>()
+    let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let isMovementAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
+    let movementAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isAuthorized: Observable<Bool?> = Observable<Bool?>(true)
     let canClaimTag: Observable<Bool?> = Observable<Bool?>(false)
@@ -84,7 +89,9 @@ struct TagSettingsViewModel {
     let humidityOffsetCorrectionVisible: Observable<Bool?> = Observable<Bool?>()
     let pressureOffsetCorrectionVisible: Observable<Bool?> = Observable<Bool?>()
 
+    let isAlertsEnabled: Observable<Bool?> = Observable<Bool?>(false)
     let isPNAlertsAvailiable: Observable<Bool?> = Observable<Bool?>(false)
+    let isCloudAlertsAvailable: Observable<Bool?> = Observable<Bool?>(false)
 
     var source: Observable<RuuviTagSensorRecordSource?> = Observable<RuuviTagSensorRecordSource?>()
 
