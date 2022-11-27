@@ -1223,6 +1223,7 @@ extension TagSettingsTableViewController {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindConnectionAlertCells() {
         guard isViewLoaded, let viewModel = viewModel  else { return }
 
@@ -1305,6 +1306,7 @@ extension TagSettingsTableViewController {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindMovementAlertCell() {
         guard isViewLoaded, let viewModel = viewModel  else { return }
 
