@@ -311,6 +311,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Inställningar";
 "Settings.BackgroundScanning.title" = "Bakgrundsskanning";
+"Settings.BackgroundScanning.Footer.message" = "Important notes: Bluetooth background history logging and Bluetooth alerts work only when the app hasn't been killed. If you disable the background scanning, all paired Ruuvi sensors will be automatically unpaired and you need to pair them again from their settings pages.";
 "Settings.BackgroundScanning.interval" = "Dataloggningsintervall";
 "Settings.Label.Chart" = "Historik";
 "ChartSettings.AllPoints.title" = "Visa all insamlad data i graferna";

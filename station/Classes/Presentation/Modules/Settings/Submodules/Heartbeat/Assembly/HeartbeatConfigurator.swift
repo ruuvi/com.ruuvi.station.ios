@@ -12,6 +12,7 @@ class HeartbeatConfigurator {
         presenter.router = router
         presenter.view = view
         presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
 
         view.output = presenter
     }
