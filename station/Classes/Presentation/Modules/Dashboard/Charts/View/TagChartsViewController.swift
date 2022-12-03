@@ -631,6 +631,7 @@ extension TagChartsViewController: TagChartsViewInput {
             }
         } else {
             /// Show buttons after two seconds if there's an unexpected error
+            handleSyncStatusLabelVisibility(show: false)
             showChartActionButtons(withDelay: true)
         }
     }
@@ -639,6 +640,7 @@ extension TagChartsViewController: TagChartsViewInput {
         // Hide the sync progress view
         hideSyncProgressView()
         showChartActionButtons()
+        handleSyncStatusLabelVisibility(show: false)
     }
 
     func showFailedToSyncIn() {
