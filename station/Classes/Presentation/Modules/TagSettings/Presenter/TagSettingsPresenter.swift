@@ -1412,6 +1412,11 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                alertType: AlertType,
                isTriggered: Bool,
                for uuid: String) {
+        if !settings.alertBellVisible {
+            return
+        }
+
+        // TODO: @priyonto - Make the live alert bell animation work properly. 
         if ruuviTag.luid?.value == uuid || ruuviTag.macId?.value == uuid {
             let isTriggered = isTriggered && (viewModel.isAlertsEnabled.value ?? false)
             switch alertType {

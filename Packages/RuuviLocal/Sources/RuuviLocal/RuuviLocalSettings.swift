@@ -73,4 +73,7 @@ public protocol RuuviLocalSettings {
 
     func setOwnerCheckDate(for macId: MACIdentifier, value: Date)
     func ownerCheckDate(for macId: MACIdentifier) -> Date?
+
+    // TODO: @priyonyo - Remove this when alert bell is implemented
+    var alertBellVisible: Bool { get set }
 }

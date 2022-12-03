@@ -20,7 +20,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            saveAdvertisementsInterval(),
                            buildSaveAndLoadFromWebIntervalMinutues(),
                            buildAskForReviewFirstTime(),
-                           buildAskForReviewLater()]
+                           buildAskForReviewLater(),
+                           buildShowLiveAlertBellOnTagSettings()]
     }
 }
 
@@ -196,5 +197,17 @@ extension DefaultsPresenter {
             observer.settings.appOpenedCountDivisibleToAskReview = interval.bound
         }
         return askForReviewAtLaunch
+    }
+
+    // TODO: @priyonyo - Remove this when alert bell is implemented
+    private func buildShowLiveAlertBellOnTagSettings() -> DefaultsViewModel {
+        let alertBellVisible = DefaultsViewModel()
+        alertBellVisible.title = "Show bell on Alert settings"
+        alertBellVisible.boolean.value = settings.alertBellVisible
+
+        bind(alertBellVisible.boolean, fire: false) { observer, alertBellVisible in
+            observer.settings.alertBellVisible = alertBellVisible.bound
+        }
+        return alertBellVisible
     }
 }
