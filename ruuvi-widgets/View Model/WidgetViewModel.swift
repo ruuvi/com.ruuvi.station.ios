@@ -120,6 +120,15 @@ extension WidgetViewModel {
             return Image(systemName: "bolt.circle.fill")
         }
     }
+
+    func measurementTime(from entry: WidgetEntry) -> String {
+        let formatter = DateFormatter()
+        let locale = Locale.current
+        formatter.locale = locale
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter.string(from: entry.record?.date ?? Date())
+    }
 }
 
 // MARK: - Private methods

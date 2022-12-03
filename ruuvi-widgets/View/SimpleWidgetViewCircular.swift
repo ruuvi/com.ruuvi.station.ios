@@ -11,9 +11,7 @@ struct SimpleWidgetViewCircular: View {
         }
         VStack {
             VStack(alignment: .center) {
-
-                Text(entry.record?.date ?? Date(), formatter: DateFormatter.widgetDateFormatter)
-                    .environment(\.locale, viewModel.locale())
+                Text(viewModel.measurementTime(from: entry))
                     .font(.custom(Constants.muliRegular.rawValue,
                                   size: 6,
                                   relativeTo: .body))

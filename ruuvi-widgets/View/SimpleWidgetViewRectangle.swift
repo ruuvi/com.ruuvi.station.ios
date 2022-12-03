@@ -13,8 +13,7 @@ struct SimpleWidgetViewRectangle: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 12, height: 12)
 
-                Text(entry.record?.date ?? Date(), formatter: DateFormatter.widgetDateFormatter)
-                    .environment(\.locale, viewModel.locale())
+                Text(viewModel.measurementTime(from: entry))
                     .font(.custom(Constants.muliRegular.rawValue,
                                   size: 12,
                                   relativeTo: .body))
