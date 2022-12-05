@@ -217,6 +217,7 @@ class TagChartsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         hideFooterView()
+        hideNoDataLabel()
         output.viewWillDisappear()
     }
 
@@ -487,8 +488,13 @@ extension TagChartsViewController: TagChartsViewInput {
                           settings: RuuviLocalSettings) {
         if chartViewData.count == 0 {
             clearChartData()
+            showNoDataLabel()
+            hideChartViews()
             return
         }
+
+        hideNoDataLabel()
+        showChartViews()
 
         for data in chartViewData {
             switch data.chartType {
@@ -748,7 +754,6 @@ extension TagChartsViewController {
     // swiftlint:disable:next cyclomatic_complexity
     private func updateChartsCollectionConstaints(from: [MeasurementType],
                                                   withAnimation: Bool = false) {
-
         if from.count == 0 {
             noDataLabel.alpha = 1
             return
@@ -961,5 +966,25 @@ extension TagChartsViewController {
 
     private func handleSyncStatusLabelVisibility(show: Bool) {
         syncStatusLabel.alpha = show ? 1 : 0
+    }
+
+    private func hideChartViews() {
+        temperatureChartView.isHidden = true
+        humidityChartView.isHidden = true
+        pressureChartView.isHidden = true
+    }
+
+    private func showChartViews() {
+        temperatureChartView.isHidden = false
+        humidityChartView.isHidden = false
+        pressureChartView.isHidden = false
+    }
+
+    private func hideNoDataLabel() {
+        noDataLabel.alpha = 0
+    }
+
+    private func showNoDataLabel() {
+        noDataLabel.alpha = 1
     }
 }
