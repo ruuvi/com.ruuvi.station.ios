@@ -476,7 +476,7 @@ extension TagSettingsTableViewController {
             }
 
             self.didSetAlertRange(sender: sender,
-                                  didSlideTo: minimumInputText.doubleValue ,
+                                  didSlideTo: minimumInputText.doubleValue,
                                   maxValue: maximumInputText.doubleValue )
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)

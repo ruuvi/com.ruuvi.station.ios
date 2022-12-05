@@ -912,8 +912,12 @@ extension TagSettingsPresenter {
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
         if let luid = ruuviTag.luid {
-            bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
+            bind(viewModel.keepConnection, fire: false) { [weak self] observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                // Toggle the background scanning if any tag is asked to pair.
+                if keepConnection.bound {
+                    self?.settings.saveHeartbeats = true
+                }
             }
         }
 
