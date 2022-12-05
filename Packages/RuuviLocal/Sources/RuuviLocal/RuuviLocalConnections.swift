@@ -6,6 +6,7 @@ public protocol RuuviLocalConnections {
 
     func keepConnection(to luid: LocalIdentifier) -> Bool
     func setKeepConnection(_ value: Bool, for luid: LocalIdentifier)
+    func unpairAllConnection()
 }
 
 extension Notification.Name {

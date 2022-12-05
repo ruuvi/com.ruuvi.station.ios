@@ -663,7 +663,7 @@ extension TagChartsViewPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-                            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String ,
+                            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
                             self?.viewModel.uuid.value != uuid {
                                 self?.dismiss()
                             }

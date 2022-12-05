@@ -54,6 +54,14 @@ extension HeartbeatTableViewController {
     }
 }
 
+// MARK: - UI TABLE VIEW
+extension HeartbeatTableViewController {
+    override func tableView(_ tableView: UITableView,
+                            titleForFooterInSection section: Int) -> String? {
+        return "Settings.BackgroundScanning.Footer.message".localized()
+    }
+}
+
 // MARK: - Private
 extension HeartbeatTableViewController {
 

@@ -418,4 +418,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func ownerCheckDate(for macId: MACIdentifier) -> Date? {
         UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
     }
+
+    // TODO: @priyonyo - Remove this when alert bell is implemented
+    @UserDefault("SettingsUserDefaults.alertBellVisible", defaultValue: false)
+    var alertBellVisible: Bool
 }
