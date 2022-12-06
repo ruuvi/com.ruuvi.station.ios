@@ -311,7 +311,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Background.Interval.Sec.string" = "sec";
 "Settings.navigationItem.title" = "Réglages";
 "Settings.BackgroundScanning.title" = "Réglages du balayage en arrière-plan";
-"Settings.BackgroundScanning.Footer.message" = "Important notes: Bluetooth background history logging and Bluetooth alerts work only when the app hasn't been killed. If you disable the background scanning, all paired Ruuvi sensors will be automatically unpaired and you need to pair them again from their settings pages.";
+"Settings.BackgroundScanning.Footer.message" = "Important notes: Bluetooth background history logging and Bluetooth alerts work only when background scanning is enabled. If you disable the background scanning, all paired Ruuvi sensors will be automatically unpaired and you need to pair them again from their settings pages.";
 "Settings.BackgroundScanning.interval" = "Intervalle d'acquisition des données";
 "Settings.Label.Chart" = "Paramètres de l'histogramme";
 "ChartSettings.AllPoints.title" = "Afficher toutes les données mesurées";
