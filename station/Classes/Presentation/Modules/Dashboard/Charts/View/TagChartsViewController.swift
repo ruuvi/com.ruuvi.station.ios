@@ -527,6 +527,9 @@ extension TagChartsViewController: TagChartsViewInput {
                              pressureEntries: [ChartDataEntry],
                              isFirstEntry: Bool,
                              settings: RuuviLocalSettings) {
+        hideNoDataLabel()
+        showChartViews()
+
         temperatureChartView.setSettings(settings: settings)
         temperatureChartView.updateDataSet(with: temperatureEntries,
                                            isFirstEntry: isFirstEntry)
@@ -601,7 +604,6 @@ extension TagChartsViewController: TagChartsViewInput {
 
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
         if let progress = progress {
-            hideChartActionButtons()
 
             switch progress {
             case .connecting:
@@ -925,10 +927,11 @@ extension TagChartsViewController {
     }
 
     private func showChartActionButtons(withDelay: Bool = false) {
+        handleSyncStatusLabelVisibility(show: false)
+        hideSyncProgressView()
         guard syncActionView.alpha == 0 else {
             return
         }
-        handleSyncStatusLabelVisibility(show: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(withDelay ? 2 : 0),
                                       execute: { [weak self] in
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
@@ -947,6 +950,8 @@ extension TagChartsViewController {
     }
 
     private func showSyncProgressView() {
+        handleSyncStatusLabelVisibility(show: false)
+        hideChartActionButtons()
         guard syncProgressView.alpha == 0 else {
             return
         }
@@ -966,6 +971,10 @@ extension TagChartsViewController {
 
     private func handleSyncStatusLabelVisibility(show: Bool) {
         syncStatusLabel.alpha = show ? 1 : 0
+        if show {
+            hideChartActionButtons()
+            hideSyncProgressView()
+        }
     }
 
     private func hideChartViews() {
@@ -981,10 +990,14 @@ extension TagChartsViewController {
     }
 
     private func hideNoDataLabel() {
-        noDataLabel.alpha = 0
+        if noDataLabel.alpha != 0 {
+            noDataLabel.alpha = 0
+        }
     }
 
     private func showNoDataLabel() {
-        noDataLabel.alpha = 1
+        if noDataLabel.alpha != 1 {
+            noDataLabel.alpha = 1
+        }
     }
 }

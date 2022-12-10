@@ -311,7 +311,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "Background.Interval.Sec.string" = "sek";
 "Settings.navigationItem.title" = "Asetukset";
 "Settings.BackgroundScanning.title" = "Taustaskannaus";
-"Settings.BackgroundScanning.Footer.message" = "Tärkeitä huomioita: Historian Bluetooth-taustatallennus ja Bluetooth-hälytykset toimivat ainoastaan mikäli sovellusta ei ole tapettu tausta-ajosta. Mikäli poistat taustaskannauksen käytöstä, kaikkien yhdistettyjen Ruuvi-anturien paritukset poistetaan ja joudut parittamaan ne uudelleen niiden asetussivuilta käsin.";
+"Settings.BackgroundScanning.Footer.message" = "Tärkeitä huomioita: Historian Bluetooth-taustatallennus ja Bluetooth-hälytykset toimivat ainoastaan sovelluksen taustaskannauksen ollessa käytössä. Mikäli poistat taustaskannauksen käytöstä, kaikkien yhdistettyjen Ruuvi-anturien paritukset poistetaan ja joudut parittamaan ne uudelleen niiden asetussivuilta käsin.";
 "Settings.BackgroundScanning.interval" = "Historiatietojen tallennusväli";
 "Settings.Label.Chart" = "Historiatietojen asetukset";
 "ChartSettings.AllPoints.title" = "Näytä kaikki kerätyt mittaukset";

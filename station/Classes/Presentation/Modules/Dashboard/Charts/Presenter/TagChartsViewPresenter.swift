@@ -228,6 +228,7 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
                 guard let syncing =  self?.isSyncing, syncing else {
+                    self?.view.setSync(progress: nil, for: viewModel)
                     return
                 }
                 self?.view.setSync(progress: progress, for: viewModel)
