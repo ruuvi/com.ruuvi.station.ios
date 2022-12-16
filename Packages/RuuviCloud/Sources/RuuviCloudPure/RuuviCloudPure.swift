@@ -640,9 +640,7 @@ public final class RuuviCloudPure: RuuviCloud {
                 // Offset is to check whether we have recent minute data. (Current time + 1 min)
                 let offset = Date().addingTimeInterval(1 * 60)
                 if let lastRecord = fetchedRecords.last,
-                   records.filter({ record in
-                    lastRecord.id == record.id
-                   }).count == 0 {
+                   !records.contains(lastRecord) {
                     let loadable =
                         (until != nil && lastRecord.date < until!) || lastRecord.date > offset
                     if loadable {
@@ -654,6 +652,8 @@ public final class RuuviCloudPure: RuuviCloud {
                             chunkSize: chunkSize,
                             promise: promise
                         )
+                    } else {
+                        promise.succeed(value: records + fetchedRecords)
                     }
                 } else {
                     promise.succeed(value: records + fetchedRecords)

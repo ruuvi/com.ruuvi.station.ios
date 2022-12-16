@@ -47,9 +47,11 @@ class SwipeDownToDismissNavigationController: UINavigationController, UIGestureR
                 interactor.cancel()
             case .ended:
                 interactor.hasStarted = false
-                interactor.shouldFinish
-                    ? interactor.finish()
-                    : interactor.cancel()
+                if interactor.shouldFinish {
+                    interactor.finish()
+                } else {
+                    interactor.cancel()
+                }
             default:
                 break
             }
