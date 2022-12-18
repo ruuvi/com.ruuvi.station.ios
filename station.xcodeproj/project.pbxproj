@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -793,6 +793,10 @@
 		E1072687291C49E500247625 /* SimpleWidgetViewInline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */; };
 		E1117008291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */; };
 		E128160B292ABCFA008E9282 /* SimpleWidgetViewCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */; };
+		E1395BEA294F6C2A00C403C6 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BE9294F6C2A00C403C6 /* String+Localization.swift */; };
+		E1395BEB294F6C2A00C403C6 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BE9294F6C2A00C403C6 /* String+Localization.swift */; };
+		E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF0294F793000C403C6 /* AppDateFormatter.swift */; };
+		E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF0294F793000C403C6 /* AppDateFormatter.swift */; };
 		E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */; };
@@ -1446,6 +1450,8 @@
 		E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewInline.swift; sourceTree = "<group>"; };
 		E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewRectangle.swift; sourceTree = "<group>"; };
 		E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewCircular.swift; sourceTree = "<group>"; };
+		E1395BE9294F6C2A00C403C6 /* String+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localization.swift"; sourceTree = "<group>"; };
+		E1395BF0294F793000C403C6 /* AppDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDateFormatter.swift; sourceTree = "<group>"; };
 		E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBatteryStatusProvider.swift; sourceTree = "<group>"; };
 		E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		E16051EB285CBA57003FCA70 /* FileManager+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Date.swift"; sourceTree = "<group>"; };
@@ -1839,6 +1845,7 @@
 		0E09672322AE895600E85F48 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E1395BEF294F791C00C403C6 /* Classess */,
 				0EA7966F2664A7B3002BA25D /* Errors */,
 				0E92A94B2686339300187E4F /* Structs */,
 				0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */,
@@ -1855,6 +1862,7 @@
 				0E11D222267F2EC0002D0686 /* VirtualLocation+Localization.swift */,
 				0EBAF064232002A00025A191 /* Language+Localization.swift */,
 				340BE39A27B54FEB006D6C34 /* String+Email.swift */,
+				E1395BE9294F6C2A00C403C6 /* String+Localization.swift */,
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit+Localization.swift */,
 				A92E3C4B24261CF900D981D5 /* MeasurementType.swift */,
 				E1B20C862926CDE10023D739 /* UITextField+Extension.swift */,
@@ -3795,6 +3803,14 @@
 			path = Share;
 			sourceTree = "<group>";
 		};
+		E1395BEF294F791C00C403C6 /* Classess */ = {
+			isa = PBXGroup;
+			children = (
+				E1395BF0294F793000C403C6 /* AppDateFormatter.swift */,
+			);
+			path = Classess;
+			sourceTree = "<group>";
+		};
 		E16B8F3A28D108970025B92D /* My Ruuvi */ = {
 			isa = PBXGroup;
 			children = (
@@ -4375,6 +4391,7 @@
 		};
 		0E8301592393FC2B0003F2EF /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -4433,6 +4450,7 @@
 		};
 		60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -4470,6 +4488,7 @@
 		};
 		A96B1EF925A7208900D3ED9C /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -4488,6 +4507,7 @@
 		};
 		A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -4543,6 +4563,7 @@
 		};
 		A9AB575A2413CCEC006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -4563,6 +4584,7 @@
 		};
 		B2718B0350BA2A18235E5F63 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -4644,6 +4666,7 @@
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				E16B8F4328D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				340BE39327B54F37006D6C34 /* OwnerViewController.swift in Sources */,
+				E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
 				345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */,
@@ -4819,6 +4842,7 @@
 				E1CD77FC28782F7100F1F0EB /* UnitSettingsModuleInput.swift in Sources */,
 				0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
+				E1395BEB294F6C2A00C403C6 /* String+Localization.swift in Sources */,
 				0EA7968E2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift in Sources */,
 				A976CA7F24A928C20099BDC1 /* ChartSettingsDisclosureTableViewCell.swift in Sources */,
 				663155FC2667F40C005B90A6 /* UpdateFirmwareRouter.swift in Sources */,
@@ -5162,6 +5186,7 @@
 				66718A46266A685700A380F8 /* DfuFlashPresenter.swift in Sources */,
 				0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */,
 				0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */,
+				E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				E18D04C028E8B3B0008EF5EC /* TagChartsViewInteractorOutput.swift in Sources */,
 				66718A6C266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
@@ -5315,6 +5340,7 @@
 				0EA7AB7A2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
 				E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */,
 				E18FD50D28DF7E7100289359 /* UIView+Layout.swift in Sources */,
+				E1395BEA294F6C2A00C403C6 /* String+Localization.swift in Sources */,
 				66BC44AA2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				E1E1475C28E85EE700832B8C /* UIImageView+Init.swift in Sources */,
@@ -5568,7 +5594,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -5596,7 +5622,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -5625,7 +5651,7 @@
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
@@ -5659,7 +5685,7 @@
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
@@ -5691,7 +5717,7 @@
 				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = intents/Info.plist;
@@ -5724,7 +5750,7 @@
 				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = intents/Info.plist;
@@ -5874,7 +5900,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5934,7 +5960,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 321;
+				CURRENT_PROJECT_VERSION = 326;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

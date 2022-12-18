@@ -12,7 +12,7 @@ class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
         viewModel.bgScanningState.value = settings.saveHeartbeats
         viewModel.bgScanningInterval.value = settings.saveHeartbeatsIntervalMinutes
 
-        bind(viewModel.bgScanningState, fire: false) { [weak self] observer,
+        bind(viewModel.bgScanningState, fire: false) { [weak self] _,
             saveHeartbeats in
             if !saveHeartbeats.bound {
                 self?.connectionPersistence.unpairAllConnection()

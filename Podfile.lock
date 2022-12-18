@@ -590,7 +590,6 @@ DEPENDENCIES:
   - iOSDFULibrary
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
-  - Localize-Swift
   - Nantes
   - Nimble
   - Quick
@@ -866,6 +865,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 03019ed28123e577c1fe4f425f7c8efa78d2ad92
+PODFILE CHECKSUM: ab748fd85c0972c271eac82ef8bb9fb0f425339e
 
 COCOAPODS: 1.11.3

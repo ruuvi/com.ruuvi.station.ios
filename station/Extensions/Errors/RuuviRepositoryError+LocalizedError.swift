@@ -1,6 +1,5 @@
 import RuuviRepository
 import Foundation
-import Localize_Swift
 
 extension RuuviRepositoryError: LocalizedError {
     public var errorDescription: String? {
