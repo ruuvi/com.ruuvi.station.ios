@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import UIKit
-import Localize_Swift
 import GestureInstructions
 import Humidity
 import RuuviOntology

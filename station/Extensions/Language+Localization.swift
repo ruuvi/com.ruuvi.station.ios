@@ -1,7 +1,6 @@
 import Foundation
 import Humidity
 import RuuviOntology
-import Localize_Swift
 
 extension Language {
     var name: String {

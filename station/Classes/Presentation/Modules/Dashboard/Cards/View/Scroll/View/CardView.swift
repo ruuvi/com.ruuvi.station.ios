@@ -1,5 +1,4 @@
 import UIKit
-import Localize_Swift
 import RuuviOntology
 import RuuviLocal
 
