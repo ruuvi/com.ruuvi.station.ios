@@ -1,6 +1,5 @@
 #if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
-import Localize_Swift
 
 @available(iOS 13.0, *)
 struct HeartbeatList: View {

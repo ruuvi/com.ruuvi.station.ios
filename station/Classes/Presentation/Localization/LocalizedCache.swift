@@ -1,5 +1,3 @@
-import Localize_Swift
-
 struct LocalizedCache {
     let notAvailable = "N/A".localized()
     let hPa = "hPa".localized()

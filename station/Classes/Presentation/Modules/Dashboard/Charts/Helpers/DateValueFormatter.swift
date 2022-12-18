@@ -3,14 +3,10 @@ import Charts
 import RuuviOntology
 
 public class DateValueFormatter: NSObject, AxisValueFormatter {
-    private let dateFormatter = DateFormatter()
+    private let locale: Locale?
 
     init(with locale: Locale) {
-        if locale == Language.english.locale {
-            dateFormatter.dateFormat = "MM/dd"
-        } else {
-            dateFormatter.dateFormat = "dd/MM"
-        }
+        self.locale = locale
     }
 
     public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
@@ -19,6 +15,14 @@ public class DateValueFormatter: NSObject, AxisValueFormatter {
                                              dateStyle: .none,
                                              timeStyle: .short)
         + "\n"
-            + dateFormatter.string(from: date)
+            + stringFromDate(from: date)
+    }
+
+    private func stringFromDate(from date: Date) -> String {
+        if locale == Language.english.locale {
+            return AppDateFormatter.shared.enLocaleDateString(from: date)
+        } else {
+            return AppDateFormatter.shared.nonEnLocaleDateString(from: date)
+        }
     }
 }

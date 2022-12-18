@@ -793,6 +793,10 @@
 		E1072687291C49E500247625 /* SimpleWidgetViewInline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */; };
 		E1117008291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */; };
 		E128160B292ABCFA008E9282 /* SimpleWidgetViewCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */; };
+		E1395BEA294F6C2A00C403C6 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BE9294F6C2A00C403C6 /* String+Localization.swift */; };
+		E1395BEB294F6C2A00C403C6 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BE9294F6C2A00C403C6 /* String+Localization.swift */; };
+		E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF0294F793000C403C6 /* AppDateFormatter.swift */; };
+		E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF0294F793000C403C6 /* AppDateFormatter.swift */; };
 		E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */; };
@@ -1446,6 +1450,8 @@
 		E1072686291C49E500247625 /* SimpleWidgetViewInline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewInline.swift; sourceTree = "<group>"; };
 		E1117007291C34A700ACCD72 /* SimpleWidgetViewRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewRectangle.swift; sourceTree = "<group>"; };
 		E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewCircular.swift; sourceTree = "<group>"; };
+		E1395BE9294F6C2A00C403C6 /* String+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localization.swift"; sourceTree = "<group>"; };
+		E1395BF0294F793000C403C6 /* AppDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDateFormatter.swift; sourceTree = "<group>"; };
 		E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBatteryStatusProvider.swift; sourceTree = "<group>"; };
 		E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		E16051EB285CBA57003FCA70 /* FileManager+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Date.swift"; sourceTree = "<group>"; };
@@ -1839,6 +1845,7 @@
 		0E09672322AE895600E85F48 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E1395BEF294F791C00C403C6 /* Classess */,
 				0EA7966F2664A7B3002BA25D /* Errors */,
 				0E92A94B2686339300187E4F /* Structs */,
 				0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */,
@@ -1855,6 +1862,7 @@
 				0E11D222267F2EC0002D0686 /* VirtualLocation+Localization.swift */,
 				0EBAF064232002A00025A191 /* Language+Localization.swift */,
 				340BE39A27B54FEB006D6C34 /* String+Email.swift */,
+				E1395BE9294F6C2A00C403C6 /* String+Localization.swift */,
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit+Localization.swift */,
 				A92E3C4B24261CF900D981D5 /* MeasurementType.swift */,
 				E1B20C862926CDE10023D739 /* UITextField+Extension.swift */,
@@ -3795,6 +3803,14 @@
 			path = Share;
 			sourceTree = "<group>";
 		};
+		E1395BEF294F791C00C403C6 /* Classess */ = {
+			isa = PBXGroup;
+			children = (
+				E1395BF0294F793000C403C6 /* AppDateFormatter.swift */,
+			);
+			path = Classess;
+			sourceTree = "<group>";
+		};
 		E16B8F3A28D108970025B92D /* My Ruuvi */ = {
 			isa = PBXGroup;
 			children = (
@@ -4202,7 +4218,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -4650,6 +4666,7 @@
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				E16B8F4328D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				340BE39327B54F37006D6C34 /* OwnerViewController.swift in Sources */,
+				E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
 				345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */,
@@ -4825,6 +4842,7 @@
 				E1CD77FC28782F7100F1F0EB /* UnitSettingsModuleInput.swift in Sources */,
 				0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
+				E1395BEB294F6C2A00C403C6 /* String+Localization.swift in Sources */,
 				0EA7968E2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift in Sources */,
 				A976CA7F24A928C20099BDC1 /* ChartSettingsDisclosureTableViewCell.swift in Sources */,
 				663155FC2667F40C005B90A6 /* UpdateFirmwareRouter.swift in Sources */,
@@ -5168,6 +5186,7 @@
 				66718A46266A685700A380F8 /* DfuFlashPresenter.swift in Sources */,
 				0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */,
 				0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */,
+				E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				E18D04C028E8B3B0008EF5EC /* TagChartsViewInteractorOutput.swift in Sources */,
 				66718A6C266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
@@ -5321,6 +5340,7 @@
 				0EA7AB7A2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
 				E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */,
 				E18FD50D28DF7E7100289359 /* UIView+Layout.swift in Sources */,
+				E1395BEA294F6C2A00C403C6 /* String+Localization.swift in Sources */,
 				66BC44AA2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				E1E1475C28E85EE700832B8C /* UIImageView+Init.swift in Sources */,
@@ -6121,7 +6141,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -6144,12 +6164,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */

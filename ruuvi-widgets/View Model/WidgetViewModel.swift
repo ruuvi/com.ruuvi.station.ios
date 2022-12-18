@@ -3,7 +3,6 @@ import SwiftUI
 import RuuviCloud
 import RuuviOntology
 import RuuviUser
-import Localize_Swift
 
 public final class WidgetViewModel: ObservableObject {
     private let widgetAssembly = WidgetAssembly.shared.assembler.resolver
