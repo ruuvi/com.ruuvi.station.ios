@@ -6,9 +6,7 @@ extension Date {
         var output = prefix.isEmpty ? "" : (prefix + " ")
         // show date if the tag has not been seen for 24h
         if elapsed >= 24 * 60 * 60 {
-            let df = DateFormatter()
-            df.dateFormat = "E MMM dd yyyy HH:mm:ss"
-            output += df.string(from: self)
+            output += AppDateFormatter.shared.ruuviAgoString(from: self)
         } else {
             let seconds = elapsed % 60
             let minutes = (elapsed / 60) % 60

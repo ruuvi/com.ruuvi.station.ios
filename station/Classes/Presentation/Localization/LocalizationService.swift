@@ -1,23 +1,9 @@
-import Localize_Swift
 import Foundation
 
 class LocalizationService {
     static let shared = LocalizationService()
 
-    var localization: String? = Locale.current.languageCode {
-        didSet {
-            if let localization = localization?.lowercased() {
-                Localize.setCurrentLanguage(localization)
-            }
-        }
-    }
-
-    init() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(LocalizationService.apply),
-                                               name: NSNotification.Name(LCLLanguageChangeNotification),
-                                               object: nil)
-    }
+    init() {}
 
     private var listeners = NSHashTable<AnyObject>.weakObjects()
 

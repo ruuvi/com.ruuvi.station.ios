@@ -25,7 +25,6 @@ def shared_pods
   pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
-  pod 'Localize-Swift'
   pod 'Nantes'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'Realm'
@@ -111,7 +110,6 @@ def widget_pods
   pod 'FutureX'
   pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
-  pod 'Localize-Swift'
   pod 'Realm'
   pod 'RealmSwift'
   pod 'RuuviUser', :path => 'Packages/RuuviUser/RuuviUser.podspec', :testspecs => ['Tests']

@@ -1137,10 +1137,7 @@ extension TagSettingsTableViewController {
         temperatureAlertHeaderCell.mutedTillLabel.bind(viewModel.temperatureAlertMutedTill) { (label, date) in
             if let date = date, date > Date() {
                 label.isHidden = false
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
+                label.text = AppDateFormatter.shared.shortTimeString(from: date)
             } else {
                 label.isHidden = true
             }
@@ -1230,10 +1227,7 @@ extension TagSettingsTableViewController {
         connectionAlertHeaderCell.mutedTillLabel.bind(viewModel.connectionAlertMutedTill) { (label, date) in
             if let date = date, date > Date() {
                 label.isHidden = false
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
+                label.text = AppDateFormatter.shared.shortTimeString(from: date)
             } else {
                 label.isHidden = true
             }
@@ -1313,10 +1307,7 @@ extension TagSettingsTableViewController {
         movementAlertHeaderCell.mutedTillLabel.bind(viewModel.movementAlertMutedTill) { (label, date) in
             if let date = date, date > Date() {
                 label.isHidden = false
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
+                label.text = AppDateFormatter.shared.shortTimeString(from: date)
             } else {
                 label.isHidden = true
             }
@@ -1382,11 +1373,7 @@ extension TagSettingsTableViewController {
         pressureAlertHeaderCell.mutedTillLabel.bind(viewModel.pressureAlertMutedTill) { (label, date) in
             if let date = date, date > Date() {
                 label.isHidden = false
-                // TODO: @prio-> Move this to static function
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
+                label.text = AppDateFormatter.shared.shortTimeString(from: date)
             } else {
                 label.isHidden = true
             }
@@ -1475,10 +1462,7 @@ extension TagSettingsTableViewController {
         rhAlertHeaderCell.mutedTillLabel.bind(viewModel.relativeHumidityAlertMutedTill) { (label, date) in
             if let date = date, date > Date() {
                 label.isHidden = false
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .short
-                label.text = formatter.string(from: date)
+                label.text = AppDateFormatter.shared.shortTimeString(from: date)
             } else {
                 label.isHidden = true
             }
