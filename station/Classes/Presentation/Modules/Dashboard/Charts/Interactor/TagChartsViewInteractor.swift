@@ -77,9 +77,12 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         lastMeasurement = nil
         restartScheduler()
         fetchLast()
-        fetchPoints { [weak self] in
-            guard let self = self else { return }
-            self.presenter.interactorDidUpdate(sensor: self.ruuviTagSensor)
+
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.fetchPoints { [weak self] in
+                guard let self = self else { return }
+                self.presenter.interactorDidUpdate(sensor: self.ruuviTagSensor)
+            }
         }
     }
 

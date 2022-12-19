@@ -23,8 +23,8 @@ class LocationPickerAppleViewController: UIViewController {
 // MARK: - LocationPickerViewInput
 extension LocationPickerAppleViewController: LocationPickerViewInput {
     func localize() {
-        doneBarButtonItem.title = "Done".localized()
-        cancelBarButtonItem.title = "Cancel".localized()
+        doneBarButtonItem.title = "Done".localized(for: Self.self)
+        cancelBarButtonItem.title = "Cancel".localized(for: Self.self)
     }
 }
 

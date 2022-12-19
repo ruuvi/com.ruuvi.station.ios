@@ -60,11 +60,11 @@ extension DiscoverTableViewController: DiscoverViewInput {
         let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
         let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(for: Self.self),
                                         style: .default, handler: { [weak self] _ in
             self?.takeUserToBTSettings(userDeclined: userDeclined)
         }))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 

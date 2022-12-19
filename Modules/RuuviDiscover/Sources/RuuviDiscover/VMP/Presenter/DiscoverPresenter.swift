@@ -120,7 +120,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidTriggerBuySensors() {
-        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized())
+        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized(for: Self.self))
         else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }

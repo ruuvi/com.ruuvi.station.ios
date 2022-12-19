@@ -53,10 +53,14 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
 
     @objc
     func refreshImmediately() {
-        cloudSyncService.syncAllRecords()
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.cloudSyncService.syncAllRecords()
+        }
     }
 
     func refreshLatestRecord() {
-        cloudSyncService.refreshLatestRecord()
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.cloudSyncService.refreshLatestRecord()
+        }
     }
 }

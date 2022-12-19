@@ -128,6 +128,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         backgroundUploadProgressToken?.invalidate()
         backgroundToken?.invalidate()
         timer?.invalidate()
+        NotificationCenter.default.removeObserver(self)
     }
 
     // swiftlint:disable:next function_parameter_count

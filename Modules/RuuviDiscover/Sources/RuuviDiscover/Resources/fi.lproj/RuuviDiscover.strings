@@ -3,6 +3,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuaalisten antureiden avulla voidaan esittää paikallisilta sääasemilta kerättyjä säätietoja.";
+"PermissionPresenter.settings" = "Asetukset";
 "OK" = "OK";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Ei havaittuja antureita Bluetooth-verkon alueella)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth ei ole käytössä)";

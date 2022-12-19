@@ -3,6 +3,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"PermissionPresenter.settings" = "Settings";
 "OK" = "OK";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";

@@ -3,6 +3,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ist nicht aktiviert";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Die Ruuvi Station benötigt Bluetooth, um die Sensoren zu verbinden. Gehen Sie zu Einstellungen und schalten Sie Bluetooth ein.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuelle Sensoren zeigen öffentliche Wetterdaten an, die von lokalen Wetterstationen bereitgestellt werden.";
+"PermissionPresenter.settings" = "Einstellungen";
 "OK" = "OK";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Keine Sensoren in Bluetooth-Reichweite)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth ist deaktiviert)";
