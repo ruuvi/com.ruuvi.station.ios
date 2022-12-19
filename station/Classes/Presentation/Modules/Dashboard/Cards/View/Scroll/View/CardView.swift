@@ -33,17 +33,12 @@ class CardView: UIView {
     @IBOutlet weak var movementCounterView: UIView!
     @IBOutlet weak var movementCounterViewHeight: NSLayoutConstraint!
 
-    var updatedAt: Date? {
-        didSet {
-            startTimer()
-        }
-    }
+    var updatedAt: Date?
     var isConnected: Bool?
     var networkTagMacId: MACIdentifier? {
         didSet {
             guard let macId = networkTagMacId else {
                 notificationToken?.invalidate()
-                startTimer()
                 return
             }
             startObservingNetworkSyncNotification(for: macId.any)
