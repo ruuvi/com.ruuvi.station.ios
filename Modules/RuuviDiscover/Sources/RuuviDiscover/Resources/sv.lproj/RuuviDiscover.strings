@@ -3,6 +3,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station behöver bluetooth för att fungera. Gå till Inställningar och aktivera Bluetooth.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuella Sensorer visar offentlig väder data som upprätthålls av lokala väderstationer.";
+"PermissionPresenter.settings" = "Inställningar";
 "OK" = "OK";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Inga sensorer inom Bluetooths räckvidd)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth är avaktiverat)";
