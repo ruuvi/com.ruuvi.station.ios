@@ -28,7 +28,7 @@ def shared_pods
   pod 'Nantes'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'Realm'
-  pod 'RealmSwift'
+  pod 'RealmSwift', '~> 10.33.0'
   # common
   pod 'RuuviPresenters', :path => 'Common/RuuviPresenters/RuuviPresenters.podspec', :testspecs => ['Tests']
   pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
@@ -111,7 +111,7 @@ def widget_pods
   pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
   pod 'Realm'
-  pod 'RealmSwift'
+  pod 'RealmSwift', '~> 10.33.0'
   pod 'RuuviUser', :path => 'Packages/RuuviUser/RuuviUser.podspec', :testspecs => ['Tests']
   pod 'RuuviUser/Coordinator', :path => 'Packages/RuuviUser/RuuviUser.podspec'
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']

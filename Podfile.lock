@@ -150,11 +150,11 @@ PODS:
   - PromisesObjC (2.1.0)
   - Quick (5.0.1)
   - RangeSeekSlider (1.8.2)
-  - Realm (10.25.2):
-    - Realm/Headers (= 10.25.2)
-  - Realm/Headers (10.25.2)
-  - RealmSwift (10.25.2):
-    - Realm (= 10.25.2)
+  - Realm (10.33.0):
+    - Realm/Headers (= 10.33.0)
+  - Realm/Headers (10.33.0)
+  - RealmSwift (10.33.0):
+    - Realm (= 10.33.0)
   - RuuviAnalytics (0.0.3):
     - RuuviAnalytics/Contract (= 0.0.3)
   - RuuviAnalytics/Contract (0.0.3)
@@ -354,7 +354,7 @@ PODS:
   - RuuviOntology/Realm (0.0.1):
     - Humidity
     - Realm
-    - RealmSwift
+    - RealmSwift (~> 10.33.0)
     - RuuviOntology/Contract
   - RuuviOntology/SQLite (0.0.1):
     - GRDB.swift
@@ -368,7 +368,7 @@ PODS:
   - RuuviPersistence/Realm (0.0.1):
     - FutureX
     - Realm
-    - RealmSwift
+    - RealmSwift (~> 10.33.0)
     - RuuviContext/Realm
     - RuuviOntology
     - RuuviOntology/Realm
@@ -587,7 +587,7 @@ DEPENDENCIES:
   - Quick
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - Realm
-  - RealmSwift
+  - RealmSwift (~> 10.33.0)
   - RuuviAnalytics (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviAnalytics/Impl (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviAnalytics/Tests (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
@@ -823,8 +823,8 @@ SPEC CHECKSUMS:
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: 978303663d0509166498f423d112e5ee97d4c91b
-  RealmSwift: a0c30c1efc49e928a0a6f8fb141bb2629616d79b
+  Realm: d4f810e161fa2c2c589b9860b6eb09238deacd73
+  RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
   RuuviAnalytics: 1442f702d42ca8a7c4000394a534cd54bf5fd67a
   RuuviBundleUtils: b143f4bb7bbb9b173527bec8836b3a507b6ca8f2
   RuuviCloud: 035d83852521fb1a5273ff6190c20949af0850aa
@@ -841,8 +841,8 @@ SPEC CHECKSUMS:
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
   RuuviOnboard: c313151167bbd590c0b01794809567d8c672989f
-  RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
-  RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
+  RuuviOntology: ed2e29ff752f568a59436b3335d62132a917010a
+  RuuviPersistence: 1fbb2265bf8cfae960e4067d7fac96f6d9d3335d
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
@@ -855,6 +855,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: ab748fd85c0972c271eac82ef8bb9fb0f425339e
+PODFILE CHECKSUM: 4a8e4965213cfd629b1234520ce8f9662babfa5c
 
 COCOAPODS: 1.11.3
