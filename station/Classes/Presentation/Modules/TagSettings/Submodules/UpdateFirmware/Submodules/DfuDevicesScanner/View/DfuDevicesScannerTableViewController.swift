@@ -52,10 +52,21 @@ class DfuDevicesScannerTableViewController: UITableViewController {
 
 // MARK: - DfuDevicesScannerViewInput
 extension DfuDevicesScannerTableViewController: DfuDevicesScannerViewInput {
-    func showBluetoothDisabled() {
+    func showBluetoothDisabled(userDeclined: Bool) {
         let title = "DfuDevicesScanner.BluetoothDisabledAlert.title".localized()
         let message = "DfuDevicesScanner.BluetoothDisabledAlert.message".localized()
-        showAlert(title: title, message: message)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+                                        style: .default, handler: { _ in
+            guard let url = URL(string: userDeclined ?
+                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                  UIApplication.shared.canOpenURL(url) else {
+                return
+            }
+            UIApplication.shared.open(url)
+        }))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
 }
 

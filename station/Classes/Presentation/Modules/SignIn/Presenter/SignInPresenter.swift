@@ -37,6 +37,7 @@ class SignInPresenter: NSObject {
 
     deinit {
         universalLinkObservationToken?.invalidate()
+        NotificationCenter.default.removeObserver(self)
     }
 }
 // MARK: - SignInViewOutput

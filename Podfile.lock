@@ -140,12 +140,6 @@ PODS:
     - ZIPFoundation (= 0.9.11)
   - KeychainAccess (4.2.2)
   - LightRoute (2.2.2)
-  - Localize-Swift (3.2.0):
-    - Localize-Swift/LocalizeSwiftCore (= 3.2.0)
-    - Localize-Swift/UIKit (= 3.2.0)
-  - Localize-Swift/LocalizeSwiftCore (3.2.0)
-  - Localize-Swift/UIKit (3.2.0):
-    - Localize-Swift/LocalizeSwiftCore
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -175,28 +169,27 @@ PODS:
   - RuuviAnalytics/Tests (0.0.3)
   - RuuviBundleUtils (0.0.1):
     - RuuviBundleUtils/RuuviBundleUtils (= 0.0.1)
-  - RuuviBundleUtils/RuuviBundleUtils (0.0.1):
-    - Localize-Swift
+  - RuuviBundleUtils/RuuviBundleUtils (0.0.1)
   - RuuviBundleUtils/Tests (0.0.1)
-  - RuuviCloud (0.0.2):
-    - RuuviCloud/Contract (= 0.0.2)
-  - RuuviCloud/Api (0.0.2):
+  - RuuviCloud (0.0.3):
+    - RuuviCloud/Contract (= 0.0.3)
+  - RuuviCloud/Api (0.0.3):
     - BTKit
     - FutureX
     - RuuviCloud/Contract
     - RuuviOntology
     - RuuviOntology/Mappers
-  - RuuviCloud/Contract (0.0.2):
+  - RuuviCloud/Contract (0.0.3):
     - FutureX
     - RuuviOntology
     - RuuviUser
-  - RuuviCloud/Pure (0.0.2):
+  - RuuviCloud/Pure (0.0.3):
     - FutureX
     - RuuviCloud/Api
     - RuuviCloud/Contract
     - RuuviOntology
     - RuuviUser
-  - RuuviCloud/Tests (0.0.2)
+  - RuuviCloud/Tests (0.0.3)
   - RuuviContext (0.0.1):
     - RuuviContext/SQLite (= 0.0.1)
   - RuuviContext/Contract (0.0.1)
@@ -294,8 +287,7 @@ PODS:
     - RuuviOntology
   - RuuviLocalization (0.0.1):
     - RuuviLocalization/RuuviLocalization (= 0.0.1)
-  - RuuviLocalization/RuuviLocalization (0.0.1):
-    - Localize-Swift
+  - RuuviLocalization/RuuviLocalization (0.0.1)
   - RuuviLocalization/Tests (0.0.1)
   - RuuviLocation (0.0.1):
     - RuuviLocation/Contract (= 0.0.1)
@@ -431,24 +423,24 @@ PODS:
     - RuuviRepository/Contract
     - RuuviStorage
   - RuuviRepository/Tests (0.0.1)
-  - RuuviService (0.0.1):
-    - RuuviService/Contract (= 0.0.1)
-  - RuuviService/Alert (0.0.1):
+  - RuuviService (0.0.2):
+    - RuuviService/Contract (= 0.0.2)
+  - RuuviService/Alert (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviOntology
     - RuuviService/Contract
-  - RuuviService/AppSettings (0.0.1):
+  - RuuviService/AppSettings (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviLocal
     - RuuviOntology
     - RuuviService/Contract
-  - RuuviService/Auth (0.0.1):
+  - RuuviService/Auth (0.0.2):
     - FutureX
     - RuuviService/Contract
     - RuuviUser
-  - RuuviService/CloudSync (0.0.1):
+  - RuuviService/CloudSync (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviLocal
@@ -457,16 +449,16 @@ PODS:
     - RuuviRepository
     - RuuviService/Contract
     - RuuviStorage
-  - RuuviService/Contract (0.0.1):
+  - RuuviService/Contract (0.0.2):
     - FutureX
     - RuuviOntology
-  - RuuviService/Export (0.0.1):
+  - RuuviService/Export (0.0.2):
     - FutureX
     - Humidity
     - RuuviOntology
     - RuuviService/Contract
     - RuuviStorage
-  - RuuviService/Factory (0.0.1):
+  - RuuviService/Factory (0.0.2):
     - FutureX
     - RuuviOntology
     - RuuviService/Alert
@@ -476,23 +468,23 @@ PODS:
     - RuuviService/Ownership
     - RuuviService/SensorProperties
     - RuuviService/SensorRecords
-  - RuuviService/GATT (0.0.1):
+  - RuuviService/GATT (0.0.2):
     - BTKit
     - FutureX
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
-  - RuuviService/Measurement (0.0.1):
+  - RuuviService/Measurement (0.0.2):
     - RuuviLocal
     - RuuviOntology
     - RuuviService/Contract
-  - RuuviService/OffsetCalibration (0.0.1):
+  - RuuviService/OffsetCalibration (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
-  - RuuviService/Ownership (0.0.1):
+  - RuuviService/Ownership (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviOntology
@@ -500,7 +492,7 @@ PODS:
     - RuuviService/Contract
     - RuuviStorage
     - RuuviUser
-  - RuuviService/SensorProperties (0.0.1):
+  - RuuviService/SensorProperties (0.0.2):
     - FutureX
     - RuuviCloud
     - RuuviCore
@@ -508,13 +500,13 @@ PODS:
     - RuuviPool
     - RuuviService/Contract
     - RuuviStorage
-  - RuuviService/SensorRecords (0.0.1):
+  - RuuviService/SensorRecords (0.0.2):
     - FutureX
     - RuuviLocal
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
-  - RuuviService/Tests (0.0.1)
+  - RuuviService/Tests (0.0.2)
   - RuuviStorage (0.0.1):
     - RuuviStorage/Contract (= 0.0.1)
   - RuuviStorage/Contract (0.0.1):
@@ -590,7 +582,6 @@ DEPENDENCIES:
   - iOSDFULibrary
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
-  - Localize-Swift
   - Nantes
   - Nimble
   - Quick
@@ -715,7 +706,6 @@ SPEC REPOS:
     - GRDB.swift
     - iOSDFULibrary
     - KeychainAccess
-    - Localize-Swift
     - nanopb
     - Nantes
     - Nimble
@@ -827,7 +817,6 @@ SPEC CHECKSUMS:
   iOSDFULibrary: 3500ac00451aa7d8ec48a752e91099669a2c1d27
   KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
-  Localize-Swift: 6f4475136bdb0d7b2882ea3d4ea919d70142b232
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   Nantes: 0396442578e32242223fed46050dea1850236184
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
@@ -837,15 +826,15 @@ SPEC CHECKSUMS:
   Realm: 978303663d0509166498f423d112e5ee97d4c91b
   RealmSwift: a0c30c1efc49e928a0a6f8fb141bb2629616d79b
   RuuviAnalytics: 1442f702d42ca8a7c4000394a534cd54bf5fd67a
-  RuuviBundleUtils: 2bf9121120e2c0707449dd7cd2f013d2512bc9a0
-  RuuviCloud: be0929956fd9db6277a13df4460bb84023ffc8ab
+  RuuviBundleUtils: b143f4bb7bbb9b173527bec8836b3a507b6ca8f2
+  RuuviCloud: 035d83852521fb1a5273ff6190c20949af0850aa
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
   RuuviDiscover: 1e6354187fbf85c84a752408577f977375696ab2
   RuuviLocal: f3879be64900ea9de25844e596c5509073547130
-  RuuviLocalization: 17e59877c53b8578b73498aa016c81cac61cfe16
+  RuuviLocalization: 04e829bac8113cc8edb49c22a243da88b8383210
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
   RuuviLocationPicker: ec6fb89f5b0a5ff85d00036a2847e0ffac3b9076
   RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
@@ -858,7 +847,7 @@ SPEC CHECKSUMS:
   RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
-  RuuviService: 109dc1ba70cc70296862f8be79cd9e205fd22971
+  RuuviService: 0975ab31c41c88ed78613d67d4bd67e75011b28d
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
   RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6
@@ -866,6 +855,6 @@ SPEC CHECKSUMS:
   Swinject: 97112918bd7e0785dc2df7036213f3c8cbba6586
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 23aaae098eacbb2229a4561706b2c3e8f27ac631
+PODFILE CHECKSUM: ab748fd85c0972c271eac82ef8bb9fb0f425339e
 
 COCOAPODS: 1.11.3

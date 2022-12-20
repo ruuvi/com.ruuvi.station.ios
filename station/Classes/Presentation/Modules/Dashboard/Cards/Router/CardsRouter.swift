@@ -96,21 +96,21 @@ class CardsRouter: NSObject, CardsRouterInput {
     }
 
     func openWhatToMeasurePage() {
-        guard let url = URL(string: "Menu.Measure.URL".localized()) else {
+        guard let url = URL(string: "Menu.Measure.URL.IOS".localized()) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviProductsPage() {
-        guard let url = URL(string: "Menu.BuySensors.URL".localized()) else {
+        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized()) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviGatewayPage() {
-        guard let url = URL(string: "Menu.BuyGateway.URL".localized()) else {
+        guard let url = URL(string: "Menu.BuyGateway.URL.IOS".localized()) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)

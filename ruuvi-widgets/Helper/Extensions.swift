@@ -108,21 +108,29 @@ extension String {
     }
 }
 
-// MARK: - DateFormatter
-extension DateFormatter {
-    static let widgetDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
+extension String {
 
-        let dateString = formatter.string(from: Date())
-        let amRange = dateString.range(of: formatter.amSymbol)
-        let pmRange = dateString.range(of: formatter.pmSymbol)
+    var length: Int {
+        return count
+    }
 
-        let is12HFormat = !(pmRange == nil && amRange == nil)
+    subscript (i: Int) -> String {
+        return self[i ..< i + 1]
+    }
 
-        formatter.dateFormat = is12HFormat ? "h:mm a": "hh:mm"
-        return formatter
-    }()
+    func substring(fromIndex: Int) -> String {
+        return self[min(fromIndex, length) ..< length]
+    }
+
+    func substring(toIndex: Int) -> String {
+        return self[0 ..< max(0, toIndex)]
+    }
+
+    subscript (r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                            upper: min(length, max(0, r.upperBound))))
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self[start ..< end])
+    }
 }

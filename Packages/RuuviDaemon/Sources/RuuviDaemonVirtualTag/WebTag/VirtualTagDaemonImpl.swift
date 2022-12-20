@@ -177,6 +177,7 @@ public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
     ) {
         let virtualTagsWithoutLocation = virtualTags.filter({ $0.loc == nil })
         for provider in VirtualProvider.allCases {
+            // swiftlint:disable:next for_where
             if virtualTagsWithoutLocation.contains(where: { $0.provider == provider }) {
                 wsTokens.append(
                     virtualService.observeCurrentLocationData(

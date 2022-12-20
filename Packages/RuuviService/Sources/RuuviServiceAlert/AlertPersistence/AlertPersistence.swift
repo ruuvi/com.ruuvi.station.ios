@@ -33,14 +33,6 @@ protocol AlertPersistence {
     func humidityDescription(for uuid: String) -> String?
     func setHumidity(description: String?, for uuid: String)
 
-    // dew point (celsius)
-    func lowerDewPointCelsius(for uuid: String) -> Double?
-    func setLowerDewPoint(celsius: Double?, for uuid: String)
-    func upperDewPointCelsius(for uuid: String) -> Double?
-    func setUpperDewPoint(celsius: Double?, for uuid: String)
-    func dewPointDescription(for uuid: String) -> String?
-    func setDewPoint(description: String?, for uuid: String)
-
     // pressure (hPa)
     func lowerPressure(for uuid: String) -> Double?
     func setLower(pressure: Double?, for uuid: String)

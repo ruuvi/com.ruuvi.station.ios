@@ -35,8 +35,6 @@ extension RuuviServiceAlertImpl {
                 )
             case .humidity:
                 break // absolute is not on cloud yet (11.06.2021)
-            case .dewPoint:
-                break // dew point is not on cloud yet (11.06.2021)
             case .pressure(let lower, let upper):
                 cloud.setAlert(
                     type: .pressure,
@@ -90,8 +88,6 @@ extension RuuviServiceAlertImpl {
                 )
             case .humidity:
                 break // absolute is not on cloud yet (11.06.2021)
-            case .dewPoint:
-                break // dew point is not on cloud yet (11.06.2021)
             case .pressure(let lower, let upper):
                 cloud.setAlert(
                     type: .pressure,
@@ -918,146 +914,6 @@ extension RuuviServiceAlertImpl {
 
     public func humidityDescription(for uuid: String) -> String? {
         return alertPersistence.humidityDescription(for: uuid)
-    }
-}
-
-// MARK: - Dew Point
-extension RuuviServiceAlertImpl {
-    public func lowerDewPointCelsius(for sensor: PhysicalSensor) -> Double? {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            return alertPersistence.lowerDewPointCelsius(for: luid.value)
-                ?? alertPersistence.lowerDewPointCelsius(for: macId.value)
-        } else if let luid = sensor.luid {
-            return alertPersistence.lowerDewPointCelsius(for: luid.value)
-        } else if let macId = sensor.macId {
-            return alertPersistence.lowerDewPointCelsius(for: macId.value)
-        } else {
-            assertionFailure()
-            return nil
-        }
-    }
-
-    public func setLowerDewPoint(celsius: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setLowerDewPoint(celsius: celsius, for: luid.value)
-            alertPersistence.setLowerDewPoint(celsius: celsius, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setLowerDewPoint(celsius: celsius, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setLowerDewPoint(celsius: celsius, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let l = celsius, let u = upperDewPointCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    public func upperDewPointCelsius(for sensor: PhysicalSensor) -> Double? {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            return alertPersistence.upperDewPointCelsius(for: luid.value)
-                ?? alertPersistence.upperDewPointCelsius(for: macId.value)
-        } else if let luid = sensor.luid {
-            return alertPersistence.upperDewPointCelsius(for: luid.value)
-        } else if let macId = sensor.macId {
-            return alertPersistence.upperDewPointCelsius(for: macId.value)
-        } else {
-            assertionFailure()
-            return nil
-        }
-    }
-
-    public func setUpperDewPoint(celsius: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setUpperDewPoint(celsius: celsius, for: luid.value)
-            alertPersistence.setUpperDewPoint(celsius: celsius, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setUpperDewPoint(celsius: celsius, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setUpperDewPoint(celsius: celsius, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-        if let u = celsius, let l = lowerDewPointCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    public func dewPointDescription(for sensor: PhysicalSensor) -> String? {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            return alertPersistence.dewPointDescription(for: luid.value)
-                ?? alertPersistence.dewPointDescription(for: macId.value)
-        } else if let luid = sensor.luid {
-            return alertPersistence.dewPointDescription(for: luid.value)
-        } else if let macId = sensor.macId {
-            return alertPersistence.dewPointDescription(for: macId.value)
-        } else {
-            assertionFailure()
-            return nil
-        }
-    }
-
-    public func setDewPoint(description: String?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setDewPoint(description: description, for: luid.value)
-            alertPersistence.setDewPoint(description: description, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setDewPoint(description: description, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setDewPoint(description: description, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let l = lowerDewPointCelsius(for: sensor), let u = upperDewPointCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    public func lowerDewPointCelsius(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.lowerDewPointCelsius(for: sensor.id)
-    }
-
-    public func setLowerDewPoint(celsius: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setLowerDewPoint(celsius: celsius, for: sensor.id)
-        if let l = celsius, let u = upperDewPointCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    public func upperDewPointCelsius(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.upperDewPointCelsius(for: sensor.id)
-    }
-
-    public func setUpperDewPoint(celsius: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setUpperDewPoint(celsius: celsius, for: sensor.id)
-        if let u = celsius, let l = lowerDewPointCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    public func dewPointDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.dewPointDescription(for: sensor.id)
-    }
-
-    public func setDewPoint(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setDewPoint(description: description, for: sensor.id)
-        if let l = lowerDewPointCelsius(for: sensor), let u = upperDewPointCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    public func lowerDewPointCelsius(for uuid: String) -> Double? {
-        return alertPersistence.lowerDewPointCelsius(for: uuid)
-    }
-
-    public func upperDewPointCelsius(for uuid: String) -> Double? {
-        return alertPersistence.upperDewPointCelsius(for: uuid)
-    }
-
-    public func dewPointDescription(for uuid: String) -> String? {
-        return alertPersistence.dewPointDescription(for: uuid)
     }
 }
 

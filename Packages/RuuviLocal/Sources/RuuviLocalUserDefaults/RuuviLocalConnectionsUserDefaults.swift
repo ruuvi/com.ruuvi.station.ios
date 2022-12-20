@@ -54,4 +54,17 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
             }
         }
     }
+
+    func unpairAllConnection() {
+        if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
+            for uuid in array {
+                NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,
+                                                object: nil,
+                                                userInfo:
+                    [CPDidStopToKeepConnectionKey.uuid: uuid])
+            }
+            array.removeAll()
+            prefs.set(array, forKey: keepConnectionArrayUDKey)
+        }
+    }
 }

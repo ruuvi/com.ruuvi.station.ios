@@ -1,8 +1,9 @@
 "DiscoverTable.NavigationItem.title" = "Add a New Sensor";
-"DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
+"DiscoverTable.GetMoreSensors.button.title" = "Buy Ruuvi Sensors";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"PermissionPresenter.settings" = "Settings";
 "OK" = "OK";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
@@ -12,3 +13,4 @@
 "DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
 "WebTagLocationSource.current" = "Your location";
 "WebTagLocationSource.manual" = "Pick from the map";
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";

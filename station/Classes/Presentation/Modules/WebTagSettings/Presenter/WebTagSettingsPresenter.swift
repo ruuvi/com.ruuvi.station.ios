@@ -228,7 +228,6 @@ extension WebTagSettingsPresenter {
     private func bindViewModel(to webTag: VirtualTagSensor) {
         bindTemperatureAlert(webTag)
         bindHumidityAlert(webTag)
-        bindDewPoint(webTag)
         bindPressureAlert(webTag)
     }
 
@@ -341,43 +340,6 @@ extension WebTagSettingsPresenter {
         }
     }
 
-    private func bindDewPoint(_ sensor: VirtualTagSensor) {
-        let dewPointLower = view.viewModel.dewPointLowerBound
-        let dewPointUpper = view.viewModel.dewPointUpperBound
-        bind(view.viewModel.isDewPointAlertOn, fire: false) {
-            [weak dewPointLower, weak dewPointUpper] observer, isOn in
-            if let l = dewPointLower?.value?.converted(to: .celsius).value,
-               let u = dewPointUpper?.value?.converted(to: .celsius).value {
-                let type: AlertType = .dewPoint(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(
-                    type: type,
-                    for: sensor.id
-                )
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, for: sensor)
-                    } else {
-                        observer.alertService.unregister(type: type, for: sensor)
-                    }
-                    observer.alertService.unmute(type: type, for: sensor)
-                }
-            }
-        }
-        bind(view.viewModel.dewPointLowerBound, fire: false) { observer, lower in
-            if let l = lower?.converted(to: .celsius).value {
-                observer.alertService.setLowerDewPoint(celsius: l, for: sensor)
-            }
-        }
-        bind(view.viewModel.dewPointUpperBound, fire: false) { observer, upper in
-            if let u = upper?.converted(to: .celsius).value {
-                observer.alertService.setUpperDewPoint(celsius: u, for: sensor)
-            }
-        }
-        bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: sensor)
-        }
-    }
-
     private func startObservingWebTag() {
         virtualReactorToken?.invalidate()
         let id = virtualSensor.id
@@ -413,7 +375,7 @@ extension WebTagSettingsPresenter {
         })
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         ruuviSensorPropertiesService.getImage(for: virtualSensor)
             .on(success: { [weak self] image in
@@ -485,26 +447,6 @@ extension WebTagSettingsPresenter {
             for: virtualSensor.id
         )
 
-        let dewPointAlertType: AlertType = .dewPoint(lower: 0, upper: 0)
-        if case .dewPoint(let lower, let upper) = alertService.alert(for: virtualSensor.id, of: dewPointAlertType) {
-            view.viewModel.isDewPointAlertOn.value = true
-            view.viewModel.dewPointLowerBound.value = Temperature(value: lower, unit: .celsius)
-            view.viewModel.dewPointUpperBound.value = Temperature(value: upper, unit: .celsius)
-        } else {
-            view.viewModel.isDewPointAlertOn.value = false
-            if let lowerBound = alertService.lowerDewPointCelsius(for: virtualSensor.id) {
-                view.viewModel.dewPointLowerBound.value = Temperature(value: lowerBound, unit: .celsius)
-            }
-            if let upperBound = alertService.upperDewPointCelsius(for: virtualSensor.id) {
-                view.viewModel.dewPointUpperBound.value = Temperature(value: upperBound, unit: .celsius)
-            }
-        }
-
-        view.viewModel.dewPointAlertMutedTill.value = alertService.mutedTill(
-            type: dewPointAlertType,
-            for: virtualSensor.id
-        )
-
         let pressureAlertType: AlertType = .pressure(lower: 0, upper: 0)
         if case .pressure(let lower, let upper) = alertService.alert(for: virtualSensor.id, of: pressureAlertType) {
             view.viewModel.isPressureAlertOn.value = true
@@ -566,8 +508,6 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.isRelativeHumidityAlertOn
         case .humidity:
             observable = view.viewModel.isHumidityAlertOn
-        case .dewPoint:
-            observable = view.viewModel.isDewPointAlertOn
         case .pressure:
             observable = view.viewModel.isPressureAlertOn
         case .connection:
@@ -595,11 +535,6 @@ extension WebTagSettingsPresenter {
             view.viewModel.humidityAlertMutedTill.value = nil
         }
 
-        if let mutedTill = view.viewModel.dewPointAlertMutedTill.value,
-           mutedTill < Date() {
-            view.viewModel.dewPointAlertMutedTill.value = nil
-        }
-
         if let mutedTill = view.viewModel.pressureAlertMutedTill.value,
            mutedTill < Date() {
             view.viewModel.pressureAlertMutedTill.value = nil
@@ -616,8 +551,6 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.relativeHumidityAlertMutedTill
         case .humidity:
             observable = view.viewModel.humidityAlertMutedTill
-        case .dewPoint:
-            observable = view.viewModel.dewPointAlertMutedTill
         case .pressure:
             observable = view.viewModel.pressureAlertMutedTill
         case .connection:

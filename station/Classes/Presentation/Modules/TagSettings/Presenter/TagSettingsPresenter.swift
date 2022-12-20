@@ -12,6 +12,7 @@ import RuuviUser
 import RuuviCore
 import RuuviPresenters
 import RuuviPool
+import RuuviNotifier
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -42,6 +43,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var featureToggleService: FeatureToggleService!
     var exportService: RuuviServiceExport!
     var localSyncState: RuuviLocalSyncState!
+    var alertHandler: RuuviNotifier!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -108,6 +110,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
     private var scrollToAlert: Bool = false
+    private var timer: Timer?
 
     deinit {
         mutedTillTimer?.invalidate()
@@ -124,6 +127,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         alertDidChangeToken?.invalidate()
         backgroundUploadProgressToken?.invalidate()
         backgroundToken?.invalidate()
+        timer?.invalidate()
+        NotificationCenter.default.removeObserver(self)
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -166,6 +171,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingApplicationState()
         startObservingAlertChanges()
         startMutedTillTimer()
+        startListeningToRuuviTagsAlertStatus()
     }
 
     func dismiss(completion: (() -> Void)?) {
@@ -177,6 +183,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
+        startObservingAppState()
+        checkOwner()
     }
 
     func viewWillAppear() {
@@ -185,6 +193,39 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         view.updateScrollPosition(scrollToAlert: scrollToAlert)
         checkFirmwareVersion()
         checkLastRecord()
+    }
+
+    private func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(handleAppEnterForgroundState),
+                         name: UIApplication.willEnterForegroundNotification,
+                         object: nil)
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(handleAppEnterBackgroundState),
+                         name: UIApplication.didEnterBackgroundNotification,
+                         object: nil)
+    }
+
+    @objc private func handleAppEnterForgroundState() {
+        if let keep = viewModel.keepConnection.value,
+           let connected = viewModel.isConnected.value {
+            if keep && !connected {
+                view.startKeepConnectionAnimatingDots()
+            }
+        }
+    }
+
+    @objc private func handleAppEnterBackgroundState() {
+        if let keep = viewModel.keepConnection.value,
+           let connected = viewModel.isConnected.value {
+            if keep && !connected {
+                view.stopKeepConnectionAnimatingDots()
+            }
+        }
     }
 
     func viewDidAskToDismiss() {
@@ -198,6 +239,23 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
+    }
+
+    func viewDidTriggerKeepConnection(isOn: Bool) {
+        if settings.cloudModeEnabled {
+            if isOn {
+                view.showKeepConnectionCloudModeDialog()
+            } else {
+                viewModel.keepConnection.value = isOn
+            }
+        } else {
+            viewModel.keepConnection.value = isOn
+            if isOn {
+                setupTimeoutTimerForKeepConnection()
+            } else {
+                invalidateTimer()
+            }
+        }
     }
 
     func viewDidAskToRemoveRuuviTag() {
@@ -279,6 +337,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         viewDidTriggerFirmwareUpdateDialog()
     }
 
+    // TODO: @priyonto - Clean this up if not needed.
     func viewDidTapOnAlertsDisabledView() {
         let isPN = viewModel.isPushNotificationsEnabled.value ?? false
         let isCo = viewModel.isConnected.value ?? false
@@ -408,6 +467,14 @@ extension TagSettingsPresenter {
             }
     }
 
+    private func startListeningToRuuviTagsAlertStatus() {
+        if let luid = ruuviTag.luid {
+            alertHandler.subscribe(self, to: luid.value)
+        } else if let macId = ruuviTag.macId {
+            alertHandler.subscribe(self, to: macId.value)
+        }
+    }
+
     // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
@@ -430,7 +497,6 @@ extension TagSettingsPresenter {
         viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag)
         viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: ruuviTag)
         viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: ruuviTag)
-        viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: ruuviTag)
         viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag)
         viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag)
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
@@ -466,7 +532,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil && ruuviTag.isOwner
-        viewModel.isConnectionSectionEnabled.value = !(ruuviTag.isCloud && settings.cloudModeEnabled && ruuviTag.isOwner)
+
         viewModel.isNetworkConnected.value = ruuviTag.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -485,9 +551,6 @@ extension TagSettingsPresenter {
         }
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
-
-        // Firmware update section
-        handleFirmwareUpdateSection()
 
         syncAlerts()
     }
@@ -519,20 +582,7 @@ extension TagSettingsPresenter {
         }
 
         // isAlertsVisible
-        let isPNAlertsAvailiable = viewModel.isPNAlertsAvailiable
         let isCloudAlertsAvailable = viewModel.isCloudAlertsAvailable
-
-        bind(viewModel.isPNAlertsAvailiable) { [weak isCloudAlertsAvailable] observer, isPNAlertsAvailiable in
-            let isPN = isPNAlertsAvailiable ?? false
-            let isCl = isCloudAlertsAvailable?.value ?? false
-            observer.viewModel.isAlertsVisible.value = isPN || isCl
-        }
-
-        bind(viewModel.isCloudAlertsAvailable) { observer, isCloudAlertsAvailable in
-            let isPN = isPNAlertsAvailiable.value ?? false
-            let isCl = isCloudAlertsAvailable ?? false
-            observer.viewModel.isAlertsVisible.value = isPN || isCl
-        }
 
         // isAlertsEnabled
         bind(viewModel.isConnected) { [weak isCloudAlertsAvailable] observer, isConnected in
@@ -568,8 +618,6 @@ extension TagSettingsPresenter {
                 sync(relativeHumidity: type, ruuviTag: ruuviTag)
             case .humidity:
                 sync(humidity: type, ruuviTag: ruuviTag)
-            case .dewPoint:
-                sync(dewPoint: type, ruuviTag: ruuviTag)
             case .pressure:
                 sync(pressure: type, ruuviTag: ruuviTag)
             case .connection:
@@ -632,23 +680,6 @@ extension TagSettingsPresenter {
             }
         }
         viewModel.relativeHumidityAlertMutedTill.value = alertService.mutedTill(type: relativeHumidity, for: ruuviTag)
-    }
-
-    private func sync(dewPoint: AlertType, ruuviTag: RuuviTagSensor) {
-        if case .dewPoint(let lower, let upper) = alertService.alert(for: ruuviTag, of: dewPoint) {
-            viewModel.isDewPointAlertOn.value = true
-            viewModel.dewPointLowerBound.value =  Temperature(Double(lower), unit: .celsius)
-            viewModel.dewPointUpperBound.value =  Temperature(Double(upper), unit: .celsius)
-        } else {
-            viewModel.isDewPointAlertOn.value = false
-            if let dewPointLowerBound = alertService.lowerDewPointCelsius(for: ruuviTag) {
-                viewModel.dewPointLowerBound.value = Temperature(Double(dewPointLowerBound), unit: .celsius)
-            }
-            if let dewPointUpperBound = alertService.upperDewPointCelsius(for: ruuviTag) {
-                viewModel.dewPointUpperBound.value = Temperature(Double(dewPointUpperBound), unit: .celsius)
-            }
-        }
-        viewModel.dewPointAlertMutedTill.value = alertService.mutedTill(type: dewPoint, for: ruuviTag)
     }
 
     private func sync(pressure: AlertType, ruuviTag: RuuviTagSensor) {
@@ -882,15 +913,18 @@ extension TagSettingsPresenter {
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
         if let luid = ruuviTag.luid {
-            bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
+            bind(viewModel.keepConnection, fire: false) { [weak self] observer, keepConnection in
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                // Toggle the background scanning if any tag is asked to pair.
+                if keepConnection.bound {
+                    self?.settings.saveHeartbeats = true
+                }
             }
         }
 
         bindTemperatureAlert(for: ruuviTag)
         bindRhAlert(for: ruuviTag)
         bindHumidityAlert(for: ruuviTag)
-        bindDewPoint(for: ruuviTag)
         bindPressureAlert(for: ruuviTag)
         bindConnectionAlert(for: ruuviTag)
         bindMovementAlert(for: ruuviTag)
@@ -1022,46 +1056,6 @@ extension TagSettingsPresenter {
         }
         bind(viewModel.humidityAlertDescription, fire: false) { observer, humidityAlertDescription in
             observer.alertService.setHumidity(description: humidityAlertDescription, for: ruuviTag)
-        }
-    }
-
-    private func bindDewPoint(for ruuviTag: RuuviTagSensor) {
-        let dewPointLower = viewModel.dewPointLowerBound
-        let dewPointUpper = viewModel.dewPointUpperBound
-        bind(viewModel.isDewPointAlertOn, fire: false) {
-            [weak dewPointLower, weak dewPointUpper] observer, isOn in
-            if let l = dewPointLower?.value?.converted(to: .celsius).value,
-               let u = dewPointUpper?.value?.converted(to: .celsius).value {
-                let type: AlertType = .dewPoint(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: ruuviTag)
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, ruuviTag: ruuviTag)
-                    } else {
-                        observer.alertService.unregister(type: type, ruuviTag: ruuviTag)
-                    }
-                    observer.alertService.unmute(type: type, for: ruuviTag)
-                }
-            }
-        }
-        let lowDewPointDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
-        bind(viewModel.dewPointLowerBound, fire: false) { observer, lower in
-            if let l = lower?.converted(to: .celsius).value {
-                lowDewPointDebouncer.run {
-                    observer.alertService.setLowerDewPoint(celsius: l, for: ruuviTag)
-                }
-            }
-        }
-        let upperDewPointDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
-        bind(viewModel.dewPointUpperBound, fire: false) { observer, upper in
-            if let u = upper?.converted(to: .celsius).value {
-                upperDewPointDebouncer.run {
-                    observer.alertService.setUpperDewPoint(celsius: u, for: ruuviTag)
-                }
-            }
-        }
-        bind(viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: ruuviTag)
         }
     }
 
@@ -1283,11 +1277,6 @@ extension TagSettingsPresenter {
             viewModel.humidityAlertMutedTill.value = nil
         }
 
-        if let mutedTill = viewModel.dewPointAlertMutedTill.value,
-           mutedTill < Date() {
-            viewModel.dewPointAlertMutedTill.value = nil
-        }
-
         if let mutedTill = viewModel.pressureAlertMutedTill.value,
            mutedTill < Date() {
             viewModel.pressureAlertMutedTill.value = nil
@@ -1313,8 +1302,6 @@ extension TagSettingsPresenter {
             observable = viewModel.relativeHumidityAlertMutedTill
         case .humidity:
             observable = viewModel.humidityAlertMutedTill
-        case .dewPoint:
-            observable = viewModel.dewPointAlertMutedTill
         case .pressure:
             observable = viewModel.pressureAlertMutedTill
         case .connection:
@@ -1338,8 +1325,6 @@ extension TagSettingsPresenter {
             observable = viewModel.isRelativeHumidityAlertOn
         case .humidity:
             observable = viewModel.isHumidityAlertOn
-        case .dewPoint:
-            observable = viewModel.isDewPointAlertOn
         case .pressure:
             observable = viewModel.isPressureAlertOn
         case .connection:
@@ -1374,11 +1359,110 @@ extension TagSettingsPresenter {
         })
     }
 
-    private func handleFirmwareUpdateSection() {
-        let isFWFeatureEnabled = featureToggleService.isEnabled(.updateFirmware)
-        let isTagAvailableLocally = ruuviTag.luid != nil && ruuviTag.isOwner
-        if !viewModel.canShowUpdateFirmware.value.bound {
-            viewModel.canShowUpdateFirmware.value = isFWFeatureEnabled && isTagAvailableLocally
+    /// Sets up a 10 seconds timer to attempt pairing to a Ruuvi Sensor via Bluetooth.
+    private func setupTimeoutTimerForKeepConnection() {
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { [weak self] (_) in
+            guard let self = self else { return }
+            self.invalidateTimer()
+            if let isConnected = self.viewModel?.isConnected.value,
+               !isConnected {
+                self.viewModel?.keepConnection.value = false
+                self.view.resetKeepConnectionSwitch()
+                self.view.showKeepConnectionTimeoutDialog()
+            }
+        })
+    }
+
+    /// Invalidates the running timer
+    private func invalidateTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+
+    private func checkOwner() {
+        guard let macId = ruuviTag.macId,
+              ruuviTag.owner == nil else {
+            return
+        }
+
+        // Check in every 15 days if the tag doesn't have any owner.
+        if let checkedDate = settings.ownerCheckDate(for: macId),
+           let days = checkedDate.numberOfDaysFromNow(), days < 15 {
+            return
+        }
+
+        ruuviOwnershipService.checkOwner(macId: macId)
+            .on(success: { [weak self] owner in
+                guard let self = self, !owner.isEmpty else {
+                    self?.settings.setOwnerCheckDate(for: macId, value: Date())
+                    return
+                }
+                self.viewModel.owner.value = owner
+                self.ruuviPool.update(self.ruuviTag
+                    .with(owner: owner)
+                    .with(isOwner: false))
+            })
+    }
+
+}
+
+// MARK: - RuuviNotifierObserver
+extension TagSettingsPresenter: RuuviNotifierObserver {
+    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+        // No op here.
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    func ruuvi(notifier: RuuviNotifier,
+               alertType: AlertType,
+               isTriggered: Bool,
+               for uuid: String) {
+        if !settings.alertBellVisible {
+            return
+        }
+
+        // TODO: @priyonto - Make the live alert bell animation work properly. 
+        if ruuviTag.luid?.value == uuid || ruuviTag.macId?.value == uuid {
+            let isTriggered = isTriggered && (viewModel.isAlertsEnabled.value ?? false)
+            switch alertType {
+            case .temperature:
+                let currentValue = viewModel.temperatureAlertState.value
+                let isOn = viewModel.isTemperatureAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.temperatureAlertState.value = newValue
+                }
+            case .relativeHumidity:
+                let currentValue = viewModel.relativeHumidityAlertState.value
+                let isOn = viewModel.isRelativeHumidityAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.relativeHumidityAlertState.value = newValue
+                }
+            case .pressure:
+                let currentValue = viewModel.pressureAlertState.value
+                let isOn = viewModel.isPressureAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.pressureAlertState.value = newValue
+                }
+            case .connection:
+                let currentValue = viewModel.connectionAlertState.value
+                let isOn = viewModel.isConnectionAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.pressureAlertState.value = newValue
+                }
+            case .movement:
+                let currentValue = viewModel.movementAlertState.value
+                let isOn = viewModel.isMovementAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if newValue != currentValue {
+                    viewModel.movementAlertState.value = newValue
+                }
+            default:
+                break
+            }
         }
     }
 }

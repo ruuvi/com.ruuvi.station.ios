@@ -12,6 +12,10 @@ struct Spinner: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
-        isAnimating ? uiView.startAnimating() : uiView.stopAnimating()
+        if isAnimating {
+            uiView.startAnimating()
+        } else {
+            uiView.stopAnimating()
+        }
     }
 }

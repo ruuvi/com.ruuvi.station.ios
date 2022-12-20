@@ -1,8 +1,9 @@
 "DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
-"DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
+"DiscoverTable.GetMoreSensors.button.title" = "Osta Ruuvi-antureita";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuaalisten antureiden avulla voidaan esittää paikallisilta sääasemilta kerättyjä säätietoja.";
+"PermissionPresenter.settings" = "Asetukset";
 "OK" = "OK";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Ei havaittuja antureita Bluetooth-verkon alueella)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth ei ole käytössä)";
@@ -12,3 +13,4 @@
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
 "WebTagLocationSource.manual" = "Valitse kartalta";
+"Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/fi/tuotteet?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";

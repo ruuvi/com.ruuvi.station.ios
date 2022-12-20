@@ -3,7 +3,7 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 import RuuviService
-
+// TODO: - @priyonto - Improve the number formatter instances.
 public final class RuuviServiceMeasurementImpl: NSObject {
     var settings: RuuviLocalSettings {
         didSet {
@@ -279,6 +279,14 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
                                                         settings.humidityAccuracy.value)
             + " " + settings.temperatureUnit.symbol
         }
+    }
+
+    public func string(for measurement: Double?) -> String {
+        guard let measurement = measurement else {
+            return ""
+        }
+        let number = NSNumber(value: measurement)
+        return commonNumberFormatter.string(from: number) ?? ""
     }
 }
 // MARK: - Private

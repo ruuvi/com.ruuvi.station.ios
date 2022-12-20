@@ -37,7 +37,9 @@ class SQLiteGRDBDatabase: GRDBDatabase {
     private(set) var dbPool: DatabasePool
 
     private init() throws {
-        dbPool = try DatabasePool(path: SQLiteGRDBDatabase.databasePath)
+        var configuration = Configuration()
+        configuration.qos = .userInitiated
+        dbPool = try DatabasePool(path: SQLiteGRDBDatabase.databasePath, configuration: configuration)
     }
 
     private func recreate() {
