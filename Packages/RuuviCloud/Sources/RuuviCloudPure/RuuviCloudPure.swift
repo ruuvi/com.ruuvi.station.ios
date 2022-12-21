@@ -411,6 +411,23 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
+    @discardableResult
+    public func checkOwner(macId: MACIdentifier) -> Future<String, RuuviCloudError> {
+        let promise = Promise<String, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiGetSensorsRequest(sensor: macId.mac)
+        api.owner(request, authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.email)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     public func loadSensorsDense(for sensor: RuuviTagSensor?,
                                  measurements: Bool?,
                                  sharedToOthers: Bool?,
@@ -620,17 +637,24 @@ public final class RuuviCloudPure: RuuviCloud {
             .on(success: { [weak self] response in
                 guard let sSelf = self else { return }
                 let fetchedRecords = sSelf.decodeSensorRecords(macId: macId, response: response)
+                // Offset is to check whether we have recent minute data. (Current time + 1 min)
+                let offset = Date().addingTimeInterval(1 * 60)
                 if let lastRecord = fetchedRecords.last,
-                   !records.contains(lastRecord),
-                   lastRecord.date < until ?? Date.distantFuture {
-                    sSelf.loadRecordsByChunk(
-                        macId: macId,
-                        since: lastRecord.date,
-                        until: until,
-                        records: records + fetchedRecords,
-                        chunkSize: chunkSize,
-                        promise: promise
-                    )
+                   !records.contains(lastRecord) {
+                    let loadable =
+                        (until != nil && lastRecord.date < until!) || lastRecord.date > offset
+                    if loadable {
+                        sSelf.loadRecordsByChunk(
+                            macId: macId,
+                            since: lastRecord.date,
+                            until: until,
+                            records: records + fetchedRecords,
+                            chunkSize: chunkSize,
+                            promise: promise
+                        )
+                    } else {
+                        promise.succeed(value: records + fetchedRecords)
+                    }
                 } else {
                     promise.succeed(value: records + fetchedRecords)
                 }

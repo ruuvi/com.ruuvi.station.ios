@@ -104,7 +104,6 @@ extension SharePresenter: ShareModuleInput {
 // MARK: - Private
 extension SharePresenter {
     private func fetchShared() {
-        activityPresenter.increment()
         ruuviOwnershipService
             .loadShared(for: sensor)
             .on(success: { [weak self] shareableSensors in
@@ -112,8 +111,6 @@ extension SharePresenter {
                 self?.view.clearInput()
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.decrement()
             })
     }
 

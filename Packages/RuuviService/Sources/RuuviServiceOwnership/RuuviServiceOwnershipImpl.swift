@@ -222,4 +222,16 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             })
         return promise.future
     }
+
+    @discardableResult
+    public func checkOwner(macId: MACIdentifier) -> Future<String, RuuviServiceError> {
+        let promise = Promise<String, RuuviServiceError>()
+        cloud.checkOwner(macId: macId)
+            .on(success: { owner in
+                promise.succeed(value: owner)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }

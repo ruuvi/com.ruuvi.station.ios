@@ -401,7 +401,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
     }
 
-    // Experiments
     private let lastOpenedChartKey = "SettingsUserDefaults.lastOpenedChart"
     func lastOpenedChart() -> String? {
         UserDefaults.standard.value(forKey: lastOpenedChartKey) as? String
@@ -410,4 +409,17 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func setLastOpenedChart(with id: String) {
         UserDefaults.standard.set(id, forKey: lastOpenedChartKey)
     }
+
+    private let ownerCheckDateKey = "SettingsUserDefaults.ownerCheckDate"
+    func setOwnerCheckDate(for macId: MACIdentifier, value: Date) {
+        UserDefaults.standard.set(value, forKey: ownerCheckDateKey + macId.mac)
+    }
+
+    func ownerCheckDate(for macId: MACIdentifier) -> Date? {
+        UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
+    }
+
+    // TODO: @priyonyo - Remove this when alert bell is implemented
+    @UserDefault("SettingsUserDefaults.alertBellVisible", defaultValue: false)
+    var alertBellVisible: Bool
 }

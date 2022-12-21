@@ -5,17 +5,21 @@ class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
     weak var view: HeartbeatViewInput!
     var router: HeartbeatRouterInput!
     var settings: RuuviLocalSettings!
+    var connectionPersistence: RuuviLocalConnections!
 
     func configure() {
         let viewModel = HeartbeatViewModel()
-        viewModel.saveHeartbeats.value = settings.saveHeartbeats
-        viewModel.saveHeartbeatsInterval.value = settings.saveHeartbeatsIntervalMinutes
+        viewModel.bgScanningState.value = settings.saveHeartbeats
+        viewModel.bgScanningInterval.value = settings.saveHeartbeatsIntervalMinutes
 
-        bind(viewModel.saveHeartbeats, fire: false) { observer, saveHeartbeats in
-            observer.settings.saveHeartbeats = saveHeartbeats.bound
+        bind(viewModel.bgScanningState, fire: false) { [weak self] _,
+            saveHeartbeats in
+            if !saveHeartbeats.bound {
+                self?.connectionPersistence.unpairAllConnection()
+            }
         }
 
-        bind(viewModel.saveHeartbeatsInterval, fire: false) { observer, saveHeartbeatsInterval in
+        bind(viewModel.bgScanningInterval, fire: false) { observer, saveHeartbeatsInterval in
             observer.settings.saveHeartbeatsIntervalMinutes = saveHeartbeatsInterval.bound
         }
 

@@ -141,13 +141,16 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         var message = ""
         switch self.viewModel.type {
         case .humidity:
-            message = "OffsetCorrection.Dialog.Calibration.EnterHumidity".localizedFormat("%".localized())
+            let format = "OffsetCorrection.Dialog.Calibration.EnterHumidity".localized()
+            message = String(format: format, "%".localized())
         case .pressure:
+            let format = "OffsetCorrection.Dialog.Calibration.EnterPressure".localized()
             let unit = self.viewModel.pressureUnit.value ?? .hectopascals
-            message = "OffsetCorrection.Dialog.Calibration.EnterPressure".localizedFormat(unit.symbol)
+            message = String(format: format, unit.symbol)
         default:
+            let format = "OffsetCorrection.Dialog.Calibration.EnterTemperature".localized()
             let unit = self.viewModel.temperatureUnit.value ?? .celsius
-            message = "OffsetCorrection.Dialog.Calibration.EnterTemperature".localizedFormat(unit.symbol)
+            message = String(format: format, unit.symbol)
         }
 
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)

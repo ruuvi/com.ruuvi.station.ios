@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8hB-Vn-evN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8hB-Vn-evN">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,14 +18,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ef3-zd-fTi">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <segue destination="O97-4W-9W0" kind="embed" identifier="EmbedHeartbeatSwiftUIHostingControllerSegueIdentifier" destinationCreationSelector="addSwiftUIView:" id="j1W-7n-11v"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kjx-Fi-b2F">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <connections>
                                     <segue destination="ybW-bv-0sg" kind="embed" identifier="EmbedHeartbeatTableViewControllerSegueIdentifier" id="W3p-fb-eCR"/>
                                 </connections>
@@ -63,7 +63,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="HeartbeatTableViewController" id="ybW-bv-0sg" customClass="HeartbeatTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="2Jo-6y-F3p">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="814"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -76,16 +76,16 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Logging Interval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iA0-et-Kck">
-                                                    <rect key="frame" x="20" y="11.5" width="162" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background Scanning" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iA0-et-Kck">
+                                                    <rect key="frame" x="20" y="11.5" width="171" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UL9-Dl-fMv">
                                                     <rect key="frame" x="343" y="6.5" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="saveHeartbeatsSwitchValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="Ysv-xi-8C4"/>
+                                                        <action selector="bgScanningSwitchValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="Edf-Ov-X8r"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -97,32 +97,56 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="bgl-03-xup">
-                                        <rect key="frame" x="0.0" y="61.5" width="414" height="43.5"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="74" id="bgl-03-xup">
+                                        <rect key="frame" x="0.0" y="61.5" width="414" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bgl-03-xup" id="k3r-Hf-2al">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWd-Xv-XbX">
-                                                    <rect key="frame" x="20" y="11.5" width="89" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Logging Interval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWd-Xv-XbX">
+                                                    <rect key="frame" x="20" y="8" width="378" height="22"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="22" id="f0n-5h-ffW"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wdz-eJ-eBd">
+                                                    <rect key="frame" x="20" y="38" width="264" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="NlI-i8-HBY">
-                                                    <rect key="frame" x="300" y="6" width="94" height="32"/>
+                                                    <rect key="frame" x="300" y="36" width="94" height="32"/>
                                                     <connections>
-                                                        <action selector="saveHeartbeatsIntervalStepperValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="Iay-5B-i7o"/>
+                                                        <action selector="bgScanningIntervalStepperValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="PlV-to-7U9"/>
                                                     </connections>
                                                 </stepper>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="NlI-i8-HBY" firstAttribute="centerY" secondItem="wdz-eJ-eBd" secondAttribute="centerY" id="JEG-hs-dfa"/>
+                                                <constraint firstAttribute="bottom" secondItem="wdz-eJ-eBd" secondAttribute="bottom" constant="8" id="JJg-Gp-ppE"/>
+                                                <constraint firstItem="NlI-i8-HBY" firstAttribute="leading" secondItem="wdz-eJ-eBd" secondAttribute="trailing" constant="16" id="KDk-eP-2Vp"/>
                                                 <constraint firstItem="DWd-Xv-XbX" firstAttribute="leading" secondItem="k3r-Hf-2al" secondAttribute="leading" constant="20" id="NS9-V8-K5d"/>
-                                                <constraint firstItem="DWd-Xv-XbX" firstAttribute="centerY" secondItem="k3r-Hf-2al" secondAttribute="centerY" id="Pte-je-N24"/>
+                                                <constraint firstItem="NlI-i8-HBY" firstAttribute="centerX" secondItem="wdz-eJ-eBd" secondAttribute="centerX" id="OWn-MW-yxF"/>
                                                 <constraint firstAttribute="trailing" secondItem="NlI-i8-HBY" secondAttribute="trailing" constant="20" id="UaJ-9e-Q3g"/>
-                                                <constraint firstItem="NlI-i8-HBY" firstAttribute="centerY" secondItem="k3r-Hf-2al" secondAttribute="centerY" id="cFa-wz-bdL"/>
+                                                <constraint firstItem="NlI-i8-HBY" firstAttribute="leading" secondItem="DWd-Xv-XbX" secondAttribute="trailing" constant="16" id="Ujn-ZR-DYz"/>
+                                                <constraint firstAttribute="trailing" secondItem="wdz-eJ-eBd" secondAttribute="trailing" id="aRr-84-1Wz"/>
+                                                <constraint firstItem="wdz-eJ-eBd" firstAttribute="top" secondItem="DWd-Xv-XbX" secondAttribute="bottom" constant="8" id="cUh-75-Ymz"/>
+                                                <constraint firstItem="wdz-eJ-eBd" firstAttribute="leading" secondItem="k3r-Hf-2al" secondAttribute="leading" constant="20" id="d2a-Cc-VJo"/>
+                                                <constraint firstAttribute="trailing" secondItem="DWd-Xv-XbX" secondAttribute="trailing" constant="16" id="db5-zU-Ksd"/>
+                                                <constraint firstItem="DWd-Xv-XbX" firstAttribute="top" secondItem="k3r-Hf-2al" secondAttribute="top" constant="8" id="qcl-8v-gF1"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="aRr-84-1Wz"/>
+                                                    <exclude reference="OWn-MW-yxF"/>
+                                                    <exclude reference="Ujn-ZR-DYz"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -134,10 +158,11 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="saveHeartbeatsIntervalLabel" destination="DWd-Xv-XbX" id="9Mx-qB-FD3"/>
-                        <outlet property="saveHeartbeatsIntervalStepper" destination="NlI-i8-HBY" id="4Qp-bf-Vpy"/>
-                        <outlet property="saveHeartbeatsSwitch" destination="UL9-Dl-fMv" id="c3F-Zg-cej"/>
-                        <outlet property="saveHeartbeatsTitleLabel" destination="iA0-et-Kck" id="35G-mU-DXI"/>
+                        <outlet property="bgScanningIntervalStepper" destination="NlI-i8-HBY" id="Uy0-s3-e7o"/>
+                        <outlet property="bgScanningIntervalTitleLabel" destination="DWd-Xv-XbX" id="NeV-2u-NTT"/>
+                        <outlet property="bgScanningIntervalValueLabel" destination="wdz-eJ-eBd" id="3pC-Bw-cQQ"/>
+                        <outlet property="bgScanningSwitch" destination="UL9-Dl-fMv" id="3QB-i6-ffE"/>
+                        <outlet property="bgScanningTitleLabel" destination="iA0-et-Kck" id="yNJ-9Y-QpO"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aNB-Ak-4Id" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

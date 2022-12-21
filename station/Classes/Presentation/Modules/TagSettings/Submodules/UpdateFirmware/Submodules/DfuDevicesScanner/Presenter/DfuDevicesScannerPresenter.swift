@@ -3,6 +3,7 @@ import BTKit
 import UIKit
 import RuuviOntology
 import RuuviDFU
+import CoreBluetooth
 
 class DfuDevicesScannerPresenter: NSObject, DfuDevicesScannerModuleInput {
     weak var view: DfuDevicesScannerViewInput!
@@ -20,6 +21,16 @@ class DfuDevicesScannerPresenter: NSObject, DfuDevicesScannerModuleInput {
         didSet {
             syncViewModels()
         }
+    }
+
+    private var isBluetoothPermissionGranted: Bool {
+        if #available(iOS 13.1, *) {
+            return CBCentralManager.authorization == .allowedAlways
+        } else if #available(iOS 13.0, *) {
+            return CBCentralManager().authorization == .allowedAlways
+        }
+        // Before iOS 13, Bluetooth permissions are not required
+        return true
     }
 
     func configure(ruuviTag: RuuviTagSensor) {
@@ -50,9 +61,10 @@ class DfuDevicesScannerPresenter: NSObject, DfuDevicesScannerModuleInput {
 extension DfuDevicesScannerPresenter: DfuDevicesScannerViewOutput {
     func viewDidLoad() {
         view.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
-        if !view.isBluetoothEnabled
-            && foreground.bluetoothState != .unknown {
-            view.showBluetoothDisabled()
+        if (!view.isBluetoothEnabled
+            && foreground.bluetoothState != .unknown) ||
+            !isBluetoothPermissionGranted {
+            view.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
         }
     }
 
@@ -80,9 +92,9 @@ extension DfuDevicesScannerPresenter {
     private func startObservingBluetoothState() {
         bluetoothStateToken = foreground.state(self, closure: { (observer, state) in
             observer.view.isBluetoothEnabled = state == .poweredOn
-            if state == .poweredOff {
+            if state == .poweredOff || !self.isBluetoothPermissionGranted {
                 observer.view.viewModels = []
-                observer.view.showBluetoothDisabled()
+                observer.view.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
             }
         })
     }

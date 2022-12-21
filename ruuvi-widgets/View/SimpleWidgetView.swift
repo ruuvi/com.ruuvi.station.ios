@@ -5,6 +5,9 @@ struct SimpleWidgetView: View {
     private let viewModel = WidgetViewModel()
     var entry: WidgetProvider.Entry
     var body: some View {
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+        }
         GeometryReader { geometry in
             VStack {
                 HStack {
@@ -15,8 +18,7 @@ struct SimpleWidgetView: View {
                         .frame(width: geometry.size.width * 0.35, alignment: .leading)
                         .foregroundColor(Color.logoColor)
                     Spacer()
-                    Text(entry.record?.date ?? Date(), formatter: DateFormatter.widgetDateFormatter)
-                        .environment(\.locale, viewModel.locale())
+                    Text(viewModel.measurementTime(from: entry))
                         .foregroundColor(Color.sensorNameColor1)
                         .font(.custom(Constants.muliRegular.rawValue, size: 10, relativeTo: .body))
                         .minimumScaleFactor(0.5)

@@ -1,5 +1,4 @@
 import SwiftUI
-import Localize_Swift
 
 // swiftlint:disable:next type_body_length
 struct DFUUIView: View {

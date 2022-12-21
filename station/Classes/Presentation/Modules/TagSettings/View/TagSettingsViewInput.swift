@@ -12,4 +12,9 @@ protocol TagSettingsViewInput: ViewInput {
     func showExportSheet(with path: URL)
     func showFirmwareUpdateDialog()
     func showFirmwareDismissConfirmationUpdateDialog()
+    func resetKeepConnectionSwitch()
+    func showKeepConnectionTimeoutDialog()
+    func showKeepConnectionCloudModeDialog()
+    func stopKeepConnectionAnimatingDots()
+    func startKeepConnectionAnimatingDots()
 }

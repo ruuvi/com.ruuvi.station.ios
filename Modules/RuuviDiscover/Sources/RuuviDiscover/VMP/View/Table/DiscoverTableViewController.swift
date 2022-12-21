@@ -16,15 +16,13 @@ enum DiscoverTableSection {
     }
 }
 
-class DiscoverTableViewController: UITableViewController {
+class DiscoverTableViewController: UIViewController {
 
     var output: DiscoverViewOutput!
 
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet var closeBarButtonItem: UIBarButtonItem!
-    @IBOutlet var btDisabledEmptyDataSetView: UIView!
-    @IBOutlet weak var btDisabledImageView: UIImageView!
-    @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
-    @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
+    @IBOutlet weak var buyRuuviSensorsButton: UIButton!
 
     private var alertVC: UIAlertController?
 
@@ -35,9 +33,7 @@ class DiscoverTableViewController: UITableViewController {
     }
 
     var isBluetoothEnabled: Bool = true {
-        didSet {
-            updateUIISBluetoothEnabled()
-        }
+        didSet {}
     }
 
     var isCloseEnabled: Bool = true {
@@ -47,7 +43,6 @@ class DiscoverTableViewController: UITableViewController {
     }
 
     private let hideAlreadyAddedWebProviders = false
-    private var emptyDataSetView: UIView?
 }
 
 // MARK: - DiscoverViewInput
@@ -55,16 +50,22 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
-        getMoreSensorsEmptyDataSetButton.setTitle(
-            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self),
+        buyRuuviSensorsButton.setTitle(
+            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self).uppercased(),
             for: .normal
         )
     }
 
-    func showBluetoothDisabled() {
+    func showBluetoothDisabled(userDeclined: Bool) {
         let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
         let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
-        showAlert(title: title, message: message)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(for: Self.self),
+                                        style: .default, handler: { [weak self] _ in
+            self?.takeUserToBTSettings(userDeclined: userDeclined)
+        }))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
 
     func showWebTagInfoDialog() {
@@ -79,6 +80,10 @@ extension DiscoverTableViewController: DiscoverViewInput {
 extension DiscoverTableViewController {
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerClose()
+    }
+
+    @IBAction func handleBuyRuuviSensorsButtonTap(_ sender: Any) {
+        output.viewDidTriggerBuySensors()
     }
 }
 
@@ -108,12 +113,12 @@ extension DiscoverTableViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension DiscoverTableViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension DiscoverTableViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return DiscoverTableSection.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let section = DiscoverTableSection.section(for: ruuviTags.count)
         switch section {
         case .device:
@@ -123,7 +128,7 @@ extension DiscoverTableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = DiscoverTableSection.section(for: ruuviTags.count)
         switch section {
         case .device:
@@ -142,8 +147,8 @@ extension DiscoverTableViewController {
 }
 
 // MARK: - UITableViewDelegate {
-extension DiscoverTableViewController {
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension DiscoverTableViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let sectionType = DiscoverTableSection.section(for: ruuviTags.count)
         switch sectionType {
@@ -152,16 +157,18 @@ extension DiscoverTableViewController {
                 let device = ruuviTags[indexPath.row]
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
-        default:
-            break
+        case .noDevices:
+            if !isBluetoothEnabled {
+                output.viewDidTriggerDisabledBTRow()
+            }
         }
     }
 
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sectionType = DiscoverTableSection.section(for: ruuviTags.count)
         switch sectionType {
         case .device:
@@ -202,15 +209,12 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     private func configureViews() {
         configureTableView()
-        configureBTDisabledImageView()
     }
 
     private func configureTableView() {
         tableView.rowHeight = 44
-    }
-
-    private func configureBTDisabledImageView() {
-        btDisabledImageView.tintColor = .red
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 }
 
@@ -218,7 +222,6 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     private func updateUI() {
         updateTableView()
-        updateUIISBluetoothEnabled()
         updateUIIsCloseEnabled()
     }
 
@@ -229,12 +232,6 @@ extension DiscoverTableViewController {
             } else {
                 navigationItem.leftBarButtonItem = nil
             }
-        }
-    }
-
-    private func updateUIISBluetoothEnabled() {
-        if isViewLoaded {
-            emptyDataSetView = isBluetoothEnabled ? getMoreSensorsEmptyDataSetView : btDisabledEmptyDataSetView
         }
     }
 
@@ -253,6 +250,15 @@ extension DiscoverTableViewController {
             return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
                 + " " + (device.luid?.value.prefix(4) ?? "")
         }
+    }
+
+    private func takeUserToBTSettings(userDeclined: Bool) {
+        guard let url = URL(string: userDeclined ?
+                            UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+              UIApplication.shared.canOpenURL(url) else {
+            return
+        }
+        UIApplication.shared.open(url)
     }
 }
 // swiftlint:enable file_length

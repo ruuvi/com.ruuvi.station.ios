@@ -25,11 +25,10 @@ def shared_pods
   pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
-  pod 'Localize-Swift'
   pod 'Nantes'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'Realm'
-  pod 'RealmSwift'
+  pod 'RealmSwift', '~> 10.33.0'
   # common
   pod 'RuuviPresenters', :path => 'Common/RuuviPresenters/RuuviPresenters.podspec', :testspecs => ['Tests']
   pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
@@ -111,9 +110,8 @@ def widget_pods
   pod 'FutureX'
   pod 'GRDB.swift', '~> 4.14.0'
   pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
-  pod 'Localize-Swift'
   pod 'Realm'
-  pod 'RealmSwift'
+  pod 'RealmSwift', '~> 10.33.0'
   pod 'RuuviUser', :path => 'Packages/RuuviUser/RuuviUser.podspec', :testspecs => ['Tests']
   pod 'RuuviUser/Coordinator', :path => 'Packages/RuuviUser/RuuviUser.podspec'
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
@@ -150,6 +148,21 @@ target 'stationTests' do
   pod 'Quick'
 end
 
+# Fix Xcode 14 warnings like:
+# warning: Run script build phase '[CP] Copy XCFrameworks' will be run during every build because it does not specify any outputs. To address this warning, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'ATargetNameHere' from project 'YourProjectName')
+# Ref.: https://github.com/CocoaPods/CocoaPods/issues/11444
+def set_run_script_to_always_run_when_no_input_or_output_files_exist(project:)
+  project.targets.each do |target|
+    run_script_build_phases = target.build_phases.filter { |phase| phase.is_a?(Xcodeproj::Project::Object::PBXShellScriptBuildPhase) }
+    cocoapods_run_script_build_phases = run_script_build_phases.filter { |phase| phase.name.start_with?("[CP") }
+    cocoapods_run_script_build_phases.each do |run_script|
+      next unless (run_script.input_paths || []).empty? && (run_script.output_paths || []).empty?
+      run_script.always_out_of_date = "1"
+    end
+  end
+  project.save
+end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
@@ -157,7 +170,21 @@ post_install do |installer|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
         config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
         config.build_settings['SWIFT_SUPPRESS_WARNINGS'] = "YES"
+        config.build_settings["DEVELOPMENT_TEAM"] = "4MUYJ4YYH4"
       end
     end
+    # This is specifically for Realm
+    if target.name == 'Realm'
+      create_symlink_phase = target.shell_script_build_phases.find { |x| x.name == 'Create Symlinks to Header Folders' }
+      create_symlink_phase.always_out_of_date = "1"
+    end
+    # End Realm patch
   end
+  set_run_script_to_always_run_when_no_input_or_output_files_exist(project: installer.pods_project)
 end
+
+post_integrate do |installer|
+  main_project = installer.aggregate_targets[0].user_project
+  set_run_script_to_always_run_when_no_input_or_output_files_exist(project: main_project)
+end
+

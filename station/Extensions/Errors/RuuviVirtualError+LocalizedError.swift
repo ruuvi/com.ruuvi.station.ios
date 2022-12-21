@@ -1,6 +1,5 @@
 import Foundation
 import RuuviVirtual
-import Localize_Swift
 
 extension VirtualReactorError: LocalizedError {
     public var errorDescription: String? {

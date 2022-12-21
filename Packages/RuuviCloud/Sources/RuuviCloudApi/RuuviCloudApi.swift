@@ -44,6 +44,11 @@ public protocol RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError>
 
+    func owner(
+        _ requestModel: RuuviCloudApiGetSensorsRequest,
+        authorization: String
+    ) -> Future<RuuviCloudAPICheckOwnerResponse, RuuviCloudApiError>
+
     func sensorsDense(
         _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
         authorization: String

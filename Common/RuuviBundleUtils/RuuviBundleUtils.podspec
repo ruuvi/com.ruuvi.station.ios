@@ -19,7 +19,6 @@ Pod::Spec.new do |s|
     ss.resource_bundles = {
         'RuuviBundleUtils' => ['Sources/**/Resources/**/*']
     }
-    ss.dependency 'Localize-Swift'
   end
 
   s.test_spec 'Tests' do |test_spec|
