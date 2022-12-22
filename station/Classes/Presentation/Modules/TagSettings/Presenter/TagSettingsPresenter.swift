@@ -17,7 +17,6 @@ import RuuviNotifier
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
-    var interactor: TagSettingsInteractorInput!
     var router: TagSettingsRouterInput!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
@@ -191,7 +190,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
         view.updateScrollPosition(scrollToAlert: scrollToAlert)
-        checkFirmwareVersion()
         checkLastRecord()
     }
 
@@ -271,11 +269,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             guard let sSelf = self else { return }
             sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
-            if let luid = sSelf.ruuviTag.luid {
-                sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
-                sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
-                sSelf.settings.setFirmwareVersion(for: luid, value: nil)
-            }
+            sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
+            sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
@@ -546,9 +541,8 @@ extension TagSettingsPresenter {
         }
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
-        if let luid = ruuviTag.luid {
-            viewModel.firmwareVersion.value = settings.firmwareVersion(for: luid)
-        }
+        viewModel.firmwareVersion.value = ruuviTag.firmwareVersion
+
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
 
@@ -877,8 +871,7 @@ extension TagSettingsPresenter {
 
         // If the firmware version returns nil that means it's an old firmware less than v3.
         // This refers to the fact that those tags do not have the capabilities for the connection
-        let fwVersion = settings.firmwareVersion(for: luid)
-        if fwVersion != nil {
+        if ruuviTag.firmwareVersion != nil {
             if device.isConnected {
                 viewModel.isConnected.value = device.isConnected
                 if source == .heartbeat {
@@ -1337,20 +1330,6 @@ extension TagSettingsPresenter {
         if isOn != observable.value {
             observable.value = isOn
         }
-    }
-
-    private func checkFirmwareVersion() {
-        guard let luid = ruuviTag.luid else { return }
-        guard settings.firmwareVersion(for: luid) == nil else { return }
-        interactor.checkFirmwareVersion(for: luid.value)
-            .on(success: { [weak self] version in
-                guard let sSelf = self else { return }
-                let currentVersion = version.replace("Ruuvi FW ", with: "")
-                sSelf.viewModel.firmwareVersion.value = currentVersion
-                sSelf.settings.setFirmwareVersion(for: luid, value: currentVersion)
-            }, failure: { [weak self] _ in
-                self?.viewModel.firmwareVersion.value = "TagSettings.Firmware.CurrentVersion.VeryOld".localized()
-            })
     }
 
     private func checkLastRecord() {
