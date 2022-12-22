@@ -23,6 +23,7 @@ import CoreBluetooth
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
     var router: CardsRouterInput!
+    var interactor: CardsInteractorInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: RuuviLocalSettings!
@@ -777,6 +778,9 @@ extension CardsPresenter {
                     sSelf.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
                 }
             case .insert(let sensor):
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    self?.checkFirmwareVersion(for: sensor)
+                }
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
@@ -1253,6 +1257,10 @@ extension CardsPresenter {
             view.showSwipeLeftRightHint()
             settings.cardsSwipeHintWasShown = true
         }
+    }
+
+    private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
+        interactor.checkAndUpdateFirmwareVersion(for: ruuviTag)
     }
 }
 // swiftlint:enable file_length trailing_whitespace
