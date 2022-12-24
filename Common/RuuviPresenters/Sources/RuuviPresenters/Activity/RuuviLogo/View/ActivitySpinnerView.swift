@@ -3,6 +3,7 @@ import UIKit
 @IBDesignable
 class ActivitySpinnerView: UIView {
 
+    private var strokeColor = UIColor(red: 0.21, green: 0.68, blue: 0.62, alpha: 1.00)
     override var layer: CAShapeLayer {
         // swiftlint:disable force_cast
         return super.layer as! CAShapeLayer
@@ -16,8 +17,8 @@ class ActivitySpinnerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.fillColor = nil
-        layer.strokeColor = UIColor.black.cgColor
-        layer.lineWidth = 8
+        layer.strokeColor = strokeColor.cgColor
+        layer.lineWidth = 4
         setPath()
     }
 
@@ -97,7 +98,7 @@ class ActivitySpinnerView: UIView {
         let animation = CAKeyframeAnimation(keyPath: "strokeColor")
         animation.keyTimes = (0 ... count).map { NSNumber(value: CFTimeInterval($0) / CFTimeInterval(count)) }
         animation.values = (0 ... count).map { _ in
-            UIColor.black.cgColor
+            strokeColor.cgColor
         }
         animation.duration = duration
         animation.calculationMode = .linear
