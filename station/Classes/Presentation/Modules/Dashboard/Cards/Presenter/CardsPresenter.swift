@@ -301,9 +301,10 @@ extension CardsPresenter: CardsViewOutput {
                 ($0.luid != nil && ($0.luid?.any == viewModel.luid.value))
                 || ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
             }) {
-                restartObservingRuuviTagLastRecord(for: sensor)
-                tagCharts?.configure(ruuviTag: sensor)
-        } 
+            restartObservingRuuviTagLastRecord(for: sensor)
+            tagCharts?.configure(ruuviTag: sensor)
+            checkFirmwareVersion(for: sensor)
+        }
     }
 
     func viewDidSetOpeningCard() {
@@ -780,9 +781,7 @@ extension CardsPresenter {
                     sSelf.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
                 }
             case .insert(let sensor):
-                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    self?.checkFirmwareVersion(for: sensor)
-                }
+                sSelf.checkFirmwareVersion(for: sensor)
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
@@ -1262,7 +1261,11 @@ extension CardsPresenter {
     }
 
     private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
-        interactor.checkAndUpdateFirmwareVersion(for: ruuviTag)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.interactor.checkAndUpdateFirmwareVersion(for: ruuviTag,
+                                                           settings: sSelf.settings)
+        }
     }
 
     private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
