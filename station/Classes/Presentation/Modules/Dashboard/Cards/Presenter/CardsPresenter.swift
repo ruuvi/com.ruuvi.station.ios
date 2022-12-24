@@ -766,6 +766,8 @@ extension CardsPresenter {
                 let isInitialLoad = sSelf.ruuviTags.count == 0
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
+                // TODO: - Remove this migration code after version v1.3.2
+                sSelf.migrateFirmwareVersion(for: ruuviTags)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
@@ -1261,6 +1263,10 @@ extension CardsPresenter {
 
     private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
         interactor.checkAndUpdateFirmwareVersion(for: ruuviTag)
+    }
+
+    private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
+        interactor.migrateFWVersionFromDefaults(for: ruuviTags, settings: settings)
     }
 }
 // swiftlint:enable file_length trailing_whitespace
