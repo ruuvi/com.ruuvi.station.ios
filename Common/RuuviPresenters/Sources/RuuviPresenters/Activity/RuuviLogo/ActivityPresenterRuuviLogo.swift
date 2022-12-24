@@ -33,6 +33,12 @@ public final class ActivityPresenterRuuviLogo: ActivityPresenter {
 
     public func increment() {
         counter += 1
+        hideMessageLabel()
+    }
+
+    public func increment(with message: String) {
+        counter += 1
+        showMessageLabel(with: message)
     }
 
     public func decrement() {
@@ -49,6 +55,11 @@ public final class ActivityPresenterRuuviLogo: ActivityPresenter {
         hudViewController.spinnerView.animate()
     }
 
+    private func showMessageLabel(with message: String) {
+        hudViewController.messageLabel.alpha = 1
+        hudViewController.messageLabel.text = message
+    }
+
     private func hide() {
         let executionTime = CFAbsoluteTimeGetCurrent() - (startTime ?? 0)
         let additionalWaitTime = executionTime < minAnimationTime ? (minAnimationTime - executionTime) : 0
@@ -57,6 +68,12 @@ public final class ActivityPresenterRuuviLogo: ActivityPresenter {
             self.appWindow = nil
             self.window.isHidden = true
             self.hudViewController.spinnerView.stopAnimating()
+            self.hideMessageLabel()
         }
+    }
+
+    private func hideMessageLabel() {
+        hudViewController.messageLabel.alpha = 0
+        hudViewController.messageLabel.text = nil
     }
 }

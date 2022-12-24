@@ -543,3 +543,4 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth-historian lataus epäonnistui. Tarkasta, että olet Bluetooth-kantaman sisällä, että anturissa on latausta tukeva laiteohjelmisto ja ettei anturi ole yhteydessä toiseen iOS-laitteeseen samanaikaisesti. Ruuvi Stationin iOS-versio varaa anturin yhteyden käyttöönsä jatkuvaa yhteystilaa käytettäessä.";
 "TagCharts.TryAgain.title" = "Yritä uudelleen";
+"SignIn.Sync.message" = "Ladataan tietoja pilvestä. Odota hetki.";

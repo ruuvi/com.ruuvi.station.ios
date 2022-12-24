@@ -543,3 +543,4 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth history download failed. Check that you're within Bluetooth range, your sensor has firmware that supports downloading and that sensor is not simultaneously connected to another iOS device. Sensor connection is reserved for Ruuvi Station when using connected mode in iOS.";
 "TagCharts.TryAgain.title" = "Try again";
+"SignIn.Sync.message" = "Downloading content from the cloud. Please wait.";
