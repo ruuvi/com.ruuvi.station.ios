@@ -12,15 +12,17 @@ class CardsInteractor {
 }
 
 extension CardsInteractor: CardsInteractorInput {
-    func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor) {
-        guard let luid = ruuviTag.luid?.value,
-        ruuviTag.firmwareVersion == nil else {
+    func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor,
+                                       settings: RuuviLocalSettings) {
+        guard let luid = ruuviTag.luid,
+              ruuviTag.firmwareVersion == nil &&
+                settings.firmwareVersion(for: luid) == nil else {
             return
         }
 
         background.services.gatt.firmwareRevision(
             for: self,
-            uuid: luid,
+            uuid: luid.value,
             options: [.connectionTimeout(15)]
         ) { [weak self] _, result in
             switch result {
