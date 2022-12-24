@@ -261,6 +261,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi Station est une application intuitive pour contôler vos capteurs Ruuvi. Commencez en jumelant des capteurs.";
 "About.AboutHelp.header" = "Infos / Aide";
+"About.TagsCount.text" = "Capteurs jumelés : %d";
 "About.MeasurementsCount.text" = "Données enregistrées : %d";
 "About.DatabaseSize.text" = "Taille de la base de données : %@";
 "About.More.contents" = "Site officiel de Ruuvi : ruuvi.com\nRuuvi Forum : f.ruuvi.com\nRuuvi Blog : ruuvi.com/blog\nRuuvi Twitter : twitter.com/ruuvicom";
@@ -271,7 +272,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "About.OperationsManual.header" = "Notice d'utilisation";
 "About.Privacy.contents" = "L'utilisation de l'application nécessite l'approbation des conditions générales de Ruuvi : ruuvi.com/terms";
 "About.Privacy.header" = "Protection des données personnelles";
-"About.TagsCount.text" = "Capteurs détectés : %d";
 "About.Troubleshooting.contents" = "Si vous rencontrez des problèmes et que vous ne trouvez pas la réponse dans la notice, veuillez consulter la page d'assistance technique : ruuvi.com/support";
 "About.Troubleshooting.header" = "Dépannage technique";
 "Interval.Hour.string" = "Heures";

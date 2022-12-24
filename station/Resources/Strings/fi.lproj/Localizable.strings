@@ -261,6 +261,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "h" = "t";
 "About.AboutHelp.contents" = "Ruuvi Station on helppokäyttöinen sovellus Ruuvin tuotteiden hallinnointiin. Aloita lisäämällä antureita.";
 "About.AboutHelp.header" = "Tietoa / Apua";
+"About.TagsCount.text" = "Lisätyt anturit: %d";
 "About.MeasurementsCount.text" = "Paikallisesti tallennettujen mittausten lukumäärä: %d";
 "About.DatabaseSize.text" = "Tietokannan koko: %@";
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: ruuvi.com/fi/blogi\nRuuvi Twitter: twitter.com/ruuvicom";
@@ -271,7 +272,6 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "About.OperationsManual.header" = "Käyttöohje";
 "About.Privacy.contents" = "Sovelluksen käyttäminen vaatii Ruuvin käyttöehtojen hyväksymisen: ruuvi.com/terms";
 "About.Privacy.header" = "Tietosuojakäytäntö";
-"About.TagsCount.text" = "Havaitut anturit: %d";
 "About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset: ruuvi.com/fi/tuki";
 "About.Troubleshooting.header" = "Vianetsintä";
 "Interval.Hour.string" = "tuntia";

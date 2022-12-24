@@ -13,6 +13,7 @@ import RuuviCore
 import RuuviPresenters
 import RuuviPool
 import RuuviNotifier
+import RuuviDaemon
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -43,6 +44,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var exportService: RuuviServiceExport!
     var localSyncState: RuuviLocalSyncState!
     var alertHandler: RuuviNotifier!
+    var advertisementDaemon: RuuviTagAdvertisementDaemon!
+    var heartbeatDaemon: RuuviTagHeartbeatDaemon!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -267,6 +270,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidConfirmTagRemoval() {
         ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
+            if sSelf.ruuviTag.isOwner {
+                sSelf.advertisementDaemon.restart()
+                if let isConnected = sSelf.viewModel.isConnected.value,
+                isConnected {
+                    sSelf.heartbeatDaemon.restart()
+                }
+            }
             sSelf.viewModel.reset()
             sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
             sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
