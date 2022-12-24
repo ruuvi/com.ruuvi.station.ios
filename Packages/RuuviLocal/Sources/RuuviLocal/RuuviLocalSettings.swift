@@ -62,6 +62,10 @@ public protocol RuuviLocalSettings {
     func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
 
+    // TODO: - Deprecate this after version v1.3.2
+    func firmwareVersion(for luid: LocalIdentifier) -> String?
+    func setFirmwareVersion(for luid: LocalIdentifier, value: String?)
+
     func cardToOpenFromWidget() -> String?
     func setCardToOpenFromWidget(for macId: String?)
 
