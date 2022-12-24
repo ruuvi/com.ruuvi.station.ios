@@ -152,6 +152,11 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                 modes: [RunLoop.Mode.default.rawValue])
     }
 
+    public func restart() {
+        stop()
+        start()
+    }
+
     @objc private func stopDaemon() {
         invalidateTokens()
         connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0.value) })

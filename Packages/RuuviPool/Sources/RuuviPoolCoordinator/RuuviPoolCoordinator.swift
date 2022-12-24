@@ -5,6 +5,7 @@ import RuuviPersistence
 import RuuviLocal
 import RuuviPool
 
+// swiftlint:disable:next type_body_length
 final class RuuviPoolCoordinator: RuuviPool {
     private var sqlite: RuuviPersistence
     private var realm: RuuviPersistence
@@ -209,7 +210,8 @@ final class RuuviPoolCoordinator: RuuviPool {
         let promise = Promise<Bool, RuuviPoolError>()
         let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId)
         let realmOpearion = realm.deleteAllRecords(ruuviTagId)
-        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+        let cleanUpOperation = sqlite.cleanupDBSpace()
+        Future.zip(sqliteOperation, realmOpearion, cleanUpOperation).on(success: { _ in
             promise.succeed(value: true)
         }, failure: { error in
             promise.fail(error: .ruuviPersistence(error))
@@ -217,11 +219,23 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
-     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError> {
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId, before: date)
         let realmOpearion = realm.deleteAllRecords(ruuviTagId, before: date)
-        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+        let cleanUpOperation = sqlite.cleanupDBSpace()
+        Future.zip(sqliteOperation, realmOpearion, cleanUpOperation).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    func cleanupDBSpace() -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        sqlite.cleanupDBSpace().on(success: { _ in
             promise.succeed(value: true)
         }, failure: { error in
             promise.fail(error: .ruuviPersistence(error))

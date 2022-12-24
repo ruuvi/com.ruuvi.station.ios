@@ -9,6 +9,7 @@ import RuuviCore
 import RuuviPresenters
 import RuuviPool
 import RuuviNotifier
+import RuuviDaemon
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -41,6 +42,8 @@ class TagSettingsTableConfigurator {
         presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.alertHandler = r.resolve(RuuviNotifier.self)
+        presenter.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
+        presenter.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 

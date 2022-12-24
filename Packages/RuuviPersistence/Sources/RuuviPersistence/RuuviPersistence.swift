@@ -58,4 +58,6 @@ public protocol RuuviPersistence {
     func save(
         sensorSettings: SensorSettings
     ) -> Future<SensorSettings, RuuviPersistenceError>
+
+    func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError>
 }
