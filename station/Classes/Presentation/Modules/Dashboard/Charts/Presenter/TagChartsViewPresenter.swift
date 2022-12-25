@@ -30,7 +30,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
     weak var view: TagChartsViewInput!
 
-    var router: TagChartsViewRouterInput!
     var interactor: TagChartsViewInteractorInput!
 
     var errorPresenter: ErrorPresenter!
@@ -43,6 +42,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     var mailComposerPresenter: MailComposerPresenter!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var measurementService: RuuviServiceMeasurement!
+    var exportService: RuuviServiceExport!
 
     var alertService: RuuviServiceAlert!
     var alertHandler: RuuviNotifier!
@@ -81,7 +81,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
-    private var cloudModeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
 
@@ -99,18 +98,16 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
-            self.view.viewModel = self.viewModel
+            // TODO: See why this is not deallocating when left.
+            if self.view != nil {
+                self.view.viewModel = self.viewModel
+                self.view.historyLengthInDay = self.settings.chartDurationHours/24
+            }
         }
     }
 
     private var isBluetoothPermissionGranted: Bool {
-        if #available(iOS 13.1, *) {
-            return CBCentralManager.authorization == .allowedAlways
-        } else if #available(iOS 13.0, *) {
-            return CBCentralManager().authorization == .allowedAlways
-        }
-        // Before iOS 13, Bluetooth permissions are not required
-        return true
+        return CBCentralManager.authorization == .allowedAlways
     }
 
     var ruuviTagData: [RuuviMeasurement] = []
@@ -120,23 +117,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var chartModules: [MeasurementType] = []
 
     deinit {
-        stateToken?.invalidate()
-        advertisementToken?.invalidate()
-        heartbeatToken?.invalidate()
-        temperatureUnitToken?.invalidate()
-        humidityUnitToken?.invalidate()
-        pressureUnitToken?.invalidate()
-        backgroundToken?.invalidate()
-        alertDidChangeToken?.invalidate()
-        didConnectToken?.invalidate()
-        didDisconnectToken?.invalidate()
-        lnmDidReceiveToken?.invalidate()
-        cloudSyncToken?.invalidate()
-        downsampleDidChangeToken?.invalidate()
-        chartIntervalDidChangeToken?.invalidate()
-        chartDurationHourDidChangeToken?.invalidate()
-        chartDrawDotsDidChangeToken?.invalidate()
-        cloudModeToken?.invalidate()
+        shutDownModule()
     }
 
     func configure(output: TagChartsViewModuleOutput) {
@@ -147,8 +128,19 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
         self.ruuviTag = ruuviTag
     }
 
+    func notifyDismissInstruction(dismissParent: Bool) {
+        if interactor.isSyncingRecords() {
+            view.showSyncAbortAlert(dismiss: dismissParent)
+        } else {
+            output?.tagChartSafeToClose(module: self,
+                                        dismissParent: dismissParent)
+        }
+    }
+
     func dismiss(completion: (() -> Void)? = nil) {
-        router.dismiss(completion: completion)
+        stopRunningProcesses()
+        shutDownModule()
+        completion?()
     }
 }
 
@@ -161,7 +153,6 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         startObservingLocalNotificationsManager()
         startObservingSensorSettingsChanges()
         startObservingCloudSyncNotification()
-        startObservingCloudModeNotification()
     }
 
     func viewWillAppear() {
@@ -173,52 +164,22 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         tryToShowSwipeUpHint()
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingTags()
-        handleClearSyncButtons(connectable: false)
         stopGattSync()
     }
 
     func viewWillDisappear() {
-        // Not implemented
-    }
-
-    func handleClearSyncButtons(connectable: Bool) {
-        view.handleClearSyncButtons(connectable: connectable,
-                                    isSyncing: interactor.isSyncingRecords())
+        // No op.
     }
 
     func viewDidTransition() {
         tryToShowSwipeUpHint()
     }
 
-    func viewDidTriggerMenu() {
-        router.openMenu(output: self)
-    }
-
-    func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
-        if interactor.isSyncingRecords() {
-            view.showSyncAbortAlert(dismiss: true)
-        } else {
-            stopRunningProcesses()
-            router.dismiss()
-        }
-    }
-
-    func viewDidTriggerSettings(for viewModel: TagChartsViewModel, scrollToAlert: Bool) {
-        if viewModel.type == .ruuvi,
-            ruuviTag.luid?.value == viewModel.uuid.value {
-            router.openTagSettings(ruuviTag: ruuviTag,
-                                   temperature: interactor.lastMeasurement?.temperature,
-                                   humidity: interactor.lastMeasurement?.humidity,
-                                   rssi: interactor.lastMeasurement?.rssi,
-                                   sensor: sensorSettings,
-                                   output: self,
-                                   scrollToAlert: scrollToAlert)
-        } else {
-            assert(false)
-        }
-    }
-
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
+        view.showSyncConfirmationDialog(for: viewModel)
+    }
+
+    func viewDidStartSync(for viewModel: TagChartsViewModel) {
         // Check bluetooth
         guard foreground.bluetoothState == .poweredOn || !isBluetoothPermissionGranted  else {
             view.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
@@ -240,7 +201,10 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         }, failure: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
             self?.view.showFailedToSyncIn()
-        }, completion: nil)
+        }, completion: { [weak self] in
+            self?.view.setSync(progress: nil, for: viewModel)
+            self?.isSyncing = false
+        })
     }
 
     func viewDidTriggerStopSync(for viewModel: TagChartsViewModel) {
@@ -263,16 +227,38 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidConfirmAbortSync(dismiss: Bool) {
         if dismiss {
-            stopRunningProcesses()
-            router.dismiss()
+            output?.tagChartSafeToClose(module: self,
+                                        dismissParent: dismiss)
         } else {
             stopGattSync()
         }
+    }
+
+    func viewDidTapOnExport() {
+        isLoading = true
+        exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
+            .on(success: { [weak self] url in
+                self?.view.showExportSheet(with: url)
+            }, failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.isLoading = false
+            })
+    }
+
+    func viewDidSelectChartHistoryLength(day: Int) {
+        settings.chartDurationHours = day*24
+        interactor.updateChartHistoryDurationSetting(with: day)
+    }
+
+    func viewDidSelectLongerHistory() {
+        view.showLongerHistoryDialog()
     }
 }
 // MARK: - TagChartsInteractorOutput
 extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
     func createChartModules(from: [MeasurementType]) {
+        guard view != nil else { return }
         chartModules = from
         view.createChartViews(from: chartModules)
     }
@@ -310,70 +296,6 @@ extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
     }
 }
 
-// MARK: - MenuModuleOutput
-extension TagChartsViewPresenter: MenuModuleOutput {
-    func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
-        module.dismiss()
-        router.openDiscover()
-    }
-
-    func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
-        module.dismiss()
-        router.openSettings()
-    }
-
-    func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
-        module.dismiss()
-        router.openAbout()
-    }
-
-    func menu(module: MenuModuleInput, didSelectWhatToMeasure sender: Any?) {
-        module.dismiss()
-        router.openWhatToMeasurePage()
-    }
-
-    func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
-        module.dismiss()
-        router.openRuuviProductsPage()
-    }
-
-    func menu(module: MenuModuleInput, didSelectGetRuuviGateway sender: Any?) {
-        module.dismiss()
-        router.openRuuviGatewayPage()
-    }
-
-    func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
-        module.dismiss()
-        infoProvider.summary { [weak self] summary in
-            guard let sSelf = self else { return }
-            sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
-                                                subject: sSelf.feedbackSubject,
-                                                body: "\n\n" + summary)
-        }
-    }
-
-    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
-        module.dismiss()
-        router.openSignIn(output: self)
-    }
-
-    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
-        module.dismiss()
-    }
-
-    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount sender: Any?) {
-        module.dismiss()
-        router.openMyRuuviAccount()
-    }
-}
-
-// MARK: - SignInModuleOutput
-extension TagChartsViewPresenter: SignInModuleOutput {
-    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
-        module.dismiss()
-    }
-}
-
 // MARK: - RuuviNotifierObserver
 extension TagChartsViewPresenter: RuuviNotifierObserver {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
@@ -385,21 +307,28 @@ extension TagChartsViewPresenter: RuuviNotifierObserver {
     }
 }
 
-// MARK: - TagSettingsModuleOutput
-extension TagChartsViewPresenter: TagSettingsModuleOutput {
-    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
-                                 ruuviTag: RuuviTagSensor) {
-        module.dismiss { [weak self] in
-            guard let sSelf = self else {
-                return
-            }
-            sSelf.output?.tagChartsDidDeleteTag(module: sSelf)
-        }
-    }
-}
-
 // MARK: - Private
 extension TagChartsViewPresenter {
+    private func shutDownModule() {
+        stateToken?.invalidate()
+        advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        pressureUnitToken?.invalidate()
+        backgroundToken?.invalidate()
+        alertDidChangeToken?.invalidate()
+        didConnectToken?.invalidate()
+        didDisconnectToken?.invalidate()
+        lnmDidReceiveToken?.invalidate()
+        cloudSyncToken?.invalidate()
+        downsampleDidChangeToken?.invalidate()
+        chartIntervalDidChangeToken?.invalidate()
+        chartDurationHourDidChangeToken?.invalidate()
+        chartDrawDotsDidChangeToken?.invalidate()
+        sensorSettingsToken?.invalidate()
+    }
+
     private func observeLastOpenedChart() {
         guard ruuviTag != nil else {
             return
@@ -446,6 +375,7 @@ extension TagChartsViewPresenter {
     private func stopGattSync() {
         interactor.stopSyncRecords()
             .on(success: { [weak self] _ in
+                guard self?.view != nil else { return }
                 self?.view.setSyncProgressViewHidden()
             })
     }
@@ -486,10 +416,6 @@ extension TagChartsViewPresenter {
                 viewModel.isConnectable.value = device.isConnectable
             }
         }
-
-        let connectable = viewModel.isConnectable.value.bound &&
-                          !settings.cloudModeEnabled
-        handleClearSyncButtons(connectable: connectable)
     }
 
     // swiftlint:disable:next function_body_length
@@ -539,15 +465,16 @@ extension TagChartsViewPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.interactor.restartObservingData()
+                guard let sSelf = self else { return }
+                sSelf.interactor.restartObservingData()
         })
         chartDrawDotsDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .ChartDrawDotsOnDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] _ in
-                self?.interactor.restartObservingData()
+                         using: { _ in
+                // TODO: Add this implemention when draw dots is back.
         })
     }
 
@@ -688,30 +615,11 @@ extension TagChartsViewPresenter {
         })
     }
 
-    private func startObservingCloudModeNotification() {
-        cloudModeToken?.invalidate()
-        cloudModeToken = NotificationCenter
-            .default
-            .addObserver(forName: .CloudModeDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                guard let sSelf = self else {
-                    return
-                }
-                let connectable = sSelf.viewModel.isConnectable.value.bound &&
-                                  !sSelf.settings.cloudModeEnabled
-                sSelf.handleClearSyncButtons(connectable: connectable)
-            })
-    }
-
     private func reloadChartsWithSensorSettingsChanges(with settings: SensorSettings) {
         interactor.restartObservingData()
     }
 
     private func stopRunningProcesses() {
-        advertisementToken?.invalidate()
-        heartbeatToken?.invalidate()
         stopObservingBluetoothState()
         interactor.stopObservingTags()
         interactor.stopObservingRuuviTagsData()
@@ -722,6 +630,7 @@ extension TagChartsViewPresenter {
 extension TagChartsViewPresenter {
 
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
+        guard view != nil else { return }
         ruuviTagData = interactor.ruuviTagData
 
         var temparatureData = [ChartDataEntry]()
@@ -745,15 +654,29 @@ extension TagChartsViewPresenter {
             }
         }
 
+        // Update new measurements on the chart
         view.updateChartViewData(temperatureEntries: temparatureData,
                                  humidityEntries: humidityData,
                                  pressureEntries: pressureData,
                                  isFirstEntry: ruuviTagData.count == 1,
                                  settings: settings)
+
+        // Update the latest measurement label.
+        if let lastMeasurement = newValues.last {
+            view.updateLatestMeasurement(
+                temperature: chartEntry(for: lastMeasurement,
+                                        type: .temperature),
+                humidity: chartEntry(for: lastMeasurement,
+                                     type: .humidity),
+                pressure: chartEntry(for: lastMeasurement,
+                                     type: .pressure),
+                settings: settings
+            )
+        }
     }
 
     private func createChartData() {
-
+        guard view != nil else { return }
         datasource.removeAll()
 
         var temparatureData = [ChartDataEntry]()
@@ -799,7 +722,21 @@ extension TagChartsViewPresenter {
             datasource.append(pressureChartData)
         }
 
+        // Set the initial data for the charts.
         view.setChartViewData(from: datasource, settings: settings)
+
+        // Update the latest measurement label.
+        if let lastMeasurement = ruuviTagData.last {
+            view.updateLatestMeasurement(
+                temperature: chartEntry(for: lastMeasurement,
+                                        type: .temperature),
+                humidity: chartEntry(for: lastMeasurement,
+                                     type: .humidity),
+                pressure: chartEntry(for: lastMeasurement,
+                                     type: .pressure),
+                settings: settings
+            )
+        }
     }
 
     // Draw dots is disabled for v1.3.0 onwards until further notice.

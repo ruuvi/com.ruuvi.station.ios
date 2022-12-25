@@ -7,10 +7,24 @@ import RuuviUser
 class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     weak var transitionHandler: UIViewController!
     private var dfuModule: DFUModuleInput?
+    private var backgroundSelectionModule: BackgroundSelectionModuleInput?
 
     func dismiss(completion: (() -> Void)?) {
         try! transitionHandler.closeCurrentModule().perform()
         completion?()
+    }
+
+    func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
+        let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
+        let module = factory.create(for: ruuviTag, virtualTag: nil)
+        self.backgroundSelectionModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
+
     }
 
     func openShare(for sensor: RuuviTagSensor) {
@@ -61,12 +75,6 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
             .then({ module in
                 module.configure(ruuviTag: ruuviTag)
             })
-    }
-
-    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
-        let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
-        controller.delegate = delegate
-        transitionHandler.present(controller, animated: true)
     }
 }
 

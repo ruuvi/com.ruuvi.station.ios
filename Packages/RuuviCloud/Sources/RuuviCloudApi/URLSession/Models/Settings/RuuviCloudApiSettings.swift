@@ -12,6 +12,8 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case chartShowAllPoints = "CHART_SHOW_ALL_POINTS"
     case chartDrawDots = "CHART_DRAW_DOTS"
     case cloudModeEnabled = "CLOUD_MODE_ENABLED"
+    case dashboardEnabled = "DASHBOARD_ENABLED"
+    case dashboardType = "DASHBOARD_TYPE"
 }
 
 extension TemperatureUnit {
@@ -98,7 +100,9 @@ extension String {
     public var ruuviCloudApiSettingUnitPressure: UnitPressure? {
         switch self {
         case "0":
-            return nil // TODO: @rinat support Pa
+            // v2.0 -> iOS doesn't support Pa. Instead when Pa
+            // is received from sync we set hPa on iOS.
+            return .hectopascals
         case "1":
             return .hectopascals
         case "2":
@@ -135,6 +139,17 @@ extension String {
             return .two
         default:
             return .two
+        }
+    }
+
+    public var ruuviCloudApiSettingsDashboardType: DashboardType {
+        switch self {
+        case "image":
+            return .image
+        case "simple":
+            return .simple
+        default:
+            return .image
         }
     }
 }

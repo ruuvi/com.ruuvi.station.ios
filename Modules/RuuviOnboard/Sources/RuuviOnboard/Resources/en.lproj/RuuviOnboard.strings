@@ -15,3 +15,31 @@
 "RuuviOnboard.Cloud.Skip.title" = "Are you sure want to skip sign in?";
 "RuuviOnboard.Cloud.Skip.Yes.title" = "Yes, skip";
 "RuuviOnboard.Cloud.Skip.GoBack.title" = "Go Back";
+
+// New Onboarding
+"onboarding_measure_your_world" = "Measure Your World";
+"onboarding_with_ruuvi_sensors" = "Let's get to know your Ruuvi Station app.";
+"onboarding_swipe_to_continue" = "Swipe to continue →";
+"onboarding_read_sensors_data" = "Read Your Ruuvi Sensors";
+"onboarding_via_bluetooth_or_cloud" = "using Bluetooth or Ruuvi Cloud";
+"onboarding_follow_measurement" = "View all sensors at a glance on your";
+"onboarding_dashboard" = "Dashboard";
+"onboarding_personalise" = "Personalise";
+"onboarding_your_sensors" = "your app with custom names and backgrounds.";
+"onboarding_explore_detailed" = "Explore your measurement";
+"onboarding_history" = "History";
+"onboarding_set_custom" = "Set and customise your";
+"onboarding_alerts" = "Alerts";
+"onboarding_share_your_sensors" = "to measure together with your friends and family.";
+"onboarding_sharees_can_use" = "Share Sensors";
+"onboarding_handy_widgets" = "Widgets";
+"onboarding_access_widgets" = "Bring your favorite sensors to your Home Screen and Lock Screen as";
+"onboarding_station_web" = "Ruuvi Web App";
+"onboarding_web_pros" = "Large dashboard, multi-year history, email alerts and more on";
+"onboarding_gateway_required" = "A Ruuvi Gateway router is required.";
+"onboarding_skip" = "Skip";
+"onboarding_thats_it" = "Almost there!";
+"onboarding_thats_it_already_signed_in" = "Let's get started!";
+"onboarding_go_to_sign_in" = "Ruuvi experience is better when you're signed in. Do it now or continue without cloud features.";
+"onboarding_go_to_sign_in_already_signed_in" = "Let's start measuring!";
+"onboarding_continue" = "Next";

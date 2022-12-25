@@ -3,7 +3,6 @@ import SwiftUI
 import Intents
 import RuuviOntology
 
-@available(iOS 14.0, *)
 final class WidgetProvider: IntentTimelineProvider {
     @ObservedObject private var networkManager = NetworkManager()
     private let viewModel = WidgetViewModel()

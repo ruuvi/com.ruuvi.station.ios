@@ -1,10 +1,12 @@
 import Foundation
 import RuuviLocal
+import RuuviUser
 
 class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
     var settings: RuuviLocalSettings!
+    var ruuviUser: RuuviUser!
 
     func configure() {
         view.viewModels = [buildWelcomeShown(),
@@ -21,7 +23,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildSaveAndLoadFromWebIntervalMinutues(),
                            buildAskForReviewFirstTime(),
                            buildAskForReviewLater(),
-                           buildShowLiveAlertBellOnTagSettings()]
+                           buildIsAuthorized(),
+                           buildAuthToken()]
     }
 }
 
@@ -36,6 +39,7 @@ extension DefaultsPresenter {
         let welcomeShown = DefaultsViewModel()
         welcomeShown.title = "Defaults.WelcomeShown.title".localized()
         welcomeShown.boolean.value = settings.welcomeShown
+        welcomeShown.type.value = .switcher
 
         bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
             observer.settings.welcomeShown = welcomeShown.bound
@@ -47,6 +51,7 @@ extension DefaultsPresenter {
         let tagChartsLandscapeSwipeInstructionWasShown = DefaultsViewModel()
         tagChartsLandscapeSwipeInstructionWasShown.title = "Defaults.ChartsSwipeInstructionWasShown.title".localized()
         tagChartsLandscapeSwipeInstructionWasShown.boolean.value = settings.tagChartsLandscapeSwipeInstructionWasShown
+        tagChartsLandscapeSwipeInstructionWasShown.type.value = .switcher
 
         bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) {
             observer, tagChartsLandscapeSwipeInstructionWasShown in
@@ -60,6 +65,7 @@ extension DefaultsPresenter {
         let connectionTimeout = DefaultsViewModel()
         connectionTimeout.title = "Defaults.ConnectionTimeout.title".localized()
         connectionTimeout.integer.value = Int(settings.connectionTimeout)
+        connectionTimeout.type.value = .stepper
         connectionTimeout.unit = .seconds
 
         bind(connectionTimeout.integer, fire: false) { observer, connectionTimeout in
@@ -72,6 +78,7 @@ extension DefaultsPresenter {
         let serviceTimeout = DefaultsViewModel()
         serviceTimeout.title = "Defaults.ServiceTimeout.title".localized()
         serviceTimeout.integer.value = Int(settings.serviceTimeout)
+        serviceTimeout.type.value = .stepper
         serviceTimeout.unit = .seconds
 
         bind(serviceTimeout.integer, fire: false) { observer, serviceTimeout in
@@ -84,6 +91,7 @@ extension DefaultsPresenter {
         let cardsSwipeHint = DefaultsViewModel()
         cardsSwipeHint.title = "Defaults.CardsSwipeHint.title".localized()
         cardsSwipeHint.boolean.value = settings.cardsSwipeHintWasShown
+        cardsSwipeHint.type.value = .switcher
 
         bind(cardsSwipeHint.boolean, fire: false) { observer, cardsSwipeHintWasShown in
             observer.settings.cardsSwipeHintWasShown = cardsSwipeHintWasShown.bound
@@ -96,6 +104,7 @@ extension DefaultsPresenter {
         alertsInterval.title = "Defaults.AlertsMuteInterval.title".localized()
         alertsInterval.integer.value = settings.alertsMuteIntervalMinutes
         alertsInterval.unit = .minutes
+        alertsInterval.type.value = .stepper
 
         bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
             observer.settings.alertsMuteIntervalMinutes = alertsInterval.bound
@@ -108,6 +117,7 @@ extension DefaultsPresenter {
         webPullInterval.title = "Defaults.WebPullInterval.title".localized()
         webPullInterval.integer.value = settings.webPullIntervalMinutes
         webPullInterval.unit = .minutes
+        webPullInterval.type.value = .stepper
 
         bind(webPullInterval.integer, fire: false) { observer, webPullInterval in
             observer.settings.webPullIntervalMinutes = webPullInterval.bound
@@ -120,6 +130,7 @@ extension DefaultsPresenter {
         pruningOffsetHours.title = "Defaults.PruningOffsetHours.title".localized()
         pruningOffsetHours.integer.value = settings.dataPruningOffsetHours
         pruningOffsetHours.unit = .hours
+        pruningOffsetHours.type.value = .stepper
 
         bind(pruningOffsetHours.integer, fire: false) { observer, pruningOffsetHours in
             observer.settings.dataPruningOffsetHours = pruningOffsetHours.bound
@@ -132,6 +143,7 @@ extension DefaultsPresenter {
         chartIntervalSeconds.title = "Defaults.ChartIntervalSeconds.title".localized()
         chartIntervalSeconds.integer.value = settings.chartIntervalSeconds
         chartIntervalSeconds.unit = .seconds
+        chartIntervalSeconds.type.value = .stepper
 
         bind(chartIntervalSeconds.integer, fire: false) { observer, chartIntervalSeconds in
             observer.settings.chartIntervalSeconds = chartIntervalSeconds.bound
@@ -144,6 +156,7 @@ extension DefaultsPresenter {
         chartDurationHours.title = "Defaults.ChartDurationHours.title".localized()
         chartDurationHours.integer.value = settings.chartDurationHours
         chartDurationHours.unit = .hours
+        chartDurationHours.type.value = .stepper
 
         bind(chartDurationHours.integer, fire: false) { observer, chartDurationHours in
             observer.settings.chartDurationHours = chartDurationHours.bound
@@ -156,6 +169,7 @@ extension DefaultsPresenter {
         advertisementInterval.title = "ForegroundRow.advertisement.title".localized()
         advertisementInterval.integer.value = settings.advertisementDaemonIntervalMinutes
         advertisementInterval.unit = .minutes
+        advertisementInterval.type.value = .stepper
 
         bind(advertisementInterval.integer, fire: false) { observer, interval in
             observer.settings.advertisementDaemonIntervalMinutes = interval.bound
@@ -168,6 +182,7 @@ extension DefaultsPresenter {
         webSaveAndLoadInterval.title = "ForegroundRow.webTags.title".localized()
         webSaveAndLoadInterval.integer.value = settings.webTagDaemonIntervalMinutes
         webSaveAndLoadInterval.unit = .minutes
+        webSaveAndLoadInterval.type.value = .stepper
 
         bind(webSaveAndLoadInterval.integer, fire: false) { observer, interval in
             observer.settings.webTagDaemonIntervalMinutes = interval.bound
@@ -180,6 +195,7 @@ extension DefaultsPresenter {
         askForReviewAtLaunch.title = "Defaults.AppLaunchRequiredForReview.Count.title".localized()
         askForReviewAtLaunch.integer.value = settings.appOpenedInitialCountToAskReview
         askForReviewAtLaunch.unit = .decimal
+        askForReviewAtLaunch.type.value = .stepper
 
         bind(askForReviewAtLaunch.integer, fire: false) { observer, interval in
             observer.settings.appOpenedInitialCountToAskReview = interval.bound
@@ -192,6 +208,7 @@ extension DefaultsPresenter {
         askForReviewAtLaunch.title = "Defaults.AskReviewIfLaunchDivisibleBy.Count.title".localized()
         askForReviewAtLaunch.integer.value = settings.appOpenedCountDivisibleToAskReview
         askForReviewAtLaunch.unit = .decimal
+        askForReviewAtLaunch.type.value = .stepper
 
         bind(askForReviewAtLaunch.integer, fire: false) { observer, interval in
             observer.settings.appOpenedCountDivisibleToAskReview = interval.bound
@@ -199,15 +216,19 @@ extension DefaultsPresenter {
         return askForReviewAtLaunch
     }
 
-    // TODO: @priyonyo - Remove this when alert bell is implemented
-    private func buildShowLiveAlertBellOnTagSettings() -> DefaultsViewModel {
-        let alertBellVisible = DefaultsViewModel()
-        alertBellVisible.title = "Show bell on Alert settings"
-        alertBellVisible.boolean.value = settings.alertBellVisible
+    private func buildIsAuthorized() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "User Authorized"
+        viewModel.type.value = .plain
+        viewModel.value.value = ruuviUser.isAuthorized ? "Yes" : "No"
+        return viewModel
+    }
 
-        bind(alertBellVisible.boolean, fire: false) { observer, alertBellVisible in
-            observer.settings.alertBellVisible = alertBellVisible.bound
-        }
-        return alertBellVisible
+    private func buildAuthToken() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Auth Token"
+        viewModel.type.value = .plain
+        viewModel.value.value = ruuviUser.apiKey
+        return viewModel
     }
 }

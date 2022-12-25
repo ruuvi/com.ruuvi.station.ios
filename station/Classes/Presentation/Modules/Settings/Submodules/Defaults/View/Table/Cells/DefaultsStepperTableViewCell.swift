@@ -13,6 +13,11 @@ class DefaultsStepperTableViewCell: UITableViewCell {
 
     var prefix: String = ""
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        stepper.layer.cornerRadius = 8
+    }
+
     @IBAction func stepperValueChanged(_ sender: Any) {
         let result = Int(stepper.value)
         let unitString: String

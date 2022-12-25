@@ -28,22 +28,34 @@ public protocol RuuviServiceMeasurement {
     /// update units cache without notify listeners
     func updateUnits()
 
+    // Temperature
     func double(for temperature: Temperature) -> Double
     func string(for temperature: Temperature?, allowSettings: Bool) -> String
     func stringWithoutSign(for temperature: Temperature?) -> String
+    func stringWithoutSign(temperature: Double?) -> String
 
+    // Humidity
     func double(for humidity: Humidity,
                 temperature: Temperature,
                 isDecimal: Bool) -> Double?
-
     func string(for humidity: Humidity?,
                 temperature: Temperature?,
                 allowSettings: Bool) -> String
+    func stringWithoutSign(for humidity: Humidity?,
+                           temperature: Temperature?) -> String
+    func stringWithoutSign(humidity: Double?) -> String
+
+    // Pressure
     func double(for pressure: Pressure) -> Double
     func string(for pressure: Pressure?, allowSettings: Bool) -> String
+    func stringWithoutSign(for pressure: Pressure?) -> String
+    func stringWithoutSign(pressure: Double?) -> String
+
+    // Voltage
     func double(for voltage: Voltage) -> Double
     func string(for voltage: Voltage?) -> String
 
+    // Offset correction
     func temperatureOffsetCorrection(for temperature: Double) -> Double
     func temperatureOffsetCorrectionString(for temperature: Double) -> String
 

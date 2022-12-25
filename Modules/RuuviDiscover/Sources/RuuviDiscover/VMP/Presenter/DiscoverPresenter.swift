@@ -7,6 +7,7 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviVirtual
 import RuuviCore
 import RuuviPresenters
 import CoreBluetooth
@@ -28,8 +29,10 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var router: AnyObject?
     weak var output: RuuviDiscoverOutput?
 
+    var virtualReactor: VirtualReactor!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
+    var virtualService: VirtualService!
     var foreground: BTForeground!
     var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
@@ -72,14 +75,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
         view?.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
-        if (!(view?.isBluetoothEnabled ?? false)
-            && foreground.bluetoothState != .unknown) ||
-            !isBluetoothPermissionGranted {
-            view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
-        }
-
         view?.isCloseEnabled = true
-
         startObservingPersistedRuuviSensors()
     }
 
@@ -126,9 +122,20 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 }
 
+ extension DiscoverPresenter {
+    func onDidPick(location: Location) {
+        virtualService.add(provider: .openWeatherMap, location: location)
+            .on(success: { [weak self] virtualSensor in
+                guard let sSelf = self else { return }
+                sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+    }
+ }
+
 // MARK: - Private
 extension DiscoverPresenter {
-
     private func startObservingPersistedRuuviSensors() {
         persistedReactorToken = ruuviReactor.observe({ [weak self] (change) in
             switch change {
@@ -238,5 +245,22 @@ extension DiscoverPresenter {
         })
 
         return filtered
+    }
+}
+
+extension DiscoverPresenter {
+    // Will be deprecated in near future. Currently retained to support already
+    // added web tags.
+    private func persistWebTag(with provider: VirtualProvider) {
+        let operation = virtualService.add(
+            provider: provider,
+            name: "Test Virtual Sensor"
+        )
+        operation.on(success: { [weak self] virtualSensor in
+            guard let sSelf = self else { return }
+            sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }

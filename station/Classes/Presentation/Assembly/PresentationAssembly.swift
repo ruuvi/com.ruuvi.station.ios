@@ -42,12 +42,5 @@ class PresentationAssembly: Assembly {
             presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
             return presenter
         }
-
-        container.register(DfuFilePickerPresenter.self) { r in
-            let presenter = DfuFilePickerPresenterSheet()
-            presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
-            presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
-            return presenter
-        }
     }
 }

@@ -32,4 +32,10 @@ public protocol RuuviServiceAppSettings {
 
     @discardableResult
     func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError>
+
+    @discardableResult
+    func set(dashboard: Bool) -> Future<Bool, RuuviServiceError>
+
+    @discardableResult
+    func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError>
 }

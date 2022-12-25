@@ -11,4 +11,6 @@ public protocol RuuviCloudSettings {
     var chartDrawDots: Bool? { get }
     var chartViewPeriod: Int? { get }
     var cloudModeEnabled: Bool? { get }
+    var dashboardEnabled: Bool? { get }
+    var dashboardType: DashboardType? { get }
 }

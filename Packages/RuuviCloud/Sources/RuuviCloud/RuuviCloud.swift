@@ -24,6 +24,19 @@ public protocol RuuviCloud {
     func deleteAccount(email: String) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
+    func registerPNToken(token: String,
+                         type: String,
+                         name: String?,
+                         data: String?) -> Future<Int, RuuviCloudError>
+
+    @discardableResult
+    func unregisterPNToken(token: String?,
+                           tokenId: Int?) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
+    func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError>
+
+    @discardableResult
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult
@@ -121,6 +134,12 @@ public protocol RuuviCloud {
 
     @discardableResult
     func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
+    func set(dashboard: Bool) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
+    func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError>
 
     @discardableResult
     func update(

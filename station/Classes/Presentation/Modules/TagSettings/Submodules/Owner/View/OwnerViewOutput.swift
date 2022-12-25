@@ -8,4 +8,5 @@ protocol OwnerViewOutput: AnyObject {
     func viewDidConfirmFirmwareUpdate()
     /// Trigger this method when user cancel the legacy firmware update dialog for the first time
     func viewDidIgnoreFirmwareUpdateDialog()
+    func viewDidDismiss()
 }

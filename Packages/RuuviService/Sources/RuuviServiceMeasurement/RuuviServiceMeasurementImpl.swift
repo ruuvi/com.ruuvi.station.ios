@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import Humidity
 import RuuviOntology
@@ -181,6 +182,14 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         return tempereatureNumberFormatter.string(from: number) ?? emptyValueString
     }
 
+    public func stringWithoutSign(temperature: Double?) -> String {
+        guard let temperature = temperature else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: temperature)
+        return tempereatureNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
     public func double(for pressure: Pressure) -> Double {
         let pressureValue = pressure
             .converted(to: units.pressureUnit)
@@ -202,6 +211,22 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         } else {
             return commonFormatter.string(from: pressure.converted(to: units.pressureUnit))
         }
+    }
+
+    public func stringWithoutSign(for pressure: Pressure?) -> String {
+        guard let pressure = pressure else {
+            return emptyValueString
+        }
+        let pressureValue = pressure.converted(to: units.pressureUnit).value
+        return pressureNumberFormatter.string(for: pressureValue) ?? emptyValueString
+    }
+
+    public func stringWithoutSign(pressure: Double?) -> String {
+        guard let pressure = pressure else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: pressure)
+        return pressureNumberFormatter.string(from: number) ?? emptyValueString
     }
 
     public func double(for voltage: Voltage) -> Double {
@@ -268,17 +293,53 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         case .gm3:
             return humidityFormatter.string(from: humidityWithTemperature.converted(to: .absolute))
         case .dew:
-            let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
-            let humidityValue = dp?.converted(to: settings.temperatureUnit.unitTemperature)
-                .value
-                .round(to: settings.humidityAccuracy.value)
-            guard let humidityValue = humidityValue else {
+            guard let dp = try? humidityWithTemperature.dewPoint(temperature: temperature) else {
                 return emptyValueString
             }
-            return humidityValue.formattedStringValue(places:
-                                                        settings.humidityAccuracy.value)
-            + " " + settings.temperatureUnit.symbol
+            let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
+            guard let value = humidityNumberFormatter.string(from: NSNumber(value: value)) else {
+                return emptyValueString
+            }
+            return value + " " + settings.temperatureUnit.symbol
         }
+    }
+
+    public func stringWithoutSign(for humidity: Humidity?,
+                                  temperature: Temperature?) -> String {
+        guard let humidity = humidity,
+              let temperature = temperature else {
+            return emptyValueString
+        }
+
+        let humidityWithTemperature = Humidity(
+            value: humidity.value,
+            unit: .relative(temperature: temperature)
+        )
+
+        switch units.humidityUnit {
+        case .percent:
+            let value = NSNumber(value: humidityWithTemperature.value * 100)
+            return humidityNumberFormatter.string(from: value) ?? emptyValueString
+        case .gm3:
+            let value = humidityWithTemperature.converted(to: .absolute)
+                .value
+            return humidityNumberFormatter.string(from: NSNumber(value: value)) ?? emptyValueString
+        case .dew:
+            if let dp = try? humidityWithTemperature.dewPoint(temperature: temperature) {
+                let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
+                return humidityNumberFormatter.string(from: NSNumber(value: value)) ?? emptyValueString
+            } else {
+                return emptyValueString
+            }
+        }
+    }
+
+    public func stringWithoutSign(humidity: Double?) -> String {
+        guard let humidity = humidity else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: humidity)
+        return humidityNumberFormatter.string(from: number) ?? emptyValueString
     }
 
     public func string(for measurement: Double?) -> String {
@@ -349,9 +410,13 @@ extension RuuviServiceMeasurementImpl {
 
     public func humidityOffsetCorrectionString(for humidity: Double) -> String {
         return commonFormatter.string(
-            from: Humidity(value: humidityOffsetCorrection(for: humidity),
-                           unit: UnitHumidity.relative(temperature: Temperature(value: 0.0,
-                                                                                unit: UnitTemperature.celsius)))
+            from: Humidity(
+                value: humidityOffsetCorrection(for: humidity) * 100,
+                unit: UnitHumidity.relative(
+                    temperature: Temperature(value: 0.0,
+                                             unit: UnitTemperature.celsius)
+                )
+            )
         )
     }
 

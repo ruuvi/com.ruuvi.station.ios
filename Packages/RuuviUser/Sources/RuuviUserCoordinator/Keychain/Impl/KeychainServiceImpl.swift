@@ -7,7 +7,7 @@ final class KeychainServiceImpl {
         accessGroup: "4MUYJ4YYH4.com.ruuvi.station"
     )
     .label("Ruuvi Station")
-    .synchronizable(true)
+    .synchronizable(false)
     .accessibility(.afterFirstUnlock)
 
     private enum Account: String {

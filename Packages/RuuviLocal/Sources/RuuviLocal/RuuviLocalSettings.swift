@@ -18,9 +18,16 @@ extension Notification.Name {
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
     public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
+    public static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
+}
+
+public enum DashboardTypeKey: String {
+    case type
 }
 
 public protocol RuuviLocalSettings {
+    /// When syncing for the first time (after sign in)
+    var isSyncing: Bool { get set }
     var temperatureUnit: TemperatureUnit { get set }
     var temperatureAccuracy: MeasurementAccuracyType { get set }
     var humidityUnit: HumidityUnit { get set }
@@ -55,6 +62,8 @@ public protocol RuuviLocalSettings {
     var appOpenedCount: Int { get set }
     var appOpenedInitialCountToAskReview: Int { get set }
     var appOpenedCountDivisibleToAskReview: Int { get set }
+    var dashboardEnabled: Bool { get set }
+    var dashboardType: DashboardType { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
@@ -74,7 +83,4 @@ public protocol RuuviLocalSettings {
 
     func setOwnerCheckDate(for macId: MACIdentifier, value: Date)
     func ownerCheckDate(for macId: MACIdentifier) -> Date?
-
-    // TODO: @priyonyo - Remove this when alert bell is implemented
-    var alertBellVisible: Bool { get set }
 }

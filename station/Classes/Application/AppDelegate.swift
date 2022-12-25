@@ -1,7 +1,5 @@
 import UIKit
-#if canImport(Firebase)
 import Firebase
-#endif
 #if canImport(FLEX)
 import FLEX
 #endif
@@ -11,6 +9,7 @@ import RuuviCore
 import RuuviNotification
 import RuuviMigration
 import RuuviContext
+import RuuviService
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,17 +17,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateService: AppStateService!
     var localNotificationsManager: RuuviNotificationLocal!
     var featureToggleService: FeatureToggleService!
+    var cloudNotificationService: RuuviServiceCloudNotification!
+    var pnManager: RuuviCorePN!
+    var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
+
     private var appRouter: AppRouter?
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
 
-        #if canImport(Firebase)
         FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        pnManager = r.resolve(RuuviCorePN.self)
+
         featureToggleService = r.resolve(FeatureToggleService.self)
         featureToggleService.fetchFeatureToggles()
-        #endif
 
         // the order is important
         r.resolve(RuuviMigration.self, name: "realm")?
@@ -47,8 +51,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let muteTitle = "LocalNotificationsManager.Mute.button".localized()
         localNotificationsManager.setup(
             disableTitle: disableTitle,
-            muteTitle: muteTitle
+            muteTitle: muteTitle,
+            output: self
         )
+
+        cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
 
         #if canImport(FLEX)
         FLEXManager.shared.registerGlobalEntry(
@@ -83,19 +90,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         appStateService.applicationDidBecomeActive(application)
     }
+
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?
+    ) -> UIInterfaceOrientationMask {
+        return orientationLock
+  }
 }
 
 // MARK: - Push Notifications
 extension AppDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let r = AppAssembly.shared.assembler.resolver
-        if var pnManager = r.resolve(RuuviCorePN.self) {
-            pnManager.pnTokenData = deviceToken
+
+        Messaging.messaging().apnsToken = deviceToken
+        pnManager.pnTokenData = deviceToken
+
+        Messaging.messaging().token { [weak self] fcmToken, _ in
+            self?.register(with: fcmToken)
         }
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print(error.localizedDescription)
+    }
+}
+
+extension AppDelegate: MessagingDelegate {
+    func messaging(
+        _ messaging: Messaging,
+        didReceiveRegistrationToken fcmToken: String?
+    ) {
+        register(with: fcmToken)
+    }
+
+    private func register(with fcmToken: String?) {
+        guard !UIDevice.isSimulator,
+                let fcmToken = fcmToken,
+                cloudNotificationService != nil else {
+            return
+        }
+
+        cloudNotificationService.set(token: fcmToken,
+                                     name: UIDevice.modelName,
+                                     data: nil)
     }
 }
 
@@ -119,7 +156,34 @@ extension AppDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         let macId = url.absoluteString
-        appStateService.applicationDidOpenWithWidgetDeepLink(app, macId: macId)
+        openSelectedCard(for: macId, application: app)
         return true
+    }
+}
+
+// MARK: - Notification tap handler
+extension AppDelegate: RuuviNotificationLocalOutput {
+    func notificationDidTap(for macId: String) {
+        openSelectedCard(for: macId)
+    }
+}
+
+// TODO: - SEE IF WE CAN MOVE THIS TO APP_STATE_SERVICE
+extension AppDelegate {
+    private func openSelectedCard(for macId: String,
+                                  application: UIApplication? = nil) {
+        appRouter?.prepareRootViewControllerWidgets()
+        window?.rootViewController = appRouter?.viewController
+
+        if let navigationController = appRouter?.viewController as? UINavigationController,
+           let controller = navigationController.viewControllers.last as? DashboardViewController {
+            if let viewModel = controller.viewModels.first(where: { viewModel in
+                viewModel.mac.value?.value == macId
+            }) {
+                controller.output.viewDidTriggerOpenCardImageView(for: viewModel)
+            }
+        }
+
+        window?.makeKeyAndVisible()
     }
 }

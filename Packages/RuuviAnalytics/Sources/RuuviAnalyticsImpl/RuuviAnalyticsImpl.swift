@@ -10,7 +10,6 @@ import RuuviVirtual
 import RuuviUser
 import RuuviService
 
-// swiftlint:disable:next type_body_length
 public final class RuuviAnalyticsImpl: RuuviAnalytics {
     private enum Properties {
         // Observe logged in users
@@ -199,7 +198,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.alertRSSI(0))
     }
 
-    // swiftlint:disable:next function_body_length
     private func set(_ property: Properties) {
         let value: String
         switch property {

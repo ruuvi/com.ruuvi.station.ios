@@ -12,14 +12,18 @@ class SignInRouter: SignInRouterInput {
         transitionHandler.navigationController?.popViewController(animated: animated)
     }
 
-    func openEmailConfirmation(output: SignInModuleOutput) {
-        let restorationId = "SignInViewController"
-        let factory = StoryboardFactory(storyboardName: "SignIn", bundle: .main, restorationId: restorationId)
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: SignInModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
-                module.configure(with: .enterVerificationCode(nil), output: output)
-            })
+    func openSignInPromoViewController(output: SignInPromoModuleOutput) {
+        let factory: SignInPromoModuleFactory = SignInPromoModuleFactoryImpl()
+        let module = factory.create()
+
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+        if let presenter = module.output as? SignInPromoModuleInput {
+            presenter.configure(output: output)
+        }
     }
 }

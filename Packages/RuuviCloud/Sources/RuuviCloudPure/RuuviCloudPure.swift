@@ -271,6 +271,46 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(dashboard: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .dashboardEnabled,
+            value: dashboard.chartBoolSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: dashboard)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError> {
+        let promise = Promise<DashboardType, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .dashboardType,
+            value: dashboardType.rawValue
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: dashboardType)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError> {
         let promise = Promise<RuuviCloudSettings, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
@@ -576,6 +616,61 @@ public final class RuuviCloudPure: RuuviCloud {
             }, failure: { error in
                 promise.fail(error: .api(error))
             })
+        return promise.future
+    }
+
+    public func registerPNToken(token: String,
+                                type: String,
+                                name: String?,
+                                data: String?) -> Future<Int, RuuviCloudError> {
+        let promise = Promise<Int, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudPNTokenRegisterRequest(token: token,
+                                                       type: type,
+                                                       name: name,
+                                                       data: data)
+        api.registerPNToken(request,
+                          authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.id)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    public func unregisterPNToken(token: String?,
+                                  tokenId: Int?) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        let request = RuuviCloudPNTokenUnregisterRequest(token: token,
+                                                         id: tokenId)
+        api.unregisterPNToken(request,
+                              authorization: user.apiKey)
+            .on(success: { _ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    public func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError> {
+        let promise = Promise<[RuuviCloudPNToken], RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudPNTokenListRequest()
+        api.listPNTokens(request,
+                         authorization: apiKey).on(success: { response in
+            let tokens = response.anyTokens
+            promise.succeed(value: tokens)
+        }, failure: { error in
+            promise.fail(error: .api(error))
+        })
         return promise.future
     }
 

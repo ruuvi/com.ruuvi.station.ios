@@ -84,6 +84,7 @@ def shared_pods
   pod 'RuuviService/Measurement', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/Export', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviService/GATT', :path => 'Packages/RuuviService/RuuviService.podspec'
+  pod 'RuuviService/CloudNotification', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviPool', :path => 'Packages/RuuviPool/RuuviPool.podspec', :testspecs => ['Tests']
   pod 'RuuviPool/Coordinator', :path => 'Packages/RuuviPool/RuuviPool.podspec'
   pod 'RuuviRepository', :path => 'Packages/RuuviRepository/RuuviRepository.podspec', :testspecs => ['Tests']

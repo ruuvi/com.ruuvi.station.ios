@@ -3,6 +3,9 @@ import RuuviUser
 import RuuviService
 import RuuviPresenters
 import RuuviCloud
+import RuuviCore
+import Future
+import RuuviLocal
 
 #if canImport(WidgetKit)
 import WidgetKit
@@ -17,6 +20,9 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
+    var pnManager: RuuviCorePN!
+    var cloudNotificationService: RuuviServiceCloudNotification!
+    var settings: RuuviLocalSettings!
 }
 
 // MARK: - MyRuuviAccountViewOutput
@@ -52,7 +58,7 @@ extension MyRuuviAccountPresenter {
     private func syncViewModel() {
         let viewModel = MyRuuviAccountViewModel()
         if ruuviUser.isAuthorized {
-            viewModel.username.value = ruuviUser.email
+            viewModel.username.value = ruuviUser.email?.lowercased()
         }
         view.viewModel = viewModel
     }
@@ -68,13 +74,20 @@ extension MyRuuviAccountPresenter {
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             guard let sSelf = self else { return }
+            sSelf.cloudNotificationService.unregister(
+                token: sSelf.pnManager.fcmToken,
+                tokenId: nil
+            ).on(success: { _ in
+                sSelf.pnManager.fcmToken = nil
+                sSelf.pnManager.fcmTokenLastRefreshed = nil
+            })
+
             sSelf.authService.logout()
-                .on(success: { [weak sSelf] _ in
-                    sSelf?.viewDidTriggerClose()
-                    sSelf?.syncViewModel()
-                    sSelf?.reloadWidgets()
-                }, failure: { [weak sSelf] error in
-                    sSelf?.errorPresenter.present(error: error)
+                .on(success: { _ in
+                    sSelf.settings.cloudModeEnabled = false
+                    sSelf.viewDidTriggerClose()
+                    sSelf.syncViewModel()
+                    sSelf.reloadWidgets()
                 })
         }
         let cancleAction = UIAlertAction(title: cancelActionTitle,
@@ -89,8 +102,6 @@ extension MyRuuviAccountPresenter {
     }
 
     private func reloadWidgets() {
-        if #available(iOS 14.0, *) {
-            WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
-        }
+        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
     }
 }

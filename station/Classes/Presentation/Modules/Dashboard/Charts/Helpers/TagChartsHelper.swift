@@ -5,17 +5,19 @@ struct TagChartsHelper {
     static func newDataSet(entries: [ChartDataEntry] = []) -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet(entries: entries)
         lineChartDataSet.axisDependency = .left
-        lineChartDataSet.setColor(NSUIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
+        lineChartDataSet.setColor(RuuviColor.ruuviGraphLineColor ?? RuuviColor.fallbackGraphLineColor)
         lineChartDataSet.lineWidth = 1.5
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.circleRadius = 0.8
         lineChartDataSet.drawValuesEnabled = false
-        lineChartDataSet.fillAlpha = 0.26
-        lineChartDataSet.fillColor = NSUIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
-        lineChartDataSet.highlightColor = NSUIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
+        lineChartDataSet.fillAlpha = 1
+        lineChartDataSet.fillColor = RuuviColor.ruuviGraphFillColor ?? RuuviColor.fallbackGraphFillColor
+        lineChartDataSet.highlightColor = RuuviColor.ruuviGraphFillColor ?? RuuviColor.fallbackGraphFillColor
+        lineChartDataSet.highlightLineDashLengths = [2, 1, 0]
+        lineChartDataSet.highlightLineWidth = 1
         lineChartDataSet.drawCircleHoleEnabled = false
         lineChartDataSet.drawFilledEnabled = true
-        lineChartDataSet.highlightEnabled = false
+        lineChartDataSet.highlightEnabled = true
         return lineChartDataSet
     }
 }

@@ -13,6 +13,7 @@ class ChartSettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         localize()
     }
 
@@ -75,8 +76,20 @@ extension ChartSettingsTableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return viewModel.sections[section].note
+    override func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return 100
+    }
+
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        let footerLabel = UILabel()
+        footerLabel.textColor = RuuviColor.ruuviTextColor
+        footerLabel.font = UIFont.Muli(.regular, size: 13)
+        footerLabel.numberOfLines = 0
+        footerLabel.text = viewModel.sections[section].note
+        footerView.addSubview(footerLabel)
+        footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
+        return footerView
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

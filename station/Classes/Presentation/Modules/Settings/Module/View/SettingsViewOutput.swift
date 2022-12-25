@@ -8,10 +8,11 @@ protocol SettingsViewOutput {
     func viewDidTriggerClose()
     func viewDidTapOnLanguage()
     func viewDidTapOnDefaults()
+    func viewDidTapOnDevices()
     func viewDidTapOnHeartbeat()
     func viewDidTapOnChart()
     func viewDidTapOnExperimental()
     func viewDidTriggerShake()
-    func viewCloudModeDidChange(isOn: Bool)
+    func viewDidTapRuuviCloud()
     func viewDidSelectChangeLanguage()
 }

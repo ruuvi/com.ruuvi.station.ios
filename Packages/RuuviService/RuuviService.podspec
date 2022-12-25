@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'RuuviService'
-  s.version          = '0.0.2'
+  s.version          = '0.0.3'
   s.summary          = 'Ruuvi Service'
   s.homepage         = 'https://ruuvi.com'
   s.author           = { 'Rinat Enikeev' => 'rinat@ruuvi.com' }
@@ -132,6 +132,17 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
     ss.dependency 'RuuviOntology'
     ss.dependency 'RuuviPool'
+  end
+
+  s.subspec 'CloudNotification' do |ss|
+    ss.source_files = 'Sources/RuuviServiceCloudNotification/**/*.{h,m,swift}', 'Sources/RuuviServiceCloudNotification/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviPool'
+    ss.dependency 'RuuviStorage'
+    ss.dependency 'RuuviCloud'
+    ss.dependency 'RuuviUser'
+    ss.dependency 'FutureX'
   end
 
   s.test_spec 'Tests' do |test_spec|

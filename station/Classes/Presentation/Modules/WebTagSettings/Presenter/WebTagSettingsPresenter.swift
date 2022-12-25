@@ -21,11 +21,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
-    var photoPickerPresenter: PhotoPickerPresenter! {
-        didSet {
-            photoPickerPresenter.delegate = self
-        }
-    }
+
     private var temperature: Temperature? {
         didSet {
             view.viewModel.temperature.value = temperature
@@ -80,17 +76,8 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
         router.dismiss()
     }
 
-    func viewDidAskToRandomizeBackground() {
-        ruuviSensorPropertiesService.setNextDefaultBackground(for: virtualSensor)
-            .on(success: { [weak self] image in
-                self?.view.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-    }
-
-    func viewDidAskToSelectBackground(sourceView: UIView) {
-        photoPickerPresenter.pick(sourceView: sourceView)
+    func viewDidTriggerChangeBackground() {
+        router.openBackgroundSelectionView(virtualSensor: virtualSensor)
     }
 
     func viewDidChangeTag(name: String) {
@@ -186,18 +173,6 @@ extension WebTagSettingsPresenter {
                          using: { [weak self] _ in
             self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
         })
-    }
-}
-
-// MARK: - PhotoPickerPresenterDelegate
-extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
-    func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        ruuviSensorPropertiesService.set(image: photo, for: virtualSensor)
-            .on(success: { [weak self] _ in
-                self?.view.viewModel.background.value = photo
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
     }
 }
 
@@ -510,9 +485,7 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.isHumidityAlertOn
         case .pressure:
             observable = view.viewModel.isPressureAlertOn
-        case .connection:
-            observable = nil
-        case .movement:
+        case .connection, .movement, .signal:
             observable = nil
         }
 
@@ -553,9 +526,7 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.humidityAlertMutedTill
         case .pressure:
             observable = view.viewModel.pressureAlertMutedTill
-        case .connection:
-            observable = nil
-        case .movement:
+        case .connection, .movement, .signal:
             observable = nil
         }
 

@@ -3,6 +3,8 @@ import UIKit
 
 class SettingsRouter: SettingsRouterInput {
     weak var transitionHandler: UIViewController!
+    private var ruuviCloudModule: RuuviCloudModuleInput?
+    private var devicesModule: DevicesModuleInput?
 
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
@@ -16,6 +18,18 @@ class SettingsRouter: SettingsRouterInput {
             .then({ module in
                 module.configure()
             })
+    }
+
+    func openDevices() {
+        let factory: DevicesModuleFactory = DevicesModuleFactoryImpl()
+        let module = factory.create()
+        self.devicesModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
     }
 
     func openHeartbeat() {
@@ -58,5 +72,17 @@ class SettingsRouter: SettingsRouterInput {
             .then({ module in
                 module.configure(viewModel: viewModel, output: output)
             })
+    }
+
+    func openRuuviCloud() {
+        let factory: RuuviCloudModuleFactory = RuuviCloudModuleFactoryImpl()
+        let module = factory.create()
+        self.ruuviCloudModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
     }
 }

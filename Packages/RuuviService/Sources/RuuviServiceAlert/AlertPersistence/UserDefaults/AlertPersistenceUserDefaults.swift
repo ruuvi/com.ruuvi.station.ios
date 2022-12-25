@@ -1,6 +1,7 @@
 import Foundation
 import RuuviOntology
 
+// swiftlint:disable file_length
 class AlertPersistenceUserDefaults: AlertPersistence {
     private let prefs = UserDefaults.standard
 
@@ -51,6 +52,18 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.pressureAlertDescriptionUDKeyPrefix."
     private let pressureAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.pressureAlertMuteTillDateUDKeyPrefix."
+
+    // signal
+    private let signalLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalLowerBoundUDKeyPrefix."
+    private let signalUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalUpperBoundUDKeyPrefix."
+    private let signalAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalAlertIsOnUDKeyPrefix."
+    private let signalAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalAlertDescriptionUDKeyPrefix."
+    private let signalAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalAlertMuteTillDateUDKeyPrefix."
 
     // connection
     private let connectionAlertIsOnUDKeyPrefix
@@ -107,6 +120,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .signal:
+            if prefs.bool(forKey: signalAlertIsOnUDKeyPrefix + uuid),
+                let lower = prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid) {
+                return .signal(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
         case .connection:
             if prefs.bool(forKey: connectionAlertIsOnUDKeyPrefix + uuid) {
                 return .connection
@@ -141,6 +162,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
+        case .signal(let lower, let upper):
+            prefs.set(true, forKey: signalAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: signalLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         case .movement(let last):
@@ -167,6 +192,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
+        case .signal(let lower, let upper):
+            prefs.set(false, forKey: signalAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: signalLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         case .movement(let last):
@@ -185,6 +214,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(date, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .signal:
+            prefs.set(date, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(date, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .movement:
@@ -202,6 +233,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(nil, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .signal:
+            prefs.set(nil, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(nil, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .movement:
@@ -219,6 +252,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .pressure:
             return prefs.value(forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .signal:
+            return prefs.value(forKey: signalAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .connection:
             return prefs.value(forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .movement:
@@ -346,6 +381,33 @@ extension AlertPersistenceUserDefaults {
 
     func setPressure(description: String?, for uuid: String) {
         prefs.set(description, forKey: pressureAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - RSSI
+extension AlertPersistenceUserDefaults {
+    func lowerSignal(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(signal: Double?, for uuid: String) {
+        prefs.set(signal, forKey: signalLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperSignal(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(signal: Double?, for uuid: String) {
+        prefs.set(signal, forKey: signalUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func signalDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: signalAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setSignal(description: String?, for uuid: String) {
+        prefs.set(description, forKey: signalAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

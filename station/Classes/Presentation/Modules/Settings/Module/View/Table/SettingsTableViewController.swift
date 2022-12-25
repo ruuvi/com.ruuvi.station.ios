@@ -1,11 +1,6 @@
 import UIKit
 import RuuviOntology
 
-private enum SettingsTableSection: Int {
-    case general = 0
-    case application = 1
-}
-
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
@@ -20,25 +15,34 @@ class SettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var heartbeatTitleLabel: UILabel!
     @IBOutlet weak var heartbeatCell: UITableViewCell!
+
     @IBOutlet weak var defaultsTitleLabel: UILabel!
     @IBOutlet weak var defaultsCell: UITableViewCell!
+
+    @IBOutlet weak var devicesTitleLabel: UILabel!
+    @IBOutlet weak var devicesCell: UITableViewCell!
+
     @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
+
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
+
     @IBOutlet weak var chartCell: UITableViewCell!
     @IBOutlet weak var chartTitleLabel: UILabel!
+
     @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
     @IBOutlet weak var experimentalFunctionsLabel: UILabel!
 
-    @IBOutlet weak var cloudModeTitleLabel: UILabel!
-    @IBOutlet weak var cloudModeEnableSwitch: UISwitch!
-    @IBOutlet weak var cloudModeCell: UITableViewCell!
+    @IBOutlet weak var ruuviCloudTitleLabel: UILabel!
+    @IBOutlet weak var ruuviCloudCell: UITableViewCell!
 
     #if DEVELOPMENT
     private let showDefaults = true
+    private let showDevices = true
     #else
     private let showDefaults = false
+    private let showDevices = false
     #endif
 
     var language: Language = .english {
@@ -57,11 +61,6 @@ class SettingsTableViewController: UITableViewController {
             updateTableIfLoaded()
         }
     }
-    var cloudModeEnabled: Bool = false {
-        didSet {
-            cloudModeEnableSwitch.isOn = cloudModeEnabled
-        }
-    }
 }
 
 // MARK: - SettingsViewInput
@@ -73,9 +72,10 @@ extension SettingsTableViewController: SettingsViewInput {
         pressureTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
+        devicesTitleLabel.text = "DfuDevicesScanner.Title.text".localized()
         heartbeatTitleLabel.text = "Settings.BackgroundScanning.title".localized()
         chartTitleLabel.text = "Settings.Label.Chart".localized()
-        cloudModeTitleLabel.text = "Settings.Label.CloudMode".localized()
+        ruuviCloudTitleLabel.text = "ruuvi_cloud".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -110,9 +110,9 @@ extension SettingsTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateNavBarTitleFont()
         setupLocalization()
         updateUI()
-        setupCloudModeCellSwitch()
         output.viewDidLoad()
         becomeFirstResponder()
     }
@@ -135,55 +135,41 @@ extension SettingsTableViewController {
         }
         // Add the logic for the cloud mode cell here
         if !showDefaults && cell == defaultsCell ||
-            !cloudModeVisible && cell == cloudModeCell {
+           (!showDevices || !cloudModeVisible) && cell == devicesCell ||
+            !cloudModeVisible && cell == ruuviCloudCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case SettingsTableSection.general.rawValue:
-            return "Settings.SectionHeader.General.title".localized()
-        case SettingsTableSection.application.rawValue:
-            return "Settings.SectionHeader.Application.title".localized()
+    // swiftlint:disable:next cyclomatic_complexity
+    override func tableView(_ tableView: UITableView,
+                            didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        switch cell {
+        case temperatureCell:
+            output.viewDidTapTemperatureUnit()
+        case humidityCell:
+            output.viewDidTapHumidityUnit()
+        case pressureCell:
+            output.viewDidTapOnPressure()
+        case languageCell:
+            output.viewDidTapOnLanguage()
+        case defaultsCell:
+            output.viewDidTapOnDefaults()
+        case devicesCell:
+            output.viewDidTapOnDevices()
+        case heartbeatCell:
+            output.viewDidTapOnHeartbeat()
+        case chartCell:
+            output.viewDidTapOnChart()
+        case experimentalFunctionsCell:
+            output.viewDidTapOnExperimental()
+        case ruuviCloudCell:
+            output.viewDidTapRuuviCloud()
         default:
-            return nil
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        switch section {
-        case SettingsTableSection.application.rawValue:
-            return cloudModeVisible ? "Settings.Label.CloudMode.description".localized() : nil
-        default:
-            return nil
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
-            switch cell {
-            case temperatureCell:
-                output.viewDidTapTemperatureUnit()
-            case humidityCell:
-                output.viewDidTapHumidityUnit()
-            case pressureCell:
-                output.viewDidTapOnPressure()
-            case languageCell:
-                output.viewDidTapOnLanguage()
-            case defaultsCell:
-                output.viewDidTapOnDefaults()
-            case heartbeatCell:
-                output.viewDidTapOnHeartbeat()
-            case chartCell:
-                output.viewDidTapOnChart()
-            case experimentalFunctionsCell:
-                output.viewDidTapOnExperimental()
-            default:
-                break
-            }
+            break
         }
     }
 }
@@ -191,8 +177,6 @@ extension SettingsTableViewController {
 // MARK: - Update UI
 extension SettingsTableViewController {
     private func updateUI() {
-//        updateUITemperatureUnit()
-//        updateUIHumidityUnit()
         updateUILanguage()
         updateTableIfLoaded()
     }
@@ -209,14 +193,8 @@ extension SettingsTableViewController {
         }
     }
 
-    private func setupCloudModeCellSwitch() {
-        cloudModeEnableSwitch.addTarget(self,
-                                        action: #selector(cloudModeSwitchValueChangeHandler),
-                                        for: .valueChanged)
-    }
-
-    @objc
-    private func cloudModeSwitchValueChangeHandler(_ sender: UISwitch) {
-        output.viewCloudModeDidChange(isOn: sender.isOn)
+    private func updateNavBarTitleFont() {
+        navigationController?.navigationBar.titleTextAttributes =
+            [NSAttributedString.Key.font: UIFont.Muli(.bold, size: 18)]
     }
 }

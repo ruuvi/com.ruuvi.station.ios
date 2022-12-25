@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Muli-Bold.ttf">
+            <string>Muli-Bold</string>
+        </array>
+        <array key="Muli-Regular.ttf">
+            <string>Muli-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Share Ruuvi sensor-->
         <scene sceneID="xGI-fv-TzY">
@@ -15,10 +24,10 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="jWW-qz-4Y5">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="RuuviPrimary"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareDescriptionTableViewCell" rowHeight="108" id="6X1-1G-8p6" customClass="ShareDescriptionTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44.5" width="414" height="108"/>
+                                <rect key="frame" x="0.0" y="50" width="414" height="108"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6X1-1G-8p6" id="TDj-aD-hqN">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
@@ -26,9 +35,9 @@
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share your Ruuvi sensor. Add your friend email address. Max 3" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MLf-W5-ib2">
                                             <rect key="frame" x="20" y="11" width="374" height="86"/>
-                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                            <color key="tintColor" name="RuuviTintColor"/>
+                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="14"/>
+                                            <color key="textColor" name="RuuviTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -39,13 +48,14 @@
                                         <constraint firstItem="MLf-W5-ib2" firstAttribute="bottom" secondItem="TDj-aD-hqN" secondAttribute="bottomMargin" id="ts6-7g-doJ"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="MLf-W5-ib2" id="cW9-q4-hIf"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailInputTableViewCell" rowHeight="57" id="l7S-aJ-8e8" customClass="ShareEmailInputTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="152.5" width="414" height="57"/>
+                                <rect key="frame" x="0.0" y="158" width="414" height="57"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l7S-aJ-8e8" id="SAL-7y-xAR">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="57"/>
@@ -63,7 +73,8 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="34" id="62B-EZ-38I"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" name="RuuviTextColor"/>
+                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="16"/>
                                             <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                         </textField>
                                     </subviews>
@@ -77,13 +88,14 @@
                                         <constraint firstItem="ZeU-ve-Fbq" firstAttribute="trailing" secondItem="SAL-7y-xAR" secondAttribute="trailingMargin" id="uTg-Ri-QAB"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="emailTextField" destination="ZeU-ve-Fbq" id="sP0-6s-Rul"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareSendButtonTableViewCell" id="bJm-nn-jm5" customClass="ShareSendButtonTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="209.5" width="414" height="66.5"/>
+                                <rect key="frame" x="0.0" y="215" width="414" height="66.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bJm-nn-jm5" id="0Ss-IZ-OAV">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="66.5"/>
@@ -91,12 +103,12 @@
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evc-gX-tbY">
                                             <rect key="frame" x="107" y="11" width="200" height="44.5"/>
-                                            <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" name="RuuviTintColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="F4C-0w-w3r"/>
                                                 <constraint firstAttribute="height" constant="44" id="Tbj-Pb-d81"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
                                             <inset key="contentEdgeInsets" minX="32" minY="12" maxX="32" maxY="12"/>
                                             <state key="normal" title="SEND"/>
                                             <userDefinedRuntimeAttributes>
@@ -119,33 +131,33 @@
                                     <outlet property="sendButton" destination="evc-gX-tbY" id="XWZ-qA-B1G"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailTableViewCell" rowHeight="52" id="wxH-bv-pTT" customClass="ShareEmailTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="276" width="414" height="52"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailTableViewCell" rowHeight="65" id="wxH-bv-pTT" customClass="ShareEmailTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="281.5" width="414" height="65"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wxH-bv-pTT" id="3ef-wz-tkh">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="50c-ak-ZNd">
-                                            <rect key="frame" x="20" y="43" width="374" height="1"/>
+                                            <rect key="frame" x="20" y="56" width="374" height="1"/>
                                             <color key="backgroundColor" systemColor="separatorColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="vBm-5x-pcN"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email@email.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrW-d2-ghU">
-                                            <rect key="frame" x="20" y="15.5" width="334" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                            <rect key="frame" x="20" y="8" width="342" height="40"/>
+                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="16"/>
+                                            <color key="textColor" name="RuuviTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OhF-9r-eYZ">
-                                            <rect key="frame" x="354" y="0.0" width="52" height="52"/>
+                                            <rect key="frame" x="362" y="6" width="44" height="44"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="5yx-y4-gXw"/>
-                                                <constraint firstAttribute="width" secondItem="OhF-9r-eYZ" secondAttribute="height" id="HOV-7I-P4Y"/>
+                                                <constraint firstAttribute="width" constant="44" id="QVk-Hc-woz"/>
                                             </constraints>
-                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                            <color key="tintColor" name="RuuviTextColor"/>
                                             <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                             <state key="normal" image="small-cross-clear-icon"/>
                                             <connections>
@@ -154,18 +166,18 @@
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="height" secondItem="3ef-wz-tkh" secondAttribute="height" id="4aC-To-RAH"/>
-                                        <constraint firstAttribute="bottom" secondItem="OhF-9r-eYZ" secondAttribute="bottom" id="9fA-6B-Fzo"/>
+                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="centerY" secondItem="KrW-d2-ghU" secondAttribute="centerY" id="G8c-av-L3W"/>
                                         <constraint firstItem="OhF-9r-eYZ" firstAttribute="leading" secondItem="KrW-d2-ghU" secondAttribute="trailing" id="PTJ-S6-w5M"/>
-                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="centerY" secondItem="OhF-9r-eYZ" secondAttribute="centerY" id="TcR-wo-eXZ"/>
+                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="top" secondItem="3ef-wz-tkh" secondAttribute="top" constant="8" id="Shp-Fz-4dM"/>
+                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leading" constant="20" id="az9-oR-Xbo"/>
                                         <constraint firstAttribute="trailing" secondItem="OhF-9r-eYZ" secondAttribute="trailing" constant="8" id="ijq-gi-HDU"/>
                                         <constraint firstItem="50c-ak-ZNd" firstAttribute="trailing" secondItem="3ef-wz-tkh" secondAttribute="trailingMargin" id="pIz-QF-PGR"/>
-                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leadingMargin" id="r7u-dR-5sf"/>
-                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="top" secondItem="3ef-wz-tkh" secondAttribute="top" id="rC9-N8-CnK"/>
+                                        <constraint firstItem="50c-ak-ZNd" firstAttribute="top" secondItem="KrW-d2-ghU" secondAttribute="bottom" constant="8" id="r5L-Xl-fxY"/>
                                         <constraint firstAttribute="bottom" secondItem="50c-ak-ZNd" secondAttribute="bottom" constant="8" id="tAu-1J-qwa"/>
                                         <constraint firstItem="50c-ak-ZNd" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leading" constant="20" id="xGI-Fi-EPc"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <outlet property="emailLabel" destination="KrW-d2-ghU" id="plf-Nr-rrY"/>
                                     <outlet property="unshareButton" destination="OhF-9r-eYZ" id="vl7-gr-A2J"/>
@@ -195,7 +207,7 @@
             <objects>
                 <navigationController id="LbA-Te-w1h" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fr2-ra-azP">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -209,14 +221,17 @@
     </scenes>
     <resources>
         <image name="small-cross-clear-icon" width="36" height="36"/>
-        <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+        <namedColor name="RuuviPrimary">
+            <color red="0.93699997663497925" green="0.94499999284744263" blue="0.94499999284744263" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviTextColor">
+            <color red="0.030999999493360519" green="0.23499999940395355" blue="0.23899999260902405" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviTintColor">
+            <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <systemColor name="separatorColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

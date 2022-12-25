@@ -10,7 +10,9 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     private let imagePersistence: ImagePersistence
     private let bgMinIndex = 1 // must be > 0, 0 means custom background
-    private let bgMaxIndex = 9
+    private let bgMaxIndex = 16
+    // The images of index 16 will be used for default background.
+    private let bgIndexDefault = 16
 
     private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
@@ -19,7 +21,8 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     private let cloudSensorPictureUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
 
     private var usedBackgrounds: [Int] {
-        if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
+        if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int],
+            ub.count == bgMaxIndex {
             return ub
         } else {
             let ub = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
@@ -69,9 +72,8 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             if let custom = getCustomBackground(for: identifier) {
                 return custom
             } else {
-                id = biasedToNotUsedRandom()
-                setBackground(id, for: identifier)
-                return UIImage(named: "bg\(id)")
+                setBackground(bgIndexDefault, for: identifier)
+                return UIImage(named: "bg\(bgIndexDefault)")
             }
         }
     }

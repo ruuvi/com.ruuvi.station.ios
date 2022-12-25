@@ -6,15 +6,19 @@ struct AppStoreReviewHelper {
     static func askForReview(settings: RuuviLocalSettings) {
         switch settings.appOpenedCount {
         case settings.appOpenedInitialCountToAskReview:
-            SKStoreReviewController.requestReview()
+            requestReview()
         case _ where settings.appOpenedCount%settings.appOpenedCountDivisibleToAskReview == 0:
-            SKStoreReviewController.requestReview()
+            requestReview()
         default:
             break
         }
     }
 
-    fileprivate func requestReview() {
-        SKStoreReviewController.requestReview()
+    fileprivate static func requestReview() {
+        if let scene = UIApplication.shared.connectedScenes.first(where: {
+            $0.activationState == .foregroundActive
+        }) as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: scene)
+        }
     }
 }

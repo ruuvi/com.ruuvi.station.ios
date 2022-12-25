@@ -9,8 +9,14 @@ public enum LNMDidReceiveKey: String {
     case uuid
 }
 
+public protocol RuuviNotificationLocalOutput: AnyObject {
+    func notificationDidTap(for macId: String)
+}
+
 public protocol RuuviNotificationLocal: AnyObject {
-    func setup(disableTitle: String, muteTitle: String)
+    func setup(disableTitle: String,
+               muteTitle: String,
+               output: RuuviNotificationLocalOutput?)
 
     func showDidConnect(uuid: String, title: String)
     func showDidDisconnect(uuid: String, title: String)

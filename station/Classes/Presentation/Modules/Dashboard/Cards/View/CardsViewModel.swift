@@ -24,6 +24,7 @@ struct CardsViewModel {
     var rssi: Observable<Int?> = Observable<Int?>()
     var version: Observable<Int?> = Observable<Int?>()
     var voltage: Observable<Voltage?> = Observable<Voltage?>()
+    let batteryNeedsReplacement: Observable<Bool?> = Observable<Bool?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
     var date: Observable<Date?> = Observable<Date?>()
     var location: Observable<Location?> = Observable<Location?>()
@@ -40,8 +41,31 @@ struct CardsViewModel {
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
     var movementCounter: Observable<Int?> = Observable<Int?>()
     var isChartAvailable: Observable<Bool?> = Observable<Bool?>(false)
+    var isAlertAvailable: Observable<Bool?> = Observable<Bool?>(false)
+
+    var latestMeasurement: Observable<RuuviTagSensorRecord?> = Observable<RuuviTagSensorRecord?>()
+
+    let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let temperatureAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
+    let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let relativeHumidityAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
+    let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
+    let isSignalAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let signalAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
+    let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let movementAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
+    let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
+
+    private let batteryStatusProvider = RuuviTagBatteryStatusProvider()
 
     init(_ virtualSensor: VirtualTagSensor) {
         type = .web
@@ -94,11 +118,13 @@ struct CardsViewModel {
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
         isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud
+        isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false
         isCloud.value = ruuviTag.isCloud
         isOwner.value = ruuviTag.isOwner
     }
 
     func update(_ record: RuuviTagSensorRecord) {
+        latestMeasurement.value = record
         temperature.value = record.temperature
         humidity.value = record.humidity
         pressure.value = record.pressure
@@ -109,6 +135,11 @@ struct CardsViewModel {
         rssi.value = record.rssi
         movementCounter.value = record.movementCounter
         source.value = record.source
+        batteryNeedsReplacement.value =
+            batteryStatusProvider
+            .batteryNeedsReplacement(temperature: record.temperature,
+                                     voltage: record.voltage)
+        isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false
     }
 
     func update(with ruuviTag: RuuviTag) {
@@ -120,6 +151,7 @@ struct CardsViewModel {
                 isChartAvailable.value = true
             }
         }
+        isAlertAvailable.value = isCloud.value ?? false || ruuviTag.isConnected
         temperature.value = ruuviTag.temperature
         humidity.value = ruuviTag.humidity
         pressure.value = ruuviTag.pressure
@@ -135,25 +167,14 @@ struct CardsViewModel {
 
 extension CardsViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(luid.value?.value)
+        hasher.combine(luid.value)
+        hasher.combine(mac.value)
     }
 }
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        var idIsEqual = false
-        if let lhsId = lhs.luid.value, let rhsId = rhs.luid.value {
-            idIsEqual = lhsId == rhsId
-        }
-        var luidIsEqual = false
-        if let lhsLuid = lhs.luid.value, let rhsLuid = rhs.luid.value {
-            luidIsEqual = lhsLuid == rhsLuid
-        }
-        var macIsEqual = false
-        if let lhsMac = lhs.mac.value, let rhsMac = rhs.mac.value {
-            macIsEqual = lhsMac == rhsMac
-        }
-        return idIsEqual || luidIsEqual || macIsEqual
+        return lhs.luid.value == rhs.luid.value && lhs.mac.value == rhs.mac.value
     }
 }
 

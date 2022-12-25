@@ -3,8 +3,6 @@ import RuuviOntology
 
 struct TagSettingsViewModel {
     let background: Observable<UIImage?> = Observable<UIImage?>()
-    let isUploadingBackground: Observable<Bool?> = Observable<Bool?>()
-    let uploadingBackgroundPercentage: Observable<Double?> = Observable<Double?>()
     let name: Observable<String?> = Observable<String?>()
     let uuid: Observable<String?> = Observable<String?>()
     let mac: Observable<String?> = Observable<String?>()
@@ -62,6 +60,13 @@ struct TagSettingsViewModel {
     let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1100, unit: .hectopascals))
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
     let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
+    let isSignalAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let signalAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let signalLowerBound: Observable<Double?> = Observable<Double?>(-105)
+    let signalUpperBound: Observable<Double?> = Observable<Double?>(0)
+    let signalAlertDescription: Observable<String?> = Observable<String?>()
+    let signalAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let isConnectionAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
@@ -136,6 +141,11 @@ struct TagSettingsViewModel {
         pressureLowerBound.value = Pressure(300, unit: .hectopascals)
         pressureUpperBound.value = Pressure(1100, unit: .hectopascals)
         pressureAlertDescription.value = nil
+
+        isSignalAlertOn.value = false
+        signalLowerBound.value = -105
+        signalUpperBound.value = 0
+        signalAlertDescription.value = nil
 
         isConnectionAlertOn.value = false
         isConnectionAlertExpanded.value = false

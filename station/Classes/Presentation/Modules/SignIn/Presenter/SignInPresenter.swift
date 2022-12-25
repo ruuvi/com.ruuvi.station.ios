@@ -5,6 +5,8 @@ import RuuviService
 import RuuviUser
 import RuuviPresenters
 import RuuviDaemon
+import FirebaseMessaging
+import RuuviLocal
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
@@ -26,6 +28,8 @@ class SignInPresenter: NSObject {
     var ruuviCloud: RuuviCloud!
     var cloudSyncService: RuuviServiceCloudSync!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
+    var cloudNotificationService: RuuviServiceCloudNotification!
+    var settings: RuuviLocalSettings!
 
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -49,21 +53,18 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidClose() {
-        dismiss()
+        output?.signIn(module: self, didCloseSignInWithoutAttempt: nil)
     }
 
-    func viewDidTapSubmitButton() {
+    func viewDidTapRequestCodeButton(for email: String?) {
+        guard let email = email, isValidEmail(email) else {
+            view.showInvalidEmailEntered()
+            return
+        }
         switch state {
         case .enterEmail:
-            sendVerificationCode()
-        case .enterVerificationCode:
-            guard let code = viewModel.inputText.value,
-                  !code.isEmpty else {
-                viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
-                return
-            }
-            verify(code)
-        case .isSyncing:
+            sendVerificationCode(for: email)
+        default:
             return
         }
     }
@@ -71,13 +72,19 @@ extension SignInPresenter: SignInViewOutput {
     func viewDidTapEnterCodeManually(code: String) {
         verify(code)
     }
+
+    func viewDidTapUseWithoutAccount() {
+        router.openSignInPromoViewController(output: self)
+    }
 }
 
-// MARK: - SignInModuleOutput
-extension SignInPresenter: SignInModuleOutput {
-    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
-        router.dismiss { [weak self] in
-            self?.output?.signIn(module: module, didSuccessfulyLogin: sender)
+extension SignInPresenter: SignInPromoModuleOutput {
+    func signIn(module: SignInPromoModuleInput,
+                didSelectUseWithoutAccount sender: Any?) {
+        module.dismiss { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.output?.signIn(module: sSelf,
+                                didSelectUseWithoutAccount: sender)
         }
     }
 }
@@ -90,11 +97,7 @@ extension SignInPresenter: SignInModuleInput {
     }
 
     func dismiss() {
-        if viewModel.canPopViewController.value == true {
-            router.popViewController(animated: true)
-        } else {
-            router.dismiss(completion: nil)
-        }
+        router.dismiss(completion: nil)
     }
 }
 
@@ -104,49 +107,14 @@ extension SignInPresenter {
         viewModel = SignInViewModel()
         switch state {
         case .enterEmail:
-            viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
-            viewModel.subTitleLabelText.value = "SignIn.SubtitleLabel.text".localized()
-            viewModel.placeholder.value = "SignIn.EmailPlaceholder".localized()
-            viewModel.submitButtonText.value = "SignIn.RequestCode".localized()
-            viewModel.errorLabelText.value = nil
-            viewModel.canPopViewController.value = false
-            viewModel.inputText.value = ruuviUser.email
-            viewModel.showEmailField.value = true
-            viewModel.showCodeField.value = false
-            viewModel.showUnderline.value = true
+            viewModel.showVerficationScreen.value = false
         case .enterVerificationCode(let code):
-            viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
-            viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
-            viewModel.placeholder.value = nil
-            viewModel.submitButtonText.value = "SignIn.SubmitCode".localized()
-            viewModel.errorLabelText.value = nil
-            viewModel.showEmailField.value = false
-            viewModel.showCodeField.value = true
-            viewModel.showUnderline.value = false
+            viewModel.showVerficationScreen.value = true
             if let code = code {
-                viewModel.canPopViewController.value = false
                 processCode(code)
             }
         case .isSyncing:
             return
-        }
-        bindViewModel()
-    }
-
-    private func bindViewModel() {
-        bind(viewModel.inputText) { (presenter, text) in
-            switch presenter.state {
-            case .enterEmail:
-                if let text = text, !text.isEmpty, !presenter.isValidEmail(text) {
-                    presenter.viewModel.errorLabelText.value = "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
-                }
-            case .enterVerificationCode:
-                if let text = text, text.isEmpty {
-                    presenter.viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
-                }
-            case .isSyncing:
-                return
-            }
         }
     }
 
@@ -160,18 +128,13 @@ extension SignInPresenter {
         return emailPred.evaluate(with: email)
     }
 
-    private func sendVerificationCode() {
-        guard let email = viewModel.inputText.value,
-              isValidEmail(email) else {
-            viewModel.errorLabelText.value = "SignIn.EnterCorrectEmail".localized()
-            return
-        }
+    private func sendVerificationCode(for email: String) {
         activityPresenter.increment()
         ruuviCloud.requestCode(email: email)
             .on(success: { [weak self] email in
                 guard let sSelf = self else { return }
-                sSelf.ruuviUser.email = email
-                sSelf.router.openEmailConfirmation(output: sSelf)
+                sSelf.ruuviUser.email = email.lowercased()
+                sSelf.viewModel.showVerficationScreen.value = true
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
@@ -188,11 +151,14 @@ extension SignInPresenter {
                     sSelf.ruuviUser.login(apiKey: result.apiKey)
                     sSelf.reloadWidgets()
                     sSelf.state = .isSyncing
+                    sSelf.settings.isSyncing = true
+                    sSelf.registerFCMToken()
                     sSelf.cloudSyncService.syncAllRecords().on(success: { [weak sSelf] _ in
                         guard let ssSelf = sSelf else { return }
                         ssSelf.activityPresenter.decrement()
                         ssSelf.cloudSyncDaemon.start()
-                        ssSelf.signIn(module: ssSelf, didSuccessfulyLogin: nil)
+                        ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)
+                        sSelf?.settings.isSyncing = false
                     }, failure: { [weak self] error in
                         self?.activityPresenter.decrement()
                         self?.errorPresenter.present(error: error)
@@ -286,8 +252,14 @@ extension SignInPresenter {
     }
 
     private func reloadWidgets() {
-        if #available(iOS 14.0, *) {
-            WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+    }
+
+    private func registerFCMToken() {
+        Messaging.messaging().token { [weak self] fcmToken, _ in
+            self?.cloudNotificationService.set(token: fcmToken,
+                                               name: UIDevice.modelName,
+                                               data: nil)
         }
     }
 }

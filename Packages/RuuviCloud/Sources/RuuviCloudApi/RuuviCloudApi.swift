@@ -19,6 +19,21 @@ public protocol RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError>
 
+    func registerPNToken(
+        _ requestModel: RuuviCloudPNTokenRegisterRequest,
+        authorization: String
+    ) -> Future<RuuviCloudPNTokenRegisterResponse, RuuviCloudApiError>
+
+    func unregisterPNToken(
+        _ requestModel: RuuviCloudPNTokenUnregisterRequest,
+        authorization: String?
+    ) -> Future<RuuviCloudPNTokenUnregisterResponse, RuuviCloudApiError>
+
+    func listPNTokens(
+        _ requestModel: RuuviCloudPNTokenListRequest,
+        authorization: String
+    ) -> Future<RuuviCloudPNTokenListResponse, RuuviCloudApiError>
+
     func claim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String

@@ -5,7 +5,7 @@ import UserNotifications
 
 class InfoProviderImpl: InfoProvider {
     var deviceModel: String {
-        return UIDevice.current.readableModel
+        return UIDevice.modelName
     }
 
     var appVersion: String {
@@ -28,7 +28,7 @@ class InfoProviderImpl: InfoProvider {
 
     var locationPermission: String {
         var result = "Location: "
-        switch CLLocationManager.authorizationStatus() {
+        switch CLLocationManager().authorizationStatus {
         case .authorizedAlways:
             result += "always"
         case .authorizedWhenInUse:

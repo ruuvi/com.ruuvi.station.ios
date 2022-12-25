@@ -4,11 +4,12 @@ import RuuviUser
 public final class RuuviOnboardPages: RuuviOnboard {
     public weak var output: RuuviOnboardOutput?
     public var router: AnyObject?
+
     public var viewController: UIViewController {
         if let view = weakView {
             return view
         } else {
-            let view = RuuviOnboardPagesViewController()
+            let view = RuuviOnboardViewController()
             view.output = self
             view.ruuviUser = ruuviUser
             self.weakView = view
@@ -25,12 +26,14 @@ public final class RuuviOnboardPages: RuuviOnboard {
     private weak var weakView: UIViewController?
 }
 
-extension RuuviOnboardPages: RuuviOnboardPagesViewControllerOutput {
-    func ruuviOnboardCloudSignIn(_ viewController: RuuviOnboardPagesViewController, didPresentSignIn sender: Any?) {
-        output?.ruuviOnboardDidShowSignIn(self)
+extension RuuviOnboardPages: RuuviOnboardViewControllerOutput {
+    func ruuviOnboardPages(_ viewController: RuuviOnboardViewController,
+                           didFinish sender: Any?) {
+        output?.ruuviOnboardDidFinish(self)
     }
 
-    func ruuviOnboardPages(_ viewController: RuuviOnboardPagesViewController, didFinish sender: Any?) {
-        output?.ruuviOnboardDidFinish(self)
+    func ruuviOnboardCloudSignIn(_ viewController: RuuviOnboardViewController,
+                                 didPresentSignIn sender: Any?) {
+        output?.ruuviOnboardDidShowSignIn(self)
     }
 }

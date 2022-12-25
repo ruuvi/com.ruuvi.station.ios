@@ -16,6 +16,35 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
         }
     }
 
+    public var fcmToken: String? {
+        get {
+            return UserDefaults.standard.string(forKey: pnFCMTokenUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: pnFCMTokenUDKey)
+        }
+    }
+
+    public var fcmTokenId: Int? {
+        get {
+            return UserDefaults.standard.integer(forKey: pnFCMTokenIdUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: pnFCMTokenIdUDKey)
+        }
+    }
+
+    public var fcmTokenLastRefreshed: Date? {
+        get {
+            return UserDefaults
+                .standard
+                .object(forKey: pnFCMTokenLastRefreshUDKey) as? Date
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: pnFCMTokenLastRefreshUDKey)
+        }
+    }
+
     public func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
@@ -69,6 +98,9 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
     }
 
     private let pnTokenDataUDKey = "PushNotificationsManagerImpl.pnTokenDataUDKey"
+    private let pnFCMTokenUDKey = "PushNotificationsManagerImpl.pnFCMTokenUDKey"
+    private let pnFCMTokenIdUDKey = "PushNotificationsManagerImpl.pnFCMTokenIdUDKey"
+    private let pnFCMTokenLastRefreshUDKey = "PushNotificationsManagerImpl.pnFCMTokenLastRefreshUDKey"
     private let didAskForRemoteNotificationPermissionUDKey =
     "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
     private var didAskForRemoteNotificationPermission: Bool {

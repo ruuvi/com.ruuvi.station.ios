@@ -94,6 +94,8 @@
 	<string>iPhone 11 Pro Max</string>
 	<key>iPhone12,8</key>
 	<string>iPhone SE 2nd Gen</string>
+    <key>iPhone14,6</key>
+    <string>iPhone SE 3rd Gen</string>
 	<key>iPhone13,1</key>
 	<string>iPhone 12 Mini</string>
 	<key>iPhone13,2</key>
@@ -102,6 +104,22 @@
 	<string>iPhone 12 Pro</string>
 	<key>iPhone13,4</key>
 	<string>iPhone 12 Pro Max</string>
+    <key>iPhone14,4</key>
+    <string>iPhone 13 mini</string>
+    <key>iPhone14,5</key>
+    <string>iPhone 13</string>
+    <key>iPhone14,2</key>
+    <string>iPhone 13 Pro</string>
+    <key>iPhone14,3</key>
+    <string>iPhone 13 Pro Max</string>
+    <key>iPhone14,7</key>
+    <string>iPhone 14</string>
+    <key>iPhone14,8</key>
+    <string>iPhone 14 Plus</string>
+    <key>iPhone15,2</key>
+    <string>iPhone 14 Pro</string>
+    <key>iPhone15,3</key>
+    <string>iPhone 14 Pro Max</string>
 	<key>iPad1,1</key>
 	<string>iPad</string>
 	<key>iPad1,2</key>
@@ -126,6 +144,30 @@
 	<string>iPad 4th Gen</string>
 	<key>iPad3,6</key>
 	<string>iPad 4th Gen</string>
+    <key>iPad6,11</key>
+    <string>iPad 5th Gen</string>
+    <key>iPad6,12</key>
+    <string>iPad 5th Gen</string>
+    <key>iPad7,5</key>
+    <string>iPad 6th Gen</string>
+    <key>iPad7,6</key>
+    <string>iPad 6th Gen</string>
+    <key>iPad7,11</key>
+    <string>iPad 7th Gen</string>
+    <key>iPad7,12</key>
+    <string>iPad 7th Gen</string>
+    <key>iPad11,6</key>
+    <string>iPad 8th Gen</string>
+    <key>iPad11,7</key>
+    <string>iPad 8th Gen</string>
+    <key>iPad12,1</key>
+    <string>iPad 7th Gen</string>
+    <key>iPad12,2</key>
+    <string>iPad 9th Gen</string>
+    <key>iPad13,18</key>
+    <string>iPad 10th Gen</string>
+    <key>iPad13,19</key>
+    <string>iPad 10th Gen</string>
 	<key>iPad4,1</key>
 	<string>iPad Air</string>
 	<key>iPad4,2</key>

@@ -11,10 +11,7 @@ public class DateValueFormatter: NSObject, AxisValueFormatter {
 
     public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         let date = Date(timeIntervalSince1970: value)
-        return DateFormatter.localizedString(from: date,
-                                             dateStyle: .none,
-                                             timeStyle: .short)
-        + "\n"
+        return AppDateFormatter.shared.graphXAxisTimeString(from: date) + "\n"
             + stringFromDate(from: date)
     }
 

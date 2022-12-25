@@ -33,7 +33,9 @@ class DiscoverTableViewController: UIViewController {
     }
 
     var isBluetoothEnabled: Bool = true {
-        didSet {}
+        didSet {
+            updateTableView()
+        }
     }
 
     var isCloseEnabled: Bool = true {
@@ -51,7 +53,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
         buyRuuviSensorsButton.setTitle(
-            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self).uppercased(),
+            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self).capitalized,
             for: .normal
         )
     }
@@ -101,13 +103,11 @@ extension DiscoverTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationItem.setHidesBackButton(true, animated: animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
         output.viewWillAppear()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
         output.viewWillDisappear()
     }
 }
@@ -179,6 +179,18 @@ extension DiscoverTableViewController: UITableViewDelegate {
             return nil
         }
     }
+
+    func tableView(_ tableView: UITableView,
+                   willDisplayHeaderView view: UIView,
+                   forSection: Int) {
+        if let headerView = view as? UITableViewHeaderFooterView {
+            headerView.textLabel?.textColor = UIColor(named: "ruuvi_text_color")
+            headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
+            if let font = UIFont(name: "Muli-Regular", size: 13) {
+                headerView.textLabel?.font = font
+            }
+        }
+    }
 }
 
 // MARK: - Cell configuration
@@ -208,6 +220,10 @@ extension DiscoverTableViewController {
 // MARK: - View configuration
 extension DiscoverTableViewController {
     private func configureViews() {
+        if let muliBold = UIFont(name: "Muli-Bold", size: 18) {
+            navigationController?.navigationBar.titleTextAttributes =
+                [.font: muliBold]
+        }
         configureTableView()
     }
 

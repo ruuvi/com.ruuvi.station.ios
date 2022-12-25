@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Muli-Bold.ttf">
+            <string>Muli-Bold</string>
+        </array>
+        <array key="Muli-Regular.ttf">
+            <string>Muli-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Owner View Controller-->
         <scene sceneID="s0d-6b-0kx">
@@ -21,10 +29,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Snr-bv-x2g">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="474"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="494"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sa5-R9-s2b">
-                                                <rect key="frame" x="16" y="20" width="288" height="382"/>
+                                                <rect key="frame" x="16" y="20" width="288" height="402"/>
                                                 <string key="text">Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.
 
 Benefits:
@@ -36,20 +44,22 @@ Benefits:
 ● Share sensors with friends and family (requires a Ruuvi Gateway)
 
 ● Browse up to 2 years of history on station.ruuvi.com (requires a Ruuvi Gateway)</string>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="16"/>
+                                                <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TMq-hd-Z5t">
-                                                <rect key="frame" x="58" y="422" width="204" height="44"/>
-                                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <rect key="frame" x="57" y="442" width="206" height="44"/>
+                                                <color key="backgroundColor" name="RuuviTintColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="44" id="74S-Kg-20W"/>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="Swd-IT-Bfy"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
                                                 <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                                <state key="normal" title="CLAIM OWNERSHIP"/>
+                                                <state key="normal" title="CLAIM OWNERSHIP">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                         <integer key="value" value="22"/>
@@ -60,7 +70,7 @@ Benefits:
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="TMq-hd-Z5t" firstAttribute="top" secondItem="sa5-R9-s2b" secondAttribute="bottom" constant="20" id="173-LK-zTr"/>
                                             <constraint firstItem="sa5-R9-s2b" firstAttribute="top" secondItem="Snr-bv-x2g" secondAttribute="top" constant="20" id="1Pj-SM-cjo"/>
@@ -71,6 +81,7 @@ Benefits:
                                         </constraints>
                                     </view>
                                 </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Snr-bv-x2g" secondAttribute="bottom" id="7fb-5r-tFZ"/>
                                     <constraint firstItem="Snr-bv-x2g" firstAttribute="top" secondItem="tt2-JQ-Lyg" secondAttribute="top" id="8D3-Co-Roc"/>
@@ -81,7 +92,7 @@ Benefits:
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hGd-EX-KTG"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="RuuviPrimary"/>
                         <constraints>
                             <constraint firstItem="tt2-JQ-Lyg" firstAttribute="top" secondItem="hGd-EX-KTG" secondAttribute="top" id="GKC-vk-3Ma"/>
                             <constraint firstItem="Snr-bv-x2g" firstAttribute="height" secondItem="hqY-lT-xal" secondAttribute="height" priority="250" id="S9u-dg-fvl"/>
@@ -106,8 +117,14 @@ Benefits:
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <namedColor name="RuuviPrimary">
+            <color red="0.93699997663497925" green="0.94499999284744263" blue="0.94499999284744263" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviTextColor">
+            <color red="0.030999999493360519" green="0.23499999940395355" blue="0.23899999260902405" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviTintColor">
+            <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

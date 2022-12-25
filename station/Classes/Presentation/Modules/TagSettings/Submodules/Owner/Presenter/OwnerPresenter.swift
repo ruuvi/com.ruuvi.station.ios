@@ -82,6 +82,10 @@ extension OwnerPresenter: OwnerViewOutput {
     func viewDidIgnoreFirmwareUpdateDialog() {
         view.showFirmwareDismissConfirmationUpdateDialog()
     }
+
+    func viewDidDismiss() {
+        router.dismiss()
+    }
 }
 
 extension OwnerPresenter {

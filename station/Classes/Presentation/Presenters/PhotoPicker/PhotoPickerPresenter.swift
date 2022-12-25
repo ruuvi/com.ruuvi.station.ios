@@ -6,5 +6,6 @@ protocol PhotoPickerPresenterDelegate: AnyObject {
 
 protocol PhotoPickerPresenter {
     var delegate: PhotoPickerPresenterDelegate? { get set }
-    func pick(sourceView: UIView?)
+    func showLibrary()
+    func showCameraUI()
 }

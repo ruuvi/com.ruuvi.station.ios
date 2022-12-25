@@ -15,3 +15,31 @@
 "RuuviOnboard.Cloud.Skip.title" = "Haluatko varmasti ohittaa sisäänkirjautumisen?";
 "RuuviOnboard.Cloud.Skip.Yes.title" = "Kyllä, ohita";
 "RuuviOnboard.Cloud.Skip.GoBack.title" = "Takaisin";
+
+// New Onboarding
+"onboarding_measure_your_world" = "Measure Your World";
+"onboarding_with_ruuvi_sensors" = "Tutustu Ruuvi Station -sovellukseesi.";
+"onboarding_swipe_to_continue" = "Jatka pyyhkäisemällä →";
+"onboarding_read_sensors_data" = "Lue Ruuvi-antureitasi";
+"onboarding_via_bluetooth_or_cloud" = "Bluetoothilla tai Ruuvi Cloudilla";
+"onboarding_follow_measurement" = "Seuraa kaikkia antureitasi";
+"onboarding_dashboard" = "koontinäytöltä";
+"onboarding_personalise" = "Personoi";
+"onboarding_your_sensors" = "sovelluksesi omilla nimillä ja taustakuvilla.";
+"onboarding_explore_detailed" = "Tarkastele anturiesi";
+"onboarding_history" = "mittaushistoriaa";
+"onboarding_set_custom" = "Aseta ja säädä omat";
+"onboarding_alerts" = "hälytyksesi";
+"onboarding_share_your_sensors" = "ja mittaa yhdessä ystävien sekä perheen kesken.";
+"onboarding_sharees_can_use" = "Jaa anturisi";
+"onboarding_handy_widgets" = "widgeteillä";
+"onboarding_access_widgets" = "Tuo suosikkianturisi kotinäytölle ja lukitusnäytölle";
+"onboarding_station_web" = "Ruuvin web-sovelluksessa";
+"onboarding_web_pros" = "Koontinäyttö, usean vuoden historia, sähköpostihälytykset ja paljon muuta";
+"onboarding_gateway_required" = "Vaatii Ruuvi Gateway -reitittimen.";
+"onboarding_skip" = "Ohita";
+"onboarding_thats_it" = "Melkein valmista!";
+"onboarding_thats_it_already_signed_in" = "Aloitetaan!";
+"onboarding_go_to_sign_in" = "Kirjautumalla sisään saat parhaan Ruuvi-käyttökokemuksen. Tee se nyt tai jatka ilman pilviominaisuuksia.";
+"onboarding_go_to_sign_in_already_signed_in" = "Lähdetään mittaamaan!";
+"onboarding_continue" = "Seuraava";

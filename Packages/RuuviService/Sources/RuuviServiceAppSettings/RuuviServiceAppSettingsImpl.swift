@@ -145,4 +145,28 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
+
+    @discardableResult
+    public func set(dashboard: Bool) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        cloud.set(dashboard: dashboard)
+            .on(success: { enabled in
+                promise.succeed(value: enabled)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError> {
+        let promise = Promise<DashboardType, RuuviServiceError>()
+        cloud.set(dashboardType: dashboardType)
+            .on(success: { type in
+                promise.succeed(value: type)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }

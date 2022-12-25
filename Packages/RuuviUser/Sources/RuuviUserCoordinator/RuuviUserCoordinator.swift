@@ -11,6 +11,7 @@ final class RuuviUserCoordinator: RuuviUser {
             keychainService.ruuviUserApiKey = newValue
         }
     }
+
     var email: String? {
         get {
             return keychainService.userApiEmail
@@ -19,6 +20,7 @@ final class RuuviUserCoordinator: RuuviUser {
             keychainService.userApiEmail = newValue
         }
     }
+
     var isAuthorized: Bool {
         get {
             return UserDefaults.standard.bool(forKey: isAuthorizedUDKey)

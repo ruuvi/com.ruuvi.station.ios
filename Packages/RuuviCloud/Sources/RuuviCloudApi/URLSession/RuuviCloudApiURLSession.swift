@@ -2,11 +2,16 @@ import Foundation
 import Future
 import RuuviCloud
 
+// swiftlint:disable file_length
+
 extension RuuviCloudApiURLSession {
     private enum Routes: String {
         case register
         case verify
         case deleteAccount = "request-delete"
+        case registerPNToken = "push-register"
+        case unregisterPNToken = "push-unregister"
+        case PNTokens = "push-list"
         case claim
         case unclaim
         case share
@@ -63,6 +68,36 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         return request(endpoint: Routes.deleteAccount,
                        with: requestModel,
                        method: .post,
+                       authorization: authorization)
+    }
+
+    public func registerPNToken(
+        _ requestModel: RuuviCloudPNTokenRegisterRequest,
+        authorization: String
+    ) -> Future<RuuviCloudPNTokenRegisterResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.registerPNToken,
+                       with: requestModel,
+                       method: .post,
+                       authorization: authorization)
+    }
+
+    public func unregisterPNToken(
+        _ requestModel: RuuviCloudPNTokenUnregisterRequest,
+        authorization: String?
+    ) -> Future<RuuviCloudPNTokenUnregisterResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.unregisterPNToken,
+                       with: requestModel,
+                       method: .post,
+                       authorization: authorization)
+    }
+
+    public func listPNTokens(
+        _ requestModel: RuuviCloudPNTokenListRequest,
+        authorization: String
+    ) -> Future<RuuviCloudPNTokenListResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.PNTokens,
+                       with: requestModel,
+                       method: .get,
                        authorization: authorization)
     }
 
@@ -376,3 +411,5 @@ extension RuuviCloudApiURLSession: URLSessionTaskDelegate {
         handler?(progress)
     }
 }
+
+// swiftlint:enable file_length

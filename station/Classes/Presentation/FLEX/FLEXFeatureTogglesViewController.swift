@@ -22,6 +22,7 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
     private static let featureCellReuseIdentifier = "FeatureCellReuseIdentifier"
 
     private func setupViews() {
+        self.view.backgroundColor = RuuviColor.ruuviPrimary
         self.headerView.addSubview(self.sourceSwitch)
         self.headerView.addSubview(self.sourceLabel)
         self.tableView.tableHeaderView = self.headerView
@@ -40,7 +41,11 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
 
     private func layoutViews() {
         let headerView = self.headerView
+
         let sourceSwitch = self.sourceSwitch
+        sourceSwitch.onTintColor = .clear
+        sourceSwitch.thumbTintColor = RuuviColor.ruuviTintColor
+
         let sourceLabel = self.sourceLabel
         headerView.translatesAutoresizingMaskIntoConstraints = false
         sourceSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -95,10 +100,14 @@ extension FLEXFeatureTogglesViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: Self.featureCellReuseIdentifier)
+        cell.backgroundColor = .clear
         let feature = self.features[indexPath.row]
         cell.textLabel?.text = Self.title(for: feature)
+        cell.textLabel?.font = UIFont.Muli(.bold, size: 16)
+        cell.textLabel?.textColor = RuuviColor.ruuviMenuTextColor
         if self.featureToggleService.isEnabled(feature) {
             cell.accessoryType = .checkmark
+            cell.tintColor = RuuviColor.ruuviTintColor
         } else {
             cell.accessoryType = .none
         }
@@ -122,6 +131,8 @@ extension FLEXFeatureTogglesViewController {
         let label = UILabel()
         label.text = "Use local feature toggles"
         label.textAlignment = .right
+        label.font = UIFont.Muli(.bold, size: 16)
+        label.textColor = RuuviColor.ruuviMenuTextColor
         return label
     }
 }

@@ -3,8 +3,7 @@ import UIKit
 protocol WebTagSettingsViewOutput {
     func viewWillAppear()
     func viewDidAskToDismiss()
-    func viewDidAskToRandomizeBackground()
-    func viewDidAskToSelectBackground(sourceView: UIView)
+    func viewDidTriggerChangeBackground()
     func viewDidChangeTag(name: String)
     func viewDidAskToRemoveWebTag()
     func viewDidConfirmTagRemoval()

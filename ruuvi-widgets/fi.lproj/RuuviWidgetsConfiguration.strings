@@ -20,8 +20,8 @@
 "gpCwrM" = "RuuviTag Selection";
 "REfdOV" = "Ruuvi Widget Tag";
 
-"gFuAkN" = "Valittu Ruuvi-anturi"; // Selected Ruuvi Sensor
-"MbquV0" = "Valittu anturityyppi"; // Selected sensor type
+"gFuAkN" = "Valittu anturi"; // Selected Ruuvi Sensor
+"MbquV0" = "Valitse anturin tyyppi"; // Selected sensor type
 
 "W4gPB4" = "Ei mitään"; // None
 "GheCHn" = "Lämpötila"; // Temperature
