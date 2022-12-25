@@ -51,20 +51,35 @@ extension HeartbeatTableViewController {
         super.viewDidLoad()
         setupLocalization()
         bindViewModel()
+        updateUIComponent()
     }
 }
 
 // MARK: - UI TABLE VIEW
 extension HeartbeatTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            titleForFooterInSection section: Int) -> String? {
-        return "Settings.BackgroundScanning.Footer.message".localized()
+    override func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return 100
+    }
+
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        let footerLabel = UILabel()
+        footerLabel.textColor = RuuviColor.ruuviTextColor
+        footerLabel.font = UIFont.Muli(.regular, size: 13)
+        footerLabel.numberOfLines = 0
+        footerLabel.text = "Settings.BackgroundScanning.Footer.message".localized()
+        footerView.addSubview(footerLabel)
+        footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
+        return footerView
     }
 }
 
 // MARK: - Private
 extension HeartbeatTableViewController {
-
+    private func updateUIComponent() {
+        tableView.sectionFooterHeight = UITableView.automaticDimension
+        bgScanningIntervalStepper.layer.cornerRadius = 8
+    }
     private func bindViewModel() {
         if isViewLoaded {
 

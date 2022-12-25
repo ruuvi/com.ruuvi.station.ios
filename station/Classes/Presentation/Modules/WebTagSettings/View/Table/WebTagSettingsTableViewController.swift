@@ -13,6 +13,7 @@ private enum WebTagSettingsTableSection: Int {
 class WebTagSettingsTableViewController: UITableViewController {
     var output: WebTagSettingsViewOutput!
 
+    @IBOutlet weak var backgroundImageContainer: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var locationCell: UITableViewCell!
@@ -43,10 +44,10 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
 
     func localize() {
         navigationItem.title = "WebTagSettings.navigationItem.title".localized()
-        backgroundImageLabel.text = "WebTagSettings.Label.BackgroundImage.text".localized()
+        backgroundImageLabel.text = "change_background_image".localized()
         tagNameTitleLabel.text = "WebTagSettings.Label.TagName.text".localized()
         locationTitleLabel.text = "WebTagSettings.Label.Location.text".localized()
-        removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
+        removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized().capitalized, for: .normal)
         tableView.reloadData()
     }
 
@@ -95,12 +96,8 @@ extension WebTagSettingsTableViewController {
         output.viewDidAskToDismiss()
     }
 
-    @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {
-        output.viewDidAskToRandomizeBackground()
-    }
-
     @IBAction func selectBackgroundButtonTouchUpInside(_ sender: UIButton) {
-        output.viewDidAskToSelectBackground(sourceView: sender)
+        output.viewDidTriggerChangeBackground()
     }
 
     @IBAction func removeThisWebTagButtonTouchUpInside(_ sender: Any) {
@@ -116,6 +113,7 @@ extension WebTagSettingsTableViewController {
 extension WebTagSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        addGestureRecognizerOnUploadBackgroundContainerView()
         setupLocalization()
         bindViewModel()
     }
@@ -123,6 +121,21 @@ extension WebTagSettingsTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
+    }
+}
+
+extension WebTagSettingsTableViewController {
+    private func addGestureRecognizerOnUploadBackgroundContainerView() {
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(Self.backgroundContainerViewTapHandler(_:))
+        )
+        backgroundImageContainer.addGestureRecognizer(tap)
+    }
+
+    @objc
+    private func backgroundContainerViewTapHandler(_ sender: Any) {
+        output.viewDidTriggerChangeBackground()
     }
 }
 
@@ -146,20 +159,6 @@ extension WebTagSettingsTableViewController {
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
-    }
-
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let section = WebTagSettingsTableSection.section(for: section)
-        switch section {
-        case .name:
-            return "WebTagSettings.SectionHeader.Name.title".localized()
-        case .moreInfo:
-            return "WebTagSettings.SectionHeader.MoreInfo.title".localized()
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return super.tableView(tableView, heightForHeaderInSection: section)
     }
 }
 

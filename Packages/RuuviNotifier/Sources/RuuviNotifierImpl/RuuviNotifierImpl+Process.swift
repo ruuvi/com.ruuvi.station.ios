@@ -5,7 +5,7 @@ import RuuviNotifier
 
 // MARK: - Process Physical Sensors
 extension RuuviNotifierImpl {
-    // swiftlint:disable:next function_body_length
+
     public func process(record record: RuuviTagSensorRecord, trigger: Bool) {
         guard let luid = record.luid,
                 ruuviAlertService.hasRegistrations(for: record) else {
@@ -99,10 +99,13 @@ extension RuuviNotifierImpl {
 }
 // MARK: - Process Network Sensors
 extension RuuviNotifierImpl {
-    public func processNetwork(record: RuuviTagSensorRecord, trigger: Bool, for identifier: MACIdentifier) {
+    public func processNetwork(record: RuuviTagSensorRecord,
+                               trigger: Bool,
+                               for identifier: MACIdentifier) {
         guard ruuviAlertService.hasRegistrations(for: record) else {
             return
         }
+
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -112,7 +115,9 @@ extension RuuviNotifierImpl {
                                       identifier: identifier,
                                       trigger: trigger)
                 isTriggered = isTriggered || isTemperature
-                notify(alertType: type, uuid: identifier.value, isTriggered: isTemperature)
+                notify(alertType: type,
+                       uuid: identifier.value,
+                       isTriggered: isTemperature)
             case .relativeHumidity:
                 let isRelativeHumidity = process(
                     relativeHumidity: record.humidity,
@@ -122,14 +127,18 @@ extension RuuviNotifierImpl {
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isRelativeHumidity
-                notify(alertType: type, uuid: identifier.value, isTriggered: isRelativeHumidity)
+                notify(alertType: type,
+                       uuid: identifier.value,
+                       isTriggered: isRelativeHumidity)
             case .pressure:
                 let isPressure = process(pressure: record.pressure,
                                       alertType: type,
                                       identifier: identifier,
                                       trigger: trigger)
                 isTriggered = isTriggered || isPressure
-                notify(alertType: type, uuid: identifier.value, isTriggered: isPressure)
+                notify(alertType: type,
+                       uuid: identifier.value,
+                       isTriggered: isPressure)
             default:
                 break
             }

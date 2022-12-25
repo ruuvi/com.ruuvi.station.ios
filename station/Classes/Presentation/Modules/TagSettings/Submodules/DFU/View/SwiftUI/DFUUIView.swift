@@ -1,7 +1,8 @@
 import SwiftUI
-
+// swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 struct DFUUIView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: DFUViewModel
 
     private struct Texts {
@@ -30,21 +31,32 @@ struct DFUUIView: View {
         let dbMigrationErrorTitle = "DFUUIView.DBMigration.Error.message".localized()
     }
 
+    private let muliBold16 = Font(UIFont.Muli(.bold, size: 16))
+    private let muliRegular16 = Font(UIFont.Muli(.regular, size: 16))
     private let texts = Texts()
     @State private var isBatteryLow = false
 
     var body: some View {
         VStack {
             content
-                .navigationBarTitle(
-                    texts.navigationTitle
-                )
                 .alert(isPresented: $viewModel.isMigrationFailed) {
                     Alert(title: Text(texts.errorTitle),
                           message: Text(texts.dbMigrationErrorTitle),
                           dismissButton: .cancel(Text(texts.okTitle)))
                 }
         }
+        .background(Color(RuuviColor.ruuviPrimarySUI!).edgesIgnoringSafeArea(.all))
+        .navigationBarTitle(
+            texts.navigationTitle
+        )
+        .accentColor(.red)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: goBack) {
+            HStack {
+                Image("chevron_back")
+                    .foregroundColor(.primary)
+            }
+        })
         .onAppear {
             self.viewModel.send(event: .onAppear)
         }
@@ -60,6 +72,8 @@ struct DFUUIView: View {
         case .loading:
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -70,12 +84,20 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case .error(let error):
-            return Text(error.localizedDescription).eraseToAnyView()
+            return Text(error.localizedDescription)
+                .font(muliRegular16)
+                .eraseToAnyView()
         case let .loaded(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                 Text(latestRelease.version)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 Text(texts.currentTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -89,8 +111,14 @@ struct DFUUIView: View {
         case let .serving(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                 Text(latestRelease.version)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 Text(texts.currentTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -103,12 +131,22 @@ struct DFUUIView: View {
         case let .checking(latestRelease, currentRelease):
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                 Text(latestRelease.version)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 Text(texts.currentTitle).bold()
+                    .font(muliBold16)
+                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                 if let currentVersion = currentRelease?.version {
                     Text(currentVersion)
+                        .font(muliRegular16)
+                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 } else {
                     Text(texts.notReportingDescription)
+                        .font(muliRegular16)
+                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 }
             }
             .frame(
@@ -121,6 +159,8 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case .noNeedToUpgrade:
             return Text(texts.alreadyOnLatest)
+                .font(muliRegular16)
+                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -132,12 +172,22 @@ struct DFUUIView: View {
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
+                        .font(muliBold16)
+                        .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                     Text(latestRelease.version)
+                        .font(muliRegular16)
+                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
                     Text(texts.currentTitle).bold()
+                        .font(muliBold16)
+                        .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                     if let currentVersion = currentRelease?.version {
                         Text(currentVersion)
+                            .font(muliRegular16)
+                            .foregroundColor(RuuviColor.ruuviTextColorSUI)
                     } else {
                         Text(texts.notReportingDescription)
+                            .font(muliRegular16)
+                            .foregroundColor(RuuviColor.ruuviTextColorSUI)
                     }
                     Button(
                         action: {
@@ -148,12 +198,13 @@ struct DFUUIView: View {
                         label: {
                             HStack {
                                 Text(texts.startUpdateProcess)
+                                    .font(muliBold16)
                             }.frame(maxWidth: .infinity)
                         }
                     )
                     .buttonStyle(
                         LargeButtonStyle(
-                            backgroundColor: RuuviColor.dustyBlue,
+                            backgroundColor: RuuviColor.ruuviTintColorSUI,
                             foregroundColor: Color.white,
                             isDisabled: false
                         )
@@ -186,10 +237,14 @@ struct DFUUIView: View {
         case .downloading:
             return VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 16)
                     .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
             }
             .frame(
                 maxWidth: .infinity,
@@ -205,18 +260,33 @@ struct DFUUIView: View {
                         RuuviBoardView()
                         VStack(alignment: .leading, spacing: 16) {
                             Text(texts.prepareTitle).bold()
+                                .font(muliBold16)
+                                .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                             Text(texts.openCoverTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.localBootButtonTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.setUpdatingModeTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.toBootModeTwoButtonsDescription)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.toBootModeOneButtonDescription)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.toBootModeSuccessTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                         }
                         Button(
                             action: {},
                             label: {
                                 HStack {
                                     Text(texts.searchingTitle)
+                                        .font(muliBold16)
                                         .foregroundColor(.secondary)
                                     Spinner(isAnimating: true, style: .medium).eraseToAnyView()
                                 }.frame(maxWidth: .infinity)
@@ -224,7 +294,7 @@ struct DFUUIView: View {
                         )
                         .buttonStyle(
                             LargeButtonStyle(
-                                backgroundColor: RuuviColor.dustyBlue,
+                                backgroundColor: RuuviColor.ruuviTintColorSUI,
                                 foregroundColor: Color.white,
                                 isDisabled: true
                             )
@@ -249,12 +319,26 @@ struct DFUUIView: View {
                         RuuviBoardView()
                         VStack(alignment: .leading, spacing: 16) {
                             Text(texts.prepareTitle).bold()
+                                .font(muliBold16)
+                                .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
                             Text(texts.openCoverTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.localBootButtonTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.setUpdatingModeTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.toBootModeTwoButtonsDescription)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.toBootModeOneButtonDescription)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                             Text(texts.toBootModeSuccessTitle)
+                                .font(muliRegular16)
+                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                         }
                         Button(
                             action: {
@@ -270,12 +354,13 @@ struct DFUUIView: View {
                             },
                             label: {
                                 Text(texts.startTitle)
+                                    .font(muliBold16)
                                     .frame(maxWidth: .infinity)
                             }
                         )
                         .buttonStyle(
                             LargeButtonStyle(
-                                backgroundColor: RuuviColor.dustyBlue,
+                                backgroundColor: RuuviColor.ruuviTintColorSUI,
                                 foregroundColor: Color.white,
                                 isDisabled: false
                             )
@@ -295,12 +380,18 @@ struct DFUUIView: View {
         case .flashing:
             return VStack(alignment: .center, spacing: 24) {
                 Text(texts.updatingTitle)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 ProgressBar(value: $viewModel.flashProgress)
                     .frame(height: 16)
                 Text("\(Int(viewModel.flashProgress * 100))%")
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 Text(texts.doNotCloseTitle)
+                    .font(muliBold16)
                     .bold()
                     .multilineTextAlignment(.center)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
 
             }
             .frame(
@@ -312,6 +403,8 @@ struct DFUUIView: View {
             .eraseToAnyView()
         case .successfulyFlashed:
             return Text(texts.updatingTitle)
+                .font(muliRegular16)
+                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -321,6 +414,8 @@ struct DFUUIView: View {
                 .eraseToAnyView()
         case .servingAfterUpdate:
             return Text(texts.updatingTitle)
+                .font(muliRegular16)
+                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -331,6 +426,8 @@ struct DFUUIView: View {
         case .firmwareAfterUpdate(let currentRelease):
             viewModel.storeUpdatedFirmware(currentRelease: currentRelease)
             return Text(texts.successfulTitle)
+                .font(muliRegular16)
+                .foregroundColor(RuuviColor.ruuviTextColorSUI)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -339,6 +436,10 @@ struct DFUUIView: View {
                 .padding()
                 .eraseToAnyView()
         }
+    }
+
+    func goBack() {
+        self.presentationMode.wrappedValue.dismiss()
     }
 
     struct RuuviBoardView: View {

@@ -17,6 +17,12 @@ class AppDateFormatter {
         return df
     }()
 
+    private let graphXAxisTimeFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "HH:mm"
+        return df
+    }()
+
     private let enLocaleDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "MM/dd"
@@ -26,6 +32,12 @@ class AppDateFormatter {
     private let nonEnLocaleDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "dd/MM"
+        return df
+    }()
+
+    private let graphMarkerDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "HH:mm\nMM/dd"
         return df
     }()
 }
@@ -43,7 +55,16 @@ extension AppDateFormatter {
         return enLocaleDateFormatter.string(from: date)
     }
 
+    func graphXAxisTimeString(from date: Date) -> String {
+        return graphXAxisTimeFormatter.string(from: date)
+    }
+
     func nonEnLocaleDateString(from date: Date) -> String {
         return nonEnLocaleDateFormatter.string(from: date)
+    }
+
+    func graphMarkerDateString(from epoch: Double) -> String {
+        let date = Date(timeIntervalSince1970: epoch)
+        return graphMarkerDateFormatter.string(from: date)
     }
 }

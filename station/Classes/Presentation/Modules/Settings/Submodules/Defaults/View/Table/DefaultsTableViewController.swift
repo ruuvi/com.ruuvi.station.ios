@@ -13,6 +13,7 @@ class DefaultsTableViewController: UITableViewController {
 
     private let switchCellReuseIdentifier = "DefaultsSwitchTableViewCellReuseIdentifier"
     private let stepperCellReuseIdentifier = "DefaultsStepperTableViewCellReuseIdentifier"
+    private let plainCellReuseIdentifier = "DefaultsPlainTableViewCellReuseIdentifier"
 }
 
 extension DefaultsTableViewController: DefaultsViewInput {
@@ -36,17 +37,27 @@ extension DefaultsTableViewController {
     // swiftlint:disable:next function_body_length
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
-        if let boolean = viewModel.boolean.value {
+        switch viewModel.type.value {
+        case .plain:
+            // swiftlint:disable force_cast
+            let cell = tableView
+                .dequeueReusableCell(withIdentifier: plainCellReuseIdentifier,
+                                     for: indexPath) as! DefaultsPlainTableViewCell
+            // swiftlint:enable force_cast
+            cell.titleLabel.text = viewModel.title
+            cell.valueLabel.text = viewModel.value.value ?? "N/A".localized()
+            return cell
+        case .switcher:
             // swiftlint:disable force_cast
             let cell = tableView
                 .dequeueReusableCell(withIdentifier: switchCellReuseIdentifier,
                                      for: indexPath) as! DefaultsSwitchTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
-            cell.isOnSwitch.isOn = boolean
+            cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
             cell.delegate = self
             return cell
-        } else {
+        case .stepper:
             // swiftlint:disable force_cast
             let cell = tableView
                 .dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier,
@@ -83,6 +94,9 @@ extension DefaultsTableViewController {
             cell.stepper.value = Double(viewModel.integer.value.bound)
             cell.delegate = self
             return cell
+        default:
+            // Should never be here
+            return UITableViewCell()
         }
 
     }

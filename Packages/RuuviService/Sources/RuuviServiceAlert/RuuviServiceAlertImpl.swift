@@ -45,6 +45,16 @@ extension RuuviServiceAlertImpl {
                     description: pressureDescription(for: ruuviTag),
                     for: macId
                 )
+            case .signal(let lower, let upper):
+                cloud.setAlert(
+                    type: .signal,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    description: signalDescription(for: ruuviTag),
+                    for: macId
+                )
             case .connection:
                 break
             case .movement(let last):
@@ -96,6 +106,16 @@ extension RuuviServiceAlertImpl {
                     max: upper * 100, // in Pa on cloud, in hPa locally
                     counter: nil,
                     description: pressureDescription(for: ruuviTag),
+                    for: macId
+                )
+            case .signal(let lower, let upper):
+                cloud.setAlert(
+                    type: .signal,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    description: signalDescription(for: ruuviTag),
                     for: macId
                 )
             case .connection:
@@ -249,6 +269,54 @@ extension RuuviServiceAlertImpl {
         }
     }
 
+    public func setLower(signal: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(signal: signal, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .signal,
+                isEnabled: isOn(type: .signal(lower: 0, upper: 0),
+                                for: ruuviTag),
+                min: (signal ?? 0),
+                max: (upperSignal(for: ruuviTag) ?? 0),
+                counter: nil,
+                description: signalDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    public func setUpper(signal: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(signal: signal, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .signal,
+                isEnabled: isOn(type: .signal(lower: 0, upper: 0),
+                                for: ruuviTag),
+                min: (lowerSignal(for: ruuviTag) ?? 0),
+                max: (signal ?? 0),
+                counter: nil,
+                description: signalDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    public func setSignal(description: String?, ruuviTag: RuuviTagSensor) {
+        setSignal(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .signal,
+                isEnabled: isOn(type: .signal(lower: 0, upper: 0),
+                                for: ruuviTag),
+                min: (lowerSignal(for: ruuviTag) ?? 0),
+                max: (upperSignal(for: ruuviTag) ?? 0),
+                counter: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
     public func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
         setMovement(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -309,7 +377,9 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     type = .movement(last: cloudAlert.counter)
                     setMovement(description: cloudAlert.description, for: physicalSensor)
                 case .signal:
-                    type = nil // not on iOS yet
+                    type = .signal(lower: cloudAlert.min,
+                                   upper: cloudAlert.max)
+                    setSignal(description: cloudAlert.description, for: physicalSensor)
                 }
                 if let type = type {
                     if cloudAlert.enabled {
@@ -1055,6 +1125,102 @@ extension RuuviServiceAlertImpl {
 
     public func pressureDescription(for uuid: String) -> String? {
         return alertPersistence.pressureDescription(for: uuid)
+    }
+}
+
+// MARK: - Signal
+extension RuuviServiceAlertImpl {
+    public func lowerSignal(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerSignal(for: luid.value)
+                ?? alertPersistence.lowerSignal(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerSignal(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerSignal(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    public func setLower(signal: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(signal: signal, for: luid.value)
+            alertPersistence.setLower(signal: signal, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(signal: signal, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(signal: signal, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = signal, let u = upperSignal(for: sensor) {
+            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
+        }
+    }
+
+    public func upperSignal(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperSignal(for: luid.value)
+                ?? alertPersistence.upperSignal(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperSignal(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperSignal(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    public func setUpper(signal: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(signal: signal, for: luid.value)
+            alertPersistence.setUpper(signal: signal, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(signal: signal, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(signal: signal, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let u = signal, let l = lowerSignal(for: sensor) {
+            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
+        }
+    }
+
+    public func signalDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.signalDescription(for: luid.value)
+                ?? alertPersistence.signalDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.signalDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.signalDescription(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    public func setSignal(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setSignal(description: description, for: luid.value)
+            alertPersistence.setSignal(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setSignal(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setSignal(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = lowerSignal(for: sensor), let u = upperSignal(for: sensor) {
+            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
+        }
     }
 }
 

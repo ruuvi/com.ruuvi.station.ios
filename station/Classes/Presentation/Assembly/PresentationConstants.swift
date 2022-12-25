@@ -1,11 +1,3 @@
-//
-//  PresentationConstants.swift
-//  station
-//
-//  Created by Iiro Alhonen on 07.12.21.
-//  Copyright © 2021 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
 
 struct Presentation: Codable {

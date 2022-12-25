@@ -1,5 +1,6 @@
 import UIKit
 
+// swiftlint:disable:next type_name
 protocol ChartSettingsStepperTableViewCellDelegate: AnyObject {
     func chartSettingsStepper(cell: ChartSettingsStepperTableViewCell, didChange value: Int)
 }
@@ -11,6 +12,11 @@ class ChartSettingsStepperTableViewCell: UITableViewCell {
     @IBOutlet weak var stepper: UIStepper!
 
     var prefix: String = ""
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        stepper.layer.cornerRadius = 8
+    }
 
     @IBAction func stepperValueChanged(_ sender: Any) {
         let result = Int(stepper.value)

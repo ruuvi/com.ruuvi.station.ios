@@ -83,14 +83,15 @@ extension SelectionTableViewController {
             default:
                 cell.nameLabel.text = "N/A".localized()
             }
-            cell.accessoryType = title == viewModel?.selection ? .checkmark : .none
+            updateCellStyle(with: title, cell: cell)
+
         } else {
             if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
                 cell.nameLabel.text = String(format: item.title, settings.temperatureUnit.symbol)
             } else {
                 cell.nameLabel.text = item.title
             }
-            cell.accessoryType = item.title == viewModel?.selection ? .checkmark : .none
+            updateCellStyle(with: item.title, cell: cell)
         }
 
         return cell
@@ -118,6 +119,19 @@ extension SelectionTableViewController {
     private func updateUISelections() {
         if isViewLoaded {
             tableView.reloadData()
+        }
+    }
+
+    private func updateCellStyle(with title: String?,
+                                 cell: SelectionTableViewCell) {
+        if title == viewModel?.selection {
+            cell.accessoryType = .checkmark
+            cell.nameLabel.textColor = RuuviColor.ruuviMenuTextColor
+            cell.nameLabel.font = UIFont.Muli(.bold, size: 16)
+        } else {
+            cell.accessoryType = .none
+            cell.nameLabel.textColor = RuuviColor.ruuviTextColor
+            cell.nameLabel.font = UIFont.Muli(.regular, size: 16)
         }
     }
 }

@@ -40,3 +40,9 @@ public extension UIViewController {
                       encoding: .ascii)!.trimmingCharacters(in: .controlCharacters)
     }
 }
+
+extension UIDevice {
+    static func isTablet() -> Bool {
+        return UIDevice.current.userInterfaceIdiom == .pad
+    }
+}

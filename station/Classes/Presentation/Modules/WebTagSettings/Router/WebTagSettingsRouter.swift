@@ -1,8 +1,10 @@
 import UIKit
 import LightRoute
+import RuuviOntology
 
 class WebTagSettingsRouter: WebTagSettingsRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
+    private var backgroundSelectionModule: BackgroundSelectionModuleInput?
 
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
@@ -21,5 +23,17 @@ class WebTagSettingsRouter: WebTagSettingsRouterInput {
         if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsUrl, options: [:])
         }
+    }
+
+    func openBackgroundSelectionView(virtualSensor: VirtualTagSensor) {
+        let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
+        let module = factory.create(for: nil, virtualTag: virtualSensor)
+        self.backgroundSelectionModule = module
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module.viewController,
+                animated: true
+            )
     }
 }

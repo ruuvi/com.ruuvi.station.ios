@@ -19,7 +19,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
 
     func configure() {
         let sections: [ChartSettingsSection] = [
-            buildDisplayAllDataSection(), buildChartHistorySection()
+            buildDisplayAllDataSection()
         ]
         viewModel = ChartSettingsViewModel(sections: sections)
     }
@@ -106,6 +106,7 @@ extension ChartSettingsPresenter {
         return cell
     }
 
+    // TODO: @priyonto - Remove this eventually since its moved on charts page on v2.0
     private func buildChartHistory() -> ChartSettingsCell {
         let title = "ChartSettings.Duration.title".localized()
         let value = settings.chartDurationHours / 24

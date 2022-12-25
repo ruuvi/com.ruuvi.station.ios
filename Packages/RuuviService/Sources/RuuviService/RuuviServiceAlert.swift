@@ -37,6 +37,11 @@ public protocol RuuviServiceAlertRuuviTag {
     func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor)
     func setPressure(description: String?, ruuviTag: RuuviTagSensor)
 
+    // signal (dB)
+    func setLower(signal: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(signal: Double?, ruuviTag: RuuviTagSensor)
+    func setSignal(description: String?, ruuviTag: RuuviTagSensor)
+
     // movement
     func setMovement(description: String?, ruuviTag: RuuviTagSensor)
 }
@@ -109,6 +114,11 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func lowerPressure(for sensor: PhysicalSensor) -> Double?
     func upperPressure(for sensor: PhysicalSensor) -> Double?
     func pressureDescription(for sensor: PhysicalSensor) -> String?
+
+    // signal (dB)
+    func lowerSignal(for sensor: PhysicalSensor) -> Double?
+    func upperSignal(for sensor: PhysicalSensor) -> Double?
+    func signalDescription(for sensor: PhysicalSensor) -> String?
 
     /// connection
     func connectionDescription(for sensor: PhysicalSensor) -> String?

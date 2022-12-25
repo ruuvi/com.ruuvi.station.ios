@@ -37,6 +37,12 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var cloudModeEnabled: Bool? {
         return cloudModeEnabledString?.ruuviCloudApiSettingBoolean
     }
+    public var dashboardEnabled: Bool? {
+        return dashboardEnabledString?.ruuviCloudApiSettingBoolean
+    }
+    public var dashboardType: DashboardType? {
+        return dashboardTypeString?.ruuviCloudApiSettingsDashboardType
+    }
 
     var unitTemperatureString: String?
     var accuracyTemperatureString: String?
@@ -48,6 +54,8 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var chartDrawDotsString: String?
     var chartViewPeriodString: String?
     var cloudModeEnabledString: String?
+    var dashboardEnabledString: String?
+    var dashboardTypeString: String?
 
     enum CodingKeys: String, CodingKey {
         case unitTemperatureString = "UNIT_TEMPERATURE"
@@ -60,5 +68,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case chartDrawDotsString = "CHART_DRAW_DOTS"
         case chartViewPeriodString = "CHART_VIEW_PERIOD"
         case cloudModeEnabledString = "CLOUD_MODE_ENABLED"
+        case dashboardEnabledString = "DASHBOARD_ENABLED"
+        case dashboardTypeString = "DASHBOARD_TYPE"
     }
 }

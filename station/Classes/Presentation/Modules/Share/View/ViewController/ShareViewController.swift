@@ -30,15 +30,29 @@ extension ShareViewController {
         }
     }
 }
+
 class ShareViewController: UITableViewController {
     var output: ShareViewOutput!
     var viewModel: ShareViewModel!
+
+    private lazy var backButton: UIButton = {
+        let button  = UIButton()
+        button.tintColor = .label
+        let buttonImage = UIImage(named: "chevron_back")
+        button.setImage(buttonImage, for: .normal)
+        button.setImage(buttonImage, for: .highlighted)
+        button.imageView?.tintColor = .label
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+        return button
+    }()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
         setupLocalization()
+        setupCustomBackButton()
         output.viewDidLoad()
     }
 
@@ -80,6 +94,14 @@ class ShareViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section > 0 ? 44 : 0
+    }
+
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView,
+                            forSection: Int) {
+        if let headerView = view as? UITableViewHeaderFooterView {
+            headerView.textLabel?.textColor = RuuviColor.ruuviMenuTextColor
+            headerView.textLabel?.font = UIFont.Muli(.bold, size: 16)
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -157,7 +179,7 @@ extension ShareViewController {
         let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
         let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
-        cell.descriptionLabel.textColor = .secondaryLabel
+        cell.descriptionLabel.textColor = RuuviColor.ruuviTextColor
         return cell
     }
 
@@ -195,6 +217,22 @@ extension ShareViewController {
         output.viewDidTapSendButton(
             email: cell.emailTextField.text?.trimmingCharacters(in: .whitespaces)
         )
+    }
+
+    private func setupCustomBackButton() {
+        let backBarButtonItemView = UIView()
+        backBarButtonItemView.addSubview(backButton)
+        backButton.anchor(top: backBarButtonItemView.topAnchor,
+                          leading: backBarButtonItemView.leadingAnchor,
+                          bottom: backBarButtonItemView.bottomAnchor,
+                          trailing: backBarButtonItemView.trailingAnchor,
+                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
+                          size: .init(width: 32, height: 32))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
+    }
+
+    @objc fileprivate func backButtonDidTap() {
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

@@ -15,3 +15,31 @@
 "RuuviOnboard.Cloud.Skip.title" = "Är du säker på att du vill hoppa över inloggningen?";
 "RuuviOnboard.Cloud.Skip.Yes.title" = "Ja, hoppa över";
 "RuuviOnboard.Cloud.Skip.GoBack.title" = "Gå tillbaka";
+
+// New Onboarding
+"onboarding_measure_your_world" = "Measure Your World";
+"onboarding_with_ruuvi_sensors" = "Lär känna din Ruuvi Station -applikation.";
+"onboarding_swipe_to_continue" = "Dra för att fortsätta →";
+"onboarding_read_sensors_data" = "Läs dina Ruuvi-sensorer";
+"onboarding_via_bluetooth_or_cloud" = "med Bluetooth eller Ruuvi Cloud";
+"onboarding_follow_measurement" = "Se alla sensorer med en blick på din";
+"onboarding_dashboard" = "instrumentpanel";
+"onboarding_personalise" = "Anpassa";
+"onboarding_your_sensors" = "din app med anpassade namn och bakgrunder.";
+"onboarding_explore_detailed" = "Utforska din";
+"onboarding_history" = "mäthistorik";
+"onboarding_set_custom" = "Ställ in och anpassa dina";
+"onboarding_alerts" = "varningar";
+"onboarding_share_your_sensors" = "för att mäta tillsammans med dina vänner och familj.";
+"onboarding_sharees_can_use" = "Dela sensorer";
+"onboarding_handy_widgets" = "widgets";
+"onboarding_access_widgets" = "Ta med dina favoritsensorer till din startskärm och låsskärm som";
+"onboarding_station_web" = "Ruuvi webbappen";
+"onboarding_web_pros" = "Stor instrumentpanel, flerårig historik, e-postvarningar och mer på";
+"onboarding_gateway_required" = "En Ruuvi Gateway -router krävs.";
+"onboarding_skip" = "Hoppa över";
+"onboarding_thats_it" = "Nästan där!";
+"onboarding_thats_it_already_signed_in" = "Låt oss börja!";
+"onboarding_go_to_sign_in" = "Ruuvi-upplevelsen är bättre när du är inloggad. Gör det nu eller fortsätt utan molnfunktioner.";
+"onboarding_go_to_sign_in_already_signed_in" = "Låt oss börja mäta!";
+"onboarding_continue" = "Nästa";

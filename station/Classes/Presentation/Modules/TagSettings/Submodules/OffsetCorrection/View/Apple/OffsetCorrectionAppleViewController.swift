@@ -13,6 +13,18 @@ class OffsetCorrectionAppleViewController: UIViewController {
         }
     }
 
+    private lazy var backButton: UIButton = {
+        let button  = UIButton()
+        button.tintColor = .label
+        let buttonImage = UIImage(named: "chevron_back")
+        button.setImage(buttonImage, for: .normal)
+        button.setImage(buttonImage, for: .highlighted)
+        button.imageView?.tintColor = .label
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+        return button
+    }()
+
     @IBOutlet weak var correctedValueTitle: UILabel!
     @IBOutlet weak var originalValueTitle: UILabel!
     @IBOutlet weak var descriptionTextView: UITextView!
@@ -42,6 +54,16 @@ class OffsetCorrectionAppleViewController: UIViewController {
         })
         bindViewModel()
 
+        let backBarButtonItemView = UIView()
+        backBarButtonItemView.addSubview(backButton)
+        backButton.anchor(top: backBarButtonItemView.topAnchor,
+                          leading: backBarButtonItemView.leadingAnchor,
+                          bottom: backBarButtonItemView.bottomAnchor,
+                          trailing: backBarButtonItemView.trailingAnchor,
+                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
+                          size: .init(width: 32, height: 32))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
+
         output.viewDidLoad()
     }
 
@@ -56,11 +78,11 @@ class OffsetCorrectionAppleViewController: UIViewController {
             if let hasValue = hasValue, hasValue == true {
                 self?.correctedValueView.isHidden = false
                 self?.clearButton.isEnabled = true
-                self?.clearButton.backgroundColor = .normalButtonBackground
+                self?.clearButton.alpha = 1
             } else {
                 self?.correctedValueView.isHidden = true
-                self?.clearButton.backgroundColor = .disableButtonBackground
                 self?.clearButton.isEnabled = false
+                self?.clearButton.alpha = 0.3
             }
         }
     }
@@ -125,15 +147,16 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         let text = "OffsetCorrection.CalibrationDescription.text".localized()
 
         let attrString = NSMutableAttributedString(string: text)
-        let muliRegular = UIFont.systemFont(ofSize: 16)
+        let muliRegular = UIFont.Muli(.regular, size: 16)
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         // make text color gray
         attrString.addAttribute(.foregroundColor,
-            value: UIColor.secondaryLabel,
+            value: RuuviColor.ruuviTextColor ?? UIColor.secondaryLabel,
             range: NSRange(location: 0, length: attrString.length))
 
         descriptionTextView.attributedText = attrString
+        descriptionTextView.textColor = RuuviColor.ruuviTextColor
     }
 
     func showCalibrateDialog() {
@@ -189,5 +212,9 @@ extension OffsetCorrectionAppleViewController {
 
     @IBAction func clearButtonAction(_ sender: Any) {
         output.viewDidOpenClearDialog()
+    }
+
+    @objc fileprivate func backButtonDidTap() {
+        _ = navigationController?.popViewController(animated: true)
     }
 }

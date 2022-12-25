@@ -5,6 +5,9 @@ import RuuviLocal
 // swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
+    @UserDefault("SettingsUserDefaults.isSyncing", defaultValue: false)
+    var isSyncing: Bool
+
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool {
@@ -35,6 +38,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
     }
 
+    private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
@@ -46,6 +50,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
         }
         set {
+            notificationServiceAppGroup?.set(newValue.rawValue, forKey: languageUDKey)
+            notificationServiceAppGroup?.synchronize()
             UserDefaults.standard.set(newValue.rawValue, forKey: languageUDKey)
             NotificationCenter
                 .default
@@ -219,7 +225,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.pressureUnitInt", defaultValue: UnitPressure.hectopascals.hashValue)
     private var pressureUnitInt: Int
 
-    @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
+    @UserDefault("SettingsUserDefaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
 
     @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
@@ -341,7 +347,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
     private let humidityUnitIntUDKey = "SettingsUserDegaults.humidityUnitInt"
 
-    @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: false)
+    @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: true)
     var chartDownsamplingOn: Bool {
         didSet {
             NotificationCenter
@@ -420,7 +426,43 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
     }
 
-    // TODO: @priyonyo - Remove this when alert bell is implemented
-    @UserDefault("SettingsUserDefaults.alertBellVisible", defaultValue: false)
-    var alertBellVisible: Bool
+    @UserDefault("SettingsUserDefaults.dashboardEnabled", defaultValue: true)
+    var dashboardEnabled: Bool
+
+    private let dashboardTypeIdKey = "SettingsUserDefaults.dashboardTypeIdKey"
+    private var dashboardTypeId: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: dashboardTypeIdKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: dashboardTypeIdKey)
+        }
+    }
+
+    var dashboardType: DashboardType {
+        get {
+            switch dashboardTypeId {
+            case 0:
+                return .image
+            case 1:
+                return .simple
+            default:
+                return .image
+            }
+        }
+        set {
+            switch newValue {
+            case .image:
+                dashboardTypeId = 0
+            case .simple:
+                dashboardTypeId = 1
+            }
+            NotificationCenter
+                .default
+                .post(name: .DashboardTypeDidChange,
+                      object: self,
+                      userInfo: [DashboardTypeKey.type: newValue])
+        }
+    }
+
 }

@@ -41,6 +41,14 @@ protocol AlertPersistence {
     func pressureDescription(for uuid: String) -> String?
     func setPressure(description: String?, for uuid: String)
 
+    // Signal
+    func lowerSignal(for uuid: String) -> Double?
+    func setLower(signal: Double?, for uuid: String)
+    func upperSignal(for uuid: String) -> Double?
+    func setUpper(signal: Double?, for uuid: String)
+    func signalDescription(for uuid: String) -> String?
+    func setSignal(description: String?, for uuid: String)
+
     // connection
     func connectionDescription(for uuid: String) -> String?
     func setConnection(description: String?, for uuid: String)

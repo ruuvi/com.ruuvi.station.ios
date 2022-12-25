@@ -817,11 +817,27 @@ private final class BusinessAssembly: Assembly {
             coordinator.router = router
             return coordinator
         })
+
+        container.register(RuuviServiceCloudNotification.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            let storage = r.resolve(RuuviStorage.self)!
+            let user = r.resolve(RuuviUser.self)!
+            let pnManager = r.resolve(RuuviCorePN.self)!
+            return factory.createCloudNotification(
+                ruuviCloud: cloud,
+                ruuviPool: pool,
+                storage: storage,
+                ruuviUser: user,
+                pnManager: pnManager
+            )
+        }
     }
 }
 
 private final class CoreAssembly: Assembly {
-    // swiftlint:disable:next function_body_length
+
     func assemble(container: Container) {
         container.register(BTForeground.self) { _ in
             return BTKit.foreground
@@ -887,8 +903,10 @@ private final class CoreAssembly: Assembly {
 private final class ModulesAssembly: Assembly {
     func assemble(container: Container) {
         container.register(RuuviDiscover.self) { r in
+            let virtualReactor = r.resolve(VirtualReactor.self)!
             let errorPresenter = r.resolve(ErrorPresenter.self)!
             let activityPresenter = r.resolve(ActivityPresenter.self)!
+            let virtualService = r.resolve(VirtualService.self)!
             let permissionsManager = r.resolve(RuuviCorePermission.self)!
             let permissionPresenter = r.resolve(PermissionPresenter.self)!
             let foreground = r.resolve(BTForeground.self)!
@@ -897,8 +915,10 @@ private final class ModulesAssembly: Assembly {
 
             let factory = RuuviDiscoverFactory()
             let dependencies = RuuviDiscoverDependencies(
+                virtualReactor: virtualReactor,
                 errorPresenter: errorPresenter,
                 activityPresenter: activityPresenter,
+                virtualService: virtualService,
                 permissionsManager: permissionsManager,
                 permissionPresenter: permissionPresenter,
                 foreground: foreground,

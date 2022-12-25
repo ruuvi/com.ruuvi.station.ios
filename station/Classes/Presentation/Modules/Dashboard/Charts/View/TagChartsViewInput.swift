@@ -5,6 +5,7 @@ import RuuviLocal
 
 protocol TagChartsViewInput: ViewInput {
     var viewModel: TagChartsViewModel { get set }
+    var historyLengthInDay: Int { get set }
     var viewIsVisible: Bool { get }
     func createChartViews(from: [MeasurementType])
     func clearChartHistory()
@@ -15,12 +16,18 @@ protocol TagChartsViewInput: ViewInput {
                              pressureEntries: [ChartDataEntry],
                              isFirstEntry: Bool,
                              settings: RuuviLocalSettings)
+    func updateLatestMeasurement(temperature: ChartDataEntry?,
+                                 humidity: ChartDataEntry?,
+                                 pressure: ChartDataEntry?,
+                                 settings: RuuviLocalSettings)
     func showBluetoothDisabled(userDeclined: Bool)
-    func handleClearSyncButtons(connectable: Bool, isSyncing: Bool)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel)
     func setSyncProgressViewHidden()
     func showFailedToSyncIn()
     func showSwipeUpInstruction()
+    func showSyncConfirmationDialog(for viewModel: TagChartsViewModel)
     func showSyncAbortAlert(dismiss: Bool)
+    func showExportSheet(with path: URL)
+    func showLongerHistoryDialog()
 }

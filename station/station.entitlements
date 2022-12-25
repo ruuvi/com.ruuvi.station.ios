@@ -13,6 +13,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
+		<string>group.com.ruuvi.station.pnservice</string>
 		<string>group.com.ruuvi.station.widgets</string>
 	</array>
 	<key>com.apple.security.assets.pictures.read-only</key>

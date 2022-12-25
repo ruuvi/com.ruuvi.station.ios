@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8hB-Vn-evN">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Muli-Bold.ttf">
+            <string>Muli-Bold</string>
+        </array>
+        <array key="Muli-Regular.ttf">
+            <string>Muli-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Heartbeat View Controller-->
         <scene sceneID="jku-f8-uQj">
@@ -32,7 +40,7 @@
                             </containerView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vso-Qy-ULO"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="RuuviPrimary"/>
                         <constraints>
                             <constraint firstItem="kjx-Fi-b2F" firstAttribute="trailing" secondItem="vso-Qy-ULO" secondAttribute="trailing" id="0Vy-MN-gZj"/>
                             <constraint firstItem="vso-Qy-ULO" firstAttribute="bottom" secondItem="kjx-Fi-b2F" secondAttribute="bottom" id="9BC-dy-bEK"/>
@@ -65,7 +73,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="2Jo-6y-F3p">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="814"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" name="RuuviPrimary"/>
                         <sections>
                             <tableViewSection id="Jw2-0e-Fb3">
                                 <cells>
@@ -77,13 +85,15 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background Scanning" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iA0-et-Kck">
-                                                    <rect key="frame" x="20" y="11.5" width="171" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <rect key="frame" x="20" y="11.5" width="168.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                                    <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UL9-Dl-fMv">
                                                     <rect key="frame" x="343" y="6.5" width="51" height="31"/>
+                                                    <color key="onTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="thumbTintColor" name="RuuviTintColor"/>
                                                     <connections>
                                                         <action selector="bgScanningSwitchValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="Edf-Ov-X8r"/>
                                                     </connections>
@@ -96,12 +106,13 @@
                                                 <constraint firstAttribute="trailing" secondItem="UL9-Dl-fMv" secondAttribute="trailing" constant="22" id="pHM-QO-g9g"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="74" id="bgl-03-xup">
-                                        <rect key="frame" x="0.0" y="61.5" width="414" height="74"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="78" id="bgl-03-xup">
+                                        <rect key="frame" x="0.0" y="61.5" width="414" height="78"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bgl-03-xup" id="k3r-Hf-2al">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="78"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Logging Interval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWd-Xv-XbX">
@@ -109,18 +120,20 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="f0n-5h-ffW"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                                    <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wdz-eJ-eBd">
                                                     <rect key="frame" x="20" y="38" width="264" height="28"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                                    <color key="textColor" name="RuuviTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="NlI-i8-HBY">
                                                     <rect key="frame" x="300" y="36" width="94" height="32"/>
+                                                    <color key="backgroundColor" name="RuuviTintColor"/>
+                                                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <connections>
                                                         <action selector="bgScanningIntervalStepperValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="PlV-to-7U9"/>
                                                     </connections>
@@ -128,7 +141,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="NlI-i8-HBY" firstAttribute="centerY" secondItem="wdz-eJ-eBd" secondAttribute="centerY" id="JEG-hs-dfa"/>
-                                                <constraint firstAttribute="bottom" secondItem="wdz-eJ-eBd" secondAttribute="bottom" constant="8" id="JJg-Gp-ppE"/>
+                                                <constraint firstAttribute="bottom" secondItem="wdz-eJ-eBd" secondAttribute="bottom" constant="12" id="JJg-Gp-ppE"/>
                                                 <constraint firstItem="NlI-i8-HBY" firstAttribute="leading" secondItem="wdz-eJ-eBd" secondAttribute="trailing" constant="16" id="KDk-eP-2Vp"/>
                                                 <constraint firstItem="DWd-Xv-XbX" firstAttribute="leading" secondItem="k3r-Hf-2al" secondAttribute="leading" constant="20" id="NS9-V8-K5d"/>
                                                 <constraint firstItem="NlI-i8-HBY" firstAttribute="centerX" secondItem="wdz-eJ-eBd" secondAttribute="centerX" id="OWn-MW-yxF"/>
@@ -148,6 +161,7 @@
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -179,11 +193,17 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="groupTableViewBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <namedColor name="RuuviMenuTextColor">
+            <color red="0.030999999493360519" green="0.23499999940395355" blue="0.23899999260902405" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviPrimary">
+            <color red="0.93699997663497925" green="0.94499999284744263" blue="0.94499999284744263" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviTextColor">
+            <color red="0.030999999493360519" green="0.23499999940395355" blue="0.23899999260902405" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RuuviTintColor">
+            <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

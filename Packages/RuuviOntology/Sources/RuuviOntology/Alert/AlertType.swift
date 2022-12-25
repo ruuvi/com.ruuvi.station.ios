@@ -5,6 +5,7 @@ public enum AlertType: CaseIterable {
     case humidity(lower: Humidity, upper: Humidity)
     case relativeHumidity(lower: Double, upper: Double) // fraction of one
     case pressure(lower: Double, upper: Double) // hPa
+    case signal(lower: Double, upper: Double) // dB
     case connection
     case movement(last: Int)
 
@@ -14,6 +15,7 @@ public enum AlertType: CaseIterable {
                 .humidity(lower: Humidity.zeroAbsolute,
                           upper: Humidity.zeroAbsolute),
                 .pressure(lower: 0, upper: 0),
+                .signal(lower: 0, upper: 0),
                 .connection,
                 .movement(last: 0)]
     }

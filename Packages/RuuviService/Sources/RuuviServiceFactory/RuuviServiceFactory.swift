@@ -28,6 +28,9 @@ import RuuviServiceSensorProperties
 #if canImport(RuuviServiceOffsetCalibration)
 import RuuviServiceOffsetCalibration
 #endif
+#if canImport(RuuviServiceCloudNotification)
+import RuuviServiceCloudNotification
+#endif
 
 public protocol RuuviServiceFactory {
     // swiftlint:disable:next function_parameter_count
@@ -91,6 +94,14 @@ public protocol RuuviServiceFactory {
         localIDs: RuuviLocalIDs,
         localSyncState: RuuviLocalSyncState
     ) -> RuuviServiceAuth
+
+    func createCloudNotification(
+        ruuviCloud: RuuviCloud,
+        ruuviPool: RuuviPool,
+        storage: RuuviStorage,
+        ruuviUser: RuuviUser,
+        pnManager: RuuviCorePN
+    ) -> RuuviServiceCloudNotification
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -214,6 +225,22 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             propertiesService: propertiesService,
             localIDs: localIDs,
             localSyncState: localSyncState
+        )
+    }
+
+    public func createCloudNotification(
+        ruuviCloud: RuuviCloud,
+        ruuviPool: RuuviPool,
+        storage: RuuviStorage,
+        ruuviUser: RuuviUser,
+        pnManager: RuuviCorePN
+    ) -> RuuviServiceCloudNotification {
+        return RuuviServiceCloudNotificationImpl(
+            cloud: ruuviCloud,
+            pool: ruuviPool,
+            storage: storage,
+            ruuviUser: ruuviUser,
+            pnManager: pnManager
         )
     }
 }

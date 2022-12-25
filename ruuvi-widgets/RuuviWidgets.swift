@@ -2,7 +2,6 @@ import WidgetKit
 import SwiftUI
 import Intents
 
-@available(iOS 14.0, *)
 struct RuuviWidgetEntryView: View {
     @Environment(\.widgetFamily) private var family
     var entry: WidgetProvider.Entry
@@ -32,7 +31,6 @@ struct RuuviWidgetEntryView: View {
     }
 }
 
-@available(iOS 14.0, *)
 @main
 struct RuuviWidgets: Widget {
     let kind: String = Constants.simpleWidgetKindId.rawValue
@@ -65,12 +63,11 @@ struct RuuviWidgets: Widget {
     }
 }
 
-@available(iOS 14.0, *)
 struct RuuviWidgets_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOSApplicationExtension 16.0, *) {
             RuuviWidgetEntryView(entry: .placeholder())
-                .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
+                .previewContext(WidgetPreviewContext(family: .accessoryCircular))
         } else {
             RuuviWidgetEntryView(entry: .placeholder())
                 .previewContext(WidgetPreviewContext(family: .systemSmall))

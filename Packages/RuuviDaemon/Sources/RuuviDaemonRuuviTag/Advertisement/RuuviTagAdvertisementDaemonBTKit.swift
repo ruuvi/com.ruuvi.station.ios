@@ -202,7 +202,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         let uuid = wrapper.device.uuid
         // If the tag chart is on foreground store all advertisements
         // Otherwise respect the settings
-        guard let luid = wrapper.device.luid else { return }
+        guard wrapper.device.luid != nil else { return }
         if settings.appIsOnForeground {
             if let previous = advertisementSequence[uuid], let previous = previous {
                 if let next = wrapper.device.measurementSequenceNumber, next > previous {

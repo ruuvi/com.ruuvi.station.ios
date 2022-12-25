@@ -57,7 +57,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     public func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
@@ -104,6 +104,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
                    cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
                     sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
+                }
+                if let dashboardEnabled = cloudSettings.dashboardEnabled,
+                   dashboardEnabled != sSelf.ruuviLocalSettings.dashboardEnabled {
+                    sSelf.ruuviLocalSettings.dashboardEnabled = dashboardEnabled
+                }
+                if let dashboardType = cloudSettings.dashboardType,
+                   dashboardType != sSelf.ruuviLocalSettings.dashboardType {
+                    sSelf.ruuviLocalSettings.dashboardType = dashboardType
                 }
 
                 promise.succeed(value: cloudSettings)

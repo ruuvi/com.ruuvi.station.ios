@@ -1,6 +1,5 @@
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct SimpleWidgetView: View {
     private let viewModel = WidgetViewModel()
     var entry: WidgetProvider.Entry

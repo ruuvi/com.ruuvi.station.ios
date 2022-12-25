@@ -23,6 +23,10 @@ extension AboutPresenter: AboutViewOutput {
     func viewDidTriggerClose() {
         router.dismiss()
     }
+
+    func viewDidTapChangelog() {
+        router.openChangelogPage()
+    }
 }
 
 // MARK: - Private
@@ -35,12 +39,40 @@ extension AboutPresenter {
         obtainDatabaseSize()
     }
 
-    private var appVersion: String? {
+    private var appVersion: NSMutableAttributedString? {
         guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
             let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String  else {
             return nil
         }
-        return "About.Version.text".localized() + " " + appVersion + "(" + buildVersion + ")"
+        let changelogString = "changelog".localized()
+        let versionText = "About.Version.text".localized() + " " + appVersion + "(" + buildVersion + ")"
+
+        let text = versionText + " " + changelogString
+
+        let attrString = NSMutableAttributedString(string: text)
+        let range = NSString(string: attrString.string).range(of: attrString.string)
+        attrString.addAttribute(NSAttributedString.Key.font,
+                                value: UIFont.Muli(.regular, size: 14),
+                                range: range)
+
+        // Change changelog color
+        let changelogFont = UIFont.Muli(.regular, size: 13)
+        let changelogRange = NSString(string: attrString.string).range(of: changelogString)
+        attrString.addAttribute(NSAttributedString.Key.font,
+                                value: changelogFont,
+                                range: changelogRange)
+        attrString.addAttribute(.foregroundColor,
+                                value: RuuviColor.ruuviTintColor ?? UIColor.blue,
+                                range: changelogRange)
+
+        // Change rest of the text color
+        let regularRange = NSString(string: attrString.string)
+            .range(of: versionText)
+        attrString.addAttribute(.foregroundColor,
+                                value: RuuviColor.dashboardIndicatorTextColor ?? UIColor.label,
+                                range: regularRange)
+
+        return attrString
     }
 
     private func obtainTagsCount() {

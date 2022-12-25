@@ -28,6 +28,32 @@ final class DiscoverRouter {
         }
     }
     private weak var weakDiscover: RuuviDiscover?
+
+    private var locationPicker: RuuviLocationPicker {
+        if let locationPicker = self.weakLocationPicker {
+            return locationPicker
+        } else {
+            let r = AppAssembly.shared.assembler.resolver
+            let locationPicker = r.resolve(RuuviLocationPicker.self)!
+            locationPicker.router = self
+            locationPicker.output = self
+            self.weakLocationPicker = locationPicker
+            return locationPicker
+        }
+    }
+    private weak var weakLocationPicker: RuuviLocationPicker?
+}
+
+extension DiscoverRouter: RuuviLocationPickerOutput {
+    func ruuviLocationPickerWantsClose(_ ruuviLocationPicker: RuuviLocationPicker) {
+        ruuviLocationPicker.viewController.dismiss(animated: true)
+    }
+
+    func ruuvi(locationPicker: RuuviLocationPicker, didPick location: Location) {
+        locationPicker.viewController.dismiss(animated: true) { [weak self] in
+            self?.discover.onDidPick(location: location)
+        }
+    }
 }
 
 extension DiscoverRouter: RuuviDiscoverOutput {
@@ -36,6 +62,19 @@ extension DiscoverRouter: RuuviDiscoverOutput {
     }
 
     func ruuvi(discover: RuuviDiscover, didAdd ruuviTag: AnyRuuviTagSensor) {
+        delegate?.discoverRouterWantsClose(self)
+    }
+}
+
+extension DiscoverRouter {
+    // Will be deprecated in near future. Currently retained to support already
+    // added web tags.
+    func ruuviDiscoverWantsPickLocation(_ ruuviDiscover: RuuviDiscover) {
+        let navigation = UINavigationController(rootViewController: locationPicker.viewController)
+        viewController.present(navigation, animated: true)
+    }
+
+    func ruuvi(discover: RuuviDiscover, didAdd virtualSensor: AnyVirtualTagSensor) {
         delegate?.discoverRouterWantsClose(self)
     }
 }

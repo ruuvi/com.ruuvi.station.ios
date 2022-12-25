@@ -1,0 +1,53 @@
+"7nvJwW-GheCHn" = "Just to confirm, you wanted ‘Temperature’?";
+
+"7nvJwW-HaVaak" = "Just to confirm, you wanted ‘Pressure’?";
+
+"7nvJwW-Nm8fuJ" = "Just to confirm, you wanted ‘Humidity’?";
+
+"7nvJwW-TObKG9" = "Just to confirm, you wanted ‘Battery Voltage’?";
+
+"7nvJwW-UGEvUA" = "Just to confirm, you wanted ‘Acceleration Y’?";
+
+"7nvJwW-W4gPB4" = "Just to confirm, you wanted ‘None’?";
+
+"7nvJwW-Xp2Wjd" = "Just to confirm, you wanted ‘Acceleration Z’?";
+
+"7nvJwW-jNcJSb" = "Just to confirm, you wanted ‘Acceleration X’?";
+
+"7nvJwW-sQZ4od" = "Just to confirm, you wanted ‘Movement Counter’?";
+
+"GheCHn" = "Temperature";
+
+"HaVaak" = "Pressure";
+
+"JrqE3E-GheCHn" = "There are ${count} options matching ‘Temperature’.";
+
+"JrqE3E-HaVaak" = "There are ${count} options matching ‘Pressure’.";
+
+"JrqE3E-Nm8fuJ" = "There are ${count} options matching ‘Humidity’.";
+
+"JrqE3E-TObKG9" = "There are ${count} options matching ‘Battery Voltage’.";
+
+"JrqE3E-UGEvUA" = "There are ${count} options matching ‘Acceleration Y’.";
+
+"JrqE3E-W4gPB4" = "There are ${count} options matching ‘None’.";
+
+"JrqE3E-Xp2Wjd" = "There are ${count} options matching ‘Acceleration Z’.";
+
+"JrqE3E-jNcJSb" = "There are ${count} options matching ‘Acceleration X’.";
+
+"JrqE3E-sQZ4od" = "There are ${count} options matching ‘Movement Counter’.";
+
+
+"gFuAkN" = "Ausgewählter Ruuvi-Sensor"; // Selected Ruuvi Sensor
+"MbquV0" = "Ausgewählter Sensortyp"; // Selected sensor type
+
+"W4gPB4" = "keiner"; // None
+"GheCHn" = "Temperatur"; // Temperature
+"Nm8fuJ" = "Feuchtigkeit"; // Humidity
+"HaVaak" = "Druck"; // Pressure
+"sQZ4od" = "Bewegungszähler"; // Movement Counter
+"TObKG9" = "Batteriespannung"; // Battery Voltage
+"jNcJSb" = "Beschleunigung X"; // Acceleration X
+"UGEvUA" = "Beschleunigung Y"; // Acceleration Y
+"Xp2Wjd" = "Beschleunigung Z"; // Acceleration Z

@@ -17,19 +17,21 @@ final class AppRouter {
         } else {
             let rootViewController: UIViewController
             if settings.welcomeShown {
-                let storyboard = UIStoryboard(name: "Cards", bundle: .main)
-                rootViewController = storyboard.instantiateInitialViewController()!
+                let controller = dashboardViewController()
+                rootViewController = controller
             } else {
+                AppUtility.lockOrientation(.portrait)
                 rootViewController = self.onboardRouter().viewController
             }
             let navigationController = UINavigationController(rootViewController: rootViewController)
-            navigationController.setNavigationBarHidden(true, animated: false)
+            navigationController.navigationBar.tintColor = .clear
             self.weakNavigationController = navigationController
             return navigationController
         }
     }
 
     private weak var weakNavigationController: UINavigationController?
+    private weak var weakDashboardController: UIViewController?
 
     // routers
     private func onboardRouter() -> OnboardRouter {
@@ -55,29 +57,78 @@ final class AppRouter {
         }
     }
     private weak var weakDiscoverRouter: DiscoverRouter?
+
+    /// Return dashboard view controller
+    private func dashboardViewController() -> UIViewController {
+        let factory: DashboardModuleFactory = DashboardModuleFactoryImpl()
+        let module = factory.create()
+        weakDashboardController = module
+        return module
+    }
+
+    /// Prepare root view controller When app launched from widget tapped.
+    func prepareRootViewControllerWidgets() {
+        let rootViewController: UIViewController
+        if settings.welcomeShown {
+            if let weakDashboardController = weakDashboardController {
+                rootViewController = weakDashboardController
+            } else {
+                let controller = dashboardViewController()
+                rootViewController = controller
+            }
+        } else {
+            rootViewController = self.onboardRouter().viewController
+        }
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        navigationController.navigationBar.tintColor = .clear
+        self.weakNavigationController = navigationController
+    }
 }
 
 extension AppRouter: OnboardRouterDelegate {
+
     func onboardRouterDidShowSignIn(_ router: OnboardRouter, output: SignInModuleOutput) {
-        let factory = StoryboardFactory(storyboardName: "SignIn")
-        try! viewController
-            .forStoryboard(factory: factory, to: SignInModuleInput.self)
-            .then({ (module) -> Any? in
-                module.configure(with: .enterEmail, output: output)
-            })
+        let factory: SignInModuleFactory = SignInModuleFactoryImpl()
+        let module = factory.create()
+        let navigationController = UINavigationController(
+            rootViewController: module)
+        viewController.present(navigationController, animated: true)
+
+        if let presenter = module.output as? SignInModuleInput {
+            presenter.configure(with: .enterEmail, output: output)
+        }
     }
 
     func onboardRouterDidFinish(_ router: OnboardRouter) {
+        presentDashboard()
+    }
+
+    func onboardRouterDidFinish(_ router: OnboardRouter,
+                                module: SignInModuleInput,
+                                showDashboard: Bool) {
+        module.dismiss()
+        if showDashboard {
+            presentDashboard()
+        }
+    }
+
+    private func presentDashboard() {
         settings.welcomeShown = true
-        let discover = self.discoverRouter().viewController
-        navigationController.pushViewController(discover, animated: true)
+        AppUtility.lockOrientation(.all)
+        let controller = dashboardViewController()
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(controller, animated: true)
     }
 }
 
 extension AppRouter: DiscoverRouterDelegate {
     func discoverRouterWantsClose(_ router: DiscoverRouter) {
-        let storyboard = UIStoryboard(name: "Cards", bundle: .main)
-        let cards = storyboard.instantiateInitialViewController()!
-        navigationController.pushViewController(cards, animated: true)
+        if let weakDashboardController = weakDashboardController {
+            navigationController.pushViewController(weakDashboardController,
+                                                    animated: true)
+        } else {
+            let controller = dashboardViewController()
+            navigationController.pushViewController(controller, animated: true)
+        }
     }
 }

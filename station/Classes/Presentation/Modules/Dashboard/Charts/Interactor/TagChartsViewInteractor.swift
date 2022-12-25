@@ -21,6 +21,7 @@ class TagChartsViewInteractor {
     var ruuviSensorRecords: RuuviServiceSensorRecords!
     var featureToggleService: FeatureToggleService!
     var localSyncState: RuuviLocalSyncState!
+    var ruuviAppSettingsService: RuuviServiceAppSettings!
 
     var lastMeasurement: RuuviMeasurement?
     var ruuviTagData: [RuuviMeasurement] = []
@@ -36,6 +37,8 @@ class TagChartsViewInteractor {
     deinit {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
+        timer = nil
+        timer?.invalidate()
     }
 }
 // MARK: - TagChartsInteractorInput
@@ -144,7 +147,9 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         )
         if syncFrom == nil {
             syncFrom = historyLength
-        } else if let from = syncFrom, let history = historyLength, from < history {
+        } else if let from = syncFrom,
+                    let history = historyLength,
+                    from < history {
             syncFrom = history
         }
 
@@ -191,6 +196,10 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
                 promise.succeed(value: ())
             })
         return promise.future
+    }
+
+    func updateChartHistoryDurationSetting(with day: Int) {
+        ruuviAppSettingsService.set(chartDuration: day)
     }
 }
 

@@ -9,7 +9,6 @@ protocol MenuViewOutput {
     func viewDidSelectAbout()
     func viewDidSelectWhatToMeasure()
     func viewDidSelectGetMoreSensors()
-    func viewDidSelectGetRuuviGateway()
     func viewDidSelectSettings()
     func viewDidSelectFeedback()
     func viewDidSelectAccountCell()

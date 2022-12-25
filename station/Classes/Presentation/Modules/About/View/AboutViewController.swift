@@ -39,6 +39,7 @@ extension AboutViewController {
         super.viewDidLoad()
         setupLocalization()
         configureViews()
+        setUpChangelogTapGesture()
         output.viewDidLoad()
     }
 
@@ -87,7 +88,7 @@ extension AboutViewController {
 
     private func bindViewModel() {
         versionLabel.bind(viewModel.version, block: { label, value in
-            label.text = value
+            label.attributedText = value
         })
         addedTagsLabel.bind(viewModel.addedTags, block: { label, value in
             label.text = value
@@ -115,20 +116,22 @@ extension AboutViewController {
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
-        attrString.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 16), range: range)
+        attrString.addAttribute(NSAttributedString.Key.font,
+                                value: UIFont.Muli(.regular, size: 16),
+                                range: range)
 
         // make headers bold
         let makeBold = ["About.OperationsManual.header".localized(),
                         "About.Troubleshooting.header".localized(),
                         "About.OpenSource.header".localized(),
                         "About.More.header".localized()]
-        let boldFont = UIFont.systemFont(ofSize: 16, weight: .bold)
+        let boldFont = UIFont.Muli(.bold, size: 16)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
         }
         // reduce the linespacing below the titles
-        let smallFont = UIFont.systemFont(ofSize: 8)
+        let smallFont = UIFont.Muli(.regular, size: 8)
         for range in attrString.string.ranges(of: "\n") {
             attrString.addAttribute(NSAttributedString.Key.font,
                                     value: smallFont,
@@ -137,10 +140,25 @@ extension AboutViewController {
 
         // make text color white
         attrString.addAttribute(.foregroundColor,
-                                value: UIColor.label,
+                                value: RuuviColor.ruuviTextColor ?? UIColor.label,
                                 range: NSRange(location: 0, length: attrString.length))
 
         aboutTextView.attributedText = attrString
+        aboutTextView.textColor = RuuviColor.ruuviTextColor
+    }
+
+    private func setUpChangelogTapGesture() {
+        versionLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer.init(
+            target: self,
+            action: #selector(handleChangelogTap(_:))
+        )
+        tapGesture.numberOfTouchesRequired = 1
+        versionLabel.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func handleChangelogTap(_ gesture: UITapGestureRecognizer) {
+        output.viewDidTapChangelog()
     }
 }
 

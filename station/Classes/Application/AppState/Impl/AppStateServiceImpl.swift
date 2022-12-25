@@ -2,6 +2,7 @@ import UIKit
 import RuuviLocal
 import RuuviDaemon
 import RuuviUser
+import RuuviOntology
 #if canImport(RuuviAnalytics)
 import RuuviAnalytics
 #endif
@@ -50,6 +51,8 @@ class AppStateServiceImpl: AppStateService {
         }
         settings.appOpenedCount += 1
         #endif
+
+        setPreferrerdLanguage()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -69,9 +72,7 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.stop()
-            if #available(iOS 14.0, *) {
-                WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.simpleWidgetKindId)
-            }
+            WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.simpleWidgetKindId)
         }
         propertiesDaemon.stop()
         pullWebDaemon.stop()
@@ -94,6 +95,7 @@ class AppStateServiceImpl: AppStateService {
         propertiesDaemon.start()
         pullWebDaemon.start()
         settings.appIsOnForeground = true
+        setPreferrerdLanguage()
     }
 
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
@@ -107,12 +109,21 @@ class AppStateServiceImpl: AppStateService {
 
 extension AppStateServiceImpl {
     fileprivate func observeWidgetKind() {
-        if #available(iOS 14.0, *) {
-            WidgetCenter.shared.getCurrentConfigurations { [weak self] widgetInfos in
-                guard case .success(let infos) = widgetInfos else { return }
-                let simpleWidgets = infos.filter({ $0.kind == AppAssemblyConstants.simpleWidgetKindId })
-                self?.settings.useSimpleWidget = simpleWidgets.count > 0
+        WidgetCenter.shared.getCurrentConfigurations { [weak self] widgetInfos in
+            guard case .success(let infos) = widgetInfos else { return }
+            let simpleWidgets = infos.filter({ $0.kind == AppAssemblyConstants.simpleWidgetKindId })
+            self?.settings.useSimpleWidget = simpleWidgets.count > 0
+        }
+    }
+
+    fileprivate func setPreferrerdLanguage() {
+        if let languageCode = Bundle.main.preferredLocalizations.first,
+           let language = Language(rawValue: languageCode) {
+            if settings.language != language {
+                settings.language = language
             }
+        } else {
+            settings.language = .english
         }
     }
 }

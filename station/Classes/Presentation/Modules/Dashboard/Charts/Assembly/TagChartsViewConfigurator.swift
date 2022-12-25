@@ -10,17 +10,14 @@ import RuuviNotifier
 import RuuviPresenters
 
 class TagChartsViewConfigurator {
-    func configure(view: TagChartsViewController) {
+    func configure(view: TagChartsViewController,
+                   ruuviTag: AnyRuuviTagSensor) {
         let r = AppAssembly.shared.assembler.resolver
 
         let interactor = TagChartsViewInteractor()
         let presenter = TagChartsViewPresenter()
-        let router = TagChartsViewRouter()
-
-        router.transitionHandler = view
 
         presenter.view = view
-        presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
@@ -39,6 +36,8 @@ class TagChartsViewConfigurator {
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.interactor = interactor
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
+        presenter.exportService = r.resolve(RuuviServiceExport.self)
+        presenter.configure(ruuviTag: ruuviTag)
 
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
@@ -49,6 +48,7 @@ class TagChartsViewConfigurator {
         interactor.ruuviSensorRecords = r.resolve(RuuviServiceSensorRecords.self)
         interactor.featureToggleService = r.resolve(FeatureToggleService.self)
         interactor.localSyncState = r.resolve(RuuviLocalSyncState.self)
+        interactor.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
         interactor.presenter = presenter
 
         view.output = presenter

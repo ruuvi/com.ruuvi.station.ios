@@ -29,6 +29,8 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     private let settings: RuuviLocalSettings
     private let ruuviAlertService: RuuviServiceAlert
 
+    private weak var output: RuuviNotificationLocalOutput?
+
     public init(
         ruuviStorage: RuuviStorage,
         virtualTagTrunk: VirtualStorage,
@@ -69,9 +71,12 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     private var alertDidChangeToken: NSObjectProtocol?
 
-    public func setup(disableTitle: String, muteTitle: String) {
+    public func setup(disableTitle: String,
+                      muteTitle: String,
+                      output: RuuviNotificationLocalOutput?) {
         setupButtons(disableTitle: disableTitle, muteTitle: muteTitle)
         startObserving()
+        self.output = output
     }
 
     deinit {
@@ -295,7 +300,7 @@ extension RuuviNotificationLocalImpl {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -342,6 +347,9 @@ extension RuuviNotificationLocalImpl {
                         if !isOn {
                             self?.cancel(.pressure, for: uuid)
                         }
+                    case .signal:
+                        // do nothing yet.
+                        break
                     case .connection:
                         // do nothing
                         break
@@ -475,6 +483,11 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
         }
 
+        // Handle push notification tap
+        if let macId = userInfo["id"] as? String {
+            output?.notificationDidTap(for: macId)
+        }
+
         completionHandler()
     }
 
@@ -554,7 +567,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
 }
 
 extension NSObjectProtocol {
+
     func invalidate() {
+        // swiftlint:disable:next notification_center_detachment
         NotificationCenter
             .default
             .removeObserver(self)

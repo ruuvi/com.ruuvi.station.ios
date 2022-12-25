@@ -49,7 +49,6 @@ extension SettingsPresenter: SettingsViewOutput {
             let cloudTagsCount = tags.filter({ $0.isOwner || $0.isCloud }).count
             let cloudModeVisible = sSelf.ruuviUser.isAuthorized && cloudTagsCount > 0
             sSelf.view.cloudModeVisible = cloudModeVisible
-            sSelf.view.cloudModeEnabled = sSelf.settings.cloudModeEnabled
         })
     }
 
@@ -108,6 +107,10 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openDefaults()
     }
 
+    func viewDidTapOnDevices() {
+        router.openDevices()
+    }
+
     func viewDidTapOnHeartbeat() {
         router.openHeartbeat()
     }
@@ -128,8 +131,7 @@ extension SettingsPresenter: SettingsViewOutput {
         view.experimentalFunctionsEnabled = true
     }
 
-    func viewCloudModeDidChange(isOn: Bool) {
-        settings.cloudModeEnabled = isOn
-        ruuviAppSettingsService.set(cloudMode: isOn)
+    func viewDidTapRuuviCloud() {
+        router.openRuuviCloud()
     }
 }
