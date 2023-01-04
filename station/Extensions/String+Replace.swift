@@ -26,3 +26,21 @@ extension String {
         return 0
     }
 }
+
+extension String {
+    func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
+        guard let range = self.range(of: target) else { return self }
+        return self.replacingCharacters(in: range, with: replacement)
+    }
+
+    func replacingLastOccurrence(of target: String, with replacement: String) -> String {
+        let options: String.CompareOptions = [.backwards]
+        if let range = self.range(of: target,
+                                  options: options,
+                                  range: nil,
+                                  locale: nil) {
+            return self.replacingCharacters(in: range, with: replacement)
+        }
+        return self
+    }
+}

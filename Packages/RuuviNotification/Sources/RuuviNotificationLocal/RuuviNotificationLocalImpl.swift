@@ -49,8 +49,6 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     var highHumidityAlerts = [String: Date]()
     var lowRelativeHumidityAlerts = [String: Date]()
     var highRelativeHumidityAlerts = [String: Date]()
-    var lowDewPointAlerts = [String: Date]()
-    var highDewPointAlerts = [String: Date]()
     var lowPressureAlerts = [String: Date]()
     var highPressureAlerts = [String: Date]()
 
@@ -178,8 +176,6 @@ extension RuuviNotificationLocalImpl {
                 cache = lowRelativeHumidityAlerts
             case .humidity:
                 cache = lowHumidityAlerts
-            case .dewPoint:
-                cache = lowDewPointAlerts
             case .pressure:
                 cache = lowPressureAlerts
             }
@@ -191,8 +187,6 @@ extension RuuviNotificationLocalImpl {
                 cache = highRelativeHumidityAlerts
             case .humidity:
                 cache = highHumidityAlerts
-            case .dewPoint:
-                cache = highDewPointAlerts
             case .pressure:
                 cache = highPressureAlerts
             }
@@ -226,8 +220,6 @@ extension RuuviNotificationLocalImpl {
                 body = ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
             case .humidity:
                 body = ruuviAlertService.humidityDescription(for: uuid) ?? ""
-            case .dewPoint:
-                body = ruuviAlertService.dewPointDescription(for: uuid) ?? ""
             case .pressure:
                 body = ruuviAlertService.pressureDescription(for: uuid) ?? ""
             }
@@ -257,8 +249,6 @@ extension RuuviNotificationLocalImpl {
                     lowRelativeHumidityAlerts[uuid] = Date()
                 case .humidity:
                     lowHumidityAlerts[uuid] = Date()
-                case .dewPoint:
-                    lowDewPointAlerts[uuid] = Date()
                 case .pressure:
                     lowPressureAlerts[uuid] = Date()
                 }
@@ -270,8 +260,6 @@ extension RuuviNotificationLocalImpl {
                     highRelativeHumidityAlerts[uuid] = Date()
                 case .humidity:
                     highHumidityAlerts[uuid] = Date()
-                case .dewPoint:
-                    highDewPointAlerts[uuid] = Date()
                 case .pressure:
                     highPressureAlerts[uuid] = Date()
                 }
@@ -293,8 +281,6 @@ extension RuuviNotificationLocalImpl {
                 lower: Humidity(value: 0, unit: .absolute),
                 upper: Humidity(value: 0, unit: .absolute)
             )
-        case .dewPoint:
-            return .dewPoint(lower: 0, upper: 0)
         case .pressure:
             return .pressure(lower: 0, upper: 0)
         }
@@ -309,7 +295,7 @@ extension RuuviNotificationLocalImpl {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next cyclomatic_complexity
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -349,12 +335,6 @@ extension RuuviNotificationLocalImpl {
                         self?.highHumidityAlerts[uuid] = nil
                         if !isOn {
                             self?.cancel(.humidity, for: uuid)
-                        }
-                    case .dewPoint:
-                        self?.lowDewPointAlerts[uuid] = nil
-                        self?.highDewPointAlerts[uuid] = nil
-                        if !isOn {
-                            self?.cancel(.dewPoint, for: uuid)
                         }
                     case .pressure:
                         self?.lowPressureAlerts[uuid] = nil

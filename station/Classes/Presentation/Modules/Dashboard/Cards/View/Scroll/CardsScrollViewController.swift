@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import UIKit
-import Localize_Swift
 import GestureInstructions
 import Humidity
 import RuuviOntology
@@ -19,6 +18,7 @@ class CardsScrollViewController: UIViewController {
             measurementService?.add(self)
         }
     }
+
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var noSensorsLabel: UILabel!
 
@@ -128,10 +128,21 @@ extension CardsScrollViewController: CardsViewInput {
         present(alertVC, animated: true)
     }
 
-    func showBluetoothDisabled() {
+    func showBluetoothDisabled(userDeclined: Bool) {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
-        showAlert(title: title, message: message)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+                                        style: .default, handler: { _ in
+            guard let url = URL(string: userDeclined ?
+                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                  UIApplication.shared.canOpenURL(url) else {
+                return
+            }
+            UIApplication.shared.open(url)
+        }))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
 
     func showNoSensorsAddedMessage(show: Bool) {
@@ -175,7 +186,7 @@ extension CardsScrollViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
-        let message = "Cards.KeepConnectionDialog.Settings.message".localized()
+        let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
@@ -362,30 +373,12 @@ extension CardsScrollViewController {
     }
 
     private func humidityUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Humidity?) -> Void {
-        let humidityWarning = view.humidityWarningImageView
         let humidityBlock: ((UILabel, Humidity?) -> Void) = {
-            [weak self,
-            weak humidityWarning] label, value in
-            let temperature = viewModel.temperature.value
-            if self?.measurementService.units.humidityUnit == .percent,
-                let temperature = temperature,
-                let offsetedValue = self?.measurementService.double(for: value,
-                                                                    temperature: temperature,
-                                                                    isDecimal: true) {
-                if let rhAlertUpperBound = viewModel.rhAlertUpperBound.value,
-                   let rhAlertLowerBound = viewModel.rhAlertLowerBound.value,
-                   let alertState = viewModel.alertState.value,
-                   (alertState == .registered || alertState == .firing),
-                   offsetedValue > rhAlertUpperBound || offsetedValue < rhAlertLowerBound {
-                    humidityWarning?.isHidden = false
-                } else {
-                    humidityWarning?.isHidden = true
-                }
-            } else {
-                humidityWarning?.isHidden = true
-            }
+            [weak self] label, value in
             view.hideHumidityView = value == nil
-            label.text = self?.measurementService.string(for: value, temperature: temperature, allowSettings: true)
+            label.text = self?.measurementService.string(for: value,
+                                                         temperature: viewModel.temperature.value,
+                                                         allowSettings: true)
         }
         return humidityBlock
     }

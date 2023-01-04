@@ -30,7 +30,7 @@ class HeartbeatViewController: UIViewController {
 
 extension HeartbeatViewController: HeartbeatViewInput {
     func localize() {
-        navigationItem.title = "Heartbeat.navigationItem.title".localized()
+        navigationItem.title = "Settings.BackgroundScanning.title".localized()
     }
 }
 

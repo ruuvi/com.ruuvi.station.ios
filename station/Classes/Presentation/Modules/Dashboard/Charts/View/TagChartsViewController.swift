@@ -95,6 +95,17 @@ class TagChartsViewController: UIViewController {
         return label
     }()
 
+    lazy var noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Cards.UpdatedLabel.NoData.message".localized()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        let font = UIFont(name: "Montserrat-Bold", size: 14)
+        label.font = font ?? UIFont.systemFont(ofSize: 14, weight: .bold)
+        return label
+    }()
+
     lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.backgroundColor = .clear
@@ -206,6 +217,7 @@ class TagChartsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         hideFooterView()
+        hideNoDataLabel()
         output.viewWillDisappear()
     }
 
@@ -339,6 +351,14 @@ class TagChartsViewController: UIViewController {
         pressureChartViewHeight.isActive = true
         pressureChartView.chartDelegate = self
 
+        view.addSubview(noDataLabel)
+        noDataLabel.anchor(top: nil,
+                           leading: view.safeLeftAnchor,
+                           bottom: nil,
+                           trailing: view.safeRightAnchor)
+        noDataLabel.centerYInSuperview()
+        noDataLabel.alpha = 0
+
     }
 
     fileprivate func setUpFooterView() {
@@ -468,8 +488,13 @@ extension TagChartsViewController: TagChartsViewInput {
                           settings: RuuviLocalSettings) {
         if chartViewData.count == 0 {
             clearChartData()
+            showNoDataLabel()
+            hideChartViews()
             return
         }
+
+        hideNoDataLabel()
+        showChartViews()
 
         for data in chartViewData {
             switch data.chartType {
@@ -502,6 +527,9 @@ extension TagChartsViewController: TagChartsViewInput {
                              pressureEntries: [ChartDataEntry],
                              isFirstEntry: Bool,
                              settings: RuuviLocalSettings) {
+        hideNoDataLabel()
+        showChartViews()
+
         temperatureChartView.setSettings(settings: settings)
         temperatureChartView.updateDataSet(with: temperatureEntries,
                                            isFirstEntry: isFirstEntry)
@@ -544,10 +572,21 @@ extension TagChartsViewController: TagChartsViewInput {
         syncCancelButton.setTitle("Cancel".localized(), for: .normal)
     }
 
-    func showBluetoothDisabled() {
+    func showBluetoothDisabled(userDeclined: Bool) {
         let title = "TagCharts.BluetoothDisabledAlert.title".localized()
         let message = "TagCharts.BluetoothDisabledAlert.message".localized()
-        showAlert(title: title, message: message)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+                                        style: .default, handler: { _ in
+            guard let url = URL(string: userDeclined ?
+                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                  UIApplication.shared.canOpenURL(url) else {
+                return
+            }
+            UIApplication.shared.open(url)
+        }))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
 
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
@@ -565,7 +604,6 @@ extension TagChartsViewController: TagChartsViewInput {
 
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
         if let progress = progress {
-            hideChartActionButtons()
 
             switch progress {
             case .connecting:
@@ -601,6 +639,7 @@ extension TagChartsViewController: TagChartsViewInput {
             }
         } else {
             /// Show buttons after two seconds if there's an unexpected error
+            handleSyncStatusLabelVisibility(show: false)
             showChartActionButtons(withDelay: true)
         }
     }
@@ -609,21 +648,19 @@ extension TagChartsViewController: TagChartsViewInput {
         // Hide the sync progress view
         hideSyncProgressView()
         showChartActionButtons()
+        handleSyncStatusLabelVisibility(show: false)
     }
 
-    func showFailedToSyncIn(connectionTimeout: TimeInterval) {
-        let message = String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(),
-                                                       connectionTimeout)
+    func showFailedToSyncIn() {
+        let message = "TagCharts.FailedToSyncDialog.message".localized()
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
-
-    func showFailedToServeIn(serviceTimeout: TimeInterval) {
-        let message = String.localizedStringWithFormat("TagCharts.FailedToServeDialog.message".localized(),
-                                                       serviceTimeout)
-        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "TagCharts.TryAgain.title".localized(),
+                                        style: .default,
+                                        handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.output.viewDidTriggerSync(for: self.viewModel)
+        }))
         present(alertVC, animated: true)
     }
 
@@ -716,7 +753,15 @@ extension TagChartsViewController {
         }
     }
 
-    private func updateChartsCollectionConstaints(from: [MeasurementType], withAnimation: Bool = false) {
+    // swiftlint:disable:next cyclomatic_complexity
+    private func updateChartsCollectionConstaints(from: [MeasurementType],
+                                                  withAnimation: Bool = false) {
+        if from.count == 0 {
+            noDataLabel.alpha = 1
+            return
+        }
+
+        noDataLabel.alpha = 0
         chartViews.removeAll()
         view.setNeedsLayout()
         view.layoutIfNeeded()
@@ -882,10 +927,11 @@ extension TagChartsViewController {
     }
 
     private func showChartActionButtons(withDelay: Bool = false) {
+        handleSyncStatusLabelVisibility(show: false)
+        hideSyncProgressView()
         guard syncActionView.alpha == 0 else {
             return
         }
-        handleSyncStatusLabelVisibility(show: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(withDelay ? 2 : 0),
                                       execute: { [weak self] in
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
@@ -904,6 +950,8 @@ extension TagChartsViewController {
     }
 
     private func showSyncProgressView() {
+        handleSyncStatusLabelVisibility(show: false)
+        hideChartActionButtons()
         guard syncProgressView.alpha == 0 else {
             return
         }
@@ -923,5 +971,33 @@ extension TagChartsViewController {
 
     private func handleSyncStatusLabelVisibility(show: Bool) {
         syncStatusLabel.alpha = show ? 1 : 0
+        if show {
+            hideChartActionButtons()
+            hideSyncProgressView()
+        }
+    }
+
+    private func hideChartViews() {
+        temperatureChartView.isHidden = true
+        humidityChartView.isHidden = true
+        pressureChartView.isHidden = true
+    }
+
+    private func showChartViews() {
+        temperatureChartView.isHidden = false
+        humidityChartView.isHidden = false
+        pressureChartView.isHidden = false
+    }
+
+    private func hideNoDataLabel() {
+        if noDataLabel.alpha != 0 {
+            noDataLabel.alpha = 0
+        }
+    }
+
+    private func showNoDataLabel() {
+        if noDataLabel.alpha != 1 {
+            noDataLabel.alpha = 1
+        }
     }
 }

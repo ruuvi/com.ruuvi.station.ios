@@ -68,6 +68,9 @@ public protocol RuuviCloud {
     ) -> Future<Set<AnyShareableSensor>, RuuviCloudError>
 
     @discardableResult
+    func checkOwner(macId: MACIdentifier) -> Future<String, RuuviCloudError>
+
+    @discardableResult
     func update(
         name: String,
         for sensor: RuuviTagSensor

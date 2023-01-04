@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import Localize_Swift
 
 extension Bundle {
     public static func pod(_ clazz: AnyClass) -> Bundle {
@@ -34,7 +33,7 @@ extension String {
         bundle = Bundle.pod(clazz)
         #endif
         if let module = NSStringFromClass(clazz).components(separatedBy: ".").first {
-            if let path = bundle.path(forResource: Localize.currentLanguage(), ofType: "lproj"),
+            if let path = bundle.path(forResource: currentLanguage(), ofType: "lproj"),
                 let bundle = Bundle(path: path) {
                 return bundle.localizedString(forKey: self, value: nil, table: module)
             } else if let path = bundle.path(forResource: "Base", ofType: "lproj"),
@@ -47,6 +46,14 @@ extension String {
         } else {
             assertionFailure()
             return self
+        }
+    }
+
+    private func currentLanguage() -> String {
+        if let preferred = Bundle.main.preferredLocalizations.first {
+            return preferred
+        } else {
+            return "Base"
         }
     }
 }

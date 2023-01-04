@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviOntology/Realm'
     ss.dependency 'RuuviOntology'
     ss.dependency 'Realm'
-    ss.dependency 'RealmSwift'
+    ss.dependency 'RealmSwift', '~> 10.33.0'
     ss.dependency 'FutureX'
   end
 

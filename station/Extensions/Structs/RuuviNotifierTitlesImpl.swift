@@ -1,6 +1,5 @@
 import Foundation
 import RuuviNotifier
-import Localize_Swift
 
 struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
     let lowTemperature = "LocalNotificationsManager.LowTemperature.title".localized()

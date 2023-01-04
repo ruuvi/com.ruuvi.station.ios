@@ -22,69 +22,12 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="1036"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pyx-d9-7cb">
-                                        <rect key="frame" x="16" y="12" width="382" height="687"/>
+                                        <rect key="frame" x="16" y="12" width="382" height="646.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" name="LogoColor"/>
                                         <attributedString key="attributedText">
                                             <fragment>
-                                                <string key="content">Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.</string>
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Regular"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="   ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" metaFont="system" size="16"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="OPERATIONS MANUAL">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Bold"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="  ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" metaFont="system" size="16"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment>
-                                                <string key="content">We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals </string>
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Regular"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="  ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" metaFont="system" size="16"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="TROUBLESHOOTING">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Bold"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="  ">
+                                                <string key="content">Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.   OPERATIONS MANUAL  We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals   TROUBLESHOOTING  </string>
                                                 <attributes>
                                                     <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <font key="NSFont" metaFont="system" size="16"/>
@@ -96,7 +39,7 @@
                                                 <string key="content">If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles</string>
                                                 <attributes>
                                                     <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Regular"/>
+                                                    <font key="NSFont" metaFont="system" size="16"/>
                                                     <font key="NSOriginalFont" metaFont="system" size="16"/>
                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
@@ -109,23 +52,7 @@
                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
                                             </fragment>
-                                            <fragment content="  ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" metaFont="system" size="16"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="OPEN-SOURCE">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Bold"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="  ">
+                                            <fragment content="  OPEN-SOURCE  ">
                                                 <attributes>
                                                     <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <font key="NSFont" metaFont="system" size="16"/>
@@ -136,46 +63,13 @@
                                             <fragment content="Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi">
                                                 <attributes>
                                                     <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Regular"/>
+                                                    <font key="NSFont" metaFont="system" size="16"/>
                                                     <font key="NSOriginalFont" metaFont="system" size="16"/>
                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
                                             </fragment>
-                                            <fragment content="   ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" metaFont="system" size="16"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content="MORE TO READ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Bold"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content=" ">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" metaFont="system" size="16"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                            <fragment content=" Ruuvi's website: ruuvi.com Ruuvi Forum: f.ruuvi.com Ruuvi Blog: blog.ruuvi.com Ruuvi on Twitter: twitter.com/ruuvicom">
-                                                <attributes>
-                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="Muli-Regular"/>
-                                                    <font key="NSOriginalFont" metaFont="system" size="18"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
                                             <fragment>
-                                                <string key="content" base64-UTF8="YES">
-Cg
+                                                <string key="content">   MORE TO READ  Ruuvi's website: ruuvi.com Ruuvi Forum: f.ruuvi.com Ruuvi Blog: blog.ruuvi.com Ruuvi on Twitter: twitter.com/ruuvicom
 </string>
                                                 <attributes>
                                                     <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -189,22 +83,22 @@ Cg
                                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added tags" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Dj-qjx">
-                                        <rect key="frame" x="20" y="723" width="374" height="16"/>
+                                        <rect key="frame" x="20" y="682.5" width="374" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stored measurements" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nhq-tg-RXR">
-                                        <rect key="frame" x="20" y="739" width="374" height="16"/>
+                                        <rect key="frame" x="20" y="698.5" width="374" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cl-Gj-SSM">
-                                        <rect key="frame" x="20" y="755" width="374" height="16"/>
+                                        <rect key="frame" x="20" y="714.5" width="374" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZT-Oy-FFh">
-                                        <rect key="frame" x="20" y="707" width="374" height="16"/>
+                                        <rect key="frame" x="20" y="666.5" width="374" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>

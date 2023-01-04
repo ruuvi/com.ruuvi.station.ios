@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
     ss.source_files = 'Sources/RuuviOntologyRealm/**/*.{h,m,swift}', 'Sources/RuuviOntologyRealm/*.{h,m,swift}'
     ss.dependency 'RuuviOntology/Contract'
     ss.dependency 'Realm'
-    ss.dependency 'RealmSwift'
+    ss.dependency 'RealmSwift', '~> 10.33.0'
     ss.dependency 'Humidity'
   end
 

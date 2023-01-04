@@ -13,6 +13,7 @@ import RuuviVirtual
 import RuuviNotification
 import RuuviNotifier
 import RuuviPresenters
+import CoreBluetooth
 
 class TagChartViewData: NSObject {
     var chartType: MeasurementType
@@ -84,14 +85,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
 
-    private lazy var queue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        queue.name = "com.ruuvi.station.TagChartsPresenter.\("temp")"
-        queue.qualityOfService = .userInteractive
-        return queue
-    }()
-
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -108,6 +101,16 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
         didSet {
             self.view.viewModel = self.viewModel
         }
+    }
+
+    private var isBluetoothPermissionGranted: Bool {
+        if #available(iOS 13.1, *) {
+            return CBCentralManager.authorization == .allowedAlways
+        } else if #available(iOS 13.0, *) {
+            return CBCentralManager().authorization == .allowedAlways
+        }
+        // Before iOS 13, Bluetooth permissions are not required
+        return true
     }
 
     var ruuviTagData: [RuuviMeasurement] = []
@@ -217,16 +220,15 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
         // Check bluetooth
-        guard foreground.bluetoothState == .poweredOn else {
-            view.showBluetoothDisabled()
+        guard foreground.bluetoothState == .poweredOn || !isBluetoothPermissionGranted  else {
+            view.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
             return
         }
         isSyncing = true
-        let connectionTimeout: TimeInterval = settings.connectionTimeout
-        let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
                 guard let syncing =  self?.isSyncing, syncing else {
+                    self?.view.setSync(progress: nil, for: viewModel)
                     return
                 }
                 self?.view.setSync(progress: progress, for: viewModel)
@@ -235,17 +237,9 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         op.on(success: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
             self?.interactor.restartObservingData()
-        }, failure: { [weak self] error in
+        }, failure: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
-            if case .btkit(.logic(.connectionTimedOut)) = error {
-                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-            } else if case .ruuviService(.btkit(.logic(.connectionTimedOut))) = error {
-                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-            } else if case .btkit(.logic(.serviceTimedOut)) = error {
-                self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
-            } else {
-                self?.errorPresenter.present(error: error)
-            }
+            self?.view.showFailedToSyncIn()
         }, completion: nil)
     }
 
@@ -581,8 +575,8 @@ extension TagChartsViewPresenter {
 
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
-            if state != .poweredOn {
-                observer.view.showBluetoothDisabled()
+            if state != .poweredOn || !self.isBluetoothPermissionGranted {
+                observer.view.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
             }
         })
     }
@@ -670,7 +664,7 @@ extension TagChartsViewPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-                            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String ,
+                            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
                             self?.viewModel.uuid.value != uuid {
                                 self?.dismiss()
                             }
