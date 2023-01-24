@@ -594,6 +594,12 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         }
         return promise.future
     }
+
+    public func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
 }
 // MARK: - Private
 extension RuuviPersistenceRealm {

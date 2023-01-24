@@ -180,7 +180,7 @@ extension SignInPresenter {
     }
 
     private func verify(_ code: String) {
-        activityPresenter.increment()
+        activityPresenter.increment(with: "SignIn.Sync.message".localized())
         ruuviCloud.validateCode(code: code)
             .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
@@ -247,7 +247,7 @@ extension SignInPresenter {
     @objc private func handleAppEnterForgroundState() {
         switch state {
         case .isSyncing:
-            activityPresenter.increment()
+            activityPresenter.increment(with: "SignIn.Sync.message".localized())
         default:
             return
         }

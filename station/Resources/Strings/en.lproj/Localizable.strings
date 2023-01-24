@@ -243,7 +243,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Alerts.Off" = "Off";
 "TagSettings.Alerts.Temperature.description" = "Alert when less than %0.f or more than %0.f";
 "TagSettings.Label.alerts.text" = "Alerts";
-"TagSettings.backgroundImageLabel.text" = "Background\nimage";
+"TagSettings.backgroundImageLabel.text" = "Background image";
 "TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";
 "HumidityCalibration.Button.Calibrate.title" = "Calibrate";
 "HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";
@@ -261,6 +261,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi Station is an easy-to-use but powerful tool to supercharge your Ruuvi sensors. Simply add some sensors and you're ready to go.";
 "About.AboutHelp.header" = "About / Help";
+"About.TagsCount.text" = "Added sensors: %d";
 "About.MeasurementsCount.text" = "Number of locally stored measurements: %d";
 "About.DatabaseSize.text" = "Database size: %@";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: ruuvi.com/blog\nRuuvi on Twitter: twitter.com/ruuvicom";
@@ -271,7 +272,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "About.OperationsManual.header" = "Operations manual";
 "About.Privacy.contents" = "By using the application, you accept Ruuvi's standard terms and conditions: ruuvi.com/terms";
 "About.Privacy.header" = "Privacy policy";
-"About.TagsCount.text" = "Seen sensors: %d";
 "About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/support";
 "About.Troubleshooting.header" = "Troubleshooting";
 "Interval.Hour.string" = "Hours";
@@ -543,3 +543,4 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth history download failed. Check that you're within Bluetooth range, your sensor has firmware that supports downloading and that sensor is not simultaneously connected to another iOS device. Sensor connection is reserved for Ruuvi Station when using connected mode in iOS.";
 "TagCharts.TryAgain.title" = "Try again";
+"SignIn.Sync.message" = "Downloading content from the cloud. Please wait.";

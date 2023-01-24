@@ -474,10 +474,6 @@
 		3414BFCB2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414BFCA2806D1B300C63BE9 /* RuuviCodeTextField.swift */; };
 		3414BFCC2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414BFCA2806D1B300C63BE9 /* RuuviCodeTextField.swift */; };
 		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
-		345057B827E0797000759B57 /* TagSettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B727E0797000759B57 /* TagSettingsInteractor.swift */; };
-		345057BA27E0798800759B57 /* TagSettingsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */; };
-		345057BE27E079A900759B57 /* TagSettingsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */; };
-		345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345057B727E0797000759B57 /* TagSettingsInteractor.swift */; };
 		3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
 		3490A4C427D9F2C80032BBAB /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3490A4C227D9F2C70032BBAB /* UINavigationController.swift */; };
 		3493385B282FAB0D009060E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
@@ -797,6 +793,10 @@
 		E1395BEB294F6C2A00C403C6 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BE9294F6C2A00C403C6 /* String+Localization.swift */; };
 		E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF0294F793000C403C6 /* AppDateFormatter.swift */; };
 		E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF0294F793000C403C6 /* AppDateFormatter.swift */; };
+		E1395BF92954DAA200C403C6 /* CardsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF82954DAA200C403C6 /* CardsInteractorInput.swift */; };
+		E1395BFA2954DAA200C403C6 /* CardsInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BF82954DAA200C403C6 /* CardsInteractorInput.swift */; };
+		E1395BFC2954DAAD00C403C6 /* CardsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BFB2954DAAD00C403C6 /* CardsInteractor.swift */; };
+		E1395BFD2954DAAD00C403C6 /* CardsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1395BFB2954DAAD00C403C6 /* CardsInteractor.swift */; };
 		E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */; };
 		E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */; };
@@ -1242,8 +1242,6 @@
 		341401EB282D03C8003DE721 /* MeasurementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementService.swift; sourceTree = "<group>"; };
 		3414BFC72806D19C00C63BE9 /* RuuviCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCodeView.swift; sourceTree = "<group>"; };
 		3414BFCA2806D1B300C63BE9 /* RuuviCodeTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCodeTextField.swift; sourceTree = "<group>"; };
-		345057B727E0797000759B57 /* TagSettingsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractor.swift; sourceTree = "<group>"; };
-		345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsInteractorInput.swift; sourceTree = "<group>"; };
 		3451BD8427E0F9870065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3451BD8527E0F9880065A7A6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3490A4C227D9F2C70032BBAB /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
@@ -1452,6 +1450,8 @@
 		E128160A292ABCFA008E9282 /* SimpleWidgetViewCircular.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWidgetViewCircular.swift; sourceTree = "<group>"; };
 		E1395BE9294F6C2A00C403C6 /* String+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localization.swift"; sourceTree = "<group>"; };
 		E1395BF0294F793000C403C6 /* AppDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDateFormatter.swift; sourceTree = "<group>"; };
+		E1395BF82954DAA200C403C6 /* CardsInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsInteractorInput.swift; sourceTree = "<group>"; };
+		E1395BFB2954DAAD00C403C6 /* CardsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsInteractor.swift; sourceTree = "<group>"; };
 		E16051E5285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBatteryStatusProvider.swift; sourceTree = "<group>"; };
 		E16051E8285CB384003FCA70 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		E16051EB285CBA57003FCA70 /* FileManager+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Date.swift"; sourceTree = "<group>"; };
@@ -2300,6 +2300,7 @@
 		0E8FD0D823336E8E00FFA577 /* Cards */ = {
 			isa = PBXGroup;
 			children = (
+				E1395BF72954DA6900C403C6 /* Interactor */,
 				0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */,
 				0E1C1DE522B3C2900032F6CA /* Assembly */,
 				0E1C1DDB22B3C1F30032F6CA /* Presenter */,
@@ -2700,7 +2701,6 @@
 		0EF2862522CBAF280026C7A5 /* TagSettings */ = {
 			isa = PBXGroup;
 			children = (
-				345057B627E0795700759B57 /* Interactor */,
 				0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */,
 				0EF2862A22CBAF480026C7A5 /* Assembly */,
 				0EF2862822CBAF3C0026C7A5 /* Presenter */,
@@ -2874,15 +2874,6 @@
 				3414BFCA2806D1B300C63BE9 /* RuuviCodeTextField.swift */,
 			);
 			path = Helper;
-			sourceTree = "<group>";
-		};
-		345057B627E0795700759B57 /* Interactor */ = {
-			isa = PBXGroup;
-			children = (
-				345057B727E0797000759B57 /* TagSettingsInteractor.swift */,
-				345057B927E0798800759B57 /* TagSettingsInteractorInput.swift */,
-			);
-			path = Interactor;
 			sourceTree = "<group>";
 		};
 		3493386128300A62009060E8 /* View */ = {
@@ -3811,6 +3802,15 @@
 			path = Classess;
 			sourceTree = "<group>";
 		};
+		E1395BF72954DA6900C403C6 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				E1395BF82954DAA200C403C6 /* CardsInteractorInput.swift */,
+				E1395BFB2954DAAD00C403C6 /* CardsInteractor.swift */,
+			);
+			path = Interactor;
+			sourceTree = "<group>";
+		};
 		E16B8F3A28D108970025B92D /* My Ruuvi */ = {
 			isa = PBXGroup;
 			children = (
@@ -4669,7 +4669,6 @@
 				E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
-				345057BF27E079B000759B57 /* TagSettingsInteractor.swift in Sources */,
 				A9646473247BAE6B0001D55D /* ChartSettingsTableViewController.swift in Sources */,
 				0EB48DFD261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				0EA796762664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift in Sources */,
@@ -4826,7 +4825,6 @@
 				0EB8ED37268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
 				E1CD77FF28782F9900F1F0EB /* UnitSettingsModuleOutput.swift in Sources */,
-				345057BE27E079A900759B57 /* TagSettingsInteractorInput.swift in Sources */,
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				3414BFCC2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */,
@@ -4887,6 +4885,7 @@
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				E1ED428028FF292F00302179 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
+				E1395BFD2954DAAD00C403C6 /* CardsInteractor.swift in Sources */,
 				0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				E1CD78022878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
@@ -4997,6 +4996,7 @@
 				A9646488247BAE6B0001D55D /* ChartSettingsRouterInput.swift in Sources */,
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
 				A91D031B25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
+				E1395BFA2954DAA200C403C6 /* CardsInteractorInput.swift in Sources */,
 				A9E599622557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				A9646479247BAE6B0001D55D /* ChartSettingsViewModel.swift in Sources */,
 				340BE38F27B54F37006D6C34 /* OwnerModuleInput.swift in Sources */,
@@ -5097,7 +5097,6 @@
 				A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */,
 				660EB2732669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				66BC44A42657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
-				345057BA27E0798800759B57 /* TagSettingsInteractorInput.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E3CA70C267365B1000D9B25 /* Debouncer.swift in Sources */,
 				660EB2702669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
@@ -5163,6 +5162,7 @@
 				0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				663155E92667F40C005B90A6 /* UpdateFirmwareModuleInput.swift in Sources */,
+				E1395BF92954DAA200C403C6 /* CardsInteractorInput.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E97D79B268C881300FE9D5B /* DFUModuleInput.swift in Sources */,
 				E1CD77FB28782F7100F1F0EB /* UnitSettingsModuleInput.swift in Sources */,
@@ -5238,7 +5238,6 @@
 				0EB8ED1A268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				E1ED427D28FF292F00302179 /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				E1CD77F428782EA500F1F0EB /* UnitSettingsTableInitializer.swift in Sources */,
-				345057B827E0797000759B57 /* TagSettingsInteractor.swift in Sources */,
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
@@ -5397,6 +5396,7 @@
 				A91D03032511207300694733 /* SelectionViewOutput.swift in Sources */,
 				0EB48DA32619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift in Sources */,
 				E168B4B62886AF1200D6B5C6 /* UnitSettingsType.swift in Sources */,
+				E1395BFC2954DAAD00C403C6 /* CardsInteractor.swift in Sources */,
 				3414BFC82806D19C00C63BE9 /* RuuviCodeView.swift in Sources */,
 				0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
@@ -5594,7 +5594,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -5603,7 +5603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5622,7 +5622,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -5631,7 +5631,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5651,7 +5651,7 @@
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
@@ -5663,7 +5663,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -5685,7 +5685,7 @@
 				CODE_SIGN_ENTITLEMENTS = ruuvi_widgets.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ruuvi-widgets/Info.plist";
@@ -5697,7 +5697,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5717,7 +5717,7 @@
 				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = intents/Info.plist;
@@ -5729,7 +5729,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -5750,7 +5750,7 @@
 				CODE_SIGN_ENTITLEMENTS = station_intents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = intents/Info.plist;
@@ -5762,7 +5762,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5900,7 +5900,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5941,7 +5941,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5960,7 +5960,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 327;
+				CURRENT_PROJECT_VERSION = 328;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5968,7 +5968,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";

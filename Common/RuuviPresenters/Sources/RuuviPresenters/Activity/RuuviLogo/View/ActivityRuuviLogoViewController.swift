@@ -6,10 +6,12 @@ public final class ActivityRuuviLogoViewController: UIViewController {
 
     @IBOutlet weak var spinnerView: ActivitySpinnerView!
     @IBOutlet weak var logoImageView: UIImageView!
+    @IBOutlet weak var messageLabel: UILabel!
 
     public override func viewDidLoad() {
         super.viewDidLoad()
         logoImageView.tintColor = UIColor.white
+        messageLabel.textColor = .white
     }
 
     public override var preferredStatusBarStyle: UIStatusBarStyle {

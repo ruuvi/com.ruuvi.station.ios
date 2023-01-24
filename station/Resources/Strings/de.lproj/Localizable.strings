@@ -261,6 +261,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi Station ist ein benutzerfreundliches, aber leistungsstarkes Werkzeug, um Ihre Ruuvi-Sensoren aufzuladen. Fügen Sie einfach einige Sensoren hinzu und schon können Sie loslegen.";
 "About.AboutHelp.header" = "Über / Hilfe";
+"About.TagsCount.text" = "Sensoren hinzugefügt: %d";
 "About.MeasurementsCount.text" = "Anzahl lokal gespeicherter Messungen: %d";
 "About.DatabaseSize.text" = "Datenbankgröße: %@";
 "About.More.contents" = "Ruuvi-Website: ruuvi.com\nRuuvi-Forum: f.ruuvi.com\nRuuvi-Blog: ruuvi.com/blog\nRuuvi auf Twitter: twitter.com/ruuvicom";
@@ -271,7 +272,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "About.OperationsManual.header" = "Anleitung";
 "About.Privacy.contents" = "Durch die Nutzung der Anwendung akzeptieren Sie die allgemeinen Geschäftsbedingungen von Ruuvi: ruuvi.com/terms";
 "About.Privacy.header" = "Datenschutz-bestimmungen";
-"About.TagsCount.text" = "Gesehene Sensoren: %d";
 "About.Troubleshooting.contents" = "Wenn Sie Probleme haben und unsere Handbücher nicht die gewünschte Hilfe bieten, finden Sie weitere Hilfe zur Fehlerbehebung hier: ruuvi.com/support";
 "About.Troubleshooting.header" = "Fehlerbehebung";
 "Interval.Hour.string" = "Stunden";
@@ -543,3 +543,4 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth history download failed. Check that you're within Bluetooth range, your sensor has firmware that supports downloading and that sensor is not simultaneously connected to another iOS device. Sensor connection is reserved for Ruuvi Station when using connected mode in iOS.";
 "TagCharts.TryAgain.title" = "Try again";
+"SignIn.Sync.message" = "Downloading content from the cloud. Please wait.";
