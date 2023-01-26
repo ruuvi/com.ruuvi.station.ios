@@ -33,7 +33,9 @@ class DiscoverTableViewController: UIViewController {
     }
 
     var isBluetoothEnabled: Bool = true {
-        didSet {}
+        didSet {
+            updateTableView()
+        }
     }
 
     var isCloseEnabled: Bool = true {

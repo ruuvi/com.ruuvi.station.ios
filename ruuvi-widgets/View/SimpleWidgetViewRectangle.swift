@@ -6,62 +6,36 @@ struct SimpleWidgetViewRectangle: View {
     var entry: WidgetProvider.Entry
     var body: some View {
         VStack {
-            HStack {
-                Image(Constants.ruuviLogoEye.rawValue)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 12, height: 12)
-
-                Text(viewModel.measurementTime(from: entry))
-                    .font(.custom(Constants.muliRegular.rawValue,
-                                  size: 12,
-                                  relativeTo: .body))
-                    .minimumScaleFactor(0.5)
-                    .padding(.leading, -2)
-
-                Spacer()
-            }.padding(EdgeInsets(top: 12,
-                                 leading: 4,
-                                 bottom: -2,
-                                 trailing: 0))
-
             VStack {
-                Text(entry.tag.displayString.uppercased())
+                Text(entry.tag.displayString.capitalized)
                     .font(.custom(Constants.muliBold.rawValue,
-                                  size: 12,
+                                  size: 16,
                                   relativeTo: .subheadline))
+                    .foregroundColor(Color.sensorNameColor1)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .minimumScaleFactor(0.5)
                     .padding(.leading, 4)
+                    .padding(.top, 10)
 
                 HStack(spacing: 2) {
-                    viewModel.symbol(from: entry)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 15, height: 15)
-                        .padding(.trailing, 2)
-
                     Text(viewModel.getValue(from: entry.record,
                                             settings: entry.settings,
                                             config: entry.config))
                     .environment(\.locale, viewModel.locale())
                     .foregroundColor(.bodyTextColor)
                     .font(.custom(Constants.oswaldBold.rawValue,
-                                  size: 28,
+                                  size: 36,
                                   relativeTo: .title))
-                    .minimumScaleFactor(0.5)
                     Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                         .foregroundColor(Color.unitTextColor)
-                        .font(.custom(Constants.oswaldBold.rawValue,
-                                      size: 16,
+                        .font(.custom(Constants.oswaldExtraLight.rawValue,
+                                      size: 20,
                                       relativeTo: .title3))
                         .baselineOffset(8)
-                        .minimumScaleFactor(0.5)
                     Spacer()
-                }.padding(EdgeInsets(top: -10,
+                }
+                .padding(EdgeInsets(top: -20,
                                      leading: 4,
-                                     bottom: 14,
+                                     bottom: 8,
                                      trailing: 4))
             }
         }.edgesIgnoringSafeArea(.all)
