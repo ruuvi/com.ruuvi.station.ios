@@ -72,14 +72,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
         view?.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
-        if (!(view?.isBluetoothEnabled ?? false)
-            && foreground.bluetoothState != .unknown) ||
-            !isBluetoothPermissionGranted {
-            view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
-        }
-
         view?.isCloseEnabled = true
-
         startObservingPersistedRuuviSensors()
     }
 
