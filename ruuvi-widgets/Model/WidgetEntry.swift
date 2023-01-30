@@ -21,6 +21,24 @@ extension WidgetEntry {
                            config: .preview)
     }
 
+    static func unauthorized() -> WidgetEntry {
+        return WidgetEntry(date: Date(),
+                           isAuthorized: false,
+                           tag: .preview,
+                           record: nil,
+                           settings: nil,
+                           config: .preview)
+    }
+
+    static func empty() -> WidgetEntry {
+        return WidgetEntry(date: Date(),
+                           isAuthorized: true,
+                           tag: .preview,
+                           record: nil,
+                           settings: nil,
+                           config: .preview)
+    }
+
     static func empty(with configuration: RuuviTagSelectionIntent,
                       authorized: Bool = false) -> WidgetEntry {
         return WidgetEntry(date: Date(),
