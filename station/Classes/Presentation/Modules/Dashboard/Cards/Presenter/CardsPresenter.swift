@@ -787,6 +787,10 @@ extension CardsPresenter {
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
+                if let luid = sensor.luid {
+                    sSelf.connectionPersistence.setKeepConnection(false, for: luid)
+                }
+
                 if let index = sSelf.viewModels.firstIndex(where: {
                     return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
                         || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
