@@ -270,6 +270,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidConfirmTagRemoval() {
         ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
+
+            if let luid = sSelf.ruuviTag.luid {
+                sSelf.connectionPersistence.setKeepConnection(false, for: luid)
+            }
+
             if sSelf.ruuviTag.isOwner {
                 sSelf.advertisementDaemon.restart()
                 if let isConnected = sSelf.viewModel.isConnected.value,

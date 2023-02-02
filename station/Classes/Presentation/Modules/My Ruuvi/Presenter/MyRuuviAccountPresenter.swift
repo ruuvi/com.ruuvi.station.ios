@@ -3,6 +3,7 @@ import RuuviUser
 import RuuviService
 import RuuviPresenters
 import RuuviCloud
+import RuuviLocal
 
 #if canImport(WidgetKit)
 import WidgetKit
@@ -14,6 +15,7 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     var ruuviCloud: RuuviCloud!
     var ruuviUser: RuuviUser!
     var authService: RuuviServiceAuth!
+    var settings: RuuviLocalSettings!
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
@@ -70,6 +72,7 @@ extension MyRuuviAccountPresenter {
             guard let sSelf = self else { return }
             sSelf.authService.logout()
                 .on(success: { [weak sSelf] _ in
+                    sSelf?.settings.cloudModeEnabled = false
                     sSelf?.viewDidTriggerClose()
                     sSelf?.syncViewModel()
                     sSelf?.reloadWidgets()
