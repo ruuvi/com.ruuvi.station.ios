@@ -13,7 +13,7 @@ struct SimpleWidgetViewCircular: View {
         VStack(spacing: 0) {
             Text(entry.tag.displayString.substring(toIndex: 8).capitalized)
                 .font(.custom(Constants.muliBold.rawValue,
-                              size: 12,
+                              size: 8,
                               relativeTo: .subheadline))
                 .foregroundColor(.sensorNameColor1)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -22,7 +22,7 @@ struct SimpleWidgetViewCircular: View {
                                     settings: entry.settings,
                                     config: entry.config))
             .environment(\.locale, viewModel.locale())
-            .foregroundColor(.bodyTextColor)
+            .foregroundColor(.white)
             .font(.custom(Constants.oswaldBold.rawValue,
                           size: 18,
                           relativeTo: .subheadline))
@@ -33,12 +33,12 @@ struct SimpleWidgetViewCircular: View {
                 rawValue: entry.config.sensor.rawValue)))
                 .foregroundColor(Color.unitTextColor)
                 .font(.custom(Constants.muliBold.rawValue,
-                              size: 8,
+                              size: 10,
                               relativeTo: .body))
-
                 .minimumScaleFactor(0.5)
+                .padding(.top, -4)
 
-        }.padding(EdgeInsets(top: 4, leading: 8, bottom: 0, trailing: 8))
+        }.padding(EdgeInsets(top: 4, leading: 10, bottom: 0, trailing: 10))
             .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
     }
 }
