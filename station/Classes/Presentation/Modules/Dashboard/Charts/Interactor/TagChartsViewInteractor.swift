@@ -144,7 +144,9 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         )
         if syncFrom == nil {
             syncFrom = historyLength
-        } else if let from = syncFrom, let history = historyLength, from < history {
+        } else if let from = syncFrom,
+                    let history = historyLength,
+                    from < history {
             syncFrom = history
         }
 

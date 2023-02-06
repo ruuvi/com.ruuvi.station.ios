@@ -25,6 +25,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(true, forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
     }
 
+    // TODO: - Deprecate this after version v1.3.2
     private let firmwareVersionPrefix = "SettingsUserDegaults.firmwareVersionPrefix"
     func firmwareVersion(for luid: LocalIdentifier) -> String? {
         return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String

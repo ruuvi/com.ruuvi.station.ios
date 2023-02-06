@@ -12,6 +12,7 @@ public enum RuuviTagHeartbeatDaemonDidFailKey: String {
 public protocol RuuviTagHeartbeatDaemon {
     func start()
     func stop()
+    func restart()
 }
 
 public protocol RuuviTagHeartbeatDaemonTitles {

@@ -11,6 +11,7 @@ import RuuviNotifier
 import RuuviPresenters
 import RuuviUser
 import RuuviDaemon
+import RuuviPool
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -50,6 +51,12 @@ class CardsScrollConfigurator {
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
         router.delegate = presenter
+
+        let interactor = CardsInteractor()
+        interactor.background = r.resolve(BTBackground.self)
+        interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
+        interactor.ruuviPool = r.resolve(RuuviPool.self)
+        presenter.interactor = interactor
 
         // swiftlint:disable force_cast
         let menu = UIStoryboard(name: "Menu",
