@@ -163,7 +163,7 @@
 "TagSettings.SectionHeader.BTConnection.title" = "BLUETOOTH VERBINDUNG";
 "TagSettings.PairAndBackgroundScan.Unpaired.title" = "Koppeln und Hintergrundsuche verwenden";
 "TagSettings.PairAndBackgroundScan.Pairing.title" = "Anschließen an den Sensor";
-"TagSettings.PairAndBackgroundScan.Paired.title" = "Gekoppelt und Hintergrundsuche ist eingeschaltet";
+"TagSettings.PairAndBackgroundScan.Paired.title" = "Gekoppelt und aktiviert";
 "TagSettings.PairAndBackgroundScan.description" = "Warnungen sind über die Bluetooth-Verbindung nicht verfügbar, wenn die Hintergrundsuche nicht aktiviert ist. Es kann jeweils nur ein iOS-Gerät mit einem Ruuvi-Sensor gekoppelt werden.";
 "TagSettings.PairError.CloudMode.description" = "Der Sensor kann nicht über Bluetooth verbunden werden, wenn der Cloud-Modus aktiv ist. Sie können die Bluetooth-Verbindung für die Cloud-Sensoren wieder aktivieren, indem Sie den Cloud-Modus in den App-Einstellungen deaktivieren.";
 "TagSettings.PairError.Timeout.description" = "Die Verbindung wurde unterbrochen. Das Pairing war nicht erfolgreich. Bitte versuchen Sie es erneut.";
@@ -241,7 +241,7 @@
 "TagSettings.Alerts.Temperature.description" = "Warnung bei weniger als %0.f oder mehr als %0.f";
 "TagSettings.Label.alerts.text" = "Warnungen";
 "TagSettings.backgroundImageLabel.text" = "Hintergrund bild";
-"TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";
+"TagSettings.batteryVoltageTitleLabel.text" = "Batteriespannung";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibrieren";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibriert: %@";
 "HumidityCalibration.Description.text" = "Um die relative Luftfeuchtigkeit so genau wie möglich zu messen, wird eine Natriumchlorid-(Salz-)Kalibrierung empfohlen. Sehen Sie sich Video-Tutorials an, wie Sie dies ganz einfach zu Hause tun können.";
@@ -253,7 +253,7 @@
 "HumidityCalibration.Button.Close.title" = "Schließen";
 "TagCharts.Status.Serving" = "Synchronisieren...";
 "TagCharts.Status.Connecting" = "Verbinden...";
-"TagSettings.ConnectStatus.Disconnected" = "Disconnected";
+"TagSettings.ConnectStatus.Disconnected" = "Getrennt";
 "TagCharts.Export.title" = "EXPORT";
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi Station ist ein benutzerfreundliches, aber leistungsstarkes Werkzeug, um Ihre Ruuvi-Sensoren aufzuladen. Fügen Sie einfach einige Sensoren hinzu und schon können Sie loslegen.";
@@ -282,7 +282,7 @@
 "Menu.Label.AboutHelp.text" = "Über / Hilfe";
 "Menu.Label.AddAnNewSensor.text" = "Neuen Sensor hinzufügen";
 "Menu.Label.AppSettings.text" = "App Einstellungen";
-"Menu.Label.GetMoreSensors.text" = "Ruuvi Sensoren kaufen";
+"Menu.Label.GetMoreSensors.text" = "Sensoren kaufen";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Ruuvi Gateway kaufen";
 "Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
@@ -352,7 +352,7 @@
 "SignIn.Title.text" = "Einloggen";
 "Menu.SignOut.text" = "Ausloggen";
 "RuuviOnboard.Cloud.Benefits.message" = "Vorteile:\n\n ● Sensornamen, Hintergrundbilder, Offsets und Alarmeinstellungen werden sicher in der Cloud gespeichert\n\n ● Fernzugriff auf Sensoren über das Internet (erfordert ein Ruuvi Gateway)\n\n ● Teilen Sie Sensoren mit Freunden und Familie (erfordert ein Ruuvi Gateway)\n\n ● Sehen Sie bis zu 2 Jahre Geschichtsdaten auf station.ruuvi.com (erfordert ein Ruuvi-Gateway)";
-"RuuviOnboard.Cloud.Details.title" = "Details";
+"RuuviOnboard.Cloud.Details.title" = "Einzelheiten";
 "ruuvi_cloud" = "Ruuvi Cloud";
 "RuuviOnboard.Cloud.Skip.title" = "Sind Sie sicher, dass Sie die Anmeldung überspringen wollen?";
 "RuuviOnboard.Cloud.Skip.Yes.title" = "Ja, überspringen";
@@ -556,7 +556,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "reading_history_x" = "History wird gelesen.. %0.f";
 "rssi_alert_description" = "Die Verwendung dieses Alarms setzt voraus, dass Sie in der App angemeldet sind und dass Sie den Sensor für sich beansprucht haben und dass er sich in der Reichweite des Ruuvi Gateway Routers befindet. iOS-Geräte können keine Informationen zur Signalstärke der vom Ruuvi-Sensor gesendeten Daten anzeigen, wenn der Sensor gekoppelt ist und Messungen im Hintergrund empfangen werden. Die Echtzeit-Bluetooth-Signalstärke wird in der App angezeigt, hat aber keinen Einfluss auf diesen Alarm.";
 "bluetooth_download" = "Bluetooth-Download";
-"bluetooth_download_description" = "Local sensor data can be downloaded, when you're within its Bluetooth range.";
+"bluetooth_download_description" = "Lokale Sensordaten können heruntergeladen werden, wenn Sie sich in Bluetooth-Reichweite befinden.";
 "download" = "Download";
 "clear_local_history" = "Lokaler Verlauf löschen";
 "clear_local_history_description" = "Möchten Sie lokal gespeicherte historische Daten aus der App löschen? Dies löscht nicht den intern gespeicherten Verlauf des Sensors oder die im Ruuvi Cloud-Dienst gespeicherten historischen Daten.";
