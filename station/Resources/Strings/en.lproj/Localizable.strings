@@ -313,14 +313,14 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Settings.BackgroundScanning.interval" = "Data logging interval";
 "Settings.Label.Chart" = "Chart Settings";
 "ChartSettings.AllPoints.title" = "Display all data in chart";
-"ChartSettings.AllPoints.description" = "Enabling it may cause charts to update slowly";
+"ChartSettings.AllPoints.description" = "Enabling it may cause charts to update slowly.";
 "ChartSettings.DrawDots.title" = "Draw dots in chart";
 "ChartSettings.DrawDots.description" = "Small dots will help to understand when measurements were collected";
 "Defaults.ChartIntervalSeconds.title" = "Chart Interval";
 "ChartSettings.Duration.title" = "Chart History View Period";
 "ChartSettings.Duration.description" = "Configure the period of history to be shown on chart from 1 to 10 days.";
 "Settings.Label.HumidityUnit.text" = "Humidity Unit";
-"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed.";
 "Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed.";
 "Settings.Label.TemperatureUnit.text" = "Temperature Unit";

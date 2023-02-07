@@ -313,14 +313,14 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "Settings.BackgroundScanning.interval" = "Dataloggningsintervall";
 "Settings.Label.Chart" = "Historik";
 "ChartSettings.AllPoints.title" = "Visa all insamlad data i graferna";
-"ChartSettings.AllPoints.description" = "Den här funktionen kan göra appen laddar historik långsammare";
+"ChartSettings.AllPoints.description" = "Den här funktionen kan göra appen laddar historik långsammare.";
 "ChartSettings.DrawDots.title" = "Visa datapunkter";
 "ChartSettings.DrawDots.description" = "Datapunkter gör det lättare att utforska lagrad historikinformation";
 "Defaults.ChartIntervalSeconds.title" = "Historikens noggrannhet";
 "ChartSettings.Duration.title" = "Historik";
 "ChartSettings.Duration.description" = "Ange hur långt bak historiken skall visas, mellan 1 - 10 dagar.";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
-"Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas";
+"Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas.";
 "Settings.Label.PressureUnit.text" = "Tryckenhet";
 "Settings.ChoosePressureUnit.text" = "Välj den tryckenhet du vill ska visas.";
 "Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
