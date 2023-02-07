@@ -313,14 +313,14 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "Settings.BackgroundScanning.interval" = "Historiatietojen tallennusväli";
 "Settings.Label.Chart" = "Historiatietojen asetukset";
 "ChartSettings.AllPoints.title" = "Näytä kaikki kerätyt mittaukset";
-"ChartSettings.AllPoints.description" = "Ominaisuuden käyttäminen saattaa hidastaa historiatietojen päivittymistä";
+"ChartSettings.AllPoints.description" = "Ominaisuuden käyttäminen saattaa hidastaa historiatietojen päivittymistä.";
 "ChartSettings.DrawDots.title" = "Näytä tietopisteet";
 "ChartSettings.DrawDots.description" = "Tietopisteiden näyttäminen helpottaa tallennetun historiatiedon tutkimista";
 "Defaults.ChartIntervalSeconds.title" = "Historian tarkkuus";
 "ChartSettings.Duration.title" = "Historian tarkastelujakso";
 "ChartSettings.Duration.description" = "Määritä historian tarkastelujakso 1 - 10 päivää.";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
-"Settings.ChooseHumidityUnit.text" = "Valitse sovelluksessa käytettävä kosteusyksikkö";
+"Settings.ChooseHumidityUnit.text" = "Valitse sovelluksessa käytettävä kosteusyksikkö.";
 "Settings.Label.PressureUnit.text" = "Paineyksikkö";
 "Settings.ChoosePressureUnit.text" = "Valitse sovelluksessa käytettävä paineyksikkö.";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
