@@ -56,7 +56,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                 case .logs(let logs):
                     let records = logs.compactMap({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
                         .with(source: .log)
-                        .with(sensorSettings: observer.sensorSettings)
+                        .any
                     })
                     let opLogs = observer.ruuviPool.create(records)
                     opLogs.on(success: { _ in

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'RuuviOnboard'
-  s.version          = '0.0.2'
+  s.version          = '0.0.3'
   s.summary          = 'Ruuvi Onboard'
   s.homepage         = 'https://ruuvi.com'
   s.author           = { 'Rinat Enikeev' => 'rinat@ruuvi.com' }

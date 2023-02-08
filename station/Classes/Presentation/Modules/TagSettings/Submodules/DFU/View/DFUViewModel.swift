@@ -84,7 +84,8 @@ final class DFUViewModel: ObservableObject {
                 self.whenListening(),
                 self.whenReadyToUpdate(),
                 self.whenFlashing(),
-                self.userInput(input: input.eraseToAnyPublisher())
+                self.userInput(input: input.eraseToAnyPublisher()),
+                self.whenServingAfterUpdate()
             ]
         )
         .assign(to: \.state, on: self)
@@ -104,14 +105,16 @@ final class DFUViewModel: ObservableObject {
         input.send(event)
     }
 
-    func storeUpdatedFirmware(latestRelease: LatestRelease) {
-        guard let luid = ruuviTag.luid else { return }
-        let firmwareVersion = latestRelease.version.replace("Ruuvi FW ", with: "")
-        settings.setFirmwareVersion(for: luid, value: firmwareVersion)
+    func storeUpdatedFirmware(currentRelease: CurrentRelease?) {
+        guard ruuviTag.luid != nil else { return }
         // If the tag is stored on realm then migration needed
         // Usually tags without macId are stored in the realm database
         // For tags with macId don't need migration
         if ruuviTag.macId != nil {
+            guard let currentRelease = currentRelease else {
+                return
+            }
+            let firmwareVersion = currentRelease.version.replace("Ruuvi FW ", with: "")
             isLoading = true
             ruuviPool.update(ruuviTag
                 .with(isConnectable: true)
@@ -289,6 +292,7 @@ extension DFUViewModel {
         case loading
         case loaded(LatestRelease)
         case serving(LatestRelease)
+        case servingAfterUpdate(LatestRelease)
         case checking(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
@@ -315,6 +319,7 @@ extension DFUViewModel {
                 fullUrl: URL
              )
         case successfulyFlashed(LatestRelease)
+        case firmwareAfterUpdate(CurrentRelease?)
         case error(Error)
     }
 
@@ -323,6 +328,7 @@ extension DFUViewModel {
         case onLoaded(LatestRelease)
         case onDidFailLoading(Error)
         case onServed(CurrentRelease?)
+        case onServedAfterUpdate(CurrentRelease?)
         case onLoadedAndServed(LatestRelease, CurrentRelease?)
         case onStartUpgrade(LatestRelease, CurrentRelease?)
         case onRead(
@@ -464,9 +470,18 @@ extension DFUViewModel {
             default:
                 return state
             }
-        case .successfulyFlashed:
-            return state
+        case .successfulyFlashed(let latestRelease):
+            return .servingAfterUpdate(latestRelease)
+        case .servingAfterUpdate:
+            switch event {
+            case let .onServedAfterUpdate(currentRelease):
+                return .firmwareAfterUpdate(currentRelease)
+            default:
+                return state
+            }
         case .error:
+            return state
+        case .firmwareAfterUpdate:
             return state
         }
     }
@@ -620,6 +635,19 @@ extension DFUViewModel {
                     }
                 })
                 .catch { Just(Event.onDidFailDownloading($0)) }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func whenServingAfterUpdate() -> Feedback<State, Event> {
+        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
+            guard case .servingAfterUpdate = state, let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+                .receive(on: RunLoop.main)
+                .map(Event.onServedAfterUpdate)
+                .catch { _ in Just(Event.onServedAfterUpdate(nil)) }
                 .eraseToAnyPublisher()
         }
     }

@@ -194,6 +194,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         let deleteTagOperation = pool.delete(sensor)
         let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
         let deleteLastRecordOperation = pool.deleteLast(sensor.id)
+        let cleanUpOperation = pool.cleanupDBSpace()
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
         if let macId = sensor.macId,
@@ -206,7 +207,10 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         }
         propertiesService.removeImage(for: sensor)
         localIDs.clear(sensor: sensor)
-        Future.zip([deleteTagOperation, deleteRecordsOperation, deleteLastRecordOperation])
+        Future.zip([deleteTagOperation,
+                    deleteRecordsOperation,
+                    deleteLastRecordOperation,
+                    cleanUpOperation])
             .on(success: { _ in
                 if let unclaimOperation = unclaimOperation {
                     unclaimOperation.on()

@@ -9,6 +9,7 @@ import RuuviCore
 import RuuviPresenters
 import RuuviPool
 import RuuviNotifier
+import RuuviDaemon
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -18,7 +19,6 @@ class TagSettingsTableConfigurator {
         router.transitionHandler = view
 
         let presenter = TagSettingsPresenter()
-        let interactor = TagSettingsInteractor()
         presenter.view = view
         presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
@@ -42,9 +42,8 @@ class TagSettingsTableConfigurator {
         presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.alertHandler = r.resolve(RuuviNotifier.self)
-        interactor.background = r.resolve(BTBackground.self)
-        interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-        presenter.interactor = interactor
+        presenter.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
+        presenter.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 

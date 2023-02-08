@@ -7,9 +7,7 @@ struct SimpleWidgetViewInline: View {
 
     var body: some View {
         HStack {
-            // swiftlint:disable:next line_length
-            Text("\(entry.tag.displayString) \(viewModel.symbol(from: entry)) \(viewModel.getInlineWidgetValue(from: entry))")
-                .environment(\.locale, viewModel.locale())
+            Text("\(entry.tag.displayString)  \(viewModel.getInlineWidgetValue(from: entry))")
         }.widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
     }
 }

@@ -646,6 +646,17 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         }
         return promise.future
     }
+
+    public func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        do {
+            try database.dbPool.vacuum()
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
 }
 
 // MARK: - Private
