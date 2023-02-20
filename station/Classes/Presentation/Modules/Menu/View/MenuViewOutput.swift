@@ -9,6 +9,7 @@ protocol MenuViewOutput {
     func viewDidSelectAbout()
     func viewDidSelectWhatToMeasure()
     func viewDidSelectGetMoreSensors()
+    // TODO: REMOVE THIS, NO LONGER SUPPORTED.
     func viewDidSelectGetRuuviGateway()
     func viewDidSelectSettings()
     func viewDidSelectFeedback()

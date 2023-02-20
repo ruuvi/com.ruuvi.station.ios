@@ -3,6 +3,7 @@ import RuuviUser
 import RuuviService
 import RuuviPresenters
 import RuuviCloud
+import RuuviLocal
 
 class MyRuuviAccountConfigurator {
     func configure(view: MyRuuviAccountViewController) {
@@ -19,6 +20,7 @@ class MyRuuviAccountConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.authService = r.resolve(RuuviServiceAuth.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         view.output = presenter
     }
 }
