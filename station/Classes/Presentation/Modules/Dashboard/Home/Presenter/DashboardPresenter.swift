@@ -918,14 +918,14 @@ extension DashboardPresenter {
                     op.on { [weak self] record in
                         if let record = record {
                             viewModel.update(record)
-                            sSelf.openTagSettingsScreens(viewModel: viewModel)
+                            sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                         } else {
                             self?.ruuviStorage.readLast(sensor).on(success: { record in
                                 guard let record = record else {
                                     return
                                 }
                                 viewModel.update(record)
-                                sSelf.openTagSettingsScreens(viewModel: viewModel)
+                                sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                             })
                         }
                     }
