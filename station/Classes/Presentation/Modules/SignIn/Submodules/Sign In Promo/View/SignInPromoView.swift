@@ -26,7 +26,7 @@ class SignInPromoView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "why_should_sign_in".localized()
-        label.font = UIFont.Montserrat(.extraBold, size: 36)
+        label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
 
@@ -36,7 +36,7 @@ class SignInPromoView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "sensors_ownership_and_settings_stored_in_cloud".localized()
-        label.font = UIFont.Muli(.semiBoldItalic, size: 20)
+        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
 
@@ -46,7 +46,7 @@ class SignInPromoView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.text = prepareFeatures()
-        label.font = UIFont.Muli(.regular, size: 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
         return label
     }()
 
@@ -55,7 +55,7 @@ class SignInPromoView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
         label.attributedText = prepareNote()
         return label
     }()
@@ -66,7 +66,7 @@ class SignInPromoView: UIView {
         button.setTitle("lets_do_it".localized(),
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
         button.addTarget(self,
                          action: #selector(handleLetsDoTap),
                          for: .touchUpInside)
@@ -95,7 +95,7 @@ extension SignInPromoView {
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
-        titleStack.spacing = 24
+        titleStack.spacing = UIDevice.isiPhoneSE() ? 16 : 24
 
         container.addSubview(titleStack)
         titleStack.anchor(top: nil,
@@ -116,7 +116,7 @@ extension SignInPromoView {
                          leading: nil,
                          bottom: nil,
                          trailing: nil,
-                         padding: .init(top: 30, left: 0,
+                             padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30, left: 0,
                                         bottom: 0, right: 0))
 
         featuresLabel.centerInSuperview()
@@ -126,7 +126,7 @@ extension SignInPromoView {
                          leading: titleStack.leadingAnchor,
                          bottom: nil,
                          trailing: titleStack.trailingAnchor,
-                         padding: .init(top: 30, left: 0,
+                         padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30, left: 0,
                                         bottom: 0, right: 0))
 
         container.addSubview(letsDoButton)
@@ -134,8 +134,10 @@ extension SignInPromoView {
                                leading: container.safeLeftAnchor,
                                bottom: nil,
                                trailing: container.safeRightAnchor,
-                               padding: .init(top: 30, left: !UIDevice.isTablet() ? 50 : 150,
-                                              bottom: 0, right: !UIDevice.isTablet() ? 50 : 150),
+                               padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30,
+                                              left: !UIDevice.isTablet() ? 50 : 150,
+                                              bottom: 0,
+                                              right: !UIDevice.isTablet() ? 50 : 150),
                             size: .init(width: 0, height: 50))
         letsDoButton.bottomAnchor.constraint(
             lessThanOrEqualTo: container.bottomAnchor, constant: 20
@@ -163,12 +165,12 @@ extension SignInPromoView {
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: 18),
+                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18),
                                 range: range)
 
         // Make note bold and orange color
         let makeBoldOrange = "note".localized()
-        let boldFont = UIFont.Muli(.bold, size: 18)
+        let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 12 : 18)
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
         attrString.addAttribute(NSAttributedString.Key.font,
                                 value: boldFont,

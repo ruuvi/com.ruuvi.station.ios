@@ -33,6 +33,7 @@ class CardsViewController: UIViewController {
     var currentPage: Int = 0
 
     private lazy var datasource = makeDatasource()
+    private static let reuseIdentifier: String = "reuseIdentifier"
     // MARK: - Datasource
     private func makeDatasource() -> CardsDataSource {
         let datasource = CardsDataSource(
@@ -49,8 +50,10 @@ class CardsViewController: UIViewController {
     func cell(collectionView: UICollectionView,
               indexPath: IndexPath,
               viewModel: CardsViewModel) -> UICollectionViewCell? {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId",
-                                                      for: indexPath) as? CardsLargeImageCell
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: Self.reuseIdentifier,
+            for: indexPath
+        ) as? CardsLargeImageCell
         cell?.configure(with: viewModel, measurementService: measurementService)
         return cell
     }
@@ -135,6 +138,11 @@ class CardsViewController: UIViewController {
         cv.backgroundColor = .clear
         cv.delegate = self
         cv.showsHorizontalScrollIndicator = false
+        cv.decelerationRate = .fast
+        cv.isPagingEnabled = true
+        cv.alwaysBounceVertical = false
+        cv.register(CardsLargeImageCell.self,
+                    forCellWithReuseIdentifier: Self.reuseIdentifier)
         return cv
     }()
 
@@ -169,11 +177,13 @@ extension CardsViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.makeTransparent()
         output.viewWillAppear()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        navigationController?.resetStyleToDefault()
         output.viewWillDisappear()
     }
 
@@ -279,10 +289,6 @@ extension CardsViewController {
                               trailing: view.safeRightAnchor)
 
         collectionView.dataSource = datasource
-        collectionView.decelerationRate = .fast
-        collectionView.isPagingEnabled = true
-        collectionView.alwaysBounceVertical = false
-        collectionView.register(CardsLargeImageCell.self, forCellWithReuseIdentifier: "cellId")
     }
 
     fileprivate func createLayout() -> UICollectionViewLayout {

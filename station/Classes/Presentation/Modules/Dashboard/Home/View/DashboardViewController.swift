@@ -160,6 +160,7 @@ extension DashboardViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadCollectionView()
+        navigationController?.makeTransparent()
         output.viewWillAppear()
     }
 
@@ -170,6 +171,7 @@ extension DashboardViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        navigationController?.resetStyleToDefault()
         output.viewWillDisappear()
     }
 
@@ -379,11 +381,13 @@ extension DashboardViewController {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(widthMultiplier),
                                               heightDimension: .estimated(itemEstimatedHeight))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        // TODO: @Priyonto - Investigate layout issue for iPhone SE 1st and 2nd Gen
         let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
         item.contentInsets = NSDirectionalEdgeInsets(top: 0,
                                                      leading: itemHorizontalSpacing,
                                                      bottom: 0,
-                                                     trailing: itemHorizontalSpacing)
+                                                     trailing: UIDevice.isiPhoneSE() ?
+                                                     0 : itemHorizontalSpacing)
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(itemEstimatedHeight))
