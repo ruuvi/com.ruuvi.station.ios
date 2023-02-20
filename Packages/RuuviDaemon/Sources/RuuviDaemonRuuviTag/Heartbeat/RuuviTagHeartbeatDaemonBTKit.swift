@@ -211,7 +211,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     let uuid = ruuviTag.uuid
                     // If the app is on foreground store all heartbeats
                     // Otherwise respect the settings
-                    guard let luid = ruuviTag.luid else { return }
+                    guard ruuviTag.luid != nil else { return }
                     // swiftlint:disable:next line_length
                     let interval = observer.settings.appIsOnForeground ? 2 : (observer.settings.saveHeartbeatsIntervalMinutes * 60)
                     if let date = observer.savedDate[uuid] {

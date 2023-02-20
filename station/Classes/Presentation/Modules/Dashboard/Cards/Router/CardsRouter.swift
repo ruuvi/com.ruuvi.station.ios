@@ -10,7 +10,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     private weak var dfuModule: DFUModuleInput?
 
     func dismiss() {
-        try! transitionHandler?.closeCurrentModule().perform()
+        try? transitionHandler?.closeCurrentModule().perform()
     }
 
     func openTagSettings(ruuviTag: RuuviTagSensor,
@@ -39,7 +39,7 @@ class CardsRouter: NSObject, CardsRouterInput {
         temperature: Temperature?
     ) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
-        try! transitionHandler?
+        try? transitionHandler?
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ (module) -> Any? in

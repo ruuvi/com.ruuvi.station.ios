@@ -20,7 +20,6 @@ protocol CardsViewInput: ViewInput {
     func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()
     func showAlreadyLoggedInAlert(with email: String)
-    // Experiments
     func showChart(module: UIViewController)
     func dismissChart()
     func viewShouldDismiss()

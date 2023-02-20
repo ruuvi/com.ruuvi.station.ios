@@ -221,7 +221,6 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="WhatToMeasureCell" destination="bFa-8B-o3r" id="nq4-f5-6TK"/>
                         <outlet property="aboutCell" destination="5jP-lL-ZsG" id="Fn2-zH-noK"/>
                         <outlet property="aboutHelpLabel" destination="vBO-sF-6UM" id="UOa-EJ-On5"/>
                         <outlet property="accountAuthLabel" destination="aXb-tc-Q6M" id="Vd0-yh-1wO"/>
@@ -234,6 +233,7 @@
                         <outlet property="getMoreSensorsCell" destination="Q41-gm-NmA" id="yQD-Eu-H6g"/>
                         <outlet property="getMoreSensorsLabel" destination="XGm-sP-Ekg" id="cdM-jH-MGT"/>
                         <outlet property="settingsCell" destination="Whs-Vz-g1g" id="A61-3K-Zae"/>
+                        <outlet property="whatToMeasureCell" destination="bFa-8B-o3r" id="BD2-yS-NOn"/>
                         <outlet property="whatToMeasureLabel" destination="iak-g7-esw" id="UiP-l5-OVu"/>
                     </connections>
                 </tableViewController>

@@ -6,7 +6,7 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     @IBOutlet weak var feedbackCell: UITableViewCell!
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!
     @IBOutlet weak var aboutCell: UITableViewCell!
-    @IBOutlet weak var WhatToMeasureCell: UITableViewCell!
+    @IBOutlet weak var whatToMeasureCell: UITableViewCell!
     @IBOutlet weak var getMoreSensorsCell: UITableViewCell!
     @IBOutlet weak var settingsCell: UITableViewCell!
     @IBOutlet weak var accountCell: UITableViewCell!
@@ -67,7 +67,7 @@ extension MenuTableEmbededViewController {
                 output.viewDidSelectAddRuuviTag()
             case aboutCell:
                 output.viewDidSelectAbout()
-            case WhatToMeasureCell:
+            case whatToMeasureCell:
                 output.viewDidSelectWhatToMeasure()
             case getMoreSensorsCell:
                 output.viewDidSelectGetMoreSensors()
