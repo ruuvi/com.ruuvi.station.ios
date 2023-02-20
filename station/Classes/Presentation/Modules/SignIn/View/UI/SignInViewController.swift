@@ -70,6 +70,16 @@ extension SignInViewController {
         setUpUI()
         output.viewDidLoad()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.makeTransparent()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.resetStyleToDefault()
+    }
 }
 
 extension SignInViewController {
@@ -215,7 +225,7 @@ extension SignInViewController {
                                        leading: view.safeLeftAnchor,
                                        bottom: view.safeBottomAnchor,
                                        trailing: view.safeRightAnchor,
-                                       padding: .init(top: 0, left: 20,
+                                       padding: .init(top: 8, left: 20,
                                                       bottom: 16, right: 20))
     }
 }

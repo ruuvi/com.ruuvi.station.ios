@@ -53,6 +53,16 @@ extension SignInPromoViewController {
         super.viewDidLoad()
         setUpUI()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.makeTransparent()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.resetStyleToDefault()
+    }
 }
 
 extension SignInPromoViewController {

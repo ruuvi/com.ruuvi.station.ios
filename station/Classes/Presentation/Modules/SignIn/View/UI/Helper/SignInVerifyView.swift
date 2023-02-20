@@ -26,7 +26,7 @@ class SignInVerifyView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "enter_code".localized()
-        label.font = UIFont.Montserrat(.extraBold, size: 30)
+        label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
 
@@ -36,7 +36,7 @@ class SignInVerifyView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "SignIn.CheckMailbox".localized()
-        label.font = UIFont.Muli(.semiBoldItalic, size: 18)
+        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
 
