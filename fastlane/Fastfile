@@ -147,6 +147,7 @@ platform :ios do
     match(type: "appstore", app_identifier: "com.ruuvi.station", readonly: true)
     match(type: "appstore", app_identifier: "com.ruuvi.station.widgets", readonly: true)
     match(type: "appstore", app_identifier: "com.ruuvi.station.intents", readonly: true)
+    match(type: "appstore", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
@@ -157,7 +158,8 @@ platform :ios do
         provisioningProfiles: {
           "com.ruuvi.station" => "match AppStore com.ruuvi.station",
           "com.ruuvi.station.widgets" => "match AppStore com.ruuvi.station.widgets",
-          "com.ruuvi.station.intents" => "match AppStore com.ruuvi.station.intents"
+          "com.ruuvi.station.intents" => "match AppStore com.ruuvi.station.intents",
+          "com.ruuvi.station.pnservice" => "match AppStore com.ruuvi.station.pnservice"
         }
       }
     )
