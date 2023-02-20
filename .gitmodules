@@ -1,3 +1,6 @@
+[submodule "station.localization"]
+	path = station.localization
+	url = git@github.com:ruuvi/station.localization.git
 [submodule "Templates/swifty_vm_viper"]
 	path = Templates/swifty_vm_viper
 	url = git@github.com:viikufa/swifty_vm_viper.git

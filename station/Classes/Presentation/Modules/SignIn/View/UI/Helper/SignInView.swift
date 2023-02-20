@@ -26,7 +26,8 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "sign_in_or_create_free_account".localized()
-        label.font = UIFont.Montserrat(.extraBold, size: 30)
+        label.font = UIFont.Montserrat(.extraBold,
+                                       size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
 
@@ -36,7 +37,7 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "to_use_all_app_features".localized()
-        label.font = UIFont.Muli(.semiBoldItalic, size: 18)
+        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
 
@@ -47,7 +48,7 @@ class SignInView: UIView {
         textField.layer.cornerRadius = 25
         textField.textColor = .white
         textField.textAlignment = .left
-        textField.font = UIFont.Muli(.bold, size: 16)
+        textField.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
         textField.placeholder = "type_your_email".localized()
         textField.addPadding(padding: .equalSpacing(16))
         textField.setPlaceHolderColor(color: UIColor.darkGray.withAlphaComponent(0.7))
@@ -64,7 +65,7 @@ class SignInView: UIView {
         button.setTitle("request_code".localized(),
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
         button.addTarget(self,
                          action: #selector(handleRequestTap),
                          for: .touchUpInside)
@@ -77,7 +78,7 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "no_password_needed".localized()
-        label.font = UIFont.Muli(.semiBoldItalic, size: 16)
+        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 16)
         return label
     }()
 }
