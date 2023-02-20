@@ -26,17 +26,18 @@ class NoSensorView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "dashboard_no_sensors_message".localized()
-        label.font = UIFont.Muli(.semiBoldItalic, size: 20)
+        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
 
     private lazy var addSensorButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
+                              cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25)
         button.setTitle("+ " + "add_your_first_sensor".localized(),
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.Muli(.bold,
+                                              size: UIDevice.isiPhoneSE() ? 12 : 16)
         button.addTarget(self,
                          action: #selector(handleAddSensorTap),
                          for: .touchUpInside)
@@ -48,7 +49,8 @@ class NoSensorView: UIView {
         button.setTitleColor(RuuviColor.ruuviTextColor, for: .normal)
         button.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(),
                         for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 14)
+        button.titleLabel?.font = UIFont.Muli(.bold,
+                                              size: UIDevice.isiPhoneSE() ? 10 : 14)
         button.addTarget(self,
                          action: #selector(handleBuySensorTap),
                          for: .touchUpInside)
@@ -73,11 +75,20 @@ extension NoSensorView {
         container.fillSuperview()
 
         container.addSubview(addSensorButton)
-        addSensorButton.centerInSuperview()
-        addSensorButton.constrainHeight(constant: 50)
-        addSensorButton.widthAnchor.constraint(
-            greaterThanOrEqualToConstant: 300
-        ).isActive = true
+        addSensorButton.constrainHeight(constant: UIDevice.isiPhoneSE() ? 40 : 50)
+        if UIDevice.isiPhoneSE() {
+            addSensorButton.centerYInSuperview()
+            addSensorButton.anchor(top: nil,
+                                   leading: container.leadingAnchor,
+                                   bottom: nil,
+                                   trailing: container.trailingAnchor,
+                                   padding: .init(top: 0, left: 8, bottom: 0, right: 8))
+        } else {
+            addSensorButton.centerInSuperview()
+            addSensorButton.widthAnchor.constraint(
+                greaterThanOrEqualToConstant: 300
+            ).isActive = true
+        }
 
         container.addSubview(messageLabel)
         messageLabel.anchor(top: nil,
