@@ -3,6 +3,11 @@
     {
       "filename" : "onboarding_widgets.png",
       "idiom" : "universal"
+    },
+    {
+      "filename" : "ipad-widgets.png",
+      "idiom" : "universal",
+      "width-class" : "regular"
     }
   ],
   "info" : {
