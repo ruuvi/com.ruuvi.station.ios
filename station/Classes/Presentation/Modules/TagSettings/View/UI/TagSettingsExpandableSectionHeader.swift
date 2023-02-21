@@ -197,50 +197,47 @@ extension TagSettingsExpandableSectionHeader {
         seprator.alpha = hide ? 0 : 1
     }
 
-    func hideAlertComponents(hide: Bool) {
-        alertIcon.isHidden = hide
-        mutedTillLabel.isHidden = hide
+    func hideAlertComponents() {
+        alertIcon.image = nil
+        mutedTillLabel.text = nil
     }
 
     func showNoValueView(show: Bool) {
         noValueContainer.isHidden = !show
     }
 
-    func setMutedTill(with date: Date?) {
+    func setAlertState(with date: Date?,
+                       isOn: Bool,
+                       alertState: AlertState?) {
+        // Show alert icon only when alert is on
+        alertIcon.alpha = isOn ? 1 : 0
+
+        // Show muted label if muted till is not nil
+        // If muted till is not nil, we don't have to execute the rest of the code
         if let date = date, date > Date() {
-            mutedTillLabel.isHidden = false
+            mutedTillLabel.isHidden = !isOn
             mutedTillLabel.text = AppDateFormatter
                 .shared
                 .shortTimeString(from: date)
+            alertIcon.image = RuuviAssets.alertOffImage
+            alertIcon.tintColor = RuuviColor.logoTintColor
+            return
         } else {
             mutedTillLabel.isHidden = true
+            alertIcon.image = isOn ? RuuviAssets.alertOnImage : nil
+            alertIcon.tintColor = RuuviColor.logoTintColor
+            removeAlertAnimations()
         }
-    }
 
-    func setAlertState(with isOn: Bool) {
-        alertIcon.alpha = isOn ? 1.0 : 0.0
-        alertIcon.image = isOn ? RuuviAssets.alertOnImage : RuuviAssets.alertOffImage
-        alertIcon.tintColor = RuuviColor.logoTintColor
-        alertIcon.layer.removeAllAnimations()
-    }
-
-    func setAlertState(with isOn: Bool,
-                       alertState: AlertState?) {
+        // Check the state and show alert bell based on the state if alert is on.
         guard isOn, let state = alertState else {
             return
         }
-
         switch state {
-        case .empty:
-            alertIcon.alpha = 0.0
-            alertIcon.image = RuuviAssets.alertOffImage
-            alertIcon.tintColor = RuuviColor.logoTintColor
-            alertIcon.layer.removeAllAnimations()
         case .registered:
-            alertIcon.layer.removeAllAnimations()
-            alertIcon.alpha = 1.0
             alertIcon.image = RuuviAssets.alertOnImage
             alertIcon.tintColor = RuuviColor.logoTintColor
+            removeAlertAnimations()
         case .firing:
             alertIcon.alpha = 1.0
             alertIcon.tintColor = RuuviColor.ruuviOrangeColor
@@ -254,6 +251,17 @@ extension TagSettingsExpandableSectionHeader {
                     self?.alertIcon.alpha = 0.0
                 })
             })
+        default:
+            alertIcon.image = nil
+            removeAlertAnimations()
         }
+    }
+
+    func removeAlertAnimations() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
+                                      execute: { [weak self] in
+            self?.alertIcon.layer.removeAllAnimations()
+            self?.alertIcon.alpha = 1
+        })
     }
 }

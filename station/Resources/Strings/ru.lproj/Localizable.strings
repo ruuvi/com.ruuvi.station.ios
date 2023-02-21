@@ -236,6 +236,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
 "LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
 "LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
+"LocalNotificationsManager.HighSignal.title" = "Высокий уровень сигнала!";
+"LocalNotificationsManager.LowSignal.title" = "Низкий уровен сигнала!";
 "LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
 "TagSettings.Alerts.Off" = "Отключено";

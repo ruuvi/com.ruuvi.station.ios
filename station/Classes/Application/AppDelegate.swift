@@ -163,14 +163,14 @@ extension AppDelegate {
 
 // MARK: - Notification tap handler
 extension AppDelegate: RuuviNotificationLocalOutput {
-    func notificationDidTap(for macId: String) {
-        openSelectedCard(for: macId)
+    func notificationDidTap(for uuid: String) {
+        openSelectedCard(for: uuid)
     }
 }
 
 // TODO: - SEE IF WE CAN MOVE THIS TO APP_STATE_SERVICE
 extension AppDelegate {
-    private func openSelectedCard(for macId: String,
+    private func openSelectedCard(for uuid: String,
                                   application: UIApplication? = nil) {
         appRouter?.prepareRootViewControllerWidgets()
         window?.rootViewController = appRouter?.viewController
@@ -178,7 +178,7 @@ extension AppDelegate {
         if let navigationController = appRouter?.viewController as? UINavigationController,
            let controller = navigationController.viewControllers.last as? DashboardViewController {
             if let viewModel = controller.viewModels.first(where: { viewModel in
-                viewModel.mac.value?.value == macId
+                viewModel.mac.value?.value == uuid || viewModel.luid.value == uuid.luid.any
             }) {
                 controller.output.viewDidTriggerOpenCardImageView(for: viewModel)
             }

@@ -195,12 +195,15 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func syncAllRecords() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        ruuviLocalSettings.isSyncing = true
         let syncAll = syncAll()
         let latestRecords = syncLatestRecord()
         syncAll.on(success: { _ in
             latestRecords.on(completion: {
                 promise.succeed(value: true)
             })
+        }, completion: { [weak self] in
+            self?.ruuviLocalSettings.isSyncing = false
         })
         return promise.future
     }

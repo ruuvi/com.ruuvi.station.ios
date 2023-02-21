@@ -235,6 +235,8 @@
 "LocalNotificationsManager.DidMove.title" = "Mouvement détecté !";
 "LocalNotificationsManager.HighPressure.title" = "La pression de l'air est trop haute !";
 "LocalNotificationsManager.LowPressure.title" = "La pression de l'air est trop basse !";
+"LocalNotificationsManager.HighSignal.title" = "Puissance du signal trop importante !";
+"LocalNotificationsManager.LowSignal.title" = "Puissance du signal trop faible !";
 "LocalNotificationsManager.HighTemperature.title" = "Température trop haute !";
 "LocalNotificationsManager.LowTemperature.title" = "Température trop basse !";
 "TagSettings.Alerts.Off" = "Désactivé";

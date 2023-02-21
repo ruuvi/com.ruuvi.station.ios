@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import RuuviOntology
 import RuuviVirtual
@@ -6,6 +7,7 @@ import RuuviNotifier
 // MARK: - Process Physical Sensors
 extension RuuviNotifierImpl {
 
+    // swiftlint:disable:next function_body_length
     public func process(record record: RuuviTagSensorRecord, trigger: Bool) {
         guard let luid = record.luid,
                 ruuviAlertService.hasRegistrations(for: record) else {
@@ -42,6 +44,15 @@ extension RuuviNotifierImpl {
                 )
                 isTriggered = isTriggered || isPressure
                 notify(alertType: type, uuid: luid.value, isTriggered: isPressure)
+            case .signal:
+                let isSignal = process(
+                    signal: record.rssi,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isSignal
+                notify(alertType: type, uuid: luid.value, isTriggered: isSignal)
             case .movement:
                 let isMovement = process(movement: type,
                                          record: record,
@@ -139,6 +150,15 @@ extension RuuviNotifierImpl {
                 notify(alertType: type,
                        uuid: identifier.value,
                        isTriggered: isPressure)
+            case .signal:
+                let isSignal = process(signal: record.rssi,
+                                      alertType: type,
+                                      identifier: identifier,
+                                      trigger: trigger)
+                isTriggered = isTriggered || isSignal
+                notify(alertType: type,
+                       uuid: identifier.value,
+                       isTriggered: isSignal)
             default:
                 break
             }
@@ -306,6 +326,48 @@ extension RuuviNotifierImpl {
                             .pressure,
                             for: identifier.value,
                             title: sSelf.titles.highPressure
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(
+        signal: Int?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
+        if case .signal(let lower, let upper) = ruuviAlertService
+            .alert(for: identifier.value,
+                   of: alertType),
+           let signal = signal {
+            let isLower = Double(signal) < lower
+            let isUpper = Double(signal) > upper
+            if trigger {
+                if isLower {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .signal,
+                            for: identifier.value,
+                            title: sSelf.titles.lowSignal
+                        )
+                    }
+                } else if isUpper {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .signal,
+                            for: identifier.value,
+                            title: sSelf.titles.highSignal
                         )
                     }
                 }

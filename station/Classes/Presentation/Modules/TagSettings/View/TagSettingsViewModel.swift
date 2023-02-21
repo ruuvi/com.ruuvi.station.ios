@@ -31,7 +31,6 @@ struct TagSettingsViewModel {
     let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let isTemperatureAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let temperatureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let temperatureLowerBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(-40, unit: .celsius))
     let temperatureUpperBound: Observable<Temperature?> = Observable<Temperature?>(Temperature(85, unit: .celsius))
@@ -39,7 +38,6 @@ struct TagSettingsViewModel {
     let temperatureAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let isRelativeHumidityAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let relativeHumidityAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
     let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>(100.0)
@@ -47,14 +45,12 @@ struct TagSettingsViewModel {
     let relativeHumidityAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let isHumidityAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let humidityAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let humidityLowerBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 0, unit: .absolute))
     let humidityUpperBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 40, unit: .absolute))
     let humidityAlertDescription: Observable<String?> = Observable<String?>()
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let isPressureAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(300, unit: .hectopascals))
     let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1100, unit: .hectopascals))
@@ -69,13 +65,11 @@ struct TagSettingsViewModel {
     let signalAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let isConnectionAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let connectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let connectionAlertDescription: Observable<String?> = Observable<String?>()
     let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let isMovementAlertExpanded: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
     let movementAlertState: Observable<AlertState?> = Observable<AlertState?>()
@@ -119,25 +113,21 @@ struct TagSettingsViewModel {
     func reset() {
         // TODO:- @Priyonto: This whole block needs to be refactored in good level later
         isTemperatureAlertOn.value = false
-        isTemperatureAlertExpanded.value = false
         temperatureLowerBound.value = Temperature(-40, unit: .celsius)
         temperatureUpperBound.value = Temperature(85, unit: .celsius)
         temperatureAlertDescription.value = nil
 
         isHumidityAlertOn.value = false
-        isHumidityAlertExpanded.value = false
         humidityLowerBound.value = Humidity(value: 0, unit: .absolute)
         humidityUpperBound.value = Humidity(value: 40, unit: .absolute)
         humidityAlertDescription.value = nil
 
         isRelativeHumidityAlertOn.value = false
-        isRelativeHumidityAlertExpanded.value = false
         relativeHumidityLowerBound.value = 0
         relativeHumidityUpperBound.value = 100
         relativeHumidityAlertDescription.value = nil
 
         isPressureAlertOn.value = false
-        isPressureAlertExpanded.value = false
         pressureLowerBound.value = Pressure(300, unit: .hectopascals)
         pressureUpperBound.value = Pressure(1100, unit: .hectopascals)
         pressureAlertDescription.value = nil
@@ -148,11 +138,9 @@ struct TagSettingsViewModel {
         signalAlertDescription.value = nil
 
         isConnectionAlertOn.value = false
-        isConnectionAlertExpanded.value = false
         connectionAlertDescription.value = nil
 
         isMovementAlertOn.value = false
-        isMovementAlertExpanded.value = false
         movementAlertDescription.value = nil
     }
 }

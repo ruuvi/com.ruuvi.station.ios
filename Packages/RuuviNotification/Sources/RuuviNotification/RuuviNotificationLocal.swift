@@ -10,7 +10,7 @@ public enum LNMDidReceiveKey: String {
 }
 
 public protocol RuuviNotificationLocalOutput: AnyObject {
-    func notificationDidTap(for macId: String)
+    func notificationDidTap(for uuid: String)
 }
 
 public protocol RuuviNotificationLocal: AnyObject {
@@ -34,6 +34,7 @@ public enum LowHighNotificationType: String {
     case relativeHumidity
     case humidity
     case pressure
+    case signal
 }
 
 public enum LowHighNotificationReason {

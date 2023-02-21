@@ -236,6 +236,8 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";
 "LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
 "LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
+"LocalNotificationsManager.HighSignal.title" = "För hög signalstyrka!";
+"LocalNotificationsManager.LowSignal.title" = "För låg signalstyrka!";
 "LocalNotificationsManager.HighTemperature.title" = "För hög temperatur!";
 "LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
 "TagSettings.Alerts.Off" = "Av";

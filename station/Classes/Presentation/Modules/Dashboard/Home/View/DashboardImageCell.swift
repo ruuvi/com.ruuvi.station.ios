@@ -22,6 +22,7 @@ class DashboardImageCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.tintColor = RuuviColor.dashboardIndicatorBigTextColor
+        iv.alpha = 0
         return iv
     }()
 
@@ -281,14 +282,6 @@ extension DashboardImageCell {
             .setBackgroundImage(with: viewModel.background.value,
                                 withAnimation: false)
 
-        // Alert bell visibility
-        let alertVisible = viewModel.isCloud.value ?? false || viewModel.isConnected.value ?? false
-        if !alertVisible {
-            alertIcon.layer.removeAllAnimations()
-            alertIcon.image = nil
-            alertButton.isUserInteractionEnabled = false
-        }
-
         // Name
         ruuviTagNameLabel.text = viewModel.name.value
 
@@ -370,13 +363,29 @@ extension DashboardImageCell {
         } else {
             batteryLevelView.isHidden = true
         }
-
-        restartAlertAnimation(for: viewModel)
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func restartAlertAnimation(for viewModel: CardsViewModel) {
+
         // Alert
+        let alertVisible = viewModel.isCloud.value ?? false || viewModel.isConnected.value ?? false
+
+        let mutedTills = [
+            viewModel.temperatureAlertMutedTill.value,
+            viewModel.relativeHumidityAlertMutedTill.value,
+            viewModel.pressureAlertMutedTill.value,
+            viewModel.signalAlertMutedTill.value,
+            viewModel.movementAlertMutedTill.value,
+            viewModel.connectionAlertMutedTill.value
+        ]
+
+        if mutedTills.first(where: { $0 != nil }) != nil || !alertVisible {
+            alertIcon.image = nil
+            alertButton.isUserInteractionEnabled = false
+            removeAlertAnimations(alpha: 0)
+            return
+        }
 
         if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
            let temperatureAlertState = viewModel.temperatureAlertState.value {
@@ -406,33 +415,30 @@ extension DashboardImageCell {
             movementView.changeColor(highlight: false)
         }
 
-        let alertVisible = viewModel.isCloud.value ?? false || viewModel.isConnected.value ?? false
-        guard alertVisible else {
-            alertIcon.layer.removeAllAnimations()
-            alertIcon.image = nil
-            alertButton.isUserInteractionEnabled = false
-            return
-        }
-
         if let state = viewModel.alertState.value {
             switch state {
             case .empty:
-                alertIcon.alpha = 0.0
-                alertIcon.image = RuuviAssets.alertOffImage
-                alertIcon.tintColor = RuuviColor.logoTintColor
-                alertIcon.layer.removeAllAnimations()
+                if alertIcon.image != nil {
+                    alertIcon.alpha = 0
+                    alertIcon.image = nil
+                    removeAlertAnimations(alpha: 0)
+                }
                 alertButton.isUserInteractionEnabled = false
             case .registered:
                 alertButton.isUserInteractionEnabled = true
-                alertIcon.layer.removeAllAnimations()
-                alertIcon.alpha = 1.0
-                alertIcon.image = RuuviAssets.alertOnImage
+                if alertIcon.image != RuuviAssets.alertOnImage {
+                    alertIcon.alpha = 1
+                    alertIcon.image = RuuviAssets.alertOnImage
+                    removeAlertAnimations()
+                }
                 alertIcon.tintColor = RuuviColor.logoTintColor
             case .firing:
                 alertButton.isUserInteractionEnabled = true
                 alertIcon.alpha = 1.0
                 alertIcon.tintColor = RuuviColor.ruuviOrangeColor
-                alertIcon.image = RuuviAssets.alertActiveImage
+                if alertIcon.image != RuuviAssets.alertActiveImage {
+                    alertIcon.image = RuuviAssets.alertActiveImage
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                     UIView.animate(withDuration: 0.5,
                                    delay: 0,
@@ -444,10 +450,18 @@ extension DashboardImageCell {
                 })
             }
         } else {
-            alertIcon.layer.removeAllAnimations()
             alertIcon.image = nil
             alertButton.isUserInteractionEnabled = false
+            removeAlertAnimations(alpha: 0)
         }
+    }
+
+    func removeAlertAnimations(alpha: Double = 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
+                                      execute: { [weak self] in
+            self?.alertIcon.layer.removeAllAnimations()
+            self?.alertIcon.alpha = alpha
+        })
     }
 }
 

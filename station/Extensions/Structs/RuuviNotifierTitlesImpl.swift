@@ -10,5 +10,7 @@ struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
     let highDewPoint = "LocalNotificationsManager.HighDewPoint.title".localized()
     let lowPressure = "LocalNotificationsManager.LowPressure.title".localized()
     let highPressure = "LocalNotificationsManager.HighPressure.title".localized()
+    let lowSignal = "LocalNotificationsManager.LowSignal.title".localized()
+    let highSignal = "LocalNotificationsManager.HighSignal.title".localized()
     let didMove = "LocalNotificationsManager.DidMove.title".localized()
 }

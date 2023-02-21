@@ -53,6 +53,8 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     var highRelativeHumidityAlerts = [String: Date]()
     var lowPressureAlerts = [String: Date]()
     var highPressureAlerts = [String: Date]()
+    var lowSignalAlerts = [String: Date]()
+    var highSignalAlerts = [String: Date]()
 
     private let lowHigh = LocalAlertCategory(
         id: "com.ruuvi.station.alerts.lh",
@@ -183,6 +185,8 @@ extension RuuviNotificationLocalImpl {
                 cache = lowHumidityAlerts
             case .pressure:
                 cache = lowPressureAlerts
+            case .signal:
+                cache = lowSignalAlerts
             }
         case .high:
             switch type {
@@ -194,6 +198,8 @@ extension RuuviNotificationLocalImpl {
                 cache = highHumidityAlerts
             case .pressure:
                 cache = highPressureAlerts
+            case .signal:
+                cache = highSignalAlerts
             }
         }
 
@@ -227,6 +233,8 @@ extension RuuviNotificationLocalImpl {
                 body = ruuviAlertService.humidityDescription(for: uuid) ?? ""
             case .pressure:
                 body = ruuviAlertService.pressureDescription(for: uuid) ?? ""
+            case .signal:
+                body = ruuviAlertService.signalDescription(for: uuid) ?? ""
             }
             content.body = body
 
@@ -256,6 +264,8 @@ extension RuuviNotificationLocalImpl {
                     lowHumidityAlerts[uuid] = Date()
                 case .pressure:
                     lowPressureAlerts[uuid] = Date()
+                case .signal:
+                    lowSignalAlerts[uuid] = Date()
                 }
             case .high:
                 switch type {
@@ -267,6 +277,8 @@ extension RuuviNotificationLocalImpl {
                     highHumidityAlerts[uuid] = Date()
                 case .pressure:
                     highPressureAlerts[uuid] = Date()
+                case .signal:
+                    highSignalAlerts[uuid] = Date()
                 }
             }
         }
@@ -288,6 +300,8 @@ extension RuuviNotificationLocalImpl {
             )
         case .pressure:
             return .pressure(lower: 0, upper: 0)
+        case .signal:
+            return .signal(lower: 0, upper: 0)
         }
     }
 
@@ -348,8 +362,11 @@ extension RuuviNotificationLocalImpl {
                             self?.cancel(.pressure, for: uuid)
                         }
                     case .signal:
-                        // do nothing yet.
-                        break
+                        self?.lowSignalAlerts[uuid] = nil
+                        self?.highSignalAlerts[uuid] = nil
+                        if !isOn {
+                            self?.cancel(.signal, for: uuid)
+                        }
                     case .connection:
                         // do nothing
                         break
@@ -481,6 +498,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         if let uuid = userInfo[lowHigh.uuidKey] as? String
                      ?? userInfo[blast.uuidKey] as? String {
             NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
+            output?.notificationDidTap(for: uuid)
         }
 
         // Handle push notification tap

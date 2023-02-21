@@ -1222,6 +1222,18 @@ extension RuuviServiceAlertImpl {
             postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
         }
     }
+
+    public func lowerSignal(for uuid: String) -> Double? {
+        return alertPersistence.lowerSignal(for: uuid)
+    }
+
+    public func upperSignal(for uuid: String) -> Double? {
+        return alertPersistence.upperSignal(for: uuid)
+    }
+
+    public func signalDescription(for uuid: String) -> String? {
+        return signalDescription(for: uuid)
+    }
 }
 
 // MARK: - Connection
