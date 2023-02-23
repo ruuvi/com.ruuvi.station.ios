@@ -40,18 +40,21 @@ class NotificationService: UNNotificationServiceExtension {
     private func processNotification() {
 
         if let contentHandler = contentHandler,
-           let alertType = currentRequest?.content.userInfo["alertType"] as? String,
-           let triggerType = currentRequest?.content.userInfo["triggerType"] as? String,
-           let threshold = currentRequest?.content.userInfo["thresholdValue"] as? String,
-           let alertUnit = currentRequest?.content.userInfo["alertUnit"] as? String,
-           let bodyValue = currentRequest?.content.userInfo["alertData"] as? String,
+           let userInfo = currentRequest?.content.userInfo,
+           let sensorName = userInfo["name"] as? String,
+           let alertType = userInfo["alertType"] as? String,
+           let triggerType = userInfo["triggerType"] as? String,
+           let threshold = userInfo["thresholdValue"] as? String,
+           let alertUnit = userInfo["alertUnit"] as? String,
+           let alertMessage = userInfo["alertData"] as? String,
            let bestAttemptContent = bestAttemptContent {
             let title = titleForAlert(from: triggerType,
                                       alertType: alertType,
                                       threshold: threshold,
                                       alertUnit: alertUnit)
             bestAttemptContent.title = title
-            bestAttemptContent.body = bodyValue
+            bestAttemptContent.subtitle = alertMessage
+            bestAttemptContent.body = sensorName
             contentHandler(bestAttemptContent)
         }
     }
