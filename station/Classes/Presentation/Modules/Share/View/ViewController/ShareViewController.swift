@@ -238,11 +238,13 @@ extension ShareViewController {
 
 extension UITableView {
     func scrollToBottom() {
-        DispatchQueue.main.async {
-            let indexPath = IndexPath(
-                row: self.numberOfRows(inSection: self.numberOfSections - 1) - 1,
-                section: self.numberOfSections - 1)
-            self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        let numberOfSections = self.numberOfSections
+        if numberOfSections > 0 {
+            let numberOfRows = self.numberOfRows(inSection: numberOfSections - 1)
+            if numberOfRows > 0 {
+                let indexPath = IndexPath(row: numberOfRows - 1, section: (numberOfSections - 1))
+                self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
         }
     }
 }
