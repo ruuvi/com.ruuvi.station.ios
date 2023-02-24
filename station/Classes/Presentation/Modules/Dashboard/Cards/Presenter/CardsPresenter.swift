@@ -362,13 +362,13 @@ extension CardsPresenter {
                        let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
                        let visibleViewModel = sSelf.visibleViewModel,
                        visibleViewModel.mac.value == physicalSensor.macId?.any {
-                        sSelf.updateIsOnState(of: type, for: physicalSensor.id)
-                        sSelf.updateMutedTill(of: type, for: physicalSensor.id)
                         if sSelf.alertService.hasRegistrations(for: physicalSensor) {
                             visibleViewModel.alertState.value = .registered
                         } else {
                             visibleViewModel.alertState.value = .empty
                         }
+                        sSelf.updateIsOnState(of: type, for: physicalSensor.id)
+                        sSelf.updateMutedTill(of: type, for: physicalSensor.id)
                         sSelf.notifyViewModelUpdate()
                     }
 
@@ -377,13 +377,13 @@ extension CardsPresenter {
                        let visibleViewModel = sSelf.visibleViewModel,
                        virtualSensor.id == visibleViewModel.id.value,
                        let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
-                        self?.updateIsOnState(of: type, for: virtualSensor.id)
-                        self?.updateMutedTill(of: type, for: virtualSensor.id)
                         if sSelf.alertService.hasRegistrations(for: virtualSensor) {
                             visibleViewModel.alertState.value = .registered
                         } else {
                             visibleViewModel.alertState.value = .empty
                         }
+                        self?.updateIsOnState(of: type, for: virtualSensor.id)
+                        self?.updateMutedTill(of: type, for: virtualSensor.id)
                         sSelf.notifyViewModelUpdate()
                     }
                 }
@@ -1124,11 +1124,11 @@ extension CardsPresenter {
         ]
         if alertStates.first(where: { alert in
             alert == .firing
-        }) != nil {
+        }) != nil && alertService.hasRegistrations(for: ruuviTag) {
             viewModel.alertState.value = .firing
         } else if alertStates.first(where: { alert in
             alert == .registered
-        }) != nil {
+        }) != nil && alertService.hasRegistrations(for: ruuviTag) {
             viewModel.alertState.value = .registered
         } else {
             viewModel.alertState.value = .empty
