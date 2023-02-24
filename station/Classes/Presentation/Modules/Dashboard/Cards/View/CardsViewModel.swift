@@ -47,21 +47,27 @@ struct CardsViewModel {
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let temperatureAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let temperatureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let relativeHumidityAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let relativeHumidityAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     let isSignalAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let signalAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let signalAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let connectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 

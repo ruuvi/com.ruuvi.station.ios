@@ -617,16 +617,29 @@ extension CardsViewController {
     }
 
     private func restartAnimations() {
+        let mutedTills = [
+            currentVisibleItem?.temperatureAlertMutedTill.value,
+            currentVisibleItem?.relativeHumidityAlertMutedTill.value,
+            currentVisibleItem?.pressureAlertMutedTill.value,
+            currentVisibleItem?.signalAlertMutedTill.value,
+            currentVisibleItem?.movementAlertMutedTill.value,
+            currentVisibleItem?.connectionAlertMutedTill.value
+        ]
+
+        if mutedTills.first(where: { $0 != nil }) != nil {
+            alertButton.image = RuuviAssets.alertOffImage
+            removeAlertAnimations(alpha: 0.5)
+            return
+        }
+
         if let state = currentVisibleItem?.alertState.value {
             switch state {
             case .empty:
-                alertButton.alpha = 0.5
                 alertButton.image = RuuviAssets.alertOffImage
-                alertButton.layer.removeAllAnimations()
+                removeAlertAnimations(alpha: 0.5)
             case .registered:
-                alertButton.layer.removeAllAnimations()
-                alertButton.alpha = 1.0
                 alertButton.image = RuuviAssets.alertOnImage
+                removeAlertAnimations()
             case .firing:
                 alertButton.alpha = 1.0
                 alertButton.image = RuuviAssets.alertActiveImage
@@ -641,9 +654,17 @@ extension CardsViewController {
                 })
             }
         } else {
-            alertButton.layer.removeAllAnimations()
             alertButton.image = nil
+            removeAlertAnimations()
         }
+    }
+
+    func removeAlertAnimations(alpha: Double = 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
+                                      execute: { [weak self] in
+            self?.alertButton.layer.removeAllAnimations()
+            self?.alertButton.alpha = alpha
+        })
     }
 
     private func updateTopActionButtonVisibility() {
