@@ -75,6 +75,11 @@ public protocol RuuviServiceAlertDeprecated {
     func upperPressure(for uuid: String) -> Double?
     func pressureDescription(for uuid: String) -> String?
 
+    // Signal (RSSI)
+    func lowerSignal(for uuid: String) -> Double?
+    func upperSignal(for uuid: String) -> Double?
+    func signalDescription(for uuid: String) -> String?
+
     // connection
     func connectionDescription(for uuid: String) -> String?
 

@@ -756,9 +756,10 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
         }
 
         if let btPairCell = btPairCell {
-            btPairCell.bind(viewModel.isConnected) { cell, isConnected in
+            btPairCell.bind(viewModel.isConnected) { [weak self] cell, isConnected in
                 cell.configureSwitch(value: isConnected.bound)
                 cell.disableSwitch(disable: false)
+                self?.reloadAlertSectionHeaders()
             }
 
             btPairCell.bind(viewModel.keepConnection) { cell, keepConnection in
@@ -924,18 +925,29 @@ extension TagSettingsViewController {
         if let temperatureAlertSectionHeaderView = temperatureAlertSectionHeaderView {
             temperatureAlertSectionHeaderView.bind(
                 viewModel.temperatureAlertMutedTill) { header, mutedTill in
-                    header.setMutedTill(with: mutedTill)
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isTemperatureAlertOn.value)
+                    let alertState = viewModel.temperatureAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             temperatureAlertSectionHeaderView
-                .bind(viewModel.isTemperatureAlertOn) { header, isOn in
-                    header.setAlertState(with: GlobalHelpers.getBool(from: isOn))
+                .bind(viewModel.isTemperatureAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let mutedTill = viewModel.temperatureAlertMutedTill.value
+                    let alertState = viewModel.temperatureAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             temperatureAlertSectionHeaderView
-                .bind(viewModel.temperatureAlertState) { header, state in
-                    let isOn = GlobalHelpers.getBool(from: viewModel.isTemperatureAlertOn.value)
-                    header.setAlertState(with: isOn, alertState: state)
+                .bind(viewModel.temperatureAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isTemperatureAlertOn.value)
+                    let mutedTill = viewModel.temperatureAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
 
@@ -979,19 +991,31 @@ extension TagSettingsViewController {
 
         if let humidityAlertSectionHeaderView = humidityAlertSectionHeaderView {
             humidityAlertSectionHeaderView.bind(
-                viewModel.relativeHumidityAlertMutedTill) { header, mutedTill in
-                    header.setMutedTill(with: mutedTill)
+                viewModel.relativeHumidityAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isRelativeHumidityAlertOn.value)
+                    let alertState = viewModel.relativeHumidityAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             humidityAlertSectionHeaderView
-                .bind(viewModel.isRelativeHumidityAlertOn) { header, isOn in
-                    header.setAlertState(with: GlobalHelpers.getBool(from: isOn))
+                .bind(viewModel.isRelativeHumidityAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.relativeHumidityAlertState.value
+                    let mutedTill = viewModel.relativeHumidityAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             humidityAlertSectionHeaderView
-                .bind(viewModel.relativeHumidityAlertState) { header, state in
-                    let isOn = GlobalHelpers.getBool(from: viewModel.isRelativeHumidityAlertOn.value)
-                    header.setAlertState(with: isOn, alertState: state)
+                .bind(viewModel.relativeHumidityAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isRelativeHumidityAlertOn.value)
+                    let mutedTill = viewModel.relativeHumidityAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
 
@@ -1042,18 +1066,29 @@ extension TagSettingsViewController {
         if let pressureAlertSectionHeaderView = pressureAlertSectionHeaderView {
             pressureAlertSectionHeaderView.bind(
                 viewModel.pressureAlertMutedTill) { header, mutedTill in
-                    header.setMutedTill(with: mutedTill)
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isPressureAlertOn.value)
+                    let alertState = viewModel.pressureAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             pressureAlertSectionHeaderView
-                .bind(viewModel.isPressureAlertOn) { header, isOn in
-                    header.setAlertState(with: GlobalHelpers.getBool(from: isOn))
+                .bind(viewModel.isPressureAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.pressureAlertState.value
+                    let mutedTill = viewModel.pressureAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             pressureAlertSectionHeaderView
-                .bind(viewModel.pressureAlertState) { header, state in
-                    let isOn = GlobalHelpers.getBool(from: viewModel.isPressureAlertOn.value)
-                    header.setAlertState(with: isOn, alertState: state)
+                .bind(viewModel.pressureAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isPressureAlertOn.value)
+                    let mutedTill = viewModel.pressureAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
 
@@ -1086,19 +1121,31 @@ extension TagSettingsViewController {
 
         if let rssiAlertSectionHeaderView = rssiAlertSectionHeaderView {
             rssiAlertSectionHeaderView.bind(
-                viewModel.signalAlertMutedTill) { header, mutedTill in
-                    header.setMutedTill(with: mutedTill)
+                viewModel.signalAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isSignalAlertOn.value)
+                    let alertState = viewModel.signalAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             rssiAlertSectionHeaderView
-                .bind(viewModel.isSignalAlertOn) { header, isOn in
-                    header.setAlertState(with: GlobalHelpers.getBool(from: isOn))
+                .bind(viewModel.isSignalAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.signalAlertState.value
+                    let mutedTill = viewModel.signalAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             rssiAlertSectionHeaderView
-                .bind(viewModel.signalAlertState) { header, state in
-                    let isOn = GlobalHelpers.getBool(from: viewModel.isSignalAlertOn.value)
-                    header.setAlertState(with: isOn, alertState: state)
+                .bind(viewModel.signalAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isSignalAlertOn.value)
+                    let mutedTill = viewModel.signalAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
 
@@ -1116,19 +1163,31 @@ extension TagSettingsViewController {
 
         if let movementAlertSectionHeaderView = movementAlertSectionHeaderView {
             movementAlertSectionHeaderView.bind(
-                viewModel.movementAlertMutedTill) { header, mutedTill in
-                    header.setMutedTill(with: mutedTill)
+                viewModel.movementAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isMovementAlertOn.value)
+                    let alertState = viewModel.movementAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             movementAlertSectionHeaderView
-                .bind(viewModel.isMovementAlertOn) { header, isOn in
-                    header.setAlertState(with: GlobalHelpers.getBool(from: isOn))
+                .bind(viewModel.isMovementAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.movementAlertState.value
+                    let mutedTill = viewModel.movementAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             movementAlertSectionHeaderView
-                .bind(viewModel.movementAlertState) { header, state in
-                    let isOn = GlobalHelpers.getBool(from: viewModel.isMovementAlertOn.value)
-                    header.setAlertState(with: isOn, alertState: state)
+                .bind(viewModel.movementAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isMovementAlertOn.value)
+                    let mutedTill = viewModel.movementAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
 
@@ -1146,19 +1205,31 @@ extension TagSettingsViewController {
 
         if let connectionAlertSectionHeaderView = connectionAlertSectionHeaderView {
             connectionAlertSectionHeaderView.bind(
-                viewModel.connectionAlertMutedTill) { header, mutedTill in
-                    header.setMutedTill(with: mutedTill)
+                viewModel.connectionAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isConnectionAlertOn.value)
+                    let alertState = viewModel.connectionAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             connectionAlertSectionHeaderView
-                .bind(viewModel.isConnectionAlertOn) { header, isOn in
-                    header.setAlertState(with: GlobalHelpers.getBool(from: isOn))
+                .bind(viewModel.isConnectionAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.connectionAlertState.value
+                    let mutedTill = viewModel.connectionAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
             }
 
             connectionAlertSectionHeaderView
-                .bind(viewModel.connectionAlertState) { header, state in
-                    let isOn = GlobalHelpers.getBool(from: viewModel.isConnectionAlertOn.value)
-                    header.setAlertState(with: isOn, alertState: state)
+                .bind(viewModel.connectionAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isConnectionAlertOn.value)
+                    let mutedTill = viewModel.connectionAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
     }
@@ -1397,6 +1468,92 @@ extension TagSettingsViewController {
     }
 
     // MARK: - Alerts helpers
+    private func alertsAvailable() -> Bool {
+        return (viewModel?.isCloudAlertsAvailable.value ?? false ||
+                viewModel?.isConnected.value ?? false)
+    }
+
+    private func reloadAlertSectionHeaders() {
+        reloadTemperatureAlertSectionHeader()
+        reloadRHAlertSectionHeader()
+        reloadPressureAlertSectionHeader()
+        reloadSignalAlertSectionHeader()
+        reloadMovementAlertSectionHeader()
+        reloadConnectionAlertSectionHeader()
+    }
+
+    private func reloadTemperatureAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isTemperatureAlertOn.value
+        )
+        let mutedTill = viewModel?.temperatureAlertMutedTill.value
+        let alertState = viewModel?.temperatureAlertState.value
+        temperatureAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
+    private func reloadRHAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isRelativeHumidityAlertOn.value
+        )
+        let mutedTill = viewModel?.relativeHumidityAlertMutedTill.value
+        let alertState = viewModel?.relativeHumidityAlertState.value
+        humidityAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
+    private func reloadPressureAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isPressureAlertOn.value
+        )
+        let mutedTill = viewModel?.pressureAlertMutedTill.value
+        let alertState = viewModel?.pressureAlertState.value
+        pressureAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
+    private func reloadSignalAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isSignalAlertOn.value
+        )
+        let mutedTill = viewModel?.signalAlertMutedTill.value
+        let alertState = viewModel?.signalAlertState.value
+        rssiAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
+    private func reloadMovementAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isMovementAlertOn.value
+        )
+        let mutedTill = viewModel?.movementAlertMutedTill.value
+        let alertState = viewModel?.movementAlertState.value
+        movementAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
+    private func reloadConnectionAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isConnectionAlertOn.value
+        )
+        let mutedTill = viewModel?.connectionAlertMutedTill.value
+        let alertState = viewModel?.connectionAlertState.value
+        connectionAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
     private func alertCustomDescription(from string: String?) -> String? {
         let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
         return string.hasText() ? string : alertPlaceholder
@@ -2519,54 +2676,66 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                 return alertSectionHeaderView(
                     from: temperatureAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    isAlertOn: GlobalHelpers.getBool(
+                    mutedTill: viewModel?.temperatureAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
                         from: viewModel?.isTemperatureAlertOn.value
                     ),
+                    alertState: viewModel?.temperatureAlertState.value,
                     section: section
                 )
             case .alertHumidity:
                 return alertSectionHeaderView(
                     from: humidityAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    isAlertOn: GlobalHelpers.getBool(
+                    mutedTill: viewModel?.relativeHumidityAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
                         from: viewModel?.isRelativeHumidityAlertOn.value
                     ),
+                    alertState: viewModel?.relativeHumidityAlertState.value,
                     section: section
                 )
             case .alertPressure:
                 return alertSectionHeaderView(
                     from: pressureAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    isAlertOn: GlobalHelpers.getBool(
+                    mutedTill: viewModel?.pressureAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
                         from: viewModel?.isPressureAlertOn.value
                     ),
+                    alertState: viewModel?.pressureAlertState.value,
                     section: section
                 )
             case .alertRSSI:
                 return alertSectionHeaderView(
                     from: rssiAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    isAlertOn: GlobalHelpers.getBool(
+                    mutedTill: viewModel?.signalAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
                         from: viewModel?.isSignalAlertOn.value
                     ),
+                    alertState: viewModel?.signalAlertState.value,
                     section: section
                 )
             case .alertMovement:
                 return alertSectionHeaderView(
                     from: movementAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    isAlertOn: GlobalHelpers.getBool(
+                    mutedTill: viewModel?.movementAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
                         from: viewModel?.isMovementAlertOn.value
                     ),
+                    alertState: viewModel?.movementAlertState.value,
                     section: section
                 )
             case .alertConnection:
                 return alertSectionHeaderView(
                     from: connectionAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    isAlertOn: GlobalHelpers.getBool(
+                    mutedTill: viewModel?.connectionAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
                         from: viewModel?.isConnectionAlertOn.value
                     ),
+                    alertState: viewModel?.connectionAlertState.value,
                     section: section
                 )
             case .moreInfo:
@@ -2578,7 +2747,7 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                               font: sectionItem.font)
                 moreInfoSectionHeaderView?
                     .hideSeparator(hide: tableViewSections.count == section)
-                moreInfoSectionHeaderView?.hideAlertComponents(hide: true)
+                moreInfoSectionHeaderView?.hideAlertComponents()
                 if let version = viewModel?.version.value {
                     moreInfoSectionHeaderView?.showNoValueView(
                         show: GlobalHelpers
@@ -2598,17 +2767,20 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                               backgroundColor: sectionItem.backgroundColor,
                               font: sectionItem.font)
                 view.hideSeparator(hide: tableViewSections.count == section)
-                view.hideAlertComponents(hide: true)
+                view.hideAlertComponents()
                 view.showNoValueView(show: false)
                 return view
             }
         }
     }
 
+    // swiftlint:disable:next function_parameter_count
     private func alertSectionHeaderView(
         from header: TagSettingsExpandableSectionHeader?,
         sectionItem: TagSettingsSection,
+        mutedTill: Date?,
         isAlertOn: Bool,
+        alertState: AlertState?,
         section: Int
     ) -> TagSettingsExpandableSectionHeader {
         if let header = header {
@@ -2618,9 +2790,10 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                           collapsed: sectionItem.collapsed,
                           backgroundColor: sectionItem.backgroundColor,
                           font: sectionItem.font)
-            header.setAlertState(with: isAlertOn)
+            header.setAlertState(with: mutedTill,
+                                 isOn: isAlertOn,
+                                 alertState: alertState)
             header.hideSeparator(hide: tableViewSections.count == section)
-            header.hideAlertComponents(hide: false)
             header.showNoValueView(show: false)
             return header
         } else {
@@ -2645,53 +2818,17 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
 
         switch currentSection.identifier {
         case .alertTemperature:
-            let isOn = GlobalHelpers.getBool(
-                from: viewModel?.isTemperatureAlertOn.value
-            )
-            temperatureAlertSectionHeaderView?
-                .setAlertState(with: isOn)
-            temperatureAlertSectionHeaderView?
-                .setAlertState(with: isOn, alertState: viewModel?.temperatureAlertState.value)
+            reloadTemperatureAlertSectionHeader()
         case .alertHumidity:
-            let isOn = GlobalHelpers.getBool(
-                from: viewModel?.isRelativeHumidityAlertOn.value
-            )
-            humidityAlertSectionHeaderView?
-                .setAlertState(with: isOn)
-            humidityAlertSectionHeaderView?
-                .setAlertState(with: isOn, alertState: viewModel?.relativeHumidityAlertState.value)
+            reloadRHAlertSectionHeader()
         case .alertPressure:
-            let isOn = GlobalHelpers.getBool(
-                from: viewModel?.isPressureAlertOn.value
-            )
-            pressureAlertSectionHeaderView?
-                .setAlertState(with: isOn)
-            pressureAlertSectionHeaderView?
-                .setAlertState(with: isOn, alertState: viewModel?.pressureAlertState.value)
+            reloadPressureAlertSectionHeader()
         case .alertRSSI:
-            let isOn = GlobalHelpers.getBool(
-                from: viewModel?.isSignalAlertOn.value
-            )
-            rssiAlertSectionHeaderView?
-                .setAlertState(with: isOn)
-            rssiAlertSectionHeaderView?
-                .setAlertState(with: isOn, alertState: viewModel?.signalAlertState.value)
+            reloadSignalAlertSectionHeader()
         case .alertMovement:
-            let isOn = GlobalHelpers.getBool(
-                from: viewModel?.isMovementAlertOn.value
-            )
-            movementAlertSectionHeaderView?
-                .setAlertState(with: isOn)
-            movementAlertSectionHeaderView?
-                .setAlertState(with: isOn, alertState: viewModel?.movementAlertState.value)
+            reloadMovementAlertSectionHeader()
         case .alertConnection:
-            let isOn = GlobalHelpers.getBool(
-                from: viewModel?.isConnectionAlertOn.value
-            )
-            connectionAlertSectionHeaderView?
-                .setAlertState(with: isOn)
-            connectionAlertSectionHeaderView?
-                .setAlertState(with: isOn, alertState: viewModel?.connectionAlertState.value)
+            reloadConnectionAlertSectionHeader()
         default:
             break
         }

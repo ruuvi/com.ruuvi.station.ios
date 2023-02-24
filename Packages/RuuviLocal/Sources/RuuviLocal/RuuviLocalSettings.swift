@@ -26,7 +26,8 @@ public enum DashboardTypeKey: String {
 }
 
 public protocol RuuviLocalSettings {
-    /// When syncing for the first time (after sign in)
+    /// When syncing for the first time (after sign in) or extensive changes
+    /// like cloud sync
     var isSyncing: Bool { get set }
     var temperatureUnit: TemperatureUnit { get set }
     var temperatureAccuracy: MeasurementAccuracyType { get set }

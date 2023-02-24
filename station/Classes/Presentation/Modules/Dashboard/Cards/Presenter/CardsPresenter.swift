@@ -72,6 +72,7 @@ class CardsPresenter {
         return CBCentralManager.authorization == .allowedAlways
     }
 
+    private var mutedTillTimer: Timer?
     /// Should open chart after view is presented.
     private var shouldOpenChart: Bool = false
     private var shouldTriggerScroll: Bool = false
@@ -150,6 +151,8 @@ extension CardsPresenter {
         startObservingDaemonsErrors()
         startObservingDidConnectDisconnectNotifications()
         startObservingCloudModeNotification()
+        syncAlerts()
+        reloadMutedTill()
     }
 
     private func updateVisibleCard(from viewModel: CardsViewModel?,
@@ -326,10 +329,17 @@ extension CardsPresenter {
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
-        if let luid = visibleRuuviTagSensor?.luid {
-            alertHandler.subscribe(self, to: luid.value)
-        } else if let macId = visibleRuuviTagSensor?.macId {
-            alertHandler.subscribe(self, to: macId.value)
+        guard let ruuviTag = visibleRuuviTagSensor else { return }
+        if ruuviTag.isCloud && settings.cloudModeEnabled {
+            if let macId = ruuviTag.macId {
+                alertHandler.subscribe(self, to: macId.value)
+            }
+        } else {
+            if let luid = ruuviTag.luid {
+                alertHandler.subscribe(self, to: luid.value)
+            } else if let macId = ruuviTag.macId {
+                alertHandler.subscribe(self, to: macId.value)
+            }
         }
     }
 
@@ -347,18 +357,48 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
                 if let sSelf = self,
-                   let userInfo = notification.userInfo,
-                   let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
-                   let visibleViewModel = sSelf.visibleViewModel,
-                   visibleViewModel.mac.value == physicalSensor.macId?.any {
-                    if sSelf.alertService.hasRegistrations(for: physicalSensor) {
-                        visibleViewModel.alertState.value = .registered
-                    } else {
-                        visibleViewModel.alertState.value = .empty
+                   let userInfo = notification.userInfo {
+                    if let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                       let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
+                       let visibleViewModel = sSelf.visibleViewModel,
+                       visibleViewModel.mac.value == physicalSensor.macId?.any {
+                        sSelf.updateIsOnState(of: type, for: physicalSensor.id)
+                        sSelf.updateMutedTill(of: type, for: physicalSensor.id)
+                        if sSelf.alertService.hasRegistrations(for: physicalSensor) {
+                            visibleViewModel.alertState.value = .registered
+                        } else {
+                            visibleViewModel.alertState.value = .empty
+                        }
+                        sSelf.notifyViewModelUpdate()
                     }
-                    sSelf.notifyViewModelUpdate()
+
+                    if let virtualSensor
+                        = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
+                       let visibleViewModel = sSelf.visibleViewModel,
+                       virtualSensor.id == visibleViewModel.id.value,
+                       let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
+                        self?.updateIsOnState(of: type, for: virtualSensor.id)
+                        self?.updateMutedTill(of: type, for: virtualSensor.id)
+                        if sSelf.alertService.hasRegistrations(for: virtualSensor) {
+                            visibleViewModel.alertState.value = .registered
+                        } else {
+                            visibleViewModel.alertState.value = .empty
+                        }
+                        sSelf.notifyViewModelUpdate()
+                    }
                 }
         })
+    }
+
+    private func startMutedTillTimer() {
+        self.mutedTillTimer = Timer
+            .scheduledTimer(
+                withTimeInterval: 5,
+                repeats: true
+            ) { [weak self] timer in
+                guard let sSelf = self else { timer.invalidate(); return }
+                sSelf.reloadMutedTill()
+            }
     }
 
     private func startObservingLocalNotificationsManager() {
@@ -725,13 +765,21 @@ extension CardsPresenter {
 
     private func processAlert(record: RuuviTagSensorRecord,
                               viewModel: CardsViewModel) {
-        if viewModel.luid.value != nil {
-            alertHandler.process(record: record, trigger: false)
+        if let isCloud = viewModel.isCloud.value,
+           isCloud && settings.cloudModeEnabled,
+            let macId = viewModel.mac.value {
+            alertHandler.processNetwork(record: record,
+                                        trigger: false,
+                                        for: macId)
         } else {
-            guard let macId = viewModel.mac.value else {
-                return
+            if viewModel.luid.value != nil {
+                alertHandler.process(record: record, trigger: false)
+            } else {
+                guard let macId = viewModel.mac.value else {
+                    return
+                }
+                alertHandler.processNetwork(record: record, trigger: false, for: macId)
             }
-            alertHandler.processNetwork(record: record, trigger: false, for: macId)
         }
     }
 
@@ -768,6 +816,7 @@ extension CardsPresenter {
         didConnectToken?.invalidate()
         didDisconnectToken?.invalidate()
         cloudModeToken?.invalidate()
+        mutedTillTimer?.invalidate()
         router.dismiss()
     }
 }
@@ -778,6 +827,7 @@ extension CardsPresenter: CardsViewOutput {
         showTagCharts()
         startObservingRuuviTags()
         startObservingWebTags()
+        startMutedTillTimer()
     }
     
     func viewWillAppear() {
@@ -1039,5 +1089,219 @@ extension CardsPresenter {
     private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
         interactor.migrateFWVersionFromDefaults(for: ruuviTags, settings: settings)
     }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private func syncAlerts() {
+        guard let ruuviTag = visibleRuuviTagSensor else {
+            return
+        }
+        AlertType.allCases.forEach { (type) in
+            switch type {
+            case .temperature:
+                sync(temperature: type, ruuviTag: ruuviTag)
+            case .relativeHumidity:
+                sync(relativeHumidity: type, ruuviTag: ruuviTag)
+            case .pressure:
+                sync(pressure: type, ruuviTag: ruuviTag)
+            case .signal:
+                sync(signal: type, ruuviTag: ruuviTag)
+            case .connection:
+                sync(connection: type, ruuviTag: ruuviTag)
+            case .movement:
+                sync(movement: type, ruuviTag: ruuviTag)
+            default: break
+            }
+        }
+        guard let viewModel = visibleViewModel else { return }
+
+        let alertStates = [
+            viewModel.temperatureAlertState.value,
+            viewModel.relativeHumidityAlertState.value,
+            viewModel.pressureAlertState.value,
+            viewModel.signalAlertState.value,
+            viewModel.connectionAlertState.value,
+            viewModel.movementAlertState.value
+        ]
+        if alertStates.first(where: { alert in
+            alert == .firing
+        }) != nil {
+            viewModel.alertState.value = .firing
+        } else if alertStates.first(where: { alert in
+            alert == .registered
+        }) != nil {
+            viewModel.alertState.value = .registered
+        } else {
+            viewModel.alertState.value = .empty
+        }
+
+        notifyViewModelUpdate()
+    }
+
+    private func sync(temperature: AlertType, ruuviTag: RuuviTagSensor) {
+        guard let viewModel = visibleViewModel else { return }
+        if case .temperature = alertService.alert(for: ruuviTag,
+                                                  of: temperature) {
+            viewModel.isTemperatureAlertOn.value = true
+        } else {
+            viewModel.isTemperatureAlertOn.value = false
+        }
+        viewModel.temperatureAlertMutedTill.value = alertService.mutedTill(type: temperature, for: ruuviTag)
+    }
+
+    private func sync(relativeHumidity: AlertType, ruuviTag: RuuviTagSensor) {
+        guard let viewModel = visibleViewModel else { return }
+        if case .relativeHumidity = alertService.alert(
+            for: ruuviTag,
+            of: relativeHumidity
+        ) {
+            viewModel.isRelativeHumidityAlertOn.value = true
+        } else {
+            viewModel.isRelativeHumidityAlertOn.value = false
+        }
+        viewModel.relativeHumidityAlertMutedTill.value = alertService
+            .mutedTill(type: relativeHumidity,
+                       for: ruuviTag)
+    }
+
+    private func sync(pressure: AlertType, ruuviTag: RuuviTagSensor) {
+        guard let viewModel = visibleViewModel else { return }
+        if case .pressure = alertService.alert(for: ruuviTag,
+                                               of: pressure) {
+            viewModel.isPressureAlertOn.value = true
+        } else {
+            viewModel.isPressureAlertOn.value = false
+        }
+        viewModel.pressureAlertMutedTill.value = alertService
+            .mutedTill(type: pressure,
+                       for: ruuviTag)
+    }
+
+    private func sync(signal: AlertType, ruuviTag: RuuviTagSensor) {
+        guard let viewModel = visibleViewModel else { return }
+        if case .signal = alertService.alert(for: ruuviTag,
+                                             of: signal) {
+            viewModel.isSignalAlertOn.value = true
+        } else {
+            viewModel.isSignalAlertOn.value = false
+        }
+        viewModel.signalAlertMutedTill.value =
+            alertService.mutedTill(type: signal,
+                                   for: ruuviTag)
+    }
+
+    private func sync(connection: AlertType, ruuviTag: RuuviTagSensor) {
+        guard let viewModel = visibleViewModel else { return }
+        if case .connection = alertService.alert(for: ruuviTag, of: connection) {
+            viewModel.isConnectionAlertOn.value = true
+        } else {
+            viewModel.isConnectionAlertOn.value = false
+        }
+        viewModel.connectionAlertMutedTill.value = alertService
+            .mutedTill(type: connection,
+                       for: ruuviTag)
+    }
+
+    private func sync(movement: AlertType, ruuviTag: RuuviTagSensor) {
+        guard let viewModel = visibleViewModel else { return }
+        if case .movement = alertService.alert(for: ruuviTag, of: movement) {
+            viewModel.isMovementAlertOn.value = true
+        } else {
+            viewModel.isMovementAlertOn.value = false
+        }
+        viewModel.movementAlertMutedTill.value = alertService
+            .mutedTill(type: movement,
+                       for: ruuviTag)
+    }
+
+    private func reloadMutedTill() {
+        if let mutedTill = visibleViewModel?.temperatureAlertMutedTill.value,
+           mutedTill < Date() {
+            visibleViewModel?.temperatureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = visibleViewModel?.relativeHumidityAlertMutedTill.value,
+           mutedTill < Date() {
+            visibleViewModel?.relativeHumidityAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = visibleViewModel?.pressureAlertMutedTill.value,
+           mutedTill < Date() {
+            visibleViewModel?.pressureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = visibleViewModel?.signalAlertMutedTill.value,
+           mutedTill < Date() {
+            visibleViewModel?.signalAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = visibleViewModel?.connectionAlertMutedTill.value,
+           mutedTill < Date() {
+            visibleViewModel?.connectionAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = visibleViewModel?.movementAlertMutedTill.value,
+           mutedTill < Date() {
+            visibleViewModel?.movementAlertMutedTill.value = nil
+        }
+    }
+
+    private func updateMutedTill(of type: AlertType, for uuid: String) {
+        guard let visibleViewModel = visibleViewModel else {
+            return
+        }
+        var observable: Observable<Date?>
+        switch type {
+        case .temperature:
+            observable = visibleViewModel.temperatureAlertMutedTill
+        case .relativeHumidity:
+            observable = visibleViewModel.relativeHumidityAlertMutedTill
+        case .pressure:
+            observable = visibleViewModel.pressureAlertMutedTill
+        case .signal:
+            observable = visibleViewModel.signalAlertMutedTill
+        case .connection:
+            observable = visibleViewModel.connectionAlertMutedTill
+        case .movement:
+            observable = visibleViewModel.movementAlertMutedTill
+        default:
+            // Should never be here
+            observable = visibleViewModel.temperatureAlertMutedTill
+        }
+
+        let date = alertService.mutedTill(type: type, for: uuid)
+        if date != observable.value {
+            observable.value = date
+        }
+    }
+
+    private func updateIsOnState(of type: AlertType, for uuid: String) {
+        guard let visibleViewModel = visibleViewModel else {
+            return
+        }
+        var observable: Observable<Bool?>
+        switch type {
+        case .temperature:
+            observable = visibleViewModel.isTemperatureAlertOn
+        case .relativeHumidity:
+            observable = visibleViewModel.isRelativeHumidityAlertOn
+        case .pressure:
+            observable = visibleViewModel.isPressureAlertOn
+        case .signal:
+            observable = visibleViewModel.isSignalAlertOn
+        case .connection:
+            observable = visibleViewModel.isConnectionAlertOn
+        case .movement:
+            observable = visibleViewModel.isMovementAlertOn
+        default:
+            // Should never be here
+            observable = visibleViewModel.isTemperatureAlertOn
+        }
+
+        let isOn = alertService.isOn(type: type, for: uuid)
+        if isOn != observable.value {
+            observable.value = isOn
+        }
+    }
+
 }
 // swiftlint:enable file_length trailing_whitespace

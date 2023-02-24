@@ -180,6 +180,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     @objc private func handleAppEnterForgroundState() {
+        syncAlerts()
         if let keep = viewModel.keepConnection.value,
            let connected = viewModel.isConnected.value {
             if keep && !connected {
@@ -383,10 +384,16 @@ extension TagSettingsPresenter {
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
-        if let luid = ruuviTag.luid {
-            alertHandler.subscribe(self, to: luid.value)
-        } else if let macId = ruuviTag.macId {
-            alertHandler.subscribe(self, to: macId.value)
+        if ruuviTag.isCloud && settings.cloudModeEnabled {
+            if let macId = ruuviTag.macId {
+                alertHandler.subscribe(self, to: macId.value)
+            }
+        } else {
+            if let luid = ruuviTag.luid {
+                alertHandler.subscribe(self, to: luid.value)
+            } else if let macId = ruuviTag.macId {
+                alertHandler.subscribe(self, to: macId.value)
+            }
         }
     }
 
@@ -879,10 +886,10 @@ extension TagSettingsPresenter {
         bind(viewModel.relativeHumidityLowerBound, fire: false) {
             [weak self] observer, lower in
             if let l = lower {
-                self?.processAlerts()
                 lowRhDebouncer.run {
                     // must divide by 100 to get fraction of one as per contract
                     observer.alertService.setLower(relativeHumidity: l / 100.0, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -890,10 +897,10 @@ extension TagSettingsPresenter {
         bind(viewModel.relativeHumidityUpperBound, fire: false) {
             [weak self] observer, upper in
             if let u = upper {
-                self?.processAlerts()
                 upperRhDebouncer.run {
                     // must divide by 100 to get fraction of one as per contract
                     observer.alertService.setUpper(relativeHumidity: u / 100.0, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -933,9 +940,9 @@ extension TagSettingsPresenter {
         bind(viewModel.signalLowerBound, fire: false) {
             [weak self] observer, lower in
             if let l = lower {
-                self?.processAlerts()
                 lowSignalDebouncer.run {
                     observer.alertService.setLower(signal: l, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -944,9 +951,9 @@ extension TagSettingsPresenter {
         bind(viewModel.signalUpperBound, fire: false) {
             [weak self] observer, upper in
             if let u = upper {
-                self?.processAlerts()
                 upperSignalDebouncer.run {
                     observer.alertService.setUpper(signal: u, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -985,9 +992,9 @@ extension TagSettingsPresenter {
         bind(viewModel.temperatureLowerBound, fire: false) {
             [weak self] observer, lower in
             if let l = lower?.converted(to: .celsius).value {
-                self?.processAlerts()
                 lowTemperatureDebouncer.run {
                     observer.alertService.setLower(celsius: l, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -995,9 +1002,9 @@ extension TagSettingsPresenter {
         bind(viewModel.temperatureUpperBound, fire: false) {
             [weak self] observer, upper in
             if let u = upper?.converted(to: .celsius).value {
-                self?.processAlerts()
                 upperTemperatureDebouncer.run {
                     observer.alertService.setUpper(celsius: u, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -1035,17 +1042,17 @@ extension TagSettingsPresenter {
         let lowHumidityDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
         bind(viewModel.humidityLowerBound, fire: false) {
             [weak self] observer, lower in
-            self?.processAlerts()
             lowHumidityDebouncer.run {
                 observer.alertService.setLower(humidity: lower, for: ruuviTag)
+                self?.processAlerts()
             }
         }
         let upperHumidityDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
         bind(viewModel.humidityUpperBound, fire: false) {
             [weak self] observer, upper in
-            self?.processAlerts()
             upperHumidityDebouncer.run {
                 observer.alertService.setUpper(humidity: upper, for: ruuviTag)
+                self?.processAlerts()
             }
         }
         bind(viewModel.humidityAlertDescription, fire: false) {
@@ -1082,9 +1089,9 @@ extension TagSettingsPresenter {
         bind(viewModel.pressureLowerBound, fire: false) {
             [weak self] observer, lower in
             if let l = lower?.converted(to: .hectopascals).value {
-                self?.processAlerts()
                 lowPressureDebouncer.run {
                     observer.alertService.setLower(pressure: l, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -1093,9 +1100,9 @@ extension TagSettingsPresenter {
         bind(viewModel.pressureUpperBound, fire: false) {
             [weak self] observer, upper in
             if let u = upper?.converted(to: .hectopascals).value {
-                self?.processAlerts()
                 upperPressureDebouncer.run {
                     observer.alertService.setUpper(pressure: u, ruuviTag: ruuviTag)
+                    self?.processAlerts()
                 }
             }
         }
@@ -1355,7 +1362,16 @@ extension TagSettingsPresenter {
     }
 
     private func processAlerts() {
-        if let lastMeasurement = lastMeasurement {
+        guard let lastMeasurement = lastMeasurement else {
+            return
+        }
+
+        if ruuviTag.isCloud && settings.cloudModeEnabled,
+            let macId = ruuviTag.macId {
+            alertHandler.processNetwork(record: lastMeasurement,
+                                        trigger: false,
+                                        for: macId)
+        } else {
             if ruuviTag.luid?.value != nil {
                 alertHandler.process(record: lastMeasurement,
                                      trigger: false)
