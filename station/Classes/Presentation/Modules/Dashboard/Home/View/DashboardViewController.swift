@@ -61,6 +61,7 @@ class DashboardViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId",
                                                                 for: indexPath) as? DashboardImageCell
             cell?.configure(with: viewModel, measurementService: measurementService)
+            cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
             cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
             return cell
@@ -68,6 +69,7 @@ class DashboardViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellIdPlain",
                                                                 for: indexPath) as? DashboardPlainCell
             cell?.configure(with: viewModel, measurementService: measurementService)
+            cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
             cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
             cell?.layout = layout

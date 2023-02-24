@@ -37,5 +37,7 @@ public protocol RuuviNotifierTitles {
     var highDewPoint: String { get }
     var lowPressure: String { get }
     var highPressure: String { get }
+    var lowSignal: String { get }
+    var highSignal: String { get }
     var didMove: String { get }
 }

@@ -236,6 +236,8 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "LocalNotificationsManager.DidMove.title" = "Liike havaittu!";
 "LocalNotificationsManager.HighPressure.title" = "Ilmanpaine liian korkea!";
 "LocalNotificationsManager.LowPressure.title" = "Ilmanpaine liian alhainen!";
+"LocalNotificationsManager.HighSignal.title" = "Signaalin voimakkuus liian korkea!";
+"LocalNotificationsManager.LowSignal.title" = "Signaalin voimakkuus liian alhainen!";
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "TagSettings.Alerts.Off" = "Pois käytöstä";

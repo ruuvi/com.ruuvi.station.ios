@@ -236,6 +236,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "LocalNotificationsManager.DidMove.title" = "Movement detected!";
 "LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
 "LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
+"LocalNotificationsManager.HighSignal.title" = "Signal strength is too high!";
+"LocalNotificationsManager.LowSignal.title" = "Signal strength is too low!";
 "LocalNotificationsManager.HighTemperature.title" = "Temperature is too high!";
 "LocalNotificationsManager.LowTemperature.title" = "Temperature is too low!";
 "TagSettings.Alerts.Off" = "Off";
