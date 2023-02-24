@@ -131,6 +131,16 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         if let output = module.output as? CardsModuleInput {
             cards = output
         }
+
+        // Remove any cards view controller from stack if exists already
+        if let navigationController = transitionHandler.navigationController,
+            navigationController
+            .containsViewController(ofKind: CardsViewController.self) {
+            transitionHandler
+                .navigationController?
+                .removeAnyViewControllers(ofKind: CardsViewController.self)
+        }
+
         transitionHandler
             .navigationController?
             .pushViewController(
