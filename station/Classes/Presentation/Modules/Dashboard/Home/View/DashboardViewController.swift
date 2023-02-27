@@ -492,7 +492,7 @@ extension DashboardViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         let viewModel = viewModels[indexPath.item]
-        output.viewDidTriggerChart(for: viewModel)
+        output.viewDidTriggerDashboardCard(for: viewModel)
     }
 
     func collectionView(
