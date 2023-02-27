@@ -497,7 +497,9 @@ extension CardsViewController: CardsViewInput {
     func scroll(to index: Int,
                 immediately: Bool = false,
                 animated: Bool = false) {
-        guard index < viewModels.count else { return }
+        guard index < viewModels.count, index < datasource.snapshot().numberOfItems else {
+            return
+        }
         let viewModel = viewModels[index]
         let indexPath = IndexPath(item: index, section: 0)
         if immediately {

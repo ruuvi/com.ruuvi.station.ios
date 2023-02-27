@@ -364,7 +364,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "SignIn.RequestCode" = "Request a code";
 "SignIn.SubmitCode" = "Submit";
 "SignIn.EmailSent" = "Email sent";
-"SignIn.CheckMailbox" = "Check your email for an activation code.";
+"SignIn.CheckMailbox" = "We've sent a one-time password to your email. Sign in by entering it here:";
 "SignIn.CodeHint" = "Code";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "When you sign out, sensors the ownerships of which you've claimed on the sensor Settings page will be automatically removed from the app. When you sign in again using the same email address, the sensors will be returned from the cloud.\n\nDo you want to sign out?";
 "TagSettings.ClaimTagButton.Claim" = "Claim ownership";
