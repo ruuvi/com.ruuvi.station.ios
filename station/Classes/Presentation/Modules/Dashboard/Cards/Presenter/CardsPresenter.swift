@@ -140,6 +140,8 @@ extension CardsPresenter: CardsModuleInput {
 
 extension CardsPresenter {
     private func startObservingVisibleTag() {
+        startObservingRuuviTags()
+        startObservingWebTags()
         observeSensorSettings()
         startListeningLatestRecord()
         startObservingVirtualSensorData()
@@ -267,6 +269,8 @@ extension CardsPresenter {
                     visible.any == sensor,
                     let first = sSelf.viewModels.first {
                     sSelf.updateVisibleCard(from: first, triggerScroll: true)
+                } else {
+                    sSelf.viewShouldDismiss()
                 }
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
@@ -825,8 +829,6 @@ extension CardsPresenter {
 extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         showTagCharts()
-        startObservingRuuviTags()
-        startObservingWebTags()
         startMutedTillTimer()
     }
     
@@ -1055,12 +1057,16 @@ extension CardsPresenter: TagSettingsModuleOutput {
                 ($0.luid.value != nil && $0.luid.value == ruuviTag.luid?.any) ||
                 ($0.mac.value != nil && $0.mac.value == ruuviTag.macId?.any)
             }) {
-                self.view?.viewModels.remove(at: index)
-                if let first = self.viewModels.first {
-                    self.updateVisibleCard(from: first, triggerScroll: true)
-                }
+                self.viewModels.remove(at: index)
+                self.view?.viewModels = self.viewModels
             }
-            
+
+            if self.viewModels.count > 0,
+                let first = self.viewModels.first {
+                self.updateVisibleCard(from: first, triggerScroll: true)
+            } else {
+                self.viewShouldDismiss()
+            }
         })
     }
 

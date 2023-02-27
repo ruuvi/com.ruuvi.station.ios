@@ -363,7 +363,7 @@
 "SignIn.RequestCode" = "Fordern Sie einen Code an";
 "SignIn.SubmitCode" = "Abschicken";
 "SignIn.EmailSent" = "E-Mail gesendet";
-"SignIn.CheckMailbox" = "Überprüfen Sie Ihre E-Mail auf einen Aktivierungscode.";
+"SignIn.CheckMailbox" = "Wir haben ein Einmalpasswort an Ihre E-Mail gesendet. Melden Sie sich an, indem Sie es hier eingeben:";
 "SignIn.CodeHint" = "Code";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Wenn Sie sich abmelden, werden Sensoren, deren Eigentum Sie mit den Sensoreinstellungen bestätigt haben, automatisch aus der App entfernt. Wenn Sie sich erneut mit derselben E-Mail-Adresse anmelden, werden die Sensoren aus der Cloud zurückgegeben.\n\nMöchten Sie sich abmelden?";
 "TagSettings.ClaimTagButton.Claim" = "Inhaberschaft beanspruchen";
