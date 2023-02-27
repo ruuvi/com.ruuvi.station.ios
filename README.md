@@ -8,10 +8,11 @@
 Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/app/ruuvi-station/id1384475885) on the AppStore. You can observe environment data read from RuuviTag beacon, such as temperature, humidity, air pressure (and more) right on your iOS device. Ruuvi Station is a companion app for open-source IoT BLE devices made by [Ruuvi](https://ruuvi.com).
 
 <p align="center">
-  <img src="/docs/screenshot0.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot1.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot2.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot3.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot0.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot1.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot2.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot3.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot4.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
 </p>
 
 <p align="center">
@@ -42,8 +43,8 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## Requirements
 
-- iOS 13.0+
-- Xcode 11.3
+- iOS 14.0+
+- Xcode 14.0+
 
 ## How to use
 
@@ -59,9 +60,9 @@ Build and Run on your device!
 
 ## Get in touch
 
-Join our [Slack](https://slack.ruuvi.com) community. Feel free to ask ``@rinat`` about iOS code.  
+Join our [Slack](https://slack.ruuvi.com) community. Feel free to ask ``@priyonto`` about iOS code.  
 
-Join our [Telegram](https://t.me/ruuvicom) community. Feel free to ask ``@rinatru`` about iOS code. 
+Join our [Telegram](https://t.me/ruuvicom) community. Feel free to ask ``@ipriyo`` about iOS code. 
 
 ## How to buy
 
