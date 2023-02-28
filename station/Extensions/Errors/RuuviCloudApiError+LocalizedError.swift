@@ -18,6 +18,8 @@ extension RuuviCloudApiError: LocalizedError {
             return error.localizedDescription
         case .parsing(let error):
             return error.localizedDescription
+        case .unauthorized:
+            return nil
 
         }
     }

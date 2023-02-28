@@ -12,6 +12,7 @@ protocol DashboardViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool)
     func viewDidTriggerChart(for viewModel: CardsViewModel)
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel)
+    func viewDidTriggerDashboardCard(for viewModel: CardsViewModel)
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel)
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel)
     func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel, scrollToAlert: Bool)
