@@ -440,6 +440,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "RuuviPersistenceError.failedToFindRuuviTag" = "Hittade inte sensorn";
 "RuuviServiceError.pictureUrlIsNil" = "Bild URL saknas";
 "RuuviServiceError.macIdIsNil" = "MAC-id saknas";
+"network_sharing_disabled" = "Endast sensorer inom räckhåll av din Ruuvi Gateway kan delas.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Både lokal och MAC-ID saknas";
 "RuuviServiceError.failedToParseNetworkResponse" = "Det gick inte att tolka svaret.";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Det gick inte att hitta eller skapa bakgrundsbild";

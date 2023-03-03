@@ -439,6 +439,7 @@
 "RuuviPersistenceError.failedToFindRuuviTag" = "Echec de jumelage";
 "RuuviServiceError.pictureUrlIsNil" = "URL de la photo manquant";
 "RuuviServiceError.macIdIsNil" = "adresse MAC manquante";
+"network_sharing_disabled" = "Vous pouvez partager seulement des capteurs à proximité du Ruuvi Gateway.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Identifiants MAC et local manquant";
 "RuuviServiceError.failedToParseNetworkResponse" = "Echec de l'enregistrement de la réponse";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Fond d'écran introuvable";

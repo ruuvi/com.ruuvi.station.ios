@@ -59,10 +59,14 @@ class ShareViewController: UITableViewController {
     // MARK: - TableView
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if viewModel.sharedEmails.value?.isEmpty == true {
-            return 2
+        if let canShare = viewModel.canShare.value, canShare {
+            if viewModel.sharedEmails.value?.isEmpty == true {
+                return 2
+            } else {
+                return 3
+            }
         } else {
-            return 3
+            return 1
         }
     }
 
@@ -176,8 +180,15 @@ extension ShareViewController {
     }
 
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
-        let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
-        let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
+        let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self,
+                                                 for: indexPath)
+        if let canShare = viewModel.canShare.value, canShare {
+            cell.sharingDisabledLabel.text = ""
+        } else {
+            cell.sharingDisabledLabel.text = "network_sharing_disabled".localized()
+        }
+
+        let description = "ShareViewController.Description".localized()
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.descriptionLabel.textColor = RuuviColor.ruuviTextColor
         return cell

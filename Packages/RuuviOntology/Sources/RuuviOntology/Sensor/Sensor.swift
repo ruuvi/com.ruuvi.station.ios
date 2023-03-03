@@ -43,6 +43,7 @@ public protocol Calibratable {
 public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable {}
 
 public protocol Shareable {
+    var canShare: Bool { get }
     var sharedTo: [String] { get } // emails
 }
 
