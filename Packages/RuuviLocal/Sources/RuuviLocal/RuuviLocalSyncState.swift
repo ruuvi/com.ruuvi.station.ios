@@ -16,6 +16,8 @@ public enum NetworkSyncStatusKey: String {
 extension Notification.Name {
     public static let NetworkSyncDidChangeStatus = Notification.Name("NetworkPersistence.DidChangeStatus")
     public static let NetworkSyncDidChangeCommonStatus = Notification.Name("NetworkPersistence.DidChangeCommonStatus")
+    public static let NetworkSyncDidFailForAuthorization =
+        Notification.Name("NetworkPersistence.NetworkSyncDidFailForAuthorization")
 }
 
 public protocol RuuviLocalSyncState {

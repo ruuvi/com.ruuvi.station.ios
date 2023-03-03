@@ -8,4 +8,5 @@ public enum RuuviCloudApiError: Error {
     case emptyResponse
     case unexpectedHTTPStatusCode
     case failedToGetDataFromResponse
+    case unauthorized
 }

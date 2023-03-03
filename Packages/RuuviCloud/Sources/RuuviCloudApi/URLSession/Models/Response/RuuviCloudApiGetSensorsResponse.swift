@@ -22,7 +22,9 @@ public struct RuuviCloudApiGetSensorsResponse: Decodable {
         }
 
         public var shareableSensor: ShareableSensor {
-            return ShareableSensorStruct(id: sensor, sharedTo: sharedTo)
+            return ShareableSensorStruct(id: sensor,
+                                         canShare: canShare,
+                                         sharedTo: sharedTo)
         }
     }
 }

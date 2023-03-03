@@ -364,7 +364,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "SignIn.RequestCode" = "Запросить код";
 "SignIn.SubmitCode" = "Отправить";
 "SignIn.EmailSent" = "Email отправлен";
-"SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
+"SignIn.CheckMailbox" = "Мы отправили одноразовый пароль на вашу электронную почту. Войдите, введя его здесь:";
 "SignIn.CodeHint" = "Код для входа";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "После выхода все датчики, которые зарегистрованы на вас, будут удалены из приложения. Если вы повторно войдете с тем же email адресом, список ваших датчиков будет загружен из облака. \n\nВы хотите выйти из сети?";
 "TagSettings.ClaimTagButton.Claim" = "Заявить о собственности";
@@ -440,6 +440,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "RuuviPersistenceError.failedToFindRuuviTag" = "Не удалось найти сенсор";
 "RuuviServiceError.pictureUrlIsNil" = "Пустой URL картинки";
 "RuuviServiceError.macIdIsNil" = "Пустой MAC-адрес";
+"network_sharing_disabled" = "Вы можете поделиться сенсорами только из зоны покрытия Ruuvi Gateway.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Локальный идентификатор и MAC-адрес пустые";
 "RuuviServiceError.failedToParseNetworkResponse" = "Не удалось распарсить ответ";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Не удалось найти или сгенерировать фоновое изображение";

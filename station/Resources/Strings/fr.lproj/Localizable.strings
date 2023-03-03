@@ -363,7 +363,7 @@
 "SignIn.RequestCode" = "Obtenir un code";
 "SignIn.SubmitCode" = "Envoyer";
 "SignIn.EmailSent" = "Email envoyé";
-"SignIn.CheckMailbox" = "Le code d'activation vous a été envoyé par mail.";
+"SignIn.CheckMailbox" = "Nous avons envoyé un mot de passe à usage unique à votre adresse e-mail. Connectez-vous en le saisissant ici:";
 "SignIn.CodeHint" = "Code";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Les capteurs dont vous êtes propriétaire seront suspprimés de l'application lorsque vous vous déconnectez de votre compte Ruuvi. Les données seront importées du cloud lorsque vous vous connectez à nouveau.\n\nSouhaitez vous vous déconnecter ?";
 "TagSettings.ClaimTagButton.Claim" = "Confirmer l'appropriation";
@@ -439,6 +439,7 @@
 "RuuviPersistenceError.failedToFindRuuviTag" = "Echec de jumelage";
 "RuuviServiceError.pictureUrlIsNil" = "URL de la photo manquant";
 "RuuviServiceError.macIdIsNil" = "adresse MAC manquante";
+"network_sharing_disabled" = "Vous pouvez partager seulement des capteurs à proximité du Ruuvi Gateway.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Identifiants MAC et local manquant";
 "RuuviServiceError.failedToParseNetworkResponse" = "Echec de l'enregistrement de la réponse";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Fond d'écran introuvable";

@@ -364,7 +364,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "SignIn.RequestCode" = "Pyydä kirjautumiskoodi";
 "SignIn.SubmitCode" = "Lähetä";
 "SignIn.EmailSent" = "Sähköposti lähetetty";
-"SignIn.CheckMailbox" = "Tarkasta aktivointikoodi saamastasi sähköpostista.";
+"SignIn.CheckMailbox" = "Olemme lähettäneet sähköpostiisi kertakäyttöisen salasanan. Kirjaudu syöttämällä se tähän:";
 "SignIn.CodeHint" = "Koodi";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Anturit, joiden omistajuuden olet vahvistanut asetussivulla poistetaan sovelluksesta automaattisesti uloskirjauduttaessa. Anturitiedot palautetaan pilvipalvelusta samalla sähköpostiosoitteella uudelleenkirjauduttaessa.\n\nHaluatko varmasti kirjautua ulos?";
 "TagSettings.ClaimTagButton.Claim" = "Vahvista omistajuus";
@@ -440,6 +440,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "RuuviPersistenceError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "RuuviServiceError.pictureUrlIsNil" = "Kuvan URL puuttuu";
 "RuuviServiceError.macIdIsNil" = "MAC-tunniste puuttuu";
+"network_sharing_disabled" = "Voit jakaa vain Ruuvi Gateway -reitittimen läheisyydessä olevia antureita.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Sekä paikallinen että MAC-tunniste puuttuu";
 "RuuviServiceError.failedToParseNetworkResponse" = "Vastauksen jäsentäminen epäonnistui";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Taustakuvaa ei löydy tai sen luominen epäonnistui";

@@ -51,6 +51,10 @@ class DashboardPresenter: DashboardModuleInput {
     var featureToggleService: FeatureToggleService!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
+    var authService: RuuviServiceAuth!
+    var activityPresenter: ActivityPresenter!
+    var pnManager: RuuviCorePN!
+    var cloudNotificationService: RuuviServiceCloudNotification!
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
     private var virtualSensorsToken: VirtualReactorToken?
@@ -85,6 +89,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var calibrationSettingsToken: NSObjectProtocol?
     private var dashboardTypeToken: NSObjectProtocol?
+    private var cloudSyncToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             startListeningToWebTagsAlertStatus()
@@ -139,6 +144,7 @@ class DashboardPresenter: DashboardModuleInput {
         systemLanguageChangeToken?.invalidate()
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
+        cloudSyncToken?.invalidate()
     }
 }
 
@@ -157,6 +163,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startListeningToSettings()
         handleCloudModeState()
         startObserveCalibrationSettingsChange()
+        startObservingCloudSyncTokenState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -228,6 +235,14 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewDidTriggerOpenCardImageView(for viewModel: CardsViewModel?) {
         guard let viewModel = viewModel else { return }
         openCardView(viewModel: viewModel, showCharts: false)
+    }
+
+    func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
+        if settings.showChartOnDashboardCardTap {
+            viewDidTriggerChart(for: viewModel)
+        } else {
+            viewDidTriggerOpenCardImageView(for: viewModel)
+        }
     }
 
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel) {
@@ -1333,7 +1348,7 @@ extension DashboardPresenter {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
         // Sync with cloud if cloud mode is turned on
-        if settings.cloudModeEnabled {
+        if ruuviUser.isAuthorized && settings.cloudModeEnabled {
             cloudSyncDaemon.refreshLatestRecord()
             for viewModel in viewModels where (viewModel.isCloud.value ?? false) {
                 viewModel.isConnected.value = false
@@ -1429,6 +1444,17 @@ extension DashboardPresenter {
                    let type = userInfo[DashboardTypeKey.type] as? DashboardType {
                    self?.view.dashboardType = type
                 }
+        })
+    }
+
+    private func startObservingCloudSyncTokenState() {
+        cloudSyncToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidFailForAuthorization,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.forceLogoutUser()
         })
     }
     
@@ -1686,6 +1712,31 @@ extension DashboardPresenter {
             observable.value = isOn
         }
         view.applyUpdate(to: viewModel)
+    }
+
+    /// Log out user if the auth token is expired.
+    private func forceLogoutUser() {
+        activityPresenter.increment()
+        cloudNotificationService.unregister(
+            token: pnManager.fcmToken,
+            tokenId: nil
+        ).on(success: { [weak self] _ in
+            self?.pnManager.fcmToken = nil
+            self?.pnManager.fcmTokenLastRefreshed = nil
+        })
+
+        authService.logout()
+            .on(success: { [weak self] _ in
+                self?.settings.cloudModeEnabled = false
+                self?.syncViewModels()
+                self?.reloadWidgets()
+            }, completion: { [weak self] in
+                self?.activityPresenter.decrement()
+            })
+    }
+
+    private func reloadWidgets() {
+        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
     }
 }
 // swiftlint:enable file_length trailing_whitespace

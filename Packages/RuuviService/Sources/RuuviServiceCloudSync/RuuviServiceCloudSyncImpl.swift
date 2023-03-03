@@ -202,6 +202,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             latestRecords.on(completion: {
                 promise.succeed(value: true)
             })
+        }, failure: { [weak self] error in
+            switch error {
+            case .ruuviCloud(let cloudError):
+                switch cloudError {
+                case .api(let unathorized):
+                    self?.postNotification()
+                default: break
+                }
+            default: break
+            }
         }, completion: { [weak self] in
             self?.ruuviLocalSettings.isSyncing = false
         })
@@ -498,5 +508,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
         })
         return promise.future
+    }
+
+    private func postNotification() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .NetworkSyncDidFailForAuthorization,
+                                            object: nil,
+                                            userInfo: nil)
+        }
     }
 }
