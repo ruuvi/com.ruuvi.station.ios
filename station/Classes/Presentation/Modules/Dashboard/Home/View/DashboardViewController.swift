@@ -58,16 +58,20 @@ class DashboardViewController: UIViewController {
               viewModel: CardsViewModel) -> UICollectionViewCell? {
         switch dashboardType {
         case .image:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId",
-                                                                for: indexPath) as? DashboardImageCell
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "cellId",
+                for: indexPath
+            ) as? DashboardImageCell
             cell?.configure(with: viewModel, measurementService: measurementService)
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
             cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
             return cell
         case .simple:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellIdPlain",
-                                                                for: indexPath) as? DashboardPlainCell
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "cellIdPlain",
+                for: indexPath
+            ) as? DashboardPlainCell
             cell?.configure(with: viewModel, measurementService: measurementService)
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
@@ -79,12 +83,13 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    func applySnapshot(_ items: [CardsViewModel]) {
+    func applySnapshot() {
         var snapshot = DashboardSnapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items, toSection: .main)
+        snapshot.appendItems(viewModels, toSection: .main)
         datasource.apply(snapshot,
-                         animatingDifferences: true)
+                         animatingDifferences: false)
+        collectionView.reloadWithoutAnimation()
     }
 
     // UI
@@ -679,6 +684,6 @@ extension DashboardViewController: NoSensorViewDelegate {
 extension DashboardViewController {
     fileprivate func updateUI() {
         showNoSensorsAddedMessage(show: viewModels.isEmpty)
-        applySnapshot(viewModels)
+        applySnapshot()
     }
 }

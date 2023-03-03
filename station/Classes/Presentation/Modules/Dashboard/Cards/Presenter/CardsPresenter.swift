@@ -49,11 +49,7 @@ class CardsPresenter {
         }
     }
     /// Card presented currently on the screen.
-    private var visibleViewModel: CardsViewModel? {
-        didSet {
-
-        }
-    }
+    private var visibleViewModel: CardsViewModel?
     /// Equivalent ruuvi tag sensor for visible card on the scree.
     private var visibleRuuviTagSensor: RuuviTagSensor?
     /// Equivalent virtual sensor for visible card on the scree.
@@ -160,12 +156,12 @@ extension CardsPresenter {
     private func updateVisibleCard(from viewModel: CardsViewModel?,
                                    openChart: Bool = false,
                                    triggerScroll: Bool = false) {
+        visibleViewModel = viewModel
         if let index = viewModels.firstIndex(where: {
             $0.id.value == viewModel?.id.value
         }) {
             shouldTriggerScroll = triggerScroll
             visibleViewModelIndex = index
-            visibleViewModel = viewModels[index]
             shouldOpenChart = openChart
         }
 
@@ -202,11 +198,23 @@ extension CardsPresenter {
             case .delete(let sensor):
                 sSelf.virtualSensors.removeAll(where: { $0.id == sensor.id })
                 sSelf.syncViewModels()
+
+                // If a sensor is deleted, and there's no more sensor take
+                // user to dashboard.
+                guard sSelf.viewModels.count > 0 else {
+                    sSelf.viewShouldDismiss()
+                    return
+                }
+
                 if let visible = sSelf.visibleVirtualSensor,
                    visible.id == sensor.id,
                    let first = sSelf.viewModels.first {
                     sSelf.updateVisibleCard(from: first, triggerScroll: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
+                                       immediately: true,
+                                       animated: true)
                 }
+
             case .update(let sensor):
                 if let index = sSelf.virtualSensors
                     .firstIndex(
@@ -215,7 +223,6 @@ extension CardsPresenter {
                         }) {
                     sSelf.virtualSensors[index] = sensor
                     sSelf.syncViewModels()
-                    sSelf.notifyViewModelUpdate()
                 }
             case .insert(let sensor):
                 sSelf.virtualSensors.append(sensor)
@@ -225,7 +232,11 @@ extension CardsPresenter {
                 }) {
                     sSelf.updateVisibleCard(from: viewModel,
                                             triggerScroll: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
+                                       immediately: true,
+                                       animated: true)
                 }
+                
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
             default: break
@@ -233,6 +244,7 @@ extension CardsPresenter {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
@@ -248,6 +260,9 @@ extension CardsPresenter {
                 }) {
                     sSelf.updateVisibleCard(from: viewModel,
                                             triggerScroll: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
+                                       immediately: true,
+                                       animated: true)
                 }
             case .update(let sensor):
                 guard let sSelf = self else { return }
@@ -259,18 +274,29 @@ extension CardsPresenter {
                         }) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
-                    sSelf.notifyViewModelUpdate()
                 }
 
             case .delete(let sensor):
                 sSelf.ruuviTags.removeAll(where: { $0.id == sensor.id })
                 sSelf.syncViewModels()
+                // If a sensor is deleted, and there's no more sensor take
+                // user to dashboard.
+                guard sSelf.viewModels.count > 0 else {
+                    sSelf.viewShouldDismiss()
+                    return
+                }
+
+                // If the visible sensor is deleted, sroll to the first sensor
+                // in the list and make it visible sensor.
+                // Don't change scroll position if a sensor is deleted(via sync or otherwise)
+                // which is not the currently visible one.
                 if let visible = sSelf.visibleRuuviTagSensor,
                     visible.any == sensor,
                     let first = sSelf.viewModels.first {
                     sSelf.updateVisibleCard(from: first, triggerScroll: true)
-                } else {
-                    sSelf.viewShouldDismiss()
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
+                                       immediately: true,
+                                       animated: true)
                 }
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
@@ -306,7 +332,6 @@ extension CardsPresenter {
                 let sensorRecord = record.with(sensorSettings:
                                                 self?.visibleSensorSettings)
                 viewModel.update(sensorRecord)
-                self?.view?.applyUpdate(to: viewModel)
                 self?.processAlert(record: sensorRecord, viewModel: viewModel)
             }
         }
@@ -326,7 +351,6 @@ extension CardsPresenter {
                 let previousDate = viewModel.date.value ?? Date.distantPast
                 if previousDate <= record.date {
                     viewModel.update(record)
-                    self?.notifyViewModelUpdate()
                 }
             }
         })
@@ -373,7 +397,6 @@ extension CardsPresenter {
                         }
                         sSelf.updateIsOnState(of: type, for: physicalSensor.id)
                         sSelf.updateMutedTill(of: type, for: physicalSensor.id)
-                        sSelf.notifyViewModelUpdate()
                     }
 
                     if let virtualSensor
@@ -388,7 +411,6 @@ extension CardsPresenter {
                         }
                         self?.updateIsOnState(of: type, for: virtualSensor.id)
                         self?.updateMutedTill(of: type, for: virtualSensor.id)
-                        sSelf.notifyViewModelUpdate()
                     }
                 }
         })
@@ -438,18 +460,15 @@ extension CardsPresenter {
                 if sensor.luid?.value == sensorSettings.luid?.value ||
                     sensor.macId?.value == sensorSettings.macId?.value {
                     self?.visibleSensorSettings = sensorSettings
-                    self?.notifyViewModelUpdate()
                 }
 
             case  .update(let sensorSettings):
                 if self?.visibleSensorSettings?.id == sensorSettings.id {
                     self?.visibleSensorSettings = sensorSettings
-                    self?.notifyViewModelUpdate()
                 }
             case .delete(let deleteSensorSettings):
                 if self?.visibleSensorSettings?.id == deleteSensorSettings.id {
                     self?.visibleSensorSettings = nil
-                    self?.notifyViewModelUpdate()
                 }
             default: break
             }
@@ -496,7 +515,7 @@ extension CardsPresenter {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                                 .on(success: { image in
                                     viewModel.background.value = image
-                                    self?.view?.changeCardBackground(of: viewModel, to: image)
+                                    viewModel.background.value = image
                                 }, failure: { [weak self] error in
                                     self?.errorPresenter.present(error: error)
                                 })
@@ -505,7 +524,6 @@ extension CardsPresenter {
                             sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
                                 .on(success: { image in
                                     viewModel.background.value = image
-                                    self?.view?.changeCardBackground(of: viewModel, to: image)
                                 }, failure: { [weak sSelf] error in
                                     sSelf?.errorPresenter.present(error: error)
                                 })
@@ -611,7 +629,6 @@ extension CardsPresenter {
                                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                                 viewModel.isConnected.value = true
-                                self?.view?.applyUpdate(to: viewModel)
                             }
                          })
         didDisconnectToken?.invalidate()
@@ -625,7 +642,6 @@ extension CardsPresenter {
                                let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                                 viewModel.isConnected.value = false
-                                self?.view?.applyUpdate(to: viewModel)
                             }
                          })
     }
@@ -648,7 +664,6 @@ extension CardsPresenter {
         if settings.cloudModeEnabled {
             for viewModel in viewModels where (viewModel.isCloud.value ?? false) {
                 viewModel.isConnected.value = false
-                view?.applyUpdate(to: viewModel)
             }
         }
     }
@@ -659,9 +674,8 @@ extension CardsPresenter {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: {[weak self] image in
+                .on(success: { image in
                     viewModel.background.value = image
-                    self?.view?.changeCardBackground(of: viewModel, to: image)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
@@ -683,7 +697,6 @@ extension CardsPresenter {
             op.on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
-                    self?.view?.applyUpdate(to: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
                 } else {
                     // If the latest data table doesn't have any data by any chance,
@@ -694,7 +707,6 @@ extension CardsPresenter {
                             return
                         }
                         viewModel.update(record)
-                        self?.view?.applyUpdate(to: viewModel)
                         self?.processAlert(record: record, viewModel: viewModel)
                     })
                 }
@@ -705,16 +717,14 @@ extension CardsPresenter {
         let virtualViewModels = virtualSensors.compactMap({ virtualSensor -> CardsViewModel in
             let viewModel = CardsViewModel(virtualSensor)
             ruuviSensorPropertiesService.getImage(for: virtualSensor)
-                .on(success: { [weak self] image in
+                .on(success: { image in
                     viewModel.background.value = image
-                    self?.view?.changeCardBackground(of: viewModel, to: image)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
             viewModel.alertState.value = alertService
                 .hasRegistrations(for: virtualSensor) ? .registered : .empty
             viewModel.isConnected.value = false
-            view?.applyUpdate(to: viewModel)
             return viewModel
         })
 
@@ -723,13 +733,6 @@ extension CardsPresenter {
         guard viewModels.count > 0 else {
             output?.cardsViewDidDismiss(module: self)
             return
-        }
-
-        if let viewModel = viewModels.first(where: {
-            ($0.luid.value != nil && $0.luid.value == visibleViewModel?.luid.value) ||
-            ($0.mac.value != nil && $0.mac.value == visibleViewModel?.mac.value)
-        }) {
-            updateVisibleCard(from: viewModel, triggerScroll: true)
         }
     }
 
@@ -784,17 +787,6 @@ extension CardsPresenter {
                 }
                 alertHandler.processNetwork(record: record, trigger: false, for: macId)
             }
-        }
-    }
-
-    private func notifyViewModelUpdate() {
-        guard let viewModel = visibleViewModel else { return }
-        if let index = viewModels.firstIndex(where: {
-            ($0.luid.value != nil && $0.luid.value == viewModel.luid.value) ||
-            ($0.mac.value != nil && $0.mac.value == viewModel.mac.value)
-        }) {
-            viewModels[index] = viewModel
-            view?.applyUpdate(to: viewModel)
         }
     }
 
@@ -1040,7 +1032,6 @@ extension CardsPresenter: RuuviNotifierObserver {
             .forEach({ viewModel in
                 let newValue: AlertState = isTriggered ? .firing : .registered
                 viewModel.alertState.value = newValue
-                view?.applyUpdate(to: viewModel)
             })
     }
 }
@@ -1139,8 +1130,6 @@ extension CardsPresenter {
         } else {
             viewModel.alertState.value = .empty
         }
-
-        notifyViewModelUpdate()
     }
 
     private func sync(temperature: AlertType, ruuviTag: RuuviTagSensor) {
