@@ -440,6 +440,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "RuuviPersistenceError.failedToFindRuuviTag" = "Не удалось найти сенсор";
 "RuuviServiceError.pictureUrlIsNil" = "Пустой URL картинки";
 "RuuviServiceError.macIdIsNil" = "Пустой MAC-адрес";
+"network_sharing_disabled" = "Вы можете поделиться сенсорами только из зоны покрытия Ruuvi Gateway.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Локальный идентификатор и MAC-адрес пустые";
 "RuuviServiceError.failedToParseNetworkResponse" = "Не удалось распарсить ответ";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Не удалось найти или сгенерировать фоновое изображение";

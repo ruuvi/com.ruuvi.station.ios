@@ -440,6 +440,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "RuuviPersistenceError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "RuuviServiceError.pictureUrlIsNil" = "Kuvan URL puuttuu";
 "RuuviServiceError.macIdIsNil" = "MAC-tunniste puuttuu";
+"network_sharing_disabled" = "Voit jakaa vain Ruuvi Gateway -reitittimen läheisyydessä olevia antureita.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Sekä paikallinen että MAC-tunniste puuttuu";
 "RuuviServiceError.failedToParseNetworkResponse" = "Vastauksen jäsentäminen epäonnistui";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Taustakuvaa ei löydy tai sen luominen epäonnistui";

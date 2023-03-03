@@ -439,6 +439,7 @@
 "RuuviPersistenceError.failedToFindRuuviTag" = "Sensor konnte nicht gefunden werden";
 "RuuviServiceError.pictureUrlIsNil" = "Bild-URL ist null";
 "RuuviServiceError.macIdIsNil" = "MAC-Kennung ist null";
+"network_sharing_disabled" = "Nur Sensoren in Reichweite Ihres Ruuvi Gateways können geteilt werden.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Sowohl lokale als auch MAC-Identifikatoren sind null";
 "RuuviServiceError.failedToParseNetworkResponse" = "Fehler beim Parsen der Antwort.";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Hintergrundbild konnte nicht gefunden oder generiert werden";

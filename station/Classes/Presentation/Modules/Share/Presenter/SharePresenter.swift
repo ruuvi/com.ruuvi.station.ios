@@ -115,10 +115,13 @@ extension SharePresenter {
     }
 
     private func filterEmails(_ sensors: Set<AnyShareableSensor>) {
-        viewModel.sharedEmails.value = sensors
+        if let sensor = sensors
             .first(where: {
                 $0.id == sensor.id
-            })?.sharedTo
+            }) {
+            viewModel.sharedEmails.value = sensor.sharedTo
+            viewModel.canShare.value = sensor.canShare
+        }
         view.reloadTableView()
     }
 

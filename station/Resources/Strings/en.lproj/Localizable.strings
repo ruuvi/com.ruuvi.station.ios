@@ -440,6 +440,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "RuuviPersistenceError.failedToFindRuuviTag" = "Failed to find sensor";
 "RuuviServiceError.pictureUrlIsNil" = "Photo URL is nil";
 "RuuviServiceError.macIdIsNil" = "MAC identifier is nil";
+"network_sharing_disabled" = "Only sensors within range of your Ruuvi Gateway can be shared.";
 "RuuviServiceError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
 "RuuviServiceError.failedToParseNetworkResponse" = "Failed to parse response.";
 "RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
