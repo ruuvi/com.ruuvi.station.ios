@@ -746,7 +746,10 @@ extension DashboardPresenter {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
-            let shouldAvoidObserving = settings.cloudModeEnabled && viewModel.isCloud.value.bound
+            let shouldAvoidObserving =
+                ruuviUser.isAuthorized &&
+                settings.cloudModeEnabled &&
+                viewModel.isCloud.value.bound
             if shouldAvoidObserving {
                 continue
             }

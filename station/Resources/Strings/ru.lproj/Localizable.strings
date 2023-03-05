@@ -530,6 +530,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Cards.Alert.AlreadyLoggedIn.message" = "Пользователь %@ уже совершил вход. Если вы хотите войти под другим аккаунтом, пожалуйста вначале выйдите, а затем повторите попытку.";
 "Settings.Label.CloudMode" = "Режим облака";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
+"internet_connection_problem" = "Проблема с подключением";
 "Widgets.Loading.message" = "загрузка...";
 "Cards.Movements.title" = "движений";
 "TagSettings.BatteryStatusLabel.Replace.message" = "Low battery";

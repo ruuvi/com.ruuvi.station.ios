@@ -206,7 +206,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             switch error {
             case .ruuviCloud(let cloudError):
                 switch cloudError {
-                case .api(let unathorized):
+                case let .api(.unauthorized):
                     self?.postNotification()
                 default: break
                 }

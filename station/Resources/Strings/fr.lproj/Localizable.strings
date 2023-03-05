@@ -529,6 +529,7 @@ RuuviTag est prêt à être utilisé !";
 "Cards.Alert.AlreadyLoggedIn.message" = "L'utilisateur %@ est déjà connecté. Si vous souhaitez utiliser un autre compte veuillez vous déconnecter d'abord.";
 "Settings.Label.CloudMode" = "Statut du cloud";
 "Settings.Label.CloudMode.description" = "Mettre à jour les capteurs à proximité associés au cloud seulement pour recevoir seulement des alertes par mail en rejetant les messages Bluetooth. Nécessite le routeur Ruuvi Gateway.";
+"internet_connection_problem" = "Problème de connexion Internet";
 "Widgets.Loading.message" = "Chargement...";
 "Cards.Movements.title" = "mouvements";
 "TagSettings.BatteryStatusLabel.Replace.message" = "Batterie faible";
