@@ -529,6 +529,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "Cards.Alert.AlreadyLoggedIn.message" = "Benutzer %@ ist bereits angemeldet. Wenn Sie ein anderes Konto verwenden möchten, melden Sie sich bitte zuerst ab und versuchen Sie es dann erneut.";
 "Settings.Label.CloudMode" = "Cloud-Modus";
 "Settings.Label.CloudMode.description" = "Aktualisieren Sie Cloud-Sensoren in der Nähe nur aus der Cloud, indem Sie ihre Bluetooth-Nachrichten ignorieren und Warnungen nur per E-Mail erhalten. Erfordert einen Ruuvi Gateway-Router.";
+"internet_connection_problem" = "Problem mit der Internetverbindung";
 "Widgets.Loading.message" = "laden...";
 "Cards.Movements.title" = "bewegungen";
 "TagSettings.BatteryStatusLabel.Replace.message" = "Schwache Batterie";
