@@ -530,6 +530,7 @@ RuuviTag-sensorn är redo att användas!";
 "Cards.Alert.AlreadyLoggedIn.message" = "Användare %@ är redan inloggad. Om du vill använda ett annat konto, logga ut först och försök sedan igen.";
 "Settings.Label.CloudMode" = "Molnläge";
 "Settings.Label.CloudMode.description" = "Uppdatera närliggande molnregistrerade sensorer endast från molnet genom att inte lyssna på deras Bluetooth-meddelanden och endast ta emot varningar via e-post. Kräver en Ruuvi Gateway.";
+"internet_connection_problem" = "Internetanslutningsproblem";
 "Widgets.Loading.message" = "laddar...";
 "Cards.Movements.title" = "rörelser";
 "TagSettings.BatteryStatusLabel.Replace.message" = "Låg batterinivå";

@@ -530,6 +530,7 @@ Your RuuviTag sensor is ready for use!";
 "Cards.Alert.AlreadyLoggedIn.message" = "User %@ is already signed in. If you'd like to use a different account, please sign out first and then try again.";
 "Settings.Label.CloudMode" = "Cloud mode";
 "Settings.Label.CloudMode.description" = "Refresh nearby cloud sensors only from the cloud by ignoring their Bluetooth messages and receiving alerts only by email. Requires a Ruuvi Gateway router.";
+"internet_connection_problem" = "Internet connection problem";
 "Widgets.Loading.message" = "loading...";
 "Cards.Movements.title" = "movements";
 "TagSettings.BatteryStatusLabel.Replace.message" = "Low battery";
