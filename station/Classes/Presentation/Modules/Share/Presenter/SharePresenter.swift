@@ -30,11 +30,8 @@ extension SharePresenter: ShareViewOutput {
 
     func viewDidTapSendButton(email: String?) {
         guard let email = email,
-              !email.isEmpty else {
-            return
-        }
-
-        guard isValidEmail(email) else {
+              !email.isEmpty,
+              isValidEmail(email) else {
             view.showInvalidEmail()
             return
         }
