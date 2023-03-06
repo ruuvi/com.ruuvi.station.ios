@@ -644,7 +644,9 @@ extension TagChartsViewController: TagChartsViewInput {
 extension TagChartsViewController {
 
     private func bindViewModel() {
-        ruuviTagNameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+        ruuviTagNameLabel.bind(viewModel.name) { (label, name) in
+            label.text = name ?? "N/A".localized()
+        }
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
