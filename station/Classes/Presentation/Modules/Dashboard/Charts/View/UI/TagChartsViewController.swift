@@ -11,9 +11,6 @@ import RuuviService
 // swiftlint:disable type_body_length
 class TagChartsViewController: UIViewController {
     var output: TagChartsViewOutput!
-    private let alertActiveImage = UIImage(named: "icon-alert-active")
-    private let alertOffImage = UIImage(named: "icon-alert-off")
-    private let alertOnImage = UIImage(named: "icon-alert-on")
     private var chartModules: [MeasurementType] = []
 
     var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi) {
@@ -625,6 +622,7 @@ extension TagChartsViewController: TagChartsViewInput {
             UIActivity.ActivityType.openInIBooks
         ]
         vc.popoverPresentationController?.permittedArrowDirections = .up
+        vc.popoverPresentationController?.sourceView = moreButton
         present(vc, animated: true)
     }
 
