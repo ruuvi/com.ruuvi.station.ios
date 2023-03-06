@@ -70,7 +70,11 @@ class CardsPresenter {
 
     private var mutedTillTimer: Timer?
     /// Should open chart after view is presented.
-    private var shouldOpenChart: Bool = false
+    private var shouldOpenChart: Bool = false {
+        didSet {
+            showTagCharts()
+        }
+    }
     private var shouldTriggerScroll: Bool = false
     private weak var tagCharts: TagChartsViewModuleInput?
     private weak var tagChartsModule: UIViewController?
@@ -820,7 +824,6 @@ extension CardsPresenter {
 // MARK: - CardsViewOutput
 extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
-        showTagCharts()
         startMutedTillTimer()
     }
     
