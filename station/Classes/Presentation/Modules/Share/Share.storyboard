@@ -21,13 +21,13 @@
         <scene sceneID="xGI-fv-TzY">
             <objects>
                 <tableViewController storyboardIdentifier="ShareViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vpJ-wk-EwZ" customClass="ShareViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="jWW-qz-4Y5">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="jWW-qz-4Y5">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="RuuviPrimary"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareDescriptionTableViewCell" rowHeight="108" id="6X1-1G-8p6" customClass="ShareDescriptionTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="414" height="108"/>
+                                <rect key="frame" x="0.0" y="55.5" width="414" height="108"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6X1-1G-8p6" id="TDj-aD-hqN">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
@@ -48,6 +48,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="mVF-LL-Sab" firstAttribute="leading" secondItem="TDj-aD-hqN" secondAttribute="leadingMargin" id="Atm-BZ-K1k"/>
                                         <constraint firstItem="mVF-LL-Sab" firstAttribute="top" secondItem="TDj-aD-hqN" secondAttribute="topMargin" id="BcD-ar-sTD"/>
@@ -66,7 +67,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailInputTableViewCell" rowHeight="57" id="l7S-aJ-8e8" customClass="ShareEmailInputTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="158" width="414" height="57"/>
+                                <rect key="frame" x="0.0" y="163.5" width="414" height="57"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l7S-aJ-8e8" id="SAL-7y-xAR">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="57"/>
@@ -89,6 +90,7 @@
                                             <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                         </textField>
                                     </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="bottomMargin" secondItem="ZeU-ve-Fbq" secondAttribute="bottom" id="3M8-C6-5Mo"/>
                                         <constraint firstItem="Ara-rC-ms9" firstAttribute="top" secondItem="ZeU-ve-Fbq" secondAttribute="bottom" id="9c6-PB-4ou"/>
@@ -106,7 +108,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareSendButtonTableViewCell" id="bJm-nn-jm5" customClass="ShareSendButtonTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="215" width="414" height="66.5"/>
+                                <rect key="frame" x="0.0" y="220.5" width="414" height="66.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bJm-nn-jm5" id="0Ss-IZ-OAV">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="66.5"/>
@@ -143,7 +145,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailTableViewCell" rowHeight="65" id="wxH-bv-pTT" customClass="ShareEmailTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="281.5" width="414" height="65"/>
+                                <rect key="frame" x="0.0" y="287" width="414" height="65"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wxH-bv-pTT" id="3ef-wz-tkh">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
@@ -176,6 +178,7 @@
                                             </connections>
                                         </button>
                                     </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="OhF-9r-eYZ" firstAttribute="centerY" secondItem="KrW-d2-ghU" secondAttribute="centerY" id="G8c-av-L3W"/>
                                         <constraint firstItem="OhF-9r-eYZ" firstAttribute="leading" secondItem="KrW-d2-ghU" secondAttribute="trailing" id="PTJ-S6-w5M"/>

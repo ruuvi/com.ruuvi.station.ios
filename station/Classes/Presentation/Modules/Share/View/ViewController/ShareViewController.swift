@@ -96,8 +96,14 @@ class ShareViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section > 0 ? 44 : 0
+    override func tableView(_ tableView: UITableView,
+                            heightForHeaderInSection section: Int) -> CGFloat {
+        switch Section(value: section) {
+        case .sharedEmails:
+            return 66
+        default:
+            return section > 0 ? 44 : 0
+        }
     }
 
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView,
@@ -105,6 +111,7 @@ class ShareViewController: UITableViewController {
         if let headerView = view as? UITableViewHeaderFooterView {
             headerView.textLabel?.textColor = RuuviColor.ruuviMenuTextColor
             headerView.textLabel?.font = UIFont.Muli(.bold, size: 16)
+            headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
         }
     }
 
