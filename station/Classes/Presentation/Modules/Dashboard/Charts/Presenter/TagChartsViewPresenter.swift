@@ -501,9 +501,10 @@ extension TagChartsViewPresenter {
     }
 
     private func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { (observer, state) in
-            if state != .poweredOn || !self.isBluetoothPermissionGranted {
-                observer.view.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
+        stateToken = foreground.state(self, closure: { [weak self] (observer, state) in
+            guard let sSelf = self else { return }
+            if state != .poweredOn || !sSelf.isBluetoothPermissionGranted {
+                observer.view.showBluetoothDisabled(userDeclined: !sSelf.isBluetoothPermissionGranted)
             }
         })
     }

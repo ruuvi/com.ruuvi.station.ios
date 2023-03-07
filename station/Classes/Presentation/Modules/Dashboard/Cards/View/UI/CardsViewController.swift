@@ -66,7 +66,9 @@ class CardsViewController: UIViewController {
                          animatingDifferences: false)
         // Forces collection view to reload.
         collectionView.reloadWithoutAnimation()
-        collectionView.scrollTo(index: currentPage)
+        if currentPage < viewModels.count {
+            collectionView.scrollTo(index: currentPage)
+        }
     }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -196,8 +198,11 @@ extension CardsViewController {
 
         // Scroll to current Item after the orientation change.
         coordinator.animate(alongsideTransition: { [weak self] _ in
-            self?.collectionView.collectionViewLayout.invalidateLayout()
-            self?.collectionView.scrollTo(index: self?.currentPage ?? 0)
+            guard let sSelf = self else { return }
+            sSelf.collectionView.collectionViewLayout.invalidateLayout()
+            if sSelf.currentPage < sSelf.viewModels.count {
+                sSelf.collectionView.scrollTo(index: sSelf.currentPage)
+            }
         })
     }
 }
