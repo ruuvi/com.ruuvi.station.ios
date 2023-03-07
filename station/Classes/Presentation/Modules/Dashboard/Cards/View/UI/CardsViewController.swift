@@ -66,7 +66,9 @@ class CardsViewController: UIViewController {
                          animatingDifferences: false)
         // Forces collection view to reload.
         collectionView.reloadWithoutAnimation()
-        collectionView.scrollTo(index: currentPage)
+        if currentPage < viewModels.count {
+            collectionView.scrollTo(index: currentPage)
+        }
     }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -196,8 +198,11 @@ extension CardsViewController {
 
         // Scroll to current Item after the orientation change.
         coordinator.animate(alongsideTransition: { [weak self] _ in
-            self?.collectionView.collectionViewLayout.invalidateLayout()
-            self?.collectionView.scrollTo(index: self?.currentPage ?? 0)
+            guard let sSelf = self else { return }
+            sSelf.collectionView.collectionViewLayout.invalidateLayout()
+            if sSelf.currentPage < sSelf.viewModels.count {
+                sSelf.collectionView.scrollTo(index: sSelf.currentPage)
+            }
         })
     }
 }
@@ -377,7 +382,7 @@ extension CardsViewController {
         guard let viewModel = currentVisibleItem else {
             return
         }
-        output.viewDidTriggerSettings(for: viewModel, with: true)
+        output.viewDidTriggerSettings(for: viewModel)
     }
 
     @objc fileprivate func chartButtonDidTap() {
@@ -422,7 +427,7 @@ extension CardsViewController {
             return
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
-        output.viewDidTriggerSettings(for: viewModel, with: false)
+        output.viewDidTriggerSettings(for: viewModel)
     }
 }
 
@@ -507,16 +512,16 @@ extension CardsViewController: CardsViewInput {
         present(alert, animated: true)
     }
 
-    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
         let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
-            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel)
         }))
         let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel, scrollToAlert: scrollToAlert)
+            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
         present(alert, animated: true)
     }
