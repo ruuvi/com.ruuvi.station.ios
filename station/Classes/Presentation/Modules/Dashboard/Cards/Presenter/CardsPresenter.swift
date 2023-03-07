@@ -751,17 +751,12 @@ extension CardsPresenter {
         })
     }
 
-    private func openTagSettingsScreens(viewModel: CardsViewModel,
-                                        scrollToAlert: Bool) {
+    private func openTagSettingsScreens(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            guard let latestMeasurement = viewModel.latestMeasurement.value else {
-                return
-            }
             self.router.openTagSettings(
                 ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
+                latestMeasurement: viewModel.latestMeasurement.value,
                 sensorSettings: visibleSensorSettings,
-                scrollToAlert: scrollToAlert,
                 output: self)
         }
     }
@@ -845,7 +840,7 @@ extension CardsPresenter: CardsViewOutput {
         stopObservingBluetoothState()
     }
 
-    func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid.value {
                 if settings.keepConnectionDialogWasShown(for: luid)
@@ -853,12 +848,12 @@ extension CardsPresenter: CardsViewOutput {
                     || !viewModel.isConnectable.value.bound
                     || !viewModel.isOwner.value.bound
                     || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
-                    openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
+                    openTagSettingsScreens(viewModel: viewModel)
                 } else {
-                    view?.showKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+                    view?.showKeepConnectionDialogSettings(for: viewModel)
                 }
             } else {
-                openTagSettingsScreens(viewModel: viewModel, scrollToAlert: scrollToAlert)
+                openTagSettingsScreens(viewModel: viewModel)
             }
         } else if viewModel.type == .web,
                   let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
@@ -943,24 +938,20 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel,
-                                                    scrollToAlert: Bool) {
+    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
-            openTagSettingsScreens(viewModel: viewModel,
-                                   scrollToAlert: scrollToAlert)
+            openTagSettingsScreens(viewModel: viewModel)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
     
-    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel,
-                                                scrollToAlert: Bool) {
+    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
-            openTagSettingsScreens(viewModel: viewModel,
-                                   scrollToAlert: scrollToAlert)
+            openTagSettingsScreens(viewModel: viewModel)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }

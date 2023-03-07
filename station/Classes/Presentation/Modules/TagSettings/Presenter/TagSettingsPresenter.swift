@@ -111,7 +111,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     func configure(ruuviTag: RuuviTagSensor,
                    latestMeasurement: RuuviTagSensorRecord?,
                    sensorSettings: SensorSettings?) {
-        // IMPORTANT: Order is important here.
+
         self.viewModel = TagSettingsViewModel()
         self.lastMeasurement = latestMeasurement
         if let sensorSettings = sensorSettings {

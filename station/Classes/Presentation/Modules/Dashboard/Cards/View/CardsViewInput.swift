@@ -12,7 +12,7 @@ protocol CardsViewInput: ViewInput {
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
-    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool)
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func showFirmwareUpdateDialog(for viewModel: CardsViewModel)
     func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()

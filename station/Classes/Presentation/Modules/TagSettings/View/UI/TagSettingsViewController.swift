@@ -1240,28 +1240,13 @@ extension TagSettingsViewController {
         // Fixed items
         sections += [
             configureAlertHeaderSection(),
-            configureTemperatureAlertSection()
+            configureTemperatureAlertSection(),
+            configureHumidityAlertSection(),
+            configurePressureAlertSection(),
+            configureRSSIAlertSection(),
+            configureMovementAlertSection(),
+            configureConnectionAlertSection()
         ]
-
-        // Variable items
-        if showHumidityOffsetCorrection() {
-            sections.append(configureHumidityAlertSection())
-        }
-
-        if showPressureOffsetCorrection() {
-            sections.append(configurePressureAlertSection())
-        }
-
-        // Fixed item
-        sections.append(configureRSSIAlertSection())
-
-        // Variable item
-        if viewModel?.movementCounter.value != nil {
-            sections.append(configureMovementAlertSection())
-        }
-
-        // Fixed item
-        sections.append(configureConnectionAlertSection())
 
         return sections
     }
@@ -1328,6 +1313,10 @@ extension TagSettingsViewController {
                                    selectedMinValue: self?.humidityLowerBound(),
                                    maxValue: maxRange,
                                    selectedMaxValue: self?.humidityUpperBound())
+                self?.humidityAlertCell?.disableEditing(
+                    disable: !GlobalHelpers.getBool(from: self?.showHumidityOffsetCorrection()),
+                    identifier: .alertHumidity
+                )
                 self?.humidityAlertCell?.delegate = self
                 return self?.humidityAlertCell ?? UITableViewCell()
             },
@@ -1357,6 +1346,10 @@ extension TagSettingsViewController {
                                                        selectedMinValue: self?.pressureLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: self?.pressureUpperBound())
+                self?.pressureAlertCell?.disableEditing(
+                    disable: !GlobalHelpers.getBool(from: self?.showPressureOffsetCorrection()),
+                    identifier: .alertPressure
+                )
                 self?.pressureAlertCell?.delegate = self
                 return self?.pressureAlertCell ?? UITableViewCell()
             },
@@ -1430,6 +1423,12 @@ extension TagSettingsViewController {
                 self?.movementAlertCell?.hideNoticeView()
                 self?.movementAlertCell?.showAdditionalTextview()
                 self?.movementAlertCell?.delegate = self
+                self?.movementAlertCell?.disableEditing(
+                    disable: GlobalHelpers.getBool(
+                        from: self?.viewModel?.movementCounter.value == nil
+                    ),
+                    identifier: .alertMovement
+                )
                 return self?.movementAlertCell ?? UITableViewCell()
             },
             action: nil
@@ -1691,7 +1690,7 @@ extension TagSettingsViewController {
                 pu.alertRange.upperBound
             )
             let u = max(
-                min(upper, pu.alertRange.upperBound),
+                max(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
             if l.decimalPoint > 0 {
@@ -1735,7 +1734,7 @@ extension TagSettingsViewController {
         }
         if let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
             let u = max(
-                min(upper, pu.alertRange.upperBound),
+                max(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
             return CGFloat(u)
@@ -2852,6 +2851,10 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: humidityLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: humidityUpperBound())
+                    humidityAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(from: !showHumidityOffsetCorrection()),
+                        identifier: currentSection.identifier
+                    )
                 }
             case .alertPressure:
                 if let pressureAlertCell = pressureAlertCell {
@@ -2861,6 +2864,10 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: pressureLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: pressureUpperBound())
+                    pressureAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(from: !showPressureOffsetCorrection()),
+                        identifier: currentSection.identifier
+                    )
                 }
             case .alertRSSI:
                 if let rssiAlertCell = rssiAlertCell {
@@ -2870,6 +2877,15 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: rssiLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: rssiUpperBound())
+                }
+            case .alertMovement:
+                if let movementAlertCell = movementAlertCell {
+                    movementAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: viewModel?.movementCounter.value == nil
+                        ),
+                        identifier: currentSection.identifier
+                    )
                 }
             default:
                 break

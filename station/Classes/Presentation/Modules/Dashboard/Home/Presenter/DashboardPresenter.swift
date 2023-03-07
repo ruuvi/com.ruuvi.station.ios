@@ -189,7 +189,7 @@ extension DashboardPresenter: DashboardViewOutput {
         router.openRuuviProductsPage()
     }
 
-    func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid.value {
                 if settings.keepConnectionDialogWasShown(for: luid)
@@ -199,8 +199,7 @@ extension DashboardPresenter: DashboardViewOutput {
                     || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                     openTagSettingsScreens(viewModel: viewModel)
                 } else {
-                    view.showKeepConnectionDialogSettings(for: viewModel,
-                                                          scrollToAlert: scrollToAlert)
+                    view.showKeepConnectionDialogSettings(for: viewModel)
                 }
             } else {
                 openTagSettingsScreens(viewModel: viewModel)
@@ -276,8 +275,7 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
 
-    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel,
-                                                    scrollToAlert: Bool) {
+    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
             openTagSettingsScreens(viewModel: viewModel)
@@ -286,8 +284,7 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
     
-    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel,
-                                                scrollToAlert: Bool) {
+    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -946,10 +943,9 @@ extension DashboardPresenter {
                             sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                         } else {
                             self?.ruuviStorage.readLast(sensor).on(success: { record in
-                                guard let record = record else {
-                                    return
+                                if let record = record {
+                                    viewModel.update(record)
                                 }
-                                viewModel.update(record)
                                 sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                             })
                         }
@@ -1272,13 +1268,9 @@ extension DashboardPresenter {
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            guard let latestMeasurement = viewModel.latestMeasurement.value
-            else {
-                return
-            }
             self.router.openTagSettings(
                 ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
+                latestMeasurement: viewModel.latestMeasurement.value,
                 sensorSettings: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
@@ -1290,10 +1282,6 @@ extension DashboardPresenter {
 
     private func openTagSettingsForNewSensor(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            guard let latestMeasurement = viewModel.latestMeasurement.value
-            else {
-                return
-            }
             self.router.openTagSettings(
                 with: viewModels,
                 ruuviTagSensors: ruuviTags,
@@ -1301,7 +1289,7 @@ extension DashboardPresenter {
                 sensorSettings: sensorSettingsList,
                 scrollTo: viewModel,
                 ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
+                latestMeasurement: viewModel.latestMeasurement.value,
                 sensorSetting: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
