@@ -6,9 +6,8 @@ protocol CardsRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openTagSettings(
         ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord,
+        latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
-        scrollToAlert: Bool,
         output: TagSettingsModuleOutput
     )
     func openVirtualSensorSettings(

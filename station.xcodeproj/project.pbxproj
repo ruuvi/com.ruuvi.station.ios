@@ -696,6 +696,8 @@
 		E116708D29634D91002DF7BF /* BackgroundSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */; };
 		E116708F29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
 		E116709029635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
+		E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
+		E11989F629B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
 		E11FDA6A29A1757C003ADA7B /* splash_bg_layer_dark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */; };
 		E11FDA6B29A1757C003ADA7B /* splash_bg_layer_dark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */; };
 		E11FDA6D29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FDA6C29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift */; };
@@ -1476,6 +1478,7 @@
 		E116708729634815002DF7BF /* BackgroundSelectionModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionModuleFactory.swift; sourceTree = "<group>"; };
 		E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionViewModel.swift; sourceTree = "<group>"; };
 		E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionUploadProgressView.swift; sourceTree = "<group>"; };
+		E11989F429B7A46E002245CF /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = splash_bg_layer_dark.jpg; sourceTree = "<group>"; };
 		E11FDA6C29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsPlainTableViewCell.swift; sourceTree = "<group>"; };
 		E11FDA6F29A3F78D003ADA7B /* RuuviSimpleViewCompositionalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviSimpleViewCompositionalLayout.swift; sourceTree = "<group>"; };
@@ -1972,6 +1975,7 @@
 				E1E6C214296C9CB100B3D037 /* Int+Extension.swift */,
 				E18FD50C28DF7E7100289359 /* UIView+Layout.swift */,
 				E18D04A028E879EE008EF5EC /* UIView+Init.swift */,
+				E11989F429B7A46E002245CF /* UIView+Extension.swift */,
 				E1597A5E295F803400DFB70B /* UIColor+Extension.swift */,
 				E1E1475B28E85EE700832B8C /* UIImageView+Init.swift */,
 				E1E3C332298D7FA500A59CB8 /* UIImage+Extension.swift */,
@@ -4950,6 +4954,7 @@
 				0EB8ED2D268F111B00C6B0FA /* View+Any.swift in Sources */,
 				E168B4AC2885C28000D6B5C6 /* MeasurementAccuracyTitles.swift in Sources */,
 				E1CD77F228782E8000F1F0EB /* UnitSettingsTableConfigurator.swift in Sources */,
+				E11989F629B7A46E002245CF /* UIView+Extension.swift in Sources */,
 				E1395C012957944E00C403C6 /* CardsViewController.swift in Sources */,
 				0E8BD31A238566AB008B31EF /* DefaultsConfigurator.swift in Sources */,
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
@@ -5306,6 +5311,7 @@
 				0E00C4F12684D97B009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				A9646472247BAE6B0001D55D /* ChartSettingsTableViewController.swift in Sources */,
 				0EF4E34026824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
+				E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */,
 				E191F1F52968D32000F1FEA6 /* TagSettingsExpandableSectionHeader.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
