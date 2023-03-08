@@ -332,10 +332,12 @@ extension TagSettingsAlertConfigCell {
         setCustomDescriptionView.disable(disable)
 
         switch identifier {
-        case .alertHumidity, .alertPressure:
+        case .alertTemperature, .alertHumidity, .alertPressure:
             alertLimitDescriptionView.disable(disable)
             alertLimitSliderView.disable(disable)
-        case .alertMovement:
+        case .alertRSSI:
+            noticeView.disable(disable)
+        case .alertMovement, .alertConnection:
             additionalTextView.disable(disable)
         default: break
         }

@@ -94,6 +94,8 @@ struct TagSettingsViewModel {
 
     var source: Observable<RuuviTagSensorRecordSource?> = Observable<RuuviTagSensorRecordSource?>()
 
+    var latestMeasurement: Observable<RuuviTagSensorRecord?> = Observable<RuuviTagSensorRecord?>()
+
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity
         temperature.value = record.temperature
@@ -108,6 +110,7 @@ struct TagSettingsViewModel {
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
         batteryNeedsReplacement.value = batteryStatusProvider.batteryNeedsReplacement(temperature: record.temperature,
                                                                           voltage: record.voltage)
+        latestMeasurement.value = record
     }
 
     func reset() {
@@ -142,5 +145,7 @@ struct TagSettingsViewModel {
 
         isMovementAlertOn.value = false
         movementAlertDescription.value = nil
+
+        latestMeasurement.value = nil
     }
 }

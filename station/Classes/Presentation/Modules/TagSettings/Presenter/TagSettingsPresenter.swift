@@ -470,6 +470,8 @@ extension TagSettingsPresenter {
         viewModel.humidity.value = lastMeasurement?.humidity
         viewModel.movementCounter.value = lastMeasurement?.movementCounter
 
+        viewModel.latestMeasurement.value = lastMeasurement
+
         syncAlerts()
 
         view.viewModel = viewModel

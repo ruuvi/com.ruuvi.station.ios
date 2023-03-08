@@ -81,21 +81,6 @@ class ShareViewController: UITableViewController {
         }
     }
 
-//    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        let section = Section(value: section)
-//        switch section {
-//        case .sharedEmails:
-//            if let count = viewModel.sharedEmails.value?.count,
-//               let title = section.title {
-//                return String(format: title, count, viewModel.maxCount)
-//            } else {
-//                return nil
-//            }
-//        default:
-//            return section.title
-//        }
-//    }
-
     override func tableView(_ tableView: UITableView,
                             viewForHeaderInSection section: Int) -> UIView? {
         let section = Section(value: section)
