@@ -209,8 +209,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         localIDs.clear(sensor: sensor)
         Future.zip([deleteTagOperation,
                     deleteRecordsOperation,
-                    deleteLastRecordOperation,
-                    cleanUpOperation])
+                    deleteLastRecordOperation])
             .on(success: { _ in
                 if let unclaimOperation = unclaimOperation {
                     unclaimOperation.on()
@@ -223,6 +222,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 }
             }, failure: { error in
                 promise.fail(error: .ruuviPool(error))
+            }, completion: {
+                cleanUpOperation.on()
             })
         return promise.future
     }
