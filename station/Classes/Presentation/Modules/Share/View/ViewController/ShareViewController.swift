@@ -81,38 +81,31 @@ class ShareViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView,
+                            viewForHeaderInSection section: Int) -> UIView? {
         let section = Section(value: section)
+        let headerView = UIView(color: .clear)
+        let titleLabel = UILabel()
+        titleLabel.textColor = RuuviColor.ruuviMenuTextColor
+        titleLabel.font = UIFont.Muli(.bold, size: 16)
+        titleLabel.numberOfLines = 0
         switch section {
         case .sharedEmails:
             if let count = viewModel.sharedEmails.value?.count,
                let title = section.title {
-                return String(format: title, count, viewModel.maxCount)
-            } else {
-                return nil
+                titleLabel.text = String(format: title,
+                                         count,
+                                         viewModel.maxCount)
             }
         default:
-            return section.title
+            titleLabel.text = section.title
         }
-    }
-
-    override func tableView(_ tableView: UITableView,
-                            heightForHeaderInSection section: Int) -> CGFloat {
-        switch Section(value: section) {
-        case .sharedEmails:
-            return 66
-        default:
-            return section > 0 ? 44 : 0
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView,
-                            forSection: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = RuuviColor.ruuviMenuTextColor
-            headerView.textLabel?.font = UIFont.Muli(.bold, size: 16)
-            headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-        }
+        headerView.addSubview(titleLabel)
+        titleLabel.fillSuperviewToSafeArea(
+            padding: .init(top: 0, left: 20,
+                           bottom: 8, right: 20)
+        )
+        return headerView
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -183,6 +176,8 @@ extension ShareViewController: UITextFieldDelegate {
 // MARK: - Private
 extension ShareViewController {
     func configureTableView() {
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.estimatedSectionHeaderHeight = 70
         tableView.tableFooterView = UIView(frame: .zero)
     }
 
