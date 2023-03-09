@@ -19,10 +19,15 @@ extension Notification.Name {
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
     public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
     public static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
+    public static let AppearanceSettingsDidChange = Notification.Name("AppearanceSettingsDidChange")
 }
 
 public enum DashboardTypeKey: String {
     case type
+}
+
+public enum AppearanceTypeKey: String {
+    case style
 }
 
 public protocol RuuviLocalSettings {
@@ -66,6 +71,7 @@ public protocol RuuviLocalSettings {
     var dashboardEnabled: Bool { get set }
     var dashboardType: DashboardType { get set }
     var showChartOnDashboardCardTap: Bool { get set }
+    var theme: RuuviTheme { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

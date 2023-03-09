@@ -15,4 +15,5 @@ protocol SettingsViewOutput {
     func viewDidTriggerShake()
     func viewDidTapRuuviCloud()
     func viewDidSelectChangeLanguage()
+    func viewDidTapAppearance()
 }

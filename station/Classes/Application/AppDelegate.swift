@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var featureToggleService: FeatureToggleService!
     var cloudNotificationService: RuuviServiceCloudNotification!
     var pnManager: RuuviCorePN!
+    var settings: RuuviLocalSettings!
     var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
 
     private var appRouter: AppRouter?
@@ -71,6 +72,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = appRouter.viewController
         self.window?.makeKeyAndVisible()
         self.appRouter = appRouter
+
+        self.settings = r.resolve(RuuviLocalSettings.self)
+        self.window?.overrideUserInterfaceStyle = settings.theme.uiInterfaceStyle
 
         return true
     }
