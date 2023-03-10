@@ -18,11 +18,14 @@ Pod::Spec.new do |s|
     ss.source_files = 'Sources/RuuviPool/**/*.{h,m,swift}', 'Sources/RuuviPool/*.{h,m,swift}'
     ss.dependency 'FutureX'
     ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviPersistence'
+    ss.dependency 'RuuviLocal'
   end
 
   s.subspec 'Coordinator' do |ss|
     ss.source_files = 'Sources/RuuviPoolCoordinator/**/*.{h,m,swift}', 'Sources/RuuviPoolCoordinator/*.{h,m,swift}'
     ss.dependency 'RuuviPool/Contract'
+    ss.dependency 'RuuviPersistence'
     ss.dependency 'RuuviPersistence/Realm'
     ss.dependency 'RuuviPersistence/SQLite'
     ss.dependency 'RuuviOntology'

@@ -600,6 +600,57 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         // No op for realmDB since this will be deprecated soon.
         return promise.future
     }
+
+    // MARK: - Queued cloud requests
+    @discardableResult
+    public func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
+
+    @discardableResult
+    public func readQueuedRequests(
+        for key: String
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
+
+    @discardableResult
+    public func readQueuedRequests(
+        for type: RuuviCloudQueuedRequestType
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
+
+    @discardableResult
+    public func createQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
+
+    @discardableResult
+    public func deleteQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
+
+    @discardableResult
+    public func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        // No op for realmDB since this will be deprecated soon.
+        return promise.future
+    }
 }
 // MARK: - Private
 extension RuuviPersistenceRealm {

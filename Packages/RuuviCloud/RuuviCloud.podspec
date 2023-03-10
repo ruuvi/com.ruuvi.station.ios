@@ -19,6 +19,8 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
     ss.dependency 'RuuviOntology'
     ss.dependency 'RuuviUser'
+    ss.dependency 'RuuviPool'
+    ss.dependency 'RuuviPersistence'
   end
 
   s.subspec 'Pure' do |ss|
@@ -28,6 +30,8 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviOntology'
     ss.dependency 'RuuviUser'
     ss.dependency 'FutureX'
+    ss.dependency 'RuuviPool'
+    ss.dependency 'RuuviPersistence'
   end
 
   s.subspec 'Api' do |ss|
@@ -37,6 +41,8 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviOntology/Mappers'
     ss.dependency 'BTKit'
     ss.dependency 'FutureX'
+    ss.dependency 'RuuviPool'
+    ss.dependency 'RuuviPersistence'
   end
 
   s.test_spec 'Tests' do |test_spec|

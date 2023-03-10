@@ -128,6 +128,10 @@ class TagSettingsViewController: UIViewController {
     private let pairingString = "TagSettings.PairAndBackgroundScan.Pairing.title".localized()
     private let unpairedString =  "TagSettings.PairAndBackgroundScan.Unpaired.title".localized()
 
+    private let temperatureAlertFormat = "TagSettings.temperatureAlertTitleLabel.text".localized()
+    private let airHumidityAlertFormat = "TagSettings.AirHumidityAlert.title".localized()
+    private let pressureAlertFormat = "TagSettings.PressureAlert.title".localized()
+
     // Cell
     static let ReuseIdentifier = "SettingsCell"
     private var tableViewSections = [TagSettingsSection]()
@@ -160,9 +164,10 @@ class TagSettingsViewController: UIViewController {
     }()
 
     private lazy var temperatureAlertSection: TagSettingsSection? = {
-        let titleFormat = "TagSettings.temperatureAlertTitleLabel.text"
-        let sectionTitle = String(format: titleFormat.localized(),
-                                  viewModel?.temperatureUnit.value?.symbol ?? "N/A".localized())
+        let sectionTitle = String(
+            format: temperatureAlertFormat,
+            viewModel?.temperatureUnit.value?.symbol ?? "N/A".localized()
+        )
         let section = TagSettingsSection(
             identifier: .alertTemperature,
             title: sectionTitle,
@@ -185,10 +190,8 @@ class TagSettingsViewController: UIViewController {
         return TagSettingsExpandableSectionHeader()
     }()
     private lazy var humidityAlertSection: TagSettingsSection? = {
-
-        let titleFormat = "TagSettings.AirHumidityAlert.title"
         let symbol = HumidityUnit.percent.symbol
-        let sectionTitle = String(format: titleFormat.localized(), symbol)
+        let sectionTitle = String(format: airHumidityAlertFormat, symbol)
         let section = TagSettingsSection(
             identifier: .alertHumidity,
             title: sectionTitle,
@@ -210,10 +213,10 @@ class TagSettingsViewController: UIViewController {
         return TagSettingsExpandableSectionHeader()
     }()
     private lazy var pressureAlertSection: TagSettingsSection? = {
-
-        let titleFormat = "TagSettings.PressureAlert.title"
-        let sectionTitle = String(format: titleFormat.localized(),
-                                  viewModel?.pressureUnit.value?.symbol ?? "N/A".localized())
+        let sectionTitle = String(
+            format: pressureAlertFormat,
+            viewModel?.pressureUnit.value?.symbol ?? "N/A".localized()
+        )
         let section = TagSettingsSection(
             identifier: .alertPressure,
             title: sectionTitle,
@@ -831,9 +834,10 @@ extension TagSettingsViewController {
         // Temperature
         tableView.bind(viewModel.temperatureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
-            let title = "TagSettings.temperatureAlertTitleLabel.text"
-            sSelf.temperatureAlertSection?.title = String(format: title.localized(),
-                                                    value?.symbol ?? "N/A".localized())
+            sSelf.temperatureAlertSection?.title = String(
+                format: sSelf.temperatureAlertFormat,
+                value?.symbol ?? "N/A".localized()
+            )
         }
 
         if let temperatureAlertCell = temperatureAlertCell {
@@ -878,6 +882,14 @@ extension TagSettingsViewController {
         }
 
         if let temperatureAlertSectionHeaderView = temperatureAlertSectionHeaderView {
+            temperatureAlertSectionHeaderView.bind(viewModel.temperatureUnit) { [weak self]
+                header, unit in
+                guard let sSelf = self else { return }
+                let sectionTitle = String(format: sSelf.temperatureAlertFormat,
+                                          unit?.symbol ?? "N/A".localized())
+                header.setTitle(with: sectionTitle)
+            }
+
             temperatureAlertSectionHeaderView.bind(
                 viewModel.temperatureAlertMutedTill) { header, mutedTill in
                     let isOn = self.alertsAvailable() &&
@@ -986,9 +998,10 @@ extension TagSettingsViewController {
         // Pressure
         tableView.bind(viewModel.pressureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
-            let titleFormat = "TagSettings.PressureAlert.title"
-            sSelf.pressureAlertSection?.title = String(format: titleFormat.localized(),
-                                                    value?.symbol ?? "N/A".localized())
+            sSelf.pressureAlertSection?.title = String(
+                format: sSelf.pressureAlertFormat,
+                value?.symbol ?? "N/A".localized()
+            )
         }
 
         if let pressureAlertCell = pressureAlertCell {
@@ -1037,6 +1050,16 @@ extension TagSettingsViewController {
         }
 
         if let pressureAlertSectionHeaderView = pressureAlertSectionHeaderView {
+            pressureAlertSectionHeaderView.bind(viewModel.pressureUnit) {
+                [weak self ] header, unit in
+                guard let sSelf = self else { return }
+                let sectionTitle = String(
+                    format: sSelf.pressureAlertFormat,
+                    unit?.symbol ?? "N/A".localized()
+                )
+                header.setTitle(with: sectionTitle)
+            }
+
             pressureAlertSectionHeaderView.bind(
                 viewModel.pressureAlertMutedTill) { header, mutedTill in
                     let isOn = self.alertsAvailable() &&

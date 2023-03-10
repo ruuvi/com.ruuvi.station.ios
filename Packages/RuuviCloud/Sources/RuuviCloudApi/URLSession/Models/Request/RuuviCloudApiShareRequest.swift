@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RuuviCloudApiShareRequest: Encodable {
+public struct RuuviCloudApiShareRequest: Codable {
     let user: String?
     let sensor: String
 

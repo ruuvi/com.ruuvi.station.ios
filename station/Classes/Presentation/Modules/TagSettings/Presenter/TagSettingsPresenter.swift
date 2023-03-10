@@ -46,7 +46,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
-            syncViewModel()
+            syncTag()
             bindViewModel()
         }
     }
@@ -56,7 +56,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
 
-    private var viewModel: TagSettingsViewModel!
+    private var viewModel: TagSettingsViewModel! {
+        didSet {
+            view.viewModel = viewModel
+        }
+    }
+
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
     private var advertisementToken: ObservationToken?
@@ -74,6 +79,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var previousAdvertisementSequence: Int?
     private var lastMeasurement: RuuviTagSensorRecord? {
         didSet {
+            syncLastMeasurement()
             syncOffsetCorrection()
         }
     }
@@ -113,6 +119,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                    sensorSettings: SensorSettings?) {
 
         self.viewModel = TagSettingsViewModel()
+        self.ruuviTag = ruuviTag
         self.lastMeasurement = latestMeasurement
         if let sensorSettings = sensorSettings {
             self.sensorSettings = sensorSettings
@@ -128,7 +135,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                 pressureOffsetDate: nil
             )
         }
-        self.ruuviTag = ruuviTag
+        syncUnits()
+        syncAlerts()
 
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
@@ -397,86 +405,6 @@ extension TagSettingsPresenter {
         }
     }
 
-    // swiftlint:disable:next function_body_length
-    private func syncViewModel() {
-        viewModel.temperatureUnit.value = settings.temperatureUnit
-        viewModel.humidityUnit.value = settings.humidityUnit
-        viewModel.pressureUnit.value = settings.pressureUnit
-        ruuviSensorPropertiesService.getImage(for: ruuviTag)
-            .on(success: { [weak self] image in
-                self?.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-        viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag)
-        viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: ruuviTag)
-        viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: ruuviTag)
-        viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag)
-        viewModel.signalAlertDescription.value = alertService.signalDescription(for: ruuviTag)
-        viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag)
-        viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
-        viewModel.isAuthorized.value = ruuviUser.isAuthorized
-        viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
-
-        // swiftlint:disable line_length
-        // Context:
-        // The tag can be claimable only when -
-        // 1: When - the tag is not claimed already, AND
-        // 2: When - the tag macId is not Nil, AND
-        // 3: When - there's no owner of the tag OR there's a owner of the tag but it's not the logged in user
-        // Last one is for the scenario when a tag is added locally but claimed by other user
-        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && (ruuviTag.owner == nil || (ruuviTag.owner != nil && ruuviTag.isOwner))
-        viewModel.canClaimTag.value = canBeClaimed
-        viewModel.isClaimedTag.value = !canBeClaimed
-
-        // Not set / Someone else / email of the one who shared the sensor with you / You
-        if let owner = ruuviTag.owner {
-            viewModel.owner.value = owner
-        } else {
-            viewModel.owner.value = "TagSettings.General.Owner.none".localized()
-        }
-        // Set isOwner value
-        viewModel.isOwner.value = ruuviTag.isOwner
-
-        if (ruuviTag.name == ruuviTag.luid?.value
-            || ruuviTag.name == ruuviTag.macId?.value)
-            && !ruuviTag.isCloud {
-            viewModel.name.value = nil
-        } else {
-            viewModel.name.value = ruuviTag.name
-        }
-
-        viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil && ruuviTag.isOwner
-
-        viewModel.isNetworkConnected.value = ruuviTag.isCloud
-        if let luid = ruuviTag.luid {
-            viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-            viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
-        } else {
-            viewModel.isConnected.value = false
-            viewModel.keepConnection.value = false
-        }
-        if let macId = ruuviTag.macId?.value {
-            viewModel.mac.value = macId
-        }
-        viewModel.uuid.value = ruuviTag.luid?.value ?? ruuviTag.macId?.value
-        viewModel.version.value = ruuviTag.version
-        viewModel.firmwareVersion.value = ruuviTag.firmwareVersion
-
-        viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
-        viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
-
-        viewModel.temperature.value = lastMeasurement?.temperature
-        viewModel.humidity.value = lastMeasurement?.humidity
-        viewModel.movementCounter.value = lastMeasurement?.movementCounter
-
-        viewModel.latestMeasurement.value = lastMeasurement
-
-        syncAlerts()
-
-        view.viewModel = viewModel
-    }
-
     private func bindViewModel() {
         // isPNAlertsAvailiable
         let isPNEnabled = viewModel.isPushNotificationsEnabled
@@ -523,6 +451,83 @@ extension TagSettingsPresenter {
         }
     }
 
+    /// Sets the view model properties related to the associated RuuviTag
+    private func syncTag() {
+        ruuviSensorPropertiesService.getImage(for: ruuviTag)
+            .on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+        viewModel.isAuthorized.value = ruuviUser.isAuthorized
+
+        viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
+
+        // swiftlint:disable line_length
+        // Context:
+        // The tag can be claimable only when -
+        // 1: When - the tag is not claimed already, AND
+        // 2: When - the tag macId is not Nil, AND
+        // 3: When - there's no owner of the tag OR there's a owner of the tag but it's not the logged in user
+        // Last one is for the scenario when a tag is added locally but claimed by other user
+        let canBeClaimed = !ruuviTag.isClaimed && ruuviTag.macId != nil && (ruuviTag.owner == nil || (ruuviTag.owner != nil && ruuviTag.isOwner))
+        viewModel.canClaimTag.value = canBeClaimed
+        viewModel.isClaimedTag.value = !canBeClaimed
+
+        // Not set / Someone else / email of the one who shared the sensor with you / You
+        if let owner = ruuviTag.owner {
+            viewModel.owner.value = owner
+        } else {
+            viewModel.owner.value = "TagSettings.General.Owner.none".localized()
+        }
+        // Set isOwner value
+        viewModel.isOwner.value = ruuviTag.isOwner
+
+        if (ruuviTag.name == ruuviTag.luid?.value
+            || ruuviTag.name == ruuviTag.macId?.value)
+            && !ruuviTag.isCloud {
+            viewModel.name.value = nil
+        } else {
+            viewModel.name.value = ruuviTag.name
+        }
+
+        viewModel.isConnectable.value = ruuviTag.isConnectable && ruuviTag.luid != nil && ruuviTag.isOwner
+
+        viewModel.isNetworkConnected.value = ruuviTag.isCloud
+        if let luid = ruuviTag.luid {
+            viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+            viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
+        } else {
+            viewModel.isConnected.value = false
+            viewModel.keepConnection.value = false
+        }
+        if let macId = ruuviTag.macId?.value {
+            viewModel.mac.value = macId
+        }
+        viewModel.uuid.value = ruuviTag.luid?.value ?? ruuviTag.macId?.value
+        viewModel.version.value = ruuviTag.version
+        viewModel.firmwareVersion.value = ruuviTag.firmwareVersion
+    }
+
+    /// Sets the view model properties related to the settings
+    private func syncUnits() {
+        viewModel.temperatureUnit.value = settings.temperatureUnit
+        viewModel.humidityUnit.value = settings.humidityUnit
+        viewModel.pressureUnit.value = settings.pressureUnit
+    }
+
+    /// Sets the view model properties related to the latest measurement
+    private func syncLastMeasurement() {
+        viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
+        viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
+
+        viewModel.temperature.value = lastMeasurement?.temperature
+        viewModel.humidity.value = lastMeasurement?.humidity
+        viewModel.movementCounter.value = lastMeasurement?.movementCounter
+        viewModel.latestMeasurement.value = lastMeasurement
+    }
+
+    /// Sets the view model properties related to the offset corrections
     private func syncOffsetCorrection() {
         // reload offset correction
         viewModel.temperatureOffsetCorrection.value = sensorSettings?.temperatureOffset
@@ -533,7 +538,17 @@ extension TagSettingsPresenter {
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
     }
 
+    /// Sets the view model properties related to alerts
     private func syncAlerts() {
+
+        viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag)
+        viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: ruuviTag)
+        viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: ruuviTag)
+        viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag)
+        viewModel.signalAlertDescription.value = alertService.signalDescription(for: ruuviTag)
+        viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag)
+        viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag)
+
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:

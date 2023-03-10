@@ -22,6 +22,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     typealias Record = RuuviTagDataSQLite
     typealias RecordLatest = RuuviTagLatestDataSQLite
     typealias Settings = SensorSettingsSQLite
+    typealias QueuedRequest = RuuviCloudQueuedRequestSQLite
 
     public var database: GRDBDatabase {
         return context.database
@@ -657,6 +658,133 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         }
         return promise.future
     }
+
+    // MARK: - Queued cloud requests
+    @discardableResult
+    public func readQueuedRequests()
+    -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
+        readQueue.async { [weak self] in
+            var sqliteEntities = [RuuviCloudQueuedRequest]()
+            do {
+                try self?.database.dbPool.read { db in
+                    let request = QueuedRequest.order(QueuedRequest.requestDateColumn)
+                    sqliteEntities = try request.fetchAll(db)
+                }
+                promise.succeed(value: sqliteEntities.map({ $0 }))
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
+    @discardableResult
+    public func readQueuedRequests(
+        for key: String
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
+        readQueuedRequests().on(success: { reqs in
+            let requests = reqs.filter({ req in
+                req.uniqueKey != nil && req.uniqueKey == key
+            })
+            promise.succeed(value: requests)
+        }, failure: { error in
+            promise.fail(error: .grdb(error))
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    public func readQueuedRequests(
+        for type: RuuviCloudQueuedRequestType
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
+        readQueuedRequests().on(success: { reqs in
+            let requests = reqs.filter({ req in
+                req.type != nil && req.type == type
+            })
+            promise.succeed(value: requests)
+        }, failure: { error in
+            promise.fail(error: .grdb(error))
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    public func createQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        // Check if there's already a request stored for the key.
+        // If exists update the existing record, otherwise create a new.
+        readQueuedRequests().on(success: { [weak self] requests in
+
+            let existingRequest = requests.first(
+                where: { ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey )
+                    && ($0.type != nil && $0.type == request.type) }
+            )
+            let isCreate = (requests.count == 0) || existingRequest == nil
+
+            self?.createQueueRequest(
+                isCreate: isCreate,
+                newRequest: request,
+                existingRequest: existingRequest
+            )
+            .on(success: { _ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: .grdb(error))
+            })
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    public func deleteQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        assert(request.id != nil)
+        let entity = QueuedRequest(
+            id: request.id,
+            type: request.type,
+            status: request.status,
+            uniqueKey: request.uniqueKey,
+            requestDate: request.requestDate,
+            successDate: request.successDate,
+            attempts: request.attempts,
+            requestBodyData: request.requestBodyData,
+            additionalData: request.additionalData
+        )
+        do {
+            var success = false
+            try database.dbPool.write { db in
+                success = try entity.delete(db)
+            }
+            promise.succeed(value: success)
+        } catch {
+            reportToCrashlytics(error: error)
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
+    @discardableResult
+    public func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        do {
+            var deletedCount = 0
+            try database.dbPool.write { db in
+                deletedCount = try QueuedRequest.deleteAll(db)
+            }
+            promise.succeed(value: deletedCount > 0)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
 }
 
 // MARK: - Private
@@ -666,6 +794,54 @@ extension RuuviPersistenceSQLite {
         Crashlytics.crashlytics().log("\(method)(line: \(line)")
         Crashlytics.crashlytics().record(error: error)
         #endif
+    }
+
+    /// Create or Update a queued request.
+    private func createQueueRequest(
+        isCreate: Bool,
+        newRequest: RuuviCloudQueuedRequest,
+        existingRequest: RuuviCloudQueuedRequest?
+    )
+    -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        if isCreate {
+            do {
+                try database.dbPool.write { db in
+                    assert(newRequest.uniqueKey != nil)
+                    try newRequest.sqlite.insert(db)
+                }
+                promise.succeed(value: true)
+            } catch {
+                reportToCrashlytics(error: error)
+                promise.fail(error: .grdb(error))
+            }
+        } else {
+            guard let existingRequest = existingRequest else {
+                return promise.future
+            }
+
+            let retryCount = existingRequest.attempts ?? 0 + 1
+            let entity = QueuedRequest(
+                id: existingRequest.id,
+                type: existingRequest.type,
+                status: newRequest.status,
+                uniqueKey: newRequest.uniqueKey,
+                requestDate: newRequest.requestDate,
+                successDate: newRequest.successDate,
+                attempts: retryCount,
+                requestBodyData: newRequest.requestBodyData,
+                additionalData: newRequest.additionalData
+            )
+            do {
+                try database.dbPool.write { db in
+                    try entity.update(db)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
     }
 }
 // swiftlint:enable file_length

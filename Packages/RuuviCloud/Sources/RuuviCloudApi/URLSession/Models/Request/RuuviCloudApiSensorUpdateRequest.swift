@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RuuviCloudApiSensorUpdateRequest: Encodable {
+public struct RuuviCloudApiSensorUpdateRequest: Encodable, Decodable {
     let sensor: String
     let name: String
     let offsetTemperature: Double?
