@@ -696,6 +696,8 @@
 		E116708D29634D91002DF7BF /* BackgroundSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */; };
 		E116708F29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
 		E116709029635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
+		E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
+		E11989F629B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
 		E11FDA6A29A1757C003ADA7B /* splash_bg_layer_dark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */; };
 		E11FDA6B29A1757C003ADA7B /* splash_bg_layer_dark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */; };
 		E11FDA6D29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FDA6C29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift */; };
@@ -919,6 +921,8 @@
 		E1B5800C29859EEB00B441FB /* DevicesInteractorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5800A29859EEB00B441FB /* DevicesInteractorOutput.swift */; };
 		E1B5800E2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5800D2986AE0800B441FB /* RuuviContextMenuButton.swift */; };
 		E1B5800F2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5800D2986AE0800B441FB /* RuuviContextMenuButton.swift */; };
+		E1C395D329B26044009301D3 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */; };
+		E1C395D429B26044009301D3 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */; };
 		E1CA28AE29201F34009E4423 /* RUAlertExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */; };
 		E1CA28AF29201F34009E4423 /* RUAlertExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */; };
 		E1CA28B8292037E4009E4423 /* RUAlertDetailsCellChildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */; };
@@ -1474,6 +1478,7 @@
 		E116708729634815002DF7BF /* BackgroundSelectionModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionModuleFactory.swift; sourceTree = "<group>"; };
 		E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionViewModel.swift; sourceTree = "<group>"; };
 		E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionUploadProgressView.swift; sourceTree = "<group>"; };
+		E11989F429B7A46E002245CF /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = splash_bg_layer_dark.jpg; sourceTree = "<group>"; };
 		E11FDA6C29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsPlainTableViewCell.swift; sourceTree = "<group>"; };
 		E11FDA6F29A3F78D003ADA7B /* RuuviSimpleViewCompositionalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviSimpleViewCompositionalLayout.swift; sourceTree = "<group>"; };
@@ -1592,6 +1597,7 @@
 		E1B5800729859EDE00B441FB /* DevicesInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesInteractorInput.swift; sourceTree = "<group>"; };
 		E1B5800A29859EEB00B441FB /* DevicesInteractorOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesInteractorOutput.swift; sourceTree = "<group>"; };
 		E1B5800D2986AE0800B441FB /* RuuviContextMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviContextMenuButton.swift; sourceTree = "<group>"; };
+		E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertExpandButton.swift; sourceTree = "<group>"; };
 		E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertDetailsCellChildView.swift; sourceTree = "<group>"; };
 		E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAnimatingDotsView.swift; sourceTree = "<group>"; };
@@ -1969,6 +1975,7 @@
 				E1E6C214296C9CB100B3D037 /* Int+Extension.swift */,
 				E18FD50C28DF7E7100289359 /* UIView+Layout.swift */,
 				E18D04A028E879EE008EF5EC /* UIView+Init.swift */,
+				E11989F429B7A46E002245CF /* UIView+Extension.swift */,
 				E1597A5E295F803400DFB70B /* UIColor+Extension.swift */,
 				E1E1475B28E85EE700832B8C /* UIImageView+Init.swift */,
 				E1E3C332298D7FA500A59CB8 /* UIImage+Extension.swift */,
@@ -1997,6 +2004,7 @@
 				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
 				0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */,
 				A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */,
+				E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */,
 				660EB29B266928E6000FD22B /* UIViewController+Alert.swift */,
 				A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */,
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
@@ -4946,6 +4954,7 @@
 				0EB8ED2D268F111B00C6B0FA /* View+Any.swift in Sources */,
 				E168B4AC2885C28000D6B5C6 /* MeasurementAccuracyTitles.swift in Sources */,
 				E1CD77F228782E8000F1F0EB /* UnitSettingsTableConfigurator.swift in Sources */,
+				E11989F629B7A46E002245CF /* UIView+Extension.swift in Sources */,
 				E1395C012957944E00C403C6 /* CardsViewController.swift in Sources */,
 				0E8BD31A238566AB008B31EF /* DefaultsConfigurator.swift in Sources */,
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
@@ -5015,6 +5024,7 @@
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				A9E5996B255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				0E8BD348238566AB008B31EF /* SettingsRouterInput.swift in Sources */,
+				E1C395D429B26044009301D3 /* UICollectionView+Extension.swift in Sources */,
 				E1CD77FC28782F7100F1F0EB /* UnitSettingsModuleInput.swift in Sources */,
 				0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
@@ -5301,6 +5311,7 @@
 				0E00C4F12684D97B009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				A9646472247BAE6B0001D55D /* ChartSettingsTableViewController.swift in Sources */,
 				0EF4E34026824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
+				E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */,
 				E191F1F52968D32000F1FEA6 /* TagSettingsExpandableSectionHeader.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
@@ -5657,6 +5668,7 @@
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */,
+				E1C395D329B26044009301D3 /* UICollectionView+Extension.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				E1E3C33C298ED3E300A59CB8 /* CardsPresenter.swift in Sources */,
 				E16B8F4528D10E2C0025B92D /* MyRuuviAccountViewOutput.swift in Sources */,
@@ -5839,7 +5851,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -5849,7 +5861,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5871,7 +5883,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -5881,7 +5893,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5903,7 +5915,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5916,7 +5928,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -5940,7 +5952,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5953,7 +5965,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5975,7 +5987,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5988,7 +6000,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -6011,7 +6023,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6024,7 +6036,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6163,7 +6175,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6205,7 +6217,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6225,7 +6237,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6234,7 +6246,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6339,7 +6351,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6352,7 +6364,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
@@ -6374,7 +6386,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 354;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6387,7 +6399,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -28,9 +28,9 @@ class CardsIndicatorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    convenience init(icon: String) {
+    convenience init(icon: UIImage?) {
         self.init()
-        self.indicatorIconView.image = UIImage(named: icon)
+        self.indicatorIconView.image = icon
         setUpUI()
     }
 
@@ -58,7 +58,7 @@ extension CardsIndicatorView {
         indicatorValueLabel.text = value
     }
 
-    func setIcon(with image: String) {
-        indicatorIconView.image = UIImage(named: image)
+    func setIcon(with image: UIImage?) {
+        indicatorIconView.image = image
     }
 }

@@ -36,9 +36,9 @@ class CardsLargeImageCell: UICollectionViewCell {
         return label
     }()
 
-    private lazy var humidityView = CardsIndicatorView(icon: "icon-measure-humidity")
-    private lazy var pressureView = CardsIndicatorView(icon: "icon-measure-pressure")
-    private lazy var movementView = CardsIndicatorView(icon: "icon-measure-movement")
+    private lazy var humidityView = CardsIndicatorView(icon: RuuviAssets.humidityImage)
+    private lazy var pressureView = CardsIndicatorView(icon: RuuviAssets.pressureImage)
+    private lazy var movementView = CardsIndicatorView(icon: RuuviAssets.movementCounterImage)
 
     private lazy var batteryLevelView = BatteryLevelView()
 
@@ -72,11 +72,6 @@ class CardsLargeImageCell: UICollectionViewCell {
     private var pressureViewHeight: NSLayoutConstraint!
     private var movementViewHeight: NSLayoutConstraint!
     private var batteryLevelViewHeight: NSLayoutConstraint!
-
-    private let advertisementImage = UIImage(named: "icon-bluetooth")
-    private let heartbeatImage = UIImage(named: "icon-bluetooth-connected")
-    private let ruuviNetworkImage = UIImage(named: "icon-gateway")
-    private let weatherProviderImage = UIImage(named: "icon-weatherstation")
 
     private var timer: Timer?
     private var notificationToken: NSObjectProtocol?
@@ -245,125 +240,126 @@ extension CardsLargeImageCell {
     func configure(with viewModel: CardsViewModel,
                    measurementService: RuuviServiceMeasurement?) {
 
-        ruuviTagNameLabel.text = viewModel.name.value?.uppercased()
-
-        // Temp
-        if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
-            temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
-        } else {
-            temperatureLabel.text = "N/A".localized()
+        ruuviTagNameLabel.bind(viewModel.name) { (label, name) in
+            label.text = name
         }
 
-        if let temperatureUnit = measurementService?.units.temperatureUnit {
-            temperatureUnitLabel.text = temperatureUnit.symbol
-        } else {
-            temperatureUnitLabel.text = "N/A".localized()
+        // Temp
+        temperatureLabel.bind(viewModel.temperature) { (label, temperature) in
+            if let temp = measurementService?.stringWithoutSign(for: temperature) {
+                label.text = temp.components(separatedBy: String.nbsp).first
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+
+        temperatureUnitLabel.bind(viewModel.temperature) { (label, _) in
+            if let temperatureUnit = measurementService?.units.temperatureUnit {
+                label.text = temperatureUnit.symbol
+            } else {
+                label.text = "N/A".localized()
+            }
         }
 
         // Humidity
-        if let humidity = viewModel.humidity.value {
-            hideHumidityView(hide: false)
-            let humidityValue = measurementService?.string(for: humidity,
-                                                           temperature: viewModel.temperature.value,
-                                                           allowSettings: true)
-            humidityView.setValue(with: humidityValue)
-        } else {
-            hideHumidityView(hide: true)
+        humidityView.bind(viewModel.humidity) { [weak self] (view, humidity) in
+            if let humidity = humidity {
+                self?.hideHumidityView(hide: false)
+                let humidityValue = measurementService?.string(
+                    for: humidity,
+                    temperature: viewModel.temperature.value,
+                    allowSettings: true
+                )
+                view.setValue(with: humidityValue)
+            } else {
+                self?.hideHumidityView(hide: true)
+            }
         }
 
         // Pressure
-        if let pressure = viewModel.pressure.value {
-            hidePressureView(hide: false)
-            let pressureValue = measurementService?.string(for: pressure,
-                                                           allowSettings: true)
-            pressureView.setValue(with: pressureValue)
-        } else {
-            hidePressureView(hide: true)
+        pressureView.bind(viewModel.pressure) { [weak self] (view, pressure) in
+            if let pressure = pressure {
+                self?.hidePressureView(hide: false)
+                let pressureValue = measurementService?.string(
+                    for: pressure,
+                    allowSettings: true
+                )
+                view.setValue(with: pressureValue)
+            } else {
+                self?.hidePressureView(hide: true)
+            }
         }
 
         // Movement
         switch viewModel.type {
         case .ruuvi:
-            if let movement = viewModel.movementCounter.value {
-                hideMovementView(hide: false)
-                let movementValue = "\(movement) " + "Cards.Movements.title".localized()
-                movementView.setValue(with: movementValue)
-            } else {
-                hideMovementView(hide: true)
+            movementView.bind(viewModel.movementCounter) {
+                [weak self] (view, movement) in
+                if let movement = movement {
+                    self?.hideMovementView(hide: false)
+                    let movementValue = "\(movement) " + "Cards.Movements.title".localized()
+                    view.setValue(with: movementValue)
+                } else {
+                    self?.hideMovementView(hide: true)
+                }
+                view.setIcon(with: RuuviAssets.movementCounterImage)
             }
-            movementView.setIcon(with: "icon-measure-movement")
         case .web:
-            let location = viewModel.location
-            if let location = location.value {
-                movementView.setValue(with: location.city ?? location.country)
-            } else if let currentLocation = viewModel.currentLocation.value {
-                movementView.setValue(with: currentLocation.description)
-            } else {
-                movementView.setValue(with: "N/A".localized())
+            movementView.bind(viewModel.location) { (view, location) in
+                if let location = location {
+                    view.setValue(with: location.city ?? location.country)
+                } else if let currentLocation = viewModel.currentLocation.value {
+                    view.setValue(with: currentLocation.description)
+                } else {
+                    view.setValue(with: "N/A".localized())
+                }
+                view.setIcon(with: RuuviAssets.locationImage)
             }
-            movementView.setIcon(with: "icon-measure-location")
         }
 
         // Ago
-        if let date = viewModel.date.value?.ruuviAgo() {
-            updatedAtLabel.text = date
-        } else {
-            updatedAtLabel.text = "Cards.UpdatedLabel.NoData.message".localized()
+        updatedAtLabel.bind(viewModel.date) { [weak self] (label, date) in
+            label.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+            self?.startTimer(with: date)
         }
-        startTimer(with: viewModel.date.value)
 
         // Source
-        if let source = viewModel.source.value {
+        dataSourceIconView.bind(viewModel.source) { (iv, source) in
+            guard let source = source else {
+                iv.image = nil
+                return
+            }
             switch source {
             case .unknown:
-                dataSourceIconView.image = nil
+                iv.image = nil
             case .advertisement:
-                dataSourceIconView.image = advertisementImage
-            case .heartbeat:
-                dataSourceIconView.image = heartbeatImage
-            case .log:
-                dataSourceIconView.image = heartbeatImage
+                iv.image = RuuviAssets.advertisementImage
+            case .heartbeat, .log:
+                iv.image = RuuviAssets.heartbeatImage
             case .ruuviNetwork:
-                dataSourceIconView.image = ruuviNetworkImage
+                iv.image = RuuviAssets.ruuviNetworkImage
             case .weatherProvider:
-                dataSourceIconView.image = weatherProviderImage
+                iv.image = RuuviAssets.weatherProviderImage
             }
-        } else {
-            dataSourceIconView.image = nil
         }
 
         // Battery stat
-        if let batteryLow = viewModel.batteryNeedsReplacement.value,
-           batteryLow {
-            batteryLevelView.isHidden = false
-            batteryLevelViewHeight.constant = 24
-        } else {
-            batteryLevelView.isHidden = true
-            batteryLevelViewHeight.constant = 0
-        }
-
-        // Sync status
-        guard let macId = viewModel.mac.value else {
-            return
-        }
-        startObservingNetworkSyncNotification(for: macId.any)
-    }
-}
-
-extension CardsLargeImageCell {
-    private func startTimer(with date: Date?) {
-        timer = Timer.scheduledTimer(withTimeInterval: 1,
-                                     repeats: true,
-                                     block: { [weak self] (_) in
-            if let date = date?.ruuviAgo() {
-                self?.updatedAtLabel.text = date
+        batteryLevelView.bind(viewModel.batteryNeedsReplacement) {
+            [weak self] (view, batteryLow) in
+            if let batteryLow = batteryLow, batteryLow {
+                view.isHidden = false
+                self?.batteryLevelViewHeight.constant = 24
             } else {
-                self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+                view.isHidden = true
+                self?.batteryLevelViewHeight.constant = 0
             }
-        })
+        }
     }
 
-    private func startObservingNetworkSyncNotification(for macId: AnyMACIdentifier) {
+    func startObservingNetworkSyncNotification(for macId: AnyMACIdentifier) {
+        notificationToken?.invalidate()
+        notificationToken = nil
+
         notificationToken = NotificationCenter
             .default
             .addObserver(forName: .NetworkSyncDidChangeStatus,
@@ -377,6 +373,23 @@ extension CardsLargeImageCell {
                 }
                 self?.updateSyncLabel(with: status)
             })
+    }
+}
+
+extension CardsLargeImageCell {
+    private func startTimer(with date: Date?) {
+        timer?.invalidate()
+        timer = nil
+
+        timer = Timer.scheduledTimer(withTimeInterval: 1,
+                                     repeats: true,
+                                     block: { [weak self] (_) in
+            if let date = date?.ruuviAgo() {
+                self?.updatedAtLabel.text = date
+            } else {
+                self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+            }
+        })
     }
 
     private func updateSyncLabel(with status: NetworkSyncStatus) {

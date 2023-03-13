@@ -118,4 +118,12 @@ class TagSettingsBasicCell: UITableViewCell {
             })
         }
     }
+
+    func disableEditing(_ disable: Bool) {
+        titleLabel.disable(disable)
+        valueLabel.disable(disable)
+        iconView.disable(disable)
+        separator.disable(disable)
+        isUserInteractionEnabled = !disable
+    }
 }

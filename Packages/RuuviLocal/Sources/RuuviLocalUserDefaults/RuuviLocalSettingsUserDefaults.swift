@@ -465,4 +465,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.showChartOnDashboardCardTap", defaultValue: false)
+    var showChartOnDashboardCardTap: Bool
 }

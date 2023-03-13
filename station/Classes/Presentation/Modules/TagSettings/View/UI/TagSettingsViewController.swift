@@ -493,25 +493,6 @@ extension TagSettingsViewController {
                     }
                 }
             }
-        case .offsetCorrection:
-            updatedSection = configureOffsetCorrectionSection()
-            if let index = tableViewSections.firstIndex(where: {
-                $0.identifier == section
-            }) {
-                tableViewSections.remove(at: index)
-                if showOffsetCorrection() {
-                    tableViewSections.insert(updatedSection, at: index)
-                }
-            } else {
-                if showOffsetCorrection() {
-                    if let indexOfConnectionSection = tableViewSections.firstIndex(where: {
-                        $0.identifier == .alertConnection
-                    }) {
-                        tableViewSections.insert(updatedSection, at: indexOfConnectionSection+1)
-                        updateSection(at: indexOfConnectionSection+1, with: updatedSection)
-                    }
-                }
-            }
         default:
             break
         }
@@ -539,7 +520,6 @@ extension TagSettingsViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func reloadCellsFor(section: TagSettingsSectionIdentifier) {
         switch section {
         case .general:
@@ -560,52 +540,6 @@ extension TagSettingsViewController {
                     if !showShare() && currentSection.cells.count > 1 {
                         currentSection.cells.remove(at: currentSection.cells.count)
                         let index = indexOfSection(section: section)
-                        tableView.performBatchUpdates({
-                            reloadSection(section: index)
-                        })
-                    }
-                }
-            }
-        case .offsetCorrection:
-            let index = indexOfSection(section: section)
-            if let currentSection = tableViewSections.first(where: {
-                $0.identifier == section
-            }) {
-
-                // Humidity offset correction cell visibility
-                if currentSection.cells.first(where: {
-                    $0.identifier == .offsetHumidity
-                }) == nil {
-                    // We will add the humidity correction cell at index '1' considering
-                    // '0' will always be occupied by Temperature section.
-                    if showHumidityOffsetCorrection() {
-                        currentSection.cells.insert(offsetCorrectionHumidityItem(), at: currentSection.cells.count)
-                        tableView.performBatchUpdates({
-                            reloadSection(section: index)
-                        })
-                    }
-                } else {
-                    if !showHumidityOffsetCorrection() && currentSection.cells.count > 1 {
-                        currentSection.cells.remove(at: currentSection.cells.count)
-                        tableView.performBatchUpdates({
-                            reloadSection(section: index)
-                        })
-                    }
-                }
-
-                // Pressure offset correction cell visibility
-                if currentSection.cells.first(where: {
-                    $0.identifier == .offsetPressure
-                }) == nil {
-                    if showPressureOffsetCorrection() {
-                        currentSection.cells.insert(offsetCorrectionPressureItem(), at: currentSection.cells.count)
-                        tableView.performBatchUpdates({
-                            reloadSection(section: index)
-                        })
-                    }
-                } else {
-                    if !showPressureOffsetCorrection() && currentSection.cells.count > 1 {
-                        currentSection.cells.remove(at: currentSection.cells.count)
                         tableView.performBatchUpdates({
                             reloadSection(section: index)
                         })
@@ -920,6 +854,11 @@ extension TagSettingsViewController {
                                    maxValue: maxRange,
                                    selectedMaxValue: sSelf.temperatureUpperBound())
             }
+
+            temperatureAlertCell.bind(viewModel.latestMeasurement) { (cell, measurement) in
+                cell.disableEditing(disable: measurement == nil,
+                                    identifier: .alertTemperature)
+            }
         }
 
         if let temperatureAlertSectionHeaderView = temperatureAlertSectionHeaderView {
@@ -986,6 +925,15 @@ extension TagSettingsViewController {
                                    selectedMinValue: sSelf.humidityLowerBound(),
                                    maxValue: maxRange,
                                    selectedMaxValue: sSelf.humidityUpperBound())
+            }
+
+            humidityAlertCell.bind(viewModel.latestMeasurement) {
+                [weak self] (cell, measurement) in
+                guard let sSelf = self else { return }
+                cell.disableEditing(
+                    disable: measurement == nil || !sSelf.showHumidityOffsetCorrection(),
+                    identifier: .alertHumidity
+                )
             }
         }
 
@@ -1061,6 +1009,15 @@ extension TagSettingsViewController {
                                    maxValue: maxRange,
                                    selectedMaxValue: sSelf.pressureUpperBound())
             }
+
+            pressureAlertCell.bind(viewModel.latestMeasurement) {
+                [weak self] (cell, measurement) in
+                guard let sSelf = self else { return }
+                cell.disableEditing(
+                    disable: measurement == nil || !sSelf.showPressureOffsetCorrection(),
+                    identifier: .alertPressure
+                )
+            }
         }
 
         if let pressureAlertSectionHeaderView = pressureAlertSectionHeaderView {
@@ -1117,6 +1074,13 @@ extension TagSettingsViewController {
                 cell.setAlertRange(selectedMinValue: self?.rssiLowerBound(),
                                    selectedMaxValue: self?.rssiUpperBound())
             }
+
+            rssiAlertCell.bind(viewModel.latestMeasurement) { (cell, measurement) in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertRSSI
+                )
+            }
         }
 
         if let rssiAlertSectionHeaderView = rssiAlertSectionHeaderView {
@@ -1158,6 +1122,15 @@ extension TagSettingsViewController {
             movementAlertCell.bind(viewModel.movementAlertDescription) {
                 [weak self] cell, value in
                 cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            movementAlertCell.bind(viewModel.latestMeasurement) {
+                [weak self] (cell, measurement) in
+                guard let sSelf = self else { return }
+                cell.disableEditing(
+                    disable: measurement == nil || sSelf.viewModel?.movementCounter.value == nil,
+                    identifier: .alertMovement
+                )
             }
         }
 
@@ -1201,6 +1174,13 @@ extension TagSettingsViewController {
                 [weak self] cell, value in
                 cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
             }
+
+            connectionAlertCell.bind(viewModel.latestMeasurement) { (cell, measurement) in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertConnection
+                )
+            }
         }
 
         if let connectionAlertSectionHeaderView = connectionAlertSectionHeaderView {
@@ -1240,28 +1220,13 @@ extension TagSettingsViewController {
         // Fixed items
         sections += [
             configureAlertHeaderSection(),
-            configureTemperatureAlertSection()
+            configureTemperatureAlertSection(),
+            configureHumidityAlertSection(),
+            configurePressureAlertSection(),
+            configureRSSIAlertSection(),
+            configureMovementAlertSection(),
+            configureConnectionAlertSection()
         ]
-
-        // Variable items
-        if showHumidityOffsetCorrection() {
-            sections.append(configureHumidityAlertSection())
-        }
-
-        if showPressureOffsetCorrection() {
-            sections.append(configurePressureAlertSection())
-        }
-
-        // Fixed item
-        sections.append(configureRSSIAlertSection())
-
-        // Variable item
-        if viewModel?.movementCounter.value != nil {
-            sections.append(configureMovementAlertSection())
-        }
-
-        // Fixed item
-        sections.append(configureConnectionAlertSection())
 
         return sections
     }
@@ -1284,6 +1249,7 @@ extension TagSettingsViewController {
 
     private func termperatureAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = temperatureMinMaxForSliders()
+        let disableTemperature = !hasMeasurement()
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.temperatureAlertCell?.setStatus(with: self?.viewModel?.isTemperatureAlertOn.value)
@@ -1297,6 +1263,10 @@ extension TagSettingsViewController {
                                                    selectedMinValue: self?.temperatureLowerBound(),
                                                    maxValue: maxRange,
                                                    selectedMaxValue: self?.temperatureUpperBound())
+                self?.temperatureAlertCell?.disableEditing(
+                    disable: disableTemperature,
+                    identifier: .alertTemperature
+                )
                 self?.temperatureAlertCell?.delegate = self
                 return self?.temperatureAlertCell ?? UITableViewCell()
             },
@@ -1312,6 +1282,7 @@ extension TagSettingsViewController {
 
     private func humidityAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = humidityMinMaxForSliders()
+        let disableHumidity = !showHumidityOffsetCorrection() || !hasMeasurement()
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.humidityAlertCell?.setStatus(
@@ -1328,6 +1299,10 @@ extension TagSettingsViewController {
                                    selectedMinValue: self?.humidityLowerBound(),
                                    maxValue: maxRange,
                                    selectedMaxValue: self?.humidityUpperBound())
+                self?.humidityAlertCell?.disableEditing(
+                    disable: disableHumidity,
+                    identifier: .alertHumidity
+                )
                 self?.humidityAlertCell?.delegate = self
                 return self?.humidityAlertCell ?? UITableViewCell()
             },
@@ -1343,6 +1318,7 @@ extension TagSettingsViewController {
 
     private func pressureAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = pressureMinMaxForSliders()
+        let disablePressure = !showPressureOffsetCorrection() || !hasMeasurement()
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.pressureAlertCell?.showAlertRangeSetter()
@@ -1357,6 +1333,10 @@ extension TagSettingsViewController {
                                                        selectedMinValue: self?.pressureLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: self?.pressureUpperBound())
+                self?.pressureAlertCell?.disableEditing(
+                    disable: disablePressure,
+                    identifier: .alertPressure
+                )
                 self?.pressureAlertCell?.delegate = self
                 return self?.pressureAlertCell ?? UITableViewCell()
             },
@@ -1381,6 +1361,7 @@ extension TagSettingsViewController {
 
     private func rssiAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = rssiMinMaxForSliders()
+        let disableRssi = !hasMeasurement()
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.rssiAlertCell?.showNoticeView()
@@ -1399,6 +1380,10 @@ extension TagSettingsViewController {
                                                        selectedMinValue: self?.rssiLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: self?.rssiUpperBound())
+                self?.rssiAlertCell?.disableEditing(
+                    disable: disableRssi,
+                    identifier: .alertRSSI
+                )
                 self?.rssiAlertCell?.delegate = self
                 return self?.rssiAlertCell ?? UITableViewCell()
             },
@@ -1422,6 +1407,8 @@ extension TagSettingsViewController {
     }
 
     private func movementAlertItem() -> TagSettingsItem {
+        let disableMovement = viewModel?.movementCounter.value == nil ||
+                !hasMeasurement()
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.movementAlertCell?
@@ -1430,6 +1417,10 @@ extension TagSettingsViewController {
                 self?.movementAlertCell?.hideNoticeView()
                 self?.movementAlertCell?.showAdditionalTextview()
                 self?.movementAlertCell?.delegate = self
+                self?.movementAlertCell?.disableEditing(
+                    disable: disableMovement,
+                    identifier: .alertMovement
+                )
                 return self?.movementAlertCell ?? UITableViewCell()
             },
             action: nil
@@ -1452,6 +1443,7 @@ extension TagSettingsViewController {
     }
 
     private func connectionAlertItem() -> TagSettingsItem {
+        let disableConnection = !hasMeasurement()
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.connectionAlertCell?
@@ -1459,6 +1451,10 @@ extension TagSettingsViewController {
                 self?.connectionAlertCell?.hideAlertRangeSetter()
                 self?.connectionAlertCell?.hideNoticeView()
                 self?.connectionAlertCell?.showAdditionalTextview()
+                self?.connectionAlertCell?.disableEditing(
+                    disable: disableConnection,
+                    identifier: .alertConnection
+                )
                 self?.connectionAlertCell?.delegate = self
                 return self?.connectionAlertCell ?? UITableViewCell()
             },
@@ -1691,7 +1687,7 @@ extension TagSettingsViewController {
                 pu.alertRange.upperBound
             )
             let u = max(
-                min(upper, pu.alertRange.upperBound),
+                max(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
             if l.decimalPoint > 0 {
@@ -1735,7 +1731,7 @@ extension TagSettingsViewController {
         }
         if let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
             let u = max(
-                min(upper, pu.alertRange.upperBound),
+                max(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
             return CGFloat(u)
@@ -2044,16 +2040,6 @@ extension TagSettingsViewController {
             return
         }
 
-        tableView.bind(viewModel.humidityOffsetCorrectionVisible) {
-            [weak self] _, _ in
-            self?.reloadCellsFor(section: .offsetCorrection)
-        }
-
-        tableView.bind(viewModel.pressureOffsetCorrectionVisible) {
-            [weak self] _, _ in
-            self?.reloadCellsFor(section: .offsetCorrection)
-        }
-
         if let tempOffsetCorrectionCell = tempOffsetCorrectionCell {
             tempOffsetCorrectionCell.bind(viewModel
                 .temperatureOffsetCorrection) { [weak self] cell, value in
@@ -2062,14 +2048,8 @@ extension TagSettingsViewController {
                     .temperatureOffsetCorrectionString(for: value ?? 0))
             }
 
-            tempOffsetCorrectionCell.bind(viewModel
-                .humidityOffsetCorrectionVisible) { [weak self] cell, _ in
-                    cell.hideSeparator(hide: GlobalHelpers.getBool(from: self?.showOnlyTemperatureOffsetCorrection()))
-                }
-
-            tempOffsetCorrectionCell.bind(viewModel
-                .pressureOffsetCorrectionVisible) { [weak self] cell, _ in
-                    cell.hideSeparator(hide: GlobalHelpers.getBool(from: self?.showOnlyTemperatureOffsetCorrection()))
+            tempOffsetCorrectionCell.bind(viewModel.latestMeasurement) { (cell, measurement) in
+                cell.disableEditing(measurement == nil)
             }
         }
 
@@ -2080,6 +2060,19 @@ extension TagSettingsViewController {
                     .measurementService
                     .humidityOffsetCorrectionString(for: value ?? 0))
             }
+
+            humidityOffsetCorrectionCell.bind(viewModel.latestMeasurement) {
+                [weak self] (cell, measurement) in
+                guard let sSelf = self else { return }
+                cell.disableEditing(measurement == nil ||
+                                     !sSelf.showHumidityOffsetCorrection())
+            }
+
+            humidityOffsetCorrectionCell.bind(viewModel
+                .humidityOffsetCorrectionVisible) { cell, visible in
+                    cell.disableEditing(!GlobalHelpers.getBool(from: visible))
+            }
+
         }
 
         if let pressureOffsetCorrectionCell = pressureOffsetCorrectionCell {
@@ -2089,26 +2082,33 @@ extension TagSettingsViewController {
                     .measurementService
                     .pressureOffsetCorrectionString(for: value ?? 0))
             }
+
+            pressureOffsetCorrectionCell.bind(viewModel
+                .pressureOffsetCorrectionVisible) { cell, visible in
+                    cell.disableEditing(!GlobalHelpers.getBool(from: visible))
+            }
+
+            pressureOffsetCorrectionCell.bind(viewModel.latestMeasurement) {
+                [weak self] (cell, measurement) in
+                guard let sSelf = self else { return }
+                cell.disableEditing(measurement == nil ||
+                                     !sSelf.showPressureOffsetCorrection())
+            }
         }
     }
 
     private func configureOffsetCorrectionSection() -> TagSettingsSection {
 
-        var availableItems: [TagSettingsItem] = [
-            offsetCorrectionTemperatureItem()
+        let offsetCorrectionItems: [TagSettingsItem] = [
+            offsetCorrectionTemperatureItem(),
+            offsetCorrectionHumidityItem(),
+            offsetCorrectionPressureItem()
         ]
-
-        if showHumidityOffsetCorrection() {
-            availableItems.append(offsetCorrectionHumidityItem())
-        }
-        if showPressureOffsetCorrection() {
-            availableItems.append(offsetCorrectionPressureItem())
-        }
 
         let section = TagSettingsSection(
             identifier: .offsetCorrection,
             title: "TagSettings.SectionHeader.OffsetCorrection.Title".localized().capitalized,
-            cells: availableItems,
+            cells: offsetCorrectionItems,
             collapsed: true,
             headerType: .expandable,
             backgroundColor: RuuviColor.tagSettingsSectionHeaderColor,
@@ -2119,6 +2119,7 @@ extension TagSettingsViewController {
 
     private func offsetCorrectionTemperatureItem() -> TagSettingsItem {
         let tempOffset = viewModel?.temperatureOffsetCorrection.value ?? 0
+        let hasMeasurement = hasMeasurement()
         let settingItem = TagSettingsItem(
             identifier: .offsetTemperature,
             createdCell: { [weak self] in
@@ -2126,12 +2127,11 @@ extension TagSettingsViewController {
                                value: self?.measurementService
                     .temperatureOffsetCorrectionString(for: tempOffset))
                 self?.tempOffsetCorrectionCell?.setAccessory(type: .chevron)
-                self?.tempOffsetCorrectionCell?
-                    .hideSeparator(hide: GlobalHelpers
-                        .getBool(from: self?.showOnlyTemperatureOffsetCorrection()))
+                self?.tempOffsetCorrectionCell?.disableEditing(!hasMeasurement)
                 return self?.tempOffsetCorrectionCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
+                guard hasMeasurement else { return }
                 self?.output.viewDidTapTemperatureOffsetCorrection()
             }
         )
@@ -2140,6 +2140,7 @@ extension TagSettingsViewController {
 
     private func offsetCorrectionHumidityItem() -> TagSettingsItem {
         let humOffset = viewModel?.humidityOffsetCorrection.value ?? 0
+        let disableHumidity = !hasMeasurement() || !showHumidityOffsetCorrection()
         let settingItem = TagSettingsItem(
             identifier: .offsetHumidity,
             createdCell: { [weak self] in
@@ -2149,13 +2150,13 @@ extension TagSettingsViewController {
                                value: self?.measurementService
                         .humidityOffsetCorrectionString(for: humOffset))
                 self?.humidityOffsetCorrectionCell?.setAccessory(type: .chevron)
-                self?
-                    .humidityOffsetCorrectionCell?
-                    .hideSeparator(hide: !GlobalHelpers
-                        .getBool(from: self?.showPressureOffsetCorrection()))
+                self?.humidityOffsetCorrectionCell?.disableEditing(disableHumidity)
                 return self?.humidityOffsetCorrectionCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
+                guard !disableHumidity else {
+                    return
+                }
                 self?.output.viewDidTapHumidityOffsetCorrection()
             }
         )
@@ -2164,6 +2165,7 @@ extension TagSettingsViewController {
 
     private func offsetCorrectionPressureItem() -> TagSettingsItem {
         let pressureOffset = viewModel?.pressureOffsetCorrection.value ?? 0
+        let disablePressure = !hasMeasurement() || !showPressureOffsetCorrection()
         let settingItem = TagSettingsItem(
             identifier: .offsetPressure,
             createdCell: { [weak self] in
@@ -2173,9 +2175,13 @@ extension TagSettingsViewController {
                                value: self?.measurementService.pressureOffsetCorrectionString(for: pressureOffset))
                 self?.pressureOffsetCorrectionCell?.setAccessory(type: .chevron)
                 self?.pressureOffsetCorrectionCell?.hideSeparator(hide: true)
+                self?.pressureOffsetCorrectionCell?.disableEditing(disablePressure)
                 return self?.pressureOffsetCorrectionCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
+                guard !disablePressure else {
+                    return
+                }
                 self?.output.viewDidTapOnPressureOffsetCorrection()
             }
         )
@@ -2198,6 +2204,11 @@ extension TagSettingsViewController {
 
     private func showOnlyTemperatureOffsetCorrection() -> Bool {
         return !showHumidityOffsetCorrection() && !showPressureOffsetCorrection()
+    }
+
+    /// Returns True if viewModel has measurement
+    private func hasMeasurement() -> Bool {
+        return GlobalHelpers.getBool(from: viewModel?.latestMeasurement.value != nil)
     }
 }
 
@@ -2843,6 +2854,10 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: temperatureLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: temperatureUpperBound())
+                    temperatureAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(from: !hasMeasurement()),
+                        identifier: currentSection.identifier
+                    )
                 }
             case .alertHumidity:
                 if let humidityAlertCell = humidityAlertCell {
@@ -2852,6 +2867,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: humidityLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: humidityUpperBound())
+                    humidityAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !showHumidityOffsetCorrection() || !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
                 }
             case .alertPressure:
                 if let pressureAlertCell = pressureAlertCell {
@@ -2861,6 +2882,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: pressureLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: pressureUpperBound())
+                    pressureAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !showPressureOffsetCorrection() || !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
                 }
             case .alertRSSI:
                 if let rssiAlertCell = rssiAlertCell {
@@ -2870,6 +2897,46 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                                                        selectedMinValue: rssiLowerBound(),
                                                        maxValue: maxRange,
                                                        selectedMaxValue: rssiUpperBound())
+                    rssiAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(from: !hasMeasurement()),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertMovement:
+                if let movementAlertCell = movementAlertCell {
+                    movementAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: viewModel?.movementCounter.value == nil || !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertConnection:
+                if let connectionAlertCell = connectionAlertCell {
+                    connectionAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .offsetCorrection:
+                if let tempOffsetCorrectionCell = tempOffsetCorrectionCell {
+                    tempOffsetCorrectionCell.disableEditing(!hasMeasurement())
+                }
+
+                if let humidityOffsetCorrectionCell = humidityOffsetCorrectionCell {
+                    humidityOffsetCorrectionCell.disableEditing(
+                        !hasMeasurement() ||
+                        !showHumidityOffsetCorrection()
+                    )
+                }
+
+                if let pressureOffsetCorrectionCell = pressureOffsetCorrectionCell {
+                    pressureOffsetCorrectionCell.disableEditing(
+                        !hasMeasurement() ||
+                        !showPressureOffsetCorrection()
+                    )
                 }
             default:
                 break

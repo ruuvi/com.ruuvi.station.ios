@@ -5,9 +5,6 @@ import RuuviOntology
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
     var scrollIndex: Int { get set }
-    var currentPage: Int { get }
-    func applyUpdate(to viewModel: CardsViewModel)
-    func changeCardBackground(of viewModel: CardsViewModel, to image: UIImage?)
     func scroll(to index: Int,
                 immediately: Bool,
                 animated: Bool)
@@ -15,7 +12,7 @@ protocol CardsViewInput: ViewInput {
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
-    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool)
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func showFirmwareUpdateDialog(for viewModel: CardsViewModel)
     func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()

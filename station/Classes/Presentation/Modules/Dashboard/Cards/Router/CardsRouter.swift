@@ -14,9 +14,8 @@ class CardsRouter: NSObject, CardsRouterInput {
     }
 
     func openTagSettings(ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord,
+                         latestMeasurement: RuuviTagSensorRecord?,
                          sensorSettings: SensorSettings?,
-                         scrollToAlert: Bool,
                          output: TagSettingsModuleOutput) {
         let factory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
         let module = factory.create()

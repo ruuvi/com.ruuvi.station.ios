@@ -2,13 +2,16 @@ import Foundation
 
 public struct ShareableSensorStruct: ShareableSensor {
     public var id: String
+    public var canShare: Bool
     public var sharedTo: [String]
 
     public init(
         id: String,
+        canShare: Bool,
         sharedTo: [String]
     ) {
         self.id = id
+        self.canShare = canShare
         self.sharedTo = sharedTo
     }
 }
@@ -28,6 +31,10 @@ public struct AnyShareableSensor: ShareableSensor, Equatable, Hashable, Reordera
 
     public var id: String {
         return object.id
+    }
+
+    public var canShare: Bool {
+        return object.canShare
     }
 
     public var sharedTo: [String] {

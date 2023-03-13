@@ -58,16 +58,20 @@ class DashboardViewController: UIViewController {
               viewModel: CardsViewModel) -> UICollectionViewCell? {
         switch dashboardType {
         case .image:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId",
-                                                                for: indexPath) as? DashboardImageCell
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "cellId",
+                for: indexPath
+            ) as? DashboardImageCell
             cell?.configure(with: viewModel, measurementService: measurementService)
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
             cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
             return cell
         case .simple:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellIdPlain",
-                                                                for: indexPath) as? DashboardPlainCell
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "cellIdPlain",
+                for: indexPath
+            ) as? DashboardPlainCell
             cell?.configure(with: viewModel, measurementService: measurementService)
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
@@ -79,12 +83,13 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    func applySnapshot(_ items: [CardsViewModel]) {
+    func applySnapshot() {
         var snapshot = DashboardSnapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items, toSection: .main)
+        snapshot.appendItems(viewModels, toSection: .main)
         datasource.apply(snapshot,
-                         animatingDifferences: true)
+                         animatingDifferences: false)
+        collectionView.reloadWithoutAnimation()
     }
 
     // UI
@@ -257,8 +262,7 @@ extension DashboardViewController {
         let settingsAction = UIAction(title: "settings_and_alerts".localized()) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
-                self?.output.viewDidTriggerSettings(for: viewModel,
-                                                    with: false)
+                self?.output.viewDidTriggerSettings(for: viewModel)
             }
         }
 
@@ -492,7 +496,7 @@ extension DashboardViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         let viewModel = viewModels[indexPath.item]
-        output.viewDidTriggerOpenCardImageView(for: viewModel)
+        output.viewDidTriggerDashboardCard(for: viewModel)
     }
 
     func collectionView(
@@ -621,16 +625,16 @@ extension DashboardViewController: DashboardViewInput {
         present(alert, animated: true)
     }
 
-    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
         let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
-            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel)
         }))
         let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel, scrollToAlert: scrollToAlert)
+            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
         present(alert, animated: true)
     }
@@ -662,7 +666,7 @@ extension DashboardViewController: RuuviServiceMeasurementDelegate {
 
 extension DashboardViewController: DashboardCellDelegate {
     func didTapAlertButton(for viewModel: CardsViewModel) {
-        output.viewDidTriggerSettings(for: viewModel, with: true)
+        output.viewDidTriggerSettings(for: viewModel)
     }
 }
 
@@ -679,6 +683,6 @@ extension DashboardViewController: NoSensorViewDelegate {
 extension DashboardViewController {
     fileprivate func updateUI() {
         showNoSensorsAddedMessage(show: viewModels.isEmpty)
-        applySnapshot(viewModels)
+        applySnapshot()
     }
 }
