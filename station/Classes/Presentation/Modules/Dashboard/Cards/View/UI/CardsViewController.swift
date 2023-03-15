@@ -23,15 +23,14 @@ class CardsViewController: UIViewController {
         }
     }
 
-    var viewModels: [CardsViewModel] = []
-    var scrollIndex: Int = 0 {
+    var viewModels: [CardsViewModel] = [] {
         didSet {
             updateUI()
         }
     }
+    var scrollIndex: Int = 0
 
-    var currentPage: Int = 0
-
+    private var currentPage: Int = 0
     private lazy var datasource = makeDatasource()
     private static let reuseIdentifier: String = "reuseIdentifier"
     // MARK: - Datasource
@@ -58,14 +57,18 @@ class CardsViewController: UIViewController {
         return cell
     }
 
-    func applySnapshot(_ items: [CardsViewModel]) {
+    func applySnapshot() {
         var snapshot = CardsSnapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items, toSection: .main)
+        snapshot.appendItems(viewModels, toSection: .main)
         currentPage = scrollIndex
         datasource.apply(snapshot,
-                         animatingDifferences: true,
-                         completion: nil)
+                         animatingDifferences: false)
+        // Forces collection view to reload.
+        collectionView.reloadWithoutAnimation()
+        if currentPage < viewModels.count {
+            collectionView.scrollTo(index: currentPage)
+        }
     }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -96,7 +99,6 @@ class CardsViewController: UIViewController {
         return button
     }()
 
-    // TODO: Make alert and chart button hidden/visible based on connected status of tag.
     private lazy var alertButton: UIImageView = {
         let iv = UIImageView(image: nil,
                              contentMode: .scaleAspectFit)
@@ -148,13 +150,11 @@ class CardsViewController: UIViewController {
 
     private var currentVisibleItem: CardsViewModel? {
         didSet {
-            updateCardBackgroundImage(with: currentVisibleItem?.background.value)
-            updateTopActionButtonVisibility()
+            bindCurrentVisibleItem()
         }
     }
 
     private var isChartsShowing: Bool = false
-    private var isCardRefreshable: Bool = true
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -198,12 +198,11 @@ extension CardsViewController {
 
         // Scroll to current Item after the orientation change.
         coordinator.animate(alongsideTransition: { [weak self] _ in
-            self?.collectionView.collectionViewLayout.invalidateLayout()
-            let indexPath = IndexPath(item: self?.currentPage ?? 0,
-                                      section: 0)
-            self?.collectionView.scrollToItem(at: indexPath,
-                                        at: .centeredHorizontally,
-                                        animated: false)
+            guard let sSelf = self else { return }
+            sSelf.collectionView.collectionViewLayout.invalidateLayout()
+            if sSelf.currentPage < sSelf.viewModels.count {
+                sSelf.collectionView.scrollTo(index: sSelf.currentPage)
+            }
         })
     }
 }
@@ -333,6 +332,22 @@ extension CardsViewController {
     private func configureGestureInstructor() {
         GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
+}
+
+extension CardsViewController: UICollectionViewDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        guard viewModels.count > 0,
+              indexPath.item < viewModels.count else { return }
+        let viewModel = viewModels[indexPath.item]
+        if let cell = cell as? CardsLargeImageCell,
+            let macId = viewModel.mac.value {
+            cell.startObservingNetworkSyncNotification(for: macId.any)
+        }
+    }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
@@ -347,22 +362,9 @@ extension CardsViewController {
             output.viewDidTriggerFirmwareUpdateDialog(for: currentVisibleItem)
         }
     }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        perform(#selector(UIScrollViewDelegate.scrollViewDidEndScrollingAnimation),
-                with: nil,
-                afterDelay: 0.3)
-        isCardRefreshable = false
-    }
-
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        isCardRefreshable = true
-    }
 }
 
-extension CardsViewController: UICollectionViewDelegate {
+extension CardsViewController {
     @objc fileprivate func backButtonDidTap() {
         // TODO: Handle the case when chart visible and sync ongoing.
         if isChartsShowing {
@@ -380,7 +382,7 @@ extension CardsViewController: UICollectionViewDelegate {
         guard let viewModel = currentVisibleItem else {
             return
         }
-        output.viewDidTriggerSettings(for: viewModel, with: true)
+        output.viewDidTriggerSettings(for: viewModel)
     }
 
     @objc fileprivate func chartButtonDidTap() {
@@ -425,7 +427,7 @@ extension CardsViewController: UICollectionViewDelegate {
             return
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
-        output.viewDidTriggerSettings(for: viewModel, with: false)
+        output.viewDidTriggerSettings(for: viewModel)
     }
 }
 
@@ -436,33 +438,8 @@ extension CardsViewController: CardsViewInput {
         _ = navigationController?.popToRootViewController(animated: true)
     }
 
-    func applyUpdate(to viewModel: CardsViewModel) {
-        guard isCardRefreshable else { return }
-        var snapshot = datasource.snapshot()
-        if let index = snapshot.indexOfItem(viewModel),
-           var item = datasource.itemIdentifier(for: IndexPath(item: index,
-                                                               section: 0)) {
-            if viewModel == currentVisibleItem {
-                item = viewModel
-                restartAnimations()
-                updateTopActionButtonVisibility()
-                snapshot.reloadItems([item])
-                datasource.apply(snapshot,
-                                 animatingDifferences: false,
-                                 completion: nil)
-            }
-        }
-    }
-
-    func changeCardBackground(of viewModel: CardsViewModel,
-                              to image: UIImage?) {
-        if viewModel == currentVisibleItem {
-            updateCardBackgroundImage(with: image)
-        }
-    }
-
     func localize() {
-
+        // No op.
     }
 
     func showWebTagAPILimitExceededError() {
@@ -497,8 +474,11 @@ extension CardsViewController: CardsViewInput {
     func scroll(to index: Int,
                 immediately: Bool = false,
                 animated: Bool = false) {
-        guard index < viewModels.count else { return }
+        guard index < viewModels.count, index < datasource.snapshot().numberOfItems else {
+            return
+        }
         let viewModel = viewModels[index]
+        currentVisibleItem = viewModel
         let indexPath = IndexPath(item: index, section: 0)
         if immediately {
             collectionView.scrollToItem(at: indexPath,
@@ -532,16 +512,16 @@ extension CardsViewController: CardsViewInput {
         present(alert, animated: true)
     }
 
-    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel, scrollToAlert: Bool) {
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
         let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
-            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel, scrollToAlert: scrollToAlert)
+            self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel)
         }))
         let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel, scrollToAlert: scrollToAlert)
+            self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
         present(alert, animated: true)
     }
@@ -592,29 +572,75 @@ extension CardsViewController: CardsViewInput {
 
 extension CardsViewController: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
-        guard isViewLoaded,
-                let viewModel = currentVisibleItem else {
+        guard isViewLoaded else {
             return
         }
-        applyUpdate(to: viewModel)
+        collectionView.reloadWithoutAnimation()
     }
 }
 
 extension CardsViewController {
     fileprivate func updateUI() {
-        applySnapshot(viewModels)
+        applySnapshot()
 
         if scrollIndex < viewModels.count {
             let item = viewModels[scrollIndex]
             currentVisibleItem = item
         }
     }
+
+    private func bindCurrentVisibleItem() {
+        guard let currentVisibleItem = currentVisibleItem else {
+            return
+        }
+
+        cardBackgroundView.bind(currentVisibleItem.background) { (view, image) in
+            view.setBackgroundImage(with: image)
+        }
+
+        view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.relativeHumidityAlertMutedTill) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.pressureAlertMutedTill) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.signalAlertMutedTill) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.movementAlertMutedTill) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.connectionAlertMutedTill) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.alertState) { [weak self] (_, _) in
+            self?.restartAnimations()
+        }
+
+        view.bind(currentVisibleItem.isChartAvailable) { [weak self] (_, _) in
+            self?.updateTopActionButtonVisibility()
+        }
+
+        view.bind(currentVisibleItem.isAlertAvailable) { [weak self] (_, _) in
+            self?.updateTopActionButtonVisibility()
+        }
+
+        view.bind(currentVisibleItem.isConnected) { [weak self] (_, _) in
+            self?.updateTopActionButtonVisibility()
+        }
+    }
 }
 
 extension CardsViewController {
-    private func updateCardBackgroundImage(with image: UIImage?) {
-        cardBackgroundView.setBackgroundImage(with: image)
-    }
 
     private func restartAnimations() {
         let mutedTills = [

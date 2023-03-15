@@ -59,10 +59,14 @@ class ShareViewController: UITableViewController {
     // MARK: - TableView
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if viewModel.sharedEmails.value?.isEmpty == true {
-            return 2
+        if let canShare = viewModel.canShare.value, canShare {
+            if viewModel.sharedEmails.value?.isEmpty == true {
+                return 2
+            } else {
+                return 3
+            }
         } else {
-            return 3
+            return 1
         }
     }
 
@@ -77,31 +81,31 @@ class ShareViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView,
+                            viewForHeaderInSection section: Int) -> UIView? {
         let section = Section(value: section)
+        let headerView = UIView(color: .clear)
+        let titleLabel = UILabel()
+        titleLabel.textColor = RuuviColor.ruuviMenuTextColor
+        titleLabel.font = UIFont.Muli(.bold, size: 16)
+        titleLabel.numberOfLines = 0
         switch section {
         case .sharedEmails:
             if let count = viewModel.sharedEmails.value?.count,
                let title = section.title {
-                return String(format: title, count, viewModel.maxCount)
-            } else {
-                return nil
+                titleLabel.text = String(format: title,
+                                         count,
+                                         viewModel.maxCount)
             }
         default:
-            return section.title
+            titleLabel.text = section.title
         }
-    }
-
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section > 0 ? 44 : 0
-    }
-
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView,
-                            forSection: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = RuuviColor.ruuviMenuTextColor
-            headerView.textLabel?.font = UIFont.Muli(.bold, size: 16)
-        }
+        headerView.addSubview(titleLabel)
+        titleLabel.fillSuperviewToSafeArea(
+            padding: .init(top: 0, left: 20,
+                           bottom: 8, right: 20)
+        )
+        return headerView
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -172,12 +176,21 @@ extension ShareViewController: UITextFieldDelegate {
 // MARK: - Private
 extension ShareViewController {
     func configureTableView() {
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.estimatedSectionHeaderHeight = 70
         tableView.tableFooterView = UIView(frame: .zero)
     }
 
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
-        let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
-        let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
+        let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self,
+                                                 for: indexPath)
+        if let canShare = viewModel.canShare.value, canShare {
+            cell.sharingDisabledLabel.text = ""
+        } else {
+            cell.sharingDisabledLabel.text = "network_sharing_disabled".localized()
+        }
+
+        let description = "ShareViewController.Description".localized()
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.descriptionLabel.textColor = RuuviColor.ruuviTextColor
         return cell

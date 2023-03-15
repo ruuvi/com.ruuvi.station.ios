@@ -45,6 +45,7 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
 
     public init(baseUrl: URL) {
         self.baseUrl = baseUrl
+        Reachability.start()
     }
 
     public func register(
@@ -303,6 +304,10 @@ extension RuuviCloudApiURLSession {
         authorization: String? = nil
     ) -> Future<Response, RuuviCloudApiError> {
         let promise = Promise<Response, RuuviCloudApiError>()
+        guard Reachability.active else {
+            promise.fail(error: .connection)
+            return promise.future
+        }
         var url: URL = self.baseUrl.appendingPathComponent(endpoint.rawValue)
         if method == .get {
             var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
@@ -324,6 +329,7 @@ extension RuuviCloudApiURLSession {
         let config = URLSessionConfiguration.default
         if #available(iOS 11.0, *) {
             config.waitsForConnectivity = true
+            config.timeoutIntervalForResource = 30
         }
         let task = URLSession(configuration: config).dataTask(with: request) { (data, _, error) in
             if let error = error {

@@ -65,6 +65,7 @@ public protocol RuuviLocalSettings {
     var appOpenedCountDivisibleToAskReview: Int { get set }
     var dashboardEnabled: Bool { get set }
     var dashboardType: DashboardType { get set }
+    var showChartOnDashboardCardTap: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

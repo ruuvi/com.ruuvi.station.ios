@@ -46,6 +46,11 @@ extension RuuviCloudApiBaseResponse {
                     return .failure(.emptyResponse)
                 }
             }
+
+            if code == "ER_UNAUTHORIZED" {
+                return .failure(.unauthorized)
+            }
+
             return .failure(.api("UserApiError." + (subCode ?? code)))
         }
     }

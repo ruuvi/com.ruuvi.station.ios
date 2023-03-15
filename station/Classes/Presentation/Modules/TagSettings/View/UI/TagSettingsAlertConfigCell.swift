@@ -142,8 +142,7 @@ extension TagSettingsAlertConfigCell {
                                                  bottom: 8,
                                                  right: 8))
 
-        let statusContainerView = UIView()
-        statusContainerView.backgroundColor = .clear
+        let statusContainerView = UIView(color: .clear)
 
         addSubview(statusContainerView)
         statusContainerView.anchor(top: noticeView.bottomAnchor,
@@ -167,7 +166,8 @@ extension TagSettingsAlertConfigCell {
                             leading: statusLabel.trailingAnchor,
                             bottom: nil,
                             trailing: statusContainerView.trailingAnchor,
-                            padding: .init(top: 0, left: 12, bottom: 0, right: 0))
+                            padding: .init(top: 0, left: 12, bottom: 0, right: 4))
+        statusSwitch.sizeToFit()
         statusSwitch.centerYInSuperview()
 
         let statusSeparator = UIView()
@@ -323,6 +323,24 @@ extension TagSettingsAlertConfigCell {
     func showNoticeView() {
         noticeViewHiddenHeight.isActive = false
         noticeView.alpha = 1
+    }
+
+    func disableEditing(disable: Bool,
+                        identifier: TagSettingsSectionIdentifier) {
+        statusSwitch.disable(disable)
+        statusLabel.disable(disable)
+        setCustomDescriptionView.disable(disable)
+
+        switch identifier {
+        case .alertTemperature, .alertHumidity, .alertPressure:
+            alertLimitDescriptionView.disable(disable)
+            alertLimitSliderView.disable(disable)
+        case .alertRSSI:
+            noticeView.disable(disable)
+        case .alertMovement, .alertConnection:
+            additionalTextView.disable(disable)
+        default: break
+        }
     }
 }
 

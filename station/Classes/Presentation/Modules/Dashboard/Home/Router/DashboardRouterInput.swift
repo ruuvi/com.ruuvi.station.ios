@@ -20,7 +20,7 @@ protocol DashboardRouterInput {
                            output: CardsModuleOutput)
     func openTagSettings(
         ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord,
+        latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
         output: TagSettingsModuleOutput
     )
@@ -37,7 +37,7 @@ protocol DashboardRouterInput {
                          sensorSettings: [SensorSettings],
                          scrollTo: CardsViewModel?,
                          ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord,
+                         latestMeasurement: RuuviTagSensorRecord?,
                          sensorSetting: SensorSettings?,
                          output: CardsModuleOutput)
     // swiftlint:enable function_parameter_count
