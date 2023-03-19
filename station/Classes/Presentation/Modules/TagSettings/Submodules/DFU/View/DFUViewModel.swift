@@ -84,8 +84,9 @@ final class DFUViewModel: ObservableObject {
                 self.whenListening(),
                 self.whenReadyToUpdate(),
                 self.whenFlashing(),
-                self.userInput(input: input.eraseToAnyPublisher()),
-                self.whenServingAfterUpdate()
+                self.whenFlashed(),
+                self.whenServingAfterUpdate(),
+                self.userInput(input: input.eraseToAnyPublisher())
             ]
         )
         .assign(to: \.state, on: self)
@@ -292,7 +293,6 @@ extension DFUViewModel {
         case loading
         case loaded(LatestRelease)
         case serving(LatestRelease)
-        case servingAfterUpdate(LatestRelease)
         case checking(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
@@ -319,6 +319,7 @@ extension DFUViewModel {
                 fullUrl: URL
              )
         case successfulyFlashed(LatestRelease)
+        case servingAfterUpdate(LatestRelease)
         case firmwareAfterUpdate(CurrentRelease?)
         case error(Error)
     }
@@ -328,7 +329,6 @@ extension DFUViewModel {
         case onLoaded(LatestRelease)
         case onDidFailLoading(Error)
         case onServed(CurrentRelease?)
-        case onServedAfterUpdate(CurrentRelease?)
         case onLoadedAndServed(LatestRelease, CurrentRelease?)
         case onStartUpgrade(LatestRelease, CurrentRelease?)
         case onRead(
@@ -368,6 +368,8 @@ extension DFUViewModel {
                 fullUrl: URL
              )
         case onSuccessfullyFlashedFirmware(LatestRelease)
+        case onServingAfterUpdate(CurrentRelease?)
+        case onServedAfterUpdate(CurrentRelease?)
         case onDidFailFlashingFirmware(Error)
     }
 }
@@ -635,6 +637,19 @@ extension DFUViewModel {
                     }
                 })
                 .catch { Just(Event.onDidFailDownloading($0)) }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func whenFlashed() -> Feedback<State, Event> {
+        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
+            guard case .successfulyFlashed = state, let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+                .receive(on: RunLoop.main)
+                .map(Event.onServingAfterUpdate)
+                .catch { _ in Just(Event.onServingAfterUpdate(nil)) }
                 .eraseToAnyPublisher()
         }
     }
