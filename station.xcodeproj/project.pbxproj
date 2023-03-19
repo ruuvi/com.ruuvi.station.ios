@@ -927,8 +927,6 @@
 		E1CA28AF29201F34009E4423 /* RUAlertExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */; };
 		E1CA28B8292037E4009E4423 /* RUAlertDetailsCellChildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */; };
 		E1CA28B9292037E4009E4423 /* RUAlertDetailsCellChildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */; };
-		E1CA28BC29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */; };
-		E1CA28BD29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */; };
 		E1CD77E728781A0E00F1F0EB /* UnitSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CD77E628781A0E00F1F0EB /* UnitSettings.storyboard */; };
 		E1CD77E828781A0E00F1F0EB /* UnitSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CD77E628781A0E00F1F0EB /* UnitSettings.storyboard */; };
 		E1CD77EC2878273500F1F0EB /* UnitSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD77EB2878273500F1F0EB /* UnitSettingsTableViewController.swift */; };
@@ -1600,7 +1598,6 @@
 		E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertExpandButton.swift; sourceTree = "<group>"; };
 		E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertDetailsCellChildView.swift; sourceTree = "<group>"; };
-		E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAnimatingDotsView.swift; sourceTree = "<group>"; };
 		E1CD77E628781A0E00F1F0EB /* UnitSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnitSettings.storyboard; sourceTree = "<group>"; };
 		E1CD77EB2878273500F1F0EB /* UnitSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsTableViewController.swift; sourceTree = "<group>"; };
 		E1CD77F028782E8000F1F0EB /* UnitSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsTableConfigurator.swift; sourceTree = "<group>"; };
@@ -3867,7 +3864,6 @@
 		E191F2022969DE3700F1FEA6 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				E1CA28BA29222A43009E4423 /* RUAnimatingDotsView */,
 				E1CA28B62920378D009E4423 /* RUAlertDetailsCellChildView */,
 				E1CA28AC29201EF0009E4423 /* RUAlertExpandButton */,
 				0E02ABB8237598B200ED4629 /* RangeSeekSlider */,
@@ -4042,14 +4038,6 @@
 				E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */,
 			);
 			path = RUAlertDetailsCellChildView;
-			sourceTree = "<group>";
-		};
-		E1CA28BA29222A43009E4423 /* RUAnimatingDotsView */ = {
-			isa = PBXGroup;
-			children = (
-				E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */,
-			);
-			path = RUAnimatingDotsView;
 			sourceTree = "<group>";
 		};
 		E1CD77E52878199600F1F0EB /* Unit Settings */ = {
@@ -5214,7 +5202,6 @@
 				66BC44B42657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
 				66BC44B72657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */,
 				E116707729634332002DF7BF /* BackgroundSelectionViewInput.swift in Sources */,
-				E1CA28BD29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */,
 				08E830207D43DAF06076D647 /* SignInModuleInput.swift in Sources */,
 				8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */,
 				E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */,
@@ -5574,7 +5561,6 @@
 				A9B57443253B994700DB7353 /* SignInViewInput.swift in Sources */,
 				E1B20C872926CDE10023D739 /* UITextField+Extension.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
-				E1CA28BC29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */,
 				E19EAF75299AE3B0005827E4 /* SignInView.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,

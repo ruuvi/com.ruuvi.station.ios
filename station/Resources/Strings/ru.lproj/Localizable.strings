@@ -536,6 +536,11 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.BatteryStatusLabel.Replace.message" = "Low battery";
 "TagSettings.BatteryStatusLabel.Ok.message" = "Батарея OK";
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from the Ruuvi Cloud. A Ruuvi Gateway router is required.";
+"settings_appearance" = "Внешний вид";
+"app_theme" = "Тема приложения";
+"follow_system_theme" = "Как в системе";
+"dark_theme" = "Темная тема";
+"light_theme" = "Светлая тема";
 "Settings.Temperature.Resolution.title" = "Temperature resolution";
 "Settings.Humidity.Resolution.title" = "Humidity resolution";
 "Settings.Pressure.Resolution.title" = "Pressure resolution";

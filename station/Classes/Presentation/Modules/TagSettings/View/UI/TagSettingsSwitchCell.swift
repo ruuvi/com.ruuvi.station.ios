@@ -12,12 +12,16 @@ class TagSettingsSwitchCell: UITableViewCell {
         let label = UILabel()
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 14)
         return label
     }()
 
-    private lazy var pairingAnimationView = RUAnimatingDotsView()
+    private lazy var pairingAnimationView: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.tintColor = RuuviColor.ruuviTintColor
+        return activityIndicator
+    }()
 
     lazy var statusSwitch: UISwitch = {
         let toggle = UISwitch()
@@ -56,22 +60,22 @@ class TagSettingsSwitchCell: UITableViewCell {
                                          bottom: 12,
                                          right: 0))
 
-        // TODO: MAKE IT FUNCTIONAL
-//        addSubview(pairingAnimationView)
-//        pairingAnimationView.anchor(top: nil,
-//                                    leading: titleLabel.trailingAnchor,
-//                                    bottom: nil,
-//                                    trailing: nil,
-//                                    size: .init(width: 24, height: 8))
-//        pairingAnimationView.centerYInSuperview()
+        addSubview(pairingAnimationView)
+        pairingAnimationView.anchor(top: nil,
+                                    leading: titleLabel.trailingAnchor,
+                                    bottom: nil,
+                                    trailing: nil,
+                                    size: .init(width: 16, height: 16))
+        pairingAnimationView.centerYInSuperview()
 
         addSubview(statusSwitch)
         statusSwitch.anchor(top: nil,
-                            leading: titleLabel.trailingAnchor,
+                            leading: pairingAnimationView.trailingAnchor,
                             bottom: nil,
                             trailing: safeRightAnchor,
                             padding: .init(top: 0, left: 8,
-                                           bottom: 0, right: 12))
+                                           bottom: 0, right: 12),
+                            size: .init(width: 51, height: 0))
         statusSwitch.centerYInSuperview()
 
         addSubview(seprator)
@@ -93,7 +97,6 @@ extension TagSettingsSwitchCell {
 
     func configure(title: String?) {
         titleLabel.text = title
-        layoutSubviews()
     }
 
     func configureSwitch(value: Bool?) {
@@ -109,7 +112,6 @@ extension TagSettingsSwitchCell {
     }
 
     func configurePairingAnimation(start: Bool) {
-        // TODO: MAKE IT FUNCTIONAL
         if start {
             pairingAnimationView.startAnimating()
         } else {
