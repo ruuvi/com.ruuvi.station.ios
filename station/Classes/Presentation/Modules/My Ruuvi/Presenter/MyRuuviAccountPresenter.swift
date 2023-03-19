@@ -74,6 +74,7 @@ extension MyRuuviAccountPresenter {
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             guard let sSelf = self else { return }
+            sSelf.activityPresenter.increment()
             sSelf.cloudNotificationService.unregister(
                 token: sSelf.pnManager.fcmToken,
                 tokenId: nil
@@ -88,6 +89,8 @@ extension MyRuuviAccountPresenter {
                     sSelf.viewDidTriggerClose()
                     sSelf.syncViewModel()
                     sSelf.reloadWidgets()
+                }, completion: { [weak self] in
+                    self?.activityPresenter.decrement()
                 })
         }
         let cancleAction = UIAlertAction(title: cancelActionTitle,

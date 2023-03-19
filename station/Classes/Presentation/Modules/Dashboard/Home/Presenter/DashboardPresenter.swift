@@ -51,6 +51,10 @@ class DashboardPresenter: DashboardModuleInput {
     var featureToggleService: FeatureToggleService!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
+    var authService: RuuviServiceAuth!
+    var activityPresenter: ActivityPresenter!
+    var pnManager: RuuviCorePN!
+    var cloudNotificationService: RuuviServiceCloudNotification!
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
     private var virtualSensorsToken: VirtualReactorToken?
@@ -85,6 +89,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var calibrationSettingsToken: NSObjectProtocol?
     private var dashboardTypeToken: NSObjectProtocol?
+    private var cloudSyncToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             startListeningToWebTagsAlertStatus()
@@ -139,6 +144,7 @@ class DashboardPresenter: DashboardModuleInput {
         systemLanguageChangeToken?.invalidate()
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
+        cloudSyncToken?.invalidate()
     }
 }
 
@@ -157,6 +163,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startListeningToSettings()
         handleCloudModeState()
         startObserveCalibrationSettingsChange()
+        startObservingCloudSyncTokenState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -182,7 +189,7 @@ extension DashboardPresenter: DashboardViewOutput {
         router.openRuuviProductsPage()
     }
 
-    func viewDidTriggerSettings(for viewModel: CardsViewModel, with scrollToAlert: Bool) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid.value {
                 if settings.keepConnectionDialogWasShown(for: luid)
@@ -192,8 +199,7 @@ extension DashboardPresenter: DashboardViewOutput {
                     || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                     openTagSettingsScreens(viewModel: viewModel)
                 } else {
-                    view.showKeepConnectionDialogSettings(for: viewModel,
-                                                          scrollToAlert: scrollToAlert)
+                    view.showKeepConnectionDialogSettings(for: viewModel)
                 }
             } else {
                 openTagSettingsScreens(viewModel: viewModel)
@@ -230,6 +236,14 @@ extension DashboardPresenter: DashboardViewOutput {
         openCardView(viewModel: viewModel, showCharts: false)
     }
 
+    func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
+        if settings.showChartOnDashboardCardTap {
+            viewDidTriggerChart(for: viewModel)
+        } else {
+            viewDidTriggerOpenCardImageView(for: viewModel)
+        }
+    }
+
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
             if let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
@@ -261,8 +275,7 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
 
-    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel,
-                                                    scrollToAlert: Bool) {
+    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
             openTagSettingsScreens(viewModel: viewModel)
@@ -271,8 +284,7 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
     
-    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel,
-                                                scrollToAlert: Bool) {
+    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -731,7 +743,10 @@ extension DashboardPresenter {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
-            let shouldAvoidObserving = settings.cloudModeEnabled && viewModel.isCloud.value.bound
+            let shouldAvoidObserving =
+                ruuviUser.isAuthorized &&
+                settings.cloudModeEnabled &&
+                viewModel.isCloud.value.bound
             if shouldAvoidObserving {
                 continue
             }
@@ -928,10 +943,9 @@ extension DashboardPresenter {
                             sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                         } else {
                             self?.ruuviStorage.readLast(sensor).on(success: { record in
-                                guard let record = record else {
-                                    return
+                                if let record = record {
+                                    viewModel.update(record)
                                 }
-                                viewModel.update(record)
                                 sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                             })
                         }
@@ -1254,13 +1268,9 @@ extension DashboardPresenter {
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            guard let latestMeasurement = viewModel.latestMeasurement.value
-            else {
-                return
-            }
             self.router.openTagSettings(
                 ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
+                latestMeasurement: viewModel.latestMeasurement.value,
                 sensorSettings: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
@@ -1272,10 +1282,6 @@ extension DashboardPresenter {
 
     private func openTagSettingsForNewSensor(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            guard let latestMeasurement = viewModel.latestMeasurement.value
-            else {
-                return
-            }
             self.router.openTagSettings(
                 with: viewModels,
                 ruuviTagSensors: ruuviTags,
@@ -1283,7 +1289,7 @@ extension DashboardPresenter {
                 sensorSettings: sensorSettingsList,
                 scrollTo: viewModel,
                 ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
+                latestMeasurement: viewModel.latestMeasurement.value,
                 sensorSetting: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
@@ -1333,7 +1339,7 @@ extension DashboardPresenter {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
         // Sync with cloud if cloud mode is turned on
-        if settings.cloudModeEnabled {
+        if ruuviUser.isAuthorized && settings.cloudModeEnabled {
             cloudSyncDaemon.refreshLatestRecord()
             for viewModel in viewModels where (viewModel.isCloud.value ?? false) {
                 viewModel.isConnected.value = false
@@ -1429,6 +1435,17 @@ extension DashboardPresenter {
                    let type = userInfo[DashboardTypeKey.type] as? DashboardType {
                    self?.view.dashboardType = type
                 }
+        })
+    }
+
+    private func startObservingCloudSyncTokenState() {
+        cloudSyncToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidFailForAuthorization,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.forceLogoutUser()
         })
     }
     
@@ -1686,6 +1703,31 @@ extension DashboardPresenter {
             observable.value = isOn
         }
         view.applyUpdate(to: viewModel)
+    }
+
+    /// Log out user if the auth token is expired.
+    private func forceLogoutUser() {
+        activityPresenter.increment()
+        cloudNotificationService.unregister(
+            token: pnManager.fcmToken,
+            tokenId: nil
+        ).on(success: { [weak self] _ in
+            self?.pnManager.fcmToken = nil
+            self?.pnManager.fcmTokenLastRefreshed = nil
+        })
+
+        authService.logout()
+            .on(success: { [weak self] _ in
+                self?.settings.cloudModeEnabled = false
+                self?.syncViewModels()
+                self?.reloadWidgets()
+            }, completion: { [weak self] in
+                self?.activityPresenter.decrement()
+            })
+    }
+
+    private func reloadWidgets() {
+        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
     }
 }
 // swiftlint:enable file_length trailing_whitespace

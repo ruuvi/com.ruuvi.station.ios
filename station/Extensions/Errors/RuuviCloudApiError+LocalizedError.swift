@@ -4,6 +4,8 @@ import RuuviCloud
 extension RuuviCloudApiError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .connection:
+            return "internet_connection_problem".localized()
         case .emptyResponse:
             return "RuuviCloudApiError.emptyResponse".localized()
         case .failedToGetDataFromResponse:
@@ -18,6 +20,8 @@ extension RuuviCloudApiError: LocalizedError {
             return error.localizedDescription
         case .parsing(let error):
             return error.localizedDescription
+        case .unauthorized:
+            return nil
 
         }
     }

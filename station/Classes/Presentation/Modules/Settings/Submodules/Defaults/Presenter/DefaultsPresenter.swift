@@ -24,7 +24,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildAskForReviewFirstTime(),
                            buildAskForReviewLater(),
                            buildIsAuthorized(),
-                           buildAuthToken()]
+                           buildAuthToken(),
+                           buildDashboardCardTapAction()]
     }
 }
 
@@ -231,4 +232,17 @@ extension DefaultsPresenter {
         viewModel.value.value = ruuviUser.apiKey
         return viewModel
     }
+
+    private func buildDashboardCardTapAction() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show Chart on Dashboard Card Tap"
+        viewModel.boolean.value = settings.showChartOnDashboardCardTap
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, showChart in
+            observer.settings.showChartOnDashboardCardTap = showChart.bound
+        }
+        return viewModel
+    }
+
 }

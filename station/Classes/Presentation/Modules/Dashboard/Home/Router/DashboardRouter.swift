@@ -86,7 +86,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     }
 
     func openTagSettings(ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord,
+                         latestMeasurement: RuuviTagSensorRecord?,
                          sensorSettings: SensorSettings?,
                          output: TagSettingsModuleOutput) {
         let factory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
@@ -165,7 +165,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                          sensorSettings: [SensorSettings],
                          scrollTo: CardsViewModel?,
                          ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord,
+                         latestMeasurement: RuuviTagSensorRecord?,
                          sensorSetting: SensorSettings?,
                          output: CardsModuleOutput) {
         let cardsFactory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
