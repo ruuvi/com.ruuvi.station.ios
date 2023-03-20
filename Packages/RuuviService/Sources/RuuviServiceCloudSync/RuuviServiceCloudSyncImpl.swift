@@ -161,13 +161,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let sensors = syncSensors()
         let settings = syncSettings()
         let alerts = syncAlerts()
+        let latestMesurements = syncLatestRecord()
         sensors.on(success: { [weak self] updatedSensors in
             guard let sSelf = self else { return }
             let syncs = updatedSensors.map({ sSelf.sync(sensor: $0) })
             Future.zip(syncs).on(success: { _ in
                 settings.on(success: { _ in
                     alerts.on(success: { _ in
-                        promise.succeed(value: updatedSensors)
+                        latestMesurements.on(success: { _ in
+                            promise.succeed(value: updatedSensors)
+                        }, failure: { error in
+                            promise.fail(error: error)
+                        })
                     }, failure: { error in
                         promise.fail(error: error)
                     })
@@ -406,9 +411,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
         // Fetch data from the dense endpoint
         ruuviCloud.loadSensorsDense(for: nil,
-                                         measurements: true,
-                                         sharedToOthers: nil,
-                                         sharedToMe: true,
+                                    measurements: true,
+                                    sharedToOthers: nil,
+                                    sharedToMe: true,
                                     alerts: nil).on(success: { [weak self] sensors in
             guard let sSelf = self else { return }
 
@@ -420,6 +425,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             for sensor in sensors {
                 sSelf.updateLatestRecord(ruuviTag: sensor.sensor.ruuviTagSensor,
                                                                   cloudRecord: sensor.record).on(completion: {
+                    // TODO: Skip adding points to history for free plan
                     sSelf.addLatestRecordToHistory(ruuviTag: sensor.sensor.ruuviTagSensor,
                                                    cloudRecord: sensor.record).on(completion: {
                         promise.succeed(value: true)

@@ -443,6 +443,19 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         postAlertDidChange(with: sensor, of: type)
     }
 
+    public func remove(type: AlertType, ruuviTag: RuuviTagSensor) {
+        if let luid = ruuviTag.luid, let macId = ruuviTag.macId {
+            alertPersistence.remove(type: type, for: luid.value)
+            alertPersistence.remove(type: type, for: macId.value)
+        } else if let luid = ruuviTag.luid {
+            alertPersistence.remove(type: type, for: luid.value)
+        } else if let macId = ruuviTag.macId {
+            alertPersistence.remove(type: type, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
     public func mute(type: AlertType, for sensor: PhysicalSensor, till date: Date) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.mute(type: type, for: luid.value, till: date)

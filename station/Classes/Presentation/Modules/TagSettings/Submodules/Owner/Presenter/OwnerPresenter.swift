@@ -51,7 +51,7 @@ extension OwnerPresenter: OwnerViewOutput {
                     }
                     self?.view.showSensorAlreadyClaimedError(error: claimError.code, email: claimError.error.email())
                 default:
-                    return
+                    self?.errorPresenter.present(error: error)
                 }
             }, completion: { [weak self] in
                 self?.isLoading = false

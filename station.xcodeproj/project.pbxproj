@@ -698,6 +698,42 @@
 		E116709029635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
 		E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
 		E11989F629B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
+		E11989FF29BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989FE29BA60CE002245CF /* AppearanceSettingsTableViewController.swift */; };
+		E1198A0029BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989FE29BA60CE002245CF /* AppearanceSettingsTableViewController.swift */; };
+		E1198A0229BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0129BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift */; };
+		E1198A0329BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0129BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift */; };
+		E1198A0829BA68B6002245CF /* AppearanceSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0729BA68B6002245CF /* AppearanceSettingsRouterInput.swift */; };
+		E1198A0929BA68B6002245CF /* AppearanceSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0729BA68B6002245CF /* AppearanceSettingsRouterInput.swift */; };
+		E1198A0B29BA68BE002245CF /* AppearanceSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0A29BA68BE002245CF /* AppearanceSettingsRouter.swift */; };
+		E1198A0C29BA68BE002245CF /* AppearanceSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0A29BA68BE002245CF /* AppearanceSettingsRouter.swift */; };
+		E1198A0E29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0D29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift */; };
+		E1198A0F29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A0D29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift */; };
+		E1198A1129BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1029BA6910002245CF /* AppearanceSettingsPresenter.swift */; };
+		E1198A1229BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1029BA6910002245CF /* AppearanceSettingsPresenter.swift */; };
+		E1198A1529BA6A06002245CF /* AppearanceSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1429BA6A06002245CF /* AppearanceSettingsViewOutput.swift */; };
+		E1198A1629BA6A06002245CF /* AppearanceSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1429BA6A06002245CF /* AppearanceSettingsViewOutput.swift */; };
+		E1198A1829BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1729BA6A61002245CF /* AppearanceSettingsViewInput.swift */; };
+		E1198A1929BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1729BA6A61002245CF /* AppearanceSettingsViewInput.swift */; };
+		E1198A1B29BA6A79002245CF /* AppearanceSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1A29BA6A79002245CF /* AppearanceSettingsViewModel.swift */; };
+		E1198A1C29BA6A79002245CF /* AppearanceSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1A29BA6A79002245CF /* AppearanceSettingsViewModel.swift */; };
+		E1198A1E29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1D29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift */; };
+		E1198A1F29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A1D29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift */; };
+		E1198A2129BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2029BA6EC6002245CF /* RuuviTheme+Extension.swift */; };
+		E1198A2229BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2029BA6EC6002245CF /* RuuviTheme+Extension.swift */; };
+		E1198A2629BA763F002245CF /* ASSelectionModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2529BA763F002245CF /* ASSelectionModuleFactory.swift */; };
+		E1198A2729BA763F002245CF /* ASSelectionModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2529BA763F002245CF /* ASSelectionModuleFactory.swift */; };
+		E1198A2C29BA769A002245CF /* ASSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2B29BA769A002245CF /* ASSelectionTableViewController.swift */; };
+		E1198A2D29BA769A002245CF /* ASSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2B29BA769A002245CF /* ASSelectionTableViewController.swift */; };
+		E1198A2F29BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2E29BA76A8002245CF /* ASSelectionTableViewCell.swift */; };
+		E1198A3029BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A2E29BA76A8002245CF /* ASSelectionTableViewCell.swift */; };
+		E1198A3229BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3129BA76C1002245CF /* ASSelectionViewOutput.swift */; };
+		E1198A3329BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3129BA76C1002245CF /* ASSelectionViewOutput.swift */; };
+		E1198A3529BA76CB002245CF /* ASSelectionViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3429BA76CB002245CF /* ASSelectionViewInput.swift */; };
+		E1198A3629BA76CB002245CF /* ASSelectionViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3429BA76CB002245CF /* ASSelectionViewInput.swift */; };
+		E1198A3829BA76DD002245CF /* ASSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3729BA76DD002245CF /* ASSelectionPresenter.swift */; };
+		E1198A3929BA76DD002245CF /* ASSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3729BA76DD002245CF /* ASSelectionPresenter.swift */; };
+		E1198A3B29BA76F1002245CF /* ASSelectionModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3A29BA76F1002245CF /* ASSelectionModuleInput.swift */; };
+		E1198A3C29BA76F1002245CF /* ASSelectionModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1198A3A29BA76F1002245CF /* ASSelectionModuleInput.swift */; };
 		E11FDA6A29A1757C003ADA7B /* splash_bg_layer_dark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */; };
 		E11FDA6B29A1757C003ADA7B /* splash_bg_layer_dark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */; };
 		E11FDA6D29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FDA6C29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift */; };
@@ -927,8 +963,6 @@
 		E1CA28AF29201F34009E4423 /* RUAlertExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */; };
 		E1CA28B8292037E4009E4423 /* RUAlertDetailsCellChildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */; };
 		E1CA28B9292037E4009E4423 /* RUAlertDetailsCellChildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */; };
-		E1CA28BC29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */; };
-		E1CA28BD29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */; };
 		E1CD77E728781A0E00F1F0EB /* UnitSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CD77E628781A0E00F1F0EB /* UnitSettings.storyboard */; };
 		E1CD77E828781A0E00F1F0EB /* UnitSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CD77E628781A0E00F1F0EB /* UnitSettings.storyboard */; };
 		E1CD77EC2878273500F1F0EB /* UnitSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CD77EB2878273500F1F0EB /* UnitSettingsTableViewController.swift */; };
@@ -1479,6 +1513,24 @@
 		E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionViewModel.swift; sourceTree = "<group>"; };
 		E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionUploadProgressView.swift; sourceTree = "<group>"; };
 		E11989F429B7A46E002245CF /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		E11989FE29BA60CE002245CF /* AppearanceSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsTableViewController.swift; sourceTree = "<group>"; };
+		E1198A0129BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsTableViewBasicCell.swift; sourceTree = "<group>"; };
+		E1198A0729BA68B6002245CF /* AppearanceSettingsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsRouterInput.swift; sourceTree = "<group>"; };
+		E1198A0A29BA68BE002245CF /* AppearanceSettingsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsRouter.swift; sourceTree = "<group>"; };
+		E1198A0D29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsModuleFactory.swift; sourceTree = "<group>"; };
+		E1198A1029BA6910002245CF /* AppearanceSettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsPresenter.swift; sourceTree = "<group>"; };
+		E1198A1429BA6A06002245CF /* AppearanceSettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsViewOutput.swift; sourceTree = "<group>"; };
+		E1198A1729BA6A61002245CF /* AppearanceSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsViewInput.swift; sourceTree = "<group>"; };
+		E1198A1A29BA6A79002245CF /* AppearanceSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsViewModel.swift; sourceTree = "<group>"; };
+		E1198A1D29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsModuleInput.swift; sourceTree = "<group>"; };
+		E1198A2029BA6EC6002245CF /* RuuviTheme+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTheme+Extension.swift"; sourceTree = "<group>"; };
+		E1198A2529BA763F002245CF /* ASSelectionModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionModuleFactory.swift; sourceTree = "<group>"; };
+		E1198A2B29BA769A002245CF /* ASSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionTableViewController.swift; sourceTree = "<group>"; };
+		E1198A2E29BA76A8002245CF /* ASSelectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionTableViewCell.swift; sourceTree = "<group>"; };
+		E1198A3129BA76C1002245CF /* ASSelectionViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionViewOutput.swift; sourceTree = "<group>"; };
+		E1198A3429BA76CB002245CF /* ASSelectionViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionViewInput.swift; sourceTree = "<group>"; };
+		E1198A3729BA76DD002245CF /* ASSelectionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionPresenter.swift; sourceTree = "<group>"; };
+		E1198A3A29BA76F1002245CF /* ASSelectionModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSelectionModuleInput.swift; sourceTree = "<group>"; };
 		E11FDA6929A1757C003ADA7B /* splash_bg_layer_dark.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = splash_bg_layer_dark.jpg; sourceTree = "<group>"; };
 		E11FDA6C29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsPlainTableViewCell.swift; sourceTree = "<group>"; };
 		E11FDA6F29A3F78D003ADA7B /* RuuviSimpleViewCompositionalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviSimpleViewCompositionalLayout.swift; sourceTree = "<group>"; };
@@ -1600,7 +1652,6 @@
 		E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertExpandButton.swift; sourceTree = "<group>"; };
 		E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertDetailsCellChildView.swift; sourceTree = "<group>"; };
-		E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAnimatingDotsView.swift; sourceTree = "<group>"; };
 		E1CD77E628781A0E00F1F0EB /* UnitSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UnitSettings.storyboard; sourceTree = "<group>"; };
 		E1CD77EB2878273500F1F0EB /* UnitSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsTableViewController.swift; sourceTree = "<group>"; };
 		E1CD77F028782E8000F1F0EB /* UnitSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSettingsTableConfigurator.swift; sourceTree = "<group>"; };
@@ -2009,6 +2060,7 @@
 				A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */,
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
+				E1198A2029BA6EC6002245CF /* RuuviTheme+Extension.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
 				3490A4C227D9F2C70032BBAB /* UINavigationController.swift */,
 			);
@@ -2620,6 +2672,7 @@
 		0EBAF063232001080025A191 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				E11989F829BA605F002245CF /* Appearance */,
 				E1B57FE629859C7000B441FB /* Devices */,
 				A9828E54247BAC0700E7E9D4 /* Chart */,
 				0E8A100023845E1200A9CBA6 /* Defaults */,
@@ -3675,6 +3728,110 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		E11989F829BA605F002245CF /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				E11989FD29BA60AC002245CF /* Presenter */,
+				E11989FC29BA60A7002245CF /* View */,
+				E11989FA29BA6097002245CF /* Router */,
+				E11989F929BA608D002245CF /* Assembly */,
+				E1198A2329BA744F002245CF /* Selection */,
+			);
+			path = Appearance;
+			sourceTree = "<group>";
+		};
+		E11989F929BA608D002245CF /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A0D29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E11989FA29BA6097002245CF /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A0729BA68B6002245CF /* AppearanceSettingsRouterInput.swift */,
+				E1198A0A29BA68BE002245CF /* AppearanceSettingsRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		E11989FC29BA60A7002245CF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A1329BA69F3002245CF /* UI */,
+				E1198A1429BA6A06002245CF /* AppearanceSettingsViewOutput.swift */,
+				E1198A1729BA6A61002245CF /* AppearanceSettingsViewInput.swift */,
+				E1198A1A29BA6A79002245CF /* AppearanceSettingsViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E11989FD29BA60AC002245CF /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A1029BA6910002245CF /* AppearanceSettingsPresenter.swift */,
+				E1198A1D29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E1198A1329BA69F3002245CF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E11989FE29BA60CE002245CF /* AppearanceSettingsTableViewController.swift */,
+				E1198A0129BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		E1198A2329BA744F002245CF /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A2929BA764D002245CF /* Presenter */,
+				E1198A2829BA7646002245CF /* View */,
+				E1198A2429BA75CF002245CF /* Assembly */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		E1198A2429BA75CF002245CF /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A2529BA763F002245CF /* ASSelectionModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E1198A2829BA7646002245CF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A2A29BA7667002245CF /* UI */,
+				E1198A3129BA76C1002245CF /* ASSelectionViewOutput.swift */,
+				E1198A3429BA76CB002245CF /* ASSelectionViewInput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E1198A2929BA764D002245CF /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A3729BA76DD002245CF /* ASSelectionPresenter.swift */,
+				E1198A3A29BA76F1002245CF /* ASSelectionModuleInput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E1198A2A29BA7667002245CF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E1198A2B29BA769A002245CF /* ASSelectionTableViewController.swift */,
+				E1198A2E29BA76A8002245CF /* ASSelectionTableViewCell.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E1395BEF294F791C00C403C6 /* Classess */ = {
 			isa = PBXGroup;
 			children = (
@@ -3867,7 +4024,6 @@
 		E191F2022969DE3700F1FEA6 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				E1CA28BA29222A43009E4423 /* RUAnimatingDotsView */,
 				E1CA28B62920378D009E4423 /* RUAlertDetailsCellChildView */,
 				E1CA28AC29201EF0009E4423 /* RUAlertExpandButton */,
 				0E02ABB8237598B200ED4629 /* RangeSeekSlider */,
@@ -4042,14 +4198,6 @@
 				E1CA28B7292037E4009E4423 /* RUAlertDetailsCellChildView.swift */,
 			);
 			path = RUAlertDetailsCellChildView;
-			sourceTree = "<group>";
-		};
-		E1CA28BA29222A43009E4423 /* RUAnimatingDotsView */ = {
-			isa = PBXGroup;
-			children = (
-				E1CA28BB29222A5A009E4423 /* RUAnimatingDotsView.swift */,
-			);
-			path = RUAnimatingDotsView;
 			sourceTree = "<group>";
 		};
 		E1CD77E52878199600F1F0EB /* Unit Settings */ = {
@@ -4862,6 +5010,7 @@
 				E19EAF76299AE3B0005827E4 /* SignInView.swift in Sources */,
 				A92A66BE2450C64A002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
+				E1198A3029BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				A91D02F52511207300694733 /* SelectionPresenter.swift in Sources */,
 				E116708629634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
@@ -4873,6 +5022,7 @@
 				0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E8BD2D7238566AB008B31EF /* WebTagSettingsViewInput.swift in Sources */,
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
+				E1198A3629BA76CB002245CF /* ASSelectionViewInput.swift in Sources */,
 				0E3CA70D267365B1000D9B25 /* Debouncer.swift in Sources */,
 				0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				E116707A29634363002DF7BF /* BackgroundSelectionViewOutput.swift in Sources */,
@@ -4888,8 +5038,10 @@
 				E168B4B72886AF1200D6B5C6 /* UnitSettingsType.swift in Sources */,
 				E1B5800929859EDE00B441FB /* DevicesInteractorInput.swift in Sources */,
 				E1597A34295CC4F900DFB70B /* LowBatteryView.swift in Sources */,
+				E1198A0029BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */,
 				340BE39727B54F38006D6C34 /* OwnerRouter.swift in Sources */,
 				66BC44B12657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
+				E1198A3C29BA76F1002245CF /* ASSelectionModuleInput.swift in Sources */,
 				E19EAF6A29997711005827E4 /* SignInViewController.swift in Sources */,
 				0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */,
 				E16B8F4F28D113230025B92D /* MyRuuviAccountInitializer.swift in Sources */,
@@ -4938,6 +5090,7 @@
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
+				E1198A3329BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */,
 				E1ED426F28FF261D00302179 /* YAxisValueFormatter.swift in Sources */,
 				0EB8ED2A268F10E900C6B0FA /* Spinner.swift in Sources */,
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
@@ -4950,6 +5103,9 @@
 				E1E3C346299007DE00A59CB8 /* TagSettingsModuleOutput.swift in Sources */,
 				66BC44AB2657AED400A03253 /* OffsetCorrectionViewInput.swift in Sources */,
 				0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */,
+				E1198A1C29BA6A79002245CF /* AppearanceSettingsViewModel.swift in Sources */,
+				E1198A0F29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift in Sources */,
+				E1198A2729BA763F002245CF /* ASSelectionModuleFactory.swift in Sources */,
 				0E8BD318238566AB008B31EF /* TemperatureUnit+Localization.swift in Sources */,
 				0EB8ED2D268F111B00C6B0FA /* View+Any.swift in Sources */,
 				E168B4AC2885C28000D6B5C6 /* MeasurementAccuracyTitles.swift in Sources */,
@@ -4998,6 +5154,7 @@
 				0E8BD330238566AB008B31EF /* AboutInitializer.swift in Sources */,
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
 				A907BB1224AE620D009DA3DB /* UIWindow+Orientation.swift in Sources */,
+				E1198A1929BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */,
 				E16B8F4C28D1114F0025B92D /* MyRuuviAccountModuleInput.swift in Sources */,
 				E16051EA285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */,
 				E1CD77ED2878273500F1F0EB /* UnitSettingsTableViewController.swift in Sources */,
@@ -5031,12 +5188,14 @@
 				E1395BEB294F6C2A00C403C6 /* String+Localization.swift in Sources */,
 				0EA7968E2664B91E002BA25D /* RuuviStorageError+LocalizedError.swift in Sources */,
 				A976CA7F24A928C20099BDC1 /* ChartSettingsDisclosureTableViewCell.swift in Sources */,
+				E1198A0329BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */,
 				0E8BD34C238566AB008B31EF /* DefaultsRouter.swift in Sources */,
 				340BE38927B54F37006D6C34 /* OwnerInitializer.swift in Sources */,
 				0EB8ED30268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
 				A91D03042511207300694733 /* SelectionViewOutput.swift in Sources */,
 				E18D04D528F1D52A008EF5EC /* TagChartsViewOutput.swift in Sources */,
 				0EB8ED1F268EFF4200C6B0FA /* Publishers+System.swift in Sources */,
+				E1198A0C29BA68BE002245CF /* AppearanceSettingsRouter.swift in Sources */,
 				E1E3C334298D7FA500A59CB8 /* UIImage+Extension.swift in Sources */,
 				E1E6C216296C9CB100B3D037 /* Int+Extension.swift in Sources */,
 				3414BFC92806D19C00C63BE9 /* RuuviCodeView.swift in Sources */,
@@ -5054,6 +5213,7 @@
 				0EB48D702619D50A008E0D2D /* FeatureToggle.swift in Sources */,
 				340BE39527B54F38006D6C34 /* OwnerViewOutput.swift in Sources */,
 				E16B8F4628D10E2C0025B92D /* MyRuuviAccountViewOutput.swift in Sources */,
+				E1198A1629BA6A06002245CF /* AppearanceSettingsViewOutput.swift in Sources */,
 				0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */,
 				E1B20C8B2926D2FC0023D739 /* Double+Extension.swift in Sources */,
 				E1CA28B9292037E4009E4423 /* RUAlertDetailsCellChildView.swift in Sources */,
@@ -5070,6 +5230,7 @@
 				A91D03012511207300694733 /* SelectionTableViewController.swift in Sources */,
 				340BE39127B54F37006D6C34 /* OwnerViewInput.swift in Sources */,
 				E1E3C33A298EC9DC00A59CB8 /* DashboardModuleFactory.swift in Sources */,
+				E1198A0929BA68B6002245CF /* AppearanceSettingsRouterInput.swift in Sources */,
 				0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E8BD364238566AB008B31EF /* MenuRouterInput.swift in Sources */,
 				0EA796822664B7DC002BA25D /* RuuviPoolError+LocalizedError.swift in Sources */,
@@ -5086,6 +5247,7 @@
 				E19EAF84299C1383005827E4 /* SignInModuleFactory.swift in Sources */,
 				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
 				E19EAF9F299E610A005827E4 /* SignInPromoPresenter.swift in Sources */,
+				E1198A1F29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift in Sources */,
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
@@ -5151,11 +5313,13 @@
 				0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */,
 				340BE39C27B54FEC006D6C34 /* String+Email.swift in Sources */,
 				E10E18B5297D67B8002C78C3 /* RuuviCloudViewModel.swift in Sources */,
+				E1198A2229BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */,
 				0E8BD3AA238566AB008B31EF /* AppDelegate.swift in Sources */,
 				E16B8F4928D10E7A0025B92D /* MyRuuviAccountViewModel.swift in Sources */,
 				E1B57FEC29859CB800B441FB /* DevicesModuleFactory.swift in Sources */,
 				E18FD50E28DF7E7100289359 /* UIView+Layout.swift in Sources */,
 				E11FDA7129A3F78D003ADA7B /* RuuviSimpleViewCompositionalLayout.swift in Sources */,
+				E1198A3929BA76DD002245CF /* ASSelectionPresenter.swift in Sources */,
 				340BE38B27B54F37006D6C34 /* OwnerConfigurator.swift in Sources */,
 				E191F1F32968C2C900F1FEA6 /* TagSettingsAlertConfigCell.swift in Sources */,
 				0EA7AB7B2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
@@ -5193,6 +5357,7 @@
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
 				E10E18BE297D68EB002C78C3 /* RuuviCloudModuleInput.swift in Sources */,
 				E10E18C2297DD0CA002C78C3 /* RuuviCloudTableViewCell.swift in Sources */,
+				E1198A2D29BA769A002245CF /* ASSelectionTableViewController.swift in Sources */,
 				A9646488247BAE6B0001D55D /* ChartSettingsRouterInput.swift in Sources */,
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
 				A91D031B25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
@@ -5214,7 +5379,6 @@
 				66BC44B42657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
 				66BC44B72657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */,
 				E116707729634332002DF7BF /* BackgroundSelectionViewInput.swift in Sources */,
-				E1CA28BD29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */,
 				08E830207D43DAF06076D647 /* SignInModuleInput.swift in Sources */,
 				8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */,
 				E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */,
@@ -5225,6 +5389,7 @@
 				0EB8ED26268F083700C6B0FA /* DFUUIView.swift in Sources */,
 				E1597A702961FEB900DFB70B /* BackgroundSelectionViewController.swift in Sources */,
 				A9BB94CD2540AB610042B190 /* AlertViewModel.swift in Sources */,
+				E1198A1229BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */,
 				4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */,
 				898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */,
 				C9D6ACA6CB9694F6C33414CE /* ShareModuleInput.swift in Sources */,
@@ -5315,6 +5480,7 @@
 				E191F1F52968D32000F1FEA6 /* TagSettingsExpandableSectionHeader.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
+				E1198A1B29BA6A79002245CF /* AppearanceSettingsViewModel.swift in Sources */,
 				A9B57447253B994700DB7353 /* SignInModuleOutput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
 				E1597A722962000B00DFB70B /* BackgroundSelectionViewCell.swift in Sources */,
@@ -5328,6 +5494,7 @@
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				A98D3F15256CBD600066588B /* ShareViewOutput.swift in Sources */,
 				E1167082296346D5002DF7BF /* BackgroundSelectionModuleInput.swift in Sources */,
+				E1198A3529BA76CB002245CF /* ASSelectionViewInput.swift in Sources */,
 				0EB48D952619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A9E5994A2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
 				E1ED427228FF261D00302179 /* CustomXAxisRenderer.swift in Sources */,
@@ -5387,12 +5554,14 @@
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				66BC44B02657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
 				E1CD78012878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
+				E1198A1129BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */,
 				0EA511B8261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				A9E599582557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
 				A91D02F12511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				E1B20C8A2926D2FC0023D739 /* Double+Extension.swift in Sources */,
 				E1395C032958A2A900C403C6 /* CardsIndicatorView.swift in Sources */,
+				E1198A0829BA68B6002245CF /* AppearanceSettingsRouterInput.swift in Sources */,
 				0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */,
 				E1CE4C772959DF01005C023F /* DashboardIndicatorView.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* CardsViewOutput.swift in Sources */,
@@ -5425,6 +5594,7 @@
 				E116708829634815002DF7BF /* BackgroundSelectionModuleFactory.swift in Sources */,
 				0EA796712664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */,
 				E1E3C333298D7FA500A59CB8 /* UIImage+Extension.swift in Sources */,
+				E11989FF29BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
 				E1B5800529859E8900B441FB /* DevicesInteractor.swift in Sources */,
 				0E84BF612397F73100A37E1A /* HeartbeatEnvironmentObject.swift in Sources */,
@@ -5437,6 +5607,7 @@
 				E19EAFA4299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */,
 				E116708529634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
+				E1198A1829BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */,
 				A9BD38BA24F6108300904BBE /* Humidity+Offset.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
@@ -5448,15 +5619,18 @@
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0EF4E33D26824ABD00D83CC7 /* RuuviDFUError+LocalizedError.swift in Sources */,
+				E1198A1E29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift in Sources */,
 				3414BFCB2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */,
 				E16B8F4228D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				A98D3F0E256CBD600066588B /* ShareRouterInput.swift in Sources */,
 				E168B4AB2885C28000D6B5C6 /* MeasurementAccuracyTitles.swift in Sources */,
 				0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */,
+				E1198A3B29BA76F1002245CF /* ASSelectionModuleInput.swift in Sources */,
 				E1597A4C295CD66500DFB70B /* DashboardInteractorInput.swift in Sources */,
 				340BE38A27B54F37006D6C34 /* OwnerConfigurator.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
+				E1198A3829BA76DD002245CF /* ASSelectionPresenter.swift in Sources */,
 				0EB8ED1A268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				E1CD77F428782EA500F1F0EB /* UnitSettingsTableInitializer.swift in Sources */,
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
@@ -5465,6 +5639,7 @@
 				E19EAFA1299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */,
 				E191F2092969E11F00F1FEA6 /* TagSettingsRouterInput.swift in Sources */,
 				0EB8ED2F268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
+				E1198A0229BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */,
 				A91D02EE2511207200694733 /* SelectionTableConfigurator.swift in Sources */,
 				66BC44B32657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
 				E19EAFAA299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */,
@@ -5574,7 +5749,6 @@
 				A9B57443253B994700DB7353 /* SignInViewInput.swift in Sources */,
 				E1B20C872926CDE10023D739 /* UITextField+Extension.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
-				E1CA28BC29222A5A009E4423 /* RUAnimatingDotsView.swift in Sources */,
 				E19EAF75299AE3B0005827E4 /* SignInView.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
@@ -5582,6 +5756,7 @@
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
 				0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
+				E1198A3229BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E046F4D22F1823C00BD4E9C /* LocationPickerAppleViewController.swift in Sources */,
@@ -5604,7 +5779,9 @@
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				0E0A381923616AC3003A0364 /* UserDefaults+Optional.swift in Sources */,
 				340BE39227B54F37006D6C34 /* OwnerViewController.swift in Sources */,
+				E1198A2629BA763F002245CF /* ASSelectionModuleFactory.swift in Sources */,
 				0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */,
+				E1198A2C29BA769A002245CF /* ASSelectionTableViewController.swift in Sources */,
 				E1B57FF429859CE200B441FB /* DevicesTableViewController.swift in Sources */,
 				E1E3C33F298FDCCC00A59CB8 /* CardsModuleOutput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
@@ -5636,6 +5813,7 @@
 				E10E18C4297DE3AF002C78C3 /* TagChartsMarkerView.swift in Sources */,
 				E11FDA7029A3F78D003ADA7B /* RuuviSimpleViewCompositionalLayout.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
+				E1198A0B29BA68BE002245CF /* AppearanceSettingsRouter.swift in Sources */,
 				E191F1FE2969D6C900F1FEA6 /* TagSettingsPlainCell.swift in Sources */,
 				E1E102EE28F348B700815508 /* TagChartsHelper.swift in Sources */,
 				0E11D223267F2EC0002D0686 /* VirtualLocation+Localization.swift in Sources */,
@@ -5648,6 +5826,7 @@
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				E1597A33295CC4F900DFB70B /* LowBatteryView.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
+				E1198A1529BA6A06002245CF /* AppearanceSettingsViewOutput.swift in Sources */,
 				E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */,
 				A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
@@ -5663,6 +5842,7 @@
 				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,
 				0E8A10122384605A00A9CBA6 /* DefaultsTableViewController.swift in Sources */,
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
+				E1198A2129BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */,
 				0E11D226267F3100002D0686 /* RuuviVirtualError+LocalizedError.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
@@ -5679,10 +5859,12 @@
 				0E84BF652397F9DC00A37E1A /* HeartbeatTableViewController.swift in Sources */,
 				E11FDA6D29A2A3C2003ADA7B /* DefaultsPlainTableViewCell.swift in Sources */,
 				0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */,
+				E1198A2F29BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */,
 				E18D04C428E9DF77008EF5EC /* TagChartsView.swift in Sources */,
 				0EB48D6F2619D50A008E0D2D /* FeatureToggle.swift in Sources */,
 				E18D04A128E879EE008EF5EC /* UIView+Init.swift in Sources */,
 				E191F21B2969EF7B00F1FEA6 /* TagSettingsModuleFactory.swift in Sources */,
+				E1198A0E29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* CardsRouter.swift in Sources */,
 				E19EAF97299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
@@ -5851,7 +6033,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -5861,7 +6043,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5883,7 +6065,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -5893,7 +6075,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5915,7 +6097,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5928,7 +6110,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -5952,7 +6134,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5965,7 +6147,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5987,7 +6169,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6000,7 +6182,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -6023,7 +6205,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6036,7 +6218,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6175,7 +6357,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6217,7 +6399,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6237,7 +6419,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6246,7 +6428,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6351,7 +6533,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6364,7 +6546,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
@@ -6386,7 +6568,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 359;
+				CURRENT_PROJECT_VERSION = 360;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6399,7 +6581,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
 				PRODUCT_NAME = "$(TARGET_NAME)";

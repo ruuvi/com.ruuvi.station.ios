@@ -4,6 +4,7 @@ import RuuviUser
 import RuuviStorage
 import RuuviPool
 import RuuviLocal
+import RuuviOntology
 
 public final class RuuviServiceAuthImpl: RuuviServiceAuth {
     private let ruuviUser: RuuviUser
@@ -12,6 +13,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
     private let propertiesService: RuuviServiceSensorProperties
     private let localIDs: RuuviLocalIDs
     private let localSyncState: RuuviLocalSyncState
+    private let alertService: RuuviServiceAlert
 
     public init(
         ruuviUser: RuuviUser,
@@ -19,7 +21,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         storage: RuuviStorage,
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
-        localSyncState: RuuviLocalSyncState
+        localSyncState: RuuviLocalSyncState,
+        alertService: RuuviServiceAlert
     ) {
         self.ruuviUser = ruuviUser
         self.pool = pool
@@ -27,6 +30,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         self.propertiesService = propertiesService
         self.localIDs = localIDs
         self.localSyncState = localSyncState
+        self.alertService = alertService
     }
 
     public func logout() -> Future<Bool, RuuviServiceError> {
@@ -48,6 +52,10 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     sSelf.localIDs.clear(sensor: sensor)
                     sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
                     sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
+                    AlertType.allCases.forEach { (type) in
+                        sSelf.alertService.remove(type: type, ruuviTag: sensor)
+                    }
+
                     Future.zip([deleteSensorOperation,
                                 deleteRecordsOperation,
                                 deleteLatestRecordOperation,
