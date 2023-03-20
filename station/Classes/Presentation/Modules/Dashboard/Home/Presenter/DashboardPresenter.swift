@@ -76,7 +76,6 @@ class DashboardPresenter: DashboardModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
-    private var lnmDidReceiveToken: NSObjectProtocol?
     private var universalLinkObservationToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
     private var temperatureUnitToken: NSObjectProtocol?
@@ -108,6 +107,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var isBluetoothPermissionGranted: Bool {
         return CBCentralManager.authorization == .allowedAlways
     }
+    private static let debouncerDelay: TimeInterval = 1.0
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -131,7 +131,6 @@ class DashboardPresenter: DashboardModuleInput {
         alertDidChangeToken?.invalidate()
         readRSSIToken?.invalidate()
         readRSSIIntervalToken?.invalidate()
-        lnmDidReceiveToken?.invalidate()
         universalLinkObservationToken?.invalidate()
         cloudModeToken?.invalidate()
         temperatureUnitToken?.invalidate()
@@ -158,7 +157,6 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingConnectionPersistenceNotifications()
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
-        startObservingLocalNotificationsManager()
         startObservingCloudModeNotification()
         startListeningToSettings()
         handleCloudModeState()
@@ -443,7 +441,7 @@ extension DashboardPresenter: RuuviNotifierObserver {
                     viewModel.alertState.value = .registered
                 }
 
-                view.applyUpdate(to: viewModel)
+                notifyViewModelUpdate(for: viewModel)
             })
     }
 }
@@ -484,7 +482,7 @@ extension DashboardPresenter {
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
                 .on(success: {[weak self] image in
                     viewModel.background.value = image
-                    self?.view.applyUpdate(to: viewModel)
+                    self?.notifyViewModelUpdate(for: viewModel)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
@@ -505,20 +503,8 @@ extension DashboardPresenter {
             op.on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
-                    self?.view.applyUpdate(to: viewModel)
+                    self?.notifyViewModelUpdate(for: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
-                } else {
-                    // If the latest data table doesn't have any data by any chance,
-                    // Try to get the data from the records table. This is implemented as a safety layer.
-                    // This will be removed in future updates
-                    self?.ruuviStorage.readLast(ruuviTag).on(success: { record in
-                        guard let record = record else {
-                            return
-                        }
-                        viewModel.update(record)
-                        self?.view.applyUpdate(to: viewModel)
-                        self?.processAlert(record: record, viewModel: viewModel)
-                    })
                 }
             }
 
@@ -529,14 +515,14 @@ extension DashboardPresenter {
             ruuviSensorPropertiesService.getImage(for: virtualSensor)
                 .on(success: { [weak self] image in
                     viewModel.background.value = image
-                    self?.view.applyUpdate(to: viewModel)
+                    self?.notifyViewModelUpdate(for: viewModel)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
             viewModel.alertState.value = alertService
                 .hasRegistrations(for: virtualSensor) ? .registered : .empty
             viewModel.isConnected.value = false
-            view.applyUpdate(to: viewModel)
+            notifyViewModelUpdate(for: viewModel)
             return viewModel
         })
 
@@ -556,7 +542,7 @@ extension DashboardPresenter {
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
                 .on(success: {[weak self] image in
                     viewModel.background.value = image
-                    self?.view.applyUpdate(to: viewModel)
+                    self?.notifyViewModelUpdate(for: viewModel)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
@@ -577,20 +563,8 @@ extension DashboardPresenter {
             op.on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
-                    self?.view.applyUpdate(to: viewModel)
+                    self?.notifyViewModelUpdate(for: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
-                } else {
-                    // If the latest data table doesn't have any data by any chance,
-                    // Try to get the data from the records table. This is implemented as a safety layer.
-                    // This will be removed in future updates
-                    self?.ruuviStorage.readLast(ruuviTag).on(success: { record in
-                        guard let record = record else {
-                            return
-                        }
-                        viewModel.update(record)
-                        self?.view.applyUpdate(to: viewModel)
-                        self?.processAlert(record: record, viewModel: viewModel)
-                    })
                 }
             }
 
@@ -603,13 +577,13 @@ extension DashboardPresenter {
             ruuviSensorPropertiesService.getImage(for: virtualSensor)
                 .on(success: { [weak self] image in
                     viewModel.background.value = image
-                    self?.view.applyUpdate(to: viewModel)
+                    self?.notifyViewModelUpdate(for: viewModel)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
             viewModel.alertState.value = alertService.hasRegistrations(for: virtualSensor) ? .registered : .empty
             viewModel.isConnected.value = false
-            view.applyUpdate(to: viewModel)
+            notifyViewModelUpdate(for: viewModel)
 
             viewModels.append(viewModel)
             viewModels = reorder(viewModels)
@@ -733,6 +707,7 @@ extension DashboardPresenter {
                     viewModel.update(
                         record
                     )
+                    self?.notifyViewModelUpdate(for: viewModel)
                     self?.alertHandler.process(record: record, trigger: false)
                 }
             })
@@ -764,6 +739,7 @@ extension DashboardPresenter {
                             .with(source: .advertisement)
                             .with(sensorSettings: sensorSettings)
                         viewModel.update(record)
+                        self?.notifyViewModelUpdate(for: viewModel)
                         self?.alertHandler.process(record: record, trigger: false)
                     }
                 })
@@ -782,7 +758,7 @@ extension DashboardPresenter {
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
-                            self?.view.applyUpdate(to: viewModel)
+                            self?.notifyViewModelUpdate(for: viewModel)
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
@@ -791,14 +767,14 @@ extension DashboardPresenter {
                             } else {
                                 self?.sensorSettingsList.append(updateSensorSettings)
                             }
-                            self?.view.applyUpdate(to: viewModel)
+                            self?.notifyViewModelUpdate(for: viewModel)
                         case .delete(let deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
                             }
-                            self?.view.applyUpdate(to: viewModel)
+                            self?.notifyViewModelUpdate(for: viewModel)
                         default: break
                         }
                     })
@@ -828,7 +804,7 @@ extension DashboardPresenter {
                             })
                         let sensorRecord = record.with(sensorSettings: sensorSettings)
                         viewModel.update(sensorRecord)
-                        self?.view.applyUpdate(to: viewModel)
+                        self?.notifyViewModelUpdate(for: viewModel)
 
                         self?.processAlert(record: sensorRecord, viewModel: viewModel)
                     }
@@ -851,7 +827,7 @@ extension DashboardPresenter {
                         let previousDate = viewModel.date.value ?? Date.distantPast
                         if previousDate <= record.date {
                             viewModel.update(record)
-                            self?.view.applyUpdate(to: viewModel)
+                            self?.notifyViewModelUpdate(for: viewModel)
                         }
                     }
                 }))
@@ -1003,7 +979,7 @@ extension DashboardPresenter {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                                 .on(success: { image in
                                     viewModel.background.value = image
-                                    self?.view.applyUpdate(to: viewModel)
+                                    self?.notifyViewModelUpdate(for: viewModel)
                                 }, failure: { [weak self] error in
                                     self?.errorPresenter.present(error: error)
                                 })
@@ -1012,7 +988,7 @@ extension DashboardPresenter {
                             sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
                                 .on(success: { image in
                                     viewModel.background.value = image
-                                    self?.view.applyUpdate(to: viewModel)
+                                    self?.notifyViewModelUpdate(for: viewModel)
                                 }, failure: { [weak sSelf] error in
                                     sSelf?.errorPresenter.present(error: error)
                                 })
@@ -1139,7 +1115,7 @@ extension DashboardPresenter {
                                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                                 viewModel.isConnected.value = true
-                                self?.view.applyUpdate(to: viewModel)
+                                self?.notifyViewModelUpdate(for: viewModel)
                                 if let latestRecord = viewModel.latestMeasurement.value {
                                     self?.processAlert(record: latestRecord,
                                                        viewModel: viewModel)
@@ -1157,7 +1133,7 @@ extension DashboardPresenter {
                                let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                                 viewModel.isConnected.value = false
-                                self?.view.applyUpdate(to: viewModel)
+                                self?.notifyViewModelUpdate(for: viewModel)
                                 if let latestRecord = viewModel.latestMeasurement.value {
                                     self?.processAlert(record: latestRecord,
                                                        viewModel: viewModel)
@@ -1212,10 +1188,10 @@ extension DashboardPresenter {
                         }).forEach({ (viewModel) in
                             if sSelf.alertService.hasRegistrations(for: virtualSensor) {
                                 viewModel.alertState.value = .registered
-                                sSelf.view.applyUpdate(to: viewModel)
+                                sSelf.notifyViewModelUpdate(for: viewModel)
                             } else {
                                 viewModel.alertState.value = .empty
-                                sSelf.view.applyUpdate(to: viewModel)
+                                sSelf.notifyViewModelUpdate(for: viewModel)
                             }
                             sSelf.updateIsOnState(of: type,
                                                   for: virtualSensor.id,
@@ -1247,23 +1223,6 @@ extension DashboardPresenter {
 
     private func startListeningToWebTagsAlertStatus() {
         virtualSensors.forEach({ alertHandler.subscribe(self, to: $0.id) })
-    }
-
-    private func startObservingLocalNotificationsManager() {
-        lnmDidReceiveToken?.invalidate()
-        lnmDidReceiveToken = NotificationCenter
-            .default
-            .addObserver(forName: .LNMDidReceive,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] (notification) in
-                if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
-                   let index = self?.viewModels.firstIndex(where: {
-                       $0.luid.value == uuid.luid.any
-                   }) {
-                    self?.view.scroll(to: index)
-                }
-            })
     }
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
@@ -1343,7 +1302,7 @@ extension DashboardPresenter {
             cloudSyncDaemon.refreshLatestRecord()
             for viewModel in viewModels where (viewModel.isCloud.value ?? false) {
                 viewModel.isConnected.value = false
-                view.applyUpdate(to: viewModel)
+                notifyViewModelUpdate(for: viewModel)
             }
         }
         // Restart observing
@@ -1527,7 +1486,7 @@ extension DashboardPresenter {
                 viewModel.alertState.value = .empty
             }
 
-            view.applyUpdate(to: viewModel)
+            notifyViewModelUpdate(for: viewModel)
         }
     }
 
@@ -1643,7 +1602,7 @@ extension DashboardPresenter {
                 viewModel.movementAlertMutedTill.value = nil
             }
 
-            view.applyUpdate(to: viewModel)
+            notifyViewModelUpdate(for: viewModel)
         }
     }
 
@@ -1673,7 +1632,7 @@ extension DashboardPresenter {
         if date != observable.value {
             observable.value = date
         }
-        view.applyUpdate(to: viewModel)
+        notifyViewModelUpdate(for: viewModel)
     }
 
     private func updateIsOnState(of type: AlertType,
@@ -1702,7 +1661,7 @@ extension DashboardPresenter {
         if isOn != observable.value {
             observable.value = isOn
         }
-        view.applyUpdate(to: viewModel)
+        notifyViewModelUpdate(for: viewModel)
     }
 
     /// Log out user if the auth token is expired.
@@ -1728,6 +1687,13 @@ extension DashboardPresenter {
 
     private func reloadWidgets() {
         WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+    }
+
+    private func notifyViewModelUpdate(for viewModel: CardsViewModel) {
+        let debouncer = Debouncer(delay: Self.debouncerDelay)
+        debouncer.run(action: { [weak self] in
+            self?.view.applyUpdate(to: viewModel)
+        })
     }
 }
 // swiftlint:enable file_length trailing_whitespace
