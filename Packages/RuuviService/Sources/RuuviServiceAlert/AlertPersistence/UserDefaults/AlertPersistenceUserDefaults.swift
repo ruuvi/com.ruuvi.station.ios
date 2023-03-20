@@ -204,6 +204,36 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    func remove(type: AlertType, for uuid: String) {
+        switch type {
+        case .temperature(let lower, let upper):
+            prefs.removeObject(forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: temperatureLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+        case .relativeHumidity(let lower, let upper):
+            prefs.removeObject(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+        case .humidity(let lower, let upper):
+            prefs.removeObject(forKey: humidityAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: humidityLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        case .pressure(let lower, let upper):
+            prefs.removeObject(forKey: pressureAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pressureLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pressureUpperBoundUDKeyPrefix + uuid)
+        case .signal(let lower, let upper):
+            prefs.removeObject(forKey: signalAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: signalLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
+        case .connection:
+            prefs.removeObject(forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .movement(let last):
+            prefs.removeObject(forKey: movementAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: movementAlertCounterUDPrefix + uuid)
+        }
+    }
+
     func mute(type: AlertType, for uuid: String, till date: Date) {
         switch type {
         case .temperature:
