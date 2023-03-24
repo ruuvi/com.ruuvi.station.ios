@@ -436,6 +436,9 @@ extension DashboardPlainCell {
 
 extension DashboardPlainCell {
     private func startTimer(with date: Date?) {
+        timer?.invalidate()
+        timer = nil
+
         timer = Timer.scheduledTimer(withTimeInterval: 1,
                                      repeats: true,
                                      block: { [weak self] (_) in
