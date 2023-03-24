@@ -202,11 +202,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviLocalSettings.isSyncing = true
         let syncAll = syncAll()
-        let latestRecords = syncLatestRecord()
         syncAll.on(success: { _ in
-            latestRecords.on(completion: {
-                promise.succeed(value: true)
-            })
+            promise.succeed(value: true)
         }, failure: { [weak self] error in
             switch error {
             case .ruuviCloud(let cloudError):
