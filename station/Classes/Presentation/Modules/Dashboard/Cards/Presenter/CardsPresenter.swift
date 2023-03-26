@@ -805,14 +805,24 @@ extension CardsPresenter {
     }
 
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
-        return viewModels.sorted(by: {
-            // Sort sensors by name alphabetically
-            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
-                return first < second
-            } else {
-                return true
+        let sortedAndUniqueArray = viewModels.reduce(
+            into: [CardsViewModel]()
+        ) { (result, element) in
+            if !result.contains(element) {
+                // Insert the element into the result array while maintaining the sorted order
+                if let index = result.firstIndex(
+                    where: {
+                        $0.name.value?.lowercased() ?? "" >
+                        element.name.value?.lowercased() ?? "" }
+                ) {
+                    result.insert(element, at: index)
+                } else {
+                    // If no such index is found, append the element at the end
+                    result.append(element)
+                }
             }
-        })
+        }
+        return sortedAndUniqueArray
     }
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
