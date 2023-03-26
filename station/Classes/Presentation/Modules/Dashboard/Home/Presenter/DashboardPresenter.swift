@@ -359,6 +359,7 @@ extension DashboardPresenter: MenuModuleOutput {
 extension DashboardPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         startObservingRuuviTags()
+        startObservingCloudModeNotification()
         module.dismiss()
         AppUtility.lockOrientation(.all)
     }
@@ -534,7 +535,6 @@ extension DashboardPresenter {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     private func syncViewModel(ruuviTagSensor: RuuviTagSensor?,
                                virtualSensor: VirtualTagSensor?) {
         if let ruuviTag = ruuviTagSensor {
@@ -583,7 +583,6 @@ extension DashboardPresenter {
                 })
             viewModel.alertState.value = alertService.hasRegistrations(for: virtualSensor) ? .registered : .empty
             viewModel.isConnected.value = false
-            notifyViewModelUpdate(for: viewModel)
 
             viewModels.append(viewModel)
             viewModels = reorder(viewModels)
@@ -611,14 +610,24 @@ extension DashboardPresenter {
     }
 
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
-        return viewModels.sorted(by: {
-            // Sort sensors by name alphabetically
-            if let first = $0.name.value?.lowercased(), let second = $1.name.value?.lowercased() {
-                return first < second
-            } else {
-                return true
+        let sortedAndUniqueArray = viewModels.reduce(
+            into: [CardsViewModel]()
+        ) { (result, element) in
+            if !result.contains(element) {
+                // Insert the element into the result array while maintaining the sorted order
+                if let index = result.firstIndex(
+                    where: {
+                        $0.name.value?.lowercased() ?? "" >
+                        element.name.value?.lowercased() ?? "" }
+                ) {
+                    result.insert(element, at: index)
+                } else {
+                    // If no such index is found, append the element at the end
+                    result.append(element)
+                }
             }
-        })
+        }
+        return sortedAndUniqueArray
     }
 
     private func syncAppSettingsToAppGroupContainer() {
@@ -1677,9 +1686,15 @@ extension DashboardPresenter {
 
         authService.logout()
             .on(success: { [weak self] _ in
+                // Stop observing cloud mode state.
+                // To break the simlatanous access of it while making it false
+                // and observing it at the same time.
+                self?.cloudModeToken?.invalidate()
+                self?.cloudModeToken = nil
                 self?.settings.cloudModeEnabled = false
                 self?.syncViewModels()
                 self?.reloadWidgets()
+                self?.handleCloudModeState()
             }, completion: { [weak self] in
                 self?.activityPresenter.decrement()
             })

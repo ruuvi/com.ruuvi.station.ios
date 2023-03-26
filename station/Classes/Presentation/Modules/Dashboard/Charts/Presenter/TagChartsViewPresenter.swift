@@ -28,7 +28,7 @@ class TagChartViewData: NSObject {
 
 class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
-    weak var view: TagChartsViewInput!
+    weak var view: TagChartsViewInput?
 
     var interactor: TagChartsViewInteractorInput!
 
@@ -98,11 +98,8 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
-            // TODO: See why this is not deallocating when left.
-            if self.view != nil {
-                self.view.viewModel = self.viewModel
-                self.view.historyLengthInDay = self.settings.chartDurationHours/24
-            }
+            self.view?.viewModel = self.viewModel
+            self.view?.historyLengthInDay = self.settings.chartDurationHours/24
         }
     }
 
@@ -130,7 +127,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
     func notifyDismissInstruction(dismissParent: Bool) {
         if interactor.isSyncingRecords() {
-            view.showSyncAbortAlert(dismiss: dismissParent)
+            view?.showSyncAbortAlert(dismiss: dismissParent)
         } else {
             output?.tagChartSafeToClose(module: self,
                                         dismissParent: dismissParent)
@@ -176,43 +173,43 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
-        view.showSyncConfirmationDialog(for: viewModel)
+        view?.showSyncConfirmationDialog(for: viewModel)
     }
 
     func viewDidStartSync(for viewModel: TagChartsViewModel) {
         // Check bluetooth
         guard foreground.bluetoothState == .poweredOn || !isBluetoothPermissionGranted  else {
-            view.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
+            view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
             return
         }
         isSyncing = true
         let op = interactor.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
                 guard let syncing =  self?.isSyncing, syncing else {
-                    self?.view.setSync(progress: nil, for: viewModel)
+                    self?.view?.setSync(progress: nil, for: viewModel)
                     return
                 }
-                self?.view.setSync(progress: progress, for: viewModel)
+                self?.view?.setSync(progress: progress, for: viewModel)
             }
         }
         op.on(success: { [weak self] _ in
-            self?.view.setSync(progress: nil, for: viewModel)
+            self?.view?.setSync(progress: nil, for: viewModel)
             self?.interactor.restartObservingData()
         }, failure: { [weak self] _ in
-            self?.view.setSync(progress: nil, for: viewModel)
-            self?.view.showFailedToSyncIn()
+            self?.view?.setSync(progress: nil, for: viewModel)
+            self?.view?.showFailedToSyncIn()
         }, completion: { [weak self] in
-            self?.view.setSync(progress: nil, for: viewModel)
+            self?.view?.setSync(progress: nil, for: viewModel)
             self?.isSyncing = false
         })
     }
 
     func viewDidTriggerStopSync(for viewModel: TagChartsViewModel) {
-        view.showSyncAbortAlert(dismiss: false)
+        view?.showSyncAbortAlert(dismiss: false)
     }
 
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
-        view.showClearConfirmationDialog(for: viewModel)
+        view?.showClearConfirmationDialog(for: viewModel)
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
@@ -238,7 +235,7 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         isLoading = true
         exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
             .on(success: { [weak self] url in
-                self?.view.showExportSheet(with: url)
+                self?.view?.showExportSheet(with: url)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
@@ -252,7 +249,7 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     }
 
     func viewDidSelectLongerHistory() {
-        view.showLongerHistoryDialog()
+        view?.showLongerHistoryDialog()
     }
 }
 // MARK: - TagChartsInteractorOutput
@@ -260,7 +257,7 @@ extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
     func createChartModules(from: [MeasurementType]) {
         guard view != nil else { return }
         chartModules = from
-        view.createChartViews(from: chartModules)
+        view?.createChartViews(from: chartModules)
     }
 
     func interactorDidError(_ error: RUError) {
@@ -335,7 +332,7 @@ extension TagChartsViewPresenter {
         }
         if let lastOpenedChart = settings.lastOpenedChart(),
            lastOpenedChart != ruuviTag.id {
-            view.clearChartHistory()
+            view?.clearChartHistory()
         }
         settings.setLastOpenedChart(with: ruuviTag.id)
     }
@@ -344,7 +341,7 @@ extension TagChartsViewPresenter {
         if UIWindow.isLandscape
             && !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
-            view.showSwipeUpInstruction()
+            view?.showSwipeUpInstruction()
         }
     }
 
@@ -376,7 +373,7 @@ extension TagChartsViewPresenter {
         interactor.stopSyncRecords()
             .on(success: { [weak self] _ in
                 guard self?.view != nil else { return }
-                self?.view.setSyncProgressViewHidden()
+                self?.view?.setSyncProgressViewHidden()
             })
     }
 
@@ -504,7 +501,7 @@ extension TagChartsViewPresenter {
         stateToken = foreground.state(self, closure: { [weak self] (observer, state) in
             guard let sSelf = self else { return }
             if state != .poweredOn || !sSelf.isBluetoothPermissionGranted {
-                observer.view.showBluetoothDisabled(userDeclined: !sSelf.isBluetoothPermissionGranted)
+                observer.view?.showBluetoothDisabled(userDeclined: !sSelf.isBluetoothPermissionGranted)
             }
         })
     }
@@ -656,7 +653,7 @@ extension TagChartsViewPresenter {
         }
 
         // Update new measurements on the chart
-        view.updateChartViewData(temperatureEntries: temparatureData,
+        view?.updateChartViewData(temperatureEntries: temparatureData,
                                  humidityEntries: humidityData,
                                  pressureEntries: pressureData,
                                  isFirstEntry: ruuviTagData.count == 1,
@@ -664,7 +661,7 @@ extension TagChartsViewPresenter {
 
         // Update the latest measurement label.
         if let lastMeasurement = newValues.last {
-            view.updateLatestMeasurement(
+            view?.updateLatestMeasurement(
                 temperature: chartEntry(for: lastMeasurement,
                                         type: .temperature),
                 humidity: chartEntry(for: lastMeasurement,
@@ -724,11 +721,11 @@ extension TagChartsViewPresenter {
         }
 
         // Set the initial data for the charts.
-        view.setChartViewData(from: datasource, settings: settings)
+        view?.setChartViewData(from: datasource, settings: settings)
 
         // Update the latest measurement label.
         if let lastMeasurement = ruuviTagData.last {
-            view.updateLatestMeasurement(
+            view?.updateLatestMeasurement(
                 temperature: chartEntry(for: lastMeasurement,
                                         type: .temperature),
                 humidity: chartEntry(for: lastMeasurement,
