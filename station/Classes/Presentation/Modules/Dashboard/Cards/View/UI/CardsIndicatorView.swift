@@ -39,8 +39,13 @@ class CardsIndicatorView: UIView {
         indicatorIconView.anchor(top: nil,
                                  leading: leadingAnchor,
                                  bottom: nil,
-                                 trailing: nil,
-                                 size: .init(width: 50, height: 50))
+                                 trailing: nil)
+        indicatorIconView.heightAnchor.constraint(
+            lessThanOrEqualToConstant: 50
+        ).isActive = true
+        indicatorIconView.widthAnchor.constraint(
+            lessThanOrEqualToConstant: 50
+        ).isActive = true
         indicatorIconView.centerYInSuperview()
 
         addSubview(indicatorValueLabel)

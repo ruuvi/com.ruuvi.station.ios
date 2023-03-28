@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-// swiftlint:disable file_length
+// swiftlint:disable file_length type_body_length
 class AlertPersistenceUserDefaults: AlertPersistence {
     private let prefs = UserDefaults.standard
 
