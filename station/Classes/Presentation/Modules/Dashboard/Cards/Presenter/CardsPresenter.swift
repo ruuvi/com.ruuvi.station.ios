@@ -42,7 +42,7 @@ class CardsPresenter {
     /// Collection of virtual sensors
     private var sensorSettings = [SensorSettings]()
     /// Collection of the card view model.
-    private var viewModels = [CardsViewModel]() {
+    private var viewModels: [CardsViewModel] = [] {
         didSet {
             guard let view = view else { return }
             view.viewModels = viewModels
@@ -69,8 +69,6 @@ class CardsPresenter {
     private weak var tagCharts: TagChartsViewModuleInput?
     private weak var tagChartsModule: UIViewController?
     private weak var output: CardsModuleOutput?
-
-    private static let debouncerDelay: TimeInterval = 0.5
 
     // MARK: - OBSERVERS
     private var ruuviTagToken: RuuviReactorToken?
@@ -147,6 +145,19 @@ extension CardsPresenter {
         startObservingDidConnectDisconnectNotifications()
         startObservingCloudModeNotification()
         reloadMutedTill()
+    }
+
+    private func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(handleAppEnterForgroundState),
+                         name: UIApplication.willEnterForegroundNotification,
+                         object: nil)
+    }
+
+    @objc private func handleAppEnterForgroundState() {
+        view?.scroll(to: visibleViewModelIndex)
     }
 
     private func updateVisibleCard(from viewModel: CardsViewModel?,
@@ -870,12 +881,18 @@ extension CardsPresenter {
         cloudModeToken?.invalidate()
         mutedTillTimer?.invalidate()
         router.dismiss()
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
 }
 
 // MARK: - CardsViewOutput
 extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
+        startObservingAppState()
         startMutedTillTimer()
     }
     
