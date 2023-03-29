@@ -96,7 +96,7 @@ class DashboardPresenter: DashboardModuleInput {
     }
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
-    private var viewModels = [CardsViewModel]() {
+    private var viewModels: [CardsViewModel] = [] {
         didSet {
             view.viewModels = viewModels
         }
@@ -144,12 +144,18 @@ class DashboardPresenter: DashboardModuleInput {
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
         cloudSyncToken?.invalidate()
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
 }
 
 // MARK: - DashboardViewOutput
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
+        startObservingAppState()
         startObservingRuuviTags()
         startObservingWebTags()
         startObservingBackgroundChanges()
@@ -474,6 +480,22 @@ extension DashboardPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
+
+    private func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(handleAppEnterForgroundState),
+                         name: UIApplication.willEnterForegroundNotification,
+                         object: nil)
+    }
+
+    @objc private func handleAppEnterForgroundState() {
+        if !viewModels.isEmpty {
+            view.viewModels = viewModels
+        }
+    }
+
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
 
@@ -527,11 +549,15 @@ extension DashboardPresenter {
             return viewModel
         })
 
-        viewModels = reorder(ruuviViewModels + virtualViewModels)
+        let viewModels = reorder(ruuviViewModels + virtualViewModels)
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags {
-            self.view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
-            self.askAppStoreReview(with: viewModels.count)
+            view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
+            askAppStoreReview(with: viewModels.count)
+        }
+
+        if !viewModels.isEmpty {
+            self.viewModels = viewModels
         }
     }
 
@@ -1309,14 +1335,11 @@ extension DashboardPresenter {
         // Sync with cloud if cloud mode is turned on
         if ruuviUser.isAuthorized && settings.cloudModeEnabled {
             cloudSyncDaemon.refreshLatestRecord()
-            for viewModel in viewModels where (viewModel.isCloud.value ?? false) {
-                viewModel.isConnected.value = false
-                notifyViewModelUpdate(for: viewModel)
-            }
         }
         // Restart observing
         restartObserveRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
+        syncViewModels()
     }
 
     private func removeConnectionsForCloudTags() {
