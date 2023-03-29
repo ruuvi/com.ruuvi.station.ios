@@ -238,7 +238,7 @@ extension CardsLargeImageCell {
     func configure(with viewModel: CardsViewModel,
                    measurementService: RuuviServiceMeasurement?) {
 
-        ruuviTagNameLabel.text = viewModel.name.value?.uppercased()
+        ruuviTagNameLabel.text = viewModel.name.value
 
         // Temp
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {

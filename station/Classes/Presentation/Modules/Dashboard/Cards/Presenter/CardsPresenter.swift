@@ -256,7 +256,11 @@ extension CardsPresenter {
                         return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
                             || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
                     }) {
-                        sSelf.notifyUpdate(for: viewModel)
+                        sSelf.updateVisibleCard(from: viewModel,
+                                                triggerScroll: true)
+                        sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
+                                           immediately: true,
+                                           animated: true)
                     }
                 }
 
