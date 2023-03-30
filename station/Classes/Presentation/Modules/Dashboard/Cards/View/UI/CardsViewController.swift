@@ -482,28 +482,19 @@ extension CardsViewController: CardsViewInput {
         gestureInstructor.show(.swipeRight, after: 0.1)
     }
 
-    func scroll(to index: Int,
-                immediately: Bool = false,
-                animated: Bool = false) {
+    func scroll(to index: Int) {
         guard index < viewModels.count, index < datasource.snapshot().numberOfItems else {
             return
         }
         let viewModel = viewModels[index]
         currentVisibleItem = viewModel
         let indexPath = IndexPath(item: index, section: 0)
-        if immediately {
-            collectionView.scrollToItem(at: indexPath,
-                                        at: .centeredHorizontally,
-                                        animated: animated)
-            output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
-                guard let sSelf = self else { return }
-                sSelf.collectionView.scrollToItem(at: indexPath,
-                                                  at: .centeredHorizontally,
-                                                  animated: animated)
-                sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.collectionView.scrollToItem(at: indexPath,
+                                              at: .centeredHorizontally,
+                                              animated: false)
+            sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
         }
 
         restartAnimations()

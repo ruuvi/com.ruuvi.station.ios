@@ -164,7 +164,8 @@ extension CardsPresenter {
                                    openChart: Bool = false,
                                    triggerScroll: Bool = false) {
         if let index = viewModels.firstIndex(where: {
-            $0.id.value == viewModel?.id.value
+            ($0.luid.value != nil && $0.luid.value == viewModel?.luid.value) ||
+            ($0.mac.value != nil && $0.mac.value == viewModel?.mac.value)
         }) {
             shouldTriggerScroll = triggerScroll
             visibleViewModelIndex = index
@@ -196,9 +197,7 @@ extension CardsPresenter {
 
                 if let first = sSelf.viewModels.first {
                     sSelf.updateVisibleCard(from: first, triggerScroll: true)
-                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
-                                       immediately: true,
-                                       animated: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
                 }
             case .update(let sensor):
                 if let index = sSelf.virtualSensors
@@ -222,9 +221,7 @@ extension CardsPresenter {
                 }) {
                     sSelf.updateVisibleCard(from: viewModel,
                                             triggerScroll: true)
-                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
-                                       immediately: true,
-                                       animated: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
                 }
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
@@ -249,9 +246,7 @@ extension CardsPresenter {
                 }) {
                     sSelf.updateVisibleCard(from: viewModel,
                                             triggerScroll: true)
-                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
-                                       immediately: true,
-                                       animated: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
                 }
             case .update(let sensor):
                 guard let sSelf = self else { return }
@@ -269,9 +264,7 @@ extension CardsPresenter {
                     }) {
                         sSelf.updateVisibleCard(from: viewModel,
                                                 triggerScroll: true)
-                        sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
-                                           immediately: true,
-                                           animated: true)
+                        sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
                     }
                 }
 
@@ -291,9 +284,7 @@ extension CardsPresenter {
                 // which is not the currently visible one.
                 if let first = sSelf.viewModels.first {
                     sSelf.updateVisibleCard(from: first, triggerScroll: true)
-                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex,
-                                       immediately: true,
-                                       animated: true)
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
                 }
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
@@ -900,9 +891,7 @@ extension CardsPresenter: CardsViewOutput {
         guard viewModels.count > 0 else {
             return
         }
-        view?.scroll(to: visibleViewModelIndex,
-                    immediately: false,
-                    animated: false)
+        view?.scroll(to: visibleViewModelIndex)
         startObservingBluetoothState()
     }
 

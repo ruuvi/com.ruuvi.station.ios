@@ -7,9 +7,7 @@ protocol CardsViewInput: ViewInput {
     var scrollIndex: Int { get set }
     func applyUpdate(to viewModel: CardsViewModel)
     func changeCardBackground(of viewModel: CardsViewModel, to image: UIImage?)
-    func scroll(to index: Int,
-                immediately: Bool,
-                animated: Bool)
+    func scroll(to index: Int)
     func showBluetoothDisabled(userDeclined: Bool)
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
@@ -25,10 +23,6 @@ protocol CardsViewInput: ViewInput {
 }
 
 extension CardsViewInput {
-    func scroll(to index: Int) {
-        scroll(to: index, immediately: false, animated: true)
-    }
-
     func showChart(module: UIViewController) {}
     func dismissChart() {}
 }
