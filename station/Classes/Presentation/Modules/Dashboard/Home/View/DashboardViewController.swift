@@ -598,23 +598,6 @@ extension DashboardViewController: DashboardViewInput {
         collectionView.isHidden = show
     }
 
-    func scroll(to index: Int,
-                immediately: Bool = false,
-                animated: Bool = false) {
-        guard index < viewModels.count else { return }
-        let indexPath = IndexPath(item: index, section: 0)
-        if immediately {
-            collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: animated)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let sSelf = self else { return }
-                sSelf.collectionView.scrollToItem(at: indexPath,
-                                                  at: .centeredVertically,
-                                                  animated: animated)
-            }
-        }
-    }
-
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         let message = "Cards.KeepConnectionDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
