@@ -467,4 +467,44 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.showChartOnDashboardCardTap", defaultValue: false)
     var showChartOnDashboardCardTap: Bool
+
+    private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
+    private var ruuviThemeId: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: ruuviThemeIdKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: ruuviThemeIdKey)
+        }
+    }
+
+    var theme: RuuviTheme {
+        get {
+            switch ruuviThemeId {
+            case 0:
+                return .system
+            case 1:
+                return .light
+            case 2:
+                return .dark
+            default:
+                return .system
+            }
+        }
+        set {
+            switch newValue {
+            case .system:
+                ruuviThemeId = 0
+            case .light:
+                ruuviThemeId = 1
+            case .dark:
+                ruuviThemeId = 2
+            }
+            NotificationCenter
+                .default
+                .post(name: .AppearanceSettingsDidChange,
+                      object: self,
+                      userInfo: [AppearanceTypeKey.style: newValue])
+        }
+    }
 }

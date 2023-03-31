@@ -85,4 +85,15 @@ class SettingsRouter: SettingsRouterInput {
                 animated: true
             )
     }
+
+    func openAppearance() {
+        let factory: AppearanceSettingsModuleFactory = AppearanceSettingsModuleFactoryImpl()
+        let module = factory.create()
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+    }
 }

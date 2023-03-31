@@ -24,6 +24,7 @@ class SettingsPresenter: SettingsModuleInput {
     var ruuviStorage: RuuviStorage!
 
     private var languageToken: NSObjectProtocol?
+
     private var sensors: [AnyRuuviTagSensor] = []
     deinit {
         languageToken?.invalidate()
@@ -133,5 +134,9 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapRuuviCloud() {
         router.openRuuviCloud()
+    }
+
+    func viewDidTapAppearance() {
+        router.openAppearance()
     }
 }

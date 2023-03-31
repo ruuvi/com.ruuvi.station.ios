@@ -21,6 +21,7 @@ public protocol RuuviServiceAlert: RuuviServiceAlertRuuviTag,
 public protocol RuuviServiceAlertRuuviTag {
     func register(type: AlertType, ruuviTag: RuuviTagSensor)
     func unregister(type: AlertType, ruuviTag: RuuviTagSensor)
+    func remove(type: AlertType, ruuviTag: RuuviTagSensor)
 
     // temperature (celsius)
     func setLower(celsius: Double?, ruuviTag: RuuviTagSensor)
