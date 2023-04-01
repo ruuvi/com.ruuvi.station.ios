@@ -27,7 +27,6 @@ class DashboardViewController: UIViewController {
 
     var viewModels: [CardsViewModel] = [] {
         didSet {
-            print("balda")
             updateUI()
         }
     }

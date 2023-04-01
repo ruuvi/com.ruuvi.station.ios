@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RuuviCloudApiPostSettingRequest: Encodable {
+public struct RuuviCloudApiPostSettingRequest: Codable {
     let name: RuuviCloudApiSetting
     let value: String
 

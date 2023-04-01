@@ -160,6 +160,10 @@ extension SQLiteGRDBDatabase {
         migrator.registerMigration("Create RuuviTagLatestDataSQLite table") { db in
             try RuuviTagLatestDataSQLite.createTable(in: db)
         }
+        // v8
+        migrator.registerMigration("Create RuuviCloudRequestQueueSQLite table") { db in
+            try RuuviCloudQueuedRequestSQLite.createTable(in: db)
+        }
 
         try migrator.migrate(dbPool)
     }

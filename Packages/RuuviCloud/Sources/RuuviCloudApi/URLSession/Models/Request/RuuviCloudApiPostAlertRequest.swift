@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-public struct RuuviCloudApiPostAlertRequest: Encodable {
+public struct RuuviCloudApiPostAlertRequest: Codable {
     let sensor: String
     let enabled: Bool
     let type: RuuviCloudAlertType

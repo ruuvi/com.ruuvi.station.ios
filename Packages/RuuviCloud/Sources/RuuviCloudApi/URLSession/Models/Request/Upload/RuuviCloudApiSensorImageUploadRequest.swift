@@ -25,7 +25,7 @@ public struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
         self.mimeType = mimeType
     }
 
-    public enum UploadAction: String, Encodable {
+    public enum UploadAction: String, Codable {
         case upload
         case reset
     }

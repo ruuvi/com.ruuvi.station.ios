@@ -5,6 +5,7 @@ import RuuviOntology
 import BTKit
 import RuuviUser
 import RuuviCloud
+import RuuviPool
 #if canImport(RuuviCloudApi)
 import RuuviCloudApi
 #endif
@@ -13,10 +14,14 @@ import RuuviCloudApi
 public final class RuuviCloudPure: RuuviCloud {
     private let user: RuuviUser
     private let api: RuuviCloudApi
+    private let pool: RuuviPool
 
-    public init(api: RuuviCloudApi, user: RuuviUser) {
+    public init(api: RuuviCloudApi,
+                user: RuuviUser,
+                pool: RuuviPool) {
         self.api = api
         self.user = user
+        self.pool = pool
     }
 
     @discardableResult
@@ -40,6 +45,7 @@ public final class RuuviCloudPure: RuuviCloud {
     // swiftlint:disable:next function_parameter_count
     public func setAlert(
         type: RuuviCloudAlertType,
+        settingType: RuuviCloudAlertSettingType,
         isEnabled: Bool,
         min: Double?,
         max: Double?,
@@ -64,7 +70,14 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postAlert(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: ())
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                let uniqueKey = macId.value + "-" + type.rawValue + "-" + settingType.rawValue
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .alert,
+                    uniqueKey: uniqueKey
+                )
+
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -84,7 +97,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: temperatureUnit)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.unitTemperature.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -104,7 +122,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: temperatureAccuracy)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.accuracyTemperature.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -124,7 +147,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: humidityUnit)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.unitHumidity.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -144,7 +172,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: humidityAccuracy)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.accuracyHumidity.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -164,7 +197,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: pressureUnit)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.unitPressure.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -184,7 +222,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: pressureAccuracy)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.accuracyPressure.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -204,7 +247,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: showAllData)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.chartShowAllPoints.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -224,7 +272,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: drawDots)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.chartDrawDots.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -244,7 +297,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: chartDuration)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.chartViewPeriod.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -264,7 +322,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: cloudMode)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.cloudModeEnabled.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -284,7 +347,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: dashboard)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.dashboardEnabled.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -304,7 +372,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: dashboardType)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.dashboardType.rawValue
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -373,7 +446,14 @@ public final class RuuviCloudPure: RuuviCloud {
                 progress?(macId, percentage)
             }).on(success: { response in
                 promise.succeed(value: response.uploadURL)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                let uniqueKey = macId.value + "-uploadImage"
+                self?.createQueuedRequest(
+                    from: requestModel,
+                    additionalData: imageData,
+                    type: .uploadImage,
+                    uniqueKey: uniqueKey
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -401,7 +481,24 @@ public final class RuuviCloudPure: RuuviCloud {
         api.update(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: sensor.any)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+
+                var keySuffix: String = ""
+                if temperatureOffset != nil {
+                    keySuffix = "-temperatureOffset"
+                } else if humidityOffset != nil {
+                    keySuffix = "-humidityOffset"
+                } else if pressureOffset != nil {
+                    keySuffix = "-pressureOffset"
+                }
+                let uniqueKey = sensor.id + keySuffix
+
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .sensor,
+                    uniqueKey: uniqueKey
+                )
+
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -427,7 +524,13 @@ public final class RuuviCloudPure: RuuviCloud {
         api.update(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: sensor.with(name: name).any)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                let uniqueKey = sensor.id + "-name"
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .sensor,
+                    uniqueKey: uniqueKey
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -487,18 +590,24 @@ public final class RuuviCloudPure: RuuviCloud {
         api.sensorsDense(request, authorization: apiKey)
             .on(success: { [weak self] response in
                 let arrayOfAny = response.sensors.compactMap({ sensor in
-                    RuuviCloudSensorDense(sensor: CloudSensorStruct(id: sensor.sensor,
-                                                                    name: sensor.name,
-                                                                    isClaimed: true,
-                                                                    isOwner: false,
-                                                                    owner: nil,
-                                                                    picture: URL(string: sensor.picture),
-                                                                    offsetTemperature: sensor.offsetTemperature,
-                                                                    offsetHumidity: sensor.offsetHumidity,
-                                                                    offsetPressure: sensor.offsetPressure,
-                                                                    isCloudSensor: true),
-                                          record: self?.decodeSensorRecord(macId: sensor.sensor.mac,
-                                                                           record: sensor.lastMeasurement))
+                    RuuviCloudSensorDense(
+                        sensor: CloudSensorStruct(
+                            id: sensor.sensor,
+                            name: sensor.name,
+                            isClaimed: true,
+                            isOwner: false,
+                            owner: nil,
+                            picture: URL(string: sensor.picture),
+                            offsetTemperature: sensor.offsetTemperature,
+                            offsetHumidity: sensor.offsetHumidity,
+                            offsetPressure: sensor.offsetPressure,
+                            isCloudSensor: true
+                        ),
+                        record: self?.decodeSensorRecord(
+                            macId: sensor.sensor.mac,
+                            record: sensor.lastMeasurement
+                        )
+                    )
                 })
                 promise.succeed(value: arrayOfAny)
             }, failure: { error in
@@ -533,7 +642,17 @@ public final class RuuviCloudPure: RuuviCloud {
         api.unshare(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: macId)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                guard let email = email else {
+                    promise.fail(error: .api(error))
+                    return
+                }
+                let uniqueKey = macId.mac + "-unshare-" + email
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .unshare,
+                    uniqueKey: uniqueKey
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -568,7 +687,13 @@ public final class RuuviCloudPure: RuuviCloud {
         api.unclaim(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: macId)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                let uniqueKey = macId.mac + "-unclaim"
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .unclaim,
+                    uniqueKey: uniqueKey
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -758,6 +883,133 @@ public final class RuuviCloudPure: RuuviCloud {
             })
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    public func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
+    -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+
+        guard let type = request.type, let requestBody = request.requestBodyData else {
+            promise.fail(error: .api(.unexpectedHTTPStatusCode))
+            return promise.future
+        }
+
+        let decoder = JSONDecoder()
+        switch type {
+        case .sensor:
+            do {
+                let request = try decoder.decode(
+                    RuuviCloudApiSensorUpdateRequest.self,
+                    from: requestBody
+                )
+
+                api.update(request, authorization: apiKey)
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        case .unclaim:
+            do {
+                let request = try decoder.decode(
+                    RuuviCloudApiClaimRequest.self,
+                    from: requestBody
+                )
+
+                api.unclaim(request, authorization: apiKey)
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        case .unshare:
+            do {
+                let request = try decoder.decode(
+                    RuuviCloudApiShareRequest.self,
+                    from: requestBody
+                )
+
+                api.unshare(request, authorization: apiKey)
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        case .alert:
+            do {
+                let request = try decoder.decode(
+                    RuuviCloudApiPostAlertRequest.self,
+                    from: requestBody
+                )
+
+                api.postAlert(request, authorization: apiKey)
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        case .settings:
+            do {
+                let request = try decoder.decode(
+                    RuuviCloudApiPostSettingRequest.self,
+                    from: requestBody
+                )
+
+                api.postSetting(request, authorization: apiKey)
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        case .uploadImage:
+            do {
+                guard let imageData = request.additionalData else {
+                    return promise.future
+                }
+
+                let requestModel = try decoder.decode(
+                    RuuviCloudApiSensorImageUploadRequest.self,
+                    from: requestBody
+                )
+
+                api.uploadImage(
+                    requestModel,
+                    imageData: imageData,
+                    authorization: apiKey,
+                    uploadProgress: nil
+                )
+                .on(success: { _ in
+                    promise.succeed(value: true)
+                }, failure: { error in
+                    promise.fail(error: .api(error))
+                })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        default:
+            break
+        }
+        return promise.future
+    }
+
     private func decodeSensorRecords(
         macId: MACIdentifier,
         response: RuuviCloudApiGetSensorResponse
@@ -827,6 +1079,28 @@ public final class RuuviCloudPure: RuuviCloud {
             humidityOffset: 0.0,
             pressureOffset: 0.0
         ).any
+    }
+
+    private func createQueuedRequest(from request: Codable,
+                                     additionalData: Data? = nil,
+                                     type: RuuviCloudQueuedRequestType,
+                                     uniqueKey: String) {
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(request) else {
+            return
+        }
+        let request = RuuviCloudQueuedRequestStruct(
+            id: nil,
+            type: type,
+            status: .failed,
+            uniqueKey: uniqueKey,
+            requestDate: Date(),
+            successDate: nil,
+            attempts: 1,
+            requestBodyData: data,
+            additionalData: additionalData
+        )
+        pool.createQueuedRequest(request)
     }
 }
 // swiftlint:enable file_length

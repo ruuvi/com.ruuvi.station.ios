@@ -158,18 +158,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
+
+        let queuedRequests = executePendingRequests()
         let sensors = syncSensors()
         let settings = syncSettings()
         let alerts = syncAlerts()
         let latestMesurements = syncLatestRecord()
-        sensors.on(success: { [weak self] updatedSensors in
-            guard let sSelf = self else { return }
-            let syncs = updatedSensors.map({ sSelf.sync(sensor: $0) })
-            Future.zip(syncs).on(success: { _ in
-                settings.on(success: { _ in
-                    alerts.on(success: { _ in
-                        latestMesurements.on(success: { _ in
-                            promise.succeed(value: updatedSensors)
+        queuedRequests.on(success: { _ in
+            sensors.on(success: { [weak self] updatedSensors in
+                guard let sSelf = self else { return }
+                let syncs = updatedSensors.map({ sSelf.sync(sensor: $0) })
+                Future.zip(syncs).on(success: { _ in
+                    settings.on(success: { _ in
+                        alerts.on(success: { _ in
+                            latestMesurements.on(success: { _ in
+                                promise.succeed(value: updatedSensors)
+                            }, failure: { error in
+                                promise.fail(error: error)
+                            })
                         }, failure: { error in
                             promise.fail(error: error)
                         })
@@ -293,6 +299,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return promise.future
     }
 
+    public func executePendingRequests() -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        ruuviStorage.readQueuedRequests().on(success: { [weak self] requests in
+            guard requests.count > 0 else {
+                return promise.succeed(value: true)
+            }
+            for request in requests {
+                self?.ruuviCloud.executeQueuedRequest(from: request)
+                    .on(success: { _ in
+                        self?.ruuviPool.deleteQueuedRequest(request)
+                    }, failure: { _ in
+                        // This is expected to update the original request.
+                        self?.ruuviPool.createQueuedRequest(request)
+                    })
+            }
+        })
+        return promise.future
+    }
+
     private func offsetSyncs(
         cloudSensors: [CloudSensor],
         updatedSensors: Set<AnyRuuviTagSensor>
@@ -399,7 +424,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             guard let sSelf = self else { return }
             for sensor in localSensors {
                 let skip = !sensor.isClaimed ||
-                            (sensor.isOwner && sensor.isClaimed && !sSelf.ruuviLocalSettings.cloudModeEnabled)
+                            (sensor.isOwner && sensor.isClaimed &&
+                             !sSelf.ruuviLocalSettings.cloudModeEnabled)
                 if let macId = sensor.macId, !skip {
                     sSelf.ruuviLocalSyncState.setSyncStatus(.syncing, for: macId)
                 }
@@ -407,11 +433,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         })
 
         // Fetch data from the dense endpoint
-        ruuviCloud.loadSensorsDense(for: nil,
-                                    measurements: true,
-                                    sharedToOthers: nil,
-                                    sharedToMe: true,
-                                    alerts: nil).on(success: { [weak self] sensors in
+        ruuviCloud.loadSensorsDense(
+            for: nil,
+            measurements: true,
+            sharedToOthers: nil,
+            sharedToMe: true,
+            alerts: nil
+        ).on(success: { [weak self] sensors in
             guard let sSelf = self else { return }
 
             guard sensors.count > 0 else {
@@ -420,11 +448,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
 
             for sensor in sensors {
-                sSelf.updateLatestRecord(ruuviTag: sensor.sensor.ruuviTagSensor,
-                                                                  cloudRecord: sensor.record).on(completion: {
-                    // TODO: Skip adding points to history for free plan
-                    sSelf.addLatestRecordToHistory(ruuviTag: sensor.sensor.ruuviTagSensor,
-                                                   cloudRecord: sensor.record).on(completion: {
+                sSelf.updateLatestRecord(
+                    ruuviTag: sensor.sensor.ruuviTagSensor,
+                    cloudRecord: sensor.record
+                ).on(completion: {
+                    sSelf.addLatestRecordToHistory(
+                        ruuviTag: sensor.sensor.ruuviTagSensor,
+                        cloudRecord: sensor.record
+                    ).on(completion: {
                         promise.succeed(value: true)
                     })
                 })

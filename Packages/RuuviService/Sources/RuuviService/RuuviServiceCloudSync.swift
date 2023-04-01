@@ -20,4 +20,7 @@ public protocol RuuviServiceCloudSync {
 
     @discardableResult
     func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError>
+
+    @discardableResult
+    func executePendingRequests() -> Future<Bool, RuuviServiceError>
 }

@@ -47,6 +47,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     let deleteSensorOperation = sSelf.pool.delete(sensor)
                     let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
                     let deleteLatestRecordOperation = sSelf.pool.deleteLast(sensor.id)
+                    let deleteQueuedRequestsOperation = sSelf.pool.deleteQueuedRequests()
                     let cleanUpOperation = sSelf.pool.cleanupDBSpace()
                     sSelf.propertiesService.removeImage(for: sensor)
                     sSelf.localIDs.clear(sensor: sensor)
@@ -59,6 +60,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     Future.zip([deleteSensorOperation,
                                 deleteRecordsOperation,
                                 deleteLatestRecordOperation,
+                                deleteQueuedRequestsOperation,
                                 cleanUpOperation])
                         .on(success: { _ in
                             promise.succeed(value: true)
