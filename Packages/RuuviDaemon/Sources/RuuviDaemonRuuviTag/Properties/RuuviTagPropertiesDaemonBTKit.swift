@@ -235,7 +235,9 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 isClaimed: ruuviTag.isClaimed,
                 isOwner: ruuviTag.isOwner,
                 owner: ruuviTag.owner,
-                isCloudSensor: ruuviTag.isCloudSensor)
+                isCloudSensor: ruuviTag.isCloudSensor,
+                canShare: ruuviTag.canShare,
+                sharedTo: ruuviTag.sharedTo)
             sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
             sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
             sSelf.ruuviPool.update(ruuviSensor)

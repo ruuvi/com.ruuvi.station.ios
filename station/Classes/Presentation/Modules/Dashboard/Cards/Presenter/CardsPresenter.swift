@@ -1173,14 +1173,15 @@ extension CardsPresenter {
             viewModel.connectionAlertState.value,
             viewModel.movementAlertState.value
         ]
-        if alertStates.first(where: { alert in
-            alert == .firing
-        }) != nil && alertService.hasRegistrations(for: ruuviTag) {
-            viewModel.alertState.value = .firing
-        } else if alertStates.first(where: { alert in
-            alert == .registered
-        }) != nil && alertService.hasRegistrations(for: ruuviTag) {
-            viewModel.alertState.value = .registered
+
+        if alertService.hasRegistrations(for: ruuviTag) {
+            if alertStates.first(where: { alert in
+                alert == .firing
+            }) != nil {
+                viewModel.alertState.value = .firing
+            } else {
+                viewModel.alertState.value = .registered
+            }
         } else {
             viewModel.alertState.value = .empty
         }

@@ -671,7 +671,9 @@ extension RuuviPersistenceRealm {
             isClaimed: false,
             isOwner: ruuviTagRealm.isOwner,
             owner: ruuviTagRealm.owner,
-            isCloudSensor: ruuviTagRealm.isCloudSensor
+            isCloudSensor: ruuviTagRealm.isCloudSensor,
+            canShare: ruuviTagRealm.canShare,
+            sharedTo: ruuviTagRealm.sharedTo
         ).any
     }
     private func constructRecordStruct(from lastRecord: RuuviTagDataRealm,

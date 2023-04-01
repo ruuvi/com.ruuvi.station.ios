@@ -49,7 +49,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
             owner: ruuviTag.owner,
-            isCloudSensor: ruuviTag.isCloudSensor
+            isCloudSensor: ruuviTag.isCloudSensor,
+            canShare: ruuviTag.canShare,
+            sharedTo: ruuviTag.sharedTo
         )
         do {
             try database.dbPool.write { db in
@@ -406,17 +408,21 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
-        let entity = Entity(id: ruuviTag.id,
-                            macId: ruuviTag.macId,
-                            luid: ruuviTag.luid,
-                            name: ruuviTag.name,
-                            version: ruuviTag.version,
-                            firmwareVersion: ruuviTag.firmwareVersion,
-                            isConnectable: ruuviTag.isConnectable,
-                            isClaimed: ruuviTag.isClaimed,
-                            isOwner: ruuviTag.isOwner,
-                            owner: ruuviTag.owner,
-                            isCloudSensor: ruuviTag.isCloudSensor)
+        let entity = Entity(
+            id: ruuviTag.id,
+            macId: ruuviTag.macId,
+            luid: ruuviTag.luid,
+            name: ruuviTag.name,
+            version: ruuviTag.version,
+            firmwareVersion: ruuviTag.firmwareVersion,
+            isConnectable: ruuviTag.isConnectable,
+            isClaimed: ruuviTag.isClaimed,
+            isOwner: ruuviTag.isOwner,
+            owner: ruuviTag.owner,
+            isCloudSensor: ruuviTag.isCloudSensor,
+            canShare: ruuviTag.canShare,
+            sharedTo: ruuviTag.sharedTo
+        )
 
         do {
             try database.dbPool.write { db in
@@ -444,7 +450,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
             owner: ruuviTag.owner,
-            isCloudSensor: ruuviTag.isCloudSensor
+            isCloudSensor: ruuviTag.isCloudSensor,
+            canShare: ruuviTag.canShare,
+            sharedTo: ruuviTag.sharedTo
         )
         do {
             var success = false

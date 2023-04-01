@@ -131,6 +131,9 @@ class DashboardImageCell: UICollectionViewCell {
                                  bottom: nil,
                                  trailing: nil,
                                  padding: .init(top: 8, left: 8, bottom: 0, right: 0))
+        ruuviTagNameLabel.heightAnchor.constraint(
+            greaterThanOrEqualToConstant: 14
+        ).isActive = true
 
         container.addSubview(alertIcon)
         alertIcon.anchor(top: ruuviTagNameLabel.topAnchor,
