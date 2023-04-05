@@ -423,116 +423,58 @@ extension TagSettingsViewController {
         tableView.reloadData()
     }
 
-    private func reloadSection(section: Int) {
-        let section = NSIndexSet(index: section) as IndexSet
+    private func reloadSection(index: Int) {
+        let section = NSIndexSet(index: index) as IndexSet
         tableView.reloadSections(section, with: .fade)
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    private func reloadSection(section: TagSettingsSectionIdentifier) {
-        var updatedSection: TagSettingsSection!
-        switch section {
+    private func reloadSection(indentifier: TagSettingsSectionIdentifier) {
+        switch indentifier {
         case .btPair:
-            updatedSection = configureBluetoothSection()
-            if let index = tableViewSections.firstIndex(where: {
-                $0.identifier == section
-            }) {
-                tableView.beginUpdates()
-                tableViewSections.remove(at: index)
-                tableViewSections.insert(updatedSection, at: index)
-                tableView.endUpdates()
-            }
-        case .alertHumidity:
-            updatedSection = configureHumidityAlertSection()
-            if let index = tableViewSections.firstIndex(where: {
-                $0.identifier == section
-            }) {
-                tableViewSections.remove(at: index)
-                if showHumidityOffsetCorrection() {
-                    tableViewSections.insert(updatedSection, at: index)
-                }
-            } else {
-                if showHumidityOffsetCorrection() {
-                    let index = indexOfSection(
-                        section: TagSettingsSectionIdentifier.alertTemperature
-                    )
-                    let newSectionIndex = index+1
-                    tableViewSections.insert(updatedSection,
-                                             at: newSectionIndex)
-                    updateSection(at: newSectionIndex, with: updatedSection)
-                    reloadRSSISection()
-                }
-            }
-
-        case .alertPressure:
-            updatedSection = configurePressureAlertSection()
-            if let index = tableViewSections.firstIndex(where: {
-                $0.identifier == section
-            }) {
-                tableViewSections.remove(at: index)
-                if showPressureOffsetCorrection() {
-                    tableViewSections.insert(updatedSection, at: index)
-                }
-            } else {
-                let index = indexOfSection(
-                    section: TagSettingsSectionIdentifier.alertTemperature
+            let section = configureBluetoothSection()
+            updateSection(
+                with: indentifier,
+                newSection: section
+            )
+        case .offsetCorrection:
+            if showOffsetCorrection() {
+                let section = configureOffsetCorrectionSection()
+                updateSection(
+                    with: indentifier,
+                    newSection: section
                 )
-                if showHumidityOffsetCorrection() && showPressureOffsetCorrection() {
-                    let newSectionIndex = index+2
-                    tableViewSections.insert(updatedSection,
-                                             at: newSectionIndex)
-                    updateSection(at: newSectionIndex, with: updatedSection)
-                    reloadRSSISection()
-                } else if !showHumidityOffsetCorrection() && showPressureOffsetCorrection() {
-                    let newSectionIndex = index+1
-                    tableViewSections.insert(updatedSection,
-                                             at: newSectionIndex)
-                    updateSection(at: newSectionIndex, with: updatedSection)
-                    reloadRSSISection()
-                }
-            }
-        case .alertMovement:
-            updatedSection = configureMovementAlertSection()
-            if let index = tableViewSections.firstIndex(where: {
-                $0.identifier == section
-            }) {
-                tableViewSections.remove(at: index)
-                if viewModel?.movementCounter.value != nil {
-                    tableViewSections.insert(updatedSection, at: index)
-                }
             } else {
-                if viewModel?.movementCounter.value != nil {
-                    if let index = tableViewSections.firstIndex(where: {
-                        $0.identifier == TagSettingsSectionIdentifier.alertRSSI
-                    }) {
-                        tableViewSections.insert(updatedSection, at: index+1)
-                        updateSection(at: index+1, with: updatedSection)
-                    }
-                }
+                removeSection(with: .offsetCorrection)
             }
         default:
             break
         }
     }
 
-    private func updateSection(at index: Int,
-                               removeFirst: Bool = false,
-                               with section: TagSettingsSection) {
-        tableView.beginUpdates()
-        let indexSet = NSIndexSet(index: index) as IndexSet
-        if removeFirst {
-            tableView.deleteSections(indexSet, with: .none)
+    private func updateSection(
+        with indentifier: TagSettingsSectionIdentifier,
+        newSection: TagSettingsSection
+    ) {
+        if let index = tableViewSections.firstIndex(where: {
+            $0.identifier == indentifier
+        }) {
+            tableView.beginUpdates()
+            tableViewSections.remove(at: index)
+            tableViewSections.insert(newSection, at: index)
+            tableView.endUpdates()
         }
-        tableView.insertSections(indexSet, with: .none)
-        tableView.endUpdates()
     }
 
-    private func reloadRSSISection() {
+    private func removeSection(
+        with indentifier: TagSettingsSectionIdentifier
+    ) {
         if let index = tableViewSections.firstIndex(where: {
-            $0.identifier == TagSettingsSectionIdentifier.alertRSSI
+            $0.identifier == indentifier
         }) {
+            let indexSet = NSIndexSet(index: index) as IndexSet
             tableView.performBatchUpdates({
-                reloadSection(section: index)
+                tableViewSections.remove(at: index)
+                tableView.deleteSections(indexSet, with: .none)
             })
         }
     }
@@ -550,7 +492,7 @@ extension TagSettingsViewController {
                         currentSection.cells.insert(tagShareSettingItem(), at: currentSection.cells.count)
                         let index = indexOfSection(section: section)
                         tableView.performBatchUpdates({
-                            reloadSection(section: index)
+                            reloadSection(index: index)
                         })
                     }
                 } else {
@@ -558,7 +500,7 @@ extension TagSettingsViewController {
                         currentSection.cells.remove(at: currentSection.cells.count)
                         let index = indexOfSection(section: section)
                         tableView.performBatchUpdates({
-                            reloadSection(section: index)
+                            reloadSection(index: index)
                         })
                     }
                 }
@@ -735,7 +677,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
-                self?.reloadSection(section: .btPair)
+                self?.reloadSection(indentifier: .btPair)
             }
 
             let isConnected = viewModel.isConnected
@@ -756,7 +698,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
-                self?.reloadSection(section: .btPair)
+                self?.reloadSection(indentifier: .btPair)
             }
         }
     }
@@ -2074,9 +2016,18 @@ extension TagSettingsViewController {
 // MARK: - OFFSET CORRECTION SECTION
 extension TagSettingsViewController {
 
+    // swiftlint:disable:next function_body_length
     private func bindOffsetCorrectionSection() {
         guard let viewModel = viewModel else {
             return
+        }
+
+        tableView.bind(viewModel.isNetworkConnected) { [weak self] (_, _) in
+            self?.reloadSection(indentifier: .offsetCorrection)
+        }
+
+        tableView.bind(viewModel.isOwner) { [weak self] (_, _) in
+            self?.reloadSection(indentifier: .offsetCorrection)
         }
 
         if let tempOffsetCorrectionCell = tempOffsetCorrectionCell {
@@ -2864,7 +2815,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
         let collapsed = !currentSection.collapsed
         tableViewSections[section].collapsed = collapsed
         header.setCollapsed(collapsed)
-        reloadSection(section: section)
+        reloadSection(index: section)
 
         switch currentSection.identifier {
         case .alertTemperature:

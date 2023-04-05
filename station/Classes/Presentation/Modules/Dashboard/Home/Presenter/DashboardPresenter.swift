@@ -107,7 +107,6 @@ class DashboardPresenter: DashboardModuleInput {
     private var isBluetoothPermissionGranted: Bool {
         return CBCentralManager.authorization == .allowedAlways
     }
-    private static let debouncerDelay: TimeInterval = 1.0
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -155,7 +154,6 @@ class DashboardPresenter: DashboardModuleInput {
 // MARK: - DashboardViewOutput
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
-        startObservingAppState()
         startObservingRuuviTags()
         startObservingWebTags()
         startObservingBackgroundChanges()
@@ -165,7 +163,6 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingAlertChanges()
         startObservingCloudModeNotification()
         startListeningToSettings()
-        handleCloudModeState()
         startObserveCalibrationSettingsChange()
         startObservingCloudSyncTokenState()
         pushNotificationsManager.registerForRemoteNotifications()
@@ -481,21 +478,6 @@ extension DashboardPresenter: TagSettingsModuleOutput {
 // MARK: - Private
 extension DashboardPresenter {
 
-    private func startObservingAppState() {
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(handleAppEnterForgroundState),
-                         name: UIApplication.willEnterForegroundNotification,
-                         object: nil)
-    }
-
-    @objc private func handleAppEnterForgroundState() {
-        if !viewModels.isEmpty {
-            view.viewModels = viewModels
-        }
-    }
-
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
 
@@ -549,15 +531,15 @@ extension DashboardPresenter {
             return viewModel
         })
 
-        let viewModels = reorder(ruuviViewModels + virtualViewModels)
+        let vms = reorder(ruuviViewModels + virtualViewModels)
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags {
-            view.showNoSensorsAddedMessage(show: viewModels.isEmpty)
-            askAppStoreReview(with: viewModels.count)
+            view.showNoSensorsAddedMessage(show: vms.isEmpty)
+            askAppStoreReview(with: vms.count)
         }
 
-        if !viewModels.isEmpty {
-            self.viewModels = viewModels
+        if !vms.isEmpty {
+            self.viewModels = vms
         }
     }
 
@@ -793,7 +775,6 @@ extension DashboardPresenter {
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
-                            self?.notifyViewModelUpdate(for: viewModel)
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
@@ -802,14 +783,12 @@ extension DashboardPresenter {
                             } else {
                                 self?.sensorSettingsList.append(updateSensorSettings)
                             }
-                            self?.notifyViewModelUpdate(for: viewModel)
                         case .delete(let deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
                             }
-                            self?.notifyViewModelUpdate(for: viewModel)
                         default: break
                         }
                     })
@@ -1506,14 +1485,15 @@ extension DashboardPresenter {
                 viewModel.connectionAlertState.value,
                 viewModel.movementAlertState.value
             ]
-            if alertStates.first(where: { alert in
-                alert == .firing
-            }) != nil && alertService.hasRegistrations(for: ruuviTag) {
-                viewModel.alertState.value = .firing
-            } else if alertStates.first(where: { alert in
-                alert == .registered
-            }) != nil && alertService.hasRegistrations(for: ruuviTag) {
-                viewModel.alertState.value = .registered
+
+            if alertService.hasRegistrations(for: ruuviTag) {
+                if alertStates.first(where: { alert in
+                    alert == .firing
+                }) != nil {
+                    viewModel.alertState.value = .firing
+                } else {
+                    viewModel.alertState.value = .registered
+                }
             } else {
                 viewModel.alertState.value = .empty
             }
@@ -1728,10 +1708,7 @@ extension DashboardPresenter {
     }
 
     private func notifyViewModelUpdate(for viewModel: CardsViewModel) {
-        let debouncer = Debouncer(delay: Self.debouncerDelay)
-        debouncer.run(action: { [weak self] in
-            self?.view.applyUpdate(to: viewModel)
-        })
+        view.applyUpdate(to: viewModel)
     }
 }
 // swiftlint:enable file_length trailing_whitespace

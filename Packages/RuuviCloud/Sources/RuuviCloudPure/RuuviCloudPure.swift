@@ -571,22 +571,25 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    public func loadSensorsDense(for sensor: RuuviTagSensor?,
-                                 measurements: Bool?,
-                                 sharedToOthers: Bool?,
-                                 sharedToMe: Bool?,
-                                 alerts: Bool?
+    public func loadSensorsDense(
+        for sensor: RuuviTagSensor?,
+        measurements: Bool?,
+        sharedToOthers: Bool?,
+        sharedToMe: Bool?,
+        alerts: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError> {
         let promise = Promise<[RuuviCloudSensorDense], RuuviCloudError>()
         guard let apiKey = user.apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiGetSensorsDenseRequest(sensor: sensor?.id,
-                                                          measurements: measurements,
-                                                          sharedToMe: sharedToMe,
-                                                          sharedToOthers: sharedToOthers,
-                                                          alerts: alerts)
+        let request = RuuviCloudApiGetSensorsDenseRequest(
+            sensor: sensor?.id,
+            measurements: measurements,
+            sharedToMe: sharedToMe,
+            sharedToOthers: sharedToOthers,
+            alerts: alerts
+        )
         api.sensorsDense(request, authorization: apiKey)
             .on(success: { [weak self] response in
                 let arrayOfAny = response.sensors.compactMap({ sensor in
@@ -595,18 +598,22 @@ public final class RuuviCloudPure: RuuviCloud {
                             id: sensor.sensor,
                             name: sensor.name,
                             isClaimed: true,
-                            isOwner: false,
-                            owner: nil,
+                            isOwner: sensor.owner == self?.user.email,
+                            owner: sensor.owner,
                             picture: URL(string: sensor.picture),
                             offsetTemperature: sensor.offsetTemperature,
                             offsetHumidity: sensor.offsetHumidity,
                             offsetPressure: sensor.offsetPressure,
-                            isCloudSensor: true
+                            isCloudSensor: true,
+                            canShare: sensor.canShare,
+                            sharedTo: sensor.sharedTo ?? []
                         ),
                         record: self?.decodeSensorRecord(
                             macId: sensor.sensor.mac,
                             record: sensor.lastMeasurement
-                        )
+                        ),
+                        alerts: sensor.alerts,
+                        subscription: sensor.subscription
                     )
                 })
                 promise.succeed(value: arrayOfAny)

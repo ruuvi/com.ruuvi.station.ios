@@ -6,13 +6,11 @@ import RuuviOntology
 
 class DashboardPlainCell: UICollectionViewCell {
 
-    weak var layout: RuuviSimpleViewCompositionalLayout?
-
     private lazy var ruuviTagNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorBigTextColor
         label.textAlignment = .left
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = UIFont.Montserrat(.bold, size: 14)
         return label
     }()
@@ -86,13 +84,6 @@ class DashboardPlainCell: UICollectionViewCell {
         setUpUI()
     }
 
-    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) ->
-    UICollectionViewLayoutAttributes {
-        let attribute = super.preferredLayoutAttributesFitting(layoutAttributes)
-        layout?.updateLayoutAttributesHeight(layoutAttributes: attribute)
-        return attribute
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -111,6 +102,9 @@ class DashboardPlainCell: UICollectionViewCell {
                                  trailing: nil,
                                  padding: .init(top: 8, left: 8,
                                                 bottom: 0, right: 0))
+        ruuviTagNameLabel.heightAnchor.constraint(
+            greaterThanOrEqualToConstant: 14
+        ).isActive = true
 
         container.addSubview(alertIcon)
         alertIcon.anchor(top: ruuviTagNameLabel.topAnchor,

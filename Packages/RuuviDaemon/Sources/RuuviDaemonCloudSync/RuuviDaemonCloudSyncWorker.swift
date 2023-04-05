@@ -69,6 +69,10 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
 
     @objc
     func refreshImmediately() {
+        guard !localSettings.isSyncing else {
+            return
+        }
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.cloudSyncService.syncAllRecords()
         }
