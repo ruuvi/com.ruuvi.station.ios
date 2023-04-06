@@ -40,6 +40,7 @@ class RuuviCloudTableViewCell: UITableViewCell {
     }
 
     fileprivate func setUpUI() {
+        selectionStyle = .none
         contentView.isUserInteractionEnabled = true
 
         backgroundColor = .clear

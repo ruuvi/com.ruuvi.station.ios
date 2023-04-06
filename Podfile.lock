@@ -343,20 +343,20 @@ PODS:
     - RuuviBundleUtils
     - RuuviUser
   - RuuviOnboard/Tests (0.0.4)
-  - RuuviOntology (0.0.3):
-    - RuuviOntology/Contract (= 0.0.3)
-  - RuuviOntology/Contract (0.0.3):
+  - RuuviOntology (0.0.4):
+    - RuuviOntology/Contract (= 0.0.4)
+  - RuuviOntology/Contract (0.0.4):
     - Humidity
-  - RuuviOntology/Mappers (0.0.3):
+  - RuuviOntology/Mappers (0.0.4):
     - BTKit
     - Humidity
     - RuuviOntology/Contract
-  - RuuviOntology/Realm (0.0.3):
+  - RuuviOntology/Realm (0.0.4):
     - Humidity
     - Realm
     - RealmSwift (~> 10.33.0)
     - RuuviOntology/Contract
-  - RuuviOntology/SQLite (0.0.3):
+  - RuuviOntology/SQLite (0.0.4):
     - GRDB.swift
     - Humidity
     - RuuviOntology/Contract
@@ -850,7 +850,7 @@ SPEC CHECKSUMS:
   RuuviNotification: 0fc88ecc79eca0dfc6bc7252c1cc13822f6c257a
   RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
   RuuviOnboard: a17e7b9ded33af7c7f3c622444fcf3d5b8770ad1
-  RuuviOntology: ebdd97f64998904614eddcf914b2b24e3dcb620f
+  RuuviOntology: d459df385713f1116d167882bc856274e4e5bb00
   RuuviPersistence: 1fbb2265bf8cfae960e4067d7fac96f6d9d3335d
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303

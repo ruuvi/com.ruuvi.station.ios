@@ -4,6 +4,9 @@ import RuuviOntology
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
+    @IBOutlet weak var appearanceCell: UITableViewCell!
+    @IBOutlet weak var appearanceTitleLabel: UILabel!
+
     @IBOutlet weak var temperatureTitleLabel: UILabel!
     @IBOutlet weak var temperatureCell: UITableViewCell!
 
@@ -76,6 +79,7 @@ extension SettingsTableViewController: SettingsViewInput {
         heartbeatTitleLabel.text = "Settings.BackgroundScanning.title".localized()
         chartTitleLabel.text = "Settings.Label.Chart".localized()
         ruuviCloudTitleLabel.text = "ruuvi_cloud".localized()
+        appearanceTitleLabel.text = "settings_appearance".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -168,6 +172,8 @@ extension SettingsTableViewController {
             output.viewDidTapOnExperimental()
         case ruuviCloudCell:
             output.viewDidTapRuuviCloud()
+        case appearanceCell:
+            output.viewDidTapAppearance()
         default:
             break
         }

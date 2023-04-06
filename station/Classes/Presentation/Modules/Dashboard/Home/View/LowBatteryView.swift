@@ -41,7 +41,12 @@ class BatteryLevelView: UIView {
         stack.spacing = 4
         stack.axis = .horizontal
         stack.distribution = .fill
-        batteryLevelIcon.size(width: 16, height: 16)
+        batteryLevelIcon.heightAnchor.constraint(
+            lessThanOrEqualToConstant: 16
+        ).isActive = true
+        batteryLevelIcon.widthAnchor.constraint(
+            lessThanOrEqualToConstant: 16
+        ).isActive = true
 
         addSubview(stack)
         stack.fillSuperview()

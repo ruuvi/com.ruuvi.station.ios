@@ -92,7 +92,8 @@ public protocol RuuviServiceFactory {
         storage: RuuviStorage,
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
-        localSyncState: RuuviLocalSyncState
+        localSyncState: RuuviLocalSyncState,
+        alertService: RuuviServiceAlert
     ) -> RuuviServiceAuth
 
     func createCloudNotification(
@@ -216,7 +217,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         storage: RuuviStorage,
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
-        localSyncState: RuuviLocalSyncState
+        localSyncState: RuuviLocalSyncState,
+        alertService: RuuviServiceAlert
     ) -> RuuviServiceAuth {
         return RuuviServiceAuthImpl(
             ruuviUser: ruuviUser,
@@ -224,7 +226,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             storage: storage,
             propertiesService: propertiesService,
             localIDs: localIDs,
-            localSyncState: localSyncState
+            localSyncState: localSyncState,
+            alertService: alertService
         )
     }
 
