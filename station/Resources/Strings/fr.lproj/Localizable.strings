@@ -664,4 +664,5 @@ RuuviTag est prêt à être utilisé !";
 "add_your_first_sensor" = "Ajoutez votre premier capteur";
 "changelog" = "(journal des modifications)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
+"shared_to_x" = "Partagé %d/%d";
 

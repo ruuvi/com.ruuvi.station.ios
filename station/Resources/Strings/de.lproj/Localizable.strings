@@ -668,3 +668,4 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "add_your_first_sensor" = "Fügen Sie Ihren ersten Sensor hinzu";
 "changelog" = "(änderungsprotokoll)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
+"shared_to_x" = "Freigegebene %d/%d";

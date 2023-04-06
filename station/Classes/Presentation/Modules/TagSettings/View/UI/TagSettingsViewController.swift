@@ -489,19 +489,34 @@ extension TagSettingsViewController {
                     $0.identifier == .generalShare
                 }) == nil {
                     if showShare() {
-                        currentSection.cells.insert(tagShareSettingItem(), at: currentSection.cells.count)
-                        let index = indexOfSection(section: section)
+                        let rowIndex = currentSection.cells.count
+                        let sectionIndex = indexOfSection(section: section)
+                        let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
                         tableView.performBatchUpdates({
-                            reloadSection(index: index)
+                            currentSection.cells.insert(
+                                tagShareSettingItem(),
+                                at: rowIndex
+                            )
+                            tableView.insertRows(at: [indexPath], with: .none)
                         })
+
+                        if let tagOwnerCell = tagOwnerCell {
+                            tagOwnerCell.hideSeparator(hide: false)
+                        }
                     }
                 } else {
                     if !showShare() && currentSection.cells.count > 1 {
-                        currentSection.cells.remove(at: currentSection.cells.count)
-                        let index = indexOfSection(section: section)
+                        let rowIndex = currentSection.cells.count - 1
+                        let sectionIndex = indexOfSection(section: section)
+                        let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
                         tableView.performBatchUpdates({
-                            reloadSection(index: index)
+                            currentSection.cells.remove(at: rowIndex)
+                            tableView.deleteRows(at: [indexPath], with: .none)
                         })
+
+                        if let tagOwnerCell = tagOwnerCell {
+                            tagOwnerCell.hideSeparator(hide: true)
+                        }
                     }
                 }
             }
@@ -549,14 +564,19 @@ extension TagSettingsViewController {
             }
         }
 
-        tableView.bind(viewModel.canShareTag) { _, _ in
+        if let tagShareCell = tagShareCell {
+            tagShareCell.bind(viewModel.sharedTo) { [weak self] cell, sharedTo in
+                cell.configure(value: self?.sensorSharedTo(from: sharedTo))
+            }
+        }
+
+        tableView.bind(viewModel.sharedTo) { _, _ in
             self.reloadCellsFor(section: .general)
         }
 
-        // TODO: @priyonto - Show shared/not shared based on actual share data.
-//        tagShareCell.bind(viewModel.owner) { cell, owner in
-//            cell.configure(value: owner)
-//        }
+        tableView.bind(viewModel.canShareTag) { _, _ in
+            self.reloadCellsFor(section: .general)
+        }
     }
 
     private func configureGeneralSection() -> TagSettingsSection {
@@ -618,9 +638,12 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .generalShare,
             createdCell: { [weak self] in
-                // TODO: @priyonto - Show shared/not shared based on actual share data.
-                self?.tagShareCell?.configure(title: "TagSettings.Share.title".localized(),
-                               value: nil)
+                self?.tagShareCell?.configure(
+                    title: "TagSettings.Share.title".localized(),
+                    value: self?.sensorSharedTo(
+                        from: self?.viewModel?.sharedTo.value
+                    )
+                )
                 self?.tagShareCell?.setAccessory(type: .chevron )
                 self?.tagShareCell?.hideSeparator(hide: true)
                 return self?.tagShareCell ?? UITableViewCell()
@@ -638,6 +661,21 @@ extension TagSettingsViewController {
 
     private func showShare() -> Bool {
         return viewModel?.canShareTag.value == true
+    }
+
+    private func sensorSharedTo(from: [String]?) -> String {
+        let maxShareCount = 10
+        if let sharedTo = from, sharedTo.count > 0 {
+            let format = "shared_to_x".localized()
+            return String(
+                format: format,
+                sharedTo.count,
+                maxShareCount
+            )
+        }
+        else {
+            return "TagSettings.NotShared.title".localized()
+        }
     }
 }
 

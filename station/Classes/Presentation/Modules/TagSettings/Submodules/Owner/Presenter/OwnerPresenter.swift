@@ -49,7 +49,10 @@ extension OwnerPresenter: OwnerViewOutput {
                     if let luid = self?.ruuviTag.luid {
                         self?.connectionPersistence.setKeepConnection(false, for: luid)
                     }
-                    self?.view.showSensorAlreadyClaimedError(error: claimError.code, email: claimError.error.email())
+                    self?.view.showSensorAlreadyClaimedError(
+                        error: claimError.code,
+                        email: claimError.error.email()
+                    )
                 default:
                     self?.errorPresenter.present(error: error)
                 }

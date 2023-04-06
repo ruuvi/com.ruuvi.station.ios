@@ -663,3 +663,4 @@ RuuviTag on valmis käyttöön!";
 "add_your_first_sensor" = "Lisää ensimmäinen anturi";
 "changelog" = "(muutosloki)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
+"shared_to_x" = "Jaettu %d/%d";

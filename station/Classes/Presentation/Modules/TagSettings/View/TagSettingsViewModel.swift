@@ -77,6 +77,7 @@ struct TagSettingsViewModel {
     let isAuthorized: Observable<Bool?> = Observable<Bool?>(true)
     let canClaimTag: Observable<Bool?> = Observable<Bool?>(false)
     let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
+    var sharedTo: Observable<[String]?> = Observable<[String]?>()
     let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
     let owner: Observable<String?> = Observable<String?>()
     let isOwner: Observable<Bool?> = Observable<Bool?>(false)
