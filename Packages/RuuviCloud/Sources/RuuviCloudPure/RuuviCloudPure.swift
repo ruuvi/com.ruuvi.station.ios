@@ -14,11 +14,11 @@ import RuuviCloudApi
 public final class RuuviCloudPure: RuuviCloud {
     private let user: RuuviUser
     private let api: RuuviCloudApi
-    private let pool: RuuviPool
+    private let pool: RuuviPool?
 
     public init(api: RuuviCloudApi,
                 user: RuuviUser,
-                pool: RuuviPool) {
+                pool: RuuviPool?) {
         self.api = api
         self.user = user
         self.pool = pool
@@ -1107,7 +1107,7 @@ public final class RuuviCloudPure: RuuviCloud {
             requestBodyData: data,
             additionalData: additionalData
         )
-        pool.createQueuedRequest(request)
+        pool?.createQueuedRequest(request)
     }
 }
 // swiftlint:enable file_length

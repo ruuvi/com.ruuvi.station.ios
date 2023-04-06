@@ -1,7 +1,6 @@
 import Swinject
 import RuuviCloud
 import RuuviUser
-import RuuviPool
 
 final class WidgetAssembly {
     static let shared = WidgetAssembly()
@@ -20,13 +19,12 @@ private final class NetworkingAssembly: Assembly {
 
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
-            let pool = r.resolve(RuuviPool.self)!
             let baseUrlString: String = Constants.ruuviCloudBaseURL.rawValue
             let baseUrl = URL(string: baseUrlString)!
             let cloud = r.resolve(RuuviCloudFactory.self)!.create(
                 baseUrl: baseUrl,
                 user: user,
-                pool: pool
+                pool: nil
             )
             return cloud
         }

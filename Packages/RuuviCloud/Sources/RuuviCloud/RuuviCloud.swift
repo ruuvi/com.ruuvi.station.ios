@@ -173,7 +173,7 @@ public protocol RuuviCloud {
 }
 
 public protocol RuuviCloudFactory {
-    func create(baseUrl: URL, user: RuuviUser, pool: RuuviPool) -> RuuviCloud
+    func create(baseUrl: URL, user: RuuviUser, pool: RuuviPool?) -> RuuviCloud
 }
 
 public enum MimeType: String, Codable {
