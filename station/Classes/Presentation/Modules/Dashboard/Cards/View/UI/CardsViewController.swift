@@ -138,11 +138,11 @@ class CardsViewController: UIViewController {
         let cv = UICollectionView(frame: .zero,
                                   collectionViewLayout: createLayout())
         cv.backgroundColor = .clear
-        cv.delegate = self
         cv.showsHorizontalScrollIndicator = false
         cv.decelerationRate = .fast
         cv.isPagingEnabled = true
         cv.alwaysBounceVertical = false
+        cv.delegate = self
         cv.register(CardsLargeImageCell.self,
                     forCellWithReuseIdentifier: Self.reuseIdentifier)
         return cv
@@ -151,6 +151,8 @@ class CardsViewController: UIViewController {
     private var currentVisibleItem: CardsViewModel? {
         didSet {
             bindCurrentVisibleItem()
+            updateCardBackgroundImage(with: currentVisibleItem?.background.value)
+            updateTopActionButtonVisibility()
         }
     }
 
@@ -335,20 +337,6 @@ extension CardsViewController {
 }
 
 extension CardsViewController: UICollectionViewDelegate {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        willDisplay cell: UICollectionViewCell,
-        forItemAt indexPath: IndexPath
-    ) {
-        guard viewModels.count > 0,
-              indexPath.item < viewModels.count else { return }
-        let viewModel = viewModels[indexPath.item]
-        if let cell = cell as? CardsLargeImageCell,
-            let macId = viewModel.mac.value {
-            cell.startObservingNetworkSyncNotification(for: macId.any)
-        }
-    }
-
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
         let yPoint = scrollView.frame.size.height / 2
@@ -435,7 +423,30 @@ extension CardsViewController {
 extension CardsViewController: CardsViewInput {
 
     func viewShouldDismiss() {
-        _ = navigationController?.popToRootViewController(animated: true)
+        output.viewShouldDismiss()
+    }
+
+    func applyUpdate(to viewModel: CardsViewModel) {
+        var snapshot = datasource.snapshot()
+        if let index = snapshot.indexOfItem(viewModel),
+           var item = datasource.itemIdentifier(for: IndexPath(item: index,
+                                                               section: 0)) {
+            if viewModel == currentVisibleItem {
+                item = viewModel
+                restartAnimations()
+                updateTopActionButtonVisibility()
+                snapshot.reloadItems([item])
+                datasource.apply(snapshot,
+                                 animatingDifferences: false)
+            }
+        }
+    }
+
+    func changeCardBackground(of viewModel: CardsViewModel,
+                              to image: UIImage?) {
+        if viewModel == currentVisibleItem {
+            updateCardBackgroundImage(with: image)
+        }
     }
 
     func localize() {
@@ -471,28 +482,19 @@ extension CardsViewController: CardsViewInput {
         gestureInstructor.show(.swipeRight, after: 0.1)
     }
 
-    func scroll(to index: Int,
-                immediately: Bool = false,
-                animated: Bool = false) {
+    func scroll(to index: Int) {
         guard index < viewModels.count, index < datasource.snapshot().numberOfItems else {
             return
         }
         let viewModel = viewModels[index]
         currentVisibleItem = viewModel
         let indexPath = IndexPath(item: index, section: 0)
-        if immediately {
-            collectionView.scrollToItem(at: indexPath,
-                                        at: .centeredHorizontally,
-                                        animated: animated)
-            output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
-                guard let sSelf = self else { return }
-                sSelf.collectionView.scrollToItem(at: indexPath,
-                                                  at: .centeredHorizontally,
-                                                  animated: animated)
-                sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.collectionView.scrollToItem(at: indexPath,
+                                              at: .centeredHorizontally,
+                                              animated: false)
+            sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
         }
 
         restartAnimations()
@@ -572,10 +574,11 @@ extension CardsViewController: CardsViewInput {
 
 extension CardsViewController: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
-        guard isViewLoaded else {
+        guard isViewLoaded,
+                let viewModel = currentVisibleItem else {
             return
         }
-        collectionView.reloadWithoutAnimation()
+        applyUpdate(to: viewModel)
     }
 }
 
@@ -592,10 +595,6 @@ extension CardsViewController {
     private func bindCurrentVisibleItem() {
         guard let currentVisibleItem = currentVisibleItem else {
             return
-        }
-
-        cardBackgroundView.bind(currentVisibleItem.background) { (view, image) in
-            view.setBackgroundImage(with: image)
         }
 
         view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] (_, _) in
@@ -641,6 +640,9 @@ extension CardsViewController {
 }
 
 extension CardsViewController {
+    private func updateCardBackgroundImage(with image: UIImage?) {
+        cardBackgroundView.setBackgroundImage(with: image)
+    }
 
     private func restartAnimations() {
         let mutedTills = [

@@ -27,6 +27,7 @@ class DashboardViewController: UIViewController {
 
     var viewModels: [CardsViewModel] = [] {
         didSet {
+            print("balda")
             updateUI()
         }
     }
@@ -544,20 +545,23 @@ extension DashboardViewController: DashboardViewInput {
             return
         }
 
-        var snapshot = datasource.snapshot()
-        guard viewModels.count > 0,
-              snapshot.numberOfItems > 0,
-              viewModels.contains(where: { $0.id.value == viewModel.id.value }),
-              let index = snapshot.indexOfItem(viewModel),
-              var item = datasource.itemIdentifier(for: IndexPath(item: index,
-                                                                  section: 0))
-        else {
-            return
+        if let index = viewModels.firstIndex(where: { vm in
+            vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
+            vm.mac.value != nil && vm.mac.value == viewModel.mac.value
+        }) {
+            let indexPath = IndexPath(item: index, section: 0)
+            if let cell = collectionView
+                .cellForItem(at: indexPath) as? DashboardImageCell {
+                cell.configure(
+                    with: viewModel, measurementService: measurementService
+                )
+            } else if let cell = collectionView
+                .cellForItem(at: indexPath) as? DashboardPlainCell {
+                cell.configure(
+                    with: viewModel, measurementService: measurementService
+                )
+            }
         }
-        item = viewModel
-        snapshot.reloadItems([item])
-        datasource.apply(snapshot,
-                         animatingDifferences: false)
     }
 
     func localize() {
@@ -592,23 +596,6 @@ extension DashboardViewController: DashboardViewInput {
     func showNoSensorsAddedMessage(show: Bool) {
         noSensorView.isHidden = !show
         collectionView.isHidden = show
-    }
-
-    func scroll(to index: Int,
-                immediately: Bool = false,
-                animated: Bool = false) {
-        guard index < viewModels.count else { return }
-        let indexPath = IndexPath(item: index, section: 0)
-        if immediately {
-            collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: animated)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let sSelf = self else { return }
-                sSelf.collectionView.scrollToItem(at: indexPath,
-                                                  at: .centeredVertically,
-                                                  animated: animated)
-            }
-        }
     }
 
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {

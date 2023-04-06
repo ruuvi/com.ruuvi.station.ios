@@ -162,6 +162,7 @@ struct CardsViewModel {
         humidity.value = ruuviTag.humidity
         pressure.value = ruuviTag.pressure
         version.value = ruuviTag.version
+        voltage.value = ruuviTag.voltage
         if let macId = ruuviTag.mac?.mac.any {
             mac.value = macId
         }

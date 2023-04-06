@@ -429,6 +429,16 @@ extension TagSettingsViewController {
     private func reloadSection(section: TagSettingsSectionIdentifier) {
         var updatedSection: TagSettingsSection!
         switch section {
+        case .btPair:
+            updatedSection = configureBluetoothSection()
+            if let index = tableViewSections.firstIndex(where: {
+                $0.identifier == section
+            }) {
+                tableView.beginUpdates()
+                tableViewSections.remove(at: index)
+                tableViewSections.insert(updatedSection, at: index)
+                tableView.endUpdates()
+            }
         case .alertHumidity:
             updatedSection = configureHumidityAlertSection()
             if let index = tableViewSections.firstIndex(where: {
@@ -440,7 +450,9 @@ extension TagSettingsViewController {
                 }
             } else {
                 if showHumidityOffsetCorrection() {
-                    let index = indexOfSection(section: TagSettingsSectionIdentifier.alertTemperature)
+                    let index = indexOfSection(
+                        section: TagSettingsSectionIdentifier.alertTemperature
+                    )
                     let newSectionIndex = index+1
                     tableViewSections.insert(updatedSection,
                                              at: newSectionIndex)
@@ -459,7 +471,9 @@ extension TagSettingsViewController {
                     tableViewSections.insert(updatedSection, at: index)
                 }
             } else {
-                let index = indexOfSection(section: TagSettingsSectionIdentifier.alertTemperature)
+                let index = indexOfSection(
+                    section: TagSettingsSectionIdentifier.alertTemperature
+                )
                 if showHumidityOffsetCorrection() && showPressureOffsetCorrection() {
                     let newSectionIndex = index+2
                     tableViewSections.insert(updatedSection,
@@ -718,6 +732,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
+                self?.reloadSection(section: .btPair)
             }
 
             let isConnected = viewModel.isConnected
@@ -738,6 +753,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
+                self?.reloadSection(section: .btPair)
             }
         }
     }

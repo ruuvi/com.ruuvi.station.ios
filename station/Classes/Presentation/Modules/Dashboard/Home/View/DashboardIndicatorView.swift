@@ -8,6 +8,7 @@ class DashboardIndicatorView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Montserrat(.bold, size: 14)
+        label.sizeToFit()
         return label
     }()
 
@@ -17,6 +18,7 @@ class DashboardIndicatorView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 12)
+        label.sizeToFit()
         return label
     }()
 
@@ -52,6 +54,10 @@ class DashboardIndicatorView: UIView {
                 lessThanOrEqualTo: indicatorValueLabel.topAnchor,
                         constant: 2
             ).isActive = true
+
+        indicatorUnitLabel.trailingAnchor
+            .constraint(greaterThanOrEqualTo: trailingAnchor)
+            .isActive = true
     }
 }
 
@@ -59,6 +65,7 @@ extension DashboardIndicatorView {
     func setValue(with value: String?, unit: String? = nil) {
         indicatorValueLabel.text = value
         indicatorUnitLabel.text = unit
+        layoutIfNeeded()
     }
 
     func changeColor(highlight: Bool) {
