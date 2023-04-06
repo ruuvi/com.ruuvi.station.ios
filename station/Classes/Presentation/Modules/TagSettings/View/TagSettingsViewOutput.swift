@@ -13,7 +13,6 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnTxPower()
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
-    func viewDidTapClaimButton()
     func viewDidTapShareButton()
     func viewDidTapOnExport()
     func viewDidTapOnOwner()

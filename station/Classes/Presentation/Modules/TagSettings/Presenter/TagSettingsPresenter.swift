@@ -320,32 +320,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         viewDidTriggerFirmwareUpdateDialog()
     }
 
-    func viewDidTapClaimButton() {
-        if viewModel.isClaimedTag.value == true {
-            isLoading = true
-            ruuviOwnershipService
-                .unclaim(sensor: ruuviTag)
-                .on(success: { [weak self] unclaimedSensor in
-                    self?.ruuviTag = unclaimedSensor
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                }, completion: { [weak self] in
-                    self?.isLoading = false
-                })
-        } else {
-            isLoading = true
-            ruuviOwnershipService
-                .claim(sensor: ruuviTag)
-                .on(success: { [weak self] claimedSensor in
-                    self?.ruuviTag = claimedSensor
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                }, completion: { [weak self] in
-                    self?.isLoading = false
-                })
-        }
-    }
-
     func viewDidTapShareButton() {
         router.openShare(for: ruuviTag)
     }
@@ -461,7 +435,9 @@ extension TagSettingsPresenter {
             })
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
 
-        viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
+        viewModel.canShareTag.value =
+            (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
+        viewModel.sharedTo.value = ruuviTag.sharedTo
 
         // swiftlint:disable line_length
         // Context:

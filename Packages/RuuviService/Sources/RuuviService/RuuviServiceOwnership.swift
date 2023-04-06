@@ -29,4 +29,7 @@ public protocol RuuviServiceOwnership {
 
     @discardableResult
     func checkOwner(macId: MACIdentifier) -> Future<String, RuuviServiceError>
+
+    @discardableResult
+    func updateShareable(for sensor: RuuviTagSensor) -> Future<Bool, RuuviServiceError>
 }
