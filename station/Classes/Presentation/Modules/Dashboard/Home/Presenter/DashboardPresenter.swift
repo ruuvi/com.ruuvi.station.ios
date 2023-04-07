@@ -22,7 +22,7 @@ import CoreBluetooth
 import Future
 
 class DashboardPresenter: DashboardModuleInput {
-    weak var view: DashboardViewInput!
+    weak var view: DashboardViewInput?
     var router: DashboardRouterInput!
     var interactor: DashboardInteractorInput!
     var realmContext: RealmContext!
@@ -98,7 +98,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var sensorSettingsList = [SensorSettings]()
     private var viewModels: [CardsViewModel] = [] {
         didSet {
-            view.viewModels = viewModels
+            view?.viewModels = viewModels
         }
     }
     private var didLoadInitialRuuviTags = false
@@ -200,7 +200,7 @@ extension DashboardPresenter: DashboardViewOutput {
                     || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                     openTagSettingsScreens(viewModel: viewModel)
                 } else {
-                    view.showKeepConnectionDialogSettings(for: viewModel)
+                    view?.showKeepConnectionDialogSettings(for: viewModel)
                 }
             } else {
                 openTagSettingsScreens(viewModel: viewModel)
@@ -223,7 +223,7 @@ extension DashboardPresenter: DashboardViewOutput {
                 || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
                 openCardView(viewModel: viewModel, showCharts: true)
             } else {
-                view.showKeepConnectionDialogChart(for: viewModel)
+                view?.showKeepConnectionDialogChart(for: viewModel)
             }
         } else if viewModel.mac.value != nil {
             openCardView(viewModel: viewModel, showCharts: true)
@@ -300,7 +300,7 @@ extension DashboardPresenter: DashboardViewOutput {
             return
         }
 
-        view.dashboardType = dashboardType
+        view?.dashboardType = dashboardType
         settings.dashboardType = dashboardType
         ruuviAppSettingsService.set(dashboardType: dashboardType)
     }
@@ -481,7 +481,7 @@ extension DashboardPresenter {
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
 
-        view.dashboardType = settings.dashboardType
+        view?.dashboardType = settings.dashboardType
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
@@ -534,7 +534,7 @@ extension DashboardPresenter {
         let vms = reorder(ruuviViewModels + virtualViewModels)
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags {
-            view.showNoSensorsAddedMessage(show: vms.isEmpty)
+            view?.showNoSensorsAddedMessage(show: vms.isEmpty)
             askAppStoreReview(with: vms.count)
         }
 
@@ -688,7 +688,9 @@ extension DashboardPresenter {
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn || !self.isBluetoothPermissionGranted {
-                observer.view.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
+                observer.view?.showBluetoothDisabled(
+                    userDeclined: !self.isBluetoothPermissionGranted
+                )
             }
         })
     }
@@ -979,9 +981,9 @@ extension DashboardPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    let viewModel = sSelf.view.viewModels
+                    let viewModel = sSelf.view?.viewModels
                         .first(where: { $0.luid.value != nil && $0.luid.value == luid?.any })
-                        ?? sSelf.view.viewModels
+                        ?? sSelf.view?.viewModels
                         .first(where: { $0.mac.value != nil && $0.mac.value == macId?.any })
                     if let viewModel = viewModel {
                         let ruuviTag = sSelf.ruuviTags
@@ -1033,11 +1035,11 @@ extension DashboardPresenter {
                     } else if case .virtualService(let serviceError) = error,
                               case .openWeatherMap(let owmError) = serviceError,
                               owmError == OWMError.apiLimitExceeded {
-                        self?.view.showWebTagAPILimitExceededError()
+                        self?.view?.showWebTagAPILimitExceededError()
                     } else if case .map(let mapError) = error {
                         let nsError = mapError as NSError
                         if nsError.code == 2, nsError.domain == "kCLErrorDomain" {
-                            self?.view.showReverseGeocodingFailed()
+                            self?.view?.showReverseGeocodingFailed()
                         } else {
                             self?.errorPresenter.present(error: error)
                         }
@@ -1291,7 +1293,7 @@ extension DashboardPresenter {
                          queue: .main,
                          using: { [weak self] (_) in
                 guard let email = self?.ruuviUser.email else { return }
-                self?.view.showAlreadyLoggedInAlert(with: email)
+                self?.view?.showAlreadyLoggedInAlert(with: email)
         })
     }
 
@@ -1403,7 +1405,7 @@ extension DashboardPresenter {
                          using: { [weak self] (notification) in
                 if let userInfo = notification.userInfo,
                    let type = userInfo[DashboardTypeKey.type] as? DashboardType {
-                   self?.view.dashboardType = type
+                   self?.view?.dashboardType = type
                 }
         })
     }
@@ -1708,7 +1710,7 @@ extension DashboardPresenter {
     }
 
     private func notifyViewModelUpdate(for viewModel: CardsViewModel) {
-        view.applyUpdate(to: viewModel)
+        view?.applyUpdate(to: viewModel)
     }
 }
 // swiftlint:enable file_length trailing_whitespace
