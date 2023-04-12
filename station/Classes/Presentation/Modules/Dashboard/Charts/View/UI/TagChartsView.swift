@@ -133,8 +133,8 @@ extension TagChartsView: ChartViewDelegate {
 extension TagChartsView {
 
     func localize() {
-        xAxis.valueFormatter = DateValueFormatter(with: settings.language.locale)
-        leftAxis.valueFormatter = YAxisValueFormatter(with: settings.language.locale)
+        xAxis.valueFormatter = DateValueFormatter(with: Locale.current)
+        leftAxis.valueFormatter = YAxisValueFormatter(with: Locale.current)
     }
 
     func clearChartData() {

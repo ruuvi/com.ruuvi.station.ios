@@ -36,7 +36,7 @@ final class MeasurementService: NSObject {
 
     private var commonFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
@@ -45,21 +45,21 @@ final class MeasurementService: NSObject {
 
     private var temperatureFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         return formatter
     }
 
     private var humidityFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         return formatter
     }
 
     private var pressureFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         return formatter
     }
