@@ -15,9 +15,7 @@ import RuuviNotifier
 import RuuviDaemon
 import RuuviPresenters
 import RuuviUser
-#if canImport(WidgetKit)
 import WidgetKit
-#endif
 import CoreBluetooth
 import Future
 
@@ -368,18 +366,21 @@ extension DashboardPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         startObservingRuuviTags()
         startObservingCloudModeNotification()
-        module.dismiss()
-        AppUtility.lockOrientation(.all)
+        module.dismiss(completion: {
+            AppUtility.lockOrientation(.all)
+        })
     }
 
     func signIn(module: SignInModuleInput, didCloseSignInWithoutAttempt sender: Any?) {
-        module.dismiss()
-        AppUtility.lockOrientation(.all)
+        module.dismiss(completion: {
+            AppUtility.lockOrientation(.all)
+        })
     }
 
     func signIn(module: SignInModuleInput, didSelectUseWithoutAccount sender: Any?) {
-        module.dismiss()
-        AppUtility.lockOrientation(.all)
+        module.dismiss(completion: {
+            AppUtility.lockOrientation(.all)
+        })
     }
 }
 

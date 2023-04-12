@@ -651,7 +651,7 @@ RuuviTag est prêt à être utilisé !";
 "request_code" = "Demander un code";
 "no_password_needed" = "Un compte gratuit sera créé pour cet e-mail si vous n'en avez pas déjà un. Seule l'adresse e-mail est requise. Nous gardons vos informations en toute sécurité.";
 "benefits_sign_in" = "En savoir plus sur les avantages du compte Ruuvi ou connectez-vous plus tard";
-"use_without_account" = "Non merci, je continue sans compte";
+"use_without_account" = "Non merci, ignorer";
 "why_should_sign_in" = "Bénéfices";
 "sensors_ownership_and_settings_stored_in_cloud" = "La connexion à l'application présente de nombreux avantages. Les paramètres seront stockés en toute sécurité sur votre compte:";
 "cloud_stored_ownerships" = "● Propriété des capteurs";
@@ -669,4 +669,9 @@ RuuviTag est prêt à être utilisé !";
 "changelog" = "(journal des modifications)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "shared_to_x" = "Partagé %d/%d";
+"synchronisation" = "Synchronisation";
+"gatt_sync_description" = "Ruuvi Station télécharge l'historique interne du capteur pour les 10 derniers jours si l'historique des mesures est disponible.\n\nL'historique est téléchargé à l'aide d'une connexion Bluetooth. Assurez-vous d'être à proximité du capteur.";
+"do_not_show_again" = "Ne plus afficher ça";
+"sign_in_continue" = "Continuer";
+"signing_in_is_optional" = "(La connexion est facultative)";
 
