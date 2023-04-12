@@ -593,8 +593,12 @@ If you cannot see the Language option in the settings, make sure that you have a
 "force_claim" = "Force Claim";
 "claim_wrong_sensor_scanned" = "You are scanning different RuuviTag";
 "view" = "Вид";
-"simple_view" = "Simple view";
-"image_view" = "Image view";
+"card_type" = "Card type";
+"image_cards" = "Image cards";
+"simple_cards" = "Simple cards";
+"card_action" = "Card action";
+"open_sensor_view" = "Open sensor view";
+"open_history_view" = "Open history view";
 "change_background_message" = "Select background image. If you're not signed in, you'll lose the image in case of app reinstall.";
 "take_photo" = "Take a photo";
 "select_from_gallery" = "Select from phone gallery";

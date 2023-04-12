@@ -304,6 +304,11 @@ extension DashboardPresenter: DashboardViewOutput {
         settings.dashboardType = dashboardType
         ruuviAppSettingsService.set(dashboardType: dashboardType)
     }
+
+    func viewDidChangeCardTapAction(showHistoryOnCardTap: Bool) {
+        settings.showChartOnDashboardCardTap = showHistoryOnCardTap
+        view?.showHistoryOnCardTap = showHistoryOnCardTap
+    }
 }
 
 // MARK: - MenuModuleOutput
