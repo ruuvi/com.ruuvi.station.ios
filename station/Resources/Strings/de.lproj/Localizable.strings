@@ -598,8 +598,12 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "force_claim" = "Kraft-Anspruch";
 "claim_wrong_sensor_scanned" = "Sie scannen gerade verschiedene RuuviTag";
 "view" = "Siehe";
-"simple_view" = "Einfache Ansicht";
-"image_view" = "Bildansicht";
+"card_type" = "Card type";
+"image_cards" = "Image cards";
+"simple_cards" = "Simple cards";
+"card_action" = "Card action";
+"open_sensor_view" = "Open sensor view";
+"open_history_view" = "Open history view";
 "change_background_message" = "Wählen Sie das Hintergrundbild. Wenn Sie nicht angemeldet sind, verlieren Sie das Bild bei einer Neuinstallation der App.";
 "take_photo" = "Ein Foto machen";
 "select_from_gallery" = "Aus der Handy-Galerie auswählen";

@@ -30,6 +30,8 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    var showHistoryOnCardTap: Bool = false
+
     private func cell(collectionView: UICollectionView,
                       indexPath: IndexPath,
                       viewModel: CardsViewModel) -> UICollectionViewCell? {
@@ -191,28 +193,59 @@ extension DashboardViewController {
 
 extension DashboardViewController {
     private func viewToggleMenuOptions() -> UIMenu {
-        let imageViewAction = UIAction(title: "image_view".localized()) { [weak self] _ in
+        // Card Type
+        let imageViewTypeAction = UIAction(title: "image_cards".localized()) {
+            [weak self] _ in
             self?.output.viewDidChangeDashboardType(dashboardType: .image)
             self?.reloadCollectionView(redrawLayout: true)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        let simpleViewAction = UIAction(title: "simple_view".localized()) { [weak self] _ in
+        let simpleViewTypeAction = UIAction(title: "simple_cards".localized()) {
+            [weak self] _ in
             self?.output.viewDidChangeDashboardType(dashboardType: .simple)
             self?.reloadCollectionView(redrawLayout: true)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
         if dashboardType == .image {
-            simpleViewAction.state = .off
-            imageViewAction.state = .on
+            simpleViewTypeAction.state = .off
+            imageViewTypeAction.state = .on
         } else {
-            imageViewAction.state = .off
-            simpleViewAction.state = .on
+            simpleViewTypeAction.state = .on
+            imageViewTypeAction.state = .off
         }
 
-        return UIMenu(title: "",
-                      children: [imageViewAction, simpleViewAction])
+        let cardTypeMenu = UIMenu(title: "card_type".localized(), children: [
+            imageViewTypeAction, simpleViewTypeAction
+        ])
+
+        // Card action
+        let openSensorViewAction = UIAction(title: "open_sensor_view".localized()) {
+            [weak self] _ in
+            self?.output.viewDidChangeCardTapAction(showHistoryOnCardTap: false)
+            self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
+        }
+
+        let openHistoryViewAction = UIAction(title: "open_history_view".localized()) {
+            [weak self] _ in
+            self?.output.viewDidChangeCardTapAction(showHistoryOnCardTap: true)
+            self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
+        }
+
+        openSensorViewAction.state = showHistoryOnCardTap ? .off : .on
+        openHistoryViewAction.state = showHistoryOnCardTap ? .on : .off
+
+        let cardActionMenu = UIMenu(title: "card_action".localized(), children: [
+            openSensorViewAction, openHistoryViewAction
+        ])
+
+        return UIMenu(
+            title: "",
+            children: [
+                cardTypeMenu, cardActionMenu
+            ]
+        )
     }
 
     private func cardContextMenuOption(for index: Int) -> UIMenu {
