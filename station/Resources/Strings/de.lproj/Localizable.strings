@@ -655,7 +655,7 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "request_code" = "Anfrage Code";
 "no_password_needed" = "Für diese E-Mail wird ein kostenloses Konto erstellt, falls Sie noch keines haben. Es ist nur eine E-Mail-Adresse erforderlich. Wir bewahren Ihre Informationen sicher auf.";
 "benefits_sign_in" = "Lesen Sie mehr über die Vorteile des Ruuvi-Kontos oder melden Sie sich später an";
-"use_without_account" = "Nein danke, ich fahre ohne Konto fort";
+"use_without_account" = "Nein danke, überspringen";
 "why_should_sign_in" = "Vorteile";
 "sensors_ownership_and_settings_stored_in_cloud" = "Die Anmeldung bei der App hat viele Vorteile. Einstellungen werden sicher in deinem Konto gespeichert:";
 "cloud_stored_ownerships" = "● Sensorbesitz";
@@ -673,3 +673,8 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "changelog" = "(änderungsprotokoll)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "shared_to_x" = "Freigegebene %d/%d";
+"synchronisation" = "Synchronisation";
+"gatt_sync_description" = "Ruuvi Station lädt den internen Verlauf des Sensors für die letzten 10 Tage herunter, wenn der Messverlauf verfügbar ist.\n\nDer Verlauf wird über eine Bluetooth-Verbindung heruntergeladen. Stellen Sie sicher, dass Sie sich in der Nähe des Sensors befinden.";
+"do_not_show_again" = "Zeige das nicht noch einmal";
+"sign_in_continue" = "Weitermachen";
+"signing_in_is_optional" = "(Die Anmeldung ist optional)";

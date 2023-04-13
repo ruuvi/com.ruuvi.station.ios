@@ -11,13 +11,8 @@ extension SignInPromoPresenter: SignInPromoViewOutput {
         // No op.
     }
 
-    func viewDidTapLetsDoIt() {
-        router.popViewController(animated: true)
-    }
-
-    func viewDidTapUseWithoutAccount() {
-        output?.signIn(module: self,
-                       didSelectUseWithoutAccount: nil)
+    func viewDidTapContinue() {
+        router.openSignIn(output: self)
     }
 }
 
@@ -28,7 +23,29 @@ extension SignInPromoPresenter: SignInPromoModuleInput {
     }
 
     func dismiss(completion: (() -> Void)?) {
-        router.popViewController(animated: false)
-        completion?()
+        router.dismiss(completion: completion)
+    }
+}
+
+extension SignInPromoPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss(completion: { [weak self] in
+            guard let self = self else { return }
+            self.output?.signIn(module: self, didSuccessfulyLogin: sender)
+        })
+    }
+
+    func signIn(module: SignInModuleInput, didCloseSignInWithoutAttempt sender: Any?) {
+        module.dismiss(completion: { [weak self] in
+            guard let self = self else { return }
+            self.output?.signIn(module: self, didCloseSignInWithoutAttempt: sender)
+        })
+    }
+
+    func signIn(module: SignInModuleInput, didSelectUseWithoutAccount sender: Any?) {
+        module.dismiss(completion: { [weak self] in
+            guard let self = self else { return }
+            self.output?.signIn(module: self, didSelectUseWithoutAccount: sender)
+        })
     }
 }

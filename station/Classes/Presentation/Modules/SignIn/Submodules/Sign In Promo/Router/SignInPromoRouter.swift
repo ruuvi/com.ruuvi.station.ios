@@ -8,7 +8,19 @@ class SignInPromoRouter: SignInPromoRouterInput {
         transitionHandler.dismiss(animated: true, completion: completion)
     }
 
-    func popViewController(animated: Bool) {
-        transitionHandler.navigationController?.popViewController(animated: animated)
+    func openSignIn(output: SignInModuleOutput) {
+        let factory: SignInModuleFactory = SignInModuleFactoryImpl()
+        let module = factory.create()
+
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+
+        if let presenter = module.output as? SignInModuleInput {
+            presenter.configure(with: .enterEmail, output: output)
+        }
     }
 }

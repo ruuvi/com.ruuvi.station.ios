@@ -86,16 +86,17 @@ final class AppRouter {
 }
 
 extension AppRouter: OnboardRouterDelegate {
-
-    func onboardRouterDidShowSignIn(_ router: OnboardRouter, output: SignInModuleOutput) {
-        let factory: SignInModuleFactory = SignInModuleFactoryImpl()
+    func onboardRouterDidShowSignIn(_ router: OnboardRouter,
+                                    output: SignInPromoModuleOutput) {
+        let factory: SignInPromoModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
+
         let navigationController = UINavigationController(
             rootViewController: module)
         viewController.present(navigationController, animated: true)
 
-        if let presenter = module.output as? SignInModuleInput {
-            presenter.configure(with: .enterEmail, output: output)
+        if let presenter = module.output as? SignInPromoModuleInput {
+            presenter.configure(output: output)
         }
     }
 
@@ -104,12 +105,13 @@ extension AppRouter: OnboardRouterDelegate {
     }
 
     func onboardRouterDidFinish(_ router: OnboardRouter,
-                                module: SignInModuleInput,
+                                module: SignInPromoModuleInput,
                                 showDashboard: Bool) {
-        module.dismiss()
-        if showDashboard {
-            presentDashboard()
-        }
+        module.dismiss(completion: { [weak self] in
+            if showDashboard {
+                self?.presentDashboard()
+            }
+        })
     }
 
     private func presentDashboard() {

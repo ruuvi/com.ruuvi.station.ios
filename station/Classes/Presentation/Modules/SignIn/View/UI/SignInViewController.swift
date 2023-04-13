@@ -20,7 +20,7 @@ class SignInViewController: UIViewController {
 
     // UI Componenets starts
     private lazy var backButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: RuuviAssets.closeButtonImage,
+        let button = UIBarButtonItem(image: RuuviAssets.backButtonImage,
                                      style: .plain,
                                      target: self,
                                      action: #selector(handleBackButtonTap))
@@ -46,7 +46,7 @@ class SignInViewController: UIViewController {
     private lazy var useWithoutAccountButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.setTitle("benefits_sign_in".localized(),
+        button.setTitle("use_without_account".localized(),
                         for: .normal)
         button.titleLabel?.font = UIFont.Muli(.semiBoldItalic, size: 14)
         button.titleLabel?.numberOfLines = 0
@@ -84,7 +84,7 @@ extension SignInViewController {
 
 extension SignInViewController {
     @objc fileprivate func handleBackButtonTap() {
-        output.viewDidClose()
+        output.viewDidTapBack()
     }
 
     @objc fileprivate func handleUseWithoutAccountTap() {
