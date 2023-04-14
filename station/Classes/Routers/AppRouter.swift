@@ -87,15 +87,15 @@ final class AppRouter {
 
 extension AppRouter: OnboardRouterDelegate {
     func onboardRouterDidShowSignIn(_ router: OnboardRouter,
-                                    output: SignInPromoModuleOutput) {
-        let factory: SignInPromoModuleFactory = SignInPromoModuleFactoryImpl()
+                                    output: SignInBenefitsModuleOutput) {
+        let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
 
         let navigationController = UINavigationController(
             rootViewController: module)
         viewController.present(navigationController, animated: true)
 
-        if let presenter = module.output as? SignInPromoModuleInput {
+        if let presenter = module.output as? SignInBenefitsModuleInput {
             presenter.configure(output: output)
         }
     }
@@ -105,7 +105,7 @@ extension AppRouter: OnboardRouterDelegate {
     }
 
     func onboardRouterDidFinish(_ router: OnboardRouter,
-                                module: SignInPromoModuleInput,
+                                module: SignInBenefitsModuleInput,
                                 showDashboard: Bool) {
         module.dismiss(completion: { [weak self] in
             if showDashboard {

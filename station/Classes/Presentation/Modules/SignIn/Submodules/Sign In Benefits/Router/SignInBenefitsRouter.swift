@@ -1,7 +1,7 @@
 import LightRoute
 import UIKit
 
-class SignInPromoRouter: SignInPromoRouterInput {
+class SignInBenefitsRouter: SignInBenefitsRouterInput {
     weak var transitionHandler: UIViewController!
 
     func dismiss(completion: (() -> Void)?) {

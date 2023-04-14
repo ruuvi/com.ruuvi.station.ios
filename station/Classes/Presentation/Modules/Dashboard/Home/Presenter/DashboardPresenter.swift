@@ -361,9 +361,10 @@ extension DashboardPresenter: MenuModuleOutput {
     }
 }
 
-// MARK: - SignInModuleOutput
-extension DashboardPresenter: SignInModuleOutput {
-    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+// MARK: - SignInBenefitsModuleOutput
+extension DashboardPresenter: SignInBenefitsModuleOutput {
+    func signIn(module: SignInBenefitsModuleInput,
+                didSuccessfulyLogin sender: Any?) {
         startObservingRuuviTags()
         startObservingCloudModeNotification()
         module.dismiss(completion: {
@@ -371,13 +372,15 @@ extension DashboardPresenter: SignInModuleOutput {
         })
     }
 
-    func signIn(module: SignInModuleInput, didCloseSignInWithoutAttempt sender: Any?) {
+    func signIn(module: SignInBenefitsModuleInput,
+                didCloseSignInWithoutAttempt sender: Any?) {
         module.dismiss(completion: {
             AppUtility.lockOrientation(.all)
         })
     }
 
-    func signIn(module: SignInModuleInput, didSelectUseWithoutAccount sender: Any?) {
+    func signIn(module: SignInBenefitsModuleInput,
+                didSelectUseWithoutAccount sender: Any?) {
         module.dismiss(completion: {
             AppUtility.lockOrientation(.all)
         })
