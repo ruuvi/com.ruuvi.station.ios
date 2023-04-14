@@ -216,7 +216,9 @@ extension DashboardViewController {
             imageViewTypeAction.state = .off
         }
 
-        let cardTypeMenu = UIMenu(title: "card_type".localized(), children: [
+        let cardTypeMenu = UIMenu(title: "card_type".localized(),
+                                  options: .displayInline,
+                                  children: [
             imageViewTypeAction, simpleViewTypeAction
         ])
 
@@ -236,7 +238,9 @@ extension DashboardViewController {
         openSensorViewAction.state = showHistoryOnCardTap ? .off : .on
         openHistoryViewAction.state = showHistoryOnCardTap ? .on : .off
 
-        let cardActionMenu = UIMenu(title: "card_action".localized(), children: [
+        let cardActionMenu = UIMenu(title: "card_action".localized(),
+                                    options: .displayInline,
+                                    children: [
             openSensorViewAction, openHistoryViewAction
         ])
 
