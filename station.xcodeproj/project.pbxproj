@@ -903,26 +903,26 @@
 		E19EAF76299AE3B0005827E4 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF74299AE3B0005827E4 /* SignInView.swift */; };
 		E19EAF78299AE5EA005827E4 /* SignInVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF77299AE5EA005827E4 /* SignInVerifyView.swift */; };
 		E19EAF79299AE5EA005827E4 /* SignInVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF77299AE5EA005827E4 /* SignInVerifyView.swift */; };
-		E19EAF7B299BF94C005827E4 /* SignInPromoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */; };
-		E19EAF7C299BF94C005827E4 /* SignInPromoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */; };
+		E19EAF7B299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */; };
+		E19EAF7C299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */; };
 		E19EAF83299C1383005827E4 /* SignInModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF82299C1383005827E4 /* SignInModuleFactory.swift */; };
 		E19EAF84299C1383005827E4 /* SignInModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF82299C1383005827E4 /* SignInModuleFactory.swift */; };
-		E19EAF94299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */; };
-		E19EAF95299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */; };
-		E19EAF97299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */; };
-		E19EAF98299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */; };
-		E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */; };
-		E19EAF9B299E608E005827E4 /* SignInPromoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */; };
-		E19EAF9E299E610A005827E4 /* SignInPromoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */; };
-		E19EAF9F299E610A005827E4 /* SignInPromoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */; };
-		E19EAFA1299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */; };
-		E19EAFA2299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */; };
-		E19EAFA4299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */; };
-		E19EAFA5299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */; };
-		E19EAFA7299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */; };
-		E19EAFA8299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */; };
-		E19EAFAA299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */; };
-		E19EAFAB299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */; };
+		E19EAF94299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */; };
+		E19EAF95299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */; };
+		E19EAF97299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */; };
+		E19EAF98299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */; };
+		E19EAF9A299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */; };
+		E19EAF9B299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */; };
+		E19EAF9E299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */; };
+		E19EAF9F299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */; };
+		E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */; };
+		E19EAFA2299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */; };
+		E19EAFA4299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */; };
+		E19EAFA5299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */; };
+		E19EAFA7299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */; };
+		E19EAFA8299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */; };
+		E19EAFAA299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */; };
+		E19EAFAB299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */; };
 		E19EAFAD299E82D1005827E4 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */; };
 		E19EAFAE299E82D1005827E4 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */; };
 		E19EAFB0299EB46D005827E4 /* NoSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAF299EB46D005827E4 /* NoSensorView.swift */; };
@@ -1620,16 +1620,16 @@
 		E19EAF71299ADB2F005827E4 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		E19EAF74299AE3B0005827E4 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		E19EAF77299AE5EA005827E4 /* SignInVerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInVerifyView.swift; sourceTree = "<group>"; };
-		E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoViewController.swift; sourceTree = "<group>"; };
+		E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewController.swift; sourceTree = "<group>"; };
 		E19EAF82299C1383005827E4 /* SignInModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInModuleFactory.swift; sourceTree = "<group>"; };
-		E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoModuleFactory.swift; sourceTree = "<group>"; };
-		E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoRouterInput.swift; sourceTree = "<group>"; };
-		E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoRouter.swift; sourceTree = "<group>"; };
-		E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoPresenter.swift; sourceTree = "<group>"; };
-		E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoModuleInput.swift; sourceTree = "<group>"; };
-		E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoModuleOutput.swift; sourceTree = "<group>"; };
-		E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoViewInput.swift; sourceTree = "<group>"; };
-		E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoViewOutput.swift; sourceTree = "<group>"; };
+		E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsModuleFactory.swift; sourceTree = "<group>"; };
+		E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsRouterInput.swift; sourceTree = "<group>"; };
+		E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsRouter.swift; sourceTree = "<group>"; };
+		E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsPresenter.swift; sourceTree = "<group>"; };
+		E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsModuleInput.swift; sourceTree = "<group>"; };
+		E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsModuleOutput.swift; sourceTree = "<group>"; };
+		E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewInput.swift; sourceTree = "<group>"; };
+		E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewOutput.swift; sourceTree = "<group>"; };
 		E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E19EAFAF299EB46D005827E4 /* NoSensorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSensorView.swift; sourceTree = "<group>"; };
 		E1B20C862926CDE10023D739 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
@@ -4069,12 +4069,12 @@
 		E19EAF8E299E5F84005827E4 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF8F299E5FE6005827E4 /* Sign In Promo */,
+				E19EAF8F299E5FE6005827E4 /* Sign In Benefits */,
 			);
 			path = Submodules;
 			sourceTree = "<group>";
 		};
-		E19EAF8F299E5FE6005827E4 /* Sign In Promo */ = {
+		E19EAF8F299E5FE6005827E4 /* Sign In Benefits */ = {
 			isa = PBXGroup;
 			children = (
 				E19EAF9C299E60FD005827E4 /* Presenter */,
@@ -4082,13 +4082,13 @@
 				E19EAF91299E6019005827E4 /* Router */,
 				E19EAF90299E6013005827E4 /* Assembly */,
 			);
-			path = "Sign In Promo";
+			path = "Sign In Benefits";
 			sourceTree = "<group>";
 		};
 		E19EAF90299E6013005827E4 /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */,
+				E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -4096,8 +4096,8 @@
 		E19EAF91299E6019005827E4 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */,
-				E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */,
+				E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */,
+				E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -4105,9 +4105,9 @@
 		E19EAF92299E601F005827E4 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */,
-				E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */,
-				E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */,
+				E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */,
+				E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */,
+				E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4115,9 +4115,9 @@
 		E19EAF9C299E60FD005827E4 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */,
-				E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */,
-				E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */,
+				E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */,
+				E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */,
+				E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -4530,7 +4530,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -4991,11 +4991,11 @@
 				A9646485247BAE6B0001D55D /* ChartSettingsPresenter.swift in Sources */,
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
-				E19EAF98299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */,
+				E19EAF98299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */,
 				E186AB2C2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				0EA511B9261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
-				E19EAF9B299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
+				E19EAF9B299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				E1E3C340298FDCCC00A59CB8 /* CardsModuleOutput.swift in Sources */,
 				A91D02FE2511207300694733 /* SelectionTableViewCell.swift in Sources */,
@@ -5057,7 +5057,7 @@
 				E1597A4A295CD5F800DFB70B /* DashboardPresenter.swift in Sources */,
 				0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				E18D04C128E8B3B0008EF5EC /* TagChartsViewInteractorOutput.swift in Sources */,
-				E19EAFA2299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */,
+				E19EAFA2299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E1B5800229859D2300B441FB /* DevicesViewOutput.swift in Sources */,
 				E19EAFAE299E82D1005827E4 /* SignInPresenter.swift in Sources */,
 				E116707029620AD4002DF7BF /* BackgroundSelectionButtonView.swift in Sources */,
@@ -5081,7 +5081,7 @@
 				0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */,
 				0E8BD300238566AB008B31EF /* TagSettingsViewOutput.swift in Sources */,
 				0E8BD302238566AB008B31EF /* CardsViewModel.swift in Sources */,
-				E19EAFA5299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */,
+				E19EAFA5299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */,
 				E10E18732978AF3D002C78C3 /* TagSettingsViewModel.swift in Sources */,
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
@@ -5130,7 +5130,7 @@
 				E1CD78052878302C00F1F0EB /* UnitSettingsViewOutput.swift in Sources */,
 				0E8BD327238566AB008B31EF /* LocationPickerViewOutput.swift in Sources */,
 				E1CA28AF29201F34009E4423 /* RUAlertExpandButton.swift in Sources */,
-				E19EAFAB299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */,
+				E19EAFAB299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */,
 				0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */,
 				0E8BD328238566AB008B31EF /* WebTagSettingsTableViewController.swift in Sources */,
 				E191F222296A00CE00F1FEA6 /* TagSettingsFooterCell.swift in Sources */,
@@ -5142,7 +5142,7 @@
 				A91D02F22511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				A93CDCDF25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
 				E18D04BB28E8B34F008EF5EC /* TagChartsViewInteractor.swift in Sources */,
-				E19EAFA8299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */,
+				E19EAFA8299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */,
 				0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
 				E168B4AF2886AE4E00D6B5C6 /* MeasurementAccuracyType+Extension.swift in Sources */,
 				E1597A47295CD5E400DFB70B /* DashboardModuleInput.swift in Sources */,
@@ -5241,13 +5241,13 @@
 				E1CD78022878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
 				E19EAF84299C1383005827E4 /* SignInModuleFactory.swift in Sources */,
 				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
-				E19EAF9F299E610A005827E4 /* SignInPromoPresenter.swift in Sources */,
+				E19EAF9F299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */,
 				E1198A1F29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift in Sources */,
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
-				E19EAF95299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */,
+				E19EAF95299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
 				A9E6774925A33081000B75A3 /* String+Characters.swift in Sources */,
 				A91D030A2511207300694733 /* SelectionRouterInput.swift in Sources */,
@@ -5335,7 +5335,7 @@
 				0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */,
 				E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */,
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
-				E19EAF7C299BF94C005827E4 /* SignInPromoViewController.swift in Sources */,
+				E19EAF7C299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */,
 				E18D04D228F1D027008EF5EC /* TagChartsViewInput.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				E1597A50295CD67900DFB70B /* DashboardInteractor.swift in Sources */,
@@ -5474,7 +5474,7 @@
 				E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */,
 				E191F1F52968D32000F1FEA6 /* TagSettingsExpandableSectionHeader.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
-				E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
+				E19EAF9A299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */,
 				E1198A1B29BA6A79002245CF /* AppearanceSettingsViewModel.swift in Sources */,
 				A9B57447253B994700DB7353 /* SignInModuleOutput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
@@ -5500,7 +5500,7 @@
 				E16B8F4E28D113230025B92D /* MyRuuviAccountInitializer.swift in Sources */,
 				A976CA7E24A928C20099BDC1 /* ChartSettingsDisclosureTableViewCell.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
-				E19EAF7B299BF94C005827E4 /* SignInPromoViewController.swift in Sources */,
+				E19EAF7B299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */,
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				E19EAFB0299EB46D005827E4 /* NoSensorView.swift in Sources */,
 				0EB8ED2C268F111B00C6B0FA /* View+Any.swift in Sources */,
@@ -5514,7 +5514,7 @@
 				E1597A4F295CD67900DFB70B /* DashboardInteractor.swift in Sources */,
 				E16B8F4828D10E7A0025B92D /* MyRuuviAccountViewModel.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
-				E19EAF94299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */,
+				E19EAF94299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */,
 				A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */,
 				E186AB2B2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				A91D02F72511207300694733 /* SelectionModuleInput.swift in Sources */,
@@ -5598,7 +5598,7 @@
 				0EB8ED29268F10E900C6B0FA /* Spinner.swift in Sources */,
 				0EA796852664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
 				E1597A6F2961FEB800DFB70B /* BackgroundSelectionViewController.swift in Sources */,
-				E19EAFA4299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */,
+				E19EAFA4299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */,
 				E116708529634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				E1198A1829BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */,
@@ -5630,13 +5630,13 @@
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
-				E19EAFA1299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */,
+				E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E191F2092969E11F00F1FEA6 /* TagSettingsRouterInput.swift in Sources */,
 				0EB8ED2F268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
 				E1198A0229BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */,
 				A91D02EE2511207200694733 /* SelectionTableConfigurator.swift in Sources */,
 				66BC44B32657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
-				E19EAFAA299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */,
+				E19EAFAA299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit+Localization.swift in Sources */,
 				E191F1F22968C2C900F1FEA6 /* TagSettingsAlertConfigCell.swift in Sources */,
@@ -5689,7 +5689,7 @@
 				E1597A6529608CF300DFB70B /* GlobalHelpers.swift in Sources */,
 				E16B8F5428D113750025B92D /* MyRuuviAccountPresenter.swift in Sources */,
 				A9646484247BAE6B0001D55D /* ChartSettingsPresenter.swift in Sources */,
-				E19EAFA7299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */,
+				E19EAFA7299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */,
 				E1B5800129859D2300B441FB /* DevicesViewOutput.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
@@ -5710,7 +5710,7 @@
 				0E8A10142384610400A9CBA6 /* DefaultsRouter.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */,
-				E19EAF9E299E610A005827E4 /* SignInPromoPresenter.swift in Sources */,
+				E19EAF9E299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */,
 				340BE38C27B54F37006D6C34 /* OwnerPresenter.swift in Sources */,
 				E18FD50A28DF7B7900289359 /* TagChartsViewController.swift in Sources */,
 				E10E18BD297D68EB002C78C3 /* RuuviCloudModuleInput.swift in Sources */,
@@ -5860,7 +5860,7 @@
 				E191F21B2969EF7B00F1FEA6 /* TagSettingsModuleFactory.swift in Sources */,
 				E1198A0E29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* CardsRouter.swift in Sources */,
-				E19EAF97299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */,
+				E19EAF97299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				A9646466247BAE6B0001D55D /* ChartSettingsViewInput.swift in Sources */,
@@ -6674,7 +6674,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -6697,12 +6697,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */

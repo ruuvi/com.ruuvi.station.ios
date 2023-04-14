@@ -5,10 +5,10 @@ import RuuviUser
 protocol OnboardRouterDelegate: AnyObject {
     func onboardRouterDidFinish(_ router: OnboardRouter)
     func onboardRouterDidFinish(_ router: OnboardRouter,
-                                module: SignInPromoModuleInput,
+                                module: SignInBenefitsModuleInput,
                                 showDashboard: Bool)
     func onboardRouterDidShowSignIn(_ router: OnboardRouter,
-                                    output: SignInPromoModuleOutput)
+                                    output: SignInBenefitsModuleOutput)
 }
 
 final class OnboardRouter {
@@ -44,16 +44,16 @@ extension OnboardRouter: RuuviOnboardOutput {
     }
 }
 
-extension OnboardRouter: SignInPromoModuleOutput {
-    func signIn(module: SignInPromoModuleInput, didCloseSignInWithoutAttempt sender: Any?) {
+extension OnboardRouter: SignInBenefitsModuleOutput {
+    func signIn(module: SignInBenefitsModuleInput, didCloseSignInWithoutAttempt sender: Any?) {
         delegate?.onboardRouterDidFinish(self, module: module, showDashboard: false)
     }
 
-    func signIn(module: SignInPromoModuleInput, didSelectUseWithoutAccount sender: Any?) {
+    func signIn(module: SignInBenefitsModuleInput, didSelectUseWithoutAccount sender: Any?) {
         delegate?.onboardRouterDidFinish(self, module: module, showDashboard: true)
     }
 
-    func signIn(module: SignInPromoModuleInput, didSuccessfulyLogin sender: Any?) {
+    func signIn(module: SignInBenefitsModuleInput, didSuccessfulyLogin sender: Any?) {
         delegate?.onboardRouterDidFinish(self, module: module, showDashboard: true)
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol SignInPromoRouterInput {
+protocol SignInBenefitsRouterInput {
     func dismiss(completion: (() -> Void)?)
     func openSignIn(output: SignInModuleOutput)
 }

@@ -1,12 +1,21 @@
 import Foundation
 import UIKit
 
-class SignInPromoViewController: UIViewController, SignInPromoViewInput {
+class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 
     // Configuration
-    var output: SignInPromoViewOutput?
+    var output: SignInBenefitsViewOutput?
 
     // UI Componenets starts
+    private lazy var closeButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: RuuviAssets.closeButtonImage,
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(handleCloseButtonTap))
+        button.tintColor = .white
+        return button
+    }()
+
     private lazy var bgLayer: UIImageView = {
         let iv = UIImageView(image: RuuviAssets.signInBgLayer)
         iv.backgroundColor = .clear
@@ -88,7 +97,7 @@ class SignInPromoViewController: UIViewController, SignInPromoViewInput {
 }
 
 // MARK: - VIEW LIFE CYCLE
-extension SignInPromoViewController {
+extension SignInBenefitsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -100,23 +109,32 @@ extension SignInPromoViewController {
     }
 }
 
-extension SignInPromoViewController {
+extension SignInBenefitsViewController {
+    @objc fileprivate func handleCloseButtonTap() {
+        output?.viewDidTapClose()
+    }
+
     @objc private func handleContinueTap() {
         output?.viewDidTapContinue()
     }
 }
 
-extension SignInPromoViewController {
+extension SignInBenefitsViewController {
     func localize() {
         // No op.
     }
 }
 
 // MARK: - PRIVATE UI SETUP
-extension SignInPromoViewController {
+extension SignInBenefitsViewController {
     private func setUpUI() {
+        setUpNavBarView()
         setUpBase()
         setUpSignInPromoView()
+    }
+
+    fileprivate func setUpNavBarView() {
+        navigationItem.leftBarButtonItem = closeButton
     }
 
     private func setUpBase() {
@@ -202,7 +220,7 @@ extension SignInPromoViewController {
     }
 }
 
-extension SignInPromoViewController {
+extension SignInBenefitsViewController {
     private func prepareFeatures() -> String {
         return [
             "cloud_stored_ownerships".localized(),

@@ -1,6 +1,7 @@
 import Foundation
 
-protocol SignInPromoViewOutput {
+protocol SignInBenefitsViewOutput {
     func viewDidLoad()
     func viewDidTapContinue()
+    func viewDidTapClose()
 }

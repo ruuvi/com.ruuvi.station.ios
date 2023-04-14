@@ -1,14 +1,18 @@
 import Foundation
 
-class SignInPromoPresenter: NSObject {
-    weak var view: SignInPromoViewInput!
-    var output: SignInPromoModuleOutput?
-    var router: SignInPromoRouterInput!
+class SignInBenefitsPresenter: NSObject {
+    weak var view: SignInBenefitsViewInput!
+    var output: SignInBenefitsModuleOutput?
+    var router: SignInBenefitsRouterInput!
 }
 // MARK: - SignInViewOutput
-extension SignInPromoPresenter: SignInPromoViewOutput {
+extension SignInBenefitsPresenter: SignInBenefitsViewOutput {
     func viewDidLoad() {
         // No op.
+    }
+
+    func viewDidTapClose() {
+        output?.signIn(module: self, didCloseSignInWithoutAttempt: nil)
     }
 
     func viewDidTapContinue() {
@@ -17,8 +21,8 @@ extension SignInPromoPresenter: SignInPromoViewOutput {
 }
 
 // MARK: - SignInPromoModuleInput
-extension SignInPromoPresenter: SignInPromoModuleInput {
-    func configure(output: SignInPromoModuleOutput?) {
+extension SignInBenefitsPresenter: SignInBenefitsModuleInput {
+    func configure(output: SignInBenefitsModuleOutput?) {
         self.output = output
     }
 
@@ -27,7 +31,7 @@ extension SignInPromoPresenter: SignInPromoModuleInput {
     }
 }
 
-extension SignInPromoPresenter: SignInModuleOutput {
+extension SignInBenefitsPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         module.dismiss(completion: { [weak self] in
             guard let self = self else { return }

@@ -20,8 +20,8 @@ class SignInRouter: SignInRouterInput {
         }
     }
 
-    func openSignInPromoViewController(output: SignInPromoModuleOutput) {
-        let factory: SignInPromoModuleFactory = SignInPromoModuleFactoryImpl()
+    func openSignInPromoViewController(output: SignInBenefitsModuleOutput) {
+        let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
 
         transitionHandler
@@ -30,7 +30,7 @@ class SignInRouter: SignInRouterInput {
                 module,
                 animated: true
             )
-        if let presenter = module.output as? SignInPromoModuleInput {
+        if let presenter = module.output as? SignInBenefitsModuleInput {
             presenter.configure(output: output)
         }
     }
