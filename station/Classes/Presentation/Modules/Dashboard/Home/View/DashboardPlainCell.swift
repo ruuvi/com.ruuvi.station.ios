@@ -61,6 +61,9 @@ class DashboardPlainCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.alpha = 0.7
+        iv.tintColor = RuuviColor
+            .dashboardIndicatorTextColor?
+            .withAlphaComponent(0.8)
         return iv
     }()
 
@@ -352,6 +355,9 @@ extension DashboardPlainCell {
         } else {
             dataSourceIconView.image = nil
         }
+        dataSourceIconView.image = dataSourceIconView
+            .image?
+            .withRenderingMode(.alwaysTemplate)
 
         // Battery stat
         if let batteryLow = viewModel.batteryNeedsReplacement.value,
