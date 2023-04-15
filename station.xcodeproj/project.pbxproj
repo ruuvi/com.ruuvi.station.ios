@@ -991,6 +991,8 @@
 		E1CE4C782959DF01005C023F /* DashboardIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */; };
 		E1D0238B29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238C29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
+		E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
+		E1D0238F29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
 		E1E102EE28F348B700815508 /* TagChartsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E102ED28F348B700815508 /* TagChartsHelper.swift */; };
 		E1E102EF28F348B700815508 /* TagChartsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E102ED28F348B700815508 /* TagChartsHelper.swift */; };
 		E1E1475C28E85EE700832B8C /* UIImageView+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E1475B28E85EE700832B8C /* UIImageView+Init.swift */; };
@@ -1015,10 +1017,10 @@
 		E1E6C216296C9CB100B3D037 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E6C214296C9CB100B3D037 /* Int+Extension.swift */; };
 		E1ED426928FF253B00302179 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426828FF253B00302179 /* TagChartsViewModel.swift */; };
 		E1ED426A28FF253B00302179 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426828FF253B00302179 /* TagChartsViewModel.swift */; };
-		E1ED426E28FF261D00302179 /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */; };
-		E1ED426F28FF261D00302179 /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */; };
-		E1ED427028FF261D00302179 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* DateValueFormatter.swift */; };
-		E1ED427128FF261D00302179 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* DateValueFormatter.swift */; };
+		E1ED426E28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */; };
+		E1ED426F28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */; };
+		E1ED427028FF261D00302179 /* XAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */; };
+		E1ED427128FF261D00302179 /* XAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */; };
 		E1ED427228FF261D00302179 /* CustomXAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */; };
 		E1ED427328FF261D00302179 /* CustomXAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */; };
 		E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
@@ -1662,6 +1664,7 @@
 		E1CE4C732959D08D005C023F /* DashboardImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardImageCell.swift; sourceTree = "<group>"; };
 		E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIndicatorView.swift; sourceTree = "<group>"; };
 		E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviUISwitch.swift; sourceTree = "<group>"; };
+		E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1E102ED28F348B700815508 /* TagChartsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsHelper.swift; sourceTree = "<group>"; };
 		E1E1475B28E85EE700832B8C /* UIImageView+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Init.swift"; sourceTree = "<group>"; };
 		E1E3C32F298C601200A59CB8 /* CardsViewModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsViewModuleFactory.swift; sourceTree = "<group>"; };
@@ -1674,8 +1677,8 @@
 		E1E3C344299007DE00A59CB8 /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		E1E6C214296C9CB100B3D037 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
 		E1ED426828FF253B00302179 /* TagChartsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewModel.swift; sourceTree = "<group>"; };
-		E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
-		E1ED426C28FF261D00302179 /* DateValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
+		E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomYAxisRenderer.swift; sourceTree = "<group>"; };
+		E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomXAxisRenderer.swift; sourceTree = "<group>"; };
 		FC417B8977A47FFAE71585F0 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
@@ -4294,8 +4297,9 @@
 			isa = PBXGroup;
 			children = (
 				E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */,
-				E1ED426C28FF261D00302179 /* DateValueFormatter.swift */,
-				E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */,
+				E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */,
+				E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */,
+				E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */,
 				E1E102ED28F348B700815508 /* TagChartsHelper.swift */,
 			);
 			path = Helpers;
@@ -5074,7 +5078,7 @@
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
 				E1198A3329BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */,
-				E1ED426F28FF261D00302179 /* YAxisValueFormatter.swift in Sources */,
+				E1ED426F28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */,
 				0EB8ED2A268F10E900C6B0FA /* Spinner.swift in Sources */,
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
@@ -5143,6 +5147,7 @@
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E2B339C26A2BC3F00366B01 /* AppRouter.swift in Sources */,
 				660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
+				E1D0238F29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0EA796862664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
 				0EF4E34126824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
@@ -5259,7 +5264,7 @@
 				E1597A692960944600DFB70B /* DashboardCellDelegate.swift in Sources */,
 				0E00C4F22684D97B009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				E18D04BE28E8B397008EF5EC /* TagChartsViewInteractorInput.swift in Sources */,
-				E1ED427128FF261D00302179 /* DateValueFormatter.swift in Sources */,
+				E1ED427128FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
 				A964646D247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8BD38D238566AB008B31EF /* DefaultsModuleInput.swift in Sources */,
 				E1CD78092878308E00F1F0EB /* UnitSettingsItem.swift in Sources */,
@@ -5616,6 +5621,7 @@
 				E1CD77F428782EA500F1F0EB /* UnitSettingsTableInitializer.swift in Sources */,
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
+				E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
 				E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E191F2092969E11F00F1FEA6 /* TagSettingsRouterInput.swift in Sources */,
@@ -5662,7 +5668,7 @@
 				0EB8ED25268F083700C6B0FA /* DFUUIView.swift in Sources */,
 				E1597A5C295E24D400DFB70B /* RuuviAssets.swift in Sources */,
 				E1E3C342299007B700A59CB8 /* TagSettingsModuleInput.swift in Sources */,
-				E1ED427028FF261D00302179 /* DateValueFormatter.swift in Sources */,
+				E1ED427028FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0EB8ED3C268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
@@ -5857,7 +5863,7 @@
 				0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				340BE39427B54F37006D6C34 /* OwnerViewOutput.swift in Sources */,
 				E10E18AB297D6664002C78C3 /* RuuviCloudModuleFactory.swift in Sources */,
-				E1ED426E28FF261D00302179 /* YAxisValueFormatter.swift in Sources */,
+				E1ED426E28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */,
 				0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */,
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				E18D04D128F1D027008EF5EC /* TagChartsViewInput.swift in Sources */,

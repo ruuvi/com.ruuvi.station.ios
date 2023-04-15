@@ -48,7 +48,7 @@ class TagChartsView: LineChartView {
                               trailing: trailingAnchor,
                               padding: .init(top: 0,
                                              left: 0,
-                                             bottom: UIDevice.isTablet() ? 52 : 38,
+                                             bottom: UIDevice.isTablet() ? 42 : 28,
                                              right: 16))
     }
 
@@ -74,16 +74,17 @@ class TagChartsView: LineChartView {
         viewPortHandler.setMaximumScaleX(5000)
         viewPortHandler.setMaximumScaleY(30)
         xAxis.setLabelCount(5, force: false)
-        xAxis.valueFormatter = DateValueFormatter(with: Locale.current)
+        xAxis.valueFormatter = XAxisValueFormatter()
 
         leftAxis.labelPosition = .outsideChart
+        leftAxis.labelAlignment = .right
         leftAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
         leftAxis.setLabelCount(5, force: true)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
-        leftAxis.minWidth = UIDevice.isTablet() ? 70.0 : 40.0
-        leftAxis.maxWidth = UIDevice.isTablet() ? 70.0 : 40.0
-        leftAxis.xOffset = 8.0
+        leftAxis.minWidth = UIDevice.isTablet() ? 70.0 : 44.0
+        leftAxis.maxWidth = UIDevice.isTablet() ? 70.0 : 44.0
+        leftAxis.xOffset = 6.0
 
         rightAxis.enabled = false
 
@@ -133,8 +134,8 @@ extension TagChartsView: ChartViewDelegate {
 extension TagChartsView {
 
     func localize() {
-        xAxis.valueFormatter = DateValueFormatter(with: Locale.current)
-        leftAxis.valueFormatter = YAxisValueFormatter(with: Locale.current)
+        xAxis.valueFormatter = XAxisValueFormatter()
+        leftAxis.valueFormatter = YAxisValueFormatter()
     }
 
     func clearChartData() {
@@ -146,8 +147,13 @@ extension TagChartsView {
     }
 
     func setYAxisLimit(min: Double, max: Double) {
-        leftAxis.axisMinimum = min - 0.5
-        leftAxis.axisMaximum = max + 0.5
+        leftAxis.axisMinimum = min
+        leftAxis.axisMaximum = max
+        leftYAxisRenderer = CustomYAxisRenderer(
+            viewPortHandler: viewPortHandler,
+            axis: leftAxis,
+            transformer: getTransformer(forAxis: .left)
+        )
     }
 
     func setXRange(min: TimeInterval, max: TimeInterval) {
