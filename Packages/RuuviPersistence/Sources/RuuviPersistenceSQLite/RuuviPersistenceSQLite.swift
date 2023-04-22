@@ -852,4 +852,4 @@ extension RuuviPersistenceSQLite {
         return promise.future
     }
 }
-// swiftlint:enable file_length
+// swiftlint:enable file_length type_body_length

@@ -154,6 +154,7 @@ extension String {
         }
     }
 
+    // swiftlint:disable switch_case_alignment
     public var ruuviCloudApiSettingsDashboardTapActionType: DashboardTapActionType {
         switch self {
             case "card":
@@ -164,4 +165,5 @@ extension String {
                 return .card
         }
     }
+    // swiftlint:enable switch_case_alignment
 }

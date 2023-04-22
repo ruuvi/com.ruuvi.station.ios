@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 
 public protocol RuuviTagSensor: PhysicalSensor, Versionable, Claimable, Connectable, Nameable, Shareable {}

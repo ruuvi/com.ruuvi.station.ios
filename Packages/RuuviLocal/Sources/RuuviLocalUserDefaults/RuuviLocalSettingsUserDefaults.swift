@@ -476,6 +476,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    // swiftlint:disable switch_case_alignment
     var dashboardTapActionType: DashboardTapActionType {
         get {
             switch dashboardTapActionTypeId {
@@ -501,6 +502,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                       userInfo: [DashboardTapActionTypeKey.type: newValue])
         }
     }
+    // swiftlint:enable switch_case_alignment
 
     private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
     private var ruuviThemeId: Int {
@@ -542,3 +544,4 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 }
+// swiftlint:enable type_body_length file_length
