@@ -672,8 +672,7 @@ extension TagSettingsViewController {
                 sharedTo.count,
                 maxShareCount
             )
-        }
-        else {
+        } else {
             return "TagSettings.NotShared.title".localized()
         }
     }

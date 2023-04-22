@@ -188,3 +188,4 @@ extension SharePresenter {
         return emailPred.evaluate(with: email)
     }
 }
+// swiftlint:enable switch_case_alignment

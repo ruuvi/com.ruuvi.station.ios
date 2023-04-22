@@ -237,6 +237,7 @@ extension DashboardPresenter: DashboardViewOutput {
         openCardView(viewModel: viewModel, showCharts: false)
     }
 
+    // swiftlint:disable switch_case_alignment
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
         switch settings.dashboardTapActionType {
             case .card:
@@ -245,6 +246,7 @@ extension DashboardPresenter: DashboardViewOutput {
                 viewDidTriggerChart(for: viewModel)
         }
     }
+    // swiftlint:enable switch_case_alignment
 
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
