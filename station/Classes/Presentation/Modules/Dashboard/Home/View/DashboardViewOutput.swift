@@ -18,5 +18,5 @@ protocol DashboardViewOutput {
     func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel)
     func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func viewDidChangeDashboardType(dashboardType: DashboardType)
-    func viewDidChangeCardTapAction(showHistoryOnCardTap: Bool)
+    func viewDidChangeDashboardTapAction(type: DashboardTapActionType)
 }

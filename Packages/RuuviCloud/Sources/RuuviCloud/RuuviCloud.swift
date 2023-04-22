@@ -143,6 +143,9 @@ public protocol RuuviCloud {
     func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError>
 
     @discardableResult
+    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError>
+
+    @discardableResult
     func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,

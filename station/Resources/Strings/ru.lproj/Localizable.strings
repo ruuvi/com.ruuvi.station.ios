@@ -317,7 +317,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "ChartSettings.AllPoints.title" = "Отображать все данные";
 "ChartSettings.AllPoints.description" = "Это может привести к медленному обновлению графиков.";
 "ChartSettings.DrawDots.title" = "Показывать точки на графике";
-"ChartSettings.DrawDots.description" = "Маленькие точки помогут точно понять когда были получены данные";
+"ChartSettings.DrawDots.description" = "Маленькие точки помогут точно понять когда были получены данные.";
 "Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
 "ChartSettings.Duration.title" = "Диапазон отображения графиков";
 "ChartSettings.Duration.description" = "Установите диапазон для отображения на графиках от 1-го до 10-ти дней.";
@@ -541,9 +541,9 @@ If you cannot see the Language option in the settings, make sure that you have a
 "follow_system_theme" = "Как в системе";
 "dark_theme" = "Темная тема";
 "light_theme" = "Светлая тема";
-"Settings.Temperature.Resolution.title" = "Temperature resolution";
-"Settings.Humidity.Resolution.title" = "Humidity resolution";
-"Settings.Pressure.Resolution.title" = "Pressure resolution";
+"Settings.Temperature.Resolution.title" = "Temperature Resolution";
+"Settings.Humidity.Resolution.title" = "Humidity Resolution";
+"Settings.Pressure.Resolution.title" = "Pressure Resolution";
 "Settings.Measurement.Resolution.description" = "Select how accurately you'd like to see the sensors' live measurement values in the app. This setting doesn't affect history charts or alerts.";
 "Settings.Measurement.Unit.title" = "Unit";
 "Settings.Measurement.Resolution.title" = "Resolution";

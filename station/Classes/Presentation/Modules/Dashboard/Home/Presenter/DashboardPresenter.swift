@@ -86,6 +86,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var calibrationSettingsToken: NSObjectProtocol?
     private var dashboardTypeToken: NSObjectProtocol?
+    private var dashboardTapActionTypeToken: NSObjectProtocol?
     private var cloudSyncToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
@@ -140,6 +141,7 @@ class DashboardPresenter: DashboardModuleInput {
         systemLanguageChangeToken?.invalidate()
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
+        dashboardTapActionTypeToken?.invalidate()
         cloudSyncToken?.invalidate()
         NotificationCenter.default.removeObserver(
             self,
@@ -236,10 +238,11 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
-        if settings.showChartOnDashboardCardTap {
-            viewDidTriggerChart(for: viewModel)
-        } else {
-            viewDidTriggerOpenCardImageView(for: viewModel)
+        switch settings.dashboardTapActionType {
+            case .card:
+                viewDidTriggerOpenCardImageView(for: viewModel)
+            case .chart:
+                viewDidTriggerChart(for: viewModel)
         }
     }
 
@@ -303,9 +306,10 @@ extension DashboardPresenter: DashboardViewOutput {
         ruuviAppSettingsService.set(dashboardType: dashboardType)
     }
 
-    func viewDidChangeCardTapAction(showHistoryOnCardTap: Bool) {
-        settings.showChartOnDashboardCardTap = showHistoryOnCardTap
-        view?.showHistoryOnCardTap = showHistoryOnCardTap
+    func viewDidChangeDashboardTapAction(type: DashboardTapActionType) {
+        settings.dashboardTapActionType = type
+        view?.dashboardTapActionType = type
+        ruuviAppSettingsService.set(dashboardTapActionType: type)
     }
 }
 
@@ -491,6 +495,8 @@ extension DashboardPresenter {
     private func syncViewModels() {
 
         view?.dashboardType = settings.dashboardType
+        view?.dashboardTapActionType = settings.dashboardTapActionType
+
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
@@ -1417,6 +1423,19 @@ extension DashboardPresenter {
                    self?.view?.dashboardType = type
                 }
         })
+
+        dashboardTapActionTypeToken = NotificationCenter
+            .default
+            .addObserver(forName: .DashboardTapActionTypeDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+                if let userInfo = notification.userInfo,
+                   let type = userInfo[DashboardTapActionTypeKey.type] as?
+                    DashboardTapActionType {
+                    self?.view?.dashboardTapActionType = type
+                }
+            })
     }
 
     private func startObservingCloudSyncTokenState() {

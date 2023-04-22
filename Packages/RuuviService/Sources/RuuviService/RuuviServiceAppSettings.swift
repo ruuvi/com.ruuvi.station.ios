@@ -38,4 +38,7 @@ public protocol RuuviServiceAppSettings {
 
     @discardableResult
     func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError>
+
+    @discardableResult
+    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviServiceError>
 }
