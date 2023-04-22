@@ -43,6 +43,9 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var dashboardType: DashboardType? {
         return dashboardTypeString?.ruuviCloudApiSettingsDashboardType
     }
+    public var dashboardTapActionType: DashboardTapActionType? {
+        return dashboardTapActionTypeString?.ruuviCloudApiSettingsDashboardTapActionType
+    }
 
     var unitTemperatureString: String?
     var accuracyTemperatureString: String?
@@ -56,6 +59,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var cloudModeEnabledString: String?
     var dashboardEnabledString: String?
     var dashboardTypeString: String?
+    var dashboardTapActionTypeString: String?
 
     enum CodingKeys: String, CodingKey {
         case unitTemperatureString = "UNIT_TEMPERATURE"
@@ -70,5 +74,6 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case cloudModeEnabledString = "CLOUD_MODE_ENABLED"
         case dashboardEnabledString = "DASHBOARD_ENABLED"
         case dashboardTypeString = "DASHBOARD_TYPE"
+        case dashboardTapActionTypeString = "DASHBOARD_TAP_ACTION"
     }
 }

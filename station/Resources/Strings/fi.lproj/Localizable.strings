@@ -317,7 +317,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "ChartSettings.AllPoints.title" = "Näytä kaikki kerätyt mittaukset";
 "ChartSettings.AllPoints.description" = "Ominaisuuden käyttäminen saattaa hidastaa historiatietojen päivittymistä.";
 "ChartSettings.DrawDots.title" = "Näytä tietopisteet";
-"ChartSettings.DrawDots.description" = "Tietopisteiden näyttäminen helpottaa tallennetun historiatiedon tutkimista";
+"ChartSettings.DrawDots.description" = "Tietopisteiden näyttäminen helpottaa tallennetun historiatiedon tutkimista.";
 "Defaults.ChartIntervalSeconds.title" = "Historian tarkkuus";
 "ChartSettings.Duration.title" = "Historian tarkastelujakso";
 "ChartSettings.Duration.description" = "Määritä historian tarkastelujakso 1 - 10 päivää.";

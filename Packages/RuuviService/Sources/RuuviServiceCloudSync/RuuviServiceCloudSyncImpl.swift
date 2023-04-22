@@ -100,6 +100,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    dashboardType != sSelf.ruuviLocalSettings.dashboardType {
                     sSelf.ruuviLocalSettings.dashboardType = dashboardType
                 }
+                if let dashboardTapActionType = cloudSettings.dashboardTapActionType,
+                   dashboardTapActionType != sSelf.ruuviLocalSettings.dashboardTapActionType {
+                    sSelf.ruuviLocalSettings.dashboardTapActionType = dashboardTapActionType
+                }
 
                 promise.succeed(value: cloudSettings)
             }, failure: { error in

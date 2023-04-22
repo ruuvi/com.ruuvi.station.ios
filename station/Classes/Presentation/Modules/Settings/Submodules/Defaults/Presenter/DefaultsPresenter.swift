@@ -236,11 +236,13 @@ extension DefaultsPresenter {
     private func buildDashboardCardTapAction() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = "Show Chart on Dashboard Card Tap"
-        viewModel.boolean.value = settings.showChartOnDashboardCardTap
+        viewModel.boolean.value = settings.dashboardTapActionType == .chart
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
-            observer.settings.showChartOnDashboardCardTap = showChart.bound
+            if let showChart = showChart {
+                observer.settings.dashboardTapActionType = showChart ? .chart : .card
+            }
         }
         return viewModel
     }

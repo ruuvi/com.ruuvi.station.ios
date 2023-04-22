@@ -30,7 +30,11 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    var showHistoryOnCardTap: Bool = false
+    var dashboardTapActionType: DashboardTapActionType! {
+        didSet {
+            viewButton.updateMenu(with: viewToggleMenuOptions())
+        }
+    }
 
     private func cell(collectionView: UICollectionView,
                       indexPath: IndexPath,
@@ -208,13 +212,8 @@ extension DashboardViewController {
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        if dashboardType == .image {
-            simpleViewTypeAction.state = .off
-            imageViewTypeAction.state = .on
-        } else {
-            simpleViewTypeAction.state = .on
-            imageViewTypeAction.state = .off
-        }
+        simpleViewTypeAction.state = dashboardType == .simple ? .on : .off
+        imageViewTypeAction.state = dashboardType == .image ? .on : .off
 
         let cardTypeMenu = UIMenu(title: "card_type".localized(),
                                   options: .displayInline,
@@ -225,18 +224,18 @@ extension DashboardViewController {
         // Card action
         let openSensorViewAction = UIAction(title: "open_sensor_view".localized()) {
             [weak self] _ in
-            self?.output.viewDidChangeCardTapAction(showHistoryOnCardTap: false)
+            self?.output.viewDidChangeDashboardTapAction(type: .card)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
         let openHistoryViewAction = UIAction(title: "open_history_view".localized()) {
             [weak self] _ in
-            self?.output.viewDidChangeCardTapAction(showHistoryOnCardTap: true)
+            self?.output.viewDidChangeDashboardTapAction(type: .chart)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        openSensorViewAction.state = showHistoryOnCardTap ? .off : .on
-        openHistoryViewAction.state = showHistoryOnCardTap ? .on : .off
+        openSensorViewAction.state = dashboardTapActionType == .card ? .on : .off
+        openHistoryViewAction.state = dashboardTapActionType == .chart ? .on : .off
 
         let cardActionMenu = UIMenu(title: "card_action".localized(),
                                     options: .displayInline,

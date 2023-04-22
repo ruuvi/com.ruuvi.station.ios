@@ -8,7 +8,7 @@ import RuuviService
 public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     private let cloud: RuuviCloud
     private var localSettings: RuuviLocalSettings
-
+    
     public init(
         cloud: RuuviCloud,
         localSettings: RuuviLocalSettings
@@ -16,7 +16,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         self.cloud = cloud
         self.localSettings = localSettings
     }
-
+    
     @discardableResult
     public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError> {
         let promise = Promise<TemperatureUnit, RuuviServiceError>()
@@ -29,21 +29,21 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType,
-                                                        RuuviServiceError> {
-        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
-        localSettings.temperatureAccuracy = temperatureAccuracy
-        cloud.set(temperatureAccuracy: temperatureAccuracy)
-            .on(success: { accuracy in
-                promise.succeed(value: accuracy)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
-    }
-
+                                                                            RuuviServiceError> {
+                                                                                let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+                                                                                localSettings.temperatureAccuracy = temperatureAccuracy
+                                                                                cloud.set(temperatureAccuracy: temperatureAccuracy)
+                                                                                    .on(success: { accuracy in
+                                                                                        promise.succeed(value: accuracy)
+                                                                                    }, failure: { error in
+                                                                                        promise.fail(error: .ruuviCloud(error))
+                                                                                    })
+                                                                                return promise.future
+                                                                            }
+    
     @discardableResult
     public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError> {
         let promise = Promise<HumidityUnit, RuuviServiceError>()
@@ -56,21 +56,21 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType,
-                                                                            RuuviServiceError> {
-        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
-        localSettings.humidityAccuracy = humidityAccuracy
-        cloud.set(humidityAccuracy: humidityAccuracy)
-            .on(success: { accuracy in
-                promise.succeed(value: accuracy)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
-    }
-
+                                                                         RuuviServiceError> {
+                                                                             let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+                                                                             localSettings.humidityAccuracy = humidityAccuracy
+                                                                             cloud.set(humidityAccuracy: humidityAccuracy)
+                                                                                 .on(success: { accuracy in
+                                                                                     promise.succeed(value: accuracy)
+                                                                                 }, failure: { error in
+                                                                                     promise.fail(error: .ruuviCloud(error))
+                                                                                 })
+                                                                             return promise.future
+                                                                         }
+    
     @discardableResult
     public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError> {
         let promise = Promise<UnitPressure, RuuviServiceError>()
@@ -83,21 +83,21 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType,
-                                                                            RuuviServiceError> {
-        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
-        localSettings.pressureAccuracy = pressureAccuracy
-        cloud.set(pressureAccuracy: pressureAccuracy)
-            .on(success: { accuracy in
-                promise.succeed(value: accuracy)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
-    }
-
+                                                                         RuuviServiceError> {
+                                                                             let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+                                                                             localSettings.pressureAccuracy = pressureAccuracy
+                                                                             cloud.set(pressureAccuracy: pressureAccuracy)
+                                                                                 .on(success: { accuracy in
+                                                                                     promise.succeed(value: accuracy)
+                                                                                 }, failure: { error in
+                                                                                     promise.fail(error: .ruuviCloud(error))
+                                                                                 })
+                                                                             return promise.future
+                                                                         }
+    
     @discardableResult
     public func set(showAllData: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
@@ -109,7 +109,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(drawDots: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
@@ -121,7 +121,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(chartDuration: Int) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
@@ -133,7 +133,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
@@ -145,7 +145,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(dashboard: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
@@ -157,7 +157,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
-
+    
     @discardableResult
     public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError> {
         let promise = Promise<DashboardType, RuuviServiceError>()
@@ -168,5 +168,18 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
                 promise.fail(error: .ruuviCloud(error))
             })
         return promise.future
+    }
+    
+    @discardableResult
+    public func set(dashboardTapActionType: DashboardTapActionType) ->
+        Future<DashboardTapActionType, RuuviServiceError> {
+            let promise = Promise<DashboardTapActionType, RuuviServiceError>()
+            cloud.set(dashboardTapActionType: dashboardTapActionType)
+                .on(success: { type in
+                    promise.succeed(value: type)
+                }, failure: { error in
+                    promise.fail(error: .ruuviCloud(error))
+                })
+            return promise.future
     }
 }
