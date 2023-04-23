@@ -996,6 +996,9 @@ extension TagSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
+                guard let isSyncing = self?.settings.isSyncing, isSyncing else {
+                    return
+                }
                 if let userInfo = notification.userInfo {
                     if let physicalSensor
                         = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
@@ -1374,7 +1377,10 @@ extension TagSettingsPresenter {
         guard let u = upperBound?.converted(to: .hectopascals).value else { return }
         upperPressureDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.alertService.setUpper(pressure: u, ruuviTag: sSelf.ruuviTag)
+            sSelf.alertService.setUpper(
+                pressure: u,
+                ruuviTag: sSelf.ruuviTag
+            )
             sSelf.processAlerts()
         }
     }
