@@ -322,6 +322,9 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "ChartSettings.Duration.title" = "Historik";
 "ChartSettings.Duration.description" = "Ange hur långt bak historiken skall visas, mellan 1 - 10 dagar.";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
+"Settings.Label.Temperature" = "Temperatur";
+"Settings.Label.Humidity" = "Fuktighet";
+"Settings.Label.Pressure" = "Lufttryck";
 "Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas.";
 "Settings.Label.PressureUnit.text" = "Tryckenhet";
 "Settings.ChoosePressureUnit.text" = "Välj den tryckenhet du vill ska visas.";

@@ -321,6 +321,9 @@
 "ChartSettings.Duration.title" = "Période de l'histogramme";
 "ChartSettings.Duration.description" = "Définir la période de l'histogramme 1 - 10 jours";
 "Settings.Label.HumidityUnit.text" = "Unité d'humidité";
+"Settings.Label.Temperature" = "Température";
+"Settings.Label.Humidity" = "Humidité";
+"Settings.Label.Pressure" = "Pression";
 "Settings.ChooseHumidityUnit.text" = "Choisissez l'unité souhaitée pour l'humidité.";
 "Settings.Label.PressureUnit.text" = "Unité de pression";
 "Settings.ChoosePressureUnit.text" = "Choisissez l'unité souhaitée pour la pression.";
