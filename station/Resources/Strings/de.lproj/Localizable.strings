@@ -321,6 +321,9 @@
 "ChartSettings.Duration.title" = "Anzeigezeitraum des Diagrammverlaufs";
 "ChartSettings.Duration.description" = "Konfigurieren Sie den Zeitraum, der im Diagramm angezeigt werden soll, von 1 bis 10 Tagen.";
 "Settings.Label.HumidityUnit.text" = "Feuchtigkeitseinheit";
+"Settings.Label.Temperature" = "Temperatur";
+"Settings.Label.Humidity" = "Feuchtigkeit";
+"Settings.Label.Pressure" = "Druck";
 "Settings.ChooseHumidityUnit.text" = "Wählen Sie die Luftfeuchtigkeitseinheit aus, die angezeigt werden soll.";
 "Settings.Label.PressureUnit.text" = "Druckeinheit";
 "Settings.ChoosePressureUnit.text" = "Wählen Sie die Druckeinheit, die angezeigt werden soll.";

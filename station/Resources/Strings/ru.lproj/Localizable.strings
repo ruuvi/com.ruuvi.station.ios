@@ -322,6 +322,9 @@ If you cannot see the Language option in the settings, make sure that you have a
 "ChartSettings.Duration.title" = "Диапазон отображения графиков";
 "ChartSettings.Duration.description" = "Установите диапазон для отображения на графиках от 1-го до 10-ти дней.";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
+"Settings.Label.Temperature" = "Температура";
+"Settings.Label.Humidity" = "Влажность";
+"Settings.Label.Pressure" = "Давление";
 "Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения.";
 "Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
 "Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения.";

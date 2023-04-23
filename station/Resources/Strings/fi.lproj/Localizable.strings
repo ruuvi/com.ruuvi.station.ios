@@ -322,6 +322,9 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "ChartSettings.Duration.title" = "Historian tarkastelujakso";
 "ChartSettings.Duration.description" = "Määritä historian tarkastelujakso 1 - 10 päivää.";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
+"Settings.Label.Temperature" = "Lämpötila";
+"Settings.Label.Humidity" = "Kosteus";
+"Settings.Label.Pressure" = "Paine";
 "Settings.ChooseHumidityUnit.text" = "Valitse sovelluksessa käytettävä kosteusyksikkö.";
 "Settings.Label.PressureUnit.text" = "Paineyksikkö";
 "Settings.ChoosePressureUnit.text" = "Valitse sovelluksessa käytettävä paineyksikkö.";

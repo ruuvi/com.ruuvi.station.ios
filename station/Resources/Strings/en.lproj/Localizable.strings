@@ -322,6 +322,9 @@ If you cannot see the Language option in the settings, make sure that you have a
 "ChartSettings.Duration.title" = "Chart History View Period";
 "ChartSettings.Duration.description" = "Configure the period of history to be shown on chart from 1 to 10 days.";
 "Settings.Label.HumidityUnit.text" = "Humidity Unit";
+"Settings.Label.Temperature" = "Temperature";
+"Settings.Label.Humidity" = "Humidity";
+"Settings.Label.Pressure" = "Pressure";
 "Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed.";
 "Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed.";
