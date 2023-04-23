@@ -1972,7 +1972,10 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 // MARK: - SET CUSTOM ALERT RANGE POPUP
 extension TagSettingsViewController {
     private func showTemperatureAlertSetPopup(sender: TagSettingsAlertConfigCell) {
-        let title = "TagSettings.Alert.SetTemperature.title".localized()
+        let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
+        let titleFormat = "TagSettings.Alert.SetTemperature.title".localized()
+        let title = titleFormat + " (\(temperatureUnit.symbol))"
+
         let (minimumRange, maximumRange) = temperatureAlertRange()
         let (minimumValue, maximumValue) = temperatureValue()
         showSensorCustomAlertRangeDialog(title: title,
@@ -1984,7 +1987,9 @@ extension TagSettingsViewController {
     }
 
     private func showHumidityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = "TagSettings.Alert.SetHumidity.title".localized()
+        let symbol = HumidityUnit.percent.symbol
+        let titleFormat = "TagSettings.Alert.SetHumidity.title".localized()
+        let title = titleFormat + " (\(symbol))"
 
         let (minimumRange, maximumRange) = humidityAlertRange()
         let (minimumValue, maximumValue) = humidityValue()
@@ -1997,7 +2002,9 @@ extension TagSettingsViewController {
     }
 
     private func showPressureAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = "TagSettings.Alert.SetPressure.title".localized()
+        let pressureUnit = viewModel?.pressureUnit.value ?? .hectopascals
+        let titleFormat = "TagSettings.Alert.SetPressure.title".localized()
+        let title = titleFormat + " (\(pressureUnit.symbol))"
 
         let (minimumRange, maximumRange) = pressureAlertRange()
         let (minimumValue, maximumValue) = pressureValue()
@@ -2010,7 +2017,9 @@ extension TagSettingsViewController {
     }
 
     private func showRSSIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = "TagSettings.Alert.SetRSSI.title".localized()
+        let symbol = "dBm".localized()
+        let titleFormat = "TagSettings.Alert.SetRSSI.title".localized()
+        let title = titleFormat + " (\(symbol))"
 
         let (minimumRange, maximumRange) = rssiAlertRange()
         let (minimumValue, maximumValue) = rssiValue()
@@ -2605,7 +2614,7 @@ extension TagSettingsViewController {
 
     private func formattedTXPower(from value: Int?) -> String {
         if let value = value {
-            return value.stringValue + " " + "dBm"
+            return value.stringValue + " " + "dBm".localized()
         } else {
             return "N/A".localized()
         }
