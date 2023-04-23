@@ -1855,17 +1855,41 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
     func didChangeAlertState(sender: TagSettingsAlertConfigCell, didToggle isOn: Bool) {
         switch sender {
         case temperatureAlertCell:
-            viewModel?.isTemperatureAlertOn.value = isOn
+            output.viewDidChangeAlertState(
+                for: .temperature(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
         case humidityAlertCell:
-            viewModel?.isRelativeHumidityAlertOn.value = isOn
+            output.viewDidChangeAlertState(
+                for: .relativeHumidity(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
         case pressureAlertCell:
-            viewModel?.isPressureAlertOn.value = isOn
+            output.viewDidChangeAlertState(
+                for: .pressure(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
         case rssiAlertCell:
-            viewModel?.isSignalAlertOn.value = isOn
+            output.viewDidChangeAlertState(
+                for: .signal(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
         case movementAlertCell:
-            viewModel?.isMovementAlertOn.value = isOn
+            output.viewDidChangeAlertState(
+                for: .movement(last: 0),
+                isOn: isOn
+            )
+
         case connectionAlertCell:
-            viewModel?.isConnectionAlertOn.value = isOn
+            output.viewDidChangeAlertState(
+                for: .connection,
+                isOn: isOn
+            )
+
         default:
             break
         }
@@ -1876,23 +1900,44 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                           maxValue: CGFloat) {
         switch sender {
         case temperatureAlertCell:
-            if let tu = viewModel?.temperatureUnit.value {
-                viewModel?.temperatureLowerBound.value =
-                    Temperature(Double(minValue), unit: tu.unitTemperature)
-                viewModel?.temperatureUpperBound.value =
-                    Temperature(Double(maxValue), unit: tu.unitTemperature)
-            }
+            output.viewDidChangeAlertLowerBound(
+                for: .temperature(lower: 0, upper: 0),
+                lower: minValue
+            )
+            output.viewDidChangeAlertUpperBound(
+                for: .temperature(lower: 0, upper: 0),
+                upper: maxValue
+            )
+
         case humidityAlertCell:
-            viewModel?.relativeHumidityLowerBound.value = Double(minValue)
-            viewModel?.relativeHumidityUpperBound.value = Double(maxValue)
+            output.viewDidChangeAlertLowerBound(
+                for: .relativeHumidity(lower: 0, upper: 0),
+                lower: minValue
+            )
+            output.viewDidChangeAlertUpperBound(
+                for: .relativeHumidity(lower: 0, upper: 0),
+                upper: minValue
+            )
+
         case pressureAlertCell:
-            if let pu = viewModel?.pressureUnit.value {
-                viewModel?.pressureLowerBound.value = Pressure(Double(minValue), unit: pu)
-                viewModel?.pressureUpperBound.value = Pressure(Double(maxValue), unit: pu)
-            }
+            output.viewDidChangeAlertLowerBound(
+                for: .pressure(lower: 0, upper: 0),
+                lower: minValue
+            )
+            output.viewDidChangeAlertUpperBound(
+                for: .pressure(lower: 0, upper: 0),
+                upper: minValue
+            )
         case rssiAlertCell:
-            viewModel?.signalLowerBound.value = Double(minValue)
-            viewModel?.signalUpperBound.value = Double(maxValue)
+            output.viewDidChangeAlertLowerBound(
+                for: .signal(lower: 0, upper: 0),
+                lower: minValue
+            )
+            output.viewDidChangeAlertUpperBound(
+                for: .signal(lower: 0, upper: 0),
+                upper: minValue
+            )
+
         default:
             break
         }
@@ -3075,6 +3120,7 @@ extension TagSettingsViewController {
 
 // MARK: - Sensor alert custom description dialog
 extension TagSettingsViewController {
+    // swiftlint:disable:next function_body_length
     private func showSensorCustomAlertDescriptionDialog(description: String?,
                                                         sender: TagSettingsAlertConfigCell) {
         let alert = UIAlertController(title: "TagSettings.Alert.CustomDescription.title".localized(),
@@ -3093,17 +3139,35 @@ extension TagSettingsViewController {
 
             switch sender {
             case self.temperatureAlertCell:
-                self.viewModel?.temperatureAlertDescription.value = inputText
+                self.output.viewDidChangeAlertDescription(
+                    for: .temperature(lower: 0, upper: 0),
+                    description: inputText
+                )
             case self.humidityAlertCell:
-                self.viewModel?.relativeHumidityAlertDescription.value = inputText
+                self.output.viewDidChangeAlertDescription(
+                    for: .relativeHumidity(lower: 0, upper: 0),
+                    description: inputText
+                )
             case self.pressureAlertCell:
-                self.viewModel?.pressureAlertDescription.value = inputText
+                self.output.viewDidChangeAlertDescription(
+                    for: .pressure(lower: 0, upper: 0),
+                    description: inputText
+                )
             case self.rssiAlertCell:
-                self.viewModel?.signalAlertDescription.value = inputText
+                self.output.viewDidChangeAlertDescription(
+                    for: .signal(lower: 0, upper: 0),
+                    description: inputText
+                )
             case self.movementAlertCell:
-                self.viewModel?.movementAlertDescription.value = inputText
+                self.output.viewDidChangeAlertDescription(
+                    for: .movement(last: 0),
+                    description: inputText
+                )
             case self.connectionAlertCell:
-                self.viewModel?.connectionAlertDescription.value = inputText
+                self.output.viewDidChangeAlertDescription(
+                    for: .connection,
+                    description: inputText
+                )
             default:
                 break
             }

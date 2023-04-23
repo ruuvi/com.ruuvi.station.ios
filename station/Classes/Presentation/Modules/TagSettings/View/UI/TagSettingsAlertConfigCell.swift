@@ -279,6 +279,7 @@ extension TagSettingsAlertConfigCell {
         if let selectedMaxValue = selectedMaxValue {
             alertLimitSliderView.selectedMaxValue = selectedMaxValue
         }
+        alertLimitSliderView.refresh()
     }
 
     func setAlertAddtionalText(with string: String) {
