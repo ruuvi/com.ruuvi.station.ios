@@ -46,8 +46,8 @@ struct TagSettingsViewModel {
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(300, unit: .hectopascals))
-    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1100, unit: .hectopascals))
+    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(500, unit: .hectopascals))
+    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1155, unit: .hectopascals))
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
     let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
@@ -121,8 +121,8 @@ struct TagSettingsViewModel {
         relativeHumidityAlertDescription.value = nil
 
         isPressureAlertOn.value = false
-        pressureLowerBound.value = Pressure(300, unit: .hectopascals)
-        pressureUpperBound.value = Pressure(1100, unit: .hectopascals)
+        pressureLowerBound.value = Pressure(500, unit: .hectopascals)
+        pressureUpperBound.value = Pressure(1155, unit: .hectopascals)
         pressureAlertDescription.value = nil
 
         isSignalAlertOn.value = false

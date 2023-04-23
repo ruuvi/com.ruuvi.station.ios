@@ -1705,7 +1705,7 @@ extension TagSettingsViewController {
                 pu.alertRange.upperBound
             )
             let u = max(
-                max(upper, pu.alertRange.upperBound),
+                min(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
             if l.decimalPoint > 0 {
@@ -1749,7 +1749,7 @@ extension TagSettingsViewController {
         }
         if let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
             let u = max(
-                max(upper, pu.alertRange.upperBound),
+                min(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
             return CGFloat(u)
@@ -1898,6 +1898,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
     func didSetAlertRange(sender: TagSettingsAlertConfigCell,
                           minValue: CGFloat,
                           maxValue: CGFloat) {
+        guard minValue < maxValue else { return }
         switch sender {
         case temperatureAlertCell:
             output.viewDidChangeAlertLowerBound(
@@ -1916,7 +1917,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             )
             output.viewDidChangeAlertUpperBound(
                 for: .relativeHumidity(lower: 0, upper: 0),
-                upper: minValue
+                upper: maxValue
             )
 
         case pressureAlertCell:
@@ -1926,8 +1927,9 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             )
             output.viewDidChangeAlertUpperBound(
                 for: .pressure(lower: 0, upper: 0),
-                upper: minValue
+                upper: maxValue
             )
+
         case rssiAlertCell:
             output.viewDidChangeAlertLowerBound(
                 for: .signal(lower: 0, upper: 0),
@@ -1935,7 +1937,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             )
             output.viewDidChangeAlertUpperBound(
                 for: .signal(lower: 0, upper: 0),
-                upper: minValue
+                upper: maxValue
             )
 
         default:
