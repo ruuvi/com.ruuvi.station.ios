@@ -1296,7 +1296,7 @@ extension TagSettingsPresenter {
 
         upperRhDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.alertService.setUpper(
+            sSelf.alertService.setLower(
                 relativeHumidity: lower / 100.0,
                 ruuviTag: sSelf.ruuviTag
             )
