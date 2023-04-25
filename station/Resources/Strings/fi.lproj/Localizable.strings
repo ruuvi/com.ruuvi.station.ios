@@ -306,6 +306,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "UnitPressure.millimetreOfMercury.title" = "Elohopeamillimetri (mmHg)";
 "TagCharts.Status.ReadingHistory" = "Historiatietoja luetaan";
 "TagSettings.rssiTitleLabel.text" = "Signaalin voimakkuus (RSSI)";
+"signal_strength_dbm" = "Signaalin voimakkuus (dBm)";
 "s" = "s";
 "Welcome.scan.title" = "SKANNAA";
 "Background.Interval.Sec.string" = "sek";

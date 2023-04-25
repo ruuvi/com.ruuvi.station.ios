@@ -241,25 +241,27 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
         let humiditySyncs: [Future<SensorSettings, RuuviPoolError>]
             = cloudSensors.compactMap { cloudSensor in
-            if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }) {
-                return self.ruuviPool.updateOffsetCorrection(
-                    type: .humidity,
-                    with: cloudSensor.offsetHumidity,
-                    of: updatedSensor
-                )
-            } else {
-                return nil
+                if let updatedSensor = updatedSensors
+                    .first(where: { $0.id == cloudSensor.id }),
+                   let offsetHumidity = cloudSensor.offsetHumidity {
+                    return self.ruuviPool.updateOffsetCorrection(
+                        type: .humidity,
+                        with: offsetHumidity / 100,
+                        of: updatedSensor
+                    )
+                } else {
+                    return nil
+                }
             }
-        }
 
         let pressureSyncs: [Future<SensorSettings, RuuviPoolError>]
             = cloudSensors.compactMap { cloudSensor in
             if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }) {
+                .first(where: { $0.id == cloudSensor.id }),
+                let offsetPressure = cloudSensor.offsetPressure {
                 return self.ruuviPool.updateOffsetCorrection(
                     type: .pressure,
-                    with: cloudSensor.offsetPressure,
+                    with: offsetPressure / 100,
                     of: updatedSensor
                 )
             } else {

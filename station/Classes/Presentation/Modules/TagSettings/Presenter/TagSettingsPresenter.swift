@@ -66,6 +66,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
+    private var sensorSettingsToken: RuuviReactorToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
@@ -102,6 +103,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         ruuviTagSensorRecordToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
+        sensorSettingsToken?.invalidate()
         temperatureUnitToken?.invalidate()
         humidityUnitToken?.invalidate()
         pressureUnitToken?.invalidate()
@@ -124,16 +126,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         if let sensorSettings = sensorSettings {
             self.sensorSettings = sensorSettings
         } else {
-            self.sensorSettings = SensorSettingsStruct(
-                luid: ruuviTag.luid,
-                macId: ruuviTag.macId,
-                temperatureOffset: nil,
-                temperatureOffsetDate: nil,
-                humidityOffset: nil,
-                humidityOffsetDate: nil,
-                pressureOffset: nil,
-                pressureOffsetDate: nil
-            )
+            self.sensorSettings = emptySensorSettings()
         }
         syncUnits()
         syncAllAlerts()
@@ -143,6 +136,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startScanningRuuviTag()
         startObservingRuuviTagSensor(ruuviTag: ruuviTag)
         startObservingSettingsChanges()
+        startObservingSensorSettings()
         startObservingConnectionStatus()
         startObservingApplicationState()
         startObservingAlertChanges()
@@ -905,6 +899,23 @@ extension TagSettingsPresenter {
         viewModel.pressureOffsetCorrection.value = sensorSettings?.pressureOffset
     }
 
+    private func startObservingSensorSettings() {
+        sensorSettingsToken?.invalidate()
+        sensorSettingsToken = nil
+
+        sensorSettingsToken = ruuviReactor.observe(ruuviTag, { [weak self] change in
+            switch change {
+            case .insert(let sensorSettings):
+                self?.sensorSettings = sensorSettings
+            case .update(let updateSensorSettings):
+                self?.sensorSettings = updateSensorSettings
+            case .delete:
+                self?.sensorSettings = self?.emptySensorSettings()
+            default: break
+            }
+        })
+    }
+
     private func startObservingSettingsChanges() {
         temperatureUnitToken = NotificationCenter
             .default
@@ -1506,6 +1517,21 @@ extension TagSettingsPresenter {
         alertService.setConnection(
             description: description,
             for: ruuviTag
+        )
+    }
+}
+
+extension TagSettingsPresenter {
+    private func emptySensorSettings() -> SensorSettings {
+        return SensorSettingsStruct(
+            luid: ruuviTag.luid,
+            macId: ruuviTag.macId,
+            temperatureOffset: nil,
+            temperatureOffsetDate: nil,
+            humidityOffset: nil,
+            humidityOffsetDate: nil,
+            pressureOffset: nil,
+            pressureOffsetDate: nil
         )
     }
 }

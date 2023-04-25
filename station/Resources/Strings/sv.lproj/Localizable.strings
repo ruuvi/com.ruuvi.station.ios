@@ -306,6 +306,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "UnitPressure.millimetreOfMercury.title" = "Millimeter kvicksilver (mmHg)";
 "TagCharts.Status.ReadingHistory" = "Läser historik";
 "TagSettings.rssiTitleLabel.text" = "Signalstyrka (RSSI)";
+"signal_strength_dbm" = "Signalstyrka (dBm)";
 "s" = "s";
 "Welcome.scan.title" = "SKANNA";
 "Background.Interval.Sec.string" = "sek";

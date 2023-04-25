@@ -498,29 +498,46 @@ extension CardsPresenter {
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettings.append(sensorSettings)
-                            self?.notifyUpdate(for: viewModel)
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettings.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettings[updateIndex] = updateSensorSettings
+                                self?.notifySensorSettingsUpdate(
+                                    sensorSettings: nil,
+                                    viewModel: viewModel
+                                )
                             } else {
                                 self?.sensorSettings.append(updateSensorSettings)
                             }
-                            self?.notifyUpdate(for: viewModel)
                         case .delete(let deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettings.firstIndex(
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettings.remove(at: deleteIndex)
                             }
-                            self?.notifyUpdate(for: viewModel)
+                            self?.notifySensorSettingsUpdate(
+                                sensorSettings: nil,
+                                viewModel: viewModel
+                            )
                         default: break
                         }
                     })
                 )
             }
         }
+    }
+
+    private func notifySensorSettingsUpdate(
+        sensorSettings: SensorSettings?, viewModel: CardsViewModel
+    ) {
+        let currentRecord = viewModel.latestMeasurement.value
+        let updatedRecord = currentRecord?.with(sensorSettings: sensorSettings)
+        guard let updatedRecord = updatedRecord else {
+            return
+        }
+        viewModel.update(updatedRecord)
+        notifyUpdate(for: viewModel)
     }
 
     private func startObservingBluetoothState() {

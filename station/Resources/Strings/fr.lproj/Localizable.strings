@@ -305,6 +305,7 @@
 "UnitPressure.millimetreOfMercury.title" = "Millimètre de mercure (mmHg)";
 "TagCharts.Status.ReadingHistory" = "Analyse de l'historique";
 "TagSettings.rssiTitleLabel.text" = "Puissance du signal (RSSI)";
+"signal_strength_dbm" = "Puissance du signal (dBm)";
 "s" = "s";
 "Welcome.scan.title" = "BALAYAGE EN COURS";
 "Background.Interval.Sec.string" = "sec";

@@ -306,6 +306,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
 "TagCharts.Status.ReadingHistory" = "Reading history";
 "TagSettings.rssiTitleLabel.text" = "Signal Strength (RSSI)";
+"signal_strength_dbm" = "Signal Strength (dBm)";
 "s" = "s";
 "Welcome.scan.title" = "SCAN";
 "Background.Interval.Sec.string" = "sec";

@@ -1367,7 +1367,7 @@ extension TagSettingsViewController {
     private func configureRSSIAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertRSSI,
-            title: "TagSettings.rssiTitleLabel.text".localized(),
+            title: "signal_strength_dbm".localized(),
             cells: [
                 rssiAlertItem()
             ],
