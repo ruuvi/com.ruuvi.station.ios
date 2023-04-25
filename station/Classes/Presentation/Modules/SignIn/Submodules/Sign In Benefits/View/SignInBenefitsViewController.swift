@@ -57,7 +57,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.text = prepareFeatures()
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         return label
     }()
 
@@ -66,7 +66,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         label.attributedText = prepareNote()
         return label
     }()
@@ -77,7 +77,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         button.setTitle("sign_in_continue".localized(),
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
+        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
         button.addTarget(self,
                          action: #selector(handleContinueTap),
                          for: .touchUpInside)
@@ -90,7 +90,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         return label
     }()
 
@@ -240,12 +240,12 @@ extension SignInBenefitsViewController {
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18),
+                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
                                 range: range)
 
         // Make note bold and orange color
         let makeBoldOrange = "note".localized()
-        let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 18)
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
         attrString.addAttribute(NSAttributedString.Key.font,
                                 value: boldFont,
