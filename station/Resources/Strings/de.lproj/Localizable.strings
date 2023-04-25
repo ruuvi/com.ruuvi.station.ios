@@ -305,6 +305,7 @@
 "UnitPressure.millimetreOfMercury.title" = "Millimeter Quecksilbersäule (mmHg)";
 "TagCharts.Status.ReadingHistory" = "History wird gelesen";
 "TagSettings.rssiTitleLabel.text" = "Signalstärke (RSSI)";
+"signal_strength_dbm" = "Signalstärke (dBm)";
 "s" = "s";
 "Welcome.scan.title" = "SCANNEN";
 "Background.Interval.Sec.string" = "sek";

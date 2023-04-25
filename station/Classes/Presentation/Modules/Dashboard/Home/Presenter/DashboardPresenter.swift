@@ -799,6 +799,10 @@ extension DashboardPresenter {
                                 where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList[updateIndex] = updateSensorSettings
+                                self?.notifySensorSettingsUpdate(
+                                    sensorSettings: nil,
+                                    viewModel: viewModel
+                                )
                             } else {
                                 self?.sensorSettingsList.append(updateSensorSettings)
                             }
@@ -807,6 +811,10 @@ extension DashboardPresenter {
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
+                                self?.notifySensorSettingsUpdate(
+                                    sensorSettings: nil,
+                                    viewModel: viewModel
+                                )
                             }
                         default: break
                         }
@@ -814,6 +822,18 @@ extension DashboardPresenter {
                 )
             }
         }
+    }
+
+    private func notifySensorSettingsUpdate(
+        sensorSettings: SensorSettings?, viewModel: CardsViewModel
+    ) {
+        let currentRecord = viewModel.latestMeasurement.value
+        let updatedRecord = currentRecord?.with(sensorSettings: sensorSettings)
+        guard let updatedRecord = updatedRecord else {
+            return
+        }
+        viewModel.update(updatedRecord)
+        notifyViewModelUpdate(for: viewModel)
     }
 
     private func restartObservingRuuviTagLastRecords() {
