@@ -794,13 +794,17 @@ extension DashboardPresenter {
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
+                            self?.notifySensorSettingsUpdate(
+                                sensorSettings: sensorSettings,
+                                viewModel: viewModel
+                            )
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList[updateIndex] = updateSensorSettings
                                 self?.notifySensorSettingsUpdate(
-                                    sensorSettings: nil,
+                                    sensorSettings: updateSensorSettings,
                                     viewModel: viewModel
                                 )
                             } else {
