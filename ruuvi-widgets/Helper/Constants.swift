@@ -4,6 +4,7 @@ public enum Constants: String {
     case appGroupBundleId = "group.com.ruuvi.station.widgets"
 
     case ruuviCloudBaseURL = "https://network.ruuvi.com"
+    case ruuviCloudBaseURLDev = "https://j9ul2pfmol.execute-api.eu-central-1.amazonaws.com"
 
     case simpleWidgetKindId = "ruuvi.simpleWidget"
     case simpleWidgetDisplayName = "Ruuvi Widget"
@@ -16,6 +17,7 @@ public enum Constants: String {
     case humidityAccuracyKey = "humidityAccuracyKey"
     case pressureUnitKey = "pressureUnitKey"
     case pressureAccuracyKey = "pressureAccuracyKey"
+    case useDevServerKey = "useDevServerKey"
 
     case ruuviLogo = "ruuvi_logo"
     case ruuviLogoEye = "eye_circle"

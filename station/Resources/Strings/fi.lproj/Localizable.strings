@@ -677,3 +677,7 @@ RuuviTag on valmis käyttöön!";
 "do_not_show_again" = "Älä näytä tätä uudestaan";
 "sign_in_continue" = "Jatka";
 "signing_in_is_optional" = "(Kirjautuminen ei ole pakollista)";
+"Defaults.UserAuthorized.title" = "User Authorized";
+"Defaults.DashboardTapActionChart.title" = "Show Chart on Dashboard Card Tap";
+"Defaults.DevServer.title" = "Use Dev Server";
+"Defaults.DevServer.message" = "Changing Ruuvi Cloud endpoint requires signing out from current session and restart the app. Are you sure?";
