@@ -7,4 +7,8 @@ enum DefaultsEmbedSegue: String {
 
 class DefaultsRouter: DefaultsRouterInput {
     weak var transitionHandler: TransitionHandler!
+
+    func dismiss() {
+        try! transitionHandler.closeCurrentModule().perform()
+    }
 }

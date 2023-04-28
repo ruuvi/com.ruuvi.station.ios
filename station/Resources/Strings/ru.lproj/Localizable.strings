@@ -677,3 +677,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "do_not_show_again" = "Больше не показывать";
 "sign_in_continue" = "Продолжить";
 "signing_in_is_optional" = "(Авторизация не обязательна)";
+"Defaults.UserAuthorized.title" = "User Authorized";
+"Defaults.DashboardTapActionChart.title" = "Show Chart on Dashboard Card Tap";
+"Defaults.DevServer.title" = "Use Dev Server";
+"Defaults.DevServer.message" = "Changing Ruuvi Cloud endpoint requires signing out from current session and restart the app. Are you sure?";

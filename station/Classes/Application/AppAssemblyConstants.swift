@@ -1,16 +1,9 @@
-//
-//  AppAssemblyConstants.swift
-//  station
-//
-//  Created by Iiro Alhonen on 07.12.21.
-//  Copyright © 2021 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
 
 struct Networking: Codable {
     var OpenWeatherMapAPIKey: String
     var RuuviCloudURL: String
+    var RuuviCloudURLDev: String
 }
 
 final class AppAssemblyConstants {
@@ -20,5 +13,6 @@ final class AppAssemblyConstants {
 
     static let openWeatherMapApiKey = networkingPlist.OpenWeatherMapAPIKey
     static let ruuviCloudUrl = networkingPlist.RuuviCloudURL
+    static let ruuviCloudUrlDev = networkingPlist.RuuviCloudURLDev
     static let simpleWidgetKindId = "ruuvi.simpleWidget"
 }

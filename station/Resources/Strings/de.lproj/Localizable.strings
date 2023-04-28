@@ -682,3 +682,7 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "do_not_show_again" = "Zeige das nicht noch einmal";
 "sign_in_continue" = "Weitermachen";
 "signing_in_is_optional" = "(Die Anmeldung ist optional)";
+"Defaults.UserAuthorized.title" = "User Authorized";
+"Defaults.DashboardTapActionChart.title" = "Show Chart on Dashboard Card Tap";
+"Defaults.DevServer.title" = "Use Dev Server";
+"Defaults.DevServer.message" = "Changing Ruuvi Cloud endpoint requires signing out from current session and restart the app. Are you sure?";

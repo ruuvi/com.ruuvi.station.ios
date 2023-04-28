@@ -102,7 +102,9 @@ class DashboardPresenter: DashboardModuleInput {
     }
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
-    private let appGroupDefaults = UserDefaults(suiteName: "group.com.ruuvi.station.widgets")
+    private let appGroupDefaults = UserDefaults(
+        suiteName: AppGroupConstants.appGroupSuiteIdentifier
+    )
     private var isBluetoothPermissionGranted: Bool {
         return CBCentralManager.authorization == .allowedAlways
     }
@@ -656,11 +658,12 @@ extension DashboardPresenter {
     }
 
     private func syncAppSettingsToAppGroupContainer() {
-        let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
-        appGroupDefaults?.set(ruuviUser.isAuthorized, forKey: isAuthorizedUDKey)
-    
+        appGroupDefaults?.set(
+            ruuviUser.isAuthorized,
+            forKey: AppGroupConstants.isAuthorizedUDKey
+        )
+
         // Temperature
-        let temperatureUnitKey = "temperatureUnitKey"
         var temperatureUnitInt: Int = 2
         switch settings.temperatureUnit {
         case .kelvin:
@@ -670,13 +673,17 @@ extension DashboardPresenter {
         case .fahrenheit:
             temperatureUnitInt = 3
         }
-        appGroupDefaults?.set(temperatureUnitInt, forKey: temperatureUnitKey)
+        appGroupDefaults?.set(
+            temperatureUnitInt,
+            forKey: AppGroupConstants.temperatureUnitKey
+        )
 
-        let temperatureAccuracyKey = "temperatureAccuracyKey"
-        appGroupDefaults?.set(settings.temperatureAccuracy.value, forKey: temperatureAccuracyKey)
-        
+        appGroupDefaults?.set(
+            settings.temperatureAccuracy.value,
+            forKey: AppGroupConstants.temperatureAccuracyKey
+        )
+
         // Humidity
-        let humidityUnitKey = "humidityUnitKey"
         var humidityUnitInt: Int = 0
         switch settings.humidityUnit {
         case .percent:
@@ -686,20 +693,30 @@ extension DashboardPresenter {
         case .dew:
             humidityUnitInt = 2
         }
-        appGroupDefaults?.set(humidityUnitInt, forKey: humidityUnitKey)
-    
-        let humidityAccuracyKey = "humidityAccuracyKey"
-        appGroupDefaults?.set(settings.humidityAccuracy.value, forKey: humidityAccuracyKey)
-    
-        // Pressure
-        let pressureUnitKey = "pressureUnitKey"
-        appGroupDefaults?.set(settings.pressureUnit.hashValue, forKey: pressureUnitKey)
+        appGroupDefaults?.set(
+            humidityUnitInt,
+            forKey: AppGroupConstants.humidityUnitKey
+        )
 
-        let pressureAccuracyKey = "pressureAccuracyKey"
-        appGroupDefaults?.set(settings.pressureAccuracy.value, forKey: pressureAccuracyKey)
-        
+        appGroupDefaults?.set(
+            settings.humidityAccuracy.value,
+            forKey: AppGroupConstants.humidityAccuracyKey)
+
+        // Pressure
+        appGroupDefaults?.set(
+            settings.pressureUnit.hashValue,
+            forKey: AppGroupConstants.pressureUnitKey
+        )
+
+        appGroupDefaults?.set(
+            settings.pressureAccuracy.value,
+            forKey: AppGroupConstants.pressureAccuracyKey
+        )
+
         // Reload widget
-        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        )
     }
 
     private func startObservingBluetoothState() {
@@ -1734,6 +1751,7 @@ extension DashboardPresenter {
 
     /// Log out user if the auth token is expired.
     private func forceLogoutUser() {
+        guard ruuviUser.isAuthorized else { return }
         activityPresenter.increment()
         cloudNotificationService.unregister(
             token: pnManager.fcmToken,
@@ -1760,7 +1778,9 @@ extension DashboardPresenter {
     }
 
     private func reloadWidgets() {
-        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        )
     }
 
     private func notifyViewModelUpdate(for viewModel: CardsViewModel) {
