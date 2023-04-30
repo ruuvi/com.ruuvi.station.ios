@@ -178,20 +178,23 @@ extension UnitSettingsPresenter {
                                   unitSettingsType: .accuracy)
     }
 
+    // swiftlint:disable:next function_body_length
     private func observeUnitChanges() {
         temperatureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
-                self?.updateUnits()
+                guard let sSelf = self else { return }
+                sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
         }
         temperatureAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureAccuracyDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
-                self?.updateUnits()
+                guard let sSelf = self else { return }
+                sSelf.view.temperatureAccuracy = sSelf.settings.temperatureAccuracy
         }
         humidityUnitToken = NotificationCenter
             .default
@@ -199,7 +202,8 @@ extension UnitSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.updateUnits()
+                guard let sSelf = self else { return }
+                sSelf.view.humidityUnit = sSelf.settings.humidityUnit
         })
         humidityAccuracyToken = NotificationCenter
             .default
@@ -207,7 +211,8 @@ extension UnitSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.updateUnits()
+                guard let sSelf = self else { return }
+                sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
         })
         pressureUnitToken = NotificationCenter
             .default
@@ -215,7 +220,8 @@ extension UnitSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.updateUnits()
+                guard let sSelf = self else { return }
+                sSelf.view.pressureUnit = sSelf.settings.pressureUnit
         })
         pressureAccuracyToken = NotificationCenter
             .default
@@ -223,7 +229,8 @@ extension UnitSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.updateUnits()
+                guard let sSelf = self else { return }
+                sSelf.view.pressureAccuracy = sSelf.settings.pressureAccuracy
         })
     }
 

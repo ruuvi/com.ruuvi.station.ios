@@ -208,15 +208,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             guard requests.count > 0 else {
                 return promise.succeed(value: true)
             }
-            for request in requests {
-                self?.ruuviCloud.executeQueuedRequest(from: request)
-                    .on(success: { _ in
-                        self?.ruuviPool.deleteQueuedRequest(request)
-                    }, failure: { _ in
-                        // This is expected to update the original request.
-                        self?.ruuviPool.createQueuedRequest(request)
-                    })
-            }
+
+            let queuedRequests = requests.flatMap({ request in
+                self?.syncQueuedRequest(request: request)
+            })
+
+            Future.zip(queuedRequests).on(completion: {
+                promise.succeed(value: true)
+            })
         })
         return promise.future
     }
@@ -561,6 +560,27 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviPool.create(cloudRecord).on(completion: {
             promise.succeed(value: true)
         })
+    }
+
+    @discardableResult
+    public func syncQueuedRequest(request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        ruuviCloud.executeQueuedRequest(from: request)
+            .on(success: { [weak self] success in
+                self?.ruuviPool.deleteQueuedRequest(request)
+                promise.succeed(value: success)
+            }, failure: { [weak self] error in
+                switch error {
+                case .api(.api(.erConflict)):
+                    // We should delete the request from local db when there's
+                    // already new data available on the cloud.
+                    self?.ruuviPool.deleteQueuedRequest(request)
+                    promise.fail(error: .ruuviCloud(error))
+                default:
+                    promise.fail(error: .ruuviCloud(error))
+                }
+            })
+        return promise.future
     }
 
     private func postNotification() {
