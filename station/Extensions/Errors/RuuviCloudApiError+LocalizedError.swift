@@ -13,7 +13,7 @@ extension RuuviCloudApiError: LocalizedError {
         case .unexpectedHTTPStatusCode:
             return "RuuviCloudApiError.unexpectedHTTPStatusCode".localized()
         case .api(let code):
-            return code.localized()
+            return "UserApiError.\(code.rawValue)".localized()
         case .claim(let claimError):
             return claimError.error.localized()
         case .networking(let error):
@@ -22,7 +22,6 @@ extension RuuviCloudApiError: LocalizedError {
             return error.localizedDescription
         case .unauthorized:
             return nil
-
         }
     }
 }

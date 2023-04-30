@@ -800,6 +800,7 @@ extension DashboardPresenter {
         }
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func observeSensorSettings() {
         sensorSettingsTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.removeAll()
@@ -808,22 +809,31 @@ extension DashboardPresenter {
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
                     ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
+                        guard let sSelf = self else { return }
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
-                            self?.notifySensorSettingsUpdate(
-                                sensorSettings: sensorSettings,
-                                viewModel: viewModel
-                            )
+                            if let viewModel = sSelf.viewModels.first(where: {
+                                $0.id.value == ruuviTagSensor.id
+                            }) {
+                                self?.notifySensorSettingsUpdate(
+                                    sensorSettings: sensorSettings,
+                                    viewModel: viewModel
+                                )
+                            }
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList[updateIndex] = updateSensorSettings
-                                self?.notifySensorSettingsUpdate(
-                                    sensorSettings: updateSensorSettings,
-                                    viewModel: viewModel
-                                )
+                                if let viewModel = sSelf.viewModels.first(where: {
+                                    $0.id.value == ruuviTagSensor.id
+                                }) {
+                                    self?.notifySensorSettingsUpdate(
+                                        sensorSettings: updateSensorSettings,
+                                        viewModel: viewModel
+                                    )
+                                }
                             } else {
                                 self?.sensorSettingsList.append(updateSensorSettings)
                             }
@@ -832,10 +842,14 @@ extension DashboardPresenter {
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
-                                self?.notifySensorSettingsUpdate(
-                                    sensorSettings: nil,
-                                    viewModel: viewModel
-                                )
+                                if let viewModel = sSelf.viewModels.first(where: {
+                                    $0.id.value == ruuviTagSensor.id
+                                }) {
+                                    self?.notifySensorSettingsUpdate(
+                                        sensorSettings: deleteSensorSettings,
+                                        viewModel: viewModel
+                                    )
+                                }
                             }
                         default: break
                         }

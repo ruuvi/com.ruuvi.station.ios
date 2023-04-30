@@ -65,7 +65,8 @@ public final class RuuviCloudPure: RuuviCloud {
             min: min,
             max: max,
             description: description,
-            counter: counter
+            counter: counter,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postAlert(request, authorization: apiKey)
             .on(success: { _ in
@@ -92,7 +93,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .unitTemperature,
-            value: temperatureUnit.ruuviCloudApiSettingString
+            value: temperatureUnit.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -117,7 +119,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .accuracyTemperature,
-            value: temperatureAccuracy.value.ruuviCloudApiSettingString
+            value: temperatureAccuracy.value.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -142,7 +145,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .unitHumidity,
-            value: humidityUnit.ruuviCloudApiSettingString
+            value: humidityUnit.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -167,7 +171,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .accuracyHumidity,
-            value: humidityAccuracy.value.ruuviCloudApiSettingString
+            value: humidityAccuracy.value.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -192,7 +197,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .unitPressure,
-            value: pressureUnit.ruuviCloudApiSettingString
+            value: pressureUnit.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -217,7 +223,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .accuracyPressure,
-            value: pressureAccuracy.value.ruuviCloudApiSettingString
+            value: pressureAccuracy.value.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -242,7 +249,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartShowAllPoints,
-            value: showAllData.chartBoolSettingString
+            value: showAllData.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -267,7 +275,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartDrawDots,
-            value: drawDots.chartBoolSettingString
+            value: drawDots.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -292,7 +301,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartViewPeriod,
-            value: chartDuration.ruuviCloudApiSettingString
+            value: chartDuration.ruuviCloudApiSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -317,7 +327,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .cloudModeEnabled,
-            value: cloudMode.chartBoolSettingString
+            value: cloudMode.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -342,7 +353,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardEnabled,
-            value: dashboard.chartBoolSettingString
+            value: dashboard.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -367,7 +379,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardType,
-            value: dashboardType.rawValue
+            value: dashboardType.rawValue,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -393,7 +406,8 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardTapActionType,
-            value: dashboardTapActionType.rawValue
+            value: dashboardTapActionType.rawValue,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -501,8 +515,8 @@ public final class RuuviCloudPure: RuuviCloud {
             name: sensor.name,
             offsetTemperature: temperatureOffset,
             offsetHumidity: humidityOffset,
-            offsetPressure: pressureOffset
-
+            offsetPressure: pressureOffset,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.update(request, authorization: apiKey)
             .on(success: { _ in
@@ -544,8 +558,8 @@ public final class RuuviCloudPure: RuuviCloud {
             name: name,
             offsetTemperature: nil,
             offsetHumidity: nil,
-            offsetPressure: nil
-
+            offsetPressure: nil,
+            timestamp: Int(Date().timeIntervalSince1970)
         )
         api.update(request, authorization: apiKey)
             .on(success: { _ in
