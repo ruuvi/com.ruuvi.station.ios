@@ -64,7 +64,7 @@ class CardsViewController: UIViewController {
     private lazy var backButton: UIButton = {
         let button  = UIButton()
         button.tintColor = .white
-        let buttonImage = UIImage(named: "chevron_back")
+        let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
         button.setImage(buttonImage, for: .highlighted)
         button.imageView?.tintColor = .white
@@ -73,11 +73,10 @@ class CardsViewController: UIViewController {
         return button
     }()
 
-    private lazy var alertButton: UIImageView = {
-        let iv = UIImageView(image: nil,
-                             contentMode: .scaleAspectFit)
-        iv.tintColor = .white
-        return iv
+    private lazy var alertButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(icon: nil)
+        button.backgroundColor = .clear
+        return button
     }()
 
     /// This button is used to be able to tap the alert button when
@@ -89,22 +88,31 @@ class CardsViewController: UIViewController {
         return button
     }()
 
-    private lazy var chartButton: UIImageView = {
-        let iv = UIImageView(image: RuuviAssets.chartsIcon,
-                             contentMode: .scaleAspectFit)
-        iv.tintColor = .white
-        iv.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                       action: #selector(chartButtonDidTap)))
-        return iv
+    private lazy var chartButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(icon: RuuviAssets.chartsIcon)
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(chartButtonDidTap)
+            )
+        )
+        return button
     }()
 
-    private lazy var settingsButton: UIImageView = {
-        let iv = UIImageView(image: RuuviAssets.settingsIcon,
-                             contentMode: .scaleAspectFit)
-        iv.tintColor = .white
-        iv.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                       action: #selector(settingsButtonDidTap)))
-        return iv
+    private lazy var settingsButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: RuuviAssets.settingsIcon,
+            iconSize: .init(width: 26, height: 25)
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(settingsButtonDidTap)
+            )
+        )
+        return button
     }()
 
     // BODY
@@ -217,15 +225,15 @@ extension CardsViewController {
                           leading: leftBarButtonView.leadingAnchor,
                           bottom: leftBarButtonView.bottomAnchor,
                           trailing: nil,
-                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+                          size: .init(width: 40, height: 40))
 
         leftBarButtonView.addSubview(ruuviLogoView)
         ruuviLogoView.anchor(top: nil,
                              leading: backButton.trailingAnchor,
                              bottom: nil,
                              trailing: leftBarButtonView.trailingAnchor,
-                             padding: .init(top: 0, left: 16, bottom: 0, right: 0),
+                             padding: .init(top: 0, left: 12, bottom: 0, right: 0),
                              size: .init(width: 110, height: 22))
         ruuviLogoView.centerYInSuperview()
 
@@ -235,8 +243,7 @@ extension CardsViewController {
         alertButton.anchor(top: rightBarButtonView.topAnchor,
                            leading: rightBarButtonView.leadingAnchor,
                            bottom: rightBarButtonView.bottomAnchor,
-                           trailing: nil,
-                           size: .init(width: 20, height: 20))
+                           trailing: nil)
         alertButton.centerYInSuperview()
 
         rightBarButtonView.addSubview(alertButtonHidden)
@@ -246,9 +253,7 @@ extension CardsViewController {
         chartButton.anchor(top: nil,
                            leading: alertButton.trailingAnchor,
                            bottom: nil,
-                           trailing: nil,
-                           padding: .init(top: 0, left: 22, bottom: 0, right: 0),
-                           size: .init(width: 20, height: 20))
+                           trailing: nil)
         chartButton.centerYInSuperview()
 
         rightBarButtonView.addSubview(settingsButton)
@@ -256,8 +261,7 @@ extension CardsViewController {
                               leading: chartButton.trailingAnchor,
                               bottom: nil,
                               trailing: rightBarButtonView.trailingAnchor,
-                              padding: .init(top: 0, left: 16, bottom: 0, right: 0),
-                              size: .init(width: 26, height: 25))
+                              padding: .init(top: 0, left: 0, bottom: 0, right: -14))
         settingsButton.centerYInSuperview()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)

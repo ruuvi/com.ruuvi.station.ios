@@ -3061,18 +3061,18 @@ extension TagSettingsViewController {
                           leading: backBarButtonItemView.leadingAnchor,
                           bottom: backBarButtonItemView.bottomAnchor,
                           trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+                          size: .init(width: 40, height: 40))
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
 
         let rightBarButtonItemView = UIView()
         rightBarButtonItemView.addSubview(exportButton)
         exportButton.anchor(top: rightBarButtonItemView.topAnchor,
-                          leading: rightBarButtonItemView.leadingAnchor,
-                          bottom: rightBarButtonItemView.bottomAnchor,
-                          trailing: rightBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: 0, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                            leading: rightBarButtonItemView.leadingAnchor,
+                            bottom: rightBarButtonItemView.bottomAnchor,
+                            trailing: rightBarButtonItemView.trailingAnchor,
+                            padding: .init(top: 0, left: 0, bottom: 0, right: -8),
+                            size: .init(width: 40, height: 40))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonItemView)
 
         let container = UIView(color: .clear)

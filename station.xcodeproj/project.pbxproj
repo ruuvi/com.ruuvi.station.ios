@@ -993,6 +993,8 @@
 		E1CE5E4029F994DE00391109 /* AppGroupConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */; };
 		E1CE5E4229FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
 		E1CE5E4329FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
+		E1CE5E472A016D4000391109 /* RuuviCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */; };
+		E1CE5E482A016D4000391109 /* RuuviCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */; };
 		E1D0238B29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238C29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
@@ -1669,6 +1671,7 @@
 		E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIndicatorView.swift; sourceTree = "<group>"; };
 		E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupConstants.swift; sourceTree = "<group>"; };
 		E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsModuleOutput.swift; sourceTree = "<group>"; };
+		E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCustomButton.swift; sourceTree = "<group>"; };
 		E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviUISwitch.swift; sourceTree = "<group>"; };
 		E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1E102ED28F348B700815508 /* TagChartsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsHelper.swift; sourceTree = "<group>"; };
@@ -3832,6 +3835,7 @@
 			children = (
 				E1395BF0294F793000C403C6 /* AppDateFormatter.swift */,
 				E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */,
+				E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */,
 			);
 			path = Classess;
 			sourceTree = "<group>";
@@ -4975,6 +4979,7 @@
 				E1597A44295CD58600DFB70B /* DashboardRouterDelegate.swift in Sources */,
 				E10E18B8297D67E8002C78C3 /* RuuviCloudViewInput.swift in Sources */,
 				E16B8F4028D10CF50025B92D /* MyRuuviAccountViewController.swift in Sources */,
+				E1CE5E482A016D4000391109 /* RuuviCustomButton.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				E16B8F4328D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				340BE39327B54F37006D6C34 /* OwnerViewController.swift in Sources */,
@@ -5687,6 +5692,7 @@
 				E1E3C345299007DE00A59CB8 /* TagSettingsModuleOutput.swift in Sources */,
 				E1B57FEB29859CB800B441FB /* DevicesModuleFactory.swift in Sources */,
 				E1B5800E2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */,
+				E1CE5E472A016D4000391109 /* RuuviCustomButton.swift in Sources */,
 				A9646478247BAE6B0001D55D /* ChartSettingsViewModel.swift in Sources */,
 				A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */,
 				E1B5800B29859EEB00B441FB /* DevicesInteractorOutput.swift in Sources */,
