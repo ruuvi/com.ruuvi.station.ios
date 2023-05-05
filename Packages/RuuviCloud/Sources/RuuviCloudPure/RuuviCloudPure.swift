@@ -424,6 +424,58 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(emailAlert: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .emailAlertEnabled,
+            value: emailAlert.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: emailAlert)
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.emailAlertEnabled.rawValue
+                )
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(pushAlert: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .pushAlertEnabled,
+            value: pushAlert.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: pushAlert)
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.pushAlertEnabled.rawValue
+                )
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError> {
         let promise = Promise<RuuviCloudSettings, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
@@ -814,16 +866,20 @@ public final class RuuviCloudPure: RuuviCloud {
     public func registerPNToken(token: String,
                                 type: String,
                                 name: String?,
-                                data: String?) -> Future<Int, RuuviCloudError> {
+                                data: String?,
+                                params: [String: String]?) -> Future<Int, RuuviCloudError> {
         let promise = Promise<Int, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudPNTokenRegisterRequest(token: token,
-                                                       type: type,
-                                                       name: name,
-                                                       data: data)
+        let request = RuuviCloudPNTokenRegisterRequest(
+            token: token,
+            type: type,
+            name: name,
+            data: data,
+            params: params
+        )
         api.registerPNToken(request,
                           authorization: apiKey)
             .on(success: { response in

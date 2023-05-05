@@ -103,7 +103,14 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
         let content = UNMutableNotificationContent()
         content.title = title
-        content.sound = .default
+        switch settings.alertSound {
+        case .systemDefault:
+            content.sound = .default
+        default:
+            content.sound = UNNotificationSound(
+                named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+            )
+        }
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
 
@@ -123,7 +130,14 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             return // muted
         }
         let content = UNMutableNotificationContent()
-        content.sound = .default
+        switch settings.alertSound {
+        case .systemDefault:
+            content.sound = .default
+        default:
+            content.sound = UNNotificationSound(
+                named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+            )
+        }
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
         content.title = title
@@ -145,7 +159,14 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         }
 
         let content = UNMutableNotificationContent()
-        content.sound = .default
+        switch settings.alertSound {
+        case .systemDefault:
+            content.sound = .default
+        default:
+            content.sound = UNNotificationSound(
+                named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+            )
+        }
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
         content.categoryIdentifier = blast.id
 
@@ -218,7 +239,14 @@ extension RuuviNotificationLocalImpl {
         }
         if needsToShow {
             let content = UNMutableNotificationContent()
-            content.sound = .default
+            switch settings.alertSound {
+            case .systemDefault:
+                content.sound = .default
+            default:
+                content.sound = UNNotificationSound(
+                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                )
+            }
             content.title = title
             content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
             content.categoryIdentifier = lowHigh.id

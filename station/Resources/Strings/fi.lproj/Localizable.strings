@@ -696,3 +696,5 @@ RuuviTag on valmis käyttöön!";
 "use_bluetooth" = "Käytä BT:tä";
 "sensor_not_found_error" = "Anturia ei löytynyt. Yritä uudelleen.";
 "Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";
+"settings_alert_sound_default" = "System Default";
+"settings_alert_sound_ruuvi_speak" = "Ruuvi Speak";

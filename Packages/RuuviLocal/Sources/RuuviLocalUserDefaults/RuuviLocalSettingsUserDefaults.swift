@@ -555,5 +555,54 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.hideNFCForSensorContest", defaultValue: false)
     var hideNFCForSensorContest: Bool
+    private let ruuviAlertSoundKey = "SettingsUserDefaults.ruuviAlertSoundKey"
+    var alertSound: RuuviAlertSound {
+        get {
+            if let key = UserDefaults.standard.string(forKey: ruuviAlertSoundKey) {
+                return RuuviAlertSound(rawValue: key) ?? .ruuviSpeak
+            }
+            return .ruuviSpeak
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: ruuviAlertSoundKey)
+            NotificationCenter
+                .default
+                .post(name: .AlertSoundSettingsDidChange,
+                      object: self,
+                      userInfo: [AppearanceTypeKey.style: newValue])
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.showEmailAlertSettings", defaultValue: false)
+    var showEmailAlertSettings: Bool
+
+    @UserDefault("SettingsUserDefaults.emailAlertEnabled", defaultValue: false)
+    var emailAlertEnabled: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(name: .EmailAlertSettingsDidChange,
+                          object: self,
+                          userInfo: nil)
+            }
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.showPushAlertSettings", defaultValue: false)
+    var showPushAlertSettings: Bool
+
+    @UserDefault("SettingsUserDefaults.pushAlertEnabled", defaultValue: false)
+    var pushAlertEnabled: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(name: .PushAlertSettingsDidChange,
+                          object: self,
+                          userInfo: nil)
+            }
+        }
+    }
 }
 // swiftlint:enable type_body_length file_length

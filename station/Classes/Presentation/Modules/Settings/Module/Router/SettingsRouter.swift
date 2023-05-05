@@ -96,4 +96,15 @@ class SettingsRouter: SettingsRouterInput {
                 animated: true
             )
     }
+
+    func openAlertNotificationsSettings() {
+        let factory: NotificationsSettingsModuleFactory = NotificationsSettingsModuleFactoryImpl()
+        let module = factory.create()
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+    }
 }
