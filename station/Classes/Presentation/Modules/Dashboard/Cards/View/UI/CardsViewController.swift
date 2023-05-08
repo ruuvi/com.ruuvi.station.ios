@@ -483,17 +483,16 @@ extension CardsViewController: CardsViewInput {
     }
 
     func scroll(to index: Int) {
-        guard index < viewModels.count, index < datasource.snapshot().numberOfItems else {
+        guard viewModels.count > 0,
+              index < viewModels.count,
+                index < datasource.snapshot().numberOfItems else {
             return
         }
         let viewModel = viewModels[index]
         currentVisibleItem = viewModel
-        let indexPath = IndexPath(item: index, section: 0)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.collectionView.scrollToItem(at: indexPath,
-                                              at: .centeredHorizontally,
-                                              animated: false)
+            sSelf.collectionView.scrollTo(index: index, animated: false)
             sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
         }
 

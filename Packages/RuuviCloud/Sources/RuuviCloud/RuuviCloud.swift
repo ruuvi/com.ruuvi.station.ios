@@ -1,4 +1,5 @@
 import Foundation
+import RuuviPool
 import Future
 import RuuviOntology
 import RuuviUser
@@ -142,6 +143,9 @@ public protocol RuuviCloud {
     func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError>
 
     @discardableResult
+    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError>
+
+    @discardableResult
     func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,
@@ -153,6 +157,7 @@ public protocol RuuviCloud {
     // swiftlint:disable:next function_parameter_count
     func setAlert(
         type: RuuviCloudAlertType,
+        settingType: RuuviCloudAlertSettingType,
         isEnabled: Bool,
         min: Double?,
         max: Double?,
@@ -163,13 +168,18 @@ public protocol RuuviCloud {
 
     @discardableResult
     func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError>
+
+    // MARK: Queued requests
+    @discardableResult
+    func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
+    -> Future<Bool, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
-    func create(baseUrl: URL, user: RuuviUser) -> RuuviCloud
+    func create(baseUrl: URL, user: RuuviUser, pool: RuuviPool?) -> RuuviCloud
 }
 
-public enum MimeType: String, Encodable {
+public enum MimeType: String, Codable {
     case png = "image/png"
     case gif = "image/gif"
     case jpg = "image/jpeg"

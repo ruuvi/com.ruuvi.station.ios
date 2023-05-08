@@ -276,4 +276,41 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    // MARK: - Queued cloud requests
+    func createQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        sqlite.createQueuedRequest(request)
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
+
+    func deleteQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        sqlite.deleteQueuedRequest(request)
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
+
+    func deleteQueuedRequests() -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        sqlite.deleteQueuedRequests()
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
 }

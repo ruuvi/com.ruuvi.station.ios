@@ -31,25 +31,13 @@ final class OwnerViewController: UIViewController {
 }
 
 extension OwnerViewController: OwnerViewInput {
-    func showSensorAlreadyClaimedError(error: String, email: String?) {
-        var message: String = ""
-        if let email = email {
-            // If there's email in the error
-            message = String.localizedStringWithFormat(error.localized(),
-                                                       email)
-        } else {
-            // if there's no email address in the error
-            message = "UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL".localized()
-        }
-        let alertVC = UIAlertController(title: "ErrorPresenterAlert.Error".localized(),
-                                        message: message,
-                                        preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak self] _ in
-            guard let email = email else {
-                return
-            }
-            self?.output.update(with: email)
-        }))
+    func showSensorAlreadyClaimedDialog() {
+        let alertVC = UIAlertController(
+            title: "ErrorPresenterAlert.Error".localized(),
+            message: "UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL".localized(),
+            preferredStyle: .alert
+        )
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: nil))
         present(alertVC, animated: true)
     }
     func localize() {

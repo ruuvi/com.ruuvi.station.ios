@@ -60,4 +60,31 @@ public protocol RuuviPersistence {
     ) -> Future<SensorSettings, RuuviPersistenceError>
 
     func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError>
+
+    // MARK: - Queued cloud requests
+    @discardableResult
+    func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+
+    @discardableResult
+    func readQueuedRequests(
+        for key: String
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+
+    @discardableResult
+    func readQueuedRequests(
+        for type: RuuviCloudQueuedRequestType
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+
+    @discardableResult
+    func createQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPersistenceError>
+
+    @discardableResult
+    func deleteQueuedRequest(
+        _ request: RuuviCloudQueuedRequest
+    ) -> Future<Bool, RuuviPersistenceError>
+
+    @discardableResult
+    func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError>
 }

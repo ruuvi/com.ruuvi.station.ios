@@ -44,16 +44,10 @@ struct TagSettingsViewModel {
     let relativeHumidityAlertDescription: Observable<String?> = Observable<String?>()
     let relativeHumidityAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
-    let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let humidityAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let humidityLowerBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 0, unit: .absolute))
-    let humidityUpperBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 40, unit: .absolute))
-    let humidityAlertDescription: Observable<String?> = Observable<String?>()
-
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
-    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(300, unit: .hectopascals))
-    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1100, unit: .hectopascals))
+    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(500, unit: .hectopascals))
+    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>(Pressure(1155, unit: .hectopascals))
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
     let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
@@ -77,6 +71,7 @@ struct TagSettingsViewModel {
     let isAuthorized: Observable<Bool?> = Observable<Bool?>(true)
     let canClaimTag: Observable<Bool?> = Observable<Bool?>(false)
     let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
+    var sharedTo: Observable<[String]?> = Observable<[String]?>()
     let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
     let owner: Observable<String?> = Observable<String?>()
     let isOwner: Observable<Bool?> = Observable<Bool?>(false)
@@ -120,19 +115,14 @@ struct TagSettingsViewModel {
         temperatureUpperBound.value = Temperature(85, unit: .celsius)
         temperatureAlertDescription.value = nil
 
-        isHumidityAlertOn.value = false
-        humidityLowerBound.value = Humidity(value: 0, unit: .absolute)
-        humidityUpperBound.value = Humidity(value: 40, unit: .absolute)
-        humidityAlertDescription.value = nil
-
         isRelativeHumidityAlertOn.value = false
         relativeHumidityLowerBound.value = 0
         relativeHumidityUpperBound.value = 100
         relativeHumidityAlertDescription.value = nil
 
         isPressureAlertOn.value = false
-        pressureLowerBound.value = Pressure(300, unit: .hectopascals)
-        pressureUpperBound.value = Pressure(1100, unit: .hectopascals)
+        pressureLowerBound.value = Pressure(500, unit: .hectopascals)
+        pressureUpperBound.value = Pressure(1155, unit: .hectopascals)
         pressureAlertDescription.value = nil
 
         isSignalAlertOn.value = false

@@ -160,6 +160,37 @@ extension SQLiteGRDBDatabase {
         migrator.registerMigration("Create RuuviTagLatestDataSQLite table") { db in
             try RuuviTagLatestDataSQLite.createTable(in: db)
         }
+        // v8
+        migrator.registerMigration("Create RuuviCloudRequestQueueSQLite table") { db in
+            try RuuviCloudQueuedRequestSQLite.createTable(in: db)
+        }
+        // v9
+        migrator.registerMigration("Create RuuviTagSQLite canShare column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                    .contains(
+                        where: { $0.name == RuuviTagSQLite.canShareColumn.name}
+                    ) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+                t.add(
+                    column: RuuviTagSQLite.canShareColumn.name, .boolean
+                ).defaults(to: false)
+            })
+        }
+        // v10
+        migrator.registerMigration("Create RuuviTagSQLite sharedTo column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                    .contains(
+                        where: { $0.name == RuuviTagSQLite.sharedToColumn.name}
+                    ) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagSQLite.sharedToColumn.name, .text)
+                    .defaults(to: "")
+            })
+        }
 
         try migrator.migrate(dbPool)
     }

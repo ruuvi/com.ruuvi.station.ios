@@ -8,6 +8,13 @@ public enum RuuviCloudAlertType: String, Codable {
     case movement
 }
 
+public enum RuuviCloudAlertSettingType: String {
+    case state
+    case lowerBound
+    case upperBound
+    case description
+}
+
 public protocol RuuviCloudSensorAlerts {
     var sensor: String { get }
     var alerts: [RuuviCloudAlert] { get }

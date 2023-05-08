@@ -65,6 +65,15 @@ extension RuuviCloudApiSensor: CloudSensor {
     public var isCloudSensor: Bool? {
         return true
     }
+
+    public var canShare: Bool {
+        return false
+    }
+
+    public var sharedTo: [String] {
+        return []
+    }
+
     /// Returns the 'id' of the sensor
     public var id: String {
         return sensorId

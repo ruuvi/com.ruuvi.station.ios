@@ -19,25 +19,14 @@ class AppDateFormatter {
 
     private let graphXAxisTimeFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.dateFormat = "HH:mm"
+        df.dateFormat = "hh:mma"
         return df
     }()
 
-    private let enLocaleDateFormatter: DateFormatter = {
+    private let graphXAxisDateFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.dateFormat = "MM/dd"
-        return df
-    }()
-
-    private let nonEnLocaleDateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateFormat = "dd/MM"
-        return df
-    }()
-
-    private let graphMarkerDateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateFormat = "HH:mm\nMM/dd"
+        df.locale = Locale.current
+        df.setLocalizedDateFormatFromTemplate("ddMM")
         return df
     }()
 }
@@ -51,20 +40,26 @@ extension AppDateFormatter {
         return shortTimeFormatter.string(from: date)
     }
 
-    func enLocaleDateString(from date: Date) -> String {
-        return enLocaleDateFormatter.string(from: date)
-    }
-
     func graphXAxisTimeString(from date: Date) -> String {
         return graphXAxisTimeFormatter.string(from: date)
     }
 
-    func nonEnLocaleDateString(from date: Date) -> String {
-        return nonEnLocaleDateFormatter.string(from: date)
+    func graphXAxisDateString(from date: Date) -> String {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.day, .month], from: date)
+        if let formattedDate = calendar.date(from: dateComponents) {
+            return graphXAxisDateFormatter.string(from: formattedDate)
+        } else {
+            return "N/A".localized()
+        }
     }
 
     func graphMarkerDateString(from epoch: Double) -> String {
         let date = Date(timeIntervalSince1970: epoch)
-        return graphMarkerDateFormatter.string(from: date)
+
+        let timeString = graphXAxisTimeString(from: date)
+        let dateString = graphXAxisDateString(from: date)
+
+        return timeString + "\n" + dateString
     }
 }

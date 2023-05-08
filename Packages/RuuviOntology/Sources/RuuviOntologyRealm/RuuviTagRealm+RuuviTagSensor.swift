@@ -23,7 +23,9 @@ extension RuuviTagRealm: RuuviTagSensor {
                 isClaimed: isClaimed,
                 isOwner: isOwner,
                 owner: owner,
-                isCloudSensor: isCloudSensor
+                isCloudSensor: isCloudSensor,
+                canShare: canShare,
+                sharedTo: sharedTo
             )
         )
     }
@@ -39,5 +41,11 @@ extension RuuviTagRealm: RuuviTagSensor {
     }
     public var firmwareVersion: String? {
         return nil
+    }
+    public var canShare: Bool {
+        return false
+    }
+    public var sharedTo: [String] {
+        return []
     }
 }

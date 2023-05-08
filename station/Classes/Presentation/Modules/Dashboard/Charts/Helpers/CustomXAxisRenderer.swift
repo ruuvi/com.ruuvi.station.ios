@@ -30,38 +30,39 @@ public class CustomXAxisRenderer: XAxisRenderer {
         let rawInterval = range / Double(labelCount)
         let interval = getClosestPredefinedInterval(from: rawInterval)
 
-        let offset = TimeZone.current.secondsFromGMT()
-        let timeZoneOffset = (interval > 10800) ? offset : 0
-
-        // swiftlint:disable line_length
-        var firstPoint = ((from + min).toLong() / interval) * interval - from.toLong() - Int64(timeZoneOffset) - 2 * interval
-        var lastPoint =  ((from + max).toLong() / interval) * interval - from.toLong() - Int64(timeZoneOffset) + 2 * interval
-        // swiftlint:enable line_length
+        var firstPoint = ((from + min).toLong() / interval) * interval - from.toLong() - 2 * interval
+        var lastPoint = ((from + max).toLong() / interval) * interval - from.toLong() + 2 * interval
 
         if range.toLong() < interval {
             firstPoint = Int64(min)
             lastPoint = firstPoint
         }
+
         var numberOfPoints = 0
-        if interval != 0 && lastPoint != firstPoint {
-            stride(from: firstPoint, through: lastPoint, by: Int(interval)).forEach { _ in numberOfPoints += 1 }
+        if lastPoint != firstPoint {
+            numberOfPoints = Int((lastPoint - firstPoint) / interval) + 1
         } else {
             numberOfPoints = 1
         }
 
         axis.entries.removeAll(keepingCapacity: true)
         axis.entries.reserveCapacity(numberOfPoints)
+        axis.entries = [Double](repeating: 0, count: numberOfPoints)
 
-        let values = stride(from: firstPoint, to: lastPoint, by: Int(interval)).map({ Double($0) })
-        axis.entries.append(contentsOf: values)
+        for i in 0..<numberOfPoints {
+            let value = firstPoint + Int64(i) * interval
+            let date = Date(timeIntervalSince1970: from + Double(value))
+            let localOffset = (interval > 3600) ? TimeZone.current.secondsFromGMT(for: date) : 0
+            axis.entries[i] = Double(value) - TimeInterval(localOffset)
+        }
 
         computeSize()
     }
 
     private func getClosestPredefinedInterval(from rawInterval: Double) -> Int64 {
-        // swiftlint:disable:next line_length
-        let closest = intervals().enumerated().min(by: { abs($0.1 - rawInterval.toLong()) < abs($1.1 - rawInterval.toLong())})
-        return closest?.element ?? 30
+        return intervals().min(by: {
+            abs($0 - Int64(rawInterval)) < abs($1 - Int64(rawInterval))
+        }) ?? 0
     }
 
     private func intervals() -> [Int64] {

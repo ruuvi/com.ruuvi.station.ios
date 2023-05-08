@@ -37,6 +37,14 @@ public protocol RuuviPool {
         of ruuviTag: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviPoolError>
+
+    // MARK: - Queued cloud requests
+    @discardableResult
+    func createQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
+    @discardableResult
+    func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
+    @discardableResult
+    func deleteQueuedRequests() -> Future<Bool, RuuviPoolError>
 }
 
 extension RuuviPool {

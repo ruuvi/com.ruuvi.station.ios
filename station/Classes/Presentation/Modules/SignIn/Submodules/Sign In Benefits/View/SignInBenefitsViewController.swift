@@ -1,21 +1,32 @@
+import Foundation
 import UIKit
 
-protocol SignInPromoViewDelegate: NSObjectProtocol {
-    func didTapLetsDoButton(sender: SignInPromoView)
-}
+class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 
-class SignInPromoView: UIView {
+    // Configuration
+    var output: SignInBenefitsViewOutput?
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setUpUI()
-    }
+    // UI Componenets starts
+    private lazy var closeButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: RuuviAssets.closeButtonImage,
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(handleCloseButtonTap))
+        button.tintColor = .white
+        return button
+    }()
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private lazy var bgLayer: UIImageView = {
+        let iv = UIImageView(image: RuuviAssets.signInBgLayer)
+        iv.backgroundColor = .clear
+        return iv
+    }()
 
-    weak var delegate: SignInPromoViewDelegate?
+    private lazy var scrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.showsVerticalScrollIndicator = false
+        return sv
+    }()
 
     private lazy var container = UIView(color: .clear)
 
@@ -46,7 +57,7 @@ class SignInPromoView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.text = prepareFeatures()
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         return label
     }()
 
@@ -55,40 +66,93 @@ class SignInPromoView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         label.attributedText = prepareNote()
         return label
     }()
 
-    private lazy var letsDoButton: UIButton = {
+    private lazy var continueButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
-        button.setTitle("lets_do_it".localized(),
+        button.setTitle("sign_in_continue".localized(),
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
+        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
         button.addTarget(self,
-                         action: #selector(handleLetsDoTap),
+                         action: #selector(handleContinueTap),
                          for: .touchUpInside)
         return button
     }()
+
+    private lazy var signInOptionalLabel: UILabel = {
+        let label = UILabel()
+        label.text = "signing_in_is_optional".localized()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
+        return label
+    }()
+
 }
 
-extension SignInPromoView {
-    @objc private func handleLetsDoTap() {
-        delegate?.didTapLetsDoButton(sender: self)
+// MARK: - VIEW LIFE CYCLE
+extension SignInBenefitsViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUpUI()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.makeTransparent()
     }
 }
 
-extension SignInPromoView {
+extension SignInBenefitsViewController {
+    @objc fileprivate func handleCloseButtonTap() {
+        output?.viewDidTapClose()
+    }
+
+    @objc private func handleContinueTap() {
+        output?.viewDidTapContinue()
+    }
+}
+
+extension SignInBenefitsViewController {
+    func localize() {
+        // No op.
+    }
+}
+
+// MARK: - PRIVATE UI SETUP
+extension SignInBenefitsViewController {
     private func setUpUI() {
-        setUpTitleView()
-        setUpPromoView()
+        setUpNavBarView()
+        setUpBase()
+        setUpSignInPromoView()
     }
 
-    private func setUpTitleView() {
-        addSubview(container)
+    fileprivate func setUpNavBarView() {
+        navigationItem.leftBarButtonItem = closeButton
+    }
+
+    private func setUpBase() {
+        view.backgroundColor = RuuviColor.ruuviPrimary
+
+        view.addSubview(bgLayer)
+        bgLayer.fillSuperview()
+
+        view.addSubview(scrollView)
+        scrollView.fillSuperviewToSafeArea()
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func setUpSignInPromoView() {
+        scrollView.addSubview(container)
         container.fillSuperview()
+        container.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        container.centerInSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
             titleLabel, subtitleLabel
@@ -98,28 +162,28 @@ extension SignInPromoView {
         titleStack.spacing = UIDevice.isiPhoneSE() ? 16 : 24
 
         container.addSubview(titleStack)
-        titleStack.anchor(top: nil,
+        titleStack.anchor(top: container.safeTopAnchor,
                          leading: container.safeLeftAnchor,
                          bottom: nil,
                          trailing: container.safeRightAnchor,
                          padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
                                         bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
-        titleStack.topAnchor.constraint(
-            greaterThanOrEqualTo: container.safeTopAnchor
-        ).isActive = true
-    }
-
-    private func setUpPromoView() {
 
         container.addSubview(featuresLabel)
-        featuresLabel.anchor(top: titleStack.bottomAnchor,
-                         leading: nil,
-                         bottom: nil,
-                         trailing: nil,
-                             padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30, left: 0,
-                                        bottom: 0, right: 0))
+        featuresLabel.anchor(
+            top: titleStack.bottomAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 20 : 30,
+                left: 0,
+                bottom: 0,
+                right: 0
+            )
+        )
 
-        featuresLabel.centerInSuperview()
+        featuresLabel.centerXInSuperview()
 
         container.addSubview(noteLabel)
         noteLabel.anchor(top: featuresLabel.bottomAnchor,
@@ -129,23 +193,34 @@ extension SignInPromoView {
                          padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30, left: 0,
                                         bottom: 0, right: 0))
 
-        container.addSubview(letsDoButton)
-        letsDoButton.anchor(top: noteLabel.bottomAnchor,
+        container.addSubview(continueButton)
+        continueButton.anchor(top: noteLabel.bottomAnchor,
+                              leading: container.safeLeftAnchor,
+                              bottom: nil,
+                              trailing: container.safeRightAnchor,
+                              padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30,
+                                             left: !UIDevice.isTablet() ? 50 : 150,
+                                             bottom: 0,
+                                             right: !UIDevice.isTablet() ? 50 : 150),
+                              size: .init(width: 0, height: 50))
+
+        container.addSubview(signInOptionalLabel)
+        signInOptionalLabel.anchor(top: continueButton.bottomAnchor,
                                leading: container.safeLeftAnchor,
                                bottom: nil,
                                trailing: container.safeRightAnchor,
-                               padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30,
-                                              left: !UIDevice.isTablet() ? 50 : 150,
+                               padding: .init(top: UIDevice.isiPhoneSE() ? 6 : 10,
+                                              left: 30,
                                               bottom: 0,
-                                              right: !UIDevice.isTablet() ? 50 : 150),
-                            size: .init(width: 0, height: 50))
-        letsDoButton.bottomAnchor.constraint(
-            lessThanOrEqualTo: container.bottomAnchor, constant: 20
+                                              right: 30))
+
+        signInOptionalLabel.bottomAnchor.constraint(
+            lessThanOrEqualTo: container.bottomAnchor, constant: -30
         ).isActive = true
     }
 }
 
-extension SignInPromoView {
+extension SignInBenefitsViewController {
     private func prepareFeatures() -> String {
         return [
             "cloud_stored_ownerships".localized(),
@@ -165,12 +240,12 @@ extension SignInPromoView {
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 12 : 18),
+                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
                                 range: range)
 
         // Make note bold and orange color
         let makeBoldOrange = "note".localized()
-        let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 12 : 18)
+        let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 18)
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
         attrString.addAttribute(NSAttributedString.Key.font,
                                 value: boldFont,

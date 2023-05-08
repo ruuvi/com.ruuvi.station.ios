@@ -1,7 +1,7 @@
 import Foundation
 
 protocol OwnerViewInput: ViewInput {
-    func showSensorAlreadyClaimedError(error: String, email: String?)
+    func showSensorAlreadyClaimedDialog()
     func showFirmwareUpdateDialog()
     func showFirmwareDismissConfirmationUpdateDialog()
 }

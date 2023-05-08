@@ -48,7 +48,7 @@ class TagChartsView: LineChartView {
                               trailing: trailingAnchor,
                               padding: .init(top: 0,
                                              left: 0,
-                                             bottom: UIDevice.isTablet() ? 52 : 38,
+                                             bottom: UIDevice.isTablet() ? 42 : 28,
                                              right: 16))
     }
 
@@ -65,25 +65,33 @@ class TagChartsView: LineChartView {
         xAxis.labelPosition = .bottom
         xAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
         xAxis.labelTextColor = UIColor.white
-        xAxis.drawAxisLineEnabled = false
+        xAxis.drawAxisLineEnabled = true
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 1
         xAxis.granularityEnabled = true
-        xAxis.yOffset = 10.0
         viewPortHandler.setMaximumScaleX(5000)
         viewPortHandler.setMaximumScaleY(30)
         xAxis.setLabelCount(5, force: false)
-        xAxis.valueFormatter = DateValueFormatter(with: Locale.current)
+        xAxis.valueFormatter = XAxisValueFormatter()
+        xAxis.forceLabelsEnabled = true
 
         leftAxis.labelPosition = .outsideChart
+        leftAxis.labelAlignment = .right
         leftAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
-        leftAxis.setLabelCount(5, force: true)
+        leftAxis.setLabelCount(6, force: false)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
-        leftAxis.minWidth = UIDevice.isTablet() ? 70.0 : 40.0
-        leftAxis.maxWidth = UIDevice.isTablet() ? 70.0 : 40.0
-        leftAxis.xOffset = 8.0
+        leftAxis.minWidth = UIDevice.isTablet() ? 70.0 : 44.0
+        leftAxis.maxWidth = UIDevice.isTablet() ? 70.0 : 44.0
+        leftAxis.xOffset = 6
+        leftAxis.drawTopYLabelEntryEnabled = false
+        leftAxis.drawBottomYLabelEntryEnabled = false
+        leftAxis.granularityEnabled = true
+        leftAxis.granularity = 1
+        leftAxis.spaceBottom = 0.2
+        leftAxis.drawZeroLineEnabled = true
+        leftAxis.forceLabelsEnabled = true
 
         rightAxis.enabled = false
 
@@ -95,6 +103,7 @@ class TagChartsView: LineChartView {
         drawMarkers = true
         markerView.chartView = self
         self.marker = markerView
+        setExtraOffsets(left: 2, top: 4, right: 0, bottom: 2)
     }
 
     private func reloadData() {
@@ -133,8 +142,8 @@ extension TagChartsView: ChartViewDelegate {
 extension TagChartsView {
 
     func localize() {
-        xAxis.valueFormatter = DateValueFormatter(with: settings.language.locale)
-        leftAxis.valueFormatter = YAxisValueFormatter(with: settings.language.locale)
+        xAxis.valueFormatter = XAxisValueFormatter()
+        leftAxis.valueFormatter = YAxisValueFormatter()
     }
 
     func clearChartData() {
@@ -146,13 +155,14 @@ extension TagChartsView {
     }
 
     func setYAxisLimit(min: Double, max: Double) {
-        leftAxis.axisMinimum = min - 0.5
-        leftAxis.axisMaximum = max + 0.5
-    }
-
-    func setXRange(min: TimeInterval, max: TimeInterval) {
-        xAxis.axisMinimum = min
-        xAxis.axisMaximum = max
+        leftAxis.axisMinimum = min - 1
+        leftAxis.axisMaximum = max + 1
+        leftYAxisRenderer = CustomYAxisRenderer(
+            viewPortHandler: viewPortHandler,
+            axis: leftAxis,
+            transformer: getTransformer(forAxis: .left)
+        )
+        leftAxis.setLabelCount(5, force: false)
     }
 
     func setXAxisRenderer() {
@@ -185,6 +195,7 @@ extension TagChartsView {
 
         for point in newData {
             data?.appendEntry(point, toDataSet: 0)
+            setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
         }
         reloadData()
     }

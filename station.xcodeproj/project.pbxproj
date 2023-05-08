@@ -361,10 +361,6 @@
 		0EE36EB1269DC71B0021B746 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB0269DC71B0021B746 /* Algorithms */; };
 		0EE36EB4269DC7D90021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB3269DC7D90021B746 /* Charts */; };
 		0EE36EB6269DC7E40021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB5269DC7E40021B746 /* Charts */; };
-		0EE49B9523B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
-		0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
-		0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
-		0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
 		0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */; };
 		0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */; };
 		0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C522B7915C0015F9E0 /* CardsViewModel.swift */; };
@@ -903,28 +899,26 @@
 		E19EAF76299AE3B0005827E4 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF74299AE3B0005827E4 /* SignInView.swift */; };
 		E19EAF78299AE5EA005827E4 /* SignInVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF77299AE5EA005827E4 /* SignInVerifyView.swift */; };
 		E19EAF79299AE5EA005827E4 /* SignInVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF77299AE5EA005827E4 /* SignInVerifyView.swift */; };
-		E19EAF7B299BF94C005827E4 /* SignInPromoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */; };
-		E19EAF7C299BF94C005827E4 /* SignInPromoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */; };
-		E19EAF7E299BFA2C005827E4 /* SignInPromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7D299BFA2C005827E4 /* SignInPromoView.swift */; };
-		E19EAF7F299BFA2C005827E4 /* SignInPromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7D299BFA2C005827E4 /* SignInPromoView.swift */; };
+		E19EAF7B299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */; };
+		E19EAF7C299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */; };
 		E19EAF83299C1383005827E4 /* SignInModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF82299C1383005827E4 /* SignInModuleFactory.swift */; };
 		E19EAF84299C1383005827E4 /* SignInModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF82299C1383005827E4 /* SignInModuleFactory.swift */; };
-		E19EAF94299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */; };
-		E19EAF95299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */; };
-		E19EAF97299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */; };
-		E19EAF98299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */; };
-		E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */; };
-		E19EAF9B299E608E005827E4 /* SignInPromoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */; };
-		E19EAF9E299E610A005827E4 /* SignInPromoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */; };
-		E19EAF9F299E610A005827E4 /* SignInPromoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */; };
-		E19EAFA1299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */; };
-		E19EAFA2299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */; };
-		E19EAFA4299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */; };
-		E19EAFA5299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */; };
-		E19EAFA7299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */; };
-		E19EAFA8299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */; };
-		E19EAFAA299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */; };
-		E19EAFAB299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */; };
+		E19EAF94299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */; };
+		E19EAF95299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */; };
+		E19EAF97299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */; };
+		E19EAF98299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */; };
+		E19EAF9A299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */; };
+		E19EAF9B299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */; };
+		E19EAF9E299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */; };
+		E19EAF9F299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */; };
+		E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */; };
+		E19EAFA2299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */; };
+		E19EAFA4299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */; };
+		E19EAFA5299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */; };
+		E19EAFA7299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */; };
+		E19EAFA8299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */; };
+		E19EAFAA299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */; };
+		E19EAFAB299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */; };
 		E19EAFAD299E82D1005827E4 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */; };
 		E19EAFAE299E82D1005827E4 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */; };
 		E19EAFB0299EB46D005827E4 /* NoSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAF299EB46D005827E4 /* NoSensorView.swift */; };
@@ -995,6 +989,14 @@
 		E1CE4C752959D08D005C023F /* DashboardImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE4C732959D08D005C023F /* DashboardImageCell.swift */; };
 		E1CE4C772959DF01005C023F /* DashboardIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */; };
 		E1CE4C782959DF01005C023F /* DashboardIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */; };
+		E1CE5E3F29F994DE00391109 /* AppGroupConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */; };
+		E1CE5E4029F994DE00391109 /* AppGroupConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */; };
+		E1CE5E4229FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
+		E1CE5E4329FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
+		E1D0238B29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
+		E1D0238C29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
+		E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
+		E1D0238F29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
 		E1E102EE28F348B700815508 /* TagChartsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E102ED28F348B700815508 /* TagChartsHelper.swift */; };
 		E1E102EF28F348B700815508 /* TagChartsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E102ED28F348B700815508 /* TagChartsHelper.swift */; };
 		E1E1475C28E85EE700832B8C /* UIImageView+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E1475B28E85EE700832B8C /* UIImageView+Init.swift */; };
@@ -1019,10 +1021,10 @@
 		E1E6C216296C9CB100B3D037 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E6C214296C9CB100B3D037 /* Int+Extension.swift */; };
 		E1ED426928FF253B00302179 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426828FF253B00302179 /* TagChartsViewModel.swift */; };
 		E1ED426A28FF253B00302179 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426828FF253B00302179 /* TagChartsViewModel.swift */; };
-		E1ED426E28FF261D00302179 /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */; };
-		E1ED426F28FF261D00302179 /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */; };
-		E1ED427028FF261D00302179 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* DateValueFormatter.swift */; };
-		E1ED427128FF261D00302179 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* DateValueFormatter.swift */; };
+		E1ED426E28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */; };
+		E1ED426F28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */; };
+		E1ED427028FF261D00302179 /* XAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */; };
+		E1ED427128FF261D00302179 /* XAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */; };
 		E1ED427228FF261D00302179 /* CustomXAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */; };
 		E1ED427328FF261D00302179 /* CustomXAxisRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */; };
 		E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
@@ -1275,8 +1277,6 @@
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
 		0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUInteractorInput.swift; sourceTree = "<group>"; };
 		0EE36E4126957E200021B746 /* LatestRelease.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestRelease.swift; sourceTree = "<group>"; };
-		0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
-		0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0EE49BB123B8C40D003012C2 /* MacInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = "<group>"; };
 		0EE49BB223B8C40D003012C2 /* DevInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = DevInfo.plist; sourceTree = "<group>"; };
 		0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLEXFeatureTogglesViewController.swift; sourceTree = "<group>"; };
@@ -1622,17 +1622,16 @@
 		E19EAF71299ADB2F005827E4 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		E19EAF74299AE3B0005827E4 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		E19EAF77299AE5EA005827E4 /* SignInVerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInVerifyView.swift; sourceTree = "<group>"; };
-		E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoViewController.swift; sourceTree = "<group>"; };
-		E19EAF7D299BFA2C005827E4 /* SignInPromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoView.swift; sourceTree = "<group>"; };
+		E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewController.swift; sourceTree = "<group>"; };
 		E19EAF82299C1383005827E4 /* SignInModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInModuleFactory.swift; sourceTree = "<group>"; };
-		E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoModuleFactory.swift; sourceTree = "<group>"; };
-		E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoRouterInput.swift; sourceTree = "<group>"; };
-		E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoRouter.swift; sourceTree = "<group>"; };
-		E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoPresenter.swift; sourceTree = "<group>"; };
-		E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoModuleInput.swift; sourceTree = "<group>"; };
-		E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoModuleOutput.swift; sourceTree = "<group>"; };
-		E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoViewInput.swift; sourceTree = "<group>"; };
-		E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromoViewOutput.swift; sourceTree = "<group>"; };
+		E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsModuleFactory.swift; sourceTree = "<group>"; };
+		E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsRouterInput.swift; sourceTree = "<group>"; };
+		E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsRouter.swift; sourceTree = "<group>"; };
+		E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsPresenter.swift; sourceTree = "<group>"; };
+		E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsModuleInput.swift; sourceTree = "<group>"; };
+		E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsModuleOutput.swift; sourceTree = "<group>"; };
+		E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewInput.swift; sourceTree = "<group>"; };
+		E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewOutput.swift; sourceTree = "<group>"; };
 		E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E19EAFAF299EB46D005827E4 /* NoSensorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSensorView.swift; sourceTree = "<group>"; };
 		E1B20C862926CDE10023D739 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
@@ -1668,6 +1667,10 @@
 		E1CE4C702959CE61005C023F /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		E1CE4C732959D08D005C023F /* DashboardImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardImageCell.swift; sourceTree = "<group>"; };
 		E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIndicatorView.swift; sourceTree = "<group>"; };
+		E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupConstants.swift; sourceTree = "<group>"; };
+		E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsModuleOutput.swift; sourceTree = "<group>"; };
+		E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviUISwitch.swift; sourceTree = "<group>"; };
+		E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1E102ED28F348B700815508 /* TagChartsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsHelper.swift; sourceTree = "<group>"; };
 		E1E1475B28E85EE700832B8C /* UIImageView+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Init.swift"; sourceTree = "<group>"; };
 		E1E3C32F298C601200A59CB8 /* CardsViewModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsViewModuleFactory.swift; sourceTree = "<group>"; };
@@ -1680,8 +1683,8 @@
 		E1E3C344299007DE00A59CB8 /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		E1E6C214296C9CB100B3D037 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
 		E1ED426828FF253B00302179 /* TagChartsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewModel.swift; sourceTree = "<group>"; };
-		E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
-		E1ED426C28FF261D00302179 /* DateValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
+		E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomYAxisRenderer.swift; sourceTree = "<group>"; };
+		E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomXAxisRenderer.swift; sourceTree = "<group>"; };
 		FC417B8977A47FFAE71585F0 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
@@ -1812,7 +1815,6 @@
 		0E046F2C22F0563E00BD4E9C /* Table */ = {
 			isa = PBXGroup;
 			children = (
-				0EE49B9323B74704003012C2 /* Cells */,
 				0E046F2D22F0569000BD4E9C /* WebTagSettingsTableViewController.swift */,
 			);
 			path = Table;
@@ -1916,6 +1918,7 @@
 			isa = PBXGroup;
 			children = (
 				340BE37427B54EE2006D6C34 /* AppAssemblyConstants.swift */,
+				E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */,
 				0E5C302322D0B16300B52E39 /* AppState */,
 				0EB48D6D2619D4D4008E0D2D /* Features */,
 				0E197C7223C5C7770074015B /* Info */,
@@ -2421,6 +2424,7 @@
 			isa = PBXGroup;
 			children = (
 				0E8A10172384613E00A9CBA6 /* DefaultsModuleInput.swift */,
+				E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */,
 				0E8A10192384615400A9CBA6 /* DefaultsPresenter.swift */,
 			);
 			path = Presenter;
@@ -2717,15 +2721,6 @@
 				0EB8ED3B268F8CD900C6B0FA /* FirmwareRepository.swift */,
 			);
 			path = FirmwareRepository;
-			sourceTree = "<group>";
-		};
-		0EE49B9323B74704003012C2 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */,
-				0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */,
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		0EE98A772649386000AAB3ED /* FLEX */ = {
@@ -3836,6 +3831,7 @@
 			isa = PBXGroup;
 			children = (
 				E1395BF0294F793000C403C6 /* AppDateFormatter.swift */,
+				E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */,
 			);
 			path = Classess;
 			sourceTree = "<group>";
@@ -4072,12 +4068,12 @@
 		E19EAF8E299E5F84005827E4 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF8F299E5FE6005827E4 /* Sign In Promo */,
+				E19EAF8F299E5FE6005827E4 /* Sign In Benefits */,
 			);
 			path = Submodules;
 			sourceTree = "<group>";
 		};
-		E19EAF8F299E5FE6005827E4 /* Sign In Promo */ = {
+		E19EAF8F299E5FE6005827E4 /* Sign In Benefits */ = {
 			isa = PBXGroup;
 			children = (
 				E19EAF9C299E60FD005827E4 /* Presenter */,
@@ -4085,13 +4081,13 @@
 				E19EAF91299E6019005827E4 /* Router */,
 				E19EAF90299E6013005827E4 /* Assembly */,
 			);
-			path = "Sign In Promo";
+			path = "Sign In Benefits";
 			sourceTree = "<group>";
 		};
 		E19EAF90299E6013005827E4 /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF93299E6038005827E4 /* SignInPromoModuleFactory.swift */,
+				E19EAF93299E6038005827E4 /* SignInBenefitsModuleFactory.swift */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -4099,8 +4095,8 @@
 		E19EAF91299E6019005827E4 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF96299E6083005827E4 /* SignInPromoRouterInput.swift */,
-				E19EAF99299E608E005827E4 /* SignInPromoRouter.swift */,
+				E19EAF96299E6083005827E4 /* SignInBenefitsRouterInput.swift */,
+				E19EAF99299E608E005827E4 /* SignInBenefitsRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -4108,10 +4104,9 @@
 		E19EAF92299E601F005827E4 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF7A299BF94C005827E4 /* SignInPromoViewController.swift */,
-				E19EAF7D299BFA2C005827E4 /* SignInPromoView.swift */,
-				E19EAFA6299E62A7005827E4 /* SignInPromoViewInput.swift */,
-				E19EAFA9299E62C0005827E4 /* SignInPromoViewOutput.swift */,
+				E19EAF7A299BF94C005827E4 /* SignInBenefitsViewController.swift */,
+				E19EAFA6299E62A7005827E4 /* SignInBenefitsViewInput.swift */,
+				E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4119,9 +4114,9 @@
 		E19EAF9C299E60FD005827E4 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
-				E19EAF9D299E610A005827E4 /* SignInPromoPresenter.swift */,
-				E19EAFA0299E61C5005827E4 /* SignInPromoModuleInput.swift */,
-				E19EAFA3299E6211005827E4 /* SignInPromoModuleOutput.swift */,
+				E19EAF9D299E610A005827E4 /* SignInBenefitsPresenter.swift */,
+				E19EAFA0299E61C5005827E4 /* SignInBenefitsModuleInput.swift */,
+				E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -4310,8 +4305,9 @@
 			isa = PBXGroup;
 			children = (
 				E1ED426D28FF261D00302179 /* CustomXAxisRenderer.swift */,
-				E1ED426C28FF261D00302179 /* DateValueFormatter.swift */,
-				E1ED426B28FF261D00302179 /* YAxisValueFormatter.swift */,
+				E1ED426C28FF261D00302179 /* XAxisValueFormatter.swift */,
+				E1ED426B28FF261D00302179 /* CustomYAxisRenderer.swift */,
+				E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */,
 				E1E102ED28F348B700815508 /* TagChartsHelper.swift */,
 			);
 			path = Helpers;
@@ -4994,12 +4990,13 @@
 				0E8BD2C6238566AB008B31EF /* AboutViewOutput.swift in Sources */,
 				A9646485247BAE6B0001D55D /* ChartSettingsPresenter.swift in Sources */,
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
+				E1CE5E4329FC39D000391109 /* DefaultsModuleOutput.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
-				E19EAF98299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */,
+				E19EAF98299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */,
 				E186AB2C2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				0EA511B9261F3C2C00EE5D5E /* LocalFeatureToggleProvider.swift in Sources */,
 				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
-				E19EAF9B299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
+				E19EAF9B299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				E1E3C340298FDCCC00A59CB8 /* CardsModuleOutput.swift in Sources */,
 				A91D02FE2511207300694733 /* SelectionTableViewCell.swift in Sources */,
@@ -5061,7 +5058,7 @@
 				E1597A4A295CD5F800DFB70B /* DashboardPresenter.swift in Sources */,
 				0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				E18D04C128E8B3B0008EF5EC /* TagChartsViewInteractorOutput.swift in Sources */,
-				E19EAFA2299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */,
+				E19EAFA2299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E1B5800229859D2300B441FB /* DevicesViewOutput.swift in Sources */,
 				E19EAFAE299E82D1005827E4 /* SignInPresenter.swift in Sources */,
 				E116707029620AD4002DF7BF /* BackgroundSelectionButtonView.swift in Sources */,
@@ -5074,7 +5071,6 @@
 				340BE37627B54EE2006D6C34 /* AppAssemblyConstants.swift in Sources */,
 				E1E3C331298C601200A59CB8 /* CardsViewModuleFactory.swift in Sources */,
 				E19EAF73299ADB2F005827E4 /* UIButton+Extension.swift in Sources */,
-				0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8BD2F4238566AB008B31EF /* DefaultsRouterInput.swift in Sources */,
 				0E8BD2F5238566AB008B31EF /* AboutPresenter.swift in Sources */,
@@ -5085,13 +5081,13 @@
 				0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */,
 				0E8BD300238566AB008B31EF /* TagSettingsViewOutput.swift in Sources */,
 				0E8BD302238566AB008B31EF /* CardsViewModel.swift in Sources */,
-				E19EAFA5299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */,
+				E19EAFA5299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */,
 				E10E18732978AF3D002C78C3 /* TagSettingsViewModel.swift in Sources */,
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
 				E1198A3329BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */,
-				E1ED426F28FF261D00302179 /* YAxisValueFormatter.swift in Sources */,
+				E1ED426F28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */,
 				0EB8ED2A268F10E900C6B0FA /* Spinner.swift in Sources */,
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
@@ -5116,6 +5112,7 @@
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				A9E599592557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
+				E1D0238C29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */,
 				0EB8ED482692018000C6B0FA /* RuuviColor.swift in Sources */,
 				0EB48D8C2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				E1597A4D295CD66500DFB70B /* DashboardInteractorInput.swift in Sources */,
@@ -5132,11 +5129,9 @@
 				0E2AFFA1266A91AE001A374D /* RuuviRepositoryError+LocalizedError.swift in Sources */,
 				0E8BD326238566AB008B31EF /* MenuTableInitializer.swift in Sources */,
 				E1CD78052878302C00F1F0EB /* UnitSettingsViewOutput.swift in Sources */,
-				E19EAF7F299BFA2C005827E4 /* SignInPromoView.swift in Sources */,
 				0E8BD327238566AB008B31EF /* LocationPickerViewOutput.swift in Sources */,
 				E1CA28AF29201F34009E4423 /* RUAlertExpandButton.swift in Sources */,
-				E19EAFAB299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */,
-				0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */,
+				E19EAFAB299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */,
 				0E8BD328238566AB008B31EF /* WebTagSettingsTableViewController.swift in Sources */,
 				E191F222296A00CE00F1FEA6 /* TagSettingsFooterCell.swift in Sources */,
 				66BC44A52657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
@@ -5147,7 +5142,7 @@
 				A91D02F22511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				A93CDCDF25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
 				E18D04BB28E8B34F008EF5EC /* TagChartsViewInteractor.swift in Sources */,
-				E19EAFA8299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */,
+				E19EAFA8299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */,
 				0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
 				E168B4AF2886AE4E00D6B5C6 /* MeasurementAccuracyType+Extension.swift in Sources */,
 				E1597A47295CD5E400DFB70B /* DashboardModuleInput.swift in Sources */,
@@ -5161,6 +5156,7 @@
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E2B339C26A2BC3F00366B01 /* AppRouter.swift in Sources */,
 				660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
+				E1D0238F29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0EA796862664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
 				0EF4E34126824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
@@ -5176,6 +5172,7 @@
 				E1CD780D287830B100F1F0EB /* UnitSettingsRouter.swift in Sources */,
 				E19EAFB1299EB46D005827E4 /* NoSensorView.swift in Sources */,
 				66BC449F2657AED400A03253 /* OffsetCorrectionModuleOutput.swift in Sources */,
+				E1CE5E4029F994DE00391109 /* AppGroupConstants.swift in Sources */,
 				0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				E19EAF6729983650005827E4 /* AppUtility.swift in Sources */,
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
@@ -5246,13 +5243,13 @@
 				E1CD78022878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
 				E19EAF84299C1383005827E4 /* SignInModuleFactory.swift in Sources */,
 				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
-				E19EAF9F299E610A005827E4 /* SignInPromoPresenter.swift in Sources */,
+				E19EAF9F299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */,
 				E1198A1F29BA6B7E002245CF /* AppearanceSettingsModuleInput.swift in Sources */,
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
-				E19EAF95299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */,
+				E19EAF95299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
 				A9E6774925A33081000B75A3 /* String+Characters.swift in Sources */,
 				A91D030A2511207300694733 /* SelectionRouterInput.swift in Sources */,
@@ -5277,7 +5274,7 @@
 				E1597A692960944600DFB70B /* DashboardCellDelegate.swift in Sources */,
 				0E00C4F22684D97B009B3C24 /* ExportHeadersProvider.swift in Sources */,
 				E18D04BE28E8B397008EF5EC /* TagChartsViewInteractorInput.swift in Sources */,
-				E1ED427128FF261D00302179 /* DateValueFormatter.swift in Sources */,
+				E1ED427128FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
 				A964646D247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8BD38D238566AB008B31EF /* DefaultsModuleInput.swift in Sources */,
 				E1CD78092878308E00F1F0EB /* UnitSettingsItem.swift in Sources */,
@@ -5340,7 +5337,7 @@
 				0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */,
 				E16051E7285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */,
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
-				E19EAF7C299BF94C005827E4 /* SignInPromoViewController.swift in Sources */,
+				E19EAF7C299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */,
 				E18D04D228F1D027008EF5EC /* TagChartsViewInput.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				E1597A50295CD67900DFB70B /* DashboardInteractor.swift in Sources */,
@@ -5479,7 +5476,7 @@
 				E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */,
 				E191F1F52968D32000F1FEA6 /* TagSettingsExpandableSectionHeader.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
-				E19EAF9A299E608E005827E4 /* SignInPromoRouter.swift in Sources */,
+				E19EAF9A299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */,
 				E1198A1B29BA6A79002245CF /* AppearanceSettingsViewModel.swift in Sources */,
 				A9B57447253B994700DB7353 /* SignInModuleOutput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
@@ -5505,7 +5502,7 @@
 				E16B8F4E28D113230025B92D /* MyRuuviAccountInitializer.swift in Sources */,
 				A976CA7E24A928C20099BDC1 /* ChartSettingsDisclosureTableViewCell.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
-				E19EAF7B299BF94C005827E4 /* SignInPromoViewController.swift in Sources */,
+				E19EAF7B299BF94C005827E4 /* SignInBenefitsViewController.swift in Sources */,
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				E19EAFB0299EB46D005827E4 /* NoSensorView.swift in Sources */,
 				0EB8ED2C268F111B00C6B0FA /* View+Any.swift in Sources */,
@@ -5519,7 +5516,7 @@
 				E1597A4F295CD67900DFB70B /* DashboardInteractor.swift in Sources */,
 				E16B8F4828D10E7A0025B92D /* MyRuuviAccountViewModel.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
-				E19EAF94299E6038005827E4 /* SignInPromoModuleFactory.swift in Sources */,
+				E19EAF94299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */,
 				A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */,
 				E186AB2B2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
 				A91D02F72511207300694733 /* SelectionModuleInput.swift in Sources */,
@@ -5538,7 +5535,6 @@
 				0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				E1395BF92954DAA200C403C6 /* CardsInteractorInput.swift in Sources */,
-				E19EAF7E299BFA2C005827E4 /* SignInPromoView.swift in Sources */,
 				E191F20F2969E1C300F1FEA6 /* TagSettingsPresenter.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				E1E3C339298EC9DC00A59CB8 /* DashboardModuleFactory.swift in Sources */,
@@ -5586,7 +5582,6 @@
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				340BE38827B54F37006D6C34 /* OwnerInitializer.swift in Sources */,
 				E1CD77EC2878273500F1F0EB /* UnitSettingsTableViewController.swift in Sources */,
-				0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
 				A9B57448253B994700DB7353 /* SignInViewModel.swift in Sources */,
 				E10E18B7297D67E8002C78C3 /* RuuviCloudViewInput.swift in Sources */,
@@ -5604,7 +5599,7 @@
 				0EB8ED29268F10E900C6B0FA /* Spinner.swift in Sources */,
 				0EA796852664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
 				E1597A6F2961FEB800DFB70B /* BackgroundSelectionViewController.swift in Sources */,
-				E19EAFA4299E6211005827E4 /* SignInPromoModuleOutput.swift in Sources */,
+				E19EAFA4299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */,
 				E116708529634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				E1198A1829BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */,
@@ -5616,6 +5611,8 @@
 				E1395C002957944E00C403C6 /* CardsViewController.swift in Sources */,
 				E1597A3D295CD52A00DFB70B /* DashboardRouterInput.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
+				E1CE5E4229FC39D000391109 /* DefaultsModuleOutput.swift in Sources */,
+				E1D0238B29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0EF4E33D26824ABD00D83CC7 /* RuuviDFUError+LocalizedError.swift in Sources */,
@@ -5635,14 +5632,16 @@
 				E1CD77F428782EA500F1F0EB /* UnitSettingsTableInitializer.swift in Sources */,
 				A964646C247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
+				E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
+				E1CE5E3F29F994DE00391109 /* AppGroupConstants.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
-				E19EAFA1299E61C5005827E4 /* SignInPromoModuleInput.swift in Sources */,
+				E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E191F2092969E11F00F1FEA6 /* TagSettingsRouterInput.swift in Sources */,
 				0EB8ED2F268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
 				E1198A0229BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */,
 				A91D02EE2511207200694733 /* SelectionTableConfigurator.swift in Sources */,
 				66BC44B32657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
-				E19EAFAA299E62C0005827E4 /* SignInPromoViewOutput.swift in Sources */,
+				E19EAFAA299E62C0005827E4 /* SignInBenefitsViewOutput.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit+Localization.swift in Sources */,
 				E191F1F22968C2C900F1FEA6 /* TagSettingsAlertConfigCell.swift in Sources */,
@@ -5658,7 +5657,6 @@
 				0E046F4A22F1820400BD4E9C /* LocationPickerViewOutput.swift in Sources */,
 				66BC44B62657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */,
 				A92E3C4C24261CF900D981D5 /* MeasurementType.swift in Sources */,
-				0EE49B9523B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */,
 				0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */,
 				A9FC78E92579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				A93CDCCF25659BA600018C6C /* AlertPresenter.swift in Sources */,
@@ -5682,7 +5680,7 @@
 				0EB8ED25268F083700C6B0FA /* DFUUIView.swift in Sources */,
 				E1597A5C295E24D400DFB70B /* RuuviAssets.swift in Sources */,
 				E1E3C342299007B700A59CB8 /* TagSettingsModuleInput.swift in Sources */,
-				E1ED427028FF261D00302179 /* DateValueFormatter.swift in Sources */,
+				E1ED427028FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0EB8ED3C268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
@@ -5695,7 +5693,7 @@
 				E1597A6529608CF300DFB70B /* GlobalHelpers.swift in Sources */,
 				E16B8F5428D113750025B92D /* MyRuuviAccountPresenter.swift in Sources */,
 				A9646484247BAE6B0001D55D /* ChartSettingsPresenter.swift in Sources */,
-				E19EAFA7299E62A7005827E4 /* SignInPromoViewInput.swift in Sources */,
+				E19EAFA7299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */,
 				E1B5800129859D2300B441FB /* DevicesViewOutput.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
@@ -5716,7 +5714,7 @@
 				0E8A10142384610400A9CBA6 /* DefaultsRouter.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */,
-				E19EAF9E299E610A005827E4 /* SignInPromoPresenter.swift in Sources */,
+				E19EAF9E299E610A005827E4 /* SignInBenefitsPresenter.swift in Sources */,
 				340BE38C27B54F37006D6C34 /* OwnerPresenter.swift in Sources */,
 				E18FD50A28DF7B7900289359 /* TagChartsViewController.swift in Sources */,
 				E10E18BD297D68EB002C78C3 /* RuuviCloudModuleInput.swift in Sources */,
@@ -5866,7 +5864,7 @@
 				E191F21B2969EF7B00F1FEA6 /* TagSettingsModuleFactory.swift in Sources */,
 				E1198A0E29BA68FD002245CF /* AppearanceSettingsModuleFactory.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* CardsRouter.swift in Sources */,
-				E19EAF97299E6083005827E4 /* SignInPromoRouterInput.swift in Sources */,
+				E19EAF97299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				A9646466247BAE6B0001D55D /* ChartSettingsViewInput.swift in Sources */,
@@ -5877,7 +5875,7 @@
 				0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				340BE39427B54F37006D6C34 /* OwnerViewOutput.swift in Sources */,
 				E10E18AB297D6664002C78C3 /* RuuviCloudModuleFactory.swift in Sources */,
-				E1ED426E28FF261D00302179 /* YAxisValueFormatter.swift in Sources */,
+				E1ED426E28FF261D00302179 /* CustomYAxisRenderer.swift in Sources */,
 				0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */,
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				E18D04D128F1D027008EF5EC /* TagChartsViewInput.swift in Sources */,
@@ -6033,7 +6031,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6043,7 +6041,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6065,7 +6063,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6075,7 +6073,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6097,7 +6095,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6110,7 +6108,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -6134,7 +6132,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6147,7 +6145,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6169,7 +6167,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6182,7 +6180,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -6205,7 +6203,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6218,7 +6216,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6357,7 +6355,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6399,7 +6397,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6419,7 +6417,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6428,7 +6426,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6533,7 +6531,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6546,7 +6544,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
@@ -6568,7 +6566,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 366;
+				CURRENT_PROJECT_VERSION = 372;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6581,7 +6579,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
 				PRODUCT_NAME = "$(TARGET_NAME)";
