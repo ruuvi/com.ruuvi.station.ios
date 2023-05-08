@@ -25,6 +25,11 @@ struct RuuviColor {
     static let ruuviTextColor = UIColor(named: "RuuviTextColor")
     static let ruuviMenuTextColor = UIColor(named: "RuuviMenuTextColor")
     static let ruuviLineColor = UIColor(named: "RuuviLineColor")
+    static let ruuviSwitchDisabledTint =
+        UIColor(named: "RuuviSwitchDisabledTint")
+    static let ruuviSwitchEnabledTint =
+        UIColor(named: "RuuviSwitchEnabledTint")
+    static let ruuviSwitchDisabledThumbTint = UIColor(named: "RuuviSwitchDisabledThumbTint")
 
     // Tag settings
     static let tagSettingsSectionHeaderColor = UIColor(named: "TagSettingsSectionHeaderColor")

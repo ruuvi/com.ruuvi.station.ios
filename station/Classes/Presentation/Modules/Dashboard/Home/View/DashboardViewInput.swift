@@ -5,6 +5,7 @@ import RuuviOntology
 protocol DashboardViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
     var dashboardType: DashboardType! { get set }
+    var dashboardTapActionType: DashboardTapActionType! { get set }
     func applyUpdate(to viewModel: CardsViewModel)
     func showNoSensorsAddedMessage(show: Bool)
     func showBluetoothDisabled(userDeclined: Bool)

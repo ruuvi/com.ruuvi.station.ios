@@ -56,7 +56,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
     // Common formatted
     private var commonNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
@@ -66,7 +66,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
 
     private var commonFormatter: MeasurementFormatter {
         let measurementFormatter = MeasurementFormatter()
-        measurementFormatter.locale = settings.language.locale
+        measurementFormatter.locale = Locale.current
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.numberFormatter = self.commonNumberFormatter
         return measurementFormatter
@@ -75,7 +75,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
     // Temperature formatter
     private var tempereatureNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = settings.temperatureAccuracy.value
         formatter.maximumFractionDigits = settings.temperatureAccuracy.value
@@ -85,7 +85,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
 
     private var temperatureFormatter: MeasurementFormatter {
         let measurementFormatter = MeasurementFormatter()
-        measurementFormatter.locale = settings.language.locale
+        measurementFormatter.locale = Locale.current
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.numberFormatter = self.tempereatureNumberFormatter
         return measurementFormatter
@@ -94,7 +94,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
     // Humidity
     private var humidityNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = settings.humidityAccuracy.value
         formatter.maximumFractionDigits = settings.humidityAccuracy.value
@@ -112,7 +112,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
     // Pressure
     private var pressureNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = settings.language.locale
+        formatter.locale = Locale.current
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = settings.pressureAccuracy.value
         formatter.maximumFractionDigits = settings.pressureAccuracy.value
@@ -122,7 +122,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
 
     private var pressureFormatter: MeasurementFormatter {
         let measurementFormatter = MeasurementFormatter()
-        measurementFormatter.locale = settings.language.locale
+        measurementFormatter.locale = Locale.current
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.numberFormatter = self.pressureNumberFormatter
         return measurementFormatter
@@ -178,7 +178,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let value = temperature.converted(to: units.temperatureUnit).value
         let number = NSNumber(value: value)
-        tempereatureNumberFormatter.locale = settings.language.locale
+        tempereatureNumberFormatter.locale = Locale.current
         return tempereatureNumberFormatter.string(from: number) ?? emptyValueString
     }
 

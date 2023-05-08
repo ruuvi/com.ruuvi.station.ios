@@ -11,7 +11,7 @@ class HeartbeatTableViewController: UITableViewController {
     }
 
     @IBOutlet weak var bgScanningTitleLabel: UILabel!
-    @IBOutlet weak var bgScanningSwitch: UISwitch!
+    @IBOutlet weak var bgScanningSwitch: RuuviUISwitch!
     @IBOutlet weak var bgScanningIntervalTitleLabel: UILabel!
     @IBOutlet weak var bgScanningIntervalValueLabel: UILabel!
     @IBOutlet weak var bgScanningIntervalStepper: UIStepper!

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RuuviCloudApiClaimRequest: Encodable {
+public struct RuuviCloudApiClaimRequest: Codable {
     let name: String?
     let sensor: String
 

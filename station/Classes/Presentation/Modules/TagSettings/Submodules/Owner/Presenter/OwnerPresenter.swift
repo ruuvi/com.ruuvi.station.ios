@@ -45,11 +45,11 @@ extension OwnerPresenter: OwnerViewOutput {
                 self?.removeConnection()
             }, failure: { [weak self] error in
                 switch error {
-                case .ruuviCloud(.api(.claim(let claimError))):
+                case .ruuviCloud(.api(.api(.erSensorAlreadyClaimed))):
                     if let luid = self?.ruuviTag.luid {
                         self?.connectionPersistence.setKeepConnection(false, for: luid)
                     }
-                    self?.view.showSensorAlreadyClaimedError(error: claimError.code, email: claimError.error.email())
+                    self?.view.showSensorAlreadyClaimedDialog()
                 default:
                     self?.errorPresenter.present(error: error)
                 }

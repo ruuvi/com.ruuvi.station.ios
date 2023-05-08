@@ -487,6 +487,7 @@ extension CardsPresenter {
         alertHandler.process(record: record, trigger: false)
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func observeSensorSettings() {
         sensorSettingsTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.removeAll()
@@ -495,32 +496,66 @@ extension CardsPresenter {
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
                     ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
+                        guard let sSelf = self else { return }
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettings.append(sensorSettings)
-                            self?.notifyUpdate(for: viewModel)
+                            if let viewModel = sSelf.viewModels.first(where: {
+                                $0.id.value == ruuviTagSensor.id
+                            }) {
+                                self?.notifySensorSettingsUpdate(
+                                    sensorSettings: sensorSettings,
+                                    viewModel: viewModel
+                                )
+                            }
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettings.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettings[updateIndex] = updateSensorSettings
+                                if let viewModel = sSelf.viewModels.first(where: {
+                                    $0.id.value == ruuviTagSensor.id
+                                }) {
+                                    self?.notifySensorSettingsUpdate(
+                                        sensorSettings: updateSensorSettings,
+                                        viewModel: viewModel
+                                    )
+                                }
                             } else {
                                 self?.sensorSettings.append(updateSensorSettings)
                             }
-                            self?.notifyUpdate(for: viewModel)
                         case .delete(let deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettings.firstIndex(
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettings.remove(at: deleteIndex)
                             }
-                            self?.notifyUpdate(for: viewModel)
+                            if let viewModel = sSelf.viewModels.first(where: {
+                                $0.id.value == ruuviTagSensor.id
+                            }) {
+                                self?.notifySensorSettingsUpdate(
+                                    sensorSettings: deleteSensorSettings,
+                                    viewModel: viewModel
+                                )
+                            }
                         default: break
                         }
                     })
                 )
             }
         }
+    }
+
+    private func notifySensorSettingsUpdate(
+        sensorSettings: SensorSettings?, viewModel: CardsViewModel
+    ) {
+        let currentRecord = viewModel.latestMeasurement.value
+        let updatedRecord = currentRecord?.with(sensorSettings: sensorSettings)
+        guard let updatedRecord = updatedRecord else {
+            return
+        }
+        viewModel.update(updatedRecord)
+        notifyUpdate(for: viewModel)
     }
 
     private func startObservingBluetoothState() {
@@ -1173,14 +1208,15 @@ extension CardsPresenter {
             viewModel.connectionAlertState.value,
             viewModel.movementAlertState.value
         ]
-        if alertStates.first(where: { alert in
-            alert == .firing
-        }) != nil && alertService.hasRegistrations(for: ruuviTag) {
-            viewModel.alertState.value = .firing
-        } else if alertStates.first(where: { alert in
-            alert == .registered
-        }) != nil && alertService.hasRegistrations(for: ruuviTag) {
-            viewModel.alertState.value = .registered
+
+        if alertService.hasRegistrations(for: ruuviTag) {
+            if alertStates.first(where: { alert in
+                alert == .firing
+            }) != nil {
+                viewModel.alertState.value = .firing
+            } else {
+                viewModel.alertState.value = .registered
+            }
         } else {
             viewModel.alertState.value = .empty
         }

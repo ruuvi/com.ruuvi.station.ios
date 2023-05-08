@@ -17,11 +17,9 @@ class RuuviCloudTableViewCell: UITableViewCell {
         return label
     }()
 
-    lazy var statusSwitch: UISwitch = {
-        let toggle = UISwitch()
+    lazy var statusSwitch: RuuviUISwitch = {
+        let toggle = RuuviUISwitch()
         toggle.isOn = false
-        toggle.onTintColor = .clear
-        toggle.thumbTintColor = RuuviColor.ruuviTintColor
         toggle.addTarget(self,
                          action: #selector(handleStatusToggle),
                          for: .valueChanged)
@@ -64,7 +62,7 @@ class RuuviCloudTableViewCell: UITableViewCell {
         statusSwitch.centerYInSuperview()
     }
 
-    @objc private func handleStatusToggle(_ sender: UISwitch) {
+    @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
         delegate?.didToggleSwitch(isOn: sender.isOn, sender: self)
     }
 }

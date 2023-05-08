@@ -8,12 +8,20 @@ class SignInRouter: SignInRouterInput {
         transitionHandler.dismiss(animated: true, completion: completion)
     }
 
-    func popViewController(animated: Bool) {
-        transitionHandler.navigationController?.popViewController(animated: animated)
+    func popViewController(animated: Bool, completion: (() -> Void)?) {
+        if let navigationController =
+            transitionHandler.navigationController,
+            navigationController.viewControllers.count > 1 {
+            // There is at least one view controller that can be popped
+            navigationController.popViewController(animated: animated)
+        } else {
+            // There are no view controllers that can be popped
+            transitionHandler.dismiss(animated: animated, completion: completion)
+        }
     }
 
-    func openSignInPromoViewController(output: SignInPromoModuleOutput) {
-        let factory: SignInPromoModuleFactory = SignInPromoModuleFactoryImpl()
+    func openSignInPromoViewController(output: SignInBenefitsModuleOutput) {
+        let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
 
         transitionHandler
@@ -22,7 +30,7 @@ class SignInRouter: SignInRouterInput {
                 module,
                 animated: true
             )
-        if let presenter = module.output as? SignInPromoModuleInput {
+        if let presenter = module.output as? SignInBenefitsModuleInput {
             presenter.configure(output: output)
         }
     }

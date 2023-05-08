@@ -456,7 +456,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     isClaimed: false,
                     isOwner: false,
                     owner: nil,
-                    isCloudSensor: false
+                    isCloudSensor: false,
+                    canShare: false,
+                    sharedTo: []
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
                 let virtualSensor = VirtualSensorStruct(id: uuid)
@@ -483,7 +485,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     isClaimed: false,
                     isOwner: false,
                     owner: nil,
-                    isCloudSensor: false
+                    isCloudSensor: false,
+                    canShare: false,
+                    sharedTo: []
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
                 let virtualSensor = VirtualSensorStruct(id: uuid)
@@ -530,7 +534,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             isClaimed: false,
             isOwner: false,
             owner: nil,
-            isCloudSensor: false
+            isCloudSensor: false,
+            canShare: false,
+            sharedTo: []
         )
         ruuviAlertService.mute(
             type: Self.alertType(from: type),
@@ -560,7 +566,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             isClaimed: false,
             isOwner: false,
             owner: nil,
-            isCloudSensor: false
+            isCloudSensor: false,
+            canShare: false,
+            sharedTo: []
         )
         ruuviAlertService.mute(
             type: Self.alertType(from: type),

@@ -71,15 +71,16 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-    func openSignIn(output: SignInModuleOutput) {
-        let factory: SignInModuleFactory = SignInModuleFactoryImpl()
+    func openSignIn(output: SignInBenefitsModuleOutput) {
+        let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
+
         let navigationController = UINavigationController(
             rootViewController: module)
         transitionHandler.present(navigationController, animated: true)
 
-        if let presenter = module.output as? SignInModuleInput {
-            presenter.configure(with: .enterEmail, output: output)
+        if let presenter = module.output as? SignInBenefitsModuleInput {
+            presenter.configure(output: output)
         }
 
         AppUtility.lockOrientation(.portrait)

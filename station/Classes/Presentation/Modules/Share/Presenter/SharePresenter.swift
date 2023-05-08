@@ -4,6 +4,7 @@ import UIKit
 import RuuviService
 import RuuviOntology
 import RuuviPresenters
+import RuuviReactor
 
 class SharePresenter {
     weak var view: ShareViewInput!
@@ -13,19 +14,30 @@ class SharePresenter {
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
+    var ruuviReactor: RuuviReactor!
 
-    private var sensor: RuuviTagSensor!
+    private var sensor: RuuviTagSensor! {
+        didSet {
+            fetchShared()
+        }
+    }
     private let maxShareCount: Int = 10
     private var viewModel: ShareViewModel! {
         didSet {
             view.viewModel = viewModel
         }
     }
+
+    private var ruuviTagToken: RuuviReactorToken?
+
+    deinit {
+        ruuviTagToken?.invalidate()
+    }
 }
 // MARK: - ShareViewOutput
 extension SharePresenter: ShareViewOutput {
     func viewDidLoad() {
-        fetchShared()
+        startObservingRuuviTag()
     }
 
     func viewDidTapSendButton(email: String?) {
@@ -40,7 +52,8 @@ extension SharePresenter: ShareViewOutput {
         ruuviOwnershipService
             .share(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] _ in
-                self?.fetchShared()
+                self?.view.clearInput()
+                self?.updateShared(email: email, add: true)
                 self?.view.showSuccessfullyShared()
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
@@ -54,7 +67,7 @@ extension SharePresenter: ShareViewOutput {
         ruuviOwnershipService
             .unshare(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] _ in
-                self?.fetchShared()
+                self?.updateShared(email: email, add: false)
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
@@ -90,8 +103,8 @@ extension SharePresenter: ShareViewOutput {
 // MARK: - ShareModuleInput
 extension SharePresenter: ShareModuleInput {
     func configure(sensor: RuuviTagSensor) {
+        viewModel = ShareViewModel(maxCount: maxShareCount)
         self.sensor = sensor
-        viewModel = ShareViewModel(maxCount: self.maxShareCount)
     }
 
     func dismiss() {
@@ -100,26 +113,73 @@ extension SharePresenter: ShareModuleInput {
 }
 // MARK: - Private
 extension SharePresenter {
+
+    // swiftlint:disable switch_case_alignment
+    private func startObservingRuuviTag() {
+        ruuviTagToken?.invalidate()
+        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
+            switch change {
+                case .update(let sensor):
+                    if (sensor.luid?.any != nil &&
+                        sensor.luid?.any == self?.sensor.luid?.any)
+                        ||
+                        (sensor.macId?.any != nil &&
+                         sensor.macId?.any == self?.sensor.macId?.any) {
+                        self?.sensor = sensor
+                    }
+                default: return
+            }
+        }
+    }
+
     private func fetchShared() {
+        guard !sensor.canShare else {
+            updateViewModel()
+            return
+        }
+
         ruuviOwnershipService
             .loadShared(for: sensor)
             .on(success: { [weak self] shareableSensors in
-                self?.filterEmails(shareableSensors)
-                self?.view.clearInput()
+                guard let sSelf = self else { return }
+                if let shareable = shareableSensors
+                    .first(where: {
+                        $0.id == sSelf.sensor.id
+                    }) {
+                    guard shareable.canShare else {
+                        return
+                    }
+
+                    let updated = sSelf.sensor.with(canShare: shareable.canShare)
+                    sSelf.ruuviOwnershipService.updateShareable(for: updated)
+                    sSelf.sensor = updated
+                }
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
     }
 
-    private func filterEmails(_ sensors: Set<AnyShareableSensor>) {
-        if let sensor = sensors
-            .first(where: {
-                $0.id == sensor.id
-            }) {
-            viewModel.sharedEmails.value = sensor.sharedTo
-            viewModel.canShare.value = sensor.canShare
-        }
+    private func updateViewModel() {
+        viewModel.sharedEmails.value = sensor.sharedTo
+        viewModel.canShare.value = sensor.canShare
         view.reloadTableView()
+    }
+
+    private func updateShared(email: String, add: Bool) {
+        var sharedTo = sensor.sharedTo
+        if add {
+            sharedTo.append(email)
+        } else {
+            if let index = sharedTo.firstIndex(where: { shared in
+                shared.lowercased() == email.lowercased()
+            }) {
+                sharedTo.remove(at: index)
+            } else {
+                return
+            }
+        }
+        let sensor = sensor.with(sharedTo: sharedTo)
+        ruuviOwnershipService.updateShareable(for: sensor)
     }
 
     private func isValidEmail(_ email: String) -> Bool {
@@ -128,3 +188,4 @@ extension SharePresenter {
         return emailPred.evaluate(with: email)
     }
 }
+// swiftlint:enable switch_case_alignment

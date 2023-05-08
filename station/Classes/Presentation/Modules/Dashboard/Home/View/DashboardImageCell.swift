@@ -75,6 +75,17 @@ class DashboardImageCell: UICollectionViewCell {
     private lazy var pressureView = DashboardIndicatorView()
     private lazy var movementView = DashboardIndicatorView()
 
+    private lazy var dataSourceIconView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.backgroundColor = .clear
+        iv.alpha = 0.7
+        iv.tintColor = RuuviColor
+            .dashboardIndicatorTextColor?
+            .withAlphaComponent(0.8)
+        return iv
+    }()
+
     private lazy var updatedAtLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
@@ -131,6 +142,9 @@ class DashboardImageCell: UICollectionViewCell {
                                  bottom: nil,
                                  trailing: nil,
                                  padding: .init(top: 8, left: 8, bottom: 0, right: 0))
+        ruuviTagNameLabel.heightAnchor.constraint(
+            greaterThanOrEqualToConstant: 14
+        ).isActive = true
 
         container.addSubview(alertIcon)
         alertIcon.anchor(top: ruuviTagNameLabel.topAnchor,
@@ -232,8 +246,16 @@ class DashboardImageCell: UICollectionViewCell {
             .constraint(equalTo: rightContainerView.widthAnchor)
             .isActive = true
 
+        let sourceAndUpdateStack = UIStackView(arrangedSubviews: [
+            dataSourceIconView, updatedAtLabel
+        ])
+        sourceAndUpdateStack.axis = .horizontal
+        sourceAndUpdateStack.spacing = 6
+        sourceAndUpdateStack.distribution = .fill
+        dataSourceIconView.size(width: 12, height: 12)
+
         let footerStack = UIStackView(arrangedSubviews: [
-            updatedAtLabel, batteryLevelView
+            sourceAndUpdateStack, batteryLevelView
         ])
         footerStack.spacing = 4
         footerStack.axis = .horizontal
@@ -355,6 +377,29 @@ extension DashboardImageCell {
             updatedAtLabel.text = "Cards.UpdatedLabel.NoData.message".localized()
         }
         startTimer(with: viewModel.date.value)
+
+        // Source
+        if let source = viewModel.source.value {
+            switch source {
+            case .unknown:
+                dataSourceIconView.image = nil
+            case .advertisement:
+                dataSourceIconView.image = RuuviAssets.advertisementImage
+            case .heartbeat:
+                dataSourceIconView.image = RuuviAssets.heartbeatImage
+            case .log:
+                dataSourceIconView.image = RuuviAssets.heartbeatImage
+            case .ruuviNetwork:
+                dataSourceIconView.image = RuuviAssets.ruuviNetworkImage
+            case .weatherProvider:
+                dataSourceIconView.image = RuuviAssets.weatherProviderImage
+            }
+        } else {
+            dataSourceIconView.image = nil
+        }
+        dataSourceIconView.image = dataSourceIconView
+            .image?
+            .withRenderingMode(.alwaysTemplate)
 
         // Battery state
         if let batteryLow = viewModel.batteryNeedsReplacement.value,

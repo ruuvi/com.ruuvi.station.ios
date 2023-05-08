@@ -1,14 +1,20 @@
 import Foundation
 import RuuviLocal
 import RuuviUser
+import WidgetKit
 
 class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
     var settings: RuuviLocalSettings!
     var ruuviUser: RuuviUser!
+    var output: DefaultsModuleOutput?
 
-    func configure() {
+    let appGroupDefaults = UserDefaults(
+        suiteName: AppGroupConstants.appGroupSuiteIdentifier
+    )
+
+    func configure(output: DefaultsModuleOutput) {
         view.viewModels = [buildWelcomeShown(),
                            buildChartsSwipeInstruction(),
                            buildConnectionTimeout(),
@@ -23,15 +29,24 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildSaveAndLoadFromWebIntervalMinutues(),
                            buildAskForReviewFirstTime(),
                            buildAskForReviewLater(),
+                           buildDashboardCardTapAction(),
+                           buildConnectToDevServer(),
                            buildIsAuthorized(),
-                           buildAuthToken(),
-                           buildDashboardCardTapAction()]
+                           buildAuthToken()]
+        self.output = output
+    }
+
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss()
+        completion?()
     }
 }
 
 // MARK: - DefaultsViewOutput
 extension DefaultsPresenter: DefaultsViewOutput {
-
+    func viewDidTriggerUseDevServer(useDevServer: Bool?) {
+        changeRuuviCloudEndpoint(useDevServer: useDevServer)
+    }
 }
 
 // MARK: Private
@@ -219,9 +234,9 @@ extension DefaultsPresenter {
 
     private func buildIsAuthorized() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
-        viewModel.title = "User Authorized"
+        viewModel.title = "Defaults.UserAuthorized.title".localized()
         viewModel.type.value = .plain
-        viewModel.value.value = ruuviUser.isAuthorized ? "Yes" : "No"
+        viewModel.value.value = ruuviUser.isAuthorized ? "Yes".localized() : "No".localized()
         return viewModel
     }
 
@@ -235,14 +250,60 @@ extension DefaultsPresenter {
 
     private func buildDashboardCardTapAction() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Show Chart on Dashboard Card Tap"
-        viewModel.boolean.value = settings.showChartOnDashboardCardTap
+        viewModel.title = "Defaults.DashboardTapActionChart.title".localized()
+        viewModel.boolean.value = settings.dashboardTapActionType == .chart
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
-            observer.settings.showChartOnDashboardCardTap = showChart.bound
+            if let showChart = showChart {
+                observer.settings.dashboardTapActionType = showChart ? .chart : .card
+            }
         }
         return viewModel
     }
 
+    private func buildConnectToDevServer() -> DefaultsViewModel {
+        let useDevServer = appGroupDefaults?.bool(
+            forKey: AppGroupConstants.useDevServerKey
+        ) ?? false
+
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Defaults.DevServer.title".localized()
+        viewModel.boolean.value = useDevServer
+        viewModel.type.value = .switcher
+
+        // This is a different settings than all other local settings.
+        // We will store this into the app group prefs so that it can be accessed
+        // in the widgets too.
+        // This also has to be loaded in the AppAssembly. So, we can't really use
+        // local settings module for this since we load the whole Local settings in
+        // the AppAssembly.
+        bind(viewModel.boolean,
+             fire: false) { [weak self] _, useDevServer in
+            self?.view
+                .showEndpointChangeConfirmationDialog(
+                useDevServer: useDevServer
+            )
+        }
+        return viewModel
+    }
+
+}
+
+extension DefaultsPresenter {
+    private func changeRuuviCloudEndpoint(useDevServer: Bool?) {
+        appGroupDefaults?.set(
+            useDevServer,
+            forKey: AppGroupConstants.useDevServerKey
+        )
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        )
+        NotificationCenter
+            .default
+            .post(name: .NetworkSyncDidFailForAuthorization,
+                  object: self,
+                  userInfo: nil)
+        output?.defaultsModuleDidDismiss(module: self)
+    }
 }

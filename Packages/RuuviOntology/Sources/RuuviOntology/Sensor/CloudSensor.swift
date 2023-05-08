@@ -12,7 +12,9 @@ extension CloudSensor {
             isClaimed: isOwner,
             isOwner: isOwner,
             owner: owner,
-            isCloudSensor: isCloudSensor
+            isCloudSensor: isCloudSensor,
+            canShare: canShare,
+            sharedTo: sharedTo
         )
     }
 
@@ -27,7 +29,9 @@ extension CloudSensor {
             offsetTemperature: offsetTemperature,
             offsetHumidity: offsetHumidity,
             offsetPressure: offsetPressure,
-            isCloudSensor: isCloudSensor
+            isCloudSensor: isCloudSensor,
+            canShare: canShare,
+            sharedTo: sharedTo
         )
     }
 }
@@ -43,6 +47,8 @@ public struct CloudSensorStruct: CloudSensor {
     public var offsetHumidity: Double?
     public var offsetPressure: Double?
     public var isCloudSensor: Bool?
+    public var canShare: Bool
+    public var sharedTo: [String]
 
     public init(
         id: String,
@@ -54,7 +60,9 @@ public struct CloudSensorStruct: CloudSensor {
         offsetTemperature: Double?,
         offsetHumidity: Double?,
         offsetPressure: Double?,
-        isCloudSensor: Bool?
+        isCloudSensor: Bool?,
+        canShare: Bool,
+        sharedTo: [String]
     ) {
         self.id = id
         self.name = name
@@ -66,6 +74,8 @@ public struct CloudSensorStruct: CloudSensor {
         self.offsetHumidity = offsetHumidity
         self.offsetPressure = offsetPressure
         self.isCloudSensor = isCloudSensor
+        self.canShare = canShare
+        self.sharedTo = sharedTo
     }
 }
 
@@ -120,6 +130,14 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
 
     public var isCloudSensor: Bool? {
         return object.isCloudSensor
+    }
+
+    public var canShare: Bool {
+        return object.canShare
+    }
+
+    public var sharedTo: [String] {
+        return object.sharedTo
     }
 
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {

@@ -13,7 +13,6 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnTxPower()
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
-    func viewDidTapClaimButton()
     func viewDidTapShareButton()
     func viewDidTapOnExport()
     func viewDidTapOnOwner()
@@ -21,6 +20,12 @@ protocol TagSettingsViewOutput {
     func viewDidConfirmFirmwareUpdate()
     /// Trigger this method when user cancel the legacy firmware update dialog for the first time
     func viewDidIgnoreFirmwareUpdateDialog()
+
+    // Alerts
+    func viewDidChangeAlertState(for type: AlertType, isOn: Bool)
+    func viewDidChangeAlertLowerBound(for type: AlertType, lower: CGFloat)
+    func viewDidChangeAlertUpperBound(for type: AlertType, upper: CGFloat)
+    func viewDidChangeAlertDescription(for type: AlertType, description: String?)
 
     // Offset Correction
     func viewDidTapTemperatureOffsetCorrection()

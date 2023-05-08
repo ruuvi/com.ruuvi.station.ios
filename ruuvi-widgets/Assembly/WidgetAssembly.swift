@@ -17,13 +17,22 @@ final class WidgetAssembly {
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
 
+        let appGroupDefaults = UserDefaults(
+            suiteName: Constants.appGroupBundleId.rawValue
+        )
+        let useDevServer = appGroupDefaults?.bool(
+            forKey: Constants.useDevServerKey.rawValue
+        ) ?? false
+
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
-            let baseUrlString: String = Constants.ruuviCloudBaseURL.rawValue
+            let baseUrlString: String = useDevServer ?
+                Constants.ruuviCloudBaseURLDev.rawValue : Constants.ruuviCloudBaseURL.rawValue
             let baseUrl = URL(string: baseUrlString)!
             let cloud = r.resolve(RuuviCloudFactory.self)!.create(
                 baseUrl: baseUrl,
-                user: user
+                user: user,
+                pool: nil
             )
             return cloud
         }

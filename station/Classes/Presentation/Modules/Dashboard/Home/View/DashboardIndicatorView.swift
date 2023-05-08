@@ -65,6 +65,9 @@ extension DashboardIndicatorView {
     func setValue(with value: String?, unit: String? = nil) {
         indicatorValueLabel.text = value
         indicatorUnitLabel.text = unit
+
+        indicatorValueLabel.sizeToFit()
+        indicatorUnitLabel.sizeToFit()
         layoutIfNeeded()
     }
 

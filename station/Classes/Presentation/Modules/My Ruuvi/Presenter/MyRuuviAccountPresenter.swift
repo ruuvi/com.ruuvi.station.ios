@@ -105,6 +105,8 @@ extension MyRuuviAccountPresenter {
     }
 
     private func reloadWidgets() {
-        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        )
     }
 }

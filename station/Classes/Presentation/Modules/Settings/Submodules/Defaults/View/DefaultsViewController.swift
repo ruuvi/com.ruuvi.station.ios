@@ -29,6 +29,18 @@ class DefaultsViewController: UIViewController {
 }
 
 extension DefaultsViewController: DefaultsViewInput {
+    func showEndpointChangeConfirmationDialog(useDevServer: Bool?) {
+        let message = "Defaults.DevServer.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let cancelActionTitle = "Cancel".localized()
+        alert.addAction(UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil))
+        let signOutTitle = "Menu.SignOut.text".localized()
+        alert.addAction(UIAlertAction(title: signOutTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidTriggerUseDevServer(useDevServer: useDevServer)
+        }))
+        present(alert, animated: true)
+    }
+
     func localize() {
         navigationItem.title = "Defaults.navigationItem.title".localized()
     }
