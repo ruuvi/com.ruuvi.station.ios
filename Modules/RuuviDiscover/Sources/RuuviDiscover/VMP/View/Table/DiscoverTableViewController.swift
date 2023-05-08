@@ -277,4 +277,3 @@ extension DiscoverTableViewController {
         UIApplication.shared.open(url)
     }
 }
-// swiftlint:enable file_length

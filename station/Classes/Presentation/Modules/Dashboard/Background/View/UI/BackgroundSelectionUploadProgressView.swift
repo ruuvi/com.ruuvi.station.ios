@@ -1,6 +1,6 @@
 import UIKit
 
-// swiftlint:disable type_name
+// swiftlint:disable:next type_name
 protocol BackgroundSelectionUploadProgressViewDelegate: NSObjectProtocol {
     func didTapCancel()
 }

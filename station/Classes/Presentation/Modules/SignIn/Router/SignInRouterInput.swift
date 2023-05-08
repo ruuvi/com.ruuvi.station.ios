@@ -2,8 +2,8 @@ import Foundation
 
 protocol SignInRouterInput {
     func dismiss(completion: (() -> Void)?)
-    func popViewController(animated: Bool)
-    func openSignInPromoViewController(output: SignInPromoModuleOutput)
+    func popViewController(animated: Bool, completion: (() -> Void)?)
+    func openSignInPromoViewController(output: SignInBenefitsModuleOutput)
 }
 
 extension SignInRouterInput {

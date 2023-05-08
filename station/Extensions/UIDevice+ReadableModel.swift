@@ -42,7 +42,7 @@ extension UIDevice {
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
 
-        // swiftlint:disable: line_length cyclomatic_complexity function_body_length
+        // swiftlint:disable line_length cyclomatic_complexity function_body_length
         func mapToDevice(identifier: String) -> String {
             #if os(iOS)
             switch identifier {
@@ -136,6 +136,7 @@ extension UIDevice {
 
         return mapToDevice(identifier: identifier)
     }()
+    // swiftlint:enable line_length cyclomatic_complexity function_body_length
 }
 
 // MARK: - Model Identifier

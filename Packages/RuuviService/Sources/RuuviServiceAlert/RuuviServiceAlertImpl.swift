@@ -16,6 +16,7 @@ extension RuuviServiceAlertImpl {
             case .temperature(let lower, let upper):
                 cloud.setAlert(
                     type: .temperature,
+                    settingType: .state,
                     isEnabled: true,
                     min: lower,
                     max: upper,
@@ -26,6 +27,7 @@ extension RuuviServiceAlertImpl {
             case .relativeHumidity(let lower, let upper):
                 cloud.setAlert(
                     type: .humidity,
+                    settingType: .state,
                     isEnabled: true,
                     min: lower * 100.0, // in percent on cloud, fraction locally
                     max: upper * 100.0, // in percent on cloud, fraction locally
@@ -38,6 +40,7 @@ extension RuuviServiceAlertImpl {
             case .pressure(let lower, let upper):
                 cloud.setAlert(
                     type: .pressure,
+                    settingType: .state,
                     isEnabled: true,
                     min: lower * 100, // in Pa on cloud, in hPa locally
                     max: upper * 100, // in Pa on cloud, in hPa locally
@@ -48,6 +51,7 @@ extension RuuviServiceAlertImpl {
             case .signal(let lower, let upper):
                 cloud.setAlert(
                     type: .signal,
+                    settingType: .state,
                     isEnabled: true,
                     min: lower,
                     max: upper,
@@ -60,6 +64,7 @@ extension RuuviServiceAlertImpl {
             case .movement(let last):
                 cloud.setAlert(
                     type: .movement,
+                    settingType: .state,
                     isEnabled: true,
                     min: nil,
                     max: nil,
@@ -79,6 +84,7 @@ extension RuuviServiceAlertImpl {
             case .temperature(let lower, let upper):
                 cloud.setAlert(
                     type: .temperature,
+                    settingType: .state,
                     isEnabled: false,
                     min: lower,
                     max: upper,
@@ -89,6 +95,7 @@ extension RuuviServiceAlertImpl {
             case .relativeHumidity(let lower, let upper):
                 cloud.setAlert(
                     type: .humidity,
+                    settingType: .state,
                     isEnabled: false,
                     min: lower * 100, // in percent on cloud, fraction locally
                     max: upper * 100, // in percent on cloud, fraction locally
@@ -101,6 +108,7 @@ extension RuuviServiceAlertImpl {
             case .pressure(let lower, let upper):
                 cloud.setAlert(
                     type: .pressure,
+                    settingType: .state,
                     isEnabled: false,
                     min: lower * 100, // in Pa on cloud, in hPa locally
                     max: upper * 100, // in Pa on cloud, in hPa locally
@@ -111,6 +119,7 @@ extension RuuviServiceAlertImpl {
             case .signal(let lower, let upper):
                 cloud.setAlert(
                     type: .signal,
+                    settingType: .state,
                     isEnabled: false,
                     min: lower,
                     max: upper,
@@ -123,6 +132,7 @@ extension RuuviServiceAlertImpl {
             case .movement(let last):
                 cloud.setAlert(
                     type: .movement,
+                    settingType: .state,
                     isEnabled: false,
                     min: nil,
                     max: nil,
@@ -139,6 +149,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .temperature,
+                settingType: .lowerBound,
                 isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
                 min: celsius,
                 max: upperCelsius(for: ruuviTag),
@@ -154,6 +165,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .temperature,
+                settingType: .upperBound,
                 isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
                 min: lowerCelsius(for: ruuviTag),
                 max: celsius,
@@ -169,6 +181,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .temperature,
+                settingType: .description,
                 isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
                 min: lowerCelsius(for: ruuviTag),
                 max: upperCelsius(for: ruuviTag),
@@ -184,6 +197,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .humidity,
+                settingType: .lowerBound,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
                 min: (relativeHumidity ?? 0) * 100.0,
                 max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
@@ -199,6 +213,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .humidity,
+                settingType: .upperBound,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
                 min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 max: (relativeHumidity ?? 0) * 100.0,
@@ -214,6 +229,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .humidity,
+                settingType: .description,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
                 min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
@@ -229,6 +245,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .pressure,
+                settingType: .lowerBound,
                 isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
                 min: (pressure ?? 0) * 100.0,
                 max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
@@ -244,6 +261,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .pressure,
+                settingType: .upperBound,
                 isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
                 min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
                 max: (pressure ?? 0) * 100.0,
@@ -259,6 +277,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .pressure,
+                settingType: .description,
                 isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
                 min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
                 max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
@@ -274,6 +293,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .signal,
+                settingType: .lowerBound,
                 isEnabled: isOn(type: .signal(lower: 0, upper: 0),
                                 for: ruuviTag),
                 min: (signal ?? 0),
@@ -290,6 +310,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .signal,
+                settingType: .upperBound,
                 isEnabled: isOn(type: .signal(lower: 0, upper: 0),
                                 for: ruuviTag),
                 min: (lowerSignal(for: ruuviTag) ?? 0),
@@ -306,6 +327,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .signal,
+                settingType: .description,
                 isEnabled: isOn(type: .signal(lower: 0, upper: 0),
                                 for: ruuviTag),
                 min: (lowerSignal(for: ruuviTag) ?? 0),
@@ -322,6 +344,7 @@ extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .movement,
+                settingType: .description,
                 isEnabled: isOn(type: .movement(last: 0), for: ruuviTag),
                 min: nil,
                 max: nil,

@@ -37,7 +37,7 @@ class NoSensorView: UIView {
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold,
-                                              size: UIDevice.isiPhoneSE() ? 12 : 16)
+                                              size: UIDevice.isiPhoneSE() ? 14 : 16)
         button.addTarget(self,
                          action: #selector(handleAddSensorTap),
                          for: .touchUpInside)
@@ -50,7 +50,7 @@ class NoSensorView: UIView {
         button.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(),
                         for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold,
-                                              size: UIDevice.isiPhoneSE() ? 10 : 14)
+                                              size: 14)
         button.addTarget(self,
                          action: #selector(handleBuySensorTap),
                          for: .touchUpInside)

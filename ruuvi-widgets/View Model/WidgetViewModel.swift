@@ -27,7 +27,8 @@ extension WidgetViewModel {
         ruuviCloud.loadSensorsDense(for: nil,
                                     measurements: true,
                                     sharedToOthers: nil,
-                                    sharedToMe: true, alerts: nil).on(success: { sensors in
+                                    sharedToMe: true,
+                                    alerts: nil).on(success: { sensors in
             let sensorsWithRecord = sensors.filter({ $0.record != nil })
             completion(sensorsWithRecord)
         })

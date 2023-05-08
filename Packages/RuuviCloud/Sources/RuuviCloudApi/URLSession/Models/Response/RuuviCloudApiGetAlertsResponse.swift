@@ -7,7 +7,8 @@ public struct RuuviCloudApiGetAlertsResponse: Decodable {
 
 public struct RuuviCloudApiGetAlertSensor: Decodable, RuuviCloudSensorAlerts {
     public let sensor: String
-    let apiAlerts: [RuuviCloudApiGetAlert]
+    public let apiAlerts: [RuuviCloudApiGetAlert]
+
     public var alerts: [RuuviCloudAlert] {
         return apiAlerts
     }

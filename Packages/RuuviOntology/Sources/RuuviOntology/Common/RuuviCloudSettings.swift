@@ -13,4 +13,5 @@ public protocol RuuviCloudSettings {
     var cloudModeEnabled: Bool? { get }
     var dashboardEnabled: Bool? { get }
     var dashboardType: DashboardType? { get }
+    var dashboardTapActionType: DashboardTapActionType? { get }
 }
