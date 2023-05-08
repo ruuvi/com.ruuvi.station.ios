@@ -31,7 +31,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildAskForReviewLater(),
                            buildDashboardCardTapAction(),
                            buildConnectToDevServer(),
-                           buildIsAuthorized()]
+                           buildIsAuthorized(),
+                           buildAuthToken()]
         self.output = output
     }
 
