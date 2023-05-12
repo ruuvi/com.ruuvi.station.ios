@@ -97,5 +97,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+    <key>NFCReaderUsageDescription</key>
+    <string>Allows user to claim a RuuviTag using NFC when the user has physical access to the sensor</string>
 </dict>
 </plist>

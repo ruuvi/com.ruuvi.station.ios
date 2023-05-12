@@ -692,4 +692,7 @@ RuuviTag on valmis käyttöön!";
 "Defaults.DevServer.message" = "Ruuvi Cloud -päätepisteen muuttaminen vaatii kirjautumisen ulos nykyisestä istunnosta ja käynnistämään sovelluksen uudelleen. Oletko varma?";
 "Defaults.ShowEmailAlertsSettings.title" = "Näytä sähköpostihälytysasetukset";
 "Defaults.ShowPushAlertsSettings.title" = "Näytä push-hälytysasetukset";
-"scan_with_nfc" = "Skannaa NFC:llä";
+"use_nfc" = "Käytä NFC:tä";
+"use_bluetooth" = "Käytä BT:tä";
+"sensor_not_found_error" = "Anturia ei löytynyt. Yritä uudelleen.";
+"Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";

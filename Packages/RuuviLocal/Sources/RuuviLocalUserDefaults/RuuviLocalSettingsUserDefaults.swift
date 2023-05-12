@@ -552,5 +552,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func setSyncDialogHidden(for luid: LocalIdentifier) {
         UserDefaults.standard.set(true, forKey: syncDialogHiddenKey + luid.value)
     }
+
+    @UserDefault("SettingsUserDefaults.hideNFCForSensorContest", defaultValue: false)
+    var hideNFCForSensorContest: Bool
 }
 // swiftlint:enable type_body_length file_length

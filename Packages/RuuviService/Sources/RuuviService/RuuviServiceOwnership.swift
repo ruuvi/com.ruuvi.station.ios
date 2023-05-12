@@ -16,6 +16,9 @@ public protocol RuuviServiceOwnership {
     func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
+    func contest(sensor: RuuviTagSensor, secret: String) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+
+    @discardableResult
     func unclaim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
