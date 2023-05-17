@@ -4,7 +4,7 @@ public enum RuuviCloudApiError: Error {
     case connection
     case networking(Error)
     case parsing(Error)
-    case api(String)
+    case api(RuuviCloudApiErrorCode)
     case claim(RuuviCloudApiClaimError)
     case emptyResponse
     case unexpectedHTTPStatusCode

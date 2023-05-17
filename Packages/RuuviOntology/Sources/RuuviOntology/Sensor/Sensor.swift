@@ -40,7 +40,7 @@ public protocol Calibratable {
     var offsetPressure: Double? { get } // in hPa
 }
 
-public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable {}
+public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable, Shareable {}
 
 public protocol Shareable {
     var canShare: Bool { get }

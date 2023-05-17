@@ -10,13 +10,13 @@ class SettingsRouter: SettingsRouterInput {
         try! transitionHandler.closeCurrentModule().perform()
     }
 
-    func openDefaults() {
+    func openDefaults(output: DefaultsModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Defaults")
         try! transitionHandler
             .forStoryboard(factory: factory, to: DefaultsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
-                module.configure()
+                module.configure(output: output)
             })
     }
 

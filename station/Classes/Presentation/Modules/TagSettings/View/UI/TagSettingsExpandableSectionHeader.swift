@@ -161,6 +161,10 @@ class TagSettingsExpandableSectionHeader: UIView {
 }
 
 extension TagSettingsExpandableSectionHeader {
+    func setTitle(with string: String?) {
+        titleLabel.text = string
+    }
+
     func setTitle(with string: String?,
                   section: Int,
                   collapsed: Bool,

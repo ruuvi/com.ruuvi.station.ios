@@ -220,4 +220,40 @@ final class RuuviStorageCoordinator: RuuviStorage {
         }
         return promise.future
     }
+
+    // MARK: - Queued cloud requests
+    func readQueuedRequests()
+    -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
+        sqlite.readQueuedRequests().on(success: { requests in
+            promise.succeed(value: requests)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    func readQueuedRequests(
+        for key: String
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
+        sqlite.readQueuedRequests(for: key).on(success: { requests in
+            promise.succeed(value: requests)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    func readQueuedRequests(
+        for type: RuuviCloudQueuedRequestType
+    ) -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
+        let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
+        sqlite.readQueuedRequests(for: type).on(success: { requests in
+            promise.succeed(value: requests)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
 }

@@ -3,11 +3,17 @@ import Foundation
 public struct RuuviCloudSensorDense {
     public let sensor: CloudSensor
     public let record: RuuviTagSensorRecord?
+    public let alerts: RuuviCloudSensorAlerts
+    public let subscription: CloudSensorSubscription?
 
     public init(sensor: CloudSensor,
-                record: RuuviTagSensorRecord?) {
+                record: RuuviTagSensorRecord?,
+                alerts: RuuviCloudSensorAlerts,
+                subscription: CloudSensorSubscription?) {
         self.sensor = sensor
         self.record = record
+        self.alerts = alerts
+        self.subscription = subscription
     }
 }
 
@@ -59,6 +65,14 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
 
     public var isCloudSensor: Bool? {
         return sensor.isCloudSensor
+    }
+
+    public var canShare: Bool {
+        return sensor.canShare
+    }
+
+    public var sharedTo: [String] {
+        return sensor.sharedTo
     }
 
     public static func == (lhs: AnyCloudSensorDense, rhs: AnyCloudSensorDense) -> Bool {

@@ -813,3 +813,4 @@ extension TagChartsViewController {
 extension TagChartsViewController: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {}
 }
+// swiftlint:enable type_body_length

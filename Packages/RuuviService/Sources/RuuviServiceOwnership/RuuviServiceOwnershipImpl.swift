@@ -239,4 +239,15 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             })
         return promise.future
     }
+
+    @discardableResult
+    public func updateShareable(for sensor: RuuviTagSensor) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        pool.update(sensor).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .ruuviPool(error))
+        })
+        return promise.future
+    }
 }

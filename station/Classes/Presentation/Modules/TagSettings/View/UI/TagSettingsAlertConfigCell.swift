@@ -47,11 +47,9 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         return label
     }()
 
-    private lazy var statusSwitch: UISwitch = {
-        let toggle = UISwitch()
+    private lazy var statusSwitch: RuuviUISwitch = {
+        let toggle = RuuviUISwitch()
         toggle.isOn = false
-        toggle.onTintColor = .clear
-        toggle.thumbTintColor = RuuviColor.ruuviTintColor
         toggle.addTarget(self, action: #selector(handleStatusToggle), for: .valueChanged)
         return toggle
     }()
@@ -240,7 +238,7 @@ extension TagSettingsAlertConfigCell {
 
 // MARK: - Private action
 extension TagSettingsAlertConfigCell {
-    @objc private func handleStatusToggle(_ sender: UISwitch) {
+    @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
         delegate?.didChangeAlertState(sender: self, didToggle: sender.isOn)
     }
 }
@@ -281,6 +279,7 @@ extension TagSettingsAlertConfigCell {
         if let selectedMaxValue = selectedMaxValue {
             alertLimitSliderView.selectedMaxValue = selectedMaxValue
         }
+        alertLimitSliderView.refresh()
     }
 
     func setAlertAddtionalText(with string: String) {

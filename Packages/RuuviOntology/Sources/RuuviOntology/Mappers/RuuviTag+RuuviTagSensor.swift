@@ -13,7 +13,9 @@ extension RuuviTag {
             isClaimed: false,
             isOwner: true,
             owner: nil,
-            isCloudSensor: false
+            isCloudSensor: false,
+            canShare: false,
+            sharedTo: []
         )
     }
 }

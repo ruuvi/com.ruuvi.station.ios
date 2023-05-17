@@ -5,14 +5,6 @@ import RuuviOntology
 import RuuviLocal
 import RuuviService
 
-// TODO: @prioyonto - Refactor this file and move things to constants.
-enum DashboardSection: CaseIterable {
-    case main
-}
-
-typealias DashboardSnapshot = NSDiffableDataSourceSnapshot<CardsSection, CardsViewModel>
-typealias DashboardDataSource = UICollectionViewDiffableDataSource<CardsSection, CardsViewModel>
-
 class DashboardViewController: UIViewController {
 
     // Configuration
@@ -27,7 +19,6 @@ class DashboardViewController: UIViewController {
 
     var viewModels: [CardsViewModel] = [] {
         didSet {
-            print("balda")
             updateUI()
         }
     }
@@ -39,24 +30,15 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    private var layout: RuuviSimpleViewCompositionalLayout?
-    private lazy var datasource = makeDatasource()
-    // MARK: - Datasource
-    private func makeDatasource() -> DashboardDataSource {
-        let datasource = CardsDataSource(
-            collectionView: collectionView,
-            cellProvider: { [unowned self] (collectionView, indexPath, viewModel) in
-                return self.cell(collectionView: collectionView,
-                           indexPath: indexPath,
-                           viewModel: viewModel)
-            }
-        )
-        return datasource
+    var dashboardTapActionType: DashboardTapActionType! {
+        didSet {
+            viewButton.updateMenu(with: viewToggleMenuOptions())
+        }
     }
 
-    func cell(collectionView: UICollectionView,
-              indexPath: IndexPath,
-              viewModel: CardsViewModel) -> UICollectionViewCell? {
+    private func cell(collectionView: UICollectionView,
+                      indexPath: IndexPath,
+                      viewModel: CardsViewModel) -> UICollectionViewCell? {
         switch dashboardType {
         case .image:
             let cell = collectionView.dequeueReusableCell(
@@ -77,20 +59,10 @@ class DashboardViewController: UIViewController {
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
             cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
-            cell?.layout = layout
             return cell
         case .none:
             return nil
         }
-    }
-
-    func applySnapshot() {
-        var snapshot = DashboardSnapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(viewModels, toSection: .main)
-        datasource.apply(snapshot,
-                         animatingDifferences: false)
-        collectionView.reloadWithoutAnimation()
     }
 
     // UI
@@ -137,11 +109,14 @@ class DashboardViewController: UIViewController {
 
     // BODY
     private lazy var collectionView: UICollectionView = {
-        let cv = UICollectionView(frame: .zero,
-                                  collectionViewLayout: createLayout())
+        let cv = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: createLayout()
+        )
         cv.backgroundColor = .clear
         cv.showsVerticalScrollIndicator = false
         cv.delegate = self
+        cv.dataSource = self
         return cv
     }()
 
@@ -162,6 +137,7 @@ extension DashboardViewController {
         super.viewDidLoad()
         setUpUI()
         setupLocalization()
+        configureRestartAnimationsOnAppDidBecomeActive()
         output.viewDidLoad()
     }
 
@@ -214,35 +190,65 @@ extension DashboardViewController {
                     }
                 )
             }
-            self?.collectionView.reloadData()
+            self?.collectionView.reloadWithoutAnimation()
         }
     }
 }
 
 extension DashboardViewController {
     private func viewToggleMenuOptions() -> UIMenu {
-        let imageViewAction = UIAction(title: "image_view".localized()) { [weak self] _ in
+        // Card Type
+        let imageViewTypeAction = UIAction(title: "image_cards".localized()) {
+            [weak self] _ in
             self?.output.viewDidChangeDashboardType(dashboardType: .image)
             self?.reloadCollectionView(redrawLayout: true)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        let simpleViewAction = UIAction(title: "simple_view".localized()) { [weak self] _ in
+        let simpleViewTypeAction = UIAction(title: "simple_cards".localized()) {
+            [weak self] _ in
             self?.output.viewDidChangeDashboardType(dashboardType: .simple)
             self?.reloadCollectionView(redrawLayout: true)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        if dashboardType == .image {
-            simpleViewAction.state = .off
-            imageViewAction.state = .on
-        } else {
-            imageViewAction.state = .off
-            simpleViewAction.state = .on
+        simpleViewTypeAction.state = dashboardType == .simple ? .on : .off
+        imageViewTypeAction.state = dashboardType == .image ? .on : .off
+
+        let cardTypeMenu = UIMenu(title: "card_type".localized(),
+                                  options: .displayInline,
+                                  children: [
+            imageViewTypeAction, simpleViewTypeAction
+        ])
+
+        // Card action
+        let openSensorViewAction = UIAction(title: "open_sensor_view".localized()) {
+            [weak self] _ in
+            self?.output.viewDidChangeDashboardTapAction(type: .card)
+            self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        return UIMenu(title: "",
-                      children: [imageViewAction, simpleViewAction])
+        let openHistoryViewAction = UIAction(title: "open_history_view".localized()) {
+            [weak self] _ in
+            self?.output.viewDidChangeDashboardTapAction(type: .chart)
+            self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
+        }
+
+        openSensorViewAction.state = dashboardTapActionType == .card ? .on : .off
+        openHistoryViewAction.state = dashboardTapActionType == .chart ? .on : .off
+
+        let cardActionMenu = UIMenu(title: "card_action".localized(),
+                                    options: .displayInline,
+                                    children: [
+            openSensorViewAction, openHistoryViewAction
+        ])
+
+        return UIMenu(
+            title: "",
+            children: [
+                cardTypeMenu, cardActionMenu
+            ]
+        )
     }
 
     private func cardContextMenuOption(for index: Int) -> UIMenu {
@@ -357,69 +363,23 @@ extension DashboardViewController {
                                              bottom: 0,
                                              right: 12))
 
-        collectionView.dataSource = datasource
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
         collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
     }
 
+    // swiftlint:disable:next function_body_length
     fileprivate func createLayout() -> UICollectionViewLayout {
+        var itemEstimatedHeight: CGFloat = 144
         switch dashboardType {
         case .image:
-            return createLayoutForImageView()
+            itemEstimatedHeight = GlobalHelpers.isDeviceTablet() ? 170 : 144
         case .simple:
-            return createLayoutForSimpleView()
+            itemEstimatedHeight = GlobalHelpers.isDeviceTablet() ? 110 : 90
         default:
-            // Should never be here.
-            return UICollectionViewLayout()
+            break
         }
-    }
 
-    private func createLayoutForSimpleView() -> UICollectionViewLayout {
-        let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
-        (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
-        (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
-        let column: Int = GlobalHelpers.isDeviceTablet() ?
-        (!GlobalHelpers.isDeviceLandscape() ? 2 : 3) :
-        (GlobalHelpers.isDeviceLandscape() ? 2 : 1)
-
-        let itemEstimatedHeight: CGFloat = 1
-
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(widthMultiplier),
-                                              heightDimension: .estimated(itemEstimatedHeight))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        // TODO: @Priyonto - Investigate layout issue for iPhone SE 1st and 2nd Gen
-        let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0,
-                                                     leading: itemHorizontalSpacing,
-                                                     bottom: 0,
-                                                     trailing: UIDevice.isiPhoneSE() ?
-                                                     0 : itemHorizontalSpacing)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(itemEstimatedHeight))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
-        section.contentInsets = NSDirectionalEdgeInsets(top: 12,
-                                                        leading: 0,
-                                                        bottom: 12,
-                                                        trailing: 0)
-
-        if column == 1 {
-            let layout = UICollectionViewCompositionalLayout(section: section)
-            self.layout = nil
-            return layout
-        } else {
-            let layout = RuuviSimpleViewCompositionalLayout(section: section,
-                                                            columns: column)
-            self.layout = layout
-            return layout
-        }
-    }
-
-    private func createLayoutForImageView() -> UICollectionViewLayout {
         let sectionProvider = { (_: Int,
                                  _: NSCollectionLayoutEnvironment)
             -> NSCollectionLayoutSection? in
@@ -427,34 +387,44 @@ extension DashboardViewController {
                 (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
                 (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
 
-            let itemEstimatedHeight: CGFloat = GlobalHelpers.isDeviceTablet() ? 170 : 144
-
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(widthMultiplier),
-                                                  heightDimension: .absolute(itemEstimatedHeight))
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(widthMultiplier),
+                heightDimension: .absolute(itemEstimatedHeight)
+            )
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
-            item.contentInsets = NSDirectionalEdgeInsets(top: 0,
-                                                         leading: itemHorizontalSpacing,
-                                                         bottom: 0,
-                                                         trailing: itemHorizontalSpacing)
+            item.contentInsets = NSDirectionalEdgeInsets(
+                top: 0,
+                leading: itemHorizontalSpacing,
+                bottom: 0,
+                trailing: itemHorizontalSpacing
+            )
 
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .absolute(itemEstimatedHeight))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(itemEstimatedHeight)
+            )
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: groupSize, subitems: [item]
+            )
 
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
-            section.contentInsets = NSDirectionalEdgeInsets(top: 12,
-                                                            leading: 0,
-                                                            bottom: 12,
-                                                            trailing: 0)
+            section.contentInsets = NSDirectionalEdgeInsets(
+                top: 12,
+                leading: 0,
+                bottom: 12,
+                trailing: 0
+            )
             return section
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.scrollDirection = .vertical
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: sectionProvider,
-                                                         configuration: config)
+        let layout = UICollectionViewCompositionalLayout(
+            sectionProvider: sectionProvider,
+            configuration: config
+        )
         return layout
     }
 
@@ -466,6 +436,25 @@ extension DashboardViewController {
                          queue: .main) { [weak self] _ in
                 self?.reloadCollectionView()
         }
+    }
+}
+
+extension DashboardViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return viewModels.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = cell(
+            collectionView: collectionView,
+            indexPath: indexPath,
+            viewModel: viewModels[indexPath.item]
+        ) else {
+            fatalError()
+        }
+        return cell
     }
 }
 
@@ -555,11 +544,13 @@ extension DashboardViewController: DashboardViewInput {
                 cell.configure(
                     with: viewModel, measurementService: measurementService
                 )
+                cell.restartAlertAnimation(for: viewModel)
             } else if let cell = collectionView
                 .cellForItem(at: indexPath) as? DashboardPlainCell {
                 cell.configure(
                     with: viewModel, measurementService: measurementService
                 )
+                cell.restartAlertAnimation(for: viewModel)
             }
         }
     }
@@ -670,6 +661,6 @@ extension DashboardViewController: NoSensorViewDelegate {
 extension DashboardViewController {
     fileprivate func updateUI() {
         showNoSensorsAddedMessage(show: viewModels.isEmpty)
-        applySnapshot()
+        collectionView.reloadWithoutAnimation()
     }
 }
