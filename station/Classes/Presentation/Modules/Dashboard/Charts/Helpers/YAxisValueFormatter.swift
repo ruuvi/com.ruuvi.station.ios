@@ -4,8 +4,9 @@ import Charts
 public class YAxisValueFormatter: NSObject, AxisValueFormatter {
     private let numberFormatter = NumberFormatter()
 
-    init(with locale: Locale) {
-        numberFormatter.locale = locale
+    override init() {
+        super.init()
+        numberFormatter.locale = Locale.current
         numberFormatter.numberStyle = .decimal
         numberFormatter.minimumFractionDigits = 0
         numberFormatter.maximumFractionDigits = 1

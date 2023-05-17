@@ -332,13 +332,23 @@ private final class NetworkingAssembly: Assembly {
             return api
         }
 
+        let appGroupDefaults = UserDefaults(
+            suiteName: AppGroupConstants.appGroupSuiteIdentifier
+        )
+        let useDevServer = appGroupDefaults?.bool(
+            forKey: AppGroupConstants.useDevServerKey
+        ) ?? false
+
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
-            let baseUrlString: String = AppAssemblyConstants.ruuviCloudUrl
+            let pool = r.resolve(RuuviPool.self)!
+            let baseUrlString: String = useDevServer ?
+                AppAssemblyConstants.ruuviCloudUrlDev : AppAssemblyConstants.ruuviCloudUrl
             let baseUrl = URL(string: baseUrlString)!
             let cloud = r.resolve(RuuviCloudFactory.self)!.create(
                 baseUrl: baseUrl,
-                user: user
+                user: user,
+                pool: pool
             )
             return cloud
         }

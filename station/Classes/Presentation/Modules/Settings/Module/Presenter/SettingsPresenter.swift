@@ -105,7 +105,7 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTapOnDefaults() {
-        router.openDefaults()
+        router.openDefaults(output: self)
     }
 
     func viewDidTapOnDevices() {
@@ -138,5 +138,13 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapAppearance() {
         router.openAppearance()
+    }
+}
+
+extension SettingsPresenter: DefaultsModuleOutput {
+    func defaultsModuleDidDismiss(module: DefaultsModuleInput) {
+        module.dismiss(completion: { [weak self] in
+            self?.router.dismiss()
+        })
     }
 }

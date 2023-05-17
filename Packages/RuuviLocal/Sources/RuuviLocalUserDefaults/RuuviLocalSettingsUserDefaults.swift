@@ -465,8 +465,44 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.showChartOnDashboardCardTap", defaultValue: false)
-    var showChartOnDashboardCardTap: Bool
+    private let dashboardTapActionTypeIdKey =
+        "SettingsUserDefaults.dashboardTapActionTypeIdKey"
+    private var dashboardTapActionTypeId: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: dashboardTapActionTypeIdKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: dashboardTapActionTypeIdKey)
+        }
+    }
+
+    // swiftlint:disable switch_case_alignment
+    var dashboardTapActionType: DashboardTapActionType {
+        get {
+            switch dashboardTapActionTypeId {
+                case 0:
+                    return .card
+                case 1:
+                    return .chart
+                default:
+                    return .card
+            }
+        }
+        set {
+            switch newValue {
+                case .card:
+                    dashboardTapActionTypeId = 0
+                case .chart:
+                    dashboardTapActionTypeId = 1
+            }
+            NotificationCenter
+                .default
+                .post(name: .DashboardTapActionTypeDidChange,
+                      object: self,
+                      userInfo: [DashboardTapActionTypeKey.type: newValue])
+        }
+    }
+    // swiftlint:enable switch_case_alignment
 
     private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
     private var ruuviThemeId: Int {
@@ -508,3 +544,4 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 }
+// swiftlint:enable type_body_length file_length

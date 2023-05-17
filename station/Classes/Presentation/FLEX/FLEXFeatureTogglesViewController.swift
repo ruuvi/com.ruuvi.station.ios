@@ -5,7 +5,7 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
 
     init() {
         self.headerView = UIView()
-        self.sourceSwitch = UISwitch()
+        self.sourceSwitch = RuuviUISwitch()
         self.sourceLabel = Self.makeSourceLabel()
         super.init(nibName: nil, bundle: nil)
     }
@@ -16,7 +16,7 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
     }
 
     private let headerView: UIView
-    private let sourceSwitch: UISwitch
+    private let sourceSwitch: RuuviUISwitch
     private let sourceLabel: UILabel
     private let features = Feature.allCases
     private static let featureCellReuseIdentifier = "FeatureCellReuseIdentifier"

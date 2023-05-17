@@ -7,9 +7,6 @@ public protocol RuuviServiceCloudSync {
     func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError>
 
     @discardableResult
-    func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError>
-
-    @discardableResult
     func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError>
 
     @discardableResult
@@ -20,4 +17,7 @@ public protocol RuuviServiceCloudSync {
 
     @discardableResult
     func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError>
+
+    @discardableResult
+    func executePendingRequests() -> Future<Bool, RuuviServiceError>
 }

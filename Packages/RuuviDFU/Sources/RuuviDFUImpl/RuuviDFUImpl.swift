@@ -31,7 +31,7 @@ public struct RuuviDFUImpl: RuuviDFU {
     }
 
     public func firmwareFromUrl(url: URL) -> DFUFirmware? {
-        return DFUFirmware(urlToZipFile: url, type: .softdeviceBootloaderApplication)
+        return try? DFUFirmware(urlToZipFile: url, type: .softdeviceBootloaderApplication)
     }
 
     public func flashFirmware(

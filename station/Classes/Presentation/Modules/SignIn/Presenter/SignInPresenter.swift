@@ -7,9 +7,7 @@ import RuuviPresenters
 import RuuviDaemon
 import FirebaseMessaging
 import RuuviLocal
-#if canImport(WidgetKit)
 import WidgetKit
-#endif
 
 class SignInPresenter: NSObject {
     enum State {
@@ -52,8 +50,16 @@ extension SignInPresenter: SignInViewOutput {
         startObservingAppState()
     }
 
-    func viewDidClose() {
-        output?.signIn(module: self, didCloseSignInWithoutAttempt: nil)
+    func viewDidTapBack() {
+        switch state {
+        case .isSyncing:
+            break
+        case .enterVerificationCode:
+            viewModel.showVerficationScreen.value = false
+            state = .enterEmail
+        case .enterEmail:
+            router.popViewController(animated: true, completion: nil)
+        }
     }
 
     func viewDidTapRequestCodeButton(for email: String?) {
@@ -74,18 +80,8 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapUseWithoutAccount() {
-        router.openSignInPromoViewController(output: self)
-    }
-}
-
-extension SignInPresenter: SignInPromoModuleOutput {
-    func signIn(module: SignInPromoModuleInput,
-                didSelectUseWithoutAccount sender: Any?) {
-        module.dismiss { [weak self] in
-            guard let sSelf = self else { return }
-            sSelf.output?.signIn(module: sSelf,
-                                didSelectUseWithoutAccount: sender)
-        }
+        output?.signIn(module: self,
+                       didSelectUseWithoutAccount: nil)
     }
 }
 
@@ -96,8 +92,8 @@ extension SignInPresenter: SignInModuleInput {
         self.state = state
     }
 
-    func dismiss() {
-        router.dismiss(completion: nil)
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss(completion: completion)
     }
 }
 
@@ -135,6 +131,7 @@ extension SignInPresenter {
                 guard let sSelf = self else { return }
                 sSelf.ruuviUser.email = email.lowercased()
                 sSelf.viewModel.showVerficationScreen.value = true
+                sSelf.state = .enterVerificationCode(nil)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
@@ -252,7 +249,9 @@ extension SignInPresenter {
     }
 
     private func reloadWidgets() {
-        WidgetCenter.shared.reloadTimelines(ofKind: "ruuvi.simpleWidget")
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        )
     }
 
     private func registerFCMToken() {

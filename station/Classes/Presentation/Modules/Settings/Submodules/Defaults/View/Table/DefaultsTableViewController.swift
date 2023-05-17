@@ -20,6 +20,10 @@ extension DefaultsTableViewController: DefaultsViewInput {
     func localize() {
         // do nothing
     }
+
+    func showEndpointChangeConfirmationDialog(useDevServer: Bool?) {
+        // No op.
+    }
 }
 
 // MARK: - View lifecycle

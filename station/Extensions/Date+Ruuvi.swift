@@ -29,3 +29,11 @@ extension Date {
         return numberOfDays.day
     }
 }
+
+extension Date {
+    func isStartOfTheDay() -> Bool {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.hour, .minute, .second], from: self)
+        return components.hour == 0 && components.minute == 0 && components.second == 0
+    }
+}

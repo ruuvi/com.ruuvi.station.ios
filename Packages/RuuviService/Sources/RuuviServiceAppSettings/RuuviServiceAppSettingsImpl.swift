@@ -31,8 +31,9 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType,
-                                                        RuuviServiceError> {
+    public func set(
+        temperatureAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
         let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
         localSettings.temperatureAccuracy = temperatureAccuracy
         cloud.set(temperatureAccuracy: temperatureAccuracy)
@@ -58,8 +59,9 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType,
-                                                                            RuuviServiceError> {
+    public func set(
+        humidityAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
         let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
         localSettings.humidityAccuracy = humidityAccuracy
         cloud.set(humidityAccuracy: humidityAccuracy)
@@ -85,8 +87,9 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType,
-                                                                            RuuviServiceError> {
+    public func set(
+        pressureAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
         let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
         localSettings.pressureAccuracy = pressureAccuracy
         cloud.set(pressureAccuracy: pressureAccuracy)
@@ -168,5 +171,18 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
                 promise.fail(error: .ruuviCloud(error))
             })
         return promise.future
+    }
+
+    @discardableResult
+    public func set(dashboardTapActionType: DashboardTapActionType) ->
+        Future<DashboardTapActionType, RuuviServiceError> {
+            let promise = Promise<DashboardTapActionType, RuuviServiceError>()
+            cloud.set(dashboardTapActionType: dashboardTapActionType)
+                .on(success: { type in
+                    promise.succeed(value: type)
+                }, failure: { error in
+                    promise.fail(error: .ruuviCloud(error))
+                })
+            return promise.future
     }
 }

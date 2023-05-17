@@ -70,9 +70,9 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = "Settings.navigationItem.title".localized()
-        temperatureTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
-        humidityTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
-        pressureTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
+        temperatureTitleLabel.text = "Settings.Label.Temperature".localized()
+        humidityTitleLabel.text = "Settings.Label.Humidity".localized()
+        pressureTitleLabel.text = "Settings.Label.Pressure".localized()
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         devicesTitleLabel.text = "DfuDevicesScanner.Title.text".localized()
