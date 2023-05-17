@@ -675,6 +675,8 @@ Your RuuviTag sensor is ready for use!";
 "settings_alert_notifications" = "Alert Notifications";
 "settings_alert_sound" = "Alert Sound";
 "settings_alert_sound_description" = "Select push notification alert sound.";
+"settings_alerts_footer_description" = "You can also adjust Notification settings under iOS Settings -> Notifications";
+"settings_alerts_footer_description_link_mask" = "iOS Settings -> Notifications";
 "settings_email_alerts" = "Email Alerts";
 "settings_email_alerts_description" = "If you are using Ruuvi Cloud and Ruuvi Gateway, you will be able to receive email alerts by enabling this.";
 "settings_push_alerts" = "Push Alerts";

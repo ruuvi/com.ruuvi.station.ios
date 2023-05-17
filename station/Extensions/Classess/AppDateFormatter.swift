@@ -19,7 +19,9 @@ class AppDateFormatter {
 
     private let graphXAxisTimeFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.dateFormat = "hh:mma"
+        df.locale = Locale.current
+        df.dateStyle = .none
+        df.timeStyle = .short
         return df
     }()
 
