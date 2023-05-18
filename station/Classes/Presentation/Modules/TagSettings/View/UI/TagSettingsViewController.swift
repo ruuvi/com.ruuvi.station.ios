@@ -428,23 +428,33 @@ extension TagSettingsViewController {
         tableView.reloadSections(section, with: .fade)
     }
 
-    private func reloadSection(indentifier: TagSettingsSectionIdentifier) {
-        switch indentifier {
+    private func reloadSection(identifier: TagSettingsSectionIdentifier) {
+        switch identifier {
         case .btPair:
             let section = configureBluetoothSection()
             updateSection(
-                with: indentifier,
+                with: identifier,
                 newSection: section
             )
         case .offsetCorrection:
             if showOffsetCorrection() {
+                // Return early if the section is already added.
+                if tableViewSections.firstIndex(
+                    where: { $0.identifier == identifier }
+                ) != nil {
+                    return
+                }
                 let section = configureOffsetCorrectionSection()
                 updateSection(
-                    with: indentifier,
+                    with: identifier,
                     newSection: section
                 )
             } else {
-                removeSection(with: .offsetCorrection)
+                if tableViewSections.firstIndex(
+                    where: { $0.identifier == identifier }
+                ) != nil {
+                    removeSection(with: .offsetCorrection)
+                }
             }
         default:
             break
@@ -452,16 +462,16 @@ extension TagSettingsViewController {
     }
 
     private func updateSection(
-        with indentifier: TagSettingsSectionIdentifier,
+        with identifier: TagSettingsSectionIdentifier,
         newSection: TagSettingsSection
     ) {
-        if let index = tableViewSections.firstIndex(where: {
-            $0.identifier == indentifier
-        }) {
-            tableView.beginUpdates()
-            tableViewSections.remove(at: index)
-            tableViewSections.insert(newSection, at: index)
-            tableView.endUpdates()
+        if let index = tableViewSections.firstIndex(
+            where: { $0.identifier == identifier }
+        ) {
+            tableView.performBatchUpdates({
+                tableViewSections.remove(at: index)
+                tableViewSections.insert(newSection, at: index)
+            })
         }
     }
 
@@ -714,7 +724,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
-                self?.reloadSection(indentifier: .btPair)
+                self?.reloadSection(identifier: .btPair)
             }
 
             let isConnected = viewModel.isConnected
@@ -735,7 +745,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
-                self?.reloadSection(indentifier: .btPair)
+                self?.reloadSection(identifier: .btPair)
             }
         }
     }
@@ -2116,11 +2126,11 @@ extension TagSettingsViewController {
         }
 
         tableView.bind(viewModel.isNetworkConnected) { [weak self] (_, _) in
-            self?.reloadSection(indentifier: .offsetCorrection)
+            self?.reloadSection(identifier: .offsetCorrection)
         }
 
         tableView.bind(viewModel.isOwner) { [weak self] (_, _) in
-            self?.reloadSection(indentifier: .offsetCorrection)
+            self?.reloadSection(identifier: .offsetCorrection)
         }
 
         if let tempOffsetCorrectionCell = tempOffsetCorrectionCell {
@@ -2273,8 +2283,14 @@ extension TagSettingsViewController {
 
     // Offset correction helpers
     private func showOffsetCorrection() -> Bool {
-        return !(viewModel?.isNetworkConnected.value == true &&
-                viewModel?.isOwner.value == false)
+        let isOwner = GlobalHelpers.getBool(
+            from: viewModel?.isOwner.value
+        )
+        let isNetworkConnected = GlobalHelpers.getBool(
+            from: viewModel?.isNetworkConnected.value
+        )
+
+        return !(isNetworkConnected && !isOwner)
     }
 
     private func showHumidityOffsetCorrection() -> Bool {
