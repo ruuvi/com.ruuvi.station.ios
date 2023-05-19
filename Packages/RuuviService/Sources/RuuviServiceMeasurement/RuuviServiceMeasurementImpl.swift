@@ -56,7 +56,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
     // Common formatted
     private var commonNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = Locale.current
+        formatter.locale = Locale.autoupdatingCurrent
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
@@ -66,7 +66,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
 
     private var commonFormatter: MeasurementFormatter {
         let measurementFormatter = MeasurementFormatter()
-        measurementFormatter.locale = Locale.current
+        measurementFormatter.locale = Locale.autoupdatingCurrent
         measurementFormatter.unitOptions = .providedUnit
         measurementFormatter.numberFormatter = self.commonNumberFormatter
         return measurementFormatter
