@@ -52,7 +52,7 @@ public class CustomXAxisRenderer: XAxisRenderer {
         for i in 0..<numberOfPoints {
             let value = firstPoint + Int64(i) * interval
             let date = Date(timeIntervalSince1970: from + Double(value))
-            let localOffset = (interval > 3600) ? TimeZone.current.secondsFromGMT(for: date) : 0
+            let localOffset = (interval > 3600) ? TimeZone.autoupdatingCurrent.secondsFromGMT(for: date) : 0
             axis.entries[i] = Double(value) - TimeInterval(localOffset)
         }
 
