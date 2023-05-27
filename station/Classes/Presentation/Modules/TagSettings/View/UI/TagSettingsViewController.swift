@@ -438,12 +438,6 @@ extension TagSettingsViewController {
             )
         case .offsetCorrection:
             if showOffsetCorrection() {
-                // Return early if the section is already added.
-                if tableViewSections.firstIndex(
-                    where: { $0.identifier == identifier }
-                ) != nil {
-                    return
-                }
                 let section = configureOffsetCorrectionSection()
                 updateSection(
                     with: identifier,
@@ -469,9 +463,14 @@ extension TagSettingsViewController {
             where: { $0.identifier == identifier }
         ) {
             tableView.performBatchUpdates({
+                // Updating data source
                 tableViewSections.remove(at: index)
                 tableViewSections.insert(newSection, at: index)
-            })
+                // Updating UITableView
+                let indexSet = IndexSet(integer: index)
+                tableView.deleteSections(indexSet, with: .none)
+                tableView.insertSections(indexSet, with: .none)
+            }, completion: nil)
         }
     }
 
