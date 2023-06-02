@@ -6,13 +6,6 @@ import RuuviLocal
 import RuuviService
 import GestureInstructions
 
-enum CardsSection: CaseIterable {
-    case main
-}
-
-typealias CardsSnapshot = NSDiffableDataSourceSnapshot<CardsSection, CardsViewModel>
-typealias CardsDataSource = UICollectionViewDiffableDataSource<CardsSection, CardsViewModel>
-
 class CardsViewController: UIViewController {
 
     // Configuration
@@ -31,20 +24,7 @@ class CardsViewController: UIViewController {
     var scrollIndex: Int = 0
 
     private var currentPage: Int = 0
-    private lazy var datasource = makeDatasource()
     private static let reuseIdentifier: String = "reuseIdentifier"
-    // MARK: - Datasource
-    private func makeDatasource() -> CardsDataSource {
-        let datasource = CardsDataSource(
-            collectionView: collectionView,
-            cellProvider: { [unowned self] (collectionView, indexPath, viewModel) in
-                return self.cell(collectionView: collectionView,
-                           indexPath: indexPath,
-                           viewModel: viewModel)
-            }
-        )
-        return datasource
-    }
 
     func cell(collectionView: UICollectionView,
               indexPath: IndexPath,
@@ -58,13 +38,7 @@ class CardsViewController: UIViewController {
     }
 
     func applySnapshot() {
-        var snapshot = CardsSnapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(viewModels, toSection: .main)
         currentPage = scrollIndex
-        datasource.apply(snapshot,
-                         animatingDifferences: false)
-        // Forces collection view to reload.
         collectionView.reloadWithoutAnimation()
         if currentPage < viewModels.count {
             collectionView.scrollTo(index: currentPage)
@@ -143,6 +117,7 @@ class CardsViewController: UIViewController {
         cv.isPagingEnabled = true
         cv.alwaysBounceVertical = false
         cv.delegate = self
+        cv.dataSource = self
         cv.register(CardsLargeImageCell.self,
                     forCellWithReuseIdentifier: Self.reuseIdentifier)
         return cv
@@ -201,10 +176,17 @@ extension CardsViewController {
         // Scroll to current Item after the orientation change.
         coordinator.animate(alongsideTransition: { [weak self] _ in
             guard let sSelf = self else { return }
-            sSelf.collectionView.collectionViewLayout.invalidateLayout()
-            if sSelf.currentPage < sSelf.viewModels.count {
-                sSelf.collectionView.scrollTo(index: sSelf.currentPage)
-            }
+            let flowLayout = sSelf.createLayout()
+            sSelf.collectionView.setCollectionViewLayout(
+                flowLayout,
+                animated: false,
+                completion: { _ in
+                    guard sSelf.viewModels.count > 0 else { return }
+                    if sSelf.currentPage < sSelf.viewModels.count {
+                        sSelf.collectionView.scrollTo(index: sSelf.currentPage)
+                    }
+                }
+            )
         })
     }
 }
@@ -288,8 +270,6 @@ extension CardsViewController {
                               leading: view.safeLeftAnchor,
                               bottom: view.safeBottomAnchor,
                               trailing: view.safeRightAnchor)
-
-        collectionView.dataSource = datasource
     }
 
     fileprivate func createLayout() -> UICollectionViewLayout {
@@ -341,14 +321,33 @@ extension CardsViewController: UICollectionViewDelegate {
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
         let yPoint = scrollView.frame.size.height / 2
         let center = CGPoint(x: xPoint, y: yPoint)
-        if let currentIndexPath = collectionView.indexPathForItem(at: center),
-           let currentVisibleItem = datasource.itemIdentifier(for: currentIndexPath) {
+        if let currentIndexPath = collectionView.indexPathForItem(at: center) {
             currentPage = currentIndexPath.row
-            self.currentVisibleItem = currentVisibleItem
+            let currentItem = viewModels[currentPage]
+            self.currentVisibleItem = currentItem
             restartAnimations()
-            output.viewDidScroll(to: currentVisibleItem)
-            output.viewDidTriggerFirmwareUpdateDialog(for: currentVisibleItem)
+            output.viewDidScroll(to: currentItem)
+            output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)
         }
+    }
+}
+
+extension CardsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return viewModels.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = cell(
+            collectionView: collectionView,
+            indexPath: indexPath,
+            viewModel: viewModels[indexPath.item]
+        ) else {
+            fatalError()
+        }
+        return cell
     }
 }
 
@@ -427,17 +426,18 @@ extension CardsViewController: CardsViewInput {
     }
 
     func applyUpdate(to viewModel: CardsViewModel) {
-        var snapshot = datasource.snapshot()
-        if let index = snapshot.indexOfItem(viewModel),
-           var item = datasource.itemIdentifier(for: IndexPath(item: index,
-                                                               section: 0)) {
-            if viewModel == currentVisibleItem {
-                item = viewModel
+        if let index = viewModels.firstIndex(where: { vm in
+            vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
+            vm.mac.value != nil && vm.mac.value == viewModel.mac.value
+        }) {
+            let indexPath = IndexPath(item: index, section: 0)
+            if let cell = collectionView
+                .cellForItem(at: indexPath) as? CardsLargeImageCell {
+                cell.configure(
+                    with: viewModel, measurementService: measurementService
+                )
                 restartAnimations()
                 updateTopActionButtonVisibility()
-                snapshot.reloadItems([item])
-                datasource.apply(snapshot,
-                                 animatingDifferences: false)
             }
         }
     }
@@ -484,8 +484,7 @@ extension CardsViewController: CardsViewInput {
 
     func scroll(to index: Int) {
         guard viewModels.count > 0,
-              index < viewModels.count,
-                index < datasource.snapshot().numberOfItems else {
+              index < viewModels.count else {
             return
         }
         let viewModel = viewModels[index]

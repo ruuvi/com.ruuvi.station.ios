@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import Charts
 import RuuviLocal
+import RuuviOntology
 
 protocol TagChartsViewInput: ViewInput {
     var viewModel: TagChartsViewModel { get set }
@@ -20,6 +21,7 @@ protocol TagChartsViewInput: ViewInput {
                                  humidity: ChartDataEntry?,
                                  pressure: ChartDataEntry?,
                                  settings: RuuviLocalSettings)
+    func updateLatestRecordStatus(with record: RuuviTagSensorRecord)
     func showBluetoothDisabled(userDeclined: Bool)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel)

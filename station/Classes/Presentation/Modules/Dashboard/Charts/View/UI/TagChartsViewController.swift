@@ -133,10 +133,31 @@ class TagChartsViewController: UIViewController {
         return button
     }()
 
+    private lazy var updatedAtLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white.withAlphaComponent(0.8)
+        label.textAlignment = .right
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.regular, size: 14)
+        return label
+    }()
+
+    private lazy var dataSourceIconView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.backgroundColor = .clear
+        iv.alpha = 0.7
+        return iv
+    }()
     // UI END
 
     private let minimumHistoryLimit: Int = 1 // Day
     private let maximumHistoryLimit: Int = 10 // Days
+    private var timer: Timer?
+
+    deinit {
+        timer?.invalidate()
+    }
 
     // MARK: - LIFECYCLE
     override func viewDidLoad() {
@@ -148,6 +169,7 @@ class TagChartsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        hideNoDataLabel()
         output.viewWillAppear()
     }
 
@@ -155,6 +177,14 @@ class TagChartsViewController: UIViewController {
         super.viewWillDisappear(animated)
         hideNoDataLabel()
         output.viewWillDisappear()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateChartsCollectionConstaints(
+            from: chartModules,
+            withAnimation: false
+        )
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -261,7 +291,7 @@ class TagChartsViewController: UIViewController {
                           leading: view.safeLeftAnchor,
                           bottom: view.safeBottomAnchor,
                           trailing: view.safeRightAnchor,
-                          padding: .init(top: 6, left: 0, bottom: 0, right: 0))
+                          padding: .init(top: 6, left: 0, bottom: 28, right: 0))
 
         scrollView.addSubview(temperatureChartView)
         temperatureChartView.anchor(top: scrollView.topAnchor,
@@ -300,6 +330,40 @@ class TagChartsViewController: UIViewController {
                            trailing: view.safeRightAnchor)
         noDataLabel.centerYInSuperview()
         noDataLabel.alpha = 0
+
+        let footerView = UIView(color: .clear)
+        view.addSubview(footerView)
+        footerView.anchor(top: scrollView.bottomAnchor,
+                          leading: view.safeLeftAnchor,
+                          bottom: view.safeBottomAnchor,
+                          trailing: view.safeRightAnchor,
+                          padding: .init(top: 4,
+                                         left: 16,
+                                         bottom: 8,
+                                         right: 16),
+                          size: .init(width: 0, height: 24))
+
+        footerView.addSubview(updatedAtLabel)
+        updatedAtLabel.anchor(top: footerView.topAnchor,
+                              leading: nil,
+                              bottom: footerView.bottomAnchor,
+                              trailing: nil,
+                              padding: .init(top: 0,
+                                             left: 12,
+                                             bottom: 0,
+                                             right: 0))
+
+        footerView.addSubview(dataSourceIconView)
+        dataSourceIconView.anchor(top: nil,
+                                  leading: updatedAtLabel.trailingAnchor,
+                                  bottom: nil,
+                                  trailing: footerView.trailingAnchor,
+                                  padding: .init(top: 0,
+                                                 left: 6,
+                                                 bottom: 0,
+                                                 right: 0),
+                                  size: .init(width: 20, height: 20))
+        dataSourceIconView.centerYInSuperview()
 
     }
 
@@ -502,6 +566,28 @@ extension TagChartsViewController: TagChartsViewInput {
                                        unit: settings.pressureUnit.symbol)
     }
 
+    func updateLatestRecordStatus(with record: RuuviTagSensorRecord) {
+        // Ago
+        let date = record.date.ruuviAgo()
+        updatedAtLabel.text = date
+        startTimer(with: record.date)
+        // Source
+        switch record.source {
+        case .unknown:
+            dataSourceIconView.image = nil
+        case .advertisement:
+            dataSourceIconView.image = RuuviAssets.advertisementImage
+        case .heartbeat:
+            dataSourceIconView.image = RuuviAssets.heartbeatImage
+        case .log:
+            dataSourceIconView.image = RuuviAssets.heartbeatImage
+        case .ruuviNetwork:
+            dataSourceIconView.image = RuuviAssets.ruuviNetworkImage
+        case .weatherProvider:
+            dataSourceIconView.image = RuuviAssets.weatherProviderImage
+        }
+    }
+
     func localize() {
         syncButton.updateTitle(with: "TagCharts.Sync.title".localized())
     }
@@ -657,8 +743,6 @@ extension TagChartsViewController {
 
         noDataLabel.alpha = 0
         chartViews.removeAll()
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
         let scrollViewHeight = scrollView.frame.height
         guard viewIsVisible && scrollViewHeight > 0 && from.count > 0 else {
             return
@@ -807,6 +891,17 @@ extension TagChartsViewController {
         if noDataLabel.alpha != 1 {
             noDataLabel.alpha = 1
         }
+    }
+
+    private func startTimer(with date: Date?) {
+        timer?.invalidate()
+        timer = nil
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1,
+                                     repeats: true,
+                                     block: { [weak self] (_) in
+            self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+        })
     }
 }
 

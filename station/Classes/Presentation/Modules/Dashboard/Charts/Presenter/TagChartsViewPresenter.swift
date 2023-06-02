@@ -673,6 +673,10 @@ extension TagChartsViewPresenter {
         }
     }
 
+    func updateLatestRecord(_ record: RuuviTagSensorRecord) {
+        view?.updateLatestRecordStatus(with: record)
+    }
+
     private func createChartData() {
         guard view != nil else { return }
         datasource.removeAll()
