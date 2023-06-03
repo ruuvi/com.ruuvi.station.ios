@@ -173,7 +173,17 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
-        view?.showSyncConfirmationDialog(for: viewModel)
+        viewDidStartSync(for: viewModel)
+
+        guard let luid = ruuviTag.luid else { return }
+        if !settings.syncDialogHidden(for: luid) {
+            view?.showSyncConfirmationDialog(for: viewModel)
+        }
+    }
+
+    func viewDidTriggerDoNotShowSyncDialog() {
+        guard let luid = ruuviTag.luid else { return }
+        settings.setSyncDialogHidden(for: luid)
     }
 
     func viewDidStartSync(for viewModel: TagChartsViewModel) {
