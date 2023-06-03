@@ -140,7 +140,7 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         var syncFrom = localSyncState.getGattSyncDate(for: ruuviTagSensor.macId)
-        let historyLength = Calendar.current.date(
+        let historyLength = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.dataPruningOffsetHours,
             to: Date()
@@ -219,7 +219,7 @@ extension TagChartsViewInteractor {
 
     private func removeFirst() {
         guard !self.settings.chartDownsamplingOn else { return }
-        let cropDate = Calendar.current.date(
+        let cropDate = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.dataPruningOffsetHours,
             to: Date()
@@ -291,7 +291,7 @@ extension TagChartsViewInteractor {
             return
         }
 
-        let date = Calendar.current.date(
+        let date = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.chartDurationHours,
             to: Date()
@@ -313,7 +313,7 @@ extension TagChartsViewInteractor {
             return
         }
 
-        let date = Calendar.current.date(
+        let date = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.chartDurationHours,
             to: Date()

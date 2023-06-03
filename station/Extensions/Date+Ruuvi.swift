@@ -25,14 +25,14 @@ extension Date {
 
 extension Date {
     func numberOfDaysFromNow() -> Int? {
-        let numberOfDays = Calendar.current.dateComponents([.day], from: self, to: Date())
+        let numberOfDays = Calendar.autoupdatingCurrent.dateComponents([.day], from: self, to: Date())
         return numberOfDays.day
     }
 }
 
 extension Date {
     func isStartOfTheDay() -> Bool {
-        let calendar = Calendar.current
+        let calendar = Calendar.autoupdatingCurrent
         let components = calendar.dateComponents([.hour, .minute, .second], from: self)
         return components.hour == 0 && components.minute == 0 && components.second == 0
     }

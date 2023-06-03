@@ -120,7 +120,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                    latestMeasurement: RuuviTagSensorRecord?,
                    sensorSettings: SensorSettings?) {
 
-        self.viewModel = TagSettingsViewModel()
+        // TODO: - Check if this can be improved.
+        // Note:(Temporary solution) ViewModel should not depend on this. 
+        let tagViewModel = TagSettingsViewModel()
+        tagViewModel.isAuthorized.value = ruuviUser.isAuthorized
+        self.viewModel = tagViewModel
+
         self.ruuviTag = ruuviTag
         self.lastMeasurement = latestMeasurement
         if let sensorSettings = sensorSettings {
