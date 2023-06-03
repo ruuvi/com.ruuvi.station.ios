@@ -6,7 +6,7 @@ public class YAxisValueFormatter: NSObject, AxisValueFormatter {
 
     override init() {
         super.init()
-        numberFormatter.locale = Locale.current
+        numberFormatter.locale = Locale.autoupdatingCurrent
         numberFormatter.numberStyle = .decimal
         numberFormatter.minimumFractionDigits = 0
         numberFormatter.maximumFractionDigits = 1

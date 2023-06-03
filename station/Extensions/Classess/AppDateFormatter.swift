@@ -12,20 +12,15 @@ class AppDateFormatter {
 
     private let shortTimeFormatter: DateFormatter = {
         let df = DateFormatter()
+        df.locale = Locale.autoupdatingCurrent
         df.dateStyle = .none
         df.timeStyle = .short
         return df
     }()
 
-    private let graphXAxisTimeFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateFormat = "hh:mma"
-        return df
-    }()
-
     private let graphXAxisDateFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.locale = Locale.current
+        df.locale = Locale.autoupdatingCurrent
         df.setLocalizedDateFormatFromTemplate("ddMM")
         return df
     }()
@@ -41,11 +36,11 @@ extension AppDateFormatter {
     }
 
     func graphXAxisTimeString(from date: Date) -> String {
-        return graphXAxisTimeFormatter.string(from: date)
+        return shortTimeFormatter.string(from: date)
     }
 
     func graphXAxisDateString(from date: Date) -> String {
-        let calendar = Calendar.current
+        let calendar = Calendar.autoupdatingCurrent
         let dateComponents = calendar.dateComponents([.day, .month], from: date)
         if let formattedDate = calendar.date(from: dateComponents) {
             return graphXAxisDateFormatter.string(from: formattedDate)
