@@ -543,5 +543,14 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                       userInfo: [AppearanceTypeKey.style: newValue])
         }
     }
+
+    private let syncDialogHiddenKey = "SettingsUserDefaults.syncDialogHiddenKey."
+    func syncDialogHidden(for luid: LocalIdentifier) -> Bool {
+        return UserDefaults.standard.bool(forKey: syncDialogHiddenKey + luid.value)
+    }
+
+    func setSyncDialogHidden(for luid: LocalIdentifier) {
+        UserDefaults.standard.set(true, forKey: syncDialogHiddenKey + luid.value)
+    }
 }
 // swiftlint:enable type_body_length file_length

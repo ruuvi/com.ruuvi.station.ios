@@ -112,12 +112,14 @@ class TagChartsViewController: UIViewController {
     }()
 
     private lazy var syncButton: RuuviContextMenuButton = {
-        let button = RuuviContextMenuButton(menu: nil,
-                                            titleColor: .white,
-                                            title: "TagCharts.Sync.title".localized(),
-                                            icon: UIImage(systemName: "arrow.triangle.2.circlepath"),
-                                            iconTintColor: .white,
-                                            preccedingIcon: true)
+        let button = RuuviContextMenuButton(
+            menu: nil,
+            titleColor: .white,
+            title: "TagCharts.Sync.title".localized(),
+            icon: UIImage(named: "icon_sync_bt"),
+            iconTintColor: .white,
+            preccedingIcon: true
+        )
         button.button.showsMenuAsPrimaryAction = false
         button.button.addTarget(self, action: #selector(syncButtonDidTap),
                                 for: .touchUpInside)
@@ -281,8 +283,9 @@ class TagChartsViewController: UIViewController {
                           leading: chartToolbarView.leadingAnchor,
                           bottom: nil,
                           trailing: nil,
+                          padding: .init(top: 0, left: 8, bottom: 0, right: 0),
                           size: .init(width: 0,
-                                      height: 24))
+                                      height: 28))
         syncButton.centerYInSuperview()
         syncButton.alpha = 1
 
@@ -667,15 +670,15 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let title = "bluetooth_download".localized()
-        let message = "bluetooth_download_description".localized()
+        let title = "synchronisation".localized()
+        let message = "gatt_sync_description".localized()
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        let actionTitle = "download".localized()
+        let actionTitle = "do_not_show_again".localized()
         alertVC.addAction(UIAlertAction(title: actionTitle,
                                         style: .default,
                                         handler: { [weak self] _ in
-            self?.output.viewDidStartSync(for: viewModel)
+            self?.output.viewDidTriggerDoNotShowSyncDialog()
 
         }))
         present(alertVC, animated: true)
