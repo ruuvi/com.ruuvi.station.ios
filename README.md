@@ -12,7 +12,6 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
   <img src="/docs/screenshot1.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
   <img src="/docs/screenshot2.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
   <img src="/docs/screenshot3.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot4.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
 </p>
 
 <p align="center">
