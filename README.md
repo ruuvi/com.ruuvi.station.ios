@@ -31,14 +31,12 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 ## Features
 
 - [x] Temperature (°C, °F, K)
-- [x] Humidity (relative in %, absolute in g/m³)
-- [x] Dew Point (°C, °F, K)
-- [x] Air Pressure (hPa)
+- [x] Humidity (%, g/m3, °C)
+- [x] Air Pressure (hPa, mmHg, inHg)
 - [x] Acceleration (g)
+- [x] 10 days sensor data storage
 - [x] Charts
-- [x] Background logging
-- [x] Localization (English, Finnish, Russian, Swedish)
-- [x] Virtual Sensors 
+- [x] Cloud Features
 
 ## Requirements
 
