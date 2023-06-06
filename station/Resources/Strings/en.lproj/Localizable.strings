@@ -692,4 +692,7 @@ Your RuuviTag sensor is ready for use!";
 "Defaults.DevServer.message" = "Changing Ruuvi Cloud endpoint requires signing out from current session and restart the app. Are you sure?";
 "Defaults.ShowEmailAlertsSettings.title" = "Show email alerts settings";
 "Defaults.ShowPushAlertsSettings.title" = "Show push alerts settings";
-"scan_with_nfc" = "Scan with NFC";
+"use_nfc" = "Use NFC";
+"use_bluetooth" = "Use BT";
+"sensor_not_found_error" = "Sensor not found. Try again.";
+"Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";

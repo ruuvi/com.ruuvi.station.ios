@@ -39,6 +39,11 @@ public protocol RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiClaimResponse, RuuviCloudApiError>
 
+    func contest(
+        _ requestModel: RuuviCloudApiContestRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiContestResponse, RuuviCloudApiError>
+
     func unclaim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String

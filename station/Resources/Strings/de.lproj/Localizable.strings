@@ -697,4 +697,7 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "Defaults.DevServer.message" = "Um den Ruuvi Cloud-Endpunkt zu ändern, müssen Sie sich von der aktuellen Sitzung abmelden und die App neu starten. Bist du dir sicher?";
 "Defaults.ShowEmailAlertsSettings.title" = "Einstellungen für E-Mail-Benachrichtigungen anzeigen";
 "Defaults.ShowPushAlertsSettings.title" = "Einstellungen für Push-Benachrichtigungen anzeigen";
-"scan_with_nfc" = "Scannen Sie mit NFC";
+"use_nfc" = "Verwenden Sie NFC";
+"use_bluetooth" = "Verwenden Sie BT";
+"sensor_not_found_error" = "Sensor nicht gefunden. Versuchen Sie es erneut.";
+"Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";

@@ -76,6 +76,20 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
                 module.configure(ruuviTag: ruuviTag)
             })
     }
+
+    func openContest(ruuviTag: RuuviTagSensor) {
+        let factory: SensorForceClaimModuleFactory = SensorForceClaimModuleFactoryImpl()
+        let module = factory.create()
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+        if let presenter = module.output as? SensorForceClaimModuleInput {
+            presenter.configure(ruuviTag: ruuviTag)
+        }
+    }
 }
 
 extension TagSettingsRouter: UIAdaptivePresentationControllerDelegate {

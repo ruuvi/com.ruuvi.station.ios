@@ -693,5 +693,8 @@ RuuviTag est prêt à être utilisé !";
 "Defaults.DevServer.message" = "La modification du point de terminaison Ruuvi Cloud nécessite de se déconnecter de la session en cours et de redémarrer l'application. Es-tu sûr?";
 "Defaults.ShowEmailAlertsSettings.title" = "Afficher les paramètres d'alertes par e-mail";
 "Defaults.ShowPushAlertsSettings.title" = "Afficher les paramètres des alertes push";
-"scan_with_nfc" = "Numériser avec NFC";
+"use_nfc" = "Utiliser NFC";
+"use_bluetooth" = "Utiliser BT";
+"sensor_not_found_error" = "Capteur introuvable. Essayer à nouveau.";
+"Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";
 

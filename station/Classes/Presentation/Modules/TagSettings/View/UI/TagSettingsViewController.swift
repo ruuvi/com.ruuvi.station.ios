@@ -567,9 +567,14 @@ extension TagSettingsViewController {
             }
         }
 
+        let isClaimed = viewModel.isClaimedTag.value
+        let isOwner = viewModel.isOwner.value
         if let tagOwnerCell = tagOwnerCell {
             tagOwnerCell.bind(viewModel.owner) { cell, owner in
                 cell.configure(value: owner)
+                if let isClaimed = isClaimed, let isOwner = isOwner {
+                    cell.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron)
+                }
             }
         }
 
@@ -626,13 +631,14 @@ extension TagSettingsViewController {
     }
 
     private func tagOwnerSettingItem() -> TagSettingsItem {
+        let isClaimed = GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
+        let isOwner = GlobalHelpers.getBool(from: viewModel?.isOwner.value)
         let settingItem = TagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
                 self?.tagOwnerCell?.configure(title: "TagSettings.NetworkInfo.Owner".localized(),
                                value: self?.viewModel?.owner.value)
-                let isClaimed = GlobalHelpers.getBool(from: self?.viewModel?.isClaimedTag.value)
-                self?.tagOwnerCell?.setAccessory(type: isClaimed ? .none : .chevron )
+                self?.tagOwnerCell?.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron )
                 self?.tagOwnerCell?.hideSeparator(hide: !GlobalHelpers.getBool(from: self?.showShare()))
                 return self?.tagOwnerCell ?? UITableViewCell()
             },

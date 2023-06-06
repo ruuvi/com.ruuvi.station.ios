@@ -77,6 +77,7 @@ public protocol RuuviLocalSettings {
     var dashboardType: DashboardType { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }
     var theme: RuuviTheme { get set }
+    var hideNFCForSensorContest: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
