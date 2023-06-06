@@ -923,6 +923,22 @@
 		E19EAFAE299E82D1005827E4 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */; };
 		E19EAFB0299EB46D005827E4 /* NoSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAF299EB46D005827E4 /* NoSensorView.swift */; };
 		E19EAFB1299EB46D005827E4 /* NoSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAF299EB46D005827E4 /* NoSensorView.swift */; };
+		E1AB905E2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */; };
+		E1AB905F2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */; };
+		E1AB90612A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */; };
+		E1AB90622A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */; };
+		E1AB90642A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */; };
+		E1AB90652A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */; };
+		E1AB90672A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */; };
+		E1AB90682A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */; };
+		E1AB906A2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */; };
+		E1AB906B2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */; };
+		E1AB90732A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */; };
+		E1AB90742A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */; };
+		E1AB907B2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */; };
+		E1AB907C2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */; };
+		E1AB907E2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */; };
+		E1AB907F2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */; };
 		E1B20C872926CDE10023D739 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B20C862926CDE10023D739 /* UITextField+Extension.swift */; };
 		E1B20C882926CDE10023D739 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B20C862926CDE10023D739 /* UITextField+Extension.swift */; };
 		E1B20C8A2926D2FC0023D739 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B20C892926D2FC0023D739 /* Double+Extension.swift */; };
@@ -993,6 +1009,8 @@
 		E1CE5E4029F994DE00391109 /* AppGroupConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */; };
 		E1CE5E4229FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
 		E1CE5E4329FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
+		E1CE5E472A016D4000391109 /* RuuviCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */; };
+		E1CE5E482A016D4000391109 /* RuuviCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */; };
 		E1D0238B29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238C29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
@@ -1634,6 +1652,14 @@
 		E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewOutput.swift; sourceTree = "<group>"; };
 		E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E19EAFAF299EB46D005827E4 /* NoSensorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSensorView.swift; sourceTree = "<group>"; };
+		E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimModuleFactory.swift; sourceTree = "<group>"; };
+		E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimPresenter.swift; sourceTree = "<group>"; };
+		E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimModuleInput.swift; sourceTree = "<group>"; };
+		E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimRouter.swift; sourceTree = "<group>"; };
+		E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimRouterInput.swift; sourceTree = "<group>"; };
+		E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimViewController.swift; sourceTree = "<group>"; };
+		E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimViewOutput.swift; sourceTree = "<group>"; };
+		E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimViewInput.swift; sourceTree = "<group>"; };
 		E1B20C862926CDE10023D739 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		E1B20C892926D2FC0023D739 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		E1B57FEA29859CB800B441FB /* DevicesModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesModuleFactory.swift; sourceTree = "<group>"; };
@@ -1669,6 +1695,7 @@
 		E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIndicatorView.swift; sourceTree = "<group>"; };
 		E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupConstants.swift; sourceTree = "<group>"; };
 		E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsModuleOutput.swift; sourceTree = "<group>"; };
+		E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCustomButton.swift; sourceTree = "<group>"; };
 		E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviUISwitch.swift; sourceTree = "<group>"; };
 		E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1E102ED28F348B700815508 /* TagChartsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsHelper.swift; sourceTree = "<group>"; };
@@ -3174,6 +3201,7 @@
 		66BC44812657AED400A03253 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				E1AB90572A0EAF4F00543F61 /* Force Claim */,
 				340BE37727B54F37006D6C34 /* Owner */,
 				0E97D782268C826400FE9D5B /* DFU */,
 				66BC44822657AED400A03253 /* OffsetCorrection */,
@@ -3832,6 +3860,7 @@
 			children = (
 				E1395BF0294F793000C403C6 /* AppDateFormatter.swift */,
 				E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */,
+				E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */,
 			);
 			path = Classess;
 			sourceTree = "<group>";
@@ -4119,6 +4148,61 @@
 				E19EAFA3299E6211005827E4 /* SignInBenefitsModuleOutput.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E1AB90572A0EAF4F00543F61 /* Force Claim */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB905C2A0EAFA600543F61 /* Router */,
+				E1AB905A2A0EAF9400543F61 /* View */,
+				E1AB90592A0EAF8900543F61 /* Presenter */,
+				E1AB90582A0EAF8200543F61 /* Assembly */,
+			);
+			path = "Force Claim";
+			sourceTree = "<group>";
+		};
+		E1AB90582A0EAF8200543F61 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E1AB90592A0EAF8900543F61 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */,
+				E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E1AB905A2A0EAF9400543F61 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90792A0EB26900543F61 /* UI */,
+				E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */,
+				E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E1AB905C2A0EAFA600543F61 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */,
+				E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		E1AB90792A0EB26900543F61 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		E1B57FE629859C7000B441FB /* Devices */ = {
@@ -4963,6 +5047,8 @@
 				0EE36E4326957E200021B746 /* LatestRelease.swift in Sources */,
 				0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */,
 				0EA7968A2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
+				E1AB90742A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */,
+				E1AB905F2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
 				E1972BE229587615000E2AEC /* CardsLargeImageCell.swift in Sources */,
@@ -4975,9 +5061,11 @@
 				E1597A44295CD58600DFB70B /* DashboardRouterDelegate.swift in Sources */,
 				E10E18B8297D67E8002C78C3 /* RuuviCloudViewInput.swift in Sources */,
 				E16B8F4028D10CF50025B92D /* MyRuuviAccountViewController.swift in Sources */,
+				E1CE5E482A016D4000391109 /* RuuviCustomButton.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				E16B8F4328D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				340BE39327B54F37006D6C34 /* OwnerViewController.swift in Sources */,
+				E1AB906B2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */,
 				E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				E1B57FF829859CEC00B441FB /* DevicesTableViewCell.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
@@ -5009,6 +5097,7 @@
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
 				E1198A3029BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
+				E1AB90652A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */,
 				A91D02F52511207300694733 /* SelectionPresenter.swift in Sources */,
 				E116708629634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
@@ -5221,6 +5310,7 @@
 				E191F1FF2969D6C900F1FEA6 /* TagSettingsPlainCell.swift in Sources */,
 				E1597A60295F803400DFB70B /* UIColor+Extension.swift in Sources */,
 				0E8BD35D238566AB008B31EF /* AboutModuleInput.swift in Sources */,
+				E1AB907F2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */,
 				0EAD33DA2399273D00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				0EB8ED1B268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				340BE37327B54E26006D6C34 /* PresentationConstants.swift in Sources */,
@@ -5267,6 +5357,7 @@
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				66718A6D266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
+				E1AB90622A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */,
 				A964647F247BAE6B0001D55D /* ChartSettingsInitializer.swift in Sources */,
 				A93CDCD025659BA600018C6C /* AlertPresenter.swift in Sources */,
 				0E8BD389238566AB008B31EF /* PhotoPickerPresenter.swift in Sources */,
@@ -5298,6 +5389,7 @@
 				0E8BD39A238566AB008B31EF /* AppStateService.swift in Sources */,
 				A9646467247BAE6B0001D55D /* ChartSettingsViewInput.swift in Sources */,
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
+				E1AB90682A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */,
 				0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				E18D04A628E8A5A3008EF5EC /* TagChartsViewConfigurator.swift in Sources */,
@@ -5308,6 +5400,7 @@
 				0E8BD3A5238566AB008B31EF /* SettingsTableInitializer.swift in Sources */,
 				0EA7967E2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
 				0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */,
+				E1AB907C2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */,
 				340BE39C27B54FEC006D6C34 /* String+Email.swift in Sources */,
 				E10E18B5297D67B8002C78C3 /* RuuviCloudViewModel.swift in Sources */,
 				E1198A2229BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */,
@@ -5458,6 +5551,7 @@
 				0EA7967D2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
 				E16B8F5128D113440025B92D /* MyRuuviAccountConfigurator.swift in Sources */,
+				E1AB907E2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */,
 				A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */,
 				E1597A752962046500DFB70B /* BackgroundSelectionViewHeader.swift in Sources */,
 				E116708C29634D91002DF7BF /* BackgroundSelectionViewModel.swift in Sources */,
@@ -5491,6 +5585,7 @@
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				A98D3F15256CBD600066588B /* ShareViewOutput.swift in Sources */,
 				E1167082296346D5002DF7BF /* BackgroundSelectionModuleInput.swift in Sources */,
+				E1AB906A2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */,
 				E1198A3529BA76CB002245CF /* ASSelectionViewInput.swift in Sources */,
 				0EB48D952619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A9E5994A2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
@@ -5548,6 +5643,7 @@
 				0E0501212685E895007060C4 /* HeartbeatDaemonTitles.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
+				E1AB90672A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */,
 				66BC44B02657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
 				E1CD78012878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
 				E1198A1129BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */,
@@ -5569,6 +5665,7 @@
 				E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				E18D04C028E8B3B0008EF5EC /* TagChartsViewInteractorOutput.swift in Sources */,
 				E19EAF72299ADB2F005827E4 /* UIButton+Extension.swift in Sources */,
+				E1AB905E2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */,
 				66718A6C266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
@@ -5635,6 +5732,7 @@
 				E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
 				E1CE5E3F29F994DE00391109 /* AppGroupConstants.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
+				E1AB907B2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */,
 				E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E191F2092969E11F00F1FEA6 /* TagSettingsRouterInput.swift in Sources */,
 				0EB8ED2F268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
@@ -5671,6 +5769,7 @@
 				0E84BF5F2397F6BE00A37E1A /* HeartbeatViewController.swift in Sources */,
 				E191F1F82968D33800F1FEA6 /* TagSettingsSimpleSectionHeader.swift in Sources */,
 				E191F1EC2968BCF300F1FEA6 /* TagSettingsBasicCell.swift in Sources */,
+				E1AB90612A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */,
 				0E84BF67239801AF00A37E1A /* HeartbeatRouterInput.swift in Sources */,
 				0EB48DDC2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
@@ -5687,6 +5786,7 @@
 				E1E3C345299007DE00A59CB8 /* TagSettingsModuleOutput.swift in Sources */,
 				E1B57FEB29859CB800B441FB /* DevicesModuleFactory.swift in Sources */,
 				E1B5800E2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */,
+				E1CE5E472A016D4000391109 /* RuuviCustomButton.swift in Sources */,
 				A9646478247BAE6B0001D55D /* ChartSettingsViewModel.swift in Sources */,
 				A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */,
 				E1B5800B29859EEB00B441FB /* DevicesInteractorOutput.swift in Sources */,
@@ -5767,6 +5867,7 @@
 				E1597A5F295F803400DFB70B /* UIColor+Extension.swift in Sources */,
 				66BC44A12657AED400A03253 /* OffsetCorrectionPresenter.swift in Sources */,
 				E1CD780F287830BF00F1F0EB /* UnitSettingsRouterInput.swift in Sources */,
+				E1AB90732A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
 				E116706F29620AD4002DF7BF /* BackgroundSelectionButtonView.swift in Sources */,
 				0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */,
@@ -5882,6 +5983,7 @@
 				A9646475247BAE6B0001D55D /* ChartSettingsViewOutput.swift in Sources */,
 				E1B5800829859EDE00B441FB /* DevicesInteractorInput.swift in Sources */,
 				A91D03002511207300694733 /* SelectionTableViewController.swift in Sources */,
+				E1AB90642A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */,
 				A964646F247BAE6B0001D55D /* ChartSettingsSwitchTableViewCell.swift in Sources */,
 				A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
@@ -6031,7 +6133,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6041,7 +6143,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6063,7 +6165,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6073,7 +6175,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6095,7 +6197,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6108,7 +6210,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -6132,7 +6234,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6145,7 +6247,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6167,7 +6269,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6180,7 +6282,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -6203,7 +6305,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6216,7 +6318,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6355,7 +6457,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6397,7 +6499,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6417,7 +6519,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6426,7 +6528,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6531,7 +6633,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6544,7 +6646,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
@@ -6566,7 +6668,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 376;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6579,7 +6681,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
 				PRODUCT_NAME = "$(TARGET_NAME)";

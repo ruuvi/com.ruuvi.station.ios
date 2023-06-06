@@ -62,6 +62,12 @@ public protocol RuuviCloud {
     ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
+    func contest(
+        macId: MACIdentifier,
+        secret: String
+    ) -> Future<MACIdentifier, RuuviCloudError>
+
+    @discardableResult
     func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult

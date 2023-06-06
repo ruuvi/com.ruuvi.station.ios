@@ -724,6 +724,26 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
+    @discardableResult
+    public func contest(
+        macId: MACIdentifier,
+        secret: String
+    ) -> Future<MACIdentifier, RuuviCloudError> {
+        let promise = Promise<MACIdentifier, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiContestRequest(sensor: macId.value, secret: secret)
+        api.contest(request, authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.sensor.mac)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     public func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError> {
         let promise = Promise<MACIdentifier, RuuviCloudError>()
         guard let apiKey = user.apiKey else {

@@ -24,7 +24,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>375</string>
+	<string>376</string>
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -91,5 +91,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NFCReaderUsageDescription</key>
+	<string>Allows user to claim a RuuviTag using NFC when the user has physical access to the sensor</string>
 </dict>
 </plist>

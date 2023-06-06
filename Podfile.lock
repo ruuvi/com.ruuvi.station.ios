@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.4.1)
+  - BTKit (0.4.2)
   - Firebase (10.7.0):
     - Firebase/Core (= 10.7.0)
   - Firebase/Analytics (10.7.0):
@@ -276,9 +276,9 @@ PODS:
   - RuuviDFU/Impl (0.0.1):
     - iOSDFULibrary
   - RuuviDFU/Tests (0.0.1)
-  - RuuviDiscover (0.0.1):
-    - RuuviDiscover/RuuviDiscover (= 0.0.1)
-  - RuuviDiscover/RuuviDiscover (0.0.1):
+  - RuuviDiscover (0.0.2):
+    - RuuviDiscover/RuuviDiscover (= 0.0.2)
+  - RuuviDiscover/RuuviDiscover (0.0.2):
     - BTKit
     - RuuviContext
     - RuuviCore
@@ -288,7 +288,7 @@ PODS:
     - RuuviReactor
     - RuuviService
     - RuuviVirtual
-  - RuuviDiscover/Tests (0.0.1)
+  - RuuviDiscover/Tests (0.0.2)
   - RuuviLocal (0.0.3):
     - RuuviLocal/Contract (= 0.0.3)
   - RuuviLocal/Contract (0.0.3):
@@ -808,7 +808,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BTKit:
-    :commit: c1c41194a14d2c2594e7658c7088f8262813707a
+    :commit: ae35464de55347e4d021659f4cb483d96c9802b2
     :git: https://github.com/ruuvi/BTKit.git
   Humidity:
     :commit: fb909b332a1f17a6453587dbeaebcfe7c6712a72
@@ -821,7 +821,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
 
 SPEC CHECKSUMS:
-  BTKit: 752fd4c1aaf8f4bc3ea3cd3df55b816bebd59dc0
+  BTKit: 3df5d1542352cb23fad21c5cda55f93843515d79
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
   FirebaseABTesting: 76c8297fd026074e0366dc941d265d1be80a56d5
   FirebaseAnalytics: f8133442ee6f8512e28ff19e62ce15398bfaeace
@@ -861,7 +861,7 @@ SPEC CHECKSUMS:
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
-  RuuviDiscover: 1e6354187fbf85c84a752408577f977375696ab2
+  RuuviDiscover: 6b710fc2c5124dba67807aec126c99d1d6e723c3
   RuuviLocal: 5d711ed6933bbea2c958bd805186bbde012bc4e3
   RuuviLocalization: 04e829bac8113cc8edb49c22a243da88b8383210
   RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8

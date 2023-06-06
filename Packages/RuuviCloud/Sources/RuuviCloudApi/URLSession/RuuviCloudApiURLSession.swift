@@ -13,6 +13,7 @@ extension RuuviCloudApiURLSession {
         case unregisterPNToken = "push-unregister"
         case PNTokens = "push-list"
         case claim
+        case contest = "contest-sensor"
         case unclaim
         case share
         case unshare
@@ -107,6 +108,16 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiClaimResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.claim,
+                       with: requestModel,
+                       method: .post,
+                       authorization: authorization)
+    }
+
+    public func contest(
+        _ requestModel: RuuviCloudApiContestRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiContestResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.contest,
                        with: requestModel,
                        method: .post,
                        authorization: authorization)

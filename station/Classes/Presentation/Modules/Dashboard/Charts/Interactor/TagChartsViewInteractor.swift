@@ -24,6 +24,7 @@ class TagChartsViewInteractor {
     var ruuviAppSettingsService: RuuviServiceAppSettings!
 
     var lastMeasurement: RuuviMeasurement?
+    var lastMeasurementRecord: RuuviTagSensorRecord?
     var ruuviTagData: [RuuviMeasurement] = []
 
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
@@ -78,6 +79,7 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
+        lastMeasurementRecord = nil
         restartScheduler()
         fetchLast()
 
@@ -240,6 +242,7 @@ extension TagChartsViewInteractor {
                 return
             }
             sSelf.lastMeasurement = record.measurement
+            sSelf.lastMeasurementRecord = record
             var chartsCases = MeasurementType.chartsCases
             if record.humidity == nil {
                 chartsCases.remove(at: 1)
@@ -247,24 +250,35 @@ extension TagChartsViewInteractor {
                 chartsCases.remove(at: 2)
             }
             sSelf.presenter.createChartModules(from: chartsCases)
+            sSelf.presenter.updateLatestRecord(record)
         }, failure: {[weak self] (error) in
             self?.presenter.interactorDidError(.ruuviStorage(error))
         })
     }
 
     private func fetchLastFromDate() {
-        guard let lastDate = lastMeasurement?.date else {
+        guard let lastMeasurement = lastMeasurement,
+              let lastMeasurementRecord = lastMeasurementRecord else {
             return
         }
-        let op = ruuviStorage.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
+        let op = ruuviStorage.readLast(
+            ruuviTagSensor.id,
+            from: lastMeasurement.date.timeIntervalSince1970
+        )
         op.on(success: { [weak self] (results) in
             guard results.count > 0,
-            let last = results.last else { return }
+                  let last = results.last else {
+                self?.presenter.updateLatestRecord(lastMeasurementRecord)
+                return
+            }
             guard let sSelf = self else { return }
             sSelf.lastMeasurement = last.measurement
+            sSelf.lastMeasurementRecord = last
             sSelf.ruuviTagData.append(last.measurement)
             sSelf.insertMeasurements([last.measurement])
+            sSelf.presenter.updateLatestRecord(last)
         }, failure: {[weak self] (error) in
+            self?.presenter.updateLatestRecord(lastMeasurementRecord)
             self?.presenter.interactorDidError(.ruuviStorage(error))
         })
     }

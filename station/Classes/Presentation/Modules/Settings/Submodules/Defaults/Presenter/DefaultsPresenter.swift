@@ -31,6 +31,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildAskForReviewLater(),
                            buildDashboardCardTapAction(),
                            buildConnectToDevServer(),
+                           buildHideNFCButtonInSensorContents(),
                            buildIsAuthorized(),
                            buildAuthToken()]
         self.output = output
@@ -284,6 +285,19 @@ extension DefaultsPresenter {
                 .showEndpointChangeConfirmationDialog(
                 useDevServer: useDevServer
             )
+        }
+        return viewModel
+    }
+
+    private func buildHideNFCButtonInSensorContents() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Defaults.HideNFC.title".localized()
+        viewModel.boolean.value = settings.hideNFCForSensorContest
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean,
+             fire: false) { [weak self] observer, hideNFC in
+            observer.settings.hideNFCForSensorContest = hideNFC.bound
         }
         return viewModel
     }

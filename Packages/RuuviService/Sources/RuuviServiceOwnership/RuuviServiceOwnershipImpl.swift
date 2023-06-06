@@ -75,7 +75,6 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    // swiftlint:disable:next function_body_length
     public func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         guard let macId = sensor.macId else {
@@ -88,58 +87,42 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         }
         cloud.claim(name: sensor.name, macId: macId)
             .on(success: { [weak self] _ in
-                guard let sSelf = self else { return }
-                let claimedSensor = sensor
-                    .with(owner: owner)
-                    .with(isClaimed: true)
-                    .with(isCloudSensor: true)
-                sSelf.pool
-                    .update(claimedSensor)
-                    .on(success: { [weak sSelf] _ in
-                        guard let ssSelf = sSelf else { return }
-                        if let customImage = ssSelf.localImages.getCustomBackground(for: macId) {
-                            if let jpegData = customImage.jpegData(compressionQuality: 1.0) {
-                                let remote = ssSelf.cloud.upload(
-                                    imageData: jpegData,
-                                    mimeType: .jpg,
-                                    progress: nil,
-                                    for: macId
-                                )
-                                remote.on(success: { _ in
-                                    promise.succeed(value: claimedSensor.any)
-                                }, failure: { error in
-                                    promise.fail(error: .ruuviCloud(error))
-                                })
-                            } else {
-                                promise.fail(error: .failedToGetJpegRepresentation)
-                            }
-                        } else {
-                            promise.succeed(value: claimedSensor.any)
-                        }
-
-                        ssSelf.storage
-                            .readSensorSettings(sensor)
-                            .on { [weak ssSelf] settings in
-                                guard let sssSelf = ssSelf else { return }
-                                sssSelf.cloud.update(
-                                    temperatureOffset: settings?.temperatureOffset ?? 0,
-                                    humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
-                                    pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPA local, Pa on cloud
-                                    for: sensor
-                                ).on()
-                            }
-
-                        AlertType.allCases.forEach { type in
-                            if let alert = ssSelf.alertService.alert(for: sensor, of: type) {
-                                ssSelf.alertService.register(type: alert, ruuviTag: claimedSensor)
-                            }
-                        }
-                    }, failure: { error in
-                        promise.fail(error: .ruuviPool(error))
-                    })
+                self?.handleSensorClaimed(
+                    sensor: sensor,
+                    owner: owner,
+                    macId: macId,
+                    promise: promise
+                )
             }, failure: { error in
-                // TODO: @rinat check on use cases
-                // if error.errorDescription == "Sensor already claimed" {
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func contest(
+        sensor: RuuviTagSensor,
+        secret: String
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
+        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
+        guard let macId = sensor.macId else {
+            promise.fail(error: .macIdIsNil)
+            return promise.future
+        }
+
+        guard let owner = ruuviUser.email else {
+            promise.fail(error: .ruuviCloud(.notAuthorized))
+            return promise.future
+        }
+
+        cloud.contest(macId: macId, secret: secret)
+            .on(success: { [weak self] _ in
+                self?.handleSensorClaimed(
+                    sensor: sensor,
+                    owner: owner,
+                    macId: macId,
+                    promise: promise)
+            }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
         return promise.future
@@ -249,5 +232,75 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             promise.fail(error: .ruuviPool(error))
         })
         return promise.future
+    }
+}
+
+extension RuuviServiceOwnershipImpl {
+    private func handleSensorClaimed(
+        sensor: RuuviTagSensor,
+        owner: String,
+        macId: MACIdentifier,
+        promise: Promise<AnyRuuviTagSensor, RuuviServiceError>
+    ) {
+        let claimedSensor = sensor
+            .with(owner: owner)
+            .with(isClaimed: true)
+            .with(isCloudSensor: true)
+            .with(isOwner: true)
+        pool
+            .update(claimedSensor)
+            .on(success: { [weak self] _ in
+                self?.handleUpdatedSensor(
+                    sensor: claimedSensor,
+                    promise: promise,
+                    macId: macId
+                )
+            }, failure: { error in
+                promise.fail(error: .ruuviPool(error))
+            })
+    }
+
+    private func handleUpdatedSensor(
+        sensor: RuuviTagSensor,
+        promise: Promise<AnyRuuviTagSensor, RuuviServiceError>,
+        macId: MACIdentifier
+    ) {
+        if let customImage = localImages.getCustomBackground(for: macId) {
+            if let jpegData = customImage.jpegData(compressionQuality: 1.0) {
+                let remote = cloud.upload(
+                    imageData: jpegData,
+                    mimeType: .jpg,
+                    progress: nil,
+                    for: macId
+                )
+                remote.on(success: { _ in
+                    promise.succeed(value: sensor.any)
+                }, failure: { error in
+                    promise.fail(error: .ruuviCloud(error))
+                })
+            } else {
+                promise.fail(error: .failedToGetJpegRepresentation)
+            }
+        } else {
+            promise.succeed(value: sensor.any)
+        }
+
+        storage
+            .readSensorSettings(sensor)
+            .on { [weak self] settings in
+                guard let sSelf = self else { return }
+                sSelf.cloud.update(
+                    temperatureOffset: settings?.temperatureOffset ?? 0,
+                    humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
+                    pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPA local, Pa on cloud
+                    for: sensor
+                ).on()
+            }
+
+        AlertType.allCases.forEach { type in
+            if let alert = alertService.alert(for: sensor, of: type) {
+                alertService.register(type: alert, ruuviTag: sensor)
+            }
+        }
     }
 }
