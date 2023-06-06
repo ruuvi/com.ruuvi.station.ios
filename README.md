@@ -7,10 +7,10 @@
 Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/app/ruuvi-station/id1384475885) on the AppStore. You can observe environment data read from RuuviTag beacon, such as temperature, humidity, air pressure (and more) right on your iOS device. Ruuvi Station is a companion app for open-source IoT BLE devices made by [Ruuvi](https://ruuvi.com).
 
 <p align="center">
-  <img src="/docs/screenshot0.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot1.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot2.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
-  <img src="/docs/screenshot3.jpeg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot0.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot1.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot2.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
+  <img src="/docs/screenshot3.jpg?raw=true" alt="Ruuvi Station for iOS" height="400"/>
 </p>
 
 <p align="center">
