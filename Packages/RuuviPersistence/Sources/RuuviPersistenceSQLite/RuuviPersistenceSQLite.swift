@@ -30,7 +30,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     private let context: SQLiteContext
     private let readQueue: DispatchQueue =
         DispatchQueue(label: "RuuviTagPersistenceSQLite.readQueue",
-                      qos: .userInitiated)
+                      qos: .default)
     public init(context: SQLiteContext) {
         self.context = context
     }
