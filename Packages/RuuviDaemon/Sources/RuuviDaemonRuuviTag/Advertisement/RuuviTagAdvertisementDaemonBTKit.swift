@@ -8,6 +8,7 @@ import RuuviPool
 import RuuviPersistence
 import RuuviDaemon
 
+// swiftlint:disable:next type_body_length
 public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTagAdvertisementDaemon {
     private let ruuviPool: RuuviPool
     private let ruuviStorage: RuuviStorage
@@ -23,6 +24,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var savedDate = [String: Date]() // uuid:date
     private var isOnToken: NSObjectProtocol?
     private var cloudModeOnToken: NSObjectProtocol?
+    private var daemonRestartToken: NSObjectProtocol?
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
@@ -46,6 +48,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         sensorSettingsTokens.removeAll()
         if let cloudModeOnToken = cloudModeOnToken {
             NotificationCenter.default.removeObserver(cloudModeOnToken)
+        }
+        if let daemonRestartToken = daemonRestartToken {
+            NotificationCenter.default.removeObserver(daemonRestartToken)
         }
     }
 
@@ -82,6 +87,15 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                          queue: .main) { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.restartObserving()
+            }
+
+        daemonRestartToken = NotificationCenter
+            .default
+            .addObserver(forName: .RuuviTagAdvertisementDaemonShouldRestart,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.restart()
             }
     }
 
@@ -121,8 +135,10 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     public func restart() {
-        stop()
-        start()
+        ruuviStorage.readAll().on(success: { [weak self] sensors in
+            self?.ruuviTags = sensors
+            self?.restartObserving()
+        })
     }
 
     @objc private func stopDaemon() {

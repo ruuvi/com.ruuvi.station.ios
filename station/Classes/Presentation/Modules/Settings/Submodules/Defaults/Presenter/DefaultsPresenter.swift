@@ -296,7 +296,7 @@ extension DefaultsPresenter {
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean,
-             fire: false) { [weak self] observer, hideNFC in
+             fire: false) { observer, hideNFC in
             observer.settings.hideNFCForSensorContest = hideNFC.bound
         }
         return viewModel

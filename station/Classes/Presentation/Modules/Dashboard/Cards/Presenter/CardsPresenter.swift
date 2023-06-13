@@ -237,6 +237,8 @@ extension CardsPresenter {
             guard let sSelf = self else { return }
             switch change {
             case .insert(let sensor):
+                sSelf.notifyRestartAdvertisementDaemon()
+                sSelf.notifyRestartHeartBeatDaemon()
                 sSelf.checkFirmwareVersion(for: sensor)
                 sSelf.ruuviTags.append(sensor.any)
                 sSelf.syncViewModels()
@@ -1402,6 +1404,24 @@ extension CardsPresenter {
         if isOn != observable.value {
             observable.value = isOn
         }
+    }
+
+    private func notifyRestartAdvertisementDaemon() {
+            // Notify daemon to restart
+        NotificationCenter
+            .default
+            .post(name: .RuuviTagAdvertisementDaemonShouldRestart,
+                  object: nil,
+                  userInfo: nil)
+    }
+    
+    private func notifyRestartHeartBeatDaemon() {
+            // Notify daemon to restart
+        NotificationCenter
+            .default
+            .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
+                  object: nil,
+                  userInfo: nil)
     }
 }
 // swiftlint:enable file_length trailing_whitespace

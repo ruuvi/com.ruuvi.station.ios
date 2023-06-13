@@ -27,7 +27,7 @@ final class RuuviTagSubjectCombine {
         ruuviTagsRealmToken?.invalidate()
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     init(sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm
@@ -40,11 +40,17 @@ final class RuuviTagSubjectCombine {
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
-                sSelf.insertSubject.send(record.any)
+                DispatchQueue.main.async {
+                    sSelf.insertSubject.send(record.any)
+                }
             case .update:
-                sSelf.updateSubject.send(record.any)
+                DispatchQueue.main.async {
+                    sSelf.updateSubject.send(record.any)
+                }
             case .deletion:
-                sSelf.deleteSubject.send(record.any)
+                DispatchQueue.main.async {
+                    sSelf.deleteSubject.send(record.any)
+                }
             case .move:
                 break
             }
