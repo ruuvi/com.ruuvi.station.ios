@@ -15,6 +15,8 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case dashboardEnabled = "DASHBOARD_ENABLED"
     case dashboardType = "DASHBOARD_TYPE"
     case dashboardTapActionType = "DASHBOARD_TAP_ACTION"
+    case pushAlertEnabled = "ALERT_PUSH_ENABLED"
+    case emailAlertEnabled = "ALERT_EMAIL_ENABLED"
 }
 
 extension TemperatureUnit {
@@ -154,16 +156,14 @@ extension String {
         }
     }
 
-    // swiftlint:disable switch_case_alignment
     public var ruuviCloudApiSettingsDashboardTapActionType: DashboardTapActionType {
         switch self {
-            case "card":
-                return .card
-            case "chart":
-                return .chart
-            default:
-                return .card
+        case "card":
+            return .card
+        case "chart":
+            return .chart
+        default:
+            return .card
         }
     }
-    // swiftlint:enable switch_case_alignment
 }

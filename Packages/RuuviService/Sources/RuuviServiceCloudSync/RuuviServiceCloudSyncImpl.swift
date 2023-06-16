@@ -104,6 +104,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    dashboardTapActionType != sSelf.ruuviLocalSettings.dashboardTapActionType {
                     sSelf.ruuviLocalSettings.dashboardTapActionType = dashboardTapActionType
                 }
+                if let pushAlertEnabled = cloudSettings.pushAlertEnabled,
+                   pushAlertEnabled != sSelf.ruuviLocalSettings.pushAlertEnabled {
+                    sSelf.ruuviLocalSettings.pushAlertEnabled = pushAlertEnabled
+                }
+                if let emailAlertEnabled = cloudSettings.emailAlertEnabled,
+                   emailAlertEnabled != sSelf.ruuviLocalSettings.emailAlertEnabled {
+                    sSelf.ruuviLocalSettings.emailAlertEnabled = emailAlertEnabled
+                }
 
                 promise.succeed(value: cloudSettings)
             }, failure: { error in

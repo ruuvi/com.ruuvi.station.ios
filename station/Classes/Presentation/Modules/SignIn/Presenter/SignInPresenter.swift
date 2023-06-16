@@ -255,10 +255,12 @@ extension SignInPresenter {
     }
 
     private func registerFCMToken() {
+        let sound = settings.alertSound
         Messaging.messaging().token { [weak self] fcmToken, _ in
             self?.cloudNotificationService.set(token: fcmToken,
                                                name: UIDevice.modelName,
-                                               data: nil)
+                                               data: nil,
+                                               sound: sound)
         }
     }
 }

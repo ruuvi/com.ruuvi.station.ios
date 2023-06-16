@@ -697,4 +697,6 @@ RuuviTag est prêt à être utilisé !";
 "use_bluetooth" = "Utiliser BT";
 "sensor_not_found_error" = "Capteur introuvable. Essayer à nouveau.";
 "Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";
+"settings_alert_sound_default" = "System Default";
+"settings_alert_sound_ruuvi_speak" = "Ruuvi Speak";
 
