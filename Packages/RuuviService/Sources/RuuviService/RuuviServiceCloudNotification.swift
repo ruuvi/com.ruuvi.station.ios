@@ -7,13 +7,19 @@ public protocol RuuviServiceCloudNotification {
     @discardableResult
     func set(token: String?,
              name: String?,
-             data: String?) -> Future<Int, RuuviServiceError>
+             data: String?,
+             sound: RuuviAlertSound) -> Future<Int, RuuviServiceError>
+
+    @discardableResult
+    func set(sound: RuuviAlertSound,
+             deviceName: String?) -> Future<Int, RuuviServiceError>
 
     @discardableResult
     func register(token: String,
                   type: String,
                   name: String?,
-                  data: String?) -> Future<Int, RuuviServiceError>
+                  data: String?,
+                  params: [String: String]?) -> Future<Int, RuuviServiceError>
 
     @discardableResult
     func unregister(token: String?,

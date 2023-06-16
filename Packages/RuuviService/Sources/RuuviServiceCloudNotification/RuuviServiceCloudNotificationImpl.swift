@@ -34,7 +34,8 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     @discardableResult
     public func set(token: String?,
                     name: String?,
-                    data: String?) -> Future<Int, RuuviServiceError> {
+                    data: String?,
+                    sound: RuuviAlertSound) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
         guard ruuviUser.isAuthorized, let token = token else {
             return promise.future
@@ -54,10 +55,43 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
             return promise.future
         }
 
-        register(token: token,
-                 type: "ios",
-                 name: name,
-                 data: data)
+        register(
+            token: token,
+            type: "ios",
+            name: name,
+            data: data,
+            params: [
+                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue
+            ]
+        )
+        .on(success: { [weak self] tokenId in
+            self?.pnManager.fcmTokenId = tokenId
+            self?.pnManager.fcmToken = token
+            self?.pnManager.fcmTokenLastRefreshed = Date()
+            promise.succeed(value: tokenId)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(sound: RuuviAlertSound,
+                    deviceName: String?) -> Future<Int, RuuviServiceError> {
+        let promise = Promise<Int, RuuviServiceError>()
+        guard ruuviUser.isAuthorized, let token = pnManager.fcmToken else {
+            return promise.future
+        }
+
+        register(
+            token: token,
+            type: "ios",
+            name: deviceName,
+            data: nil,
+            params: [
+                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue
+            ]
+        )
         .on(success: { [weak self] tokenId in
             self?.pnManager.fcmTokenId = tokenId
             self?.pnManager.fcmToken = token
@@ -73,12 +107,14 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     public func register(token: String,
                          type: String,
                          name: String?,
-                         data: String?) -> Future<Int, RuuviServiceError> {
+                         data: String?,
+                         params: [String: String]?) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
         cloud.registerPNToken(token: token,
                               type: type,
                               name: name,
-                              data: data)
+                              data: data,
+                              params: params)
         .on(success: { tokenId in
             promise.succeed(value: tokenId)
         }, failure: { error in

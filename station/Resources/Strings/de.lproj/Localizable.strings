@@ -701,3 +701,5 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "use_bluetooth" = "Verwenden Sie BT";
 "sensor_not_found_error" = "Sensor nicht gefunden. Versuchen Sie es erneut.";
 "Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";
+"settings_alert_sound_default" = "System Default";
+"settings_alert_sound_ruuvi_speak" = "Ruuvi Speak";
