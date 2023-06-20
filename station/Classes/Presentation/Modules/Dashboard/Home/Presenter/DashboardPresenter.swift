@@ -321,6 +321,10 @@ extension DashboardPresenter: DashboardViewOutput {
         view?.dashboardTapActionType = type
         ruuviAppSettingsService.set(dashboardTapActionType: type)
     }
+
+    func viewDidTriggerPullToRefresh() {
+        cloudSyncDaemon.refreshImmediately()
+    }
 }
 
 // MARK: - MenuModuleOutput

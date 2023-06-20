@@ -20,4 +20,5 @@ protocol DashboardViewOutput {
     func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func viewDidChangeDashboardType(dashboardType: DashboardType)
     func viewDidChangeDashboardTapAction(type: DashboardTapActionType)
+    func viewDidTriggerPullToRefresh()
 }
