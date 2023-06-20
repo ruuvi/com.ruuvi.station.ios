@@ -117,12 +117,23 @@ class DashboardViewController: UIViewController {
         cv.showsVerticalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
+        cv.alwaysBounceVertical = true
+        cv.refreshControl = refresher
         return cv
+    }()
+
+    private lazy var refresher: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.tintColor = RuuviColor.ruuviTintColor
+        rc.layer.zPosition = -1
+        rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        return rc
     }()
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
 
     private var isListRefreshable: Bool = true
+    private var isRefreshing: Bool = false
     /// The view model when context menu is presented after a card tap.
     private var highlightedViewModel: CardsViewModel?
 
@@ -192,6 +203,19 @@ extension DashboardViewController {
             }
             self?.collectionView.reloadWithoutAnimation()
         }
+    }
+
+    @objc fileprivate func didPullToRefresh() {
+        guard !isRefreshing else {
+          refresher.endRefreshing()
+          return
+        }
+        isRefreshing = true
+        output.viewDidTriggerPullToRefresh()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak self] in
+            self?.refresher.endRefreshing()
+            self?.isRefreshing = false
+        })
     }
 }
 
@@ -374,7 +398,7 @@ extension DashboardViewController {
                               leading: view.safeLeftAnchor,
                               bottom: view.bottomAnchor,
                               trailing: view.safeRightAnchor,
-                              padding: .init(top: 0,
+                              padding: .init(top: 12,
                                              left: 12,
                                              bottom: 0,
                                              right: 12))
@@ -382,6 +406,8 @@ extension DashboardViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
         collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
+
+        collectionView.addSubview(refresher)
     }
 
     // swiftlint:disable:next function_body_length
@@ -427,7 +453,7 @@ extension DashboardViewController {
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
             section.contentInsets = NSDirectionalEdgeInsets(
-                top: 12,
+                top: 0,
                 leading: 0,
                 bottom: 12,
                 trailing: 0
