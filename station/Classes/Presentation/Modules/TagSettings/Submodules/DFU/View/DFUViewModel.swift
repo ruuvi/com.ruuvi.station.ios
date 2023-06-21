@@ -31,6 +31,7 @@ final class DFUViewModel: ObservableObject {
     private let activityPresenter: ActivityPresenter
     private var ruuviTagObserveToken: ObservationToken?
     private var isMigrating: Bool = false
+    private let timeoutDuration: Int = 15
 
     var isLoading: Bool = false {
         didSet {
@@ -600,6 +601,8 @@ extension DFUViewModel {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+                .timeout(.seconds(sSelf.timeoutDuration),
+                         scheduler: DispatchQueue.main)
                 .receive(on: RunLoop.main)
                 .map(Event.onServed)
                 .catch { _ in Just(Event.onServed(nil)) }
@@ -647,6 +650,8 @@ extension DFUViewModel {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+                .timeout(.seconds(sSelf.timeoutDuration),
+                         scheduler: DispatchQueue.main)
                 .receive(on: RunLoop.main)
                 .map(Event.onServingAfterUpdate)
                 .catch { _ in Just(Event.onServingAfterUpdate(nil)) }
@@ -660,6 +665,8 @@ extension DFUViewModel {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+                .timeout(.seconds(sSelf.timeoutDuration),
+                         scheduler: DispatchQueue.main)
                 .receive(on: RunLoop.main)
                 .map(Event.onServedAfterUpdate)
                 .catch { _ in Just(Event.onServedAfterUpdate(nil)) }
