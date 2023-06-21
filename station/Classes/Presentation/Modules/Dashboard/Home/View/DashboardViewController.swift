@@ -280,11 +280,27 @@ extension DashboardViewController {
             }
         }
 
-        return UIMenu(title: "",
-                      children: [fullImageViewAction,
-                                 historyViewAction,
-                                 settingsAction,
-                                 changeBackgroundAction])
+        let shareSensorAction = UIAction(title: "TagSettings.ShareButton".localized()) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                self?.output.viewDidTriggerShare(for: viewModel)
+            }
+        }
+
+        var contextMenuActions: [UIAction] = [
+          fullImageViewAction,
+          historyViewAction,
+          settingsAction,
+          changeBackgroundAction
+        ]
+
+        let viewModel = viewModels[index]
+        if let canShare = viewModel.canShareTag.value,
+           canShare {
+          contextMenuActions.append(shareSensorAction)
+        }
+
+        return UIMenu(title: "", children: contextMenuActions)
     }
 }
 

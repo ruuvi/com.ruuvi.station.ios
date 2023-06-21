@@ -46,4 +46,5 @@ protocol DashboardRouterInput {
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
     func openBackgroundSelectionView(virtualSensor: VirtualTagSensor)
     func openMyRuuviAccount()
+    func openShare(for sensor: RuuviTagSensor)
 }
