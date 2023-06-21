@@ -261,7 +261,13 @@ extension DashboardPresenter: DashboardViewOutput {
         }
         
     }
-    
+
+    func viewDidTriggerShare(for viewModel: CardsViewModel) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+            router.openShare(for: ruuviTag)
+        }
+    }
+
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)

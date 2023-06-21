@@ -35,6 +35,7 @@ struct CardsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var isCloud: Observable<Bool?> = Observable<Bool?>()
     var isOwner: Observable<Bool?> = Observable<Bool?>()
+    var canShareTag: Observable<Bool?> = Observable<Bool?>(false)
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var rhAlertLowerBound: Observable<Double?> = Observable<Double?>()
     var rhAlertUpperBound: Observable<Double?> = Observable<Double?>()
@@ -127,6 +128,8 @@ struct CardsViewModel {
         isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false
         isCloud.value = ruuviTag.isCloud
         isOwner.value = ruuviTag.isOwner
+        canShareTag.value =
+          (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
     }
 
     func update(_ record: RuuviTagSensorRecord) {
