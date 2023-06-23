@@ -589,7 +589,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "settings_and_alerts" = "Einstellungen & Benachrichtigungen";
 "change_background" = "Einstellungen und Warnungen";
 "check_claim_state" = "Prüfung des Antragsstatus";
-"claim_in_progress" = "Claiming in progress";
+"claim_in_progress" = "Anspruchserhebung läuft";
 "force_claim_sensor" = "Antragstellung in Bearbeitung";
 "force_claim_sensor_description1" = "Dieser Sensor wurde von einem anderen Benutzer beansprucht. Sie können die Eigentümerschaft für Ihr Konto erzwingen, wenn Sie physischen Zugang zu diesem Sensor haben. Jeder Ruuvi-Sensor kann nur einen Besitzer haben.";
 "force_claim_sensor_description2" = "Die Zwangsanforderung erfolgt über die Nahfeldkommunikation (NFC). Vergewissern Sie sich, dass NFC auf Ihrem Mobilgerät aktiviert ist.\
@@ -597,7 +597,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 	2. Nach erfolgreicher Beanspruchung werden Sie zu den Sensoreinstellungen zurückgeschickt.\
 \
 Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht verfügbar ist:\n\n	1. Öffnen Sie die Abdeckung Ihres Ruuvi-Sensors.\
-	2. Suchen Sie die runde schwarze Taste (oder die Taste \"B\", falls Ihr Sensor 2 Tasten hat) auf der weißen Platine und drücken Sie sie kurz, um den Beanspruchungsprozess zu starten.\
+	2. Suchen Sie die runde schwarze Taste (oder die Taste \"B\", falls Ihr Sensor 2 Tasten hat) auf der weißen Platine und drücken Sie sie kurz, und tippen Sie dann auf die Schaltfläche „Verwenden Sie BT“, um den Beanspruchungsprozess zu starten.\
 \n\t3. Nach erfolgreicher Beanspruchung werden Sie zu den Sensoreinstellungen zurückgeschickt.";
 "force_claim" = "Kraft-Anspruch";
 "claim_wrong_sensor_scanned" = "Sie scannen gerade verschiedene RuuviTag";
@@ -700,6 +700,6 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "use_nfc" = "Verwenden Sie NFC";
 "use_bluetooth" = "Verwenden Sie BT";
 "sensor_not_found_error" = "Sensor nicht gefunden. Versuchen Sie es erneut.";
-"Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";
-"settings_alert_sound_default" = "System Default";
-"settings_alert_sound_ruuvi_speak" = "Ruuvi Speak";
+"Defaults.HideNFC.title" = "Verstecken Sie die NFC-Option vor einem erzwungenen Eigentümerwechsel";
+"settings_alert_sound_default" = "Systemfehler";
+"settings_alert_sound_ruuvi_speak" = "Ruuvi Alarm";
