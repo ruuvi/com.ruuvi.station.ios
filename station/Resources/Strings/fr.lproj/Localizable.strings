@@ -589,11 +589,11 @@ RuuviTag est prêt à être utilisé !";
 "settings_and_alerts" = "Paramètres & alertes";
 "change_background" = "Paramètres et alertes";
 "check_claim_state" = "Vérification de l'état de la demande";
-"claim_in_progress" = "Claiming in progress";
+"claim_in_progress" = "Réclamation en cours";
 "force_claim_sensor" = "Revendication en cours";
 "force_claim_sensor_description1" = "Ce capteur a été réclamé par un autre utilisateur. Vous pouvez forcer la propriété à votre compte si vous avez un accès physique à ce capteur. Chaque capteur Ruuvi ne peut avoir qu'un seul propriétaire.";
 "force_claim_sensor_description2" = "La réclamation forcée est effectuée en utilisant la communication en champ proche (NFC). Assurez-vous que la NFC est activée sur votre appareil mobile. 1. Touchez le capteur de votre Ruuvi avec votre appareil mobile pour lancer le processus de réclamation.
-	2. Une fois la réclamation réussie, vous serez renvoyé aux paramètres du capteur. Si la réclamation n'a pas abouti ou si la technologie NFC n'est pas disponible sur votre appareil : 1. Ouvrez le couvercle de votre capteur Ruuvi. 2. Localisez le bouton rond noir (ou le bouton \"B\" si votre capteur a 2 boutons) sur la carte de circuit imprimé blanche et appuyez dessus brièvement pour lancer le processus de réclamation.
+	2. Une fois la réclamation réussie, vous serez renvoyé aux paramètres du capteur. Si la réclamation n'a pas abouti ou si la technologie NFC n'est pas disponible sur votre appareil : 1. Ouvrez le couvercle de votre capteur Ruuvi. 2. Localisez le bouton rond noir (ou le bouton \"B\" si votre capteur a 2 boutons) sur la carte de circuit imprimé blanche et appuyez dessus brièvement, puis appuyez sur le bouton Utiliser BT pour démarrer le processus de réclamation.
 	3. Une fois la réclamation réussie, vous serez renvoyé aux paramètres du capteur.";
 "force_claim" = "Revendication de force";
 "claim_wrong_sensor_scanned" = "Vous scannez différents RuuviTag";
@@ -696,7 +696,7 @@ RuuviTag est prêt à être utilisé !";
 "use_nfc" = "Utiliser NFC";
 "use_bluetooth" = "Utiliser BT";
 "sensor_not_found_error" = "Capteur introuvable. Essayer à nouveau.";
-"Defaults.HideNFC.title" = "Hide NFC Ooption for sensor contest";
-"settings_alert_sound_default" = "System Default";
-"settings_alert_sound_ruuvi_speak" = "Ruuvi Speak";
+"Defaults.HideNFC.title" = "Masquer l'option NFC du changement de propriété forcé";
+"settings_alert_sound_default" = "Défaillance du système";
+"settings_alert_sound_ruuvi_speak" = "Ruuvi alarme";
 
