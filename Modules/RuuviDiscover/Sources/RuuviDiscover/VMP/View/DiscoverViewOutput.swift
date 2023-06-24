@@ -1,4 +1,6 @@
 import Foundation
+import CoreNFC
+import RuuviOntology
 
 protocol DiscoverViewOutput {
     func viewDidLoad()
@@ -8,4 +10,8 @@ protocol DiscoverViewOutput {
     func viewDidTriggerClose()
     func viewDidTriggerDisabledBTRow()
     func viewDidTriggerBuySensors()
+    func viewDidTapUseNFC()
+    func viewDidReceiveNFCMessages(messages: [NFCNDEFMessage])
+    func viewDidAddDeviceWithNFC(with sensor: NFCSensor?)
+    func viewDidACopySensorDetails(with details: String?)
 }
