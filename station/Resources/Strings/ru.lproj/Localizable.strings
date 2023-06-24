@@ -698,3 +698,13 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Defaults.HideNFC.title" = "Hide NFC Option for sensor contest";
 "settings_alert_sound_default" = "System Default";
 "settings_alert_sound_ruuvi_speak" = "Ruuvi Alert";
+"add_with_nfc" = "Add with NFC";
+"sensor_details" = "Sensor Details";
+"add_sensor" = "Add Sensor";
+"copy_details" = "Copy Details";
+"name" = "Name:";
+"mac_address" = "Mac Address:";
+"unique_id" = "Unique ID:";
+"firmware_version" = "Firmware Version:";
+"close" = "Close";
+"add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";

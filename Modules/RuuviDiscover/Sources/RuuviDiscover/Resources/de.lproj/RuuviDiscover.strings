@@ -14,3 +14,13 @@
 "WebTagLocationSource.current" = "Ihr Standort";
 "WebTagLocationSource.manual" = "Wählen Sie aus der Karte";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"add_with_nfc" = "Add with NFC";
+"sensor_details" = "Sensor Details";
+"add_sensor" = "Add Sensor";
+"copy_details" = "Copy Details";
+"name" = "Name:";
+"mac_address" = "Mac Address:";
+"unique_id" = "Unique ID:";
+"firmware_version" = "Firmware Version:";
+"close" = "Close";
+"add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";

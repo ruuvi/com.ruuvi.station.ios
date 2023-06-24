@@ -699,4 +699,14 @@ RuuviTag est prêt à être utilisé !";
 "Defaults.HideNFC.title" = "Masquer l'option NFC du changement de propriété forcé";
 "settings_alert_sound_default" = "Défaillance du système";
 "settings_alert_sound_ruuvi_speak" = "Ruuvi alarme";
+"add_with_nfc" = "Add with NFC";
+"sensor_details" = "Sensor Details";
+"add_sensor" = "Add Sensor";
+"copy_details" = "Copy Details";
+"name" = "Name:";
+"mac_address" = "Mac Address:";
+"unique_id" = "Unique ID:";
+"firmware_version" = "Firmware Version:";
+"close" = "Close";
+"add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
 
