@@ -12,6 +12,7 @@ final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
     weak var view: SensorForceClaimViewInput?
     var router: SensorForceClaimRouterInput?
     var ruuviOwnershipService: RuuviServiceOwnership!
+    var activityPresenter: ActivityPresenter!
     var ruuviUser: RuuviUser!
     var ruuviPool: RuuviPool!
     var background: BTBackground!
@@ -20,7 +21,15 @@ final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
 
     private var ruuviTag: RuuviTagSensor?
     private var secret: String?
-    private var isLoading: Bool = false
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                activityPresenter.increment()
+            } else {
+                activityPresenter.decrement()
+            }
+        }
+    }
     private var timer: Timer?
     private var gattTimeoutSeconds: Double = 15
 
@@ -41,12 +50,10 @@ extension SensorForceClaimPresenter: SensorForceClaimViewOutput {
     }
 
     func viewDidTapUseNFC() {
-        view?.disableScanButton()
         view?.startNFCSession()
     }
 
     func viewDidTapUseBluetooth() {
-        view?.disableScanButton()
         setUpTimeoutTimerForGATTSecret()
         getTagSecretFromGatt()
     }
@@ -83,9 +90,9 @@ extension SensorForceClaimPresenter {
             withTimeInterval: gattTimeoutSeconds,
             repeats: true,
             block: { [weak self] (_) in
+                self?.isLoading = false
                 self?.invalidateTimer()
                 self?.view?.showGATTConnectionTimeoutDialog()
-                self?.view?.enableScanButton()
             })
     }
 
@@ -99,7 +106,7 @@ extension SensorForceClaimPresenter {
         guard let luid = ruuviTag?.luid else {
             return
         }
-
+        isLoading = true
         // TODO: Check the timeout issue. Timeout not trigerred now.
         background.services.gatt.serialRevision(
             for: self,
@@ -110,8 +117,8 @@ extension SensorForceClaimPresenter {
             case .success(let secret):
                 self?.contestSensor(with: secret)
             case .failure(let error):
-                self?.view?.enableScanButton()
                 self?.errorPresenter.present(error: error)
+                self?.isLoading = false
             }
         }
     }
@@ -119,17 +126,15 @@ extension SensorForceClaimPresenter {
     /// Contest sensor with tag secret.
     private func contestSensor(with secret: String?) {
         guard let ruuviTag = ruuviTag,
-              let secret = secret, !isLoading else { return }
+              let secret = secret else { return }
 
         isLoading = true
         ruuviOwnershipService
             .contest(sensor: ruuviTag, secret: secret)
             .on(success: { [weak self] _ in
                 self?.router?.dismiss()
-                self?.view?.enableScanButton()
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
-                self?.view?.enableScanButton()
             }, completion: { [weak self] in
                 self?.isLoading = false
             })

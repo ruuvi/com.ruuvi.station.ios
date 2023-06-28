@@ -103,8 +103,8 @@ public protocol RuuviLocalSettings {
     func lastOpenedChart() -> String?
     func setLastOpenedChart(with id: String)
 
-    func setOwnerCheckDate(for macId: MACIdentifier, value: Date)
-    func ownerCheckDate(for macId: MACIdentifier) -> Date?
+    func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?)
+    func ownerCheckDate(for macId: MACIdentifier?) -> Date?
 
     func syncDialogHidden(for luid: LocalIdentifier) -> Bool
     func setSyncDialogHidden(for luid: LocalIdentifier)

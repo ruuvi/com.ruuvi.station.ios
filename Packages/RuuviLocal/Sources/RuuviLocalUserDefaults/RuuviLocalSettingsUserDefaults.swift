@@ -418,12 +418,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
 
     private let ownerCheckDateKey = "SettingsUserDefaults.ownerCheckDate"
-    func setOwnerCheckDate(for macId: MACIdentifier, value: Date) {
-        UserDefaults.standard.set(value, forKey: ownerCheckDateKey + macId.mac)
+    func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?) {
+        guard let macId = macId else { return }
+        if let value = value {
+            UserDefaults.standard.set(value, forKey: ownerCheckDateKey + macId.mac)
+        } else {
+            UserDefaults.standard.removeObject(forKey: ownerCheckDateKey + macId.mac)
+        }
     }
 
-    func ownerCheckDate(for macId: MACIdentifier) -> Date? {
-        UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
+    func ownerCheckDate(for macId: MACIdentifier?) -> Date? {
+        guard let macId = macId else { return nil }
+        return UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
     }
 
     @UserDefault("SettingsUserDefaults.dashboardEnabled", defaultValue: true)
