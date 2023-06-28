@@ -23,6 +23,7 @@ final class SensorForceClaimModuleFactoryImpl: SensorForceClaimModuleFactory {
         presenter.view = view
         presenter.router = router
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
+        presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.background = r.resolve(BTBackground.self)
