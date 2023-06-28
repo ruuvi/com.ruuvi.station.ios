@@ -54,12 +54,6 @@ class SensorForceClaimViewController: UIViewController {
         return tv
     }()
 
-    private lazy var processingAnimationView: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.tintColor = RuuviColor.ruuviTintColor
-        return activityIndicator
-    }()
-
     private lazy var useNFCButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
@@ -138,20 +132,6 @@ extension SensorForceClaimViewController: SensorForceClaimViewInput {
 
     func stopNFCSession() {
         session?.invalidate()
-    }
-
-    func disableScanButton() {
-        processingAnimationView.startAnimating()
-        useNFCButton.alpha = 0
-        useBluetoothButton.alpha = 0
-    }
-
-    func enableScanButton() {
-        processingAnimationView.stopAnimating()
-        useBluetoothButton.alpha = 1
-        if isNFCAvailable {
-            useNFCButton.alpha = 1
-        }
     }
 
     func showGATTConnectionTimeoutDialog() {
@@ -237,10 +217,6 @@ extension SensorForceClaimViewController {
             trailing: sensorClaimNotesView.trailingAnchor
         )
 
-        // Activity Indicator
-        footerView.addSubview(processingAnimationView)
-        processingAnimationView.centerInSuperview(size: .init(width: 20, height: 20))
-
         // Scan buttons
         footerView.addSubview(useNFCButton)
         useNFCButton.anchor(
@@ -323,7 +299,6 @@ extension SensorForceClaimViewController: NFCNDEFReaderSessionDelegate {
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.stopNFCSession()
-            self?.enableScanButton()
         }
     }
 

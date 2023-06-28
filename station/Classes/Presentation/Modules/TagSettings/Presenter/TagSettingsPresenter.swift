@@ -258,6 +258,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             sSelf.viewModel.reset()
             sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
             sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
+            sSelf.settings.setOwnerCheckDate(for: sSelf.ruuviTag.macId, value: nil)
             sSelf.output?.tagSettingsDidDeleteTag(module: sSelf,
                                                  ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] error in
