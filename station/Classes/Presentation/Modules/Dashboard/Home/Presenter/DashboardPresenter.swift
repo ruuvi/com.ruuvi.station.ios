@@ -341,7 +341,7 @@ extension DashboardPresenter: MenuModuleOutput {
     
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
-        router.openRuuviProductsPage()
+        router.openRuuviProductsPageFromMenu()
     }
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {

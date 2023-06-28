@@ -71,6 +71,13 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
+    func openRuuviProductsPageFromMenu() {
+        guard let url = URL(string: "Ruuvi.BuySensors.Menu.URL.IOS".localized()) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     func openSignIn(output: SignInBenefitsModuleOutput) {
         let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
