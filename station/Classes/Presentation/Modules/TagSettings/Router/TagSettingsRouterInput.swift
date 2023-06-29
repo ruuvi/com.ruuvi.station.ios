@@ -10,7 +10,7 @@ protocol TagSettingsRouterInput {
                               ruuviTag: RuuviTagSensor,
                               sensorSettings: SensorSettings?)
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
-    func openOwner(ruuviTag: RuuviTagSensor)
+    func openOwner(ruuviTag: RuuviTagSensor, mode: OwnershipMode)
     func openContest(ruuviTag: RuuviTagSensor)
 }
 

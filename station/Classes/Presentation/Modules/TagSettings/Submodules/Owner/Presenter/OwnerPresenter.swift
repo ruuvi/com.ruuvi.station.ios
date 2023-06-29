@@ -6,6 +6,11 @@ import RuuviStorage
 import RuuviPresenters
 import RuuviLocal
 
+enum OwnershipMode {
+    case claim
+    case unclaim
+}
+
 final class OwnerPresenter: OwnerModuleInput {
     weak var view: OwnerViewInput!
     var router: OwnerRouterInput!
@@ -19,6 +24,11 @@ final class OwnerPresenter: OwnerModuleInput {
     var settings: RuuviLocalSettings!
 
     private var ruuviTag: RuuviTagSensor!
+    private var ownershipMode: OwnershipMode = .claim {
+        didSet {
+            view.mode = ownershipMode
+        }
+    }
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -29,33 +39,22 @@ final class OwnerPresenter: OwnerModuleInput {
         }
     }
 
-    func configure(ruuviTag: RuuviTagSensor) {
+    func configure(ruuviTag: RuuviTagSensor, mode: OwnershipMode) {
         self.ruuviTag = ruuviTag
+        self.ownershipMode = mode
     }
 }
 
 extension OwnerPresenter: OwnerViewOutput {
-    /// This method is responsible for claiming the sensor
-    func viewDidTapOnClaim() {
+    /// This method is responsible for claiming/unclaiming the sensor
+    func viewDidTapOnClaim(mode: OwnershipMode) {
         isLoading = true
-        ruuviOwnershipService
-            .claim(sensor: ruuviTag)
-            .on(success: { [weak self] _ in
-                self?.router.dismiss()
-                self?.removeConnection()
-            }, failure: { [weak self] error in
-                switch error {
-                case .ruuviCloud(.api(.api(.erSensorAlreadyClaimed))):
-                    if let luid = self?.ruuviTag.luid {
-                        self?.connectionPersistence.setKeepConnection(false, for: luid)
-                    }
-                    self?.view.showSensorAlreadyClaimedDialog()
-                default:
-                    self?.errorPresenter.present(error: error)
-                }
-            }, completion: { [weak self] in
-                self?.isLoading = false
-            })
+        switch mode {
+        case .claim:
+            claimSensor()
+        case .unclaim:
+            unclaimSensor()
+        }
     }
 
     /// Update the tag with owner information
@@ -97,5 +96,38 @@ extension OwnerPresenter {
         if let luid = ruuviTag.luid {
             connectionPersistence.setKeepConnection(false, for: luid)
         }
+    }
+
+    private func claimSensor() {
+        ruuviOwnershipService
+            .claim(sensor: ruuviTag)
+            .on(success: { [weak self] _ in
+                self?.router.dismiss()
+                self?.removeConnection()
+            }, failure: { [weak self] error in
+                switch error {
+                case .ruuviCloud(.api(.api(.erSensorAlreadyClaimed))):
+                    if let luid = self?.ruuviTag.luid {
+                        self?.connectionPersistence.setKeepConnection(false, for: luid)
+                    }
+                    self?.view.showSensorAlreadyClaimedDialog()
+                default:
+                    self?.errorPresenter.present(error: error)
+                }
+            }, completion: { [weak self] in
+                self?.isLoading = false
+            })
+    }
+
+    private func unclaimSensor() {
+        ruuviOwnershipService
+            .unclaim(sensor: ruuviTag)
+            .on(success: { [weak self] _ in
+                self?.router.dismiss()
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.isLoading = false
+            })
     }
 }

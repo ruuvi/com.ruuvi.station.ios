@@ -287,6 +287,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "Menu.Label.AppSettings.text" = "Asetukset";
 "Menu.Label.GetMoreSensors.text" = "Osta Ruuvi-antureita";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/fi/tuotteet?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"Ruuvi.BuySensors.Menu.URL.IOS" = "https://ruuvi.com/fi/tuotteet?utm_campaign=app_ua_nav&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Osta Ruuvi Gateway";
 "Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/fi/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "Mitä mitata Ruuvilla?";
@@ -372,7 +373,6 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "SignIn.CodeHint" = "Koodi";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Anturit, joiden omistajuuden olet vahvistanut asetussivulla poistetaan sovelluksesta automaattisesti uloskirjauduttaessa. Anturitiedot palautetaan pilvipalvelusta samalla sähköpostiosoitteella uudelleenkirjauduttaessa.\n\nHaluatko varmasti kirjautua ulos?";
 "TagSettings.ClaimTagButton.Claim" = "Vahvista omistajuus";
-"TagSettings.ClaimTagButton.Unclaim" = "Vapauta omistajuus";
 "TagSettings.ShareButton" = "Jaa";
 "Syncing..." = "Ladataan historiaa pilvestä...";
 "Synchronized" = "Synkronoitu";
@@ -708,3 +708,6 @@ RuuviTag on valmis käyttöön!";
 "firmware_version" = "Firmware Version:";
 "close" = "Close";
 "add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
+"unclaim_sensor" = "Unclaim sensor";
+"unclaim" = "Unclaim";
+"unclaim_sensor_description" = "This sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor, it's settings and related data from Ruuvi account.";

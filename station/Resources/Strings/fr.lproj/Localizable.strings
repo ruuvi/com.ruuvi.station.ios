@@ -286,6 +286,7 @@
 "Menu.Label.AppSettings.text" = "Réglages";
 "Menu.Label.GetMoreSensors.text" = "Acheter des capteurs";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"Ruuvi.BuySensors.Menu.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua_nav&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Acheter le routeur Ruuvi Gateway";
 "Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "Que mesurer avec Ruuvi?";
@@ -371,7 +372,6 @@
 "SignIn.CodeHint" = "Code";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Les capteurs dont vous êtes propriétaire seront suspprimés de l'application lorsque vous vous déconnectez de votre compte Ruuvi. Les données seront importées du cloud lorsque vous vous connectez à nouveau.\n\nSouhaitez vous vous déconnecter ?";
 "TagSettings.ClaimTagButton.Claim" = "Confirmer l'appropriation";
-"TagSettings.ClaimTagButton.Unclaim" = "Réinitialiser l'appropriation";
 "TagSettings.ShareButton" = "Partager";
 "Syncing..." = "Synchronisation...";
 "Synchronized" = "Synchronisé";
@@ -709,4 +709,7 @@ RuuviTag est prêt à être utilisé !";
 "firmware_version" = "Firmware Version:";
 "close" = "Close";
 "add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
+"unclaim_sensor" = "Unclaim sensor";
+"unclaim" = "Unclaim";
+"unclaim_sensor_description" = "This sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor, it's settings and related data from Ruuvi account.";
 

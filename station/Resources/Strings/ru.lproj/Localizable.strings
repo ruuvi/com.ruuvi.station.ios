@@ -287,6 +287,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.AppSettings.text" = "Настройки";
 "Menu.Label.GetMoreSensors.text" = "Купить датчики Ruuvi";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"Ruuvi.BuySensors.Menu.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua_nav&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Купить Ruuvi Gateway";
 "Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "Что измерять с помощью Ruuvi?";
@@ -372,7 +373,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "SignIn.CodeHint" = "Код для входа";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "После выхода все датчики, которые зарегистрованы на вас, будут удалены из приложения. Если вы повторно войдете с тем же email адресом, список ваших датчиков будет загружен из облака. \n\nВы хотите выйти из сети?";
 "TagSettings.ClaimTagButton.Claim" = "Заявить о собственности";
-"TagSettings.ClaimTagButton.Unclaim" = "Отказаться от владения";
 "TagSettings.ShareButton" = "Поделиться";
 "Syncing..." = "Синхронизация...";
 "Synchronized" = "Синхронизировано";
@@ -708,3 +708,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "firmware_version" = "Firmware Version:";
 "close" = "Close";
 "add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
+"unclaim_sensor" = "Unclaim sensor";
+"unclaim" = "Unclaim";
+"unclaim_sensor_description" = "This sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor, it's settings and related data from Ruuvi account.";

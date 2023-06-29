@@ -287,6 +287,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "Menu.Label.AppSettings.text" = "App Inställningar";
 "Menu.Label.GetMoreSensors.text" = "Köp Ruuvi-sensorer";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"Ruuvi.BuySensors.Menu.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua_nav&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Köp Ruuvi Gateway";
 "Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "Vad ska man mäta med Ruuvi?";
@@ -372,7 +373,6 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "SignIn.CodeHint" = "Kod";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Sensorer som du har verifierat äganderätten till på inställningssidan tas automatiskt bort från appen när du loggar ut. Sensordata hämtas från molnet igen om du loggar in med samma e-postadress.\n\nÄr du säker på att du vill logga ut? ";
 "TagSettings.ClaimTagButton.Claim" = "Bekräfta ägandet";
-"TagSettings.ClaimTagButton.Unclaim" = "Hävda ägande";
 "TagSettings.ShareButton" = "Dela";
 "Syncing..." = "Synkroniserar...";
 "Synchronized" = "Synkronisering klar";
@@ -708,3 +708,6 @@ RuuviTag-sensorn är redo att användas!";
 "firmware_version" = "Firmware Version:";
 "close" = "Close";
 "add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
+"unclaim_sensor" = "Unclaim sensor";
+"unclaim" = "Unclaim";
+"unclaim_sensor_description" = "This sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor, it's settings and related data from Ruuvi account.";

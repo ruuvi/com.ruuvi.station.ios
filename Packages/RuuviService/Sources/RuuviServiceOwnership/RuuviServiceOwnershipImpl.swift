@@ -140,6 +140,9 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 guard let sSelf = self else { return }
                 let unclaimedSensor = sensor
                     .with(isClaimed: false)
+                    .with(canShare: false)
+                    .with(sharedTo: [])
+                    .with(isCloudSensor: false)
                     .withoutOwner()
                 sSelf.pool
                     .update(unclaimedSensor)

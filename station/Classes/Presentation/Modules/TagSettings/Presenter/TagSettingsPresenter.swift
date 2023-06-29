@@ -415,10 +415,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnOwner() {
         if viewModel.isClaimedTag.value == false {
-            router.openOwner(ruuviTag: ruuviTag)
+            router.openOwner(ruuviTag: ruuviTag, mode: .claim)
         } else {
-            guard let isOwner = viewModel.isOwner.value, !isOwner else { return }
-            router.openContest(ruuviTag: ruuviTag)
+            if let isOwner = viewModel.isOwner.value, isOwner {
+                router.openOwner(ruuviTag: ruuviTag, mode: .unclaim)
+            } else {
+                router.openContest(ruuviTag: ruuviTag)
+            }
         }
     }
 }
