@@ -162,6 +162,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
+        showFirmwareUpdateAlertForDF3Sensors()
     }
 
     func viewWillAppear() {
@@ -1545,6 +1546,13 @@ extension TagSettingsPresenter {
             .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
                   object: nil,
                   userInfo: nil)
+    }
+
+    private func showFirmwareUpdateAlertForDF3Sensors() {
+        guard let version = viewModel.version.value, version < 5 else {
+            return
+        }
+        view?.showFirmwareUpdateDialog()
     }
 }
 
