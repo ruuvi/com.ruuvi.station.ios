@@ -37,7 +37,7 @@ class CardsLargeImageCell: UICollectionViewCell {
     private lazy var pressureView = CardsIndicatorView(icon: RuuviAssets.pressureImage)
     private lazy var movementView = CardsIndicatorView(icon: RuuviAssets.movementCounterImage)
 
-    private lazy var batteryLevelView = BatteryLevelView()
+    private lazy var batteryLevelView = BatteryLevelView(fontSize: 12)
 
     private lazy var syncStateLabel: UILabel = {
         let label = UILabel()
@@ -53,7 +53,7 @@ class CardsLargeImageCell: UICollectionViewCell {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.Muli(.regular, size: 12)
         return label
     }()
 
@@ -207,7 +207,7 @@ class CardsLargeImageCell: UICollectionViewCell {
                                                  left: 6,
                                                  bottom: 0,
                                                  right: 0),
-                                  size: .init(width: 20, height: 20))
+                                  size: .init(width: 22, height: 22))
         dataSourceIconView.centerYInSuperview()
     }
 }

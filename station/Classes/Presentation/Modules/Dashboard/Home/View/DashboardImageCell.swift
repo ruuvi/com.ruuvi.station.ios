@@ -252,7 +252,7 @@ class DashboardImageCell: UICollectionViewCell {
         sourceAndUpdateStack.axis = .horizontal
         sourceAndUpdateStack.spacing = 6
         sourceAndUpdateStack.distribution = .fill
-        dataSourceIconView.size(width: 12, height: 12)
+        dataSourceIconView.size(width: 22, height: 22)
 
         let footerStack = UIStackView(arrangedSubviews: [
             sourceAndUpdateStack, batteryLevelView
