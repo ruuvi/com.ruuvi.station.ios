@@ -23,6 +23,7 @@ class RuuviContextMenuButton: UIView {
     }()
 
     private var preccedingIcon: Bool = false
+    private var iconSize: CGSize = .init(width: 16, height: 16)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,6 +38,7 @@ class RuuviContextMenuButton: UIView {
                      title: String?,
                      icon: UIImage?,
                      iconTintColor: UIColor?,
+                     iconSize: CGSize = .init(width: 16, height: 16),
                      preccedingIcon: Bool = false) {
         self.init()
         self.preccedingIcon = preccedingIcon
@@ -45,6 +47,7 @@ class RuuviContextMenuButton: UIView {
         self.buttonTitleLabel.textColor = titleColor
         self.buttonIconView.tintColor = iconTintColor
         self.buttonIconView.image = icon
+        self.iconSize = iconSize
         self.setUpUI()
     }
 }
@@ -65,10 +68,10 @@ extension RuuviContextMenuButton {
             ])
         }
         buttonIconView.heightAnchor.constraint(
-            lessThanOrEqualToConstant: 16
+            lessThanOrEqualToConstant: iconSize.height
         ).isActive = true
         buttonIconView.widthAnchor.constraint(
-            lessThanOrEqualToConstant: 16
+            lessThanOrEqualToConstant: iconSize.width
         ).isActive = true
         stackView.axis = .horizontal
         stackView.spacing = 6

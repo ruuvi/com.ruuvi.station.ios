@@ -118,6 +118,7 @@ class TagChartsViewController: UIViewController {
             title: "TagCharts.Sync.title".localized(),
             icon: UIImage(named: "icon_sync_bt"),
             iconTintColor: .white,
+            iconSize: .init(width: 22, height: 22),
             preccedingIcon: true
         )
         button.button.showsMenuAsPrimaryAction = false
@@ -140,7 +141,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.Muli(.regular, size: 12)
         return label
     }()
 
@@ -365,7 +366,7 @@ class TagChartsViewController: UIViewController {
                                                  left: 6,
                                                  bottom: 0,
                                                  right: 0),
-                                  size: .init(width: 20, height: 20))
+                                  size: .init(width: 22, height: 22))
         dataSourceIconView.centerYInSuperview()
 
     }
