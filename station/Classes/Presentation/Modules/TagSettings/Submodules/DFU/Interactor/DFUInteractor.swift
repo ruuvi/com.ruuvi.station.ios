@@ -8,6 +8,8 @@ final class DFUInteractor {
     var ruuviDFU: RuuviDFU!
     var background: BTBackground!
     private let firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
+    private var timer: Timer?
+    private var timeoutDuration: Double = 15
 }
 
 extension DFUInteractor: DFUInteractorInput {
@@ -132,6 +134,15 @@ extension DFUInteractor: DFUInteractorInput {
                 promise(.failure(DFUError.failedToGetLuid))
                 return
             }
+
+            sSelf.invalidateTimer()
+            sSelf.timer = Timer.scheduledTimer(
+                withTimeInterval: sSelf.timeoutDuration, repeats: false
+            ) { _ in
+                sSelf.invalidateTimer()
+                promise(.failure(BTError.logic(.connectionTimedOut)))
+            }
+
             sSelf.background.services.gatt.firmwareRevision(
                 for: sSelf,
                 uuid: uuid,
@@ -166,5 +177,12 @@ extension DFUInteractor: DFUInteractorInput {
                 }
             })
         }
+    }
+}
+
+extension DFUInteractor {
+    private func invalidateTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
