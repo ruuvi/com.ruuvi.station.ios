@@ -57,8 +57,9 @@ extension OwnerPresenter: OwnerViewOutput {
                 self?.isLoading = false
             })
     }
+
     /// Update the tag with owner information
-    func update(with email: String) {
+    func updateOwnerInfo(with email: String) {
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
             if let sensor = localSensors.first(where: {$0.id == sSelf.ruuviTag.id }) {

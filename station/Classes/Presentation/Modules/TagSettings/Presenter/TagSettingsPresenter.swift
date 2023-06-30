@@ -39,8 +39,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var exportService: RuuviServiceExport!
     var localSyncState: RuuviLocalSyncState!
     var alertHandler: RuuviNotifier!
-    var advertisementDaemon: RuuviTagAdvertisementDaemon!
-    var heartbeatDaemon: RuuviTagHeartbeatDaemon!
 
     private static let lowUpperDebounceDelay: TimeInterval = 0.3
 
@@ -247,19 +245,20 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
                let isConnected = sSelf.viewModel.isConnected.value,
                isConnected {
                 sSelf.connectionPersistence.setKeepConnection(false, for: luid)
-                sSelf.heartbeatDaemon.restart()
+                sSelf.notifyRestartHeartBeatDaemon()
             }
 
             if sSelf.ruuviTag.isOwner {
-                sSelf.advertisementDaemon.restart()
+                sSelf.notifyRestartAdvertisementDaemon()
                 if let isConnected = sSelf.viewModel.isConnected.value,
                 isConnected {
-                    sSelf.heartbeatDaemon.restart()
+                    sSelf.notifyRestartHeartBeatDaemon()
                 }
             }
             sSelf.viewModel.reset()
             sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
             sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
+            sSelf.settings.setOwnerCheckDate(for: sSelf.ruuviTag.macId, value: nil)
             sSelf.output?.tagSettingsDidDeleteTag(module: sSelf,
                                                  ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] error in
@@ -415,9 +414,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidTapOnOwner() {
-        guard let isOwner = viewModel.isOwner.value, isOwner else { return }
         if viewModel.isClaimedTag.value == false {
             router.openOwner(ruuviTag: ruuviTag)
+        } else {
+            guard let isOwner = viewModel.isOwner.value, !isOwner else { return }
+            router.openContest(ruuviTag: ruuviTag)
         }
     }
 }
@@ -1523,6 +1524,24 @@ extension TagSettingsPresenter {
             description: description,
             for: ruuviTag
         )
+    }
+
+    private func notifyRestartAdvertisementDaemon() {
+            // Notify daemon to restart
+        NotificationCenter
+            .default
+            .post(name: .RuuviTagAdvertisementDaemonShouldRestart,
+                  object: nil,
+                  userInfo: nil)
+    }
+
+    private func notifyRestartHeartBeatDaemon() {
+            // Notify daemon to restart
+        NotificationCenter
+            .default
+            .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
+                  object: nil,
+                  userInfo: nil)
     }
 }
 

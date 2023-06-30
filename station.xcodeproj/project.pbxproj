@@ -692,6 +692,9 @@
 		E116708D29634D91002DF7BF /* BackgroundSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */; };
 		E116708F29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
 		E116709029635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */; };
+		E116AED22A059578003EF65A /* ruuvi_speak.caf in Resources */ = {isa = PBXBuildFile; fileRef = E116AED12A059578003EF65A /* ruuvi_speak.caf */; };
+		E116AED32A059578003EF65A /* ruuvi_speak.caf in Resources */ = {isa = PBXBuildFile; fileRef = E116AED12A059578003EF65A /* ruuvi_speak.caf */; };
+		E116AED42A059578003EF65A /* ruuvi_speak.caf in Resources */ = {isa = PBXBuildFile; fileRef = E116AED12A059578003EF65A /* ruuvi_speak.caf */; };
 		E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
 		E11989F629B7A46E002245CF /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989F429B7A46E002245CF /* UIView+Extension.swift */; };
 		E11989FF29BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11989FE29BA60CE002245CF /* AppearanceSettingsTableViewController.swift */; };
@@ -882,6 +885,46 @@
 		E191F21F2969FF6900F1FEA6 /* TagSettingsSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E191F21D2969FF6900F1FEA6 /* TagSettingsSwitchCell.swift */; };
 		E191F221296A00CE00F1FEA6 /* TagSettingsFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E191F220296A00CE00F1FEA6 /* TagSettingsFooterCell.swift */; };
 		E191F222296A00CE00F1FEA6 /* TagSettingsFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E191F220296A00CE00F1FEA6 /* TagSettingsFooterCell.swift */; };
+		E19691502A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196914F2A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift */; };
+		E19691512A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196914F2A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift */; };
+		E19691542A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691522A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift */; };
+		E19691552A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691522A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift */; };
+		E19691562A06DCBB00DC360E /* NotificationsSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691532A06DCBB00DC360E /* NotificationsSettingsRouter.swift */; };
+		E19691572A06DCBB00DC360E /* NotificationsSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691532A06DCBB00DC360E /* NotificationsSettingsRouter.swift */; };
+		E196915B2A06DCD500DC360E /* NotificationsSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691582A06DCD400DC360E /* NotificationsSettingsTableViewController.swift */; };
+		E196915C2A06DCD500DC360E /* NotificationsSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691582A06DCD400DC360E /* NotificationsSettingsTableViewController.swift */; };
+		E196915D2A06DCD500DC360E /* NotificationsSettingsTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691592A06DCD500DC360E /* NotificationsSettingsTextCell.swift */; };
+		E196915E2A06DCD500DC360E /* NotificationsSettingsTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691592A06DCD500DC360E /* NotificationsSettingsTextCell.swift */; };
+		E196915F2A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196915A2A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift */; };
+		E19691602A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196915A2A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift */; };
+		E19691642A06DCE500DC360E /* NotificationsSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691612A06DCE500DC360E /* NotificationsSettingsViewInput.swift */; };
+		E19691652A06DCE500DC360E /* NotificationsSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691612A06DCE500DC360E /* NotificationsSettingsViewInput.swift */; };
+		E19691662A06DCE500DC360E /* NotificationsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691622A06DCE500DC360E /* NotificationsSettingsViewModel.swift */; };
+		E19691672A06DCE500DC360E /* NotificationsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691622A06DCE500DC360E /* NotificationsSettingsViewModel.swift */; };
+		E19691682A06DCE500DC360E /* NotificationsSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691632A06DCE500DC360E /* NotificationsSettingsViewOutput.swift */; };
+		E19691692A06DCE500DC360E /* NotificationsSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691632A06DCE500DC360E /* NotificationsSettingsViewOutput.swift */; };
+		E196916C2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196916A2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift */; };
+		E196916D2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196916A2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift */; };
+		E196916E2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196916B2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift */; };
+		E196916F2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196916B2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift */; };
+		E196917C2A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691722A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift */; };
+		E196917D2A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691722A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift */; };
+		E196917E2A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691742A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift */; };
+		E196917F2A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691742A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift */; };
+		E19691802A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691752A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift */; };
+		E19691812A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691752A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift */; };
+		E19691822A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691782A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift */; };
+		E19691832A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691782A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift */; };
+		E19691842A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691792A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift */; };
+		E19691852A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19691792A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift */; };
+		E19691862A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196917A2A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift */; };
+		E19691872A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196917A2A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift */; };
+		E19691882A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196917B2A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift */; };
+		E19691892A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196917B2A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift */; };
+		E196918B2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196918A2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift */; };
+		E196918C2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196918A2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift */; };
+		E196918E2A06E2E100DC360E /* RuuviAlertSound+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196918D2A06E2E100DC360E /* RuuviAlertSound+Extension.swift */; };
+		E196918F2A06E2E100DC360E /* RuuviAlertSound+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E196918D2A06E2E100DC360E /* RuuviAlertSound+Extension.swift */; };
 		E1972BE129587615000E2AEC /* CardsLargeImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1972BE029587615000E2AEC /* CardsLargeImageCell.swift */; };
 		E1972BE229587615000E2AEC /* CardsLargeImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1972BE029587615000E2AEC /* CardsLargeImageCell.swift */; };
 		E19EAF4C299679D8005827E4 /* pnservice.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E17C469929956732008CFDD7 /* pnservice.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -923,6 +966,24 @@
 		E19EAFAE299E82D1005827E4 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */; };
 		E19EAFB0299EB46D005827E4 /* NoSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAF299EB46D005827E4 /* NoSensorView.swift */; };
 		E19EAFB1299EB46D005827E4 /* NoSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19EAFAF299EB46D005827E4 /* NoSensorView.swift */; };
+		E1AB90552A0BFECE00543F61 /* RuuviLinkTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90542A0BFECE00543F61 /* RuuviLinkTextView.swift */; };
+		E1AB90562A0BFECE00543F61 /* RuuviLinkTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90542A0BFECE00543F61 /* RuuviLinkTextView.swift */; };
+		E1AB905E2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */; };
+		E1AB905F2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */; };
+		E1AB90612A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */; };
+		E1AB90622A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */; };
+		E1AB90642A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */; };
+		E1AB90652A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */; };
+		E1AB90672A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */; };
+		E1AB90682A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */; };
+		E1AB906A2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */; };
+		E1AB906B2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */; };
+		E1AB90732A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */; };
+		E1AB90742A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */; };
+		E1AB907B2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */; };
+		E1AB907C2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */; };
+		E1AB907E2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */; };
+		E1AB907F2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */; };
 		E1B20C872926CDE10023D739 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B20C862926CDE10023D739 /* UITextField+Extension.swift */; };
 		E1B20C882926CDE10023D739 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B20C862926CDE10023D739 /* UITextField+Extension.swift */; };
 		E1B20C8A2926D2FC0023D739 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B20C892926D2FC0023D739 /* Double+Extension.swift */; };
@@ -993,6 +1054,8 @@
 		E1CE5E4029F994DE00391109 /* AppGroupConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */; };
 		E1CE5E4229FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
 		E1CE5E4329FC39D000391109 /* DefaultsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */; };
+		E1CE5E472A016D4000391109 /* RuuviCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */; };
+		E1CE5E482A016D4000391109 /* RuuviCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */; };
 		E1D0238B29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238C29EB02C600EC0FFD /* RuuviUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */; };
 		E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */; };
@@ -1512,6 +1575,7 @@
 		E116708729634815002DF7BF /* BackgroundSelectionModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionModuleFactory.swift; sourceTree = "<group>"; };
 		E116708B29634D91002DF7BF /* BackgroundSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionViewModel.swift; sourceTree = "<group>"; };
 		E116708E29635B53002DF7BF /* BackgroundSelectionUploadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSelectionUploadProgressView.swift; sourceTree = "<group>"; };
+		E116AED12A059578003EF65A /* ruuvi_speak.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ruuvi_speak.caf; sourceTree = "<group>"; };
 		E11989F429B7A46E002245CF /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		E11989FE29BA60CE002245CF /* AppearanceSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsTableViewController.swift; sourceTree = "<group>"; };
 		E1198A0129BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsTableViewBasicCell.swift; sourceTree = "<group>"; };
@@ -1610,6 +1674,26 @@
 		E191F21A2969EF7B00F1FEA6 /* TagSettingsModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleFactory.swift; sourceTree = "<group>"; };
 		E191F21D2969FF6900F1FEA6 /* TagSettingsSwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsSwitchCell.swift; sourceTree = "<group>"; };
 		E191F220296A00CE00F1FEA6 /* TagSettingsFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsFooterCell.swift; sourceTree = "<group>"; };
+		E196914F2A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsModuleFactory.swift; sourceTree = "<group>"; };
+		E19691522A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsRouterInput.swift; sourceTree = "<group>"; };
+		E19691532A06DCBB00DC360E /* NotificationsSettingsRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsRouter.swift; sourceTree = "<group>"; };
+		E19691582A06DCD400DC360E /* NotificationsSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsTableViewController.swift; sourceTree = "<group>"; };
+		E19691592A06DCD500DC360E /* NotificationsSettingsTextCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsTextCell.swift; sourceTree = "<group>"; };
+		E196915A2A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsSwitchCell.swift; sourceTree = "<group>"; };
+		E19691612A06DCE500DC360E /* NotificationsSettingsViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsViewInput.swift; sourceTree = "<group>"; };
+		E19691622A06DCE500DC360E /* NotificationsSettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsViewModel.swift; sourceTree = "<group>"; };
+		E19691632A06DCE500DC360E /* NotificationsSettingsViewOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsViewOutput.swift; sourceTree = "<group>"; };
+		E196916A2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsPresenter.swift; sourceTree = "<group>"; };
+		E196916B2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsModuleInput.swift; sourceTree = "<group>"; };
+		E19691722A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionModuleFactory.swift; sourceTree = "<group>"; };
+		E19691742A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionPresenter.swift; sourceTree = "<group>"; };
+		E19691752A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionModuleInput.swift; sourceTree = "<group>"; };
+		E19691782A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionTableViewController.swift; sourceTree = "<group>"; };
+		E19691792A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionTableViewCell.swift; sourceTree = "<group>"; };
+		E196917A2A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionViewInput.swift; sourceTree = "<group>"; };
+		E196917B2A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionViewOutput.swift; sourceTree = "<group>"; };
+		E196918A2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushAlertSoundSelectionViewModel.swift; sourceTree = "<group>"; };
+		E196918D2A06E2E100DC360E /* RuuviAlertSound+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviAlertSound+Extension.swift"; sourceTree = "<group>"; };
 		E1972BE029587615000E2AEC /* CardsLargeImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsLargeImageCell.swift; sourceTree = "<group>"; };
 		E19EAF502996BAAF005827E4 /* pnservice.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pnservice.entitlements; sourceTree = "<group>"; };
 		E19EAF512996C828005827E4 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -1634,6 +1718,15 @@
 		E19EAFA9299E62C0005827E4 /* SignInBenefitsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInBenefitsViewOutput.swift; sourceTree = "<group>"; };
 		E19EAFAC299E82D1005827E4 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E19EAFAF299EB46D005827E4 /* NoSensorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSensorView.swift; sourceTree = "<group>"; };
+		E1AB90542A0BFECE00543F61 /* RuuviLinkTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviLinkTextView.swift; sourceTree = "<group>"; };
+		E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimModuleFactory.swift; sourceTree = "<group>"; };
+		E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimPresenter.swift; sourceTree = "<group>"; };
+		E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimModuleInput.swift; sourceTree = "<group>"; };
+		E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimRouter.swift; sourceTree = "<group>"; };
+		E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimRouterInput.swift; sourceTree = "<group>"; };
+		E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimViewController.swift; sourceTree = "<group>"; };
+		E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimViewOutput.swift; sourceTree = "<group>"; };
+		E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorForceClaimViewInput.swift; sourceTree = "<group>"; };
 		E1B20C862926CDE10023D739 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		E1B20C892926D2FC0023D739 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		E1B57FEA29859CB800B441FB /* DevicesModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesModuleFactory.swift; sourceTree = "<group>"; };
@@ -1669,6 +1762,7 @@
 		E1CE4C762959DF01005C023F /* DashboardIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIndicatorView.swift; sourceTree = "<group>"; };
 		E1CE5E3E29F994DE00391109 /* AppGroupConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupConstants.swift; sourceTree = "<group>"; };
 		E1CE5E4129FC39D000391109 /* DefaultsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsModuleOutput.swift; sourceTree = "<group>"; };
+		E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviCustomButton.swift; sourceTree = "<group>"; };
 		E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviUISwitch.swift; sourceTree = "<group>"; };
 		E1D0238D29EB3F7D00EC0FFD /* YAxisValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisValueFormatter.swift; sourceTree = "<group>"; };
 		E1E102ED28F348B700815508 /* TagChartsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsHelper.swift; sourceTree = "<group>"; };
@@ -1942,6 +2036,7 @@
 		0E09671722AE762900E85F48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E116AED02A05955B003EF65A /* Sounds */,
 				E1597A5A295E24BB00DFB70B /* Assets */,
 				0EB8ED412692004300C6B0FA /* Colors */,
 				0EB48DE4261A17F4008E0D2D /* JSONs */,
@@ -2064,6 +2159,7 @@
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
 				E1198A2029BA6EC6002245CF /* RuuviTheme+Extension.swift */,
+				E196918D2A06E2E100DC360E /* RuuviAlertSound+Extension.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
 				3490A4C227D9F2C70032BBAB /* UINavigationController.swift */,
 			);
@@ -2676,6 +2772,7 @@
 		0EBAF063232001080025A191 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				E196914A2A059C7200DC360E /* Notifications */,
 				E11989F829BA605F002245CF /* Appearance */,
 				E1B57FE629859C7000B441FB /* Devices */,
 				A9828E54247BAC0700E7E9D4 /* Chart */,
@@ -3174,6 +3271,7 @@
 		66BC44812657AED400A03253 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				E1AB90572A0EAF4F00543F61 /* Force Claim */,
 				340BE37727B54F37006D6C34 /* Owner */,
 				0E97D782268C826400FE9D5B /* DFU */,
 				66BC44822657AED400A03253 /* OffsetCorrection */,
@@ -3723,6 +3821,14 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		E116AED02A05955B003EF65A /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				E116AED12A059578003EF65A /* ruuvi_speak.caf */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		E11989F829BA605F002245CF /* Appearance */ = {
 			isa = PBXGroup;
 			children = (
@@ -3832,6 +3938,8 @@
 			children = (
 				E1395BF0294F793000C403C6 /* AppDateFormatter.swift */,
 				E1D0238A29EB02C600EC0FFD /* RuuviUISwitch.swift */,
+				E1CE5E462A016D4000391109 /* RuuviCustomButton.swift */,
+				E1AB90542A0BFECE00543F61 /* RuuviLinkTextView.swift */,
 			);
 			path = Classess;
 			sourceTree = "<group>";
@@ -4056,6 +4164,102 @@
 			path = Presenter;
 			sourceTree = "<group>";
 		};
+		E196914A2A059C7200DC360E /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				E196914E2A059CAD00DC360E /* Assembly */,
+				E196914D2A059C8D00DC360E /* Router */,
+				E196914C2A059C8800DC360E /* View */,
+				E196914B2A059C8000DC360E /* Presenter */,
+				E19691702A06E03300DC360E /* Selection */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		E196914B2A059C8000DC360E /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E196916B2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift */,
+				E196916A2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E196914C2A059C8800DC360E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E19691612A06DCE500DC360E /* NotificationsSettingsViewInput.swift */,
+				E19691622A06DCE500DC360E /* NotificationsSettingsViewModel.swift */,
+				E19691632A06DCE500DC360E /* NotificationsSettingsViewOutput.swift */,
+				E1BCF0B52A06390A005729F4 /* UI */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E196914D2A059C8D00DC360E /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				E19691532A06DCBB00DC360E /* NotificationsSettingsRouter.swift */,
+				E19691522A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		E196914E2A059CAD00DC360E /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E196914F2A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E19691702A06E03300DC360E /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				E19691712A06E03300DC360E /* Assembly */,
+				E19691732A06E03300DC360E /* Presenter */,
+				E19691762A06E03300DC360E /* View */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		E19691712A06E03300DC360E /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E19691722A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E19691732A06E03300DC360E /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E19691742A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift */,
+				E19691752A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E19691762A06E03300DC360E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E19691772A06E03300DC360E /* UI */,
+				E196917A2A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift */,
+				E196917B2A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift */,
+				E196918A2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E19691772A06E03300DC360E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E19691782A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift */,
+				E19691792A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E19EAF81299C1310005827E4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -4121,6 +4325,61 @@
 			path = Presenter;
 			sourceTree = "<group>";
 		};
+		E1AB90572A0EAF4F00543F61 /* Force Claim */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB905C2A0EAFA600543F61 /* Router */,
+				E1AB905A2A0EAF9400543F61 /* View */,
+				E1AB90592A0EAF8900543F61 /* Presenter */,
+				E1AB90582A0EAF8200543F61 /* Assembly */,
+			);
+			path = "Force Claim";
+			sourceTree = "<group>";
+		};
+		E1AB90582A0EAF8200543F61 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB905D2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E1AB90592A0EAF8900543F61 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90602A0EB11800543F61 /* SensorForceClaimPresenter.swift */,
+				E1AB90632A0EB13400543F61 /* SensorForceClaimModuleInput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E1AB905A2A0EAF9400543F61 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90792A0EB26900543F61 /* UI */,
+				E1AB907A2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift */,
+				E1AB907D2A0ECB7600543F61 /* SensorForceClaimViewInput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E1AB905C2A0EAFA600543F61 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90662A0EB1AD00543F61 /* SensorForceClaimRouter.swift */,
+				E1AB90692A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		E1AB90792A0EB26900543F61 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E1AB90722A0EB24600543F61 /* SensorForceClaimViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E1B57FE629859C7000B441FB /* Devices */ = {
 			isa = PBXGroup;
 			children = (
@@ -4177,6 +4436,16 @@
 				E1B5800A29859EEB00B441FB /* DevicesInteractorOutput.swift */,
 			);
 			path = Interactor;
+			sourceTree = "<group>";
+		};
+		E1BCF0B52A06390A005729F4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E196915A2A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift */,
+				E19691582A06DCD400DC360E /* NotificationsSettingsTableViewController.swift */,
+				E19691592A06DCD500DC360E /* NotificationsSettingsTextCell.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		E1CA28AC29201EF0009E4423 /* RUAlertExpandButton */ = {
@@ -4568,6 +4837,7 @@
 				E19EAF5C2996CF38005827E4 /* Muli-SemiBoldItalic.ttf in Resources */,
 				0E8BD3EB238566AB008B31EF /* Localizable.strings in Resources */,
 				E1CD77E828781A0E00F1F0EB /* UnitSettings.storyboard in Resources */,
+				E116AED32A059578003EF65A /* ruuvi_speak.caf in Resources */,
 				0E8BD3EF238566AB008B31EF /* Muli-Regular.ttf in Resources */,
 				E19EAF542996C828005827E4 /* Montserrat-ExtraBold.ttf in Resources */,
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
@@ -4632,6 +4902,7 @@
 				E19EAF5B2996CF38005827E4 /* Muli-SemiBoldItalic.ttf in Resources */,
 				0EEB20C722B7A7200015F9E0 /* Localizable.strings in Resources */,
 				E1CD77E728781A0E00F1F0EB /* UnitSettings.storyboard in Resources */,
+				E116AED22A059578003EF65A /* ruuvi_speak.caf in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				E19EAF532996C828005827E4 /* Montserrat-ExtraBold.ttf in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
@@ -4672,6 +4943,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E17C46A429957763008CFDD7 /* Localizable.strings in Resources */,
+				E116AED42A059578003EF65A /* ruuvi_speak.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4963,6 +5235,8 @@
 				0EE36E4326957E200021B746 /* LatestRelease.swift in Sources */,
 				0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */,
 				0EA7968A2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
+				E1AB90742A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */,
+				E1AB905F2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
 				E1972BE229587615000E2AEC /* CardsLargeImageCell.swift in Sources */,
@@ -4975,9 +5249,11 @@
 				E1597A44295CD58600DFB70B /* DashboardRouterDelegate.swift in Sources */,
 				E10E18B8297D67E8002C78C3 /* RuuviCloudViewInput.swift in Sources */,
 				E16B8F4028D10CF50025B92D /* MyRuuviAccountViewController.swift in Sources */,
+				E1CE5E482A016D4000391109 /* RuuviCustomButton.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				E16B8F4328D10DF90025B92D /* MyRuuviAccountViewInput.swift in Sources */,
 				340BE39327B54F37006D6C34 /* OwnerViewController.swift in Sources */,
+				E1AB906B2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */,
 				E1395BF2294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				E1B57FF829859CEC00B441FB /* DevicesTableViewCell.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
@@ -5003,12 +5279,14 @@
 				0E8BD2CE238566AB008B31EF /* Language+Localization.swift in Sources */,
 				A91D02F82511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */,
+				E19691512A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift in Sources */,
 				E10E18AF297D6672002C78C3 /* RuuviCloudPresenter.swift in Sources */,
 				E19EAF76299AE3B0005827E4 /* SignInView.swift in Sources */,
 				A92A66BE2450C64A002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
 				E1198A3029BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
+				E1AB90652A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */,
 				A91D02F52511207300694733 /* SelectionPresenter.swift in Sources */,
 				E116708629634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
@@ -5029,6 +5307,7 @@
 				0E62299626AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				0E8BD2DD238566AB008B31EF /* Localizable.swift in Sources */,
 				0E97D7A9268C922C00FE9D5B /* DFUInteractor.swift in Sources */,
+				E19691572A06DCBB00DC360E /* NotificationsSettingsRouter.swift in Sources */,
 				0EE36E4026957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E8BD2DE238566AB008B31EF /* LocationPickerAppleInitializer.swift in Sources */,
 				E19EAF79299AE5EA005827E4 /* SignInVerifyView.swift in Sources */,
@@ -5038,6 +5317,7 @@
 				E1198A0029BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */,
 				340BE39727B54F38006D6C34 /* OwnerRouter.swift in Sources */,
 				66BC44B12657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
+				E19691672A06DCE500DC360E /* NotificationsSettingsViewModel.swift in Sources */,
 				E1198A3C29BA76F1002245CF /* ASSelectionModuleInput.swift in Sources */,
 				E19EAF6A29997711005827E4 /* SignInViewController.swift in Sources */,
 				0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */,
@@ -5065,7 +5345,10 @@
 				E1CD7810287830BF00F1F0EB /* UnitSettingsRouterInput.swift in Sources */,
 				E1B57FFF29859D1800B441FB /* DevicesViewInput.swift in Sources */,
 				0EB48D962619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
+				E196915C2A06DCD500DC360E /* NotificationsSettingsTableViewController.swift in Sources */,
+				E19691812A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift in Sources */,
 				0EA7967A2664B37F002BA25D /* RuuviLocalError+LocalizedError.swift in Sources */,
+				E19691832A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift in Sources */,
 				A91D0317251124F900694733 /* SelectionItem.swift in Sources */,
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
 				340BE37627B54EE2006D6C34 /* AppAssemblyConstants.swift in Sources */,
@@ -5120,6 +5403,7 @@
 				0EB48DDD2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
 				A9646482247BAE6B0001D55D /* ChartModuleInput.swift in Sources */,
 				0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */,
+				E19691652A06DCE500DC360E /* NotificationsSettingsViewInput.swift in Sources */,
 				E16B8F5228D113440025B92D /* MyRuuviAccountConfigurator.swift in Sources */,
 				E116708D29634D91002DF7BF /* BackgroundSelectionViewModel.swift in Sources */,
 				E18D04C528E9DF77008EF5EC /* TagChartsView.swift in Sources */,
@@ -5144,9 +5428,11 @@
 				E18D04BB28E8B34F008EF5EC /* TagChartsViewInteractor.swift in Sources */,
 				E19EAFA8299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */,
 				0EB8ED3D268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
+				E19691872A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift in Sources */,
 				E168B4AF2886AE4E00D6B5C6 /* MeasurementAccuracyType+Extension.swift in Sources */,
 				E1597A47295CD5E400DFB70B /* DashboardModuleInput.swift in Sources */,
 				0E8BD330238566AB008B31EF /* AboutInitializer.swift in Sources */,
+				E19691692A06DCE500DC360E /* NotificationsSettingsViewOutput.swift in Sources */,
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
 				A907BB1224AE620D009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				E1198A1929BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */,
@@ -5156,6 +5442,7 @@
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E2B339C26A2BC3F00366B01 /* AppRouter.swift in Sources */,
 				660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
+				E196917D2A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift in Sources */,
 				E1D0238F29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0EA796862664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
@@ -5168,6 +5455,7 @@
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				3414BFCC2806D1B300C63BE9 /* RuuviCodeTextField.swift in Sources */,
+				E1AB90562A0BFECE00543F61 /* RuuviLinkTextView.swift in Sources */,
 				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				E1CD780D287830B100F1F0EB /* UnitSettingsRouter.swift in Sources */,
 				E19EAFB1299EB46D005827E4 /* NoSensorView.swift in Sources */,
@@ -5188,6 +5476,7 @@
 				E1198A0329BA6193002245CF /* AppearanceSettingsTableViewBasicCell.swift in Sources */,
 				0E8BD34C238566AB008B31EF /* DefaultsRouter.swift in Sources */,
 				340BE38927B54F37006D6C34 /* OwnerInitializer.swift in Sources */,
+				E19691892A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift in Sources */,
 				0EB8ED30268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
 				A91D03042511207300694733 /* SelectionViewOutput.swift in Sources */,
 				E18D04D528F1D52A008EF5EC /* TagChartsViewOutput.swift in Sources */,
@@ -5220,7 +5509,9 @@
 				E1395C072958A33400C403C6 /* CardsBackgroundView.swift in Sources */,
 				E191F1FF2969D6C900F1FEA6 /* TagSettingsPlainCell.swift in Sources */,
 				E1597A60295F803400DFB70B /* UIColor+Extension.swift in Sources */,
+				E19691552A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift in Sources */,
 				0E8BD35D238566AB008B31EF /* AboutModuleInput.swift in Sources */,
+				E1AB907F2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */,
 				0EAD33DA2399273D00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				0EB8ED1B268EF36200C6B0FA /* DFUViewModel.swift in Sources */,
 				340BE37327B54E26006D6C34 /* PresentationConstants.swift in Sources */,
@@ -5238,6 +5529,7 @@
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
 				E1395BFD2954DAAD00C403C6 /* CardsInteractor.swift in Sources */,
 				0EB8ED3A268F6A6900C6B0FA /* ProgressBar.swift in Sources */,
+				E196916D2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift in Sources */,
 				E191F21C2969EF7B00F1FEA6 /* TagSettingsModuleFactory.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				E1CD78022878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
@@ -5251,7 +5543,9 @@
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				E19EAF95299E6038005827E4 /* SignInBenefitsModuleFactory.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
+				E196918F2A06E2E100DC360E /* RuuviAlertSound+Extension.swift in Sources */,
 				A9E6774925A33081000B75A3 /* String+Characters.swift in Sources */,
+				E196915E2A06DCD500DC360E /* NotificationsSettingsTextCell.swift in Sources */,
 				A91D030A2511207300694733 /* SelectionRouterInput.swift in Sources */,
 				0EAD33E42399273D00EC5BAA /* HeartbeatViewController.swift in Sources */,
 				E191F20D2969E14600F1FEA6 /* TagSettingsRouter.swift in Sources */,
@@ -5267,6 +5561,7 @@
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				66718A6D266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
+				E1AB90622A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */,
 				A964647F247BAE6B0001D55D /* ChartSettingsInitializer.swift in Sources */,
 				A93CDCD025659BA600018C6C /* AlertPresenter.swift in Sources */,
 				0E8BD389238566AB008B31EF /* PhotoPickerPresenter.swift in Sources */,
@@ -5277,6 +5572,7 @@
 				E1ED427128FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
 				A964646D247BAE6B0001D55D /* ChartSettingsStepperTableViewCell.swift in Sources */,
 				0E8BD38D238566AB008B31EF /* DefaultsModuleInput.swift in Sources */,
+				E196918C2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift in Sources */,
 				E1CD78092878308E00F1F0EB /* UnitSettingsItem.swift in Sources */,
 				E1B57FFC29859D0700B441FB /* DevicesViewModel.swift in Sources */,
 				0E8BD392238566AB008B31EF /* HumidityUnit+Localization.swift in Sources */,
@@ -5298,6 +5594,7 @@
 				0E8BD39A238566AB008B31EF /* AppStateService.swift in Sources */,
 				A9646467247BAE6B0001D55D /* ChartSettingsViewInput.swift in Sources */,
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
+				E1AB90682A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */,
 				0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				E18D04A628E8A5A3008EF5EC /* TagChartsViewConfigurator.swift in Sources */,
@@ -5308,6 +5605,7 @@
 				0E8BD3A5238566AB008B31EF /* SettingsTableInitializer.swift in Sources */,
 				0EA7967E2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
 				0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */,
+				E1AB907C2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */,
 				340BE39C27B54FEC006D6C34 /* String+Email.swift in Sources */,
 				E10E18B5297D67B8002C78C3 /* RuuviCloudViewModel.swift in Sources */,
 				E1198A2229BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */,
@@ -5315,6 +5613,7 @@
 				E16B8F4928D10E7A0025B92D /* MyRuuviAccountViewModel.swift in Sources */,
 				E1B57FEC29859CB800B441FB /* DevicesModuleFactory.swift in Sources */,
 				E18FD50E28DF7E7100289359 /* UIView+Layout.swift in Sources */,
+				E19691602A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift in Sources */,
 				E11FDA7129A3F78D003ADA7B /* RuuviSimpleViewCompositionalLayout.swift in Sources */,
 				E1198A3929BA76DD002245CF /* ASSelectionPresenter.swift in Sources */,
 				340BE38B27B54F37006D6C34 /* OwnerConfigurator.swift in Sources */,
@@ -5359,6 +5658,7 @@
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
 				A91D031B25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
 				E1395BFA2954DAA200C403C6 /* CardsInteractorInput.swift in Sources */,
+				E196917F2A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift in Sources */,
 				A9E599622557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				A9646479247BAE6B0001D55D /* ChartSettingsViewModel.swift in Sources */,
 				E1CE4C752959D08D005C023F /* DashboardImageCell.swift in Sources */,
@@ -5389,6 +5689,7 @@
 				E1198A1229BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */,
 				4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */,
 				898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */,
+				E196916F2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift in Sources */,
 				C9D6ACA6CB9694F6C33414CE /* ShareModuleInput.swift in Sources */,
 				248444E4B7F8C3D6454D4D1B /* ShareModuleOutput.swift in Sources */,
 				26BA929FDA200CCAC9964651 /* SharePresenter.swift in Sources */,
@@ -5398,6 +5699,7 @@
 				B6FA27492FB1F63393783EFC /* ShareViewInput.swift in Sources */,
 				E1B20C882926CDE10023D739 /* UITextField+Extension.swift in Sources */,
 				3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */,
+				E19691852A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift in Sources */,
 				2BB81E4733D8EC40BECC68EF /* ShareViewModel.swift in Sources */,
 				E18FD50B28DF7B7900289359 /* TagChartsViewController.swift in Sources */,
 				E1597A53295CD6BB00DFB70B /* DashboardViewInput.swift in Sources */,
@@ -5458,6 +5760,7 @@
 				0EA7967D2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
 				E16B8F5128D113440025B92D /* MyRuuviAccountConfigurator.swift in Sources */,
+				E1AB907E2A0ECB7600543F61 /* SensorForceClaimViewInput.swift in Sources */,
 				A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */,
 				E1597A752962046500DFB70B /* BackgroundSelectionViewHeader.swift in Sources */,
 				E116708C29634D91002DF7BF /* BackgroundSelectionViewModel.swift in Sources */,
@@ -5474,6 +5777,7 @@
 				A9646472247BAE6B0001D55D /* ChartSettingsTableViewController.swift in Sources */,
 				0EF4E34026824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
 				E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */,
+				E19691542A06DCBB00DC360E /* NotificationsSettingsRouterInput.swift in Sources */,
 				E191F1F52968D32000F1FEA6 /* TagSettingsExpandableSectionHeader.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				E19EAF9A299E608E005827E4 /* SignInBenefitsRouter.swift in Sources */,
@@ -5483,7 +5787,9 @@
 				E1597A722962000B00DFB70B /* BackgroundSelectionViewCell.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				A91D03062511207300694733 /* SelectionRouter.swift in Sources */,
+				E196918B2A06E15F00DC360E /* PushAlertSoundSelectionViewModel.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
+				E196915D2A06DCD500DC360E /* NotificationsSettingsTextCell.swift in Sources */,
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
 				E1CD77F828782F2200F1F0EB /* UnitSettingsPresenter.swift in Sources */,
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
@@ -5491,6 +5797,7 @@
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				A98D3F15256CBD600066588B /* ShareViewOutput.swift in Sources */,
 				E1167082296346D5002DF7BF /* BackgroundSelectionModuleInput.swift in Sources */,
+				E1AB906A2A0EB1BC00543F61 /* SensorForceClaimRouterInput.swift in Sources */,
 				E1198A3529BA76CB002245CF /* ASSelectionViewInput.swift in Sources */,
 				0EB48D952619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A9E5994A2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
@@ -5548,6 +5855,7 @@
 				0E0501212685E895007060C4 /* HeartbeatDaemonTitles.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
+				E1AB90672A0EB1AD00543F61 /* SensorForceClaimRouter.swift in Sources */,
 				66BC44B02657AED400A03253 /* OffsetCorrectionViewOutput.swift in Sources */,
 				E1CD78012878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
 				E1198A1129BA6910002245CF /* AppearanceSettingsPresenter.swift in Sources */,
@@ -5569,6 +5877,7 @@
 				E1395BF1294F793000C403C6 /* AppDateFormatter.swift in Sources */,
 				E18D04C028E8B3B0008EF5EC /* TagChartsViewInteractorOutput.swift in Sources */,
 				E19EAF72299ADB2F005827E4 /* UIButton+Extension.swift in Sources */,
+				E1AB905E2A0EB0D000543F61 /* SensorForceClaimModuleFactory.swift in Sources */,
 				66718A6C266BD0E800A380F8 /* Color+Ruuvi.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
@@ -5590,6 +5899,7 @@
 				0EA796712664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */,
 				E1E3C333298D7FA500A59CB8 /* UIImage+Extension.swift in Sources */,
 				E11989FF29BA60CE002245CF /* AppearanceSettingsTableViewController.swift in Sources */,
+				E196916C2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
 				E1B5800529859E8900B441FB /* DevicesInteractor.swift in Sources */,
 				0E84BF612397F73100A37E1A /* HeartbeatEnvironmentObject.swift in Sources */,
@@ -5602,6 +5912,7 @@
 				E19EAFA4299E6211005827E4 /* SignInBenefitsModuleOutput.swift in Sources */,
 				E116708529634708002DF7BF /* BackgroundSelectionPresenter.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
+				E1AB90552A0BFECE00543F61 /* RuuviLinkTextView.swift in Sources */,
 				E1198A1829BA6A61002245CF /* AppearanceSettingsViewInput.swift in Sources */,
 				A9BD38BA24F6108300904BBE /* Humidity+Offset.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
@@ -5635,6 +5946,7 @@
 				E1D0238E29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
 				E1CE5E3F29F994DE00391109 /* AppGroupConstants.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
+				E1AB907B2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */,
 				E19EAFA1299E61C5005827E4 /* SignInBenefitsModuleInput.swift in Sources */,
 				E191F2092969E11F00F1FEA6 /* TagSettingsRouterInput.swift in Sources */,
 				0EB8ED2F268F12FA00C6B0FA /* DFUModuleFactory.swift in Sources */,
@@ -5662,6 +5974,7 @@
 				A93CDCCF25659BA600018C6C /* AlertPresenter.swift in Sources */,
 				E1597A2D295B6E6B00DFB70B /* UIFont+Extension.swift in Sources */,
 				A9646487247BAE6B0001D55D /* ChartSettingsRouterInput.swift in Sources */,
+				E196917C2A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				E16B8F4B28D1114F0025B92D /* MyRuuviAccountModuleInput.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
@@ -5671,14 +5984,17 @@
 				0E84BF5F2397F6BE00A37E1A /* HeartbeatViewController.swift in Sources */,
 				E191F1F82968D33800F1FEA6 /* TagSettingsSimpleSectionHeader.swift in Sources */,
 				E191F1EC2968BCF300F1FEA6 /* TagSettingsBasicCell.swift in Sources */,
+				E1AB90612A0EB11800543F61 /* SensorForceClaimPresenter.swift in Sources */,
 				0E84BF67239801AF00A37E1A /* HeartbeatRouterInput.swift in Sources */,
 				0EB48DDC2619E306008E0D2D /* FallbackFeatureToggleProvider.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
+				E19691842A06E03300DC360E /* PushAlertSoundSelectionTableViewCell.swift in Sources */,
 				A98D3F0F256CBD600066588B /* ShareViewInput.swift in Sources */,
 				0EB8ED3F26916D1700C6B0FA /* LargeButtonStyle.swift in Sources */,
 				E1CD77F128782E8000F1F0EB /* UnitSettingsTableConfigurator.swift in Sources */,
 				0EB8ED25268F083700C6B0FA /* DFUUIView.swift in Sources */,
 				E1597A5C295E24D400DFB70B /* RuuviAssets.swift in Sources */,
+				E19691682A06DCE500DC360E /* NotificationsSettingsViewOutput.swift in Sources */,
 				E1E3C342299007B700A59CB8 /* TagSettingsModuleInput.swift in Sources */,
 				E1ED427028FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
@@ -5687,6 +6003,7 @@
 				E1E3C345299007DE00A59CB8 /* TagSettingsModuleOutput.swift in Sources */,
 				E1B57FEB29859CB800B441FB /* DevicesModuleFactory.swift in Sources */,
 				E1B5800E2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */,
+				E1CE5E472A016D4000391109 /* RuuviCustomButton.swift in Sources */,
 				A9646478247BAE6B0001D55D /* ChartSettingsViewModel.swift in Sources */,
 				A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */,
 				E1B5800B29859EEB00B441FB /* DevicesInteractorOutput.swift in Sources */,
@@ -5694,6 +6011,7 @@
 				E16B8F5428D113750025B92D /* MyRuuviAccountPresenter.swift in Sources */,
 				A9646484247BAE6B0001D55D /* ChartSettingsPresenter.swift in Sources */,
 				E19EAFA7299E62A7005827E4 /* SignInBenefitsViewInput.swift in Sources */,
+				E196917E2A06E03300DC360E /* PushAlertSoundSelectionPresenter.swift in Sources */,
 				E1B5800129859D2300B441FB /* DevicesViewOutput.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
@@ -5706,8 +6024,10 @@
 				A9E6774825A33081000B75A3 /* String+Characters.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
+				E196915F2A06DCD500DC360E /* NotificationsSettingsSwitchCell.swift in Sources */,
 				A91D02FD2511207300694733 /* SelectionTableViewCell.swift in Sources */,
 				E10E18BA297D67FC002C78C3 /* RuuviCloudViewOutput.swift in Sources */,
+				E19691562A06DCBB00DC360E /* NotificationsSettingsRouter.swift in Sources */,
 				E10E18722978AF3D002C78C3 /* TagSettingsViewModel.swift in Sources */,
 				340BE39627B54F38006D6C34 /* OwnerRouter.swift in Sources */,
 				E18D04AF28E8A747008EF5EC /* TagChartsViewModuleOutput.swift in Sources */,
@@ -5721,9 +6041,11 @@
 				E1CD78082878308E00F1F0EB /* UnitSettingsItem.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				E16B8F3F28D10CF50025B92D /* MyRuuviAccountViewController.swift in Sources */,
+				E19691662A06DCE500DC360E /* NotificationsSettingsViewModel.swift in Sources */,
 				0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */,
 				E191F1FB2969CD0100F1FEA6 /* TagSettingsBackgroundSelectionView.swift in Sources */,
 				E1CD78042878302C00F1F0EB /* UnitSettingsViewOutput.swift in Sources */,
+				E19691642A06DCE500DC360E /* NotificationsSettingsViewInput.swift in Sources */,
 				E16051EC285CBA57003FCA70 /* FileManager+Date.swift in Sources */,
 				0EA796892664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* CardsModuleInput.swift in Sources */,
@@ -5732,6 +6054,7 @@
 				0E25135F2684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */,
 				E18D04A928E8A6C0008EF5EC /* TagChartsViewPresenter.swift in Sources */,
 				A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */,
+				E19691502A06DCA400DC360E /* NotificationsSettingsModuleFactory.swift in Sources */,
 				0EA7AB7A2680A68200C137AD /* RuuviCoreError+LocalizedError.swift in Sources */,
 				E16051E9285CB384003FCA70 /* AppStoreReviewHelper.swift in Sources */,
 				E18FD50D28DF7E7100289359 /* UIView+Layout.swift in Sources */,
@@ -5755,6 +6078,7 @@
 				0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				E1198A3229BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */,
+				E19691882A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E046F4D22F1823C00BD4E9C /* LocationPickerAppleViewController.swift in Sources */,
@@ -5767,16 +6091,20 @@
 				E1597A5F295F803400DFB70B /* UIColor+Extension.swift in Sources */,
 				66BC44A12657AED400A03253 /* OffsetCorrectionPresenter.swift in Sources */,
 				E1CD780F287830BF00F1F0EB /* UnitSettingsRouterInput.swift in Sources */,
+				E1AB90732A0EB24600543F61 /* SensorForceClaimViewController.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
 				E116706F29620AD4002DF7BF /* BackgroundSelectionButtonView.swift in Sources */,
 				0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */,
 				A98D3F14256CBD600066588B /* ShareModuleOutput.swift in Sources */,
 				E191F21E2969FF6900F1FEA6 /* TagSettingsSwitchCell.swift in Sources */,
 				E1CE4C742959D08D005C023F /* DashboardImageCell.swift in Sources */,
+				E19691862A06E03300DC360E /* PushAlertSoundSelectionViewInput.swift in Sources */,
 				A98D3F10256CBD600066588B /* ShareViewModel.swift in Sources */,
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
+				E19691802A06E03300DC360E /* PushAlertSoundSelectionModuleInput.swift in Sources */,
 				0E0A381923616AC3003A0364 /* UserDefaults+Optional.swift in Sources */,
 				340BE39227B54F37006D6C34 /* OwnerViewController.swift in Sources */,
+				E196915B2A06DCD500DC360E /* NotificationsSettingsTableViewController.swift in Sources */,
 				E1198A2629BA763F002245CF /* ASSelectionModuleFactory.swift in Sources */,
 				0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */,
 				E1198A2C29BA769A002245CF /* ASSelectionTableViewController.swift in Sources */,
@@ -5796,6 +6124,7 @@
 				E1597A40295CD55300DFB70B /* DashboardRouter.swift in Sources */,
 				0EB48DA32619D7EE008E0D2D /* FirebaseFeatureToggleProvider.swift in Sources */,
 				E168B4B62886AF1200D6B5C6 /* UnitSettingsType.swift in Sources */,
+				E19691822A06E03300DC360E /* PushAlertSoundSelectionTableViewController.swift in Sources */,
 				E1395BFC2954DAAD00C403C6 /* CardsInteractor.swift in Sources */,
 				3414BFC82806D19C00C63BE9 /* RuuviCodeView.swift in Sources */,
 				0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
@@ -5848,6 +6177,7 @@
 				3490A4C327D9F2C80032BBAB /* UINavigationController.swift in Sources */,
 				E1C395D329B26044009301D3 /* UICollectionView+Extension.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
+				E196916E2A06DCEF00DC360E /* NotificationsSettingsModuleInput.swift in Sources */,
 				E1E3C33C298ED3E300A59CB8 /* CardsPresenter.swift in Sources */,
 				E16B8F4528D10E2C0025B92D /* MyRuuviAccountViewOutput.swift in Sources */,
 				A9B5744A253B994700DB7353 /* SignInViewOutput.swift in Sources */,
@@ -5872,6 +6202,7 @@
 				0EB8ED36268F685500C6B0FA /* URLSession+downloadTaskPublisher.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
+				E196918E2A06E2E100DC360E /* RuuviAlertSound+Extension.swift in Sources */,
 				0E62299526AAA0570041DCDD /* DiscoverRouter.swift in Sources */,
 				340BE39427B54F37006D6C34 /* OwnerViewOutput.swift in Sources */,
 				E10E18AB297D6664002C78C3 /* RuuviCloudModuleFactory.swift in Sources */,
@@ -5882,6 +6213,7 @@
 				A9646475247BAE6B0001D55D /* ChartSettingsViewOutput.swift in Sources */,
 				E1B5800829859EDE00B441FB /* DevicesInteractorInput.swift in Sources */,
 				A91D03002511207300694733 /* SelectionTableViewController.swift in Sources */,
+				E1AB90642A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */,
 				A964646F247BAE6B0001D55D /* ChartSettingsSwitchTableViewCell.swift in Sources */,
 				A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
@@ -6031,7 +6363,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6041,7 +6373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6063,7 +6395,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6073,7 +6405,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6095,7 +6427,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6108,7 +6440,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -6132,7 +6464,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6145,7 +6477,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6167,7 +6499,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6180,7 +6512,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -6203,7 +6535,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6216,7 +6548,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6355,7 +6687,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6397,7 +6729,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6417,7 +6749,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6426,7 +6758,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6531,7 +6863,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6544,7 +6876,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
@@ -6566,7 +6898,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 375;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6579,7 +6911,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.2.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -9,6 +9,7 @@ protocol DashboardRouterInput {
     func openAbout()
     func openWhatToMeasurePage()
     func openRuuviProductsPage()
+    func openRuuviProductsPageFromMenu()
     func openSignIn(output: SignInBenefitsModuleOutput)
     // swiftlint:disable:next function_parameter_count
     func openCardImageView(with viewModels: [CardsViewModel],

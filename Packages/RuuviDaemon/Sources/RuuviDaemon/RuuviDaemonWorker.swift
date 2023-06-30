@@ -2,13 +2,13 @@ import Foundation
 
 open class RuuviDaemonWorker: NSObject {
     public var thread: Thread!
-    private var block: (() -> Void)!
+    private var block: (() -> Void)?
 
     override public init() {}
 
     @objc internal func runBlock() {
         autoreleasepool {
-            block()
+            block?()
         }
     }
 
@@ -19,12 +19,12 @@ open class RuuviDaemonWorker: NSObject {
             .components(separatedBy: .punctuationCharacters)[1]
 
         thread = Thread { [weak self] in
-            while self != nil && !self!.thread.isCancelled {
+            defer { self?.block = nil }
+            while !(self?.thread.isCancelled ?? true) {
                 RunLoop.current.run(
                     mode: RunLoop.Mode.default,
                     before: Date.distantFuture)
             }
-            Thread.exit()
         }
         thread.name = "\(threadName)-\(UUID().uuidString)"
         thread.start()
@@ -37,6 +37,7 @@ open class RuuviDaemonWorker: NSObject {
     }
 
     public func stopWork() {
+        block = nil
         perform(#selector(stopThread),
                 on: thread,
                 with: nil,
@@ -45,7 +46,6 @@ open class RuuviDaemonWorker: NSObject {
     }
 
     @objc func stopThread() {
-        Thread.exit()
+        thread.cancel()
     }
-
 }

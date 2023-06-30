@@ -258,20 +258,20 @@
 "TagSettings.ConnectStatus.Disconnected" = "Getrennt";
 "TagCharts.Export.title" = "EXPORT";
 "h" = "h";
-"About.AboutHelp.contents" = "Ruuvi Station ist ein benutzerfreundliches, aber leistungsstarkes Werkzeug, um Ihre Ruuvi-Sensoren aufzuladen. Fügen Sie einfach einige Sensoren hinzu und schon können Sie loslegen.";
+"About.AboutHelp.contents" = "Ruuvi Station ist eine benutzerfreundliche Anwendung, mit der Sie die Messdaten von Ruuvi-Sensoren überwachen können.";
 "About.AboutHelp.header" = "Über / Hilfe";
 "About.TagsCount.text" = "Sensoren hinzugefügt: %d";
 "About.MeasurementsCount.text" = "Anzahl lokal gespeicherter Messungen: %d";
 "About.DatabaseSize.text" = "Datenbankgröße: %@";
 "About.More.contents" = "Ruuvi-Website: ruuvi.com\nRuuvi-Forum: f.ruuvi.com\nRuuvi-Blog: ruuvi.com/blog\nRuuvi auf Twitter: twitter.com/ruuvicom";
 "About.More.header" = "Mehr erfahren";
-"About.OpenSource.contents" = "Genau wie Ruuvi-Sensoren ist auch Ruuvi Station Open Source: github.com/ruuvi";
+"About.OpenSource.contents" = "Genau wie Ruuvi-Sensoren sind auch die Ruuvi Station-Apps Open Source. Verfolgen Sie die Entwicklung und leisten Sie einen Beitrag unter: github.com/ruuvi";
 "About.OpenSource.header" = "Open-source";
-"About.OperationsManual.contents" = "Wir haben die App so gestaltet, dass sie selbsterklärend ist, aber sowohl für Ruuvi-Sensoren als auch für die Ruuvi-Station sind umfassende Handbücher verfügbar: ruuvi.com/support";
+"About.OperationsManual.contents" = "Beginnen Sie mit der Nutzung der mobilen Anwendung Ruuvi Station mit unseren Online-Anleitungen: ruuvi.com/support/station-mobile";
 "About.OperationsManual.header" = "Anleitung";
 "About.Privacy.contents" = "Durch die Nutzung der Anwendung akzeptieren Sie die allgemeinen Geschäftsbedingungen von Ruuvi: ruuvi.com/terms";
 "About.Privacy.header" = "Datenschutz-bestimmungen";
-"About.Troubleshooting.contents" = "Wenn Sie Probleme haben und unsere Handbücher nicht die gewünschte Hilfe bieten, finden Sie weitere Hilfe zur Fehlerbehebung hier: ruuvi.com/support";
+"About.Troubleshooting.contents" = "Hilfe bei der Verwendung der Ruuvi Station-Apps, Ruuvi-Produkte und des Ruuvi Cloud-Dienstes finden Sie in unserem Support-Center: ruuvi.com/support";
 "About.Troubleshooting.header" = "Fehlerbehebung";
 "Interval.Hour.string" = "Stunden";
 "Interval.Days.string" = "Tage";
@@ -589,7 +589,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "settings_and_alerts" = "Einstellungen & Benachrichtigungen";
 "change_background" = "Einstellungen und Warnungen";
 "check_claim_state" = "Prüfung des Antragsstatus";
-"claim_in_progress" = "Claiming in progress";
+"claim_in_progress" = "Anspruchserhebung läuft";
 "force_claim_sensor" = "Antragstellung in Bearbeitung";
 "force_claim_sensor_description1" = "Dieser Sensor wurde von einem anderen Benutzer beansprucht. Sie können die Eigentümerschaft für Ihr Konto erzwingen, wenn Sie physischen Zugang zu diesem Sensor haben. Jeder Ruuvi-Sensor kann nur einen Besitzer haben.";
 "force_claim_sensor_description2" = "Die Zwangsanforderung erfolgt über die Nahfeldkommunikation (NFC). Vergewissern Sie sich, dass NFC auf Ihrem Mobilgerät aktiviert ist.\
@@ -597,7 +597,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 	2. Nach erfolgreicher Beanspruchung werden Sie zu den Sensoreinstellungen zurückgeschickt.\
 \
 Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht verfügbar ist:\n\n	1. Öffnen Sie die Abdeckung Ihres Ruuvi-Sensors.\
-	2. Suchen Sie die runde schwarze Taste (oder die Taste \"B\", falls Ihr Sensor 2 Tasten hat) auf der weißen Platine und drücken Sie sie kurz, um den Beanspruchungsprozess zu starten.\
+	2. Suchen Sie die runde schwarze Taste (oder die Taste \"B\", falls Ihr Sensor 2 Tasten hat) auf der weißen Platine und drücken Sie sie kurz, und tippen Sie dann auf die Schaltfläche „Verwenden Sie BT“, um den Beanspruchungsprozess zu starten.\
 \n\t3. Nach erfolgreicher Beanspruchung werden Sie zu den Sensoreinstellungen zurückgeschickt.";
 "force_claim" = "Kraft-Anspruch";
 "claim_wrong_sensor_scanned" = "Sie scannen gerade verschiedene RuuviTag";
@@ -678,22 +678,28 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "shared_to_x" = "Freigegebene %d/%d";
 "settings_alert_notifications" = "Alarmbenachrichtigungen";
-"settings_alert_sound" = "Alert Sound";
-"settings_alert_sound_description" = "Select push notification alert sound.";
-"settings_alerts_footer_description" = "You can also adjust Notification settings under iOS Settings -> Notifications";
-"settings_alerts_footer_description_link_mask" = "iOS Settings -> Notifications";
-"settings_email_alerts" = "Email Alerts";
-"settings_email_alerts_description" = "If you are using Ruuvi Cloud and Ruuvi Gateway, you will be able to receive email alerts by enabling this.";
-"settings_push_alerts" = "Push Alerts";
-"settings_push_alerts_description" = "If you are using Ruuvi Cloud and Ruuvi Gateway, you will be able to receive push alerts by enabling this.";
+"settings_alert_sound" = "Alarmton";
+"settings_alert_sound_description" = "Wählen Sie den Push-Benachrichtigungston aus.";
+"settings_alerts_footer_description" = "Sie können die Benachrichtigungseinstellungen auch unter iOS-Einstellungen -> Benachrichtigungen anpassen";
+"settings_alerts_footer_description_link_mask" = "iOS-Einstellungen -> Benachrichtigungen";
+"settings_email_alerts" = "E-Mail-Benachrichtigungen";
+"settings_email_alerts_description" = "Wenn Sie Ruuvi Cloud und Ruuvi Gateway verwenden, können Sie durch Aktivieren dieser Funktion E-Mail-Benachrichtigungen erhalten.";
+"settings_push_alerts" = "Push-Benachrichtigungen";
+"settings_push_alerts_description" = "Wenn Sie Ruuvi Cloud und Ruuvi Gateway verwenden, können Sie Push-Benachrichtigungen erhalten, indem Sie diese aktivieren.";
 "synchronisation" = "Synchronisation";
 "gatt_sync_description" = "Ruuvi Station lädt den internen Verlauf des Sensors für die letzten 10 Tage herunter, wenn der Messverlauf verfügbar ist.\n\nDer Verlauf wird über eine Bluetooth-Verbindung heruntergeladen. Stellen Sie sicher, dass Sie sich in der Nähe des Sensors befinden.";
 "do_not_show_again" = "Zeige das nicht noch einmal";
 "sign_in_continue" = "Weitermachen";
 "signing_in_is_optional" = "(Die Anmeldung ist optional)";
-"Defaults.UserAuthorized.title" = "User Authorized";
-"Defaults.DashboardTapActionChart.title" = "Show Chart on Dashboard Card Tap";
-"Defaults.DevServer.title" = "Use Dev Server";
-"Defaults.DevServer.message" = "Changing Ruuvi Cloud endpoint requires signing out from current session and restart the app. Are you sure?";
-"Defaults.ShowEmailAlertsSettings.title" = "Show email alerts settings";
-"Defaults.ShowPushAlertsSettings.title" = "Show push alerts settings";
+"Defaults.UserAuthorized.title" = "Benutzerautorisiert";
+"Defaults.DashboardTapActionChart.title" = "Tippen Sie auf die Dashboard-Karte, um das Diagramm anzuzeigen";
+"Defaults.DevServer.title" = "Verwenden Sie einen Entwicklungsserver";
+"Defaults.DevServer.message" = "Um den Ruuvi Cloud-Endpunkt zu ändern, müssen Sie sich von der aktuellen Sitzung abmelden und die App neu starten. Bist du dir sicher?";
+"Defaults.ShowEmailAlertsSettings.title" = "Einstellungen für E-Mail-Benachrichtigungen anzeigen";
+"Defaults.ShowPushAlertsSettings.title" = "Einstellungen für Push-Benachrichtigungen anzeigen";
+"use_nfc" = "Verwenden Sie NFC";
+"use_bluetooth" = "Verwenden Sie BT";
+"sensor_not_found_error" = "Sensor nicht gefunden. Versuchen Sie es erneut.";
+"Defaults.HideNFC.title" = "Verstecken Sie die NFC-Option vor einem erzwungenen Eigentümerwechsel";
+"settings_alert_sound_default" = "Systemfehler";
+"settings_alert_sound_ruuvi_speak" = "Ruuvi Alarm";

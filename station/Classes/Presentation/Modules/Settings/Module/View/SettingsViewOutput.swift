@@ -16,4 +16,5 @@ protocol SettingsViewOutput {
     func viewDidTapRuuviCloud()
     func viewDidSelectChangeLanguage()
     func viewDidTapAppearance()
+    func viewDidTapAlertNotifications()
 }

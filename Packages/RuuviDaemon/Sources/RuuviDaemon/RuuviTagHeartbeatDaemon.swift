@@ -3,6 +3,7 @@ import Future
 
 extension Notification.Name {
     public static let RuuviTagHeartbeatDaemonDidFail = Notification.Name("RuuviTagHeartbeatDaemonDidFail")
+    public static let RuuviTagHeartBeatDaemonShouldRestart = Notification.Name("RuuviTagHeartBeatDaemonShouldRestart")
 }
 
 public enum RuuviTagHeartbeatDaemonDidFailKey: String {

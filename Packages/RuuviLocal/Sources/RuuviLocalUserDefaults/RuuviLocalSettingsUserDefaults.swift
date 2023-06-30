@@ -418,12 +418,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
 
     private let ownerCheckDateKey = "SettingsUserDefaults.ownerCheckDate"
-    func setOwnerCheckDate(for macId: MACIdentifier, value: Date) {
-        UserDefaults.standard.set(value, forKey: ownerCheckDateKey + macId.mac)
+    func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?) {
+        guard let macId = macId else { return }
+        if let value = value {
+            UserDefaults.standard.set(value, forKey: ownerCheckDateKey + macId.mac)
+        } else {
+            UserDefaults.standard.removeObject(forKey: ownerCheckDateKey + macId.mac)
+        }
     }
 
-    func ownerCheckDate(for macId: MACIdentifier) -> Date? {
-        UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
+    func ownerCheckDate(for macId: MACIdentifier?) -> Date? {
+        guard let macId = macId else { return nil }
+        return UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
     }
 
     @UserDefault("SettingsUserDefaults.dashboardEnabled", defaultValue: true)
@@ -541,6 +547,67 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 .post(name: .AppearanceSettingsDidChange,
                       object: self,
                       userInfo: [AppearanceTypeKey.style: newValue])
+        }
+    }
+
+    private let syncDialogHiddenKey = "SettingsUserDefaults.syncDialogHiddenKey."
+    func syncDialogHidden(for luid: LocalIdentifier) -> Bool {
+        return UserDefaults.standard.bool(forKey: syncDialogHiddenKey + luid.value)
+    }
+
+    func setSyncDialogHidden(for luid: LocalIdentifier) {
+        UserDefaults.standard.set(true, forKey: syncDialogHiddenKey + luid.value)
+    }
+
+    @UserDefault("SettingsUserDefaults.hideNFCForSensorContest", defaultValue: false)
+    var hideNFCForSensorContest: Bool
+    private let ruuviAlertSoundKey = "SettingsUserDefaults.ruuviAlertSoundKey"
+    var alertSound: RuuviAlertSound {
+        get {
+            if let key = UserDefaults.standard.string(forKey: ruuviAlertSoundKey) {
+                return RuuviAlertSound(rawValue: key) ?? .ruuviSpeak
+            }
+            return .ruuviSpeak
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: ruuviAlertSoundKey)
+            NotificationCenter
+                .default
+                .post(name: .AlertSoundSettingsDidChange,
+                      object: self,
+                      userInfo: [AppearanceTypeKey.style: newValue])
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.showEmailAlertSettings", defaultValue: false)
+    var showEmailAlertSettings: Bool
+
+    @UserDefault("SettingsUserDefaults.emailAlertEnabled", defaultValue: false)
+    var emailAlertEnabled: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(name: .EmailAlertSettingsDidChange,
+                          object: self,
+                          userInfo: nil)
+            }
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.showPushAlertSettings", defaultValue: false)
+    var showPushAlertSettings: Bool
+
+    @UserDefault("SettingsUserDefaults.pushAlertEnabled", defaultValue: false)
+    var pushAlertEnabled: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(name: .PushAlertSettingsDidChange,
+                          object: self,
+                          userInfo: nil)
+            }
         }
     }
 }

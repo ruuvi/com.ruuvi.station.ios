@@ -47,8 +47,6 @@ final class TagSettingsModuleFactoryImpl: TagSettingsModuleFactory {
         presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.alertHandler = r.resolve(RuuviNotifier.self)
-        presenter.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
-        presenter.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 

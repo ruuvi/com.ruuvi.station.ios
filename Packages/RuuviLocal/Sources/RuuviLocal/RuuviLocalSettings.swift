@@ -21,6 +21,9 @@ extension Notification.Name {
     public static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
     public static let DashboardTapActionTypeDidChange = Notification.Name("DashboardTapActionTypeDidChange")
     public static let AppearanceSettingsDidChange = Notification.Name("AppearanceSettingsDidChange")
+    public static let AlertSoundSettingsDidChange = Notification.Name("AlertSoundSettingsDidChange")
+    public static let EmailAlertSettingsDidChange = Notification.Name("EmailAlertSettingsDidChange")
+    public static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
 }
 
 public enum DashboardTypeKey: String {
@@ -77,6 +80,12 @@ public protocol RuuviLocalSettings {
     var dashboardType: DashboardType { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }
     var theme: RuuviTheme { get set }
+    var hideNFCForSensorContest: Bool { get set }
+    var alertSound: RuuviAlertSound { get set }
+    var showEmailAlertSettings: Bool { get set }
+    var emailAlertEnabled: Bool { get set }
+    var showPushAlertSettings: Bool { get set }
+    var pushAlertEnabled: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
@@ -94,6 +103,9 @@ public protocol RuuviLocalSettings {
     func lastOpenedChart() -> String?
     func setLastOpenedChart(with id: String)
 
-    func setOwnerCheckDate(for macId: MACIdentifier, value: Date)
-    func ownerCheckDate(for macId: MACIdentifier) -> Date?
+    func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?)
+    func ownerCheckDate(for macId: MACIdentifier?) -> Date?
+
+    func syncDialogHidden(for luid: LocalIdentifier) -> Bool
+    func setSyncDialogHidden(for luid: LocalIdentifier)
 }
