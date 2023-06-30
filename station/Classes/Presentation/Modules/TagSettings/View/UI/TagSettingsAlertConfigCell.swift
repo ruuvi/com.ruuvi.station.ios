@@ -83,7 +83,7 @@ class TagSettingsAlertConfigCell: UITableViewCell {
 
     private lazy var additionalTextLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .right
+        label.textAlignment = .left
         label.numberOfLines = 0
         label.textColor = .label
         label.font = .systemFont(ofSize: 14)
@@ -257,6 +257,10 @@ extension TagSettingsAlertConfigCell {
     }
 
     func setAlertLimitDescription(description: String?) {
+        alertLimitDescriptionView.configure(with: description)
+    }
+
+    func setAlertLimitDescription(description: NSMutableAttributedString?) {
         alertLimitDescriptionView.configure(with: description)
     }
 
