@@ -287,6 +287,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.AppSettings.text" = "Настройки";
 "Menu.Label.GetMoreSensors.text" = "Купить датчики Ruuvi";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"Ruuvi.BuySensors.Menu.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua_nav&utm_medium=referral&utm_source=ios";
 "Menu.Label.BuyRuuviGateway.text" = "Купить Ruuvi Gateway";
 "Menu.BuyGateway.URL.IOS" = "https://ruuvi.com/gateway?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
 "Menu.Label.WhatToMeasure.text" = "Что измерять с помощью Ruuvi?";
@@ -372,7 +373,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "SignIn.CodeHint" = "Код для входа";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "После выхода все датчики, которые зарегистрованы на вас, будут удалены из приложения. Если вы повторно войдете с тем же email адресом, список ваших датчиков будет загружен из облака. \n\nВы хотите выйти из сети?";
 "TagSettings.ClaimTagButton.Claim" = "Заявить о собственности";
-"TagSettings.ClaimTagButton.Unclaim" = "Отказаться от владения";
 "TagSettings.ShareButton" = "Поделиться";
 "Syncing..." = "Синхронизация...";
 "Synchronized" = "Синхронизировано";
@@ -512,7 +512,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.NotShared.title" = "Не делились";
 "Owner.title" = "Заявить о собственности";
 "Owner.ClaimOwnership.button" = "Заявить о владении";
-"Owner.Claim.description" = "Это ваш датчик? Если да, то пожалуйста заявите о владении и датчик будет добавлен в ваш Ruuvi аккаунт. Каждый датчик может иметь только одного владельца.\n\nПреимущества:\n\n ● Название датчика, изображение фона, данные калибровки и настройки тревог будут безопасно храниться в облаке\n\n ● Получите доступ к датчикам через интернет (требуестся Ruuvi Gateway)\n\n ● Поделитесь данными датчиков с друзьями и членами семьи (требуется Ruuvi Gateway)\n\n ● Просматривайте до 2-х лет истории на сайте station.ruuvi.com (требуется a Ruuvi Gateway)";
+"Owner.Claim.description" = "Это ваш датчик? Если да, то пожалуйста заявите о владении и датчик будет добавлен в ваш Ruuvi аккаунт. Каждый датчик может иметь только одного владельца. Чтобы заявить права собственности, вам необходимо войти в систему.\n\nПреимущества:\n\n ● Название датчика, изображение фона, данные калибровки и настройки тревог будут безопасно храниться в облаке\n\n ● Получите доступ к датчикам через интернет (требуестся Ruuvi Gateway)\n\n ● Поделитесь данными датчиков с друзьями и членами семьи (требуется Ruuvi Gateway)\n\n ● Просматривайте до 2-х лет истории на сайте station.ruuvi.com (требуется a Ruuvi Gateway)";
 "TagSettings.confirmTagUnclaimAndRemoveDialog.message" = "Удаляя датчик вы также отказываетесь от владения. Кто-то другой сможет заявить о владении этим датчиком. Каждый датчик может иметь только одного владельца.";
 "TagSettings.confirmSharedTagRemovalDialog.message" = "Если вы удалите датчик, то владелец будет уведомлен и вы более не сможете получать данные с него.";
 "TagSettings.General.Owner.none" = "Нет владельца";
@@ -698,3 +698,16 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Defaults.HideNFC.title" = "Hide NFC Option for sensor contest";
 "settings_alert_sound_default" = "System Default";
 "settings_alert_sound_ruuvi_speak" = "Ruuvi Alert";
+"add_with_nfc" = "Add with NFC";
+"sensor_details" = "Sensor Details";
+"add_sensor" = "Add Sensor";
+"copy_details" = "Copy Details";
+"name" = "Name:";
+"mac_address" = "Mac Address:";
+"unique_id" = "Unique ID:";
+"firmware_version" = "Firmware Version:";
+"close" = "Close";
+"add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
+"unclaim_sensor" = "Unclaim sensor";
+"unclaim" = "Unclaim";
+"unclaim_sensor_description" = "Ownership of this sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor's settings and related data from your Ruuvi account.";
