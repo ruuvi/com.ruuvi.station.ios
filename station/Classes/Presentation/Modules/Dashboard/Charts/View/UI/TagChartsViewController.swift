@@ -345,7 +345,7 @@ class TagChartsViewController: UIViewController {
                                          left: 16,
                                          bottom: 8,
                                          right: 16),
-                          size: .init(width: 0, height: 24))
+                          size: .init(width: 0, height: 26))
 
         footerView.addSubview(updatedAtLabel)
         updatedAtLabel.anchor(top: footerView.topAnchor,
