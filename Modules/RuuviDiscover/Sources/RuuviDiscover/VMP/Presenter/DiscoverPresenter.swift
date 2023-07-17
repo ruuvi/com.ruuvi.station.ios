@@ -40,12 +40,40 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviOwnershipService: RuuviServiceOwnership!
 
     private weak var view: DiscoverViewInput?
-    private var ruuviTags = Set<RuuviTag>()
+    private var accessQueue = DispatchQueue(
+        label: "com.ruuviDiscover.accessQueue", attributes: .concurrent
+    )
+    private var _persistedSensors: [RuuviTagSensor] = []
     private var persistedSensors: [RuuviTagSensor]! {
-        didSet {
-            updateViewDevices()
+        get {
+            return accessQueue.sync {
+                _persistedSensors
+            }
+        }
+        set {
+            accessQueue.async(flags: .barrier) {
+                self._persistedSensors = newValue
+                DispatchQueue.main.async {
+                    self.updateViewDevices()
+                }
+            }
         }
     }
+
+    private var _ruuviTags = Set<RuuviTag>()
+    private var ruuviTags: Set<RuuviTag> {
+        get {
+            return accessQueue.sync {
+                _ruuviTags
+            }
+        }
+        set {
+            accessQueue.async(flags: .barrier) {
+                self._ruuviTags = newValue
+            }
+        }
+    }
+
     private var reloadTimer: Timer?
     private var scanToken: ObservationToken?
     private var stateToken: ObservationToken?
@@ -196,7 +224,10 @@ extension DiscoverPresenter {
     }
 
     private func startReloading() {
-        reloadTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { [weak self] (_) in
+        reloadTimer = Timer.scheduledTimer(
+            withTimeInterval: 3,
+            repeats: true,
+            block: { [weak self] (_) in
             self?.updateViewDevices()
         })
         // don't wait for timer, reload after 0.5 sec

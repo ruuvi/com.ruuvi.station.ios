@@ -4,6 +4,9 @@ import RuuviOntology
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
+    @IBOutlet weak var alertNotificationsCell: UITableViewCell!
+    @IBOutlet weak var alertNotificationsTitleLabel: UILabel!
+
     @IBOutlet weak var appearanceCell: UITableViewCell!
     @IBOutlet weak var appearanceTitleLabel: UILabel!
 
@@ -80,6 +83,7 @@ extension SettingsTableViewController: SettingsViewInput {
         chartTitleLabel.text = "Settings.Label.Chart".localized()
         ruuviCloudTitleLabel.text = "ruuvi_cloud".localized()
         appearanceTitleLabel.text = "settings_appearance".localized()
+        alertNotificationsTitleLabel.text = "settings_alert_notifications".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -174,6 +178,8 @@ extension SettingsTableViewController {
             output.viewDidTapRuuviCloud()
         case appearanceCell:
             output.viewDidTapAppearance()
+        case alertNotificationsCell:
+            output.viewDidTapAlertNotifications()
         default:
             break
         }

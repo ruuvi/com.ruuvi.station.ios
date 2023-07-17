@@ -136,7 +136,8 @@ extension AppDelegate: MessagingDelegate {
 
         cloudNotificationService.set(token: fcmToken,
                                      name: UIDevice.modelName,
-                                     data: nil)
+                                     data: nil,
+                                     sound: settings.alertSound)
     }
 }
 

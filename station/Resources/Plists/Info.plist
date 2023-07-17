@@ -24,7 +24,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>384</string>
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -35,6 +35,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NFCReaderUsageDescription</key>
+	<string>Allows user to claim a RuuviTag using NFC when the user has physical access to the sensor</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>The app uses Bluetooth LE to read data from Ruuvi Sensors</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

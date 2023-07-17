@@ -139,6 +139,10 @@ extension SettingsPresenter: SettingsViewOutput {
     func viewDidTapAppearance() {
         router.openAppearance()
     }
+
+    func viewDidTapAlertNotifications() {
+        router.openAlertNotificationsSettings()
+    }
 }
 
 extension SettingsPresenter: DefaultsModuleOutput {

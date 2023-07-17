@@ -33,6 +33,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     private var ruuviTagsToken: RuuviReactorToken?
     private var sensorSettingsTokens = [String: RuuviReactorToken]()
     private var cloudModeOnToken: NSObjectProtocol?
+    private var daemonRestartToken: NSObjectProtocol?
 
     // swiftlint:disable:next function_body_length
     public init(
@@ -101,6 +102,15 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                 guard let sSelf = self else { return }
                 sSelf.handleRuuviTagsChange()
             }
+
+        daemonRestartToken = NotificationCenter
+            .default
+            .addObserver(forName: .RuuviTagHeartBeatDaemonShouldRestart,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.handleRuuviTagsChange()
+            }
     }
 
     deinit {
@@ -113,6 +123,9 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
         }
         if let cloudModeOnToken = cloudModeOnToken {
             NotificationCenter.default.removeObserver(cloudModeOnToken)
+        }
+        if let daemonRestartToken = daemonRestartToken {
+            NotificationCenter.default.removeObserver(daemonRestartToken)
         }
     }
 
@@ -153,8 +166,10 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     }
 
     public func restart() {
-        stop()
-        start()
+        ruuviStorage.readAll().on(success: { [weak self] sensors in
+            self?.ruuviTags = sensors
+            self?.handleRuuviTagsChange()
+        })
     }
 
     @objc private func stopDaemon() {

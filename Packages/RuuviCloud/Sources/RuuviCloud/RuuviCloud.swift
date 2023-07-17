@@ -28,7 +28,8 @@ public protocol RuuviCloud {
     func registerPNToken(token: String,
                          type: String,
                          name: String?,
-                         data: String?) -> Future<Int, RuuviCloudError>
+                         data: String?,
+                         params: [String: String]?) -> Future<Int, RuuviCloudError>
 
     @discardableResult
     func unregisterPNToken(token: String?,
@@ -59,6 +60,12 @@ public protocol RuuviCloud {
     func claim(
         name: String,
         macId: MACIdentifier
+    ) -> Future<MACIdentifier, RuuviCloudError>
+
+    @discardableResult
+    func contest(
+        macId: MACIdentifier,
+        secret: String
     ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
@@ -144,6 +151,12 @@ public protocol RuuviCloud {
 
     @discardableResult
     func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError>
+
+    @discardableResult
+    func set(emailAlert: Bool) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
+    func set(pushAlert: Bool) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
     func update(

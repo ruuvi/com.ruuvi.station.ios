@@ -16,7 +16,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
     private lazy var backButton: UIButton = {
         let button  = UIButton()
         button.tintColor = .label
-        let buttonImage = UIImage(named: "chevron_back")
+        let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
         button.setImage(buttonImage, for: .highlighted)
         button.imageView?.tintColor = .label
@@ -60,8 +60,8 @@ class OffsetCorrectionAppleViewController: UIViewController {
                           leading: backBarButtonItemView.leadingAnchor,
                           bottom: backBarButtonItemView.bottomAnchor,
                           trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+                          size: .init(width: 40, height: 40))
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
 
         output.viewDidLoad()
