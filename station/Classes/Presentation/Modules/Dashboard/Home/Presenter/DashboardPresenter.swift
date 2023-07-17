@@ -341,7 +341,7 @@ extension DashboardPresenter: MenuModuleOutput {
     
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
-        router.openRuuviProductsPage()
+        router.openRuuviProductsPageFromMenu()
     }
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
@@ -982,6 +982,8 @@ extension DashboardPresenter {
                 sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
             case .insert(let sensor):
+                sSelf.notifyRestartAdvertisementDaemon()
+                sSelf.notifyRestartHeartBeatDaemon()
                 sSelf.checkFirmwareVersion(for: sensor)
                 sSelf.ruuviTags.append(sensor.any)
 
@@ -1799,6 +1801,24 @@ extension DashboardPresenter {
 
     private func notifyViewModelUpdate(for viewModel: CardsViewModel) {
         view?.applyUpdate(to: viewModel)
+    }
+
+    private func notifyRestartAdvertisementDaemon() {
+            // Notify daemon to restart
+        NotificationCenter
+            .default
+            .post(name: .RuuviTagAdvertisementDaemonShouldRestart,
+                  object: nil,
+                  userInfo: nil)
+    }
+
+    private func notifyRestartHeartBeatDaemon() {
+            // Notify daemon to restart
+        NotificationCenter
+            .default
+            .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
+                  object: nil,
+                  userInfo: nil)
     }
 }
 // swiftlint:enable file_length trailing_whitespace

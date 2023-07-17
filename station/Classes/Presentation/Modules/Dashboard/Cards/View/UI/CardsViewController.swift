@@ -6,13 +6,6 @@ import RuuviLocal
 import RuuviService
 import GestureInstructions
 
-enum CardsSection: CaseIterable {
-    case main
-}
-
-typealias CardsSnapshot = NSDiffableDataSourceSnapshot<CardsSection, CardsViewModel>
-typealias CardsDataSource = UICollectionViewDiffableDataSource<CardsSection, CardsViewModel>
-
 class CardsViewController: UIViewController {
 
     // Configuration
@@ -31,20 +24,7 @@ class CardsViewController: UIViewController {
     var scrollIndex: Int = 0
 
     private var currentPage: Int = 0
-    private lazy var datasource = makeDatasource()
     private static let reuseIdentifier: String = "reuseIdentifier"
-    // MARK: - Datasource
-    private func makeDatasource() -> CardsDataSource {
-        let datasource = CardsDataSource(
-            collectionView: collectionView,
-            cellProvider: { [unowned self] (collectionView, indexPath, viewModel) in
-                return self.cell(collectionView: collectionView,
-                           indexPath: indexPath,
-                           viewModel: viewModel)
-            }
-        )
-        return datasource
-    }
 
     func cell(collectionView: UICollectionView,
               indexPath: IndexPath,
@@ -58,13 +38,7 @@ class CardsViewController: UIViewController {
     }
 
     func applySnapshot() {
-        var snapshot = CardsSnapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(viewModels, toSection: .main)
         currentPage = scrollIndex
-        datasource.apply(snapshot,
-                         animatingDifferences: false)
-        // Forces collection view to reload.
         collectionView.reloadWithoutAnimation()
         if currentPage < viewModels.count {
             collectionView.scrollTo(index: currentPage)
@@ -90,7 +64,7 @@ class CardsViewController: UIViewController {
     private lazy var backButton: UIButton = {
         let button  = UIButton()
         button.tintColor = .white
-        let buttonImage = UIImage(named: "chevron_back")
+        let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
         button.setImage(buttonImage, for: .highlighted)
         button.imageView?.tintColor = .white
@@ -99,11 +73,10 @@ class CardsViewController: UIViewController {
         return button
     }()
 
-    private lazy var alertButton: UIImageView = {
-        let iv = UIImageView(image: nil,
-                             contentMode: .scaleAspectFit)
-        iv.tintColor = .white
-        return iv
+    private lazy var alertButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(icon: nil)
+        button.backgroundColor = .clear
+        return button
     }()
 
     /// This button is used to be able to tap the alert button when
@@ -115,22 +88,31 @@ class CardsViewController: UIViewController {
         return button
     }()
 
-    private lazy var chartButton: UIImageView = {
-        let iv = UIImageView(image: RuuviAssets.chartsIcon,
-                             contentMode: .scaleAspectFit)
-        iv.tintColor = .white
-        iv.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                       action: #selector(chartButtonDidTap)))
-        return iv
+    private lazy var chartButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(icon: RuuviAssets.chartsIcon)
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(chartButtonDidTap)
+            )
+        )
+        return button
     }()
 
-    private lazy var settingsButton: UIImageView = {
-        let iv = UIImageView(image: RuuviAssets.settingsIcon,
-                             contentMode: .scaleAspectFit)
-        iv.tintColor = .white
-        iv.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                       action: #selector(settingsButtonDidTap)))
-        return iv
+    private lazy var settingsButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: RuuviAssets.settingsIcon,
+            iconSize: .init(width: 26, height: 25)
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(settingsButtonDidTap)
+            )
+        )
+        return button
     }()
 
     // BODY
@@ -143,6 +125,7 @@ class CardsViewController: UIViewController {
         cv.isPagingEnabled = true
         cv.alwaysBounceVertical = false
         cv.delegate = self
+        cv.dataSource = self
         cv.register(CardsLargeImageCell.self,
                     forCellWithReuseIdentifier: Self.reuseIdentifier)
         return cv
@@ -201,10 +184,17 @@ extension CardsViewController {
         // Scroll to current Item after the orientation change.
         coordinator.animate(alongsideTransition: { [weak self] _ in
             guard let sSelf = self else { return }
-            sSelf.collectionView.collectionViewLayout.invalidateLayout()
-            if sSelf.currentPage < sSelf.viewModels.count {
-                sSelf.collectionView.scrollTo(index: sSelf.currentPage)
-            }
+            let flowLayout = sSelf.createLayout()
+            sSelf.collectionView.setCollectionViewLayout(
+                flowLayout,
+                animated: false,
+                completion: { _ in
+                    guard sSelf.viewModels.count > 0 else { return }
+                    if sSelf.currentPage < sSelf.viewModels.count {
+                        sSelf.collectionView.scrollTo(index: sSelf.currentPage)
+                    }
+                }
+            )
         })
     }
 }
@@ -235,15 +225,15 @@ extension CardsViewController {
                           leading: leftBarButtonView.leadingAnchor,
                           bottom: leftBarButtonView.bottomAnchor,
                           trailing: nil,
-                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+                          size: .init(width: 40, height: 40))
 
         leftBarButtonView.addSubview(ruuviLogoView)
         ruuviLogoView.anchor(top: nil,
                              leading: backButton.trailingAnchor,
                              bottom: nil,
                              trailing: leftBarButtonView.trailingAnchor,
-                             padding: .init(top: 0, left: 16, bottom: 0, right: 0),
+                             padding: .init(top: 0, left: 12, bottom: 0, right: 0),
                              size: .init(width: 110, height: 22))
         ruuviLogoView.centerYInSuperview()
 
@@ -253,8 +243,7 @@ extension CardsViewController {
         alertButton.anchor(top: rightBarButtonView.topAnchor,
                            leading: rightBarButtonView.leadingAnchor,
                            bottom: rightBarButtonView.bottomAnchor,
-                           trailing: nil,
-                           size: .init(width: 20, height: 20))
+                           trailing: nil)
         alertButton.centerYInSuperview()
 
         rightBarButtonView.addSubview(alertButtonHidden)
@@ -264,9 +253,7 @@ extension CardsViewController {
         chartButton.anchor(top: nil,
                            leading: alertButton.trailingAnchor,
                            bottom: nil,
-                           trailing: nil,
-                           padding: .init(top: 0, left: 22, bottom: 0, right: 0),
-                           size: .init(width: 20, height: 20))
+                           trailing: nil)
         chartButton.centerYInSuperview()
 
         rightBarButtonView.addSubview(settingsButton)
@@ -274,8 +261,7 @@ extension CardsViewController {
                               leading: chartButton.trailingAnchor,
                               bottom: nil,
                               trailing: rightBarButtonView.trailingAnchor,
-                              padding: .init(top: 0, left: 16, bottom: 0, right: 0),
-                              size: .init(width: 26, height: 25))
+                              padding: .init(top: 0, left: 0, bottom: 0, right: -14))
         settingsButton.centerYInSuperview()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
@@ -288,8 +274,6 @@ extension CardsViewController {
                               leading: view.safeLeftAnchor,
                               bottom: view.safeBottomAnchor,
                               trailing: view.safeRightAnchor)
-
-        collectionView.dataSource = datasource
     }
 
     fileprivate func createLayout() -> UICollectionViewLayout {
@@ -341,14 +325,33 @@ extension CardsViewController: UICollectionViewDelegate {
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
         let yPoint = scrollView.frame.size.height / 2
         let center = CGPoint(x: xPoint, y: yPoint)
-        if let currentIndexPath = collectionView.indexPathForItem(at: center),
-           let currentVisibleItem = datasource.itemIdentifier(for: currentIndexPath) {
+        if let currentIndexPath = collectionView.indexPathForItem(at: center) {
             currentPage = currentIndexPath.row
-            self.currentVisibleItem = currentVisibleItem
+            let currentItem = viewModels[currentPage]
+            self.currentVisibleItem = currentItem
             restartAnimations()
-            output.viewDidScroll(to: currentVisibleItem)
-            output.viewDidTriggerFirmwareUpdateDialog(for: currentVisibleItem)
+            output.viewDidScroll(to: currentItem)
+            output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)
         }
+    }
+}
+
+extension CardsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return viewModels.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = cell(
+            collectionView: collectionView,
+            indexPath: indexPath,
+            viewModel: viewModels[indexPath.item]
+        ) else {
+            fatalError()
+        }
+        return cell
     }
 }
 
@@ -427,17 +430,18 @@ extension CardsViewController: CardsViewInput {
     }
 
     func applyUpdate(to viewModel: CardsViewModel) {
-        var snapshot = datasource.snapshot()
-        if let index = snapshot.indexOfItem(viewModel),
-           var item = datasource.itemIdentifier(for: IndexPath(item: index,
-                                                               section: 0)) {
-            if viewModel == currentVisibleItem {
-                item = viewModel
+        if let index = viewModels.firstIndex(where: { vm in
+            vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
+            vm.mac.value != nil && vm.mac.value == viewModel.mac.value
+        }) {
+            let indexPath = IndexPath(item: index, section: 0)
+            if let cell = collectionView
+                .cellForItem(at: indexPath) as? CardsLargeImageCell {
+                cell.configure(
+                    with: viewModel, measurementService: measurementService
+                )
                 restartAnimations()
                 updateTopActionButtonVisibility()
-                snapshot.reloadItems([item])
-                datasource.apply(snapshot,
-                                 animatingDifferences: false)
             }
         }
     }
@@ -484,8 +488,7 @@ extension CardsViewController: CardsViewInput {
 
     func scroll(to index: Int) {
         guard viewModels.count > 0,
-              index < viewModels.count,
-                index < datasource.snapshot().numberOfItems else {
+              index < viewModels.count else {
             return
         }
         let viewModel = viewModels[index]

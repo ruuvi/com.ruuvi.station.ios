@@ -10,4 +10,5 @@ protocol SettingsRouterInput {
     func openUnitSettings(with viewModel: UnitSettingsViewModel, output: UnitSettingsModuleOutput?)
     func openRuuviCloud()
     func openAppearance()
+    func openAlertNotificationsSettings()
 }

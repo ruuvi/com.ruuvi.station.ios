@@ -37,7 +37,11 @@ extension OwnerViewController: OwnerViewInput {
             message: "UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL".localized(),
             preferredStyle: .alert
         )
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: {
+            [weak self] _ in
+            // TODO: - Update with masked email once backend is adjusted.
+            self?.output.updateOwnerInfo(with: "*****")
+        }))
         present(alertVC, animated: true)
     }
     func localize() {
@@ -80,8 +84,8 @@ extension OwnerViewController {
                           leading: backBarButtonItemView.leadingAnchor,
                           bottom: backBarButtonItemView.bottomAnchor,
                           trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+                          size: .init(width: 40, height: 40))
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 

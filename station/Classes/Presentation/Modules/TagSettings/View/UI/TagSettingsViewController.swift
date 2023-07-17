@@ -567,9 +567,14 @@ extension TagSettingsViewController {
             }
         }
 
+        let isClaimed = viewModel.isClaimedTag.value
+        let isOwner = viewModel.isOwner.value
         if let tagOwnerCell = tagOwnerCell {
             tagOwnerCell.bind(viewModel.owner) { cell, owner in
                 cell.configure(value: owner)
+                if let isClaimed = isClaimed, let isOwner = isOwner {
+                    cell.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron)
+                }
             }
         }
 
@@ -626,13 +631,14 @@ extension TagSettingsViewController {
     }
 
     private func tagOwnerSettingItem() -> TagSettingsItem {
+        let isClaimed = GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
+        let isOwner = GlobalHelpers.getBool(from: viewModel?.isOwner.value)
         let settingItem = TagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
                 self?.tagOwnerCell?.configure(title: "TagSettings.NetworkInfo.Owner".localized(),
                                value: self?.viewModel?.owner.value)
-                let isClaimed = GlobalHelpers.getBool(from: self?.viewModel?.isClaimedTag.value)
-                self?.tagOwnerCell?.setAccessory(type: isClaimed ? .none : .chevron )
+                self?.tagOwnerCell?.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron )
                 self?.tagOwnerCell?.hideSeparator(hide: !GlobalHelpers.getBool(from: self?.showShare()))
                 return self?.tagOwnerCell ?? UITableViewCell()
             },
@@ -3061,18 +3067,18 @@ extension TagSettingsViewController {
                           leading: backBarButtonItemView.leadingAnchor,
                           bottom: backBarButtonItemView.bottomAnchor,
                           trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -8, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+                          size: .init(width: 40, height: 40))
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
 
         let rightBarButtonItemView = UIView()
         rightBarButtonItemView.addSubview(exportButton)
         exportButton.anchor(top: rightBarButtonItemView.topAnchor,
-                          leading: rightBarButtonItemView.leadingAnchor,
-                          bottom: rightBarButtonItemView.bottomAnchor,
-                          trailing: rightBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: 0, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+                            leading: rightBarButtonItemView.leadingAnchor,
+                            bottom: rightBarButtonItemView.bottomAnchor,
+                            trailing: rightBarButtonItemView.trailingAnchor,
+                            padding: .init(top: 0, left: 0, bottom: 0, right: -8),
+                            size: .init(width: 40, height: 40))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonItemView)
 
         let container = UIView(color: .clear)

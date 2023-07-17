@@ -65,10 +65,10 @@ extension RuuviContextMenuButton {
             ])
         }
         buttonIconView.heightAnchor.constraint(
-            lessThanOrEqualToConstant: 12
+            lessThanOrEqualToConstant: 16
         ).isActive = true
         buttonIconView.widthAnchor.constraint(
-            lessThanOrEqualToConstant: 12
+            lessThanOrEqualToConstant: 16
         ).isActive = true
         stackView.axis = .horizontal
         stackView.spacing = 6

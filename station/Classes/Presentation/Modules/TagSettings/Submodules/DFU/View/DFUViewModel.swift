@@ -31,6 +31,7 @@ final class DFUViewModel: ObservableObject {
     private let activityPresenter: ActivityPresenter
     private var ruuviTagObserveToken: ObservationToken?
     private var isMigrating: Bool = false
+    private let timeoutDuration: Int = 15
 
     var isLoading: Bool = false {
         didSet {
