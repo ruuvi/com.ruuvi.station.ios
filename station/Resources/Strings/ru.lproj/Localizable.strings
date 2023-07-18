@@ -707,7 +707,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "unique_id" = "Unique ID:";
 "firmware_version" = "Firmware Version:";
 "close" = "Close";
-"add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
+"add_sensor_nfc_df3_error" = "This sensor cannot be added with NFC due to old firmware. Please add the sensor with Bluetooth and update firmware.";
 "unclaim_sensor" = "Unclaim sensor";
 "unclaim" = "Unclaim";
 "unclaim_sensor_description" = "Ownership of this sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor's settings and related data from your Ruuvi account.";
