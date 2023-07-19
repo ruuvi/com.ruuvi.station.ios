@@ -24,6 +24,7 @@ class DiscoverTableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var closeBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var actionButton: UIButton!
+    private var discoverTableHeaderView = DiscoverTableHeaderView()
 
     private var alertVC: UIAlertController?
 
@@ -46,9 +47,6 @@ class DiscoverTableViewController: UIViewController {
     }
 
     private let hideAlreadyAddedWebProviders = false
-    private var isNFCAvailable: Bool {
-        return NFCNDEFReaderSession.readingAvailable
-    }
     private var session: NFCNDEFReaderSession?
 }
 
@@ -151,11 +149,14 @@ extension DiscoverTableViewController {
     }
 
     @IBAction func handleActionButtonTap(_ sender: Any) {
-        if ruuviTags.isEmpty || !isNFCAvailable {
-            output.viewDidTriggerBuySensors()
-        } else {
-          output.viewDidTapUseNFC()
-        }
+        output.viewDidTriggerBuySensors()
+    }
+}
+
+// MARK: - DiscoverTableHeaderViewDelegate
+extension DiscoverTableViewController: DiscoverTableHeaderViewDelegate {
+    func didTapAddWithNFCButton(sender: DiscoverTableHeaderView) {
+        output.viewDidTapUseNFC()
     }
 }
 
@@ -179,6 +180,23 @@ extension DiscoverTableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let headerView = tableView.tableHeaderView {
+
+            let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            var headerFrame = headerView.frame
+
+            if height != headerFrame.size.height {
+                headerFrame.size.height = height
+                headerView.frame = headerFrame
+                tableView.tableHeaderView = headerView
+            }
+            headerView.translatesAutoresizingMaskIntoConstraints = true
+        }
     }
 }
 
@@ -233,34 +251,6 @@ extension DiscoverTableViewController: UITableViewDelegate {
             }
         }
     }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionType = DiscoverTableSection.section(for: ruuviTags.count)
-        switch sectionType {
-        case .device:
-            return ruuviTags.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
-        case .noDevices:
-            return ruuviTags.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
-        default:
-            return nil
-        }
-    }
-
-    func tableView(_ tableView: UITableView,
-                   willDisplayHeaderView view: UIView,
-                   forSection: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = UIColor(named: "ruuvi_text_color")
-            headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-            if let font = UIFont(name: "Muli-Regular", size: 13) {
-                headerView.textLabel?.font = font
-            }
-        }
-    }
 }
 
 // MARK: - Cell configuration
@@ -294,6 +284,9 @@ extension DiscoverTableViewController {
             navigationController?.navigationBar.titleTextAttributes =
                 [.font: muliBold]
         }
+        actionButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(
+            for: Self.self
+        ).capitalized, for: .normal)
         configureTableView()
     }
 
@@ -301,6 +294,9 @@ extension DiscoverTableViewController {
         tableView.rowHeight = 44
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableHeaderView = discoverTableHeaderView
+        discoverTableHeaderView.delegate = self
+        tableView.tableFooterView = UIView()
     }
 }
 
@@ -309,7 +305,6 @@ extension DiscoverTableViewController {
     private func updateUI() {
         updateTableView()
         updateUIIsCloseEnabled()
-        actionButton.alpha = 0
     }
 
     private func updateUIIsCloseEnabled() {
@@ -325,18 +320,6 @@ extension DiscoverTableViewController {
     private func updateTableView() {
         if isViewLoaded {
             tableView.reloadData()
-
-            actionButton.alpha = 1
-            actionButton.setTitle(
-              ruuviTags.isEmpty || !isNFCAvailable ?
-              "DiscoverTable.GetMoreSensors.button.title".localized(
-                for: Self.self
-              ).capitalized
-              : "add_with_nfc".localized(
-                for: Self.self
-              ),
-              for: .normal
-            )
         }
     }
 

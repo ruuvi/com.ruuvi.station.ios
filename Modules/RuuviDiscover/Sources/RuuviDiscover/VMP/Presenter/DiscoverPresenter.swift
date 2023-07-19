@@ -75,6 +75,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
             }
         }
     }
+    private var nfcSensor: NFCSensor?
 
     private var reloadTimer: Timer?
     private var scanToken: ObservationToken?
@@ -125,7 +126,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any != nil && $0.luid?.any == device.luid?.any }) {
-            addRuuviTagOwnership(for: ruuviTag, displayName: displayName)
+            addRuuviTagOwnership(
+                for: ruuviTag,
+                displayName: displayName,
+                firmwareVersion: nil
+            )
         }
     }
 
@@ -151,18 +156,19 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidReceiveNFCMessages(messages: [NFCNDEFMessage]) {
         // Stop NFC session
         view?.stopNFCSession()
-        var nfcSensor = NFCSensor(id: "", macId: "", firmwareVersion: "")
+
+        nfcSensor = NFCSensor(id: "", macId: "", firmwareVersion: "")
         // Parse the message
         for message in messages {
             for record in message.records {
                 if let (key, value) = parse(record: record) {
                     switch key {
                     case "idID":
-                        nfcSensor.id = value
+                        self.nfcSensor?.id = trimNulls(from: value)
                     case "adMAC":
-                        nfcSensor.macId = value
+                        self.nfcSensor?.macId = trimNulls(from: value)
                     case "swSW":
-                        nfcSensor.firmwareVersion = value
+                        self.nfcSensor?.firmwareVersion = trimNulls(from: value)
                     default:
                         break
                     }
@@ -170,11 +176,14 @@ extension DiscoverPresenter: DiscoverViewOutput {
             }
         }
 
-        if let addedTag = persistedSensors.first(where: { [weak self] ruuviTag in
-            ruuviTag.macId?.mac == nfcSensor.macId
+        // Stop NFC session
+        view?.stopNFCSession()
+
+        // If tag is already added show the name from RuuviStation alongside
+        // other info.
+        if let addedTag = persistedSensors.first(where: { ruuviTag in
+            ruuviTag.macId?.mac == nfcSensor?.macId
         }) {
-            // If tag is already added show the name from RuuviStation alongside
-            // other info.
             guard let message = self.message(
                 for: nfcSensor,
                 displayName: addedTag.name
@@ -183,12 +192,15 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 for: nfcSensor,
                 message: message,
                 showAddSensor: false,
-                isDF3: true
+                isDF3: false
             )
-        } else if let addableTag = ruuviTags.first(where: { ruuviTag in
-            ruuviTag.mac == nfcSensor.macId
+            return
+        }
+
+        // If tag is not added get the name from the mac and show other info.
+        if let addableTag = ruuviTags.first(where: { ruuviTag in
+            ruuviTag.mac == nfcSensor?.macId
         }) {
-            // If tag is not added get the name from the mac and show other info.
             guard let message = self.message(
                 for: nfcSensor,
                 displayName: self.displayName(for: nfcSensor)
@@ -199,21 +211,24 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 showAddSensor: true,
                 isDF3: false
             )
-        } else {
-            // Got mac id from scan, but no match in the persisted tag or available tag.
-            // which means its a DF3 tag where mac id is not present.
-            // Show info in that case to add the tag using BT and update FW.
-            guard let message = self.message(
-                for: nfcSensor,
-                displayName: self.displayName(for: nfcSensor)
-            ) else { return }
-            self.view?.showSensorDetailsDialog(
-                for: nfcSensor,
-                message: message,
-                showAddSensor: false,
-                isDF3: true
-            )
+            return
         }
+
+        // Got mac id from scan, but no match in the persisted tag or available tag.
+        // which means either its a DF3 tag where mac id is not present or NFC scan
+        // is done when sensor is not yet seen by BT.
+        // Show info for DF3 case to add the tag using BT and update FW.
+        // TODO: Discuss about the other case to handle it.
+        guard let message = self.message(
+            for: nfcSensor,
+            displayName: self.displayName(for: nfcSensor)
+        ) else { return }
+        self.view?.showSensorDetailsDialog(
+            for: nfcSensor,
+            message: message,
+            showAddSensor: false,
+            isDF3: nfcSensor?.firmwareVersion == "2.5.9"
+        )
     }
 
     func viewDidAddDeviceWithNFC(with tag: NFCSensor?) {
@@ -221,7 +236,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
             return
         }
         if let ruuviTag = ruuviTags.first(where: { $0.mac != nil && $0.mac == tag?.macId }) {
-            addRuuviTagOwnership(for: ruuviTag, displayName: displayName)
+            addRuuviTagOwnership(
+                for: ruuviTag,
+                displayName: displayName,
+                firmwareVersion: tag?.firmwareVersion
+            )
         }
     }
 
@@ -404,9 +423,14 @@ extension DiscoverPresenter {
         return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n".localized(for: Self.self)
     }
 
-    private func addRuuviTagOwnership(for ruuviTag: RuuviTag, displayName: String) {
+    private func addRuuviTagOwnership(
+        for ruuviTag: RuuviTag,
+        displayName: String,
+        firmwareVersion: String?
+    ) {
         ruuviOwnershipService.add(
-            sensor: ruuviTag.with(name: displayName),
+            sensor: ruuviTag.with(name: displayName)
+                .with(firmwareVersion: firmwareVersion ?? ""),
             record: ruuviTag.with(source: .advertisement))
             .on(success: { [weak self] anyRuuviTagSensor in
                 guard let sSelf = self else { return }
@@ -414,6 +438,10 @@ extension DiscoverPresenter {
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
+    }
+
+    private func trimNulls(from string: String) -> String {
+        return string.replacingOccurrences(of: "\0", with: "")
     }
 }
 
