@@ -143,7 +143,9 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             // either by pressing B or by upgrading firmware
             if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
                 // tag is already saved to SQLite
-                ruuviPool.update(pair.ruuviTag.with(macId: mac))
+                ruuviPool.update(pair.ruuviTag
+                    .with(macId: mac)
+                    .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
                         self?.post(error: .ruuviPool(error))
                     })
@@ -200,13 +202,23 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
             if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-                ruuviPool.update(pair.ruuviTag.with(macId: mac))
+                ruuviPool.update(pair.ruuviTag
+                    .with(macId: mac)
+                    .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
                         self?.post(error: .ruuviPool(error))
                     })
             } else {
                 // Should never be there
                 return
+            }
+        } else {
+            if pair.ruuviTag.version != pair.device.version {
+                ruuviPool.update(pair.ruuviTag
+                    .with(version: pair.device.version))
+                    .on(failure: { [weak self] error in
+                        self?.post(error: .ruuviPool(error))
+                    })
             }
         }
     }

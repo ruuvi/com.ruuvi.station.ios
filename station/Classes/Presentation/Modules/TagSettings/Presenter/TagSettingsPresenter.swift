@@ -162,12 +162,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
-        showFirmwareUpdateAlertForDF3Sensors()
     }
 
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
+        showFirmwareUpdateAlertForDF3Sensors()
     }
 
     private func startObservingAppState() {
@@ -1549,10 +1549,11 @@ extension TagSettingsPresenter {
     }
 
     private func showFirmwareUpdateAlertForDF3Sensors() {
-        guard let version = viewModel.version.value, version < 5 else {
-            return
-        }
-        view?.showFirmwareUpdateDialog()
+        ruuviStorage.readOne(ruuviTag.id).on(success: { [weak self] ruuviTag in
+            if ruuviTag.version < 5 {
+                self?.view?.showFirmwareUpdateDialog()
+            }
+        })
     }
 }
 
