@@ -1,4 +1,5 @@
 import UIKit
+import CoreBluetooth
 import CoreNFC
 
 protocol DiscoverTableHeaderViewDelegate: NSObjectProtocol {
@@ -14,6 +15,27 @@ class DiscoverTableHeaderView: UIView {
         return NFCNDEFReaderSession.readingAvailable
     }
 
+    private var isBluetoothPermissionGranted: Bool {
+        if #available(iOS 13.1, *) {
+            return CBCentralManager.authorization == .allowedAlways
+        } else if #available(iOS 13.0, *) {
+            return CBCentralManager().authorization == .allowedAlways
+        }
+        // Before iOS 13, Bluetooth permissions are not required
+        return true
+    }
+
+    private let addSensorDescriptionKey: String = "add_sensor_description"
+    private let addSensorViaNFCKey: String = "add_sensor_via_nfc"
+
+    // UI
+    private lazy var descriptionLabel = createDescriptionLabel()
+    private lazy var nfcButton = createAddWithNFCButton()
+
+    private var descriptionLabelBottomConstraint: NSLayoutConstraint!
+    private var nfcButtonTopConstraint: NSLayoutConstraint!
+    private var nfcButtonBottomConstraint: NSLayoutConstraint!
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -28,17 +50,15 @@ class DiscoverTableHeaderView: UIView {
         let headerView = createHeaderView()
         addSubview(headerView)
 
-        let descriptionLabel = createDescriptionLabel()
         headerView.addSubview(descriptionLabel)
 
-        let button = createAddWithNFCButton()
-        if isNFCAvailable {
-            headerView.addSubview(button)
+        if isBluetoothPermissionGranted && isNFCAvailable {
+            headerView.addSubview(nfcButton)
         }
 
         setupLayout(headerView: headerView,
                     descriptionLabel: descriptionLabel,
-                    button: button)
+                    button: nfcButton)
     }
 
     private func createHeaderView() -> UIView {
@@ -53,10 +73,11 @@ class DiscoverTableHeaderView: UIView {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.numberOfLines = 0
 
-        let addSensorString: String = "add_sensor_description".localized(for: Self.self)
-        let addSensorViaNFCString = "add_sensor_via_nfc".localized(for: Self.self)
+        let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
+        let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
         let descriptionString =
-            isNFCAvailable ? (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
+            (isBluetoothPermissionGranted && isNFCAvailable) ?
+            (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
 
         descriptionLabel.text = descriptionString
         descriptionLabel.textColor = UIColor(named: "ruuvi_text_color")
@@ -89,28 +110,58 @@ class DiscoverTableHeaderView: UIView {
         let headerPadding = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         NSLayoutConstraint.activate(headerView.constraints(to: self, padding: headerPadding))
 
-        if isNFCAvailable {
+        NSLayoutConstraint.activate([
+            descriptionLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+        ])
+
+        // variable constraints
+        nfcButtonTopConstraint = button
+            .topAnchor
+            .constraint(
+                equalTo: descriptionLabel.bottomAnchor, constant: 12
+            )
+        nfcButtonBottomConstraint = button
+            .bottomAnchor
+            .constraint(
+                equalTo: headerView.bottomAnchor, constant: -12
+            )
+        descriptionLabelBottomConstraint = descriptionLabel
+            .bottomAnchor
+            .constraint(equalTo: headerView.bottomAnchor)
+
+        if isBluetoothPermissionGranted && isNFCAvailable {
             NSLayoutConstraint.activate([
-                descriptionLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
-                descriptionLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-                descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
-                button.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 12),
+                nfcButtonTopConstraint,
                 button.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
                 button.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
-                button.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -12)
+                nfcButtonBottomConstraint
             ])
         } else {
             NSLayoutConstraint.activate([
-                descriptionLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
-                descriptionLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-                descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
-                descriptionLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+                descriptionLabelBottomConstraint
             ])
         }
     }
 
     @objc private func handleButtonTap() {
         delegate?.didTapAddWithNFCButton(sender: self)
+    }
+}
+
+extension DiscoverTableHeaderView {
+    func handleNFCButtonViewVisibility(show: Bool) {
+        nfcButtonTopConstraint.isActive = show
+        nfcButtonBottomConstraint.isActive = show
+        descriptionLabelBottomConstraint.isActive = !show
+        nfcButton.isHidden = !show
+        let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
+        let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
+        let descriptionString =
+            (show && isBluetoothPermissionGranted && isNFCAvailable) ?
+            (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
+        descriptionLabel.text =  descriptionString
     }
 }
 

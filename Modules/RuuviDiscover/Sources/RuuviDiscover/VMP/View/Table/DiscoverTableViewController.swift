@@ -319,6 +319,9 @@ extension DiscoverTableViewController {
 
     private func updateTableView() {
         if isViewLoaded {
+            discoverTableHeaderView.handleNFCButtonViewVisibility(
+                show: ruuviTags.count > 0
+            )
             tableView.reloadData()
         }
     }
