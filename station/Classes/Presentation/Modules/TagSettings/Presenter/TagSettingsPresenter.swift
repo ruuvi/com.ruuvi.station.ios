@@ -168,6 +168,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
         showFirmwareUpdateAlertForDF3Sensors()
+        checkAndUpdateFirmwareVersion()
     }
 
     private func startObservingAppState() {
@@ -1554,6 +1555,30 @@ extension TagSettingsPresenter {
                 self?.view?.showFirmwareUpdateDialog()
             }
         })
+    }
+
+    func checkAndUpdateFirmwareVersion() {
+        guard let luid = ruuviTag.luid,
+              ruuviTag.firmwareVersion == nil ||
+                !ruuviTag.firmwareVersion.hasText() &&
+                settings.firmwareVersion(for: luid) == nil else {
+            return
+        }
+
+        background.services.gatt.firmwareRevision(
+            for: self,
+            uuid: luid.value,
+            options: [.connectionTimeout(15)]
+        ) { [weak self] _, result in
+            guard let sSelf = self else { return }
+            switch result {
+            case .success(let version):
+                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
+                self?.ruuviPool.update(tagWithVersion)
+            default:
+                break
+            }
+        }
     }
 }
 

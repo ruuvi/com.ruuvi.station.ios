@@ -116,11 +116,10 @@ final class DFUViewModel: ObservableObject {
             guard let currentRelease = currentRelease else {
                 return
             }
-            let firmwareVersion = currentRelease.version.replace("Ruuvi FW ", with: "")
             isLoading = true
             ruuviPool.update(ruuviTag
                 .with(isConnectable: true)
-                .with(firmwareVersion: firmwareVersion))
+                .with(firmwareVersion: currentRelease.version))
             .on(success: { [weak self] _ in
                 self?.isLoading = false
             }, failure: { [weak self] _ in
@@ -131,6 +130,17 @@ final class DFUViewModel: ObservableObject {
             propertiesDaemon.stop()
             startObserving()
         }
+    }
+
+    func storeCurrentFirmwareVersion(from currentRelease: CurrentRelease?) {
+        guard ruuviTag.firmwareVersion == nil ||
+                !ruuviTag.firmwareVersion.hasText(),
+              let currentRelease = currentRelease else {
+            return
+        }
+        ruuviPool.update(ruuviTag
+            .with(isConnectable: true)
+            .with(firmwareVersion: currentRelease.version))
     }
 
     private func startObserving() {
