@@ -714,3 +714,4 @@ RuuviTag-sensorn är redo att användas!";
 "unclaim_sensor" = "Ta bort äganderätten";
 "unclaim" = "Ta bort anspråk";
 "unclaim_sensor_description" = "Äganderätten till denna sensor har gjorts anspråk på ditt Ruuvi-konto. Tryck på Unclaim för att ta bort sensorns inställningar och relaterade data från ditt Ruuvi-konto.";
+"rename" = "Rename";
