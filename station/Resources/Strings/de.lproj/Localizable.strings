@@ -719,4 +719,6 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "unclaim_sensor" = "Anspruch auf Eigentum zurückziehen";
 "unclaim" = "Anspruch aufheben";
 "unclaim_sensor_description" = "Das Eigentum an diesem Sensor wurde Ihrem Ruuvi-Konto zugeordnet. Klicken Sie auf „Anspruch aufheben“, um die Einstellungen dieses Sensors und die zugehörigen Daten aus Ihrem Ruuvi-Konto zu entfernen.";
+"claim_sensor_ownership" = "Beanspruchen Sie den Besitz des Sensors";
+"do_you_own_sensor" = "Besitzen Sie diesen Sensor?";
 "rename" = "Rename";
