@@ -262,6 +262,10 @@ extension DashboardPresenter: DashboardViewOutput {
         
     }
 
+    func viewDidTriggerRename(for viewModel: CardsViewModel) {
+        view?.showSensorNameRenameDialog(for: viewModel)
+    }
+
     func viewDidTriggerShare(for viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             router.openShare(for: ruuviTag)
@@ -324,6 +328,20 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewDidTriggerPullToRefresh() {
         cloudSyncDaemon.refreshImmediately()
+    }
+
+    func viewDidRenameTag(to name: String, viewModel: CardsViewModel) {
+        guard let ruuviTag = ruuviTags.first(where: {
+            $0.id == viewModel.id.value
+        }) else {
+            return
+        }
+
+        let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
+        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+            .on(failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 }
 

@@ -129,6 +129,8 @@ class DashboardViewController: UIViewController {
         rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         return rc
     }()
+    private var tagNameTextField = UITextField()
+    private let tagNameCharaterLimit: Int = 32
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
 
@@ -304,6 +306,13 @@ extension DashboardViewController {
             }
         }
 
+        let renameAction = UIAction(title: "rename".localized()) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                self?.output.viewDidTriggerRename(for: viewModel)
+            }
+        }
+
         let shareSensorAction = UIAction(title: "TagSettings.ShareButton".localized()) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
@@ -315,7 +324,8 @@ extension DashboardViewController {
           fullImageViewAction,
           historyViewAction,
           settingsAction,
-          changeBackgroundAction
+          changeBackgroundAction,
+          renameAction
         ]
 
         let viewModel = viewModels[index]
@@ -673,6 +683,27 @@ extension DashboardViewController: DashboardViewInput {
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alert, animated: true)
     }
+
+    func showSensorNameRenameDialog(for viewModel: CardsViewModel) {
+        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
+                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+                                      preferredStyle: .alert)
+        alert.addTextField { [weak self] alertTextField in
+            guard let self = self else { return }
+            alertTextField.delegate = self
+            alertTextField.text = viewModel.name.value
+            self.tagNameTextField = alertTextField
+        }
+        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            guard let name = self.tagNameTextField.text, !name.isEmpty else { return }
+            self.output.viewDidRenameTag(to: name, viewModel: viewModel)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 extension DashboardViewController: RuuviServiceMeasurementDelegate {
@@ -704,5 +735,26 @@ extension DashboardViewController {
     fileprivate func updateUI() {
         showNoSensorsAddedMessage(show: viewModels.isEmpty)
         collectionView.reloadWithoutAnimation()
+    }
+}
+
+    // MARK: - UITextFieldDelegate
+extension DashboardViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn
+                   range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let text = textField.text else {
+            return true
+        }
+        let limit = text.utf16.count + string.utf16.count - range.length
+        if textField == tagNameTextField {
+            if limit <= tagNameCharaterLimit {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
     }
 }
