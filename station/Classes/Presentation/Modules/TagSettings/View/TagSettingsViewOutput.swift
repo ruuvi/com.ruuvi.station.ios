@@ -5,6 +5,7 @@ protocol TagSettingsViewOutput {
     func viewDidLoad()
     func viewWillAppear()
     func viewDidAskToDismiss()
+    func viewDidConfirmClaimTag()
     func viewDidTriggerChangeBackground()
     func viewDidAskToRemoveRuuviTag()
     func viewDidConfirmTagRemoval()

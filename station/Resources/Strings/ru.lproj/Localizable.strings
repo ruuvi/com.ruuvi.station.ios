@@ -714,4 +714,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "unclaim_sensor" = "Unclaim sensor";
 "unclaim" = "Unclaim";
 "unclaim_sensor_description" = "Ownership of this sensor has been claimed to your Ruuvi account. Press Unclaim to remove this sensor's settings and related data from your Ruuvi account.";
+"claim_sensor_ownership" = "Заявить о собственности на датчик";
+"do_you_own_sensor" = "Это ваш датчик?";
 "rename" = "Rename";

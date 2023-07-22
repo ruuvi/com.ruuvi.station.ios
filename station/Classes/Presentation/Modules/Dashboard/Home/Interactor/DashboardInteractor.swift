@@ -55,13 +55,21 @@ extension DashboardInteractor: DashboardInteractorInput {
 
         ruuviOwnershipService.checkOwner(macId: macId)
             .on(success: { [weak self] owner in
-                guard let self = self, !owner.isEmpty else {
-                    self?.settings.setOwnerCheckDate(for: macId, value: Date())
+                guard let sSelf = self else {
                     return
                 }
-                self.ruuviPool.update(ruuviTag
+                guard !owner.isEmpty else {
+                    sSelf.settings.setOwnerCheckDate(for: macId, value: Date())
+                    NotificationCenter.default.post(
+                        name: .RuuviTagOwnershipCheckDidEnd,
+                        object: nil,
+                        userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
+                    )
+                    return
+                }
+                sSelf.ruuviPool.update(ruuviTag
                     .with(owner: owner)
-                    .with(isOwner: owner == self.ruuviUser.email))
+                    .with(isOwner: owner == sSelf.ruuviUser.email))
             })
     }
 }

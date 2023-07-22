@@ -62,6 +62,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
+    private var ruuviTagSensorOwnerCheckToken: NSObjectProtocol?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var sensorSettingsToken: RuuviReactorToken?
@@ -99,6 +100,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         mutedTillTimer?.invalidate()
         ruuviTagToken?.invalidate()
         ruuviTagSensorRecordToken?.invalidate()
+        ruuviTagSensorOwnerCheckToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
         sensorSettingsToken?.invalidate()
@@ -162,6 +164,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
+        startObservingRuuviTagOwnerCheckResponse()
     }
 
     func viewWillAppear() {
@@ -207,6 +210,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToDismiss() {
         output?.tagSettingsDidDismiss(module: self)
+    }
+
+    func viewDidConfirmClaimTag() {
+        router.openOwner(ruuviTag: ruuviTag, mode: .claim)
     }
 
     func viewDidTriggerChangeBackground() {
@@ -417,6 +424,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnOwner() {
         if viewModel.isClaimedTag.value == false {
+            ruuviTagSensorOwnerCheckToken?.invalidate()
+            ruuviTagSensorOwnerCheckToken = nil
             router.openOwner(ruuviTag: ruuviTag, mode: .claim)
         } else {
             if let isOwner = viewModel.isOwner.value, isOwner {
@@ -779,6 +788,24 @@ extension TagSettingsPresenter {
             }
         })
     }
+
+    private func startObservingRuuviTagOwnerCheckResponse() {
+        ruuviTagSensorOwnerCheckToken = NotificationCenter
+            .default
+            .addObserver(forName: .RuuviTagOwnershipCheckDidEnd,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+                guard let sSelf = self,
+                      let userInfo = notification.userInfo,
+                      let hasOwner = userInfo[RuuviTagOwnershipCheckResultKey.hasOwner] as? Bool,
+                        !hasOwner else {
+                    return
+                }
+                sSelf.view.showTagClaimDialog()
+            })
+    }
+
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()

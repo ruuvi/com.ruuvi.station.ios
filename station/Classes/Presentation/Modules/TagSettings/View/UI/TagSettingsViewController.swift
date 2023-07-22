@@ -3328,6 +3328,19 @@ extension TagSettingsViewController: TagSettingsViewInput {
         present(controller, animated: true)
     }
 
+    func showTagClaimDialog() {
+        let title = "claim_sensor_ownership".localized()
+        let message = "do_you_own_sensor".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Yes".localized(),
+                                           style: .default,
+                                           handler: { [weak self] _ in
+            self?.output.viewDidConfirmClaimTag()
+        }))
+        controller.addAction(UIAlertAction(title: "No".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+
     func showUnclaimAndRemoveConfirmationDialog() {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
         let message = "TagSettings.confirmTagUnclaimAndRemoveDialog.message".localized()

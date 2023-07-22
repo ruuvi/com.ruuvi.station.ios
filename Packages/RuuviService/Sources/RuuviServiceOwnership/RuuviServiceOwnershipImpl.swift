@@ -8,6 +8,14 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 
+extension Notification.Name {
+    public static let RuuviTagOwnershipCheckDidEnd = Notification.Name("RuuviTagOwnershipCheckDidEnd")
+}
+
+public enum RuuviTagOwnershipCheckResultKey: String {
+    case hasOwner = "hasOwner"
+}
+
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
