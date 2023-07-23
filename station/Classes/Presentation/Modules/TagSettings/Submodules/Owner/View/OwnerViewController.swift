@@ -3,6 +3,8 @@ import UIKit
 final class OwnerViewController: UIViewController {
     var output: OwnerViewOutput!
 
+    var mode: OwnershipMode = .claim
+
     @IBOutlet weak var claimOwnershipDescriptionLabel: UILabel!
     @IBOutlet weak var claimOwnershipButton: UIButton!
 
@@ -19,7 +21,7 @@ final class OwnerViewController: UIViewController {
     }()
 
     @IBAction func claimOwnershipButtonTouchUpInside(_ sender: Any) {
-        output.viewDidTapOnClaim()
+        output.viewDidTapOnClaim(mode: mode)
     }
 
     override func viewDidLoad() {
@@ -44,11 +46,21 @@ extension OwnerViewController: OwnerViewInput {
         }))
         present(alertVC, animated: true)
     }
+
     func localize() {
-        title = "Owner.title".localized()
-        claimOwnershipDescriptionLabel.text = "Owner.Claim.description".localized()
-        claimOwnershipButton.setTitle("Owner.ClaimOwnership.button".localized().capitalized, for: .normal)
+        // No op.
+        switch mode {
+        case .claim:
+            title = "Owner.title".localized()
+            claimOwnershipDescriptionLabel.text = "Owner.Claim.description".localized()
+            claimOwnershipButton.setTitle("Owner.ClaimOwnership.button".localized().capitalized, for: .normal)
+        case .unclaim:
+            title = "unclaim_sensor".localized()
+            claimOwnershipDescriptionLabel.text = "unclaim_sensor_description".localized()
+            claimOwnershipButton.setTitle("unclaim".localized().capitalized, for: .normal)
+        }
     }
+
     func showFirmwareUpdateDialog() {
         let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)

@@ -157,7 +157,7 @@ struct DFUUIView: View {
             .padding()
             .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
-        case .noNeedToUpgrade:
+        case .noNeedToUpgrade(_, let currentRelease):
             return Text(texts.alreadyOnLatest)
                 .font(muliRegular16)
                 .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -167,6 +167,7 @@ struct DFUUIView: View {
                     alignment: .topLeading
                 )
                 .padding()
+                .onAppear { self.viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
                 .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {

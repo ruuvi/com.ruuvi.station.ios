@@ -8,6 +8,14 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 
+extension Notification.Name {
+    public static let RuuviTagOwnershipCheckDidEnd = Notification.Name("RuuviTagOwnershipCheckDidEnd")
+}
+
+public enum RuuviTagOwnershipCheckResultKey: String {
+    case hasOwner = "hasOwner"
+}
+
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
@@ -140,6 +148,9 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 guard let sSelf = self else { return }
                 let unclaimedSensor = sensor
                     .with(isClaimed: false)
+                    .with(canShare: false)
+                    .with(sharedTo: [])
+                    .with(isCloudSensor: false)
                     .withoutOwner()
                 sSelf.pool
                     .update(unclaimedSensor)

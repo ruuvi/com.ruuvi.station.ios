@@ -255,6 +255,18 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             )
     }
 
+    func openShare(for sensor: RuuviTagSensor) {
+        let restorationId = "ShareViewController"
+        let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
+        try! transitionHandler
+            .forStoryboard(factory: factory,
+                           to: ShareModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(sensor: sensor)
+            })
+    }
+
 }
 
 extension DashboardRouter: DiscoverRouterDelegate {

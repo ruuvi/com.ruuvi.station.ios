@@ -1589,11 +1589,11 @@ extension TagSettingsViewController {
     }
 
     private func temperatureAlertRangeDescription(from min: CGFloat? = nil,
-                                                  max: CGFloat? = nil) -> String? {
+                                                  max: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
         if let min = min, let max = max {
-            return String(format: format, min, max)
+            return attributedString(from: String(format: format, min, max))
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
@@ -1612,7 +1612,8 @@ extension TagSettingsViewController {
             }
 
             let message = String(format: format, l.value.round(to: 2), u.value.round(to: 2))
-            return message
+            return attributedString(from: message)
+
         } else {
             return nil
         }
@@ -1652,11 +1653,11 @@ extension TagSettingsViewController {
 
     // Humidity
     private func humidityAlertRangeDescription(from min: CGFloat? = nil,
-                                               max: CGFloat? = nil) -> String? {
+                                               max: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
         if let min = min, let max = max {
-            return String(format: format, min, max)
+            return attributedString(from: String(format: format, min, max))
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
            let u = viewModel?.relativeHumidityUpperBound.value {
@@ -1670,7 +1671,7 @@ extension TagSettingsViewController {
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
             let message = String(format: format, l.round(to: 2), u.round(to: 2))
-            return message
+            return attributedString(from: message)
         } else {
             return nil
         }
@@ -1704,12 +1705,12 @@ extension TagSettingsViewController {
 
     // Pressure
     private func pressureAlertRangeDescription(from minValue: CGFloat? = nil,
-                                               maxValue: CGFloat? = nil) -> String? {
+                                               maxValue: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
 
         if let minValue = minValue, let maxValue = maxValue {
-            return String(format: format, minValue, maxValue)
+            return attributedString(from: String(format: format, minValue, maxValue))
         }
 
         if let pu = viewModel?.pressureUnit.value,
@@ -1733,7 +1734,7 @@ extension TagSettingsViewController {
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
             let message = String(format: format, l.round(to: 2), u.round(to: 2))
-            return message
+            return attributedString(from: message)
         } else {
             return nil
         }
@@ -1781,18 +1782,18 @@ extension TagSettingsViewController {
 
     // RSSI
     private func rssiAlertRangeDescription(from min: CGFloat? = nil,
-                                           max: CGFloat? = nil) -> String? {
+                                           max: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         let format = "TagSettings.Alerts.Temperature.description".localized()
 
         if let min = min, let max = max {
-            return String(format: format, min, max)
+            return attributedString(from: String(format: format, min, max))
         }
 
         if let lower = viewModel?.signalLowerBound.value,
            let upper = viewModel?.signalUpperBound.value {
             let message = String(format: format, lower, upper)
-            return message
+            return attributedString(from: message)
         } else {
             return nil
         }
@@ -1822,6 +1823,23 @@ extension TagSettingsViewController {
                                             maximum: CGFloat) {
         return (minimum: CGFloat(-105),
                 maximum: CGFloat(0))
+    }
+
+    private func attributedString(from message: String?) -> NSMutableAttributedString? {
+        if let message = message {
+            let attributedString = NSMutableAttributedString(string: message)
+            let boldFont = UIFont.Muli(.bold, size: 14)
+            let numberRegex = try? NSRegularExpression(pattern: "\\d+(\\.\\d+)?")
+            let range = NSRange(location: 0, length: message.utf16.count)
+            if let matches = numberRegex?.matches(in: message, options: [], range: range) {
+                for match in matches {
+                    attributedString.addAttribute(.font, value: boldFont, range: match.range)
+                }
+            }
+            return attributedString
+        } else {
+            return nil
+        }
     }
 }
 
@@ -3307,6 +3325,19 @@ extension TagSettingsViewController: TagSettingsViewInput {
                                             self?.output.viewDidConfirmTagRemoval()
                                            }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+
+    func showTagClaimDialog() {
+        let title = "claim_sensor_ownership".localized()
+        let message = "do_you_own_sensor".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Yes".localized(),
+                                           style: .default,
+                                           handler: { [weak self] _ in
+            self?.output.viewDidConfirmClaimTag()
+        }))
+        controller.addAction(UIAlertAction(title: "No".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 

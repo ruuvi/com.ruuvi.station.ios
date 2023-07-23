@@ -62,6 +62,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
+    private var ruuviTagSensorOwnerCheckToken: NSObjectProtocol?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var sensorSettingsToken: RuuviReactorToken?
@@ -99,6 +100,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         mutedTillTimer?.invalidate()
         ruuviTagToken?.invalidate()
         ruuviTagSensorRecordToken?.invalidate()
+        ruuviTagSensorOwnerCheckToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
         sensorSettingsToken?.invalidate()
@@ -162,11 +164,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
+        startObservingRuuviTagOwnerCheckResponse()
     }
 
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
+        showFirmwareUpdateAlertForDF3Sensors()
+        checkAndUpdateFirmwareVersion()
     }
 
     private func startObservingAppState() {
@@ -205,6 +210,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToDismiss() {
         output?.tagSettingsDidDismiss(module: self)
+    }
+
+    func viewDidConfirmClaimTag() {
+        router.openOwner(ruuviTag: ruuviTag, mode: .claim)
     }
 
     func viewDidTriggerChangeBackground() {
@@ -415,10 +424,15 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidTapOnOwner() {
         if viewModel.isClaimedTag.value == false {
-            router.openOwner(ruuviTag: ruuviTag)
+            ruuviTagSensorOwnerCheckToken?.invalidate()
+            ruuviTagSensorOwnerCheckToken = nil
+            router.openOwner(ruuviTag: ruuviTag, mode: .claim)
         } else {
-            guard let isOwner = viewModel.isOwner.value, !isOwner else { return }
-            router.openContest(ruuviTag: ruuviTag)
+            if let isOwner = viewModel.isOwner.value, isOwner {
+                router.openOwner(ruuviTag: ruuviTag, mode: .unclaim)
+            } else {
+                router.openContest(ruuviTag: ruuviTag)
+            }
         }
     }
 }
@@ -774,6 +788,24 @@ extension TagSettingsPresenter {
             }
         })
     }
+
+    private func startObservingRuuviTagOwnerCheckResponse() {
+        ruuviTagSensorOwnerCheckToken = NotificationCenter
+            .default
+            .addObserver(forName: .RuuviTagOwnershipCheckDidEnd,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+                guard let sSelf = self,
+                      let userInfo = notification.userInfo,
+                      let hasOwner = userInfo[RuuviTagOwnershipCheckResultKey.hasOwner] as? Bool,
+                        !hasOwner else {
+                    return
+                }
+                sSelf.view.showTagClaimDialog()
+            })
+    }
+
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
@@ -1542,6 +1574,38 @@ extension TagSettingsPresenter {
             .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
                   object: nil,
                   userInfo: nil)
+    }
+
+    private func showFirmwareUpdateAlertForDF3Sensors() {
+        ruuviStorage.readOne(ruuviTag.id).on(success: { [weak self] ruuviTag in
+            if ruuviTag.version < 5 {
+                self?.view?.showFirmwareUpdateDialog()
+            }
+        })
+    }
+
+    func checkAndUpdateFirmwareVersion() {
+        guard let luid = ruuviTag.luid,
+              ruuviTag.firmwareVersion == nil ||
+                !ruuviTag.firmwareVersion.hasText() &&
+                settings.firmwareVersion(for: luid) == nil else {
+            return
+        }
+
+        background.services.gatt.firmwareRevision(
+            for: self,
+            uuid: luid.value,
+            options: [.connectionTimeout(15)]
+        ) { [weak self] _, result in
+            guard let sSelf = self else { return }
+            switch result {
+            case .success(let version):
+                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
+                self?.ruuviPool.update(tagWithVersion)
+            default:
+                break
+            }
+        }
     }
 }
 

@@ -14,3 +14,16 @@
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
 "WebTagLocationSource.manual" = "Valitse kartalta";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/fi/tuotteet?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"add_with_nfc" = "Lisää NFC:llä";
+"sensor_details" = "Anturin tiedot";
+"add_sensor" = "Lisää anturi";
+"copy_details" = "Kopioi tiedot";
+"name" = "Nimi:";
+"mac_address" = "MAC-osoite:";
+"go_to_sensor" = "Siirry anturikortille";
+"unique_id" = "Yksilöivä tunniste:";
+"firmware_version" = "Laiteohjelmistoversio:";
+"close" = "Sulje";
+"add_sensor_nfc_df3_error" = "Vanha laiteohjelmisto ei salli anturin lisäämistä NFC:llä. Lisää anturi Bluetooth-yhteydellä ja päivitä laiteohjelmisto.";
+"add_sensor_description" = "Tällä sivulla näet lähelläsi olevat Ruuvi-anturit, joita ei ole vielä lisätty sovellukseen. Lisää listattu anturi napauttamalla.";
+"add_sensor_via_nfc" = "Voit vaihtoehtoisesti lisätä anturin sovellukseen NFC:llä napauttamalla Lisää NFC:llä painiketta ja koskettamalla sitä.";
