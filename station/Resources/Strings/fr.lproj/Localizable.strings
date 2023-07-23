@@ -708,7 +708,7 @@ RuuviTag est prêt à être utilisé !";
 "go_to_sensor" = "Aller à la carte du capteur";
 "unique_id" = "Identifiant unique:";
 "firmware_version" = "Version du firmware:";
-"close" = "Fermer";
+"Close" = "Fermer";
 "add_sensor_nfc_df3_error" = "Ce capteur ne peut pas être ajouté avec NFC en raison d'un ancien firmware. Veuillez ajouter le capteur avec Bluetooth et mettre à jour le firmware.";
 "add_sensor_description" = "Cette page montre les capteurs Ruuvi à proximité qui n'ont pas encore été ajoutés à l'application. Appuyez sur un capteur pour l'ajouter.";
 "add_sensor_via_nfc" = "Alternatively, you can add a sensor using NFC by selecting Add with NFC and touching it with your phone.";

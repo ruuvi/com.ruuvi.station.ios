@@ -674,7 +674,7 @@ extension TagChartsViewController: TagChartsViewInput {
         let title = "synchronisation".localized()
         let message = "gatt_sync_description".localized()
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "Close".localized(), style: .cancel, handler: nil))
         let actionTitle = "do_not_show_again".localized()
         alertVC.addAction(UIAlertAction(title: actionTitle,
                                         style: .default,
