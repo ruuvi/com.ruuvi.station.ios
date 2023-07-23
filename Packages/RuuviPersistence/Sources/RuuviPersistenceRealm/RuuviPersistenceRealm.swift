@@ -671,6 +671,7 @@ extension RuuviPersistenceRealm {
             isClaimed: false,
             isOwner: ruuviTagRealm.isOwner,
             owner: ruuviTagRealm.owner,
+            ownersPlan: ruuviTagRealm.ownersPlan,
             isCloudSensor: ruuviTagRealm.isCloudSensor,
             canShare: ruuviTagRealm.canShare,
             sharedTo: ruuviTagRealm.sharedTo

@@ -543,6 +543,7 @@ extension TagSettingsPresenter {
         }
         // Set isOwner value
         viewModel.isOwner.value = ruuviTag.isOwner
+        viewModel.ownersPlan.value = ruuviTag.ownersPlan
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)

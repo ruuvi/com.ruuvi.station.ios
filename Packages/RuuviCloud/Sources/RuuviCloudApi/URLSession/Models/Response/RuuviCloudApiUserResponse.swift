@@ -57,6 +57,11 @@ extension RuuviCloudApiSensor: CloudSensor {
     public var owner: String? {
         return sensorOwner
     }
+
+    public var ownersPlan: String? {
+        return nil
+    }
+
     /// Returns status of sensor whether it is already claimed
     public var isClaimed: Bool {
         return isOwner

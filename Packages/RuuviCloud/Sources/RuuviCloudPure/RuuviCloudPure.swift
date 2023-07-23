@@ -692,6 +692,7 @@ public final class RuuviCloudPure: RuuviCloud {
                             isClaimed: true,
                             isOwner: sensor.owner == self?.user.email,
                             owner: sensor.owner,
+                            ownersPlan: sensor.subscription?.subscriptionName,
                             picture: URL(string: sensor.picture),
                             offsetTemperature: sensor.offsetTemperature,
                             offsetHumidity: sensor.offsetHumidity,
