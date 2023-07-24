@@ -403,6 +403,9 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     type = .signal(lower: cloudAlert.min,
                                    upper: cloudAlert.max)
                     setSignal(description: cloudAlert.description, for: physicalSensor)
+                case .offline:
+                    // Not supported on app yet.
+                    break
                 }
                 if let type = type {
                     if cloudAlert.enabled {
