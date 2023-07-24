@@ -484,6 +484,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     isClaimed: false,
                     isOwner: false,
                     owner: nil,
+                    ownersPlan: nil,
                     isCloudSensor: false,
                     canShare: false,
                     sharedTo: []
@@ -513,6 +514,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     isClaimed: false,
                     isOwner: false,
                     owner: nil,
+                    ownersPlan: nil,
                     isCloudSensor: false,
                     canShare: false,
                     sharedTo: []
@@ -562,6 +564,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             isClaimed: false,
             isOwner: false,
             owner: nil,
+            ownersPlan: nil,
             isCloudSensor: false,
             canShare: false,
             sharedTo: []
@@ -594,6 +597,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             isClaimed: false,
             isOwner: false,
             owner: nil,
+            ownersPlan: nil,
             isCloudSensor: false,
             canShare: false,
             sharedTo: []

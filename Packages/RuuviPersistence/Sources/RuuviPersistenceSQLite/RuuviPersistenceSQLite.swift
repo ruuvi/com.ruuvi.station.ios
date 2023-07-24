@@ -49,6 +49,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
             owner: ruuviTag.owner,
+            ownersPlan: ruuviTag.ownersPlan,
             isCloudSensor: ruuviTag.isCloudSensor,
             canShare: ruuviTag.canShare,
             sharedTo: ruuviTag.sharedTo
@@ -419,6 +420,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
             owner: ruuviTag.owner,
+            ownersPlan: ruuviTag.ownersPlan,
             isCloudSensor: ruuviTag.isCloudSensor,
             canShare: ruuviTag.canShare,
             sharedTo: ruuviTag.sharedTo
@@ -450,6 +452,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             isClaimed: ruuviTag.isClaimed,
             isOwner: ruuviTag.isOwner,
             owner: ruuviTag.owner,
+            ownersPlan: ruuviTag.ownersPlan,
             isCloudSensor: ruuviTag.isCloudSensor,
             canShare: ruuviTag.canShare,
             sharedTo: ruuviTag.sharedTo

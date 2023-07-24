@@ -30,6 +30,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -47,6 +48,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -64,6 +66,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -81,6 +84,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -98,6 +102,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -115,6 +120,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -132,6 +138,25 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
+            isCloudSensor: isCloudSensor,
+            canShare: canShare,
+            sharedTo: sharedTo
+        )
+    }
+
+    public func with(ownersPlan: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -149,6 +174,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -166,6 +192,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -183,6 +210,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: nil,
+            ownersPlan: nil,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -200,6 +228,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -217,6 +246,7 @@ extension RuuviTagSensor {
             isClaimed: cloudSensor.isOwner,
             isOwner: cloudSensor.isOwner,
             owner: cloudSensor.owner,
+            ownersPlan: cloudSensor.ownersPlan,
             isCloudSensor: cloudSensor.isCloudSensor ?? true,
             canShare: cloudSensor.canShare,
             sharedTo: cloudSensor.sharedTo
@@ -235,6 +265,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -252,6 +283,7 @@ extension RuuviTagSensor {
             isClaimed: false,
             isOwner: true,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: false,
             canShare: canShare,
             sharedTo: sharedTo
@@ -269,6 +301,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -286,6 +319,7 @@ extension RuuviTagSensor {
             isClaimed: isClaimed,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -309,6 +343,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
+    public var ownersPlan: String?
     public var isCloudSensor: Bool?
     public var canShare: Bool
     public var sharedTo: [String]
@@ -323,6 +358,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         isClaimed: Bool,
         isOwner: Bool,
         owner: String?,
+        ownersPlan: String?,
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String]
@@ -336,6 +372,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.ownersPlan = ownersPlan
         self.isCloudSensor = isCloudSensor
         self.canShare = canShare
         self.sharedTo = sharedTo
@@ -378,6 +415,9 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
     public var owner: String? {
         return object.owner
+    }
+    public var ownersPlan: String? {
+        return object.ownersPlan
     }
     public var isCloudSensor: Bool? {
         return object.isCloudSensor

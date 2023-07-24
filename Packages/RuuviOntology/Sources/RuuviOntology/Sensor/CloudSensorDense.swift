@@ -20,11 +20,14 @@ public struct RuuviCloudSensorDense {
 public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable {
     private let sensor: CloudSensor
     private let record: RuuviTagSensorRecord
+    private let subscription: CloudSensorSubscription?
 
     public init(sensor: CloudSensor,
-                record: RuuviTagSensorRecord) {
+                record: RuuviTagSensorRecord,
+                subscription: CloudSensorSubscription?) {
         self.sensor = sensor
         self.record = record
+        self.subscription = subscription
     }
 
     public var id: String {
@@ -45,6 +48,10 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
 
     public var owner: String? {
         return sensor.owner
+    }
+
+    public var ownersPlan: String? {
+        return subscription?.subscriptionName
     }
 
     public var picture: URL? {
