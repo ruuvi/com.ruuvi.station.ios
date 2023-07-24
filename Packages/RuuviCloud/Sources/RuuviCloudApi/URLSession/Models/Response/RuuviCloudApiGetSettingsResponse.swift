@@ -3,7 +3,7 @@ import RuuviOntology
 import Humidity
 
 public struct RuuviCloudApiGetSettingsResponse: Decodable {
-    public let settings: RuuviCloudApiSettings
+    public let settings: RuuviCloudApiSettings?
 }
 
 public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {

@@ -59,8 +59,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviServiceError> {
-        let promise = Promise<MACIdentifier, RuuviServiceError>()
+    public func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier?, RuuviServiceError> {
+        let promise = Promise<MACIdentifier?, RuuviServiceError>()
         cloud.share(macId: macId, with: email)
             .on(success: { macId in
                 promise.succeed(value: macId)
@@ -223,8 +223,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func checkOwner(macId: MACIdentifier) -> Future<String, RuuviServiceError> {
-        let promise = Promise<String, RuuviServiceError>()
+    public func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviServiceError> {
+        let promise = Promise<String?, RuuviServiceError>()
         cloud.checkOwner(macId: macId)
             .on(success: { owner in
                 promise.succeed(value: owner)

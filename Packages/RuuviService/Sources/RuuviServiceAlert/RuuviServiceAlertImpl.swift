@@ -371,44 +371,52 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     }
 
     // RuuviCloudAlert
+    // swiftlint:disable:next cyclomatic_complexity
     public func sync(cloudAlerts: [RuuviCloudSensorAlerts]) {
         cloudAlerts.forEach { cloudSensorAlert in
-            let macId = cloudSensorAlert.sensor.mac
+            guard let macId = cloudSensorAlert.sensor?.mac else { return }
             let luid = localIDs.luid(for: macId)
             let physicalSensor = PhysicalSensorStruct(luid: luid, macId: macId)
-            cloudSensorAlert.alerts.forEach { cloudAlert in
+            cloudSensorAlert.alerts?.forEach { cloudAlert in
                 var type: AlertType?
                 switch cloudAlert.type {
                 case .temperature:
-                    type = .temperature(lower: cloudAlert.min, upper: cloudAlert.max)
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .temperature(lower: min, upper: max)
                     setTemperature(description: cloudAlert.description, for: physicalSensor)
                 case .humidity:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     // in percent on cloud, in fraction locally
                     type = .relativeHumidity(
-                        lower: cloudAlert.min / 100.0,
-                        upper: cloudAlert.max / 100.0
+                        lower: min / 100.0,
+                        upper: max / 100.0
                     )
                     setRelativeHumidity(description: cloudAlert.description, for: physicalSensor)
                 case .pressure:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     // in Pa on cloud, in hPa locally
                     type = .pressure(
-                        lower: cloudAlert.min / 100.0,
-                        upper: cloudAlert.max / 100.0
+                        lower: min / 100.0,
+                        upper: max / 100.0
                     )
                     setPressure(description: cloudAlert.description, for: physicalSensor)
                 case .movement:
-                    type = .movement(last: cloudAlert.counter)
+                    guard let counter = cloudAlert.counter else { return }
+                    type = .movement(last: counter)
                     setMovement(description: cloudAlert.description, for: physicalSensor)
                 case .signal:
-                    type = .signal(lower: cloudAlert.min,
-                                   upper: cloudAlert.max)
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .signal(lower: min,
+                                   upper: max)
                     setSignal(description: cloudAlert.description, for: physicalSensor)
                 case .offline:
                     // Not supported on app yet.
                     break
+                default:
+                    break
                 }
                 if let type = type {
-                    if cloudAlert.enabled {
+                    if let enabled = cloudAlert.enabled, enabled {
                         register(type: type, for: physicalSensor)
                     } else {
                         unregister(type: type, for: physicalSensor)

@@ -15,7 +15,7 @@ extension RuuviCloudApiError: LocalizedError {
         case .api(let code):
             return "UserApiError.\(code.rawValue)".localized()
         case .claim(let claimError):
-            return claimError.error.localized()
+            return claimError.error?.localized()
         case .networking(let error):
             return error.localizedDescription
         case .parsing(let error):
