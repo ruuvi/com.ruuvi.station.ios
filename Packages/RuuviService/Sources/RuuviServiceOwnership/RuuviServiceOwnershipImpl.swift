@@ -13,7 +13,7 @@ extension Notification.Name {
 }
 
 public enum RuuviTagOwnershipCheckResultKey: String {
-    case hasOwner = "hasOwner"
+    case hasOwner = "hasTagOwner"
 }
 
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {

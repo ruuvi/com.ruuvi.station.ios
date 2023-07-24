@@ -716,4 +716,5 @@ RuuviTag on valmis käyttöön!";
 "unclaim_sensor_description" = "Tämän anturin omistajuus on merkitty Ruuvi-tilillesi. Poista anturin asetukset ja anturin tiedot Ruuvi-tililtä valitsemalla Poista omistajuus.";
 "claim_sensor_ownership" = "Vaadi anturin omistajuutta";
 "do_you_own_sensor" = "Omistatko tämän anturin?";
+"owners_plan" = "Omistajan Ruuvi-tilaus";
 "rename" = "Rename";

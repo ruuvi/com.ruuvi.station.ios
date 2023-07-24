@@ -717,5 +717,6 @@ RuuviTag est prêt à être utilisé !";
 "unclaim_sensor_description" = "La propriété de ce capteur a été revendiquée sur votre compte Ruuvi. Appuyez sur Annuler la revendication pour supprimer les paramètres de ce capteur et les données associées de votre compte Ruuvi.";
 "claim_sensor_ownership" = "Revendiquer la propriété du capteur";
 "do_you_own_sensor" = "Possédez-vous ce capteur ?";
+"owners_plan" = "Plan Ruuvi du propriétaire";
 "rename" = "Rename";
 

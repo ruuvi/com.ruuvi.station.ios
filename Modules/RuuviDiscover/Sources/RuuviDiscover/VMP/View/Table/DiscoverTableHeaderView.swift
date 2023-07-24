@@ -113,7 +113,7 @@ class DiscoverTableHeaderView: UIView {
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor)
         ])
 
         // variable constraints
