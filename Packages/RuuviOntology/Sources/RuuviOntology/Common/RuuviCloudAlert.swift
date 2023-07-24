@@ -6,6 +6,7 @@ public enum RuuviCloudAlertType: String, Codable {
     case pressure
     case signal
     case movement
+    case offline
 }
 
 public enum RuuviCloudAlertSettingType: String {
