@@ -9,6 +9,7 @@ class NotificationService: UNNotificationServiceExtension {
         case pressure = "pressure"
         case signal = "signal"
         case movement = "movement"
+        case offline = "offline"
     }
 
     private enum TriggerType: String {
@@ -41,20 +42,25 @@ class NotificationService: UNNotificationServiceExtension {
 
         if let contentHandler = contentHandler,
            let userInfo = currentRequest?.content.userInfo,
-           let sensorName = userInfo["name"] as? String,
-           let alertType = userInfo["alertType"] as? String,
-           let triggerType = userInfo["triggerType"] as? String,
-           let threshold = userInfo["thresholdValue"] as? String,
-           let alertUnit = userInfo["alertUnit"] as? String,
-           let alertMessage = userInfo["alertData"] as? String,
-           let bestAttemptContent = bestAttemptContent {
-            let title = titleForAlert(from: triggerType,
-                                      alertType: alertType,
-                                      threshold: threshold,
-                                      alertUnit: alertUnit)
-            bestAttemptContent.title = title
-            bestAttemptContent.subtitle = alertMessage
-            bestAttemptContent.body = sensorName
+            let bestAttemptContent = bestAttemptContent {
+            // If this value is not available on data, show formatted message.
+            // Otherwise don't do anything.
+            let showLocallyFormattedMessage = userInfo["showLocallyFormatted"] as? Bool ?? true
+            if showLocallyFormattedMessage {
+                if let sensorName = userInfo["name"] as? String,
+                   let alertType = userInfo["alertType"] as? String,
+                   let triggerType = userInfo["triggerType"] as? String,
+                   let threshold = userInfo["thresholdValue"] as? String,
+                   let alertMessage = userInfo["alertData"] as? String {
+                    let title = titleForAlert(from: triggerType,
+                                              alertType: alertType,
+                                              threshold: threshold)
+                    bestAttemptContent.subtitle = alertMessage
+                    bestAttemptContent.title = title
+                    bestAttemptContent.body = sensorName
+                }
+            }
+
             contentHandler(bestAttemptContent)
         }
     }
@@ -92,8 +98,7 @@ extension NotificationService {
     // swiftlint:disable:next cyclomatic_complexity
     private func titleForAlert(from triggerType: String,
                                alertType: String,
-                               threshold: String,
-                               alertUnit: String) -> String {
+                               threshold: String) -> String {
         guard let triggerType = getTriggerType(from: triggerType),
               let alertType = getAlertType(from: alertType) else {
             return ""
@@ -114,6 +119,8 @@ extension NotificationService {
             case .movement:
                 let format = "LocalNotificationsManager.DidMove.title"
                 return localized(value: format)
+            default:
+                break
             }
         case .over:
             switch alertType {
@@ -128,10 +135,12 @@ extension NotificationService {
             case .movement:
                 let format = "LocalNotificationsManager.DidMove.title"
                 return localized(value: format)
+            default:
+                break
             }
         }
 
-        return String(format: localized(value: format), threshold) + alertUnit
+        return String(format: localized(value: format), threshold)
     }
 
     private func localized(value: String) -> String {
