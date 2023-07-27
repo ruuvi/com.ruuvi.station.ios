@@ -64,4 +64,11 @@ extension CardsRouter: DiscoverRouterDelegate {
     func discoverRouterWantsClose(_ router: DiscoverRouter) {
         router.viewController.dismiss(animated: true)
     }
+
+    func discoverRouterWantsCloseWithRuuviTagNavigation(
+        _ router: DiscoverRouter,
+        ruuviTag: RuuviTagSensor
+    ) {
+        router.viewController.dismiss(animated: true)
+    }
 }

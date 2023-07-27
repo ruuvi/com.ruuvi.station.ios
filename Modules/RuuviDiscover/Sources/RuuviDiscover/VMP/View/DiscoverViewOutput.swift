@@ -13,5 +13,7 @@ protocol DiscoverViewOutput {
     func viewDidTapUseNFC()
     func viewDidReceiveNFCMessages(messages: [NFCNDEFMessage])
     func viewDidAddDeviceWithNFC(with sensor: NFCSensor?)
-    func viewDidACopySensorDetails(with details: String?)
+    func viewDidGoToSensor(with sensor: NFCSensor?)
+    func viewDidACopyMacAddress(of sensor: NFCSensor?)
+    func viewDidACopySecret(of sensor: NFCSensor?)
 }

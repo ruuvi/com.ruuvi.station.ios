@@ -701,7 +701,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "add_with_nfc" = "Add with NFC";
 "sensor_details" = "Sensor Details";
 "add_sensor" = "Add Sensor";
-"copy_details" = "Copy Details";
+"copy_mac_address" = "Копировать MAC-адрес";
+"copy_unique_id" = "Скопировать уникальный идентификатор";
 "name" = "Name:";
 "mac_address" = "Mac Address:";
 "go_to_sensor" = "Go to sensor card";

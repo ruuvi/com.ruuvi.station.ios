@@ -16,6 +16,7 @@ protocol DiscoverViewInput: UIViewController, Localizable {
         for tag: NFCSensor?,
         message: String,
         showAddSensor: Bool,
+        showGoToSensor: Bool,
         isDF3: Bool
     )
 }

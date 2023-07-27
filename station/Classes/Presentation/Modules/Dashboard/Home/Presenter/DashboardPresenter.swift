@@ -185,7 +185,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerAddSensors() {
-        router.openDiscover()
+        router.openDiscover(delegate: self)
     }
 
     func viewDidTriggerBuySensors() {
@@ -349,7 +349,7 @@ extension DashboardPresenter: DashboardViewOutput {
 extension DashboardPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover()
+        router.openDiscover(delegate: self)
     }
     
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -420,6 +420,30 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
         module.dismiss(completion: {
             AppUtility.lockOrientation(.all)
         })
+    }
+}
+
+extension DashboardPresenter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
+        router.viewController.dismiss(animated: true)
+    }
+
+    func discoverRouterWantsCloseWithRuuviTagNavigation(
+        _ router: DiscoverRouter,
+        ruuviTag: RuuviTagSensor
+    ) {
+        router.viewController.dismiss(animated: true)
+        if let viewModel = viewModels.first(where: {
+            $0.id.value == ruuviTag.id
+        }) {
+            self.router.openCardImageView(with: viewModels,
+                                     ruuviTagSensors: ruuviTags,
+                                     virtualSensors: virtualSensors,
+                                     sensorSettings: sensorSettingsList,
+                                     scrollTo: viewModel,
+                                     showCharts: false,
+                                     output: self)
+        }
     }
 }
 

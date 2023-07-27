@@ -12,6 +12,7 @@ public protocol RuuviDiscover: AnyObject {
 public protocol RuuviDiscoverOutput: AnyObject {
     func ruuviDiscoverWantsClose(_ ruuviDiscover: RuuviDiscover)
     func ruuvi(discover: RuuviDiscover, didAdd ruuviTag: AnyRuuviTagSensor)
+    func ruuvi(discover: RuuviDiscover, didSelectFromNFC ruuviTag: RuuviTagSensor)
     // Will be deprecated in near future. Currently retained to support already
     // added web tags.
     func ruuviDiscoverWantsPickLocation(_ ruuviDiscover: RuuviDiscover)
