@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 
 public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
-    public let sensors: [CloudApiSensor]
+    public let sensors: [CloudApiSensor]?
 
     public struct CloudApiSensor: Decodable {
         public let sensor: String
@@ -11,9 +11,9 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
         public let picture: String
         public let isPublic: Bool
         public let canShare: Bool
-        public let offsetTemperature: Double
-        public let offsetHumidity: Double
-        public let offsetPressure: Double
+        public let offsetTemperature: Double?
+        public let offsetHumidity: Double?
+        public let offsetPressure: Double?
         public let sharedTo: [String]?
         public let measurements: [UserApiSensorRecord]?
         public let apiAlerts: [RuuviCloudApiGetAlert]?
