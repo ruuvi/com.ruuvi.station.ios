@@ -1957,50 +1957,71 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func didSetAlertRange(sender: TagSettingsAlertConfigCell,
                           minValue: CGFloat,
                           maxValue: CGFloat) {
         guard minValue < maxValue else { return }
         switch sender {
         case temperatureAlertCell:
-            output.viewDidChangeAlertLowerBound(
-                for: .temperature(lower: 0, upper: 0),
-                lower: minValue
-            )
-            output.viewDidChangeAlertUpperBound(
-                for: .temperature(lower: 0, upper: 0),
-                upper: maxValue
-            )
+            if minValue != viewModel?.temperatureLowerBound.value?.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .temperature(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.temperatureUpperBound.value?.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .temperature(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
 
         case humidityAlertCell:
-            output.viewDidChangeAlertLowerBound(
-                for: .relativeHumidity(lower: 0, upper: 0),
-                lower: minValue
-            )
-            output.viewDidChangeAlertUpperBound(
-                for: .relativeHumidity(lower: 0, upper: 0),
-                upper: maxValue
-            )
+            if minValue != viewModel?.relativeHumidityLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .relativeHumidity(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.relativeHumidityUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .relativeHumidity(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
 
         case pressureAlertCell:
-            output.viewDidChangeAlertLowerBound(
-                for: .pressure(lower: 0, upper: 0),
-                lower: minValue
-            )
-            output.viewDidChangeAlertUpperBound(
-                for: .pressure(lower: 0, upper: 0),
-                upper: maxValue
-            )
+            if minValue != viewModel?.pressureLowerBound.value?.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .pressure(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.pressureUpperBound.value?.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .pressure(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
 
         case rssiAlertCell:
-            output.viewDidChangeAlertLowerBound(
-                for: .signal(lower: 0, upper: 0),
-                lower: minValue
-            )
-            output.viewDidChangeAlertUpperBound(
-                for: .signal(lower: 0, upper: 0),
-                upper: maxValue
-            )
+            if minValue != viewModel?.signalLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .signal(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.signalUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .signal(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
 
         default:
             break
