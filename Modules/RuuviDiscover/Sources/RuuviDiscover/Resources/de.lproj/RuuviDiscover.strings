@@ -17,7 +17,8 @@
 "add_with_nfc" = "Mit NFC hinzufügen";
 "sensor_details" = "Sensordetails";
 "add_sensor" = "Sensor hinzufügen";
-"copy_details" = "Details kopieren";
+"copy_mac_address" = "MAC-Adresse kopieren";
+"copy_unique_id" = "Eindeutige ID kopieren";
 "name" = "Name:";
 "mac_address" = "MAC-Adresse:";
 "go_to_sensor" = "Gehen Sie zur Sensorkarte";

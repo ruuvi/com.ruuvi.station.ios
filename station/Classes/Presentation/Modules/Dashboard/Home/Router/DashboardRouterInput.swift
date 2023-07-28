@@ -4,7 +4,7 @@ import RuuviVirtual
 
 protocol DashboardRouterInput {
     func openMenu(output: MenuModuleOutput)
-    func openDiscover()
+    func openDiscover(delegate: DiscoverRouterDelegate)
     func openSettings()
     func openAbout()
     func openWhatToMeasurePage()
