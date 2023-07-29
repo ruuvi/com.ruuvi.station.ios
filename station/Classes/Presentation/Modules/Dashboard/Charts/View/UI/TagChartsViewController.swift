@@ -42,8 +42,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        let font = UIFont(name: "Montserrat-Bold", size: 20)
-        label.font = font ?? UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont.Muli(.extraBold, size: 20)
         return label
     }()
 
@@ -53,8 +52,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        let font = UIFont(name: "Montserrat-Bold", size: 14)
-        label.font = font ?? UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.font = UIFont.Montserrat(.bold, size: 14)
         return label
     }()
 
@@ -141,7 +139,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 12)
+        label.font = UIFont.Muli(.regular, size: 14)
         return label
     }()
 

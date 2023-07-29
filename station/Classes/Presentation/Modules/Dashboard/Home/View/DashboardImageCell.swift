@@ -259,7 +259,7 @@ class DashboardImageCell: UICollectionViewCell {
         ])
         footerStack.spacing = 4
         footerStack.axis = .horizontal
-        footerStack.distribution = .fillEqually
+        footerStack.distribution = .fillProportionally
 
         container.addSubview(footerStack)
         footerStack.anchor(top: leftContainerView.bottomAnchor,
