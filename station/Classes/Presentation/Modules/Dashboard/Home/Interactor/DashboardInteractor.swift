@@ -58,7 +58,7 @@ extension DashboardInteractor: DashboardInteractorInput {
                 guard let sSelf = self else {
                     return
                 }
-                guard !owner.isEmpty else {
+                guard let owner = owner, !owner.isEmpty else {
                     sSelf.settings.setOwnerCheckDate(for: macId, value: Date())
                     NotificationCenter.default.post(
                         name: .RuuviTagOwnershipCheckDidEnd,

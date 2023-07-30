@@ -192,6 +192,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 for: nfcSensor,
                 message: message,
                 showAddSensor: false,
+                showGoToSensor: true,
                 isDF3: false
             )
             return
@@ -209,6 +210,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 for: nfcSensor,
                 message: message,
                 showAddSensor: true,
+                showGoToSensor: false,
                 isDF3: false
             )
             return
@@ -227,6 +229,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             for: nfcSensor,
             message: message,
             showAddSensor: false,
+            showGoToSensor: false,
             isDF3: nfcSensor?.firmwareVersion == "2.5.9"
         )
     }
@@ -244,8 +247,20 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
 
-    func viewDidACopySensorDetails(with details: String?) {
-        UIPasteboard.general.string = details
+    func viewDidGoToSensor(with sensor: NFCSensor?) {
+        if let ruuviTag = persistedSensors.first(where: { ruuviTag in
+            ruuviTag.macId?.mac == sensor?.macId
+        }) {
+            output?.ruuvi(discover: self, didSelectFromNFC: ruuviTag)
+        }
+    }
+
+    func viewDidACopyMacAddress(of sensor: NFCSensor?) {
+        UIPasteboard.general.string = sensor?.macId
+    }
+
+    func viewDidACopySecret(of sensor: NFCSensor?) {
+        UIPasteboard.general.string = sensor?.id
     }
 }
 

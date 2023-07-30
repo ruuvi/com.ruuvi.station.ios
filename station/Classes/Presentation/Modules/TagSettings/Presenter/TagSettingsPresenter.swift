@@ -92,6 +92,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             }
         }
     }
+    private var firmwareUpdateDialogShown: Bool = false
 
     private var timer: Timer?
 
@@ -170,7 +171,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
-        showFirmwareUpdateAlertForDF3Sensors()
         checkAndUpdateFirmwareVersion()
     }
 
@@ -543,6 +543,7 @@ extension TagSettingsPresenter {
         }
         // Set isOwner value
         viewModel.isOwner.value = ruuviTag.isOwner
+        viewModel.ownersPlan.value = ruuviTag.ownersPlan
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
@@ -832,6 +833,13 @@ extension TagSettingsPresenter {
     private func handleMeasurementPoint(tag: RuuviTag,
                                         luid: LocalIdentifier,
                                         source: RuuviTagSensorRecordSource) {
+
+        // Trigger firmware aler dialog for DF3 tags.
+        if !firmwareUpdateDialogShown && tag.version < 5 {
+            view.showFirmwareUpdateDialog()
+            firmwareUpdateDialogShown = true
+        }
+
         // RuuviTag with data format 5 or above has the measurements sequence number
         if tag.version >= 5 {
             if previousAdvertisementSequence != nil {
@@ -1574,14 +1582,6 @@ extension TagSettingsPresenter {
             .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
                   object: nil,
                   userInfo: nil)
-    }
-
-    private func showFirmwareUpdateAlertForDF3Sensors() {
-        ruuviStorage.readOne(ruuviTag.id).on(success: { [weak self] ruuviTag in
-            if ruuviTag.version < 5 {
-                self?.view?.showFirmwareUpdateDialog()
-            }
-        })
     }
 
     func checkAndUpdateFirmwareVersion() {

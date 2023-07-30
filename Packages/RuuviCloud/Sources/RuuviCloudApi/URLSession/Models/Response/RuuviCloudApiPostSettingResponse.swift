@@ -1,5 +1,5 @@
 import Foundation
 
 public struct RuuviCloudApiPostSettingResponse: Decodable {
-    public let action: String
+    public let action: String?
 }

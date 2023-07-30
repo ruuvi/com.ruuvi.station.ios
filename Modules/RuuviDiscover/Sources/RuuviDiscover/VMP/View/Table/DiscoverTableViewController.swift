@@ -97,6 +97,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         for tag: NFCSensor?,
         message: String,
         showAddSensor: Bool,
+        showGoToSensor: Bool,
         isDF3: Bool
     ) {
         let title = "sensor_details".localized(for: Self.self)
@@ -132,10 +133,22 @@ extension DiscoverTableViewController: DiscoverViewInput {
           }))
         }
 
-        alertVC.addAction(UIAlertAction(title: "copy_details".localized(for: Self.self),
+        alertVC.addAction(UIAlertAction(title: "copy_mac_address".localized(for: Self.self),
                                         style: .default, handler: { [weak self] _ in
-            self?.output.viewDidACopySensorDetails(with: message)
+            self?.output.viewDidACopyMacAddress(of: tag)
         }))
+
+        alertVC.addAction(UIAlertAction(title: "copy_unique_id".localized(for: Self.self),
+                                        style: .default, handler: { [weak self] _ in
+            self?.output.viewDidACopySecret(of: tag)
+        }))
+
+        if showGoToSensor {
+          alertVC.addAction(UIAlertAction(title: "go_to_sensor".localized(for: Self.self),
+                                          style: .default, handler: { [weak self] _ in
+            self?.output.viewDidGoToSensor(with: tag)
+          }))
+        }
 
         alertVC.addAction(UIAlertAction(title: "close".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)

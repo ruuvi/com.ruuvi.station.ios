@@ -34,11 +34,10 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             })
     }
 
-    func openDiscover() {
+    func openDiscover(delegate: DiscoverRouterDelegate) {
         let discoverRouter = DiscoverRouter()
-        discoverRouter.delegate = self
+        discoverRouter.delegate = delegate
         let viewController = discoverRouter.viewController
-        viewController.presentationController?.delegate = self
         let navigationController = UINavigationController(rootViewController: viewController)
         transitionHandler.present(navigationController, animated: true)
     }
@@ -267,12 +266,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             })
     }
 
-}
-
-extension DashboardRouter: DiscoverRouterDelegate {
-    func discoverRouterWantsClose(_ router: DiscoverRouter) {
-        router.viewController.dismiss(animated: true)
-    }
 }
 
 extension DashboardRouter: UIAdaptivePresentationControllerDelegate {

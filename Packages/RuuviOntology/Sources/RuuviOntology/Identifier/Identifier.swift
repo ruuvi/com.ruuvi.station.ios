@@ -77,6 +77,22 @@ extension String {
     }
 }
 
+extension Optional where Wrapped == String {
+    public var luid: LocalIdentifier? {
+        guard let self = self else {
+            return nil
+        }
+        return LocalIdentifierStruct(value: self).any
+    }
+
+    public var mac: MACIdentifier? {
+        guard let self = self else {
+            return nil
+        }
+        return MACIdentifierStruct(value: self).any
+    }
+}
+
 extension LocalIdentifier {
     public var any: AnyLocalIdentifier {
         return AnyLocalIdentifier(object: self)
