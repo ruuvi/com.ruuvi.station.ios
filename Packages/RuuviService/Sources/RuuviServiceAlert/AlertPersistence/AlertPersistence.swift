@@ -54,6 +54,12 @@ protocol AlertPersistence {
     func connectionDescription(for uuid: String) -> String?
     func setConnection(description: String?, for uuid: String)
 
+    // cloud connection
+    func cloudConnectionUnseenDuration(for uuid: String) -> Double?
+    func setCloudConnection(unseenDuration: Double?, for uuid: String)
+    func cloudConnectionDescription(for uuid: String) -> String?
+    func setCloudConnection(description: String?, for uuid: String)
+
     // movement counter
     func movementCounter(for uuid: String) -> Int?
     func setMovement(counter: Int?, for uuid: String)

@@ -21,6 +21,7 @@ extension RuuviServiceAlertImpl {
                     min: lower,
                     max: upper,
                     counter: nil,
+                    delay: nil,
                     description: temperatureDescription(for: ruuviTag),
                     for: macId
                 )
@@ -32,6 +33,7 @@ extension RuuviServiceAlertImpl {
                     min: lower * 100.0, // in percent on cloud, fraction locally
                     max: upper * 100.0, // in percent on cloud, fraction locally
                     counter: nil,
+                    delay: nil,
                     description: relativeHumidityDescription(for: ruuviTag),
                     for: macId
                 )
@@ -45,6 +47,7 @@ extension RuuviServiceAlertImpl {
                     min: lower * 100, // in Pa on cloud, in hPa locally
                     max: upper * 100, // in Pa on cloud, in hPa locally
                     counter: nil,
+                    delay: nil,
                     description: pressureDescription(for: ruuviTag),
                     for: macId
                 )
@@ -56,11 +59,24 @@ extension RuuviServiceAlertImpl {
                     min: lower,
                     max: upper,
                     counter: nil,
+                    delay: nil,
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
             case .connection:
                 break
+            case .cloudConnection(let unseenDuration):
+                cloud.setAlert(
+                    type: .offline,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: 0,
+                    max: unseenDuration,
+                    counter: nil,
+                    delay: 0,
+                    description: cloudConnectionDescription(for: ruuviTag),
+                    for: macId
+                )
             case .movement(let last):
                 cloud.setAlert(
                     type: .movement,
@@ -69,6 +85,7 @@ extension RuuviServiceAlertImpl {
                     min: nil,
                     max: nil,
                     counter: last,
+                    delay: nil,
                     description: movementDescription(for: ruuviTag),
                     for: macId
                 )
@@ -89,6 +106,7 @@ extension RuuviServiceAlertImpl {
                     min: lower,
                     max: upper,
                     counter: nil,
+                    delay: nil,
                     description: temperatureDescription(for: ruuviTag),
                     for: macId
                 )
@@ -100,6 +118,7 @@ extension RuuviServiceAlertImpl {
                     min: lower * 100, // in percent on cloud, fraction locally
                     max: upper * 100, // in percent on cloud, fraction locally
                     counter: nil,
+                    delay: nil,
                     description: relativeHumidityDescription(for: ruuviTag),
                     for: macId
                 )
@@ -113,6 +132,7 @@ extension RuuviServiceAlertImpl {
                     min: lower * 100, // in Pa on cloud, in hPa locally
                     max: upper * 100, // in Pa on cloud, in hPa locally
                     counter: nil,
+                    delay: nil,
                     description: pressureDescription(for: ruuviTag),
                     for: macId
                 )
@@ -124,11 +144,24 @@ extension RuuviServiceAlertImpl {
                     min: lower,
                     max: upper,
                     counter: nil,
+                    delay: nil,
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
             case .connection:
                 break
+            case .cloudConnection(let unseenDuration):
+                cloud.setAlert(
+                    type: .offline,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: 0,
+                    max: unseenDuration,
+                    counter: nil,
+                    delay: 0,
+                    description: cloudConnectionDescription(for: ruuviTag),
+                    for: macId
+                )
             case .movement(let last):
                 cloud.setAlert(
                     type: .movement,
@@ -137,6 +170,7 @@ extension RuuviServiceAlertImpl {
                     min: nil,
                     max: nil,
                     counter: last,
+                    delay: nil,
                     description: movementDescription(for: ruuviTag),
                     for: macId
                 )
@@ -154,6 +188,7 @@ extension RuuviServiceAlertImpl {
                 min: celsius,
                 max: upperCelsius(for: ruuviTag),
                 counter: nil,
+                delay: nil,
                 description: temperatureDescription(for: ruuviTag),
                 for: macId
             )
@@ -170,6 +205,7 @@ extension RuuviServiceAlertImpl {
                 min: lowerCelsius(for: ruuviTag),
                 max: celsius,
                 counter: nil,
+                delay: nil,
                 description: temperatureDescription(for: ruuviTag),
                 for: macId
             )
@@ -186,6 +222,7 @@ extension RuuviServiceAlertImpl {
                 min: lowerCelsius(for: ruuviTag),
                 max: upperCelsius(for: ruuviTag),
                 counter: nil,
+                delay: nil,
                 description: description,
                 for: macId
             )
@@ -202,6 +239,7 @@ extension RuuviServiceAlertImpl {
                 min: (relativeHumidity ?? 0) * 100.0,
                 max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 counter: nil,
+                delay: nil,
                 description: relativeHumidityDescription(for: ruuviTag),
                 for: macId
             )
@@ -218,6 +256,7 @@ extension RuuviServiceAlertImpl {
                 min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 max: (relativeHumidity ?? 0) * 100.0,
                 counter: nil,
+                delay: nil,
                 description: relativeHumidityDescription(for: ruuviTag),
                 for: macId
             )
@@ -234,6 +273,7 @@ extension RuuviServiceAlertImpl {
                 min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
                 counter: nil,
+                delay: nil,
                 description: description,
                 for: macId
             )
@@ -250,6 +290,7 @@ extension RuuviServiceAlertImpl {
                 min: (pressure ?? 0) * 100.0,
                 max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
                 counter: nil,
+                delay: nil,
                 description: pressureDescription(for: ruuviTag),
                 for: macId
             )
@@ -266,6 +307,7 @@ extension RuuviServiceAlertImpl {
                 min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
                 max: (pressure ?? 0) * 100.0,
                 counter: nil,
+                delay: nil,
                 description: pressureDescription(for: ruuviTag),
                 for: macId
             )
@@ -282,6 +324,7 @@ extension RuuviServiceAlertImpl {
                 min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
                 max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
                 counter: nil,
+                delay: nil,
                 description: description,
                 for: macId
             )
@@ -299,6 +342,7 @@ extension RuuviServiceAlertImpl {
                 min: (signal ?? 0),
                 max: (upperSignal(for: ruuviTag) ?? 0),
                 counter: nil,
+                delay: nil,
                 description: signalDescription(for: ruuviTag),
                 for: macId
             )
@@ -316,6 +360,7 @@ extension RuuviServiceAlertImpl {
                 min: (lowerSignal(for: ruuviTag) ?? 0),
                 max: (signal ?? 0),
                 counter: nil,
+                delay: nil,
                 description: signalDescription(for: ruuviTag),
                 for: macId
             )
@@ -333,6 +378,7 @@ extension RuuviServiceAlertImpl {
                 min: (lowerSignal(for: ruuviTag) ?? 0),
                 max: (upperSignal(for: ruuviTag) ?? 0),
                 counter: nil,
+                delay: nil,
                 description: description,
                 for: macId
             )
@@ -349,6 +395,41 @@ extension RuuviServiceAlertImpl {
                 min: nil,
                 max: nil,
                 counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    public func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor) {
+        setCloudConnection(unseenDuration: unseenDuration, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .offline,
+                settingType: .delay,
+                isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
+                min: 0,
+                max: unseenDuration,
+                counter: nil,
+                delay: 0,
+                description: cloudConnectionDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    public func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor) {
+        setCloudConnection(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .offline,
+                settingType: .description,
+                isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
+                min: 0,
+                max: cloudConnectionUnseenDuration(for: ruuviTag) ?? 600, // Default: 15mins
+                counter: nil,
+                delay: 0,
                 description: description,
                 for: macId
             )
@@ -410,8 +491,9 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                                    upper: max)
                     setSignal(description: cloudAlert.description, for: physicalSensor)
                 case .offline:
-                    // Not supported on app yet.
-                    break
+                    guard let unseenDuration = cloudAlert.max else { return }
+                    type = .cloudConnection(unseenDuration: unseenDuration)
+                    setCloudConnection(description: cloudAlert.description, for: physicalSensor)
                 default:
                     break
                 }
@@ -1324,6 +1406,70 @@ extension RuuviServiceAlertImpl {
 
     public func connectionDescription(for uuid: String) -> String? {
         return alertPersistence.connectionDescription(for: uuid)
+    }
+}
+
+// MARK: - Cloud Connection
+extension RuuviServiceAlertImpl {
+    public func cloudConnectionDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.cloudConnectionDescription(for: luid.value)
+                ?? alertPersistence.cloudConnectionDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.cloudConnectionDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.cloudConnectionDescription(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    public func setCloudConnection(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setCloudConnection(description: description, for: luid.value)
+            alertPersistence.setCloudConnection(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setCloudConnection(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setCloudConnection(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    public func cloudConnectionDescription(for sensor: VirtualSensor) -> String? {
+        return alertPersistence.cloudConnectionDescription(for: sensor.id)
+    }
+
+    public func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: luid.value)
+            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+        if let unseenDuration = unseenDuration {
+            postAlertDidChange(with: sensor, of: .cloudConnection(unseenDuration: unseenDuration))
+        }
+    }
+
+    public func cloudConnectionUnseenDuration(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.cloudConnectionUnseenDuration(for: luid.value)
+                ?? alertPersistence.cloudConnectionUnseenDuration(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.cloudConnectionUnseenDuration(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.cloudConnectionUnseenDuration(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
     }
 }
 

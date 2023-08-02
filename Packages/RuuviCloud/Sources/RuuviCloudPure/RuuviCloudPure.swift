@@ -50,6 +50,7 @@ public final class RuuviCloudPure: RuuviCloud {
         min: Double?,
         max: Double?,
         counter: Int?,
+        delay: Int?,
         description: String?,
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {
@@ -66,6 +67,7 @@ public final class RuuviCloudPure: RuuviCloud {
             max: max,
             description: description,
             counter: counter,
+            delay: delay,
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postAlert(request, authorization: apiKey)

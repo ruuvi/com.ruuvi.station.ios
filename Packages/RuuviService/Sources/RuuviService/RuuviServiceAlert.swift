@@ -45,6 +45,10 @@ public protocol RuuviServiceAlertRuuviTag {
 
     // movement
     func setMovement(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Cloud connection
+    func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor)
+    func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor)
 }
 
 public protocol RuuviServiceAlertCloud {
@@ -129,6 +133,12 @@ public protocol RuuviServiceAlertPhysicalSensor {
     /// connection
     func connectionDescription(for sensor: PhysicalSensor) -> String?
     func setConnection(description: String?, for sensor: PhysicalSensor)
+
+    /// cloud connection
+    func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor)
+    func cloudConnectionUnseenDuration(for sensor: PhysicalSensor) -> Double?
+    func cloudConnectionDescription(for sensor: PhysicalSensor) -> String?
+    func setCloudConnection(description: String?, for sensor: PhysicalSensor)
 
     /// movement
     func movementCounter(for sensor: PhysicalSensor) -> Int?

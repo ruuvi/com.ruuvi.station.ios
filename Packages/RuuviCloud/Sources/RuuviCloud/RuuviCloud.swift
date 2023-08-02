@@ -175,6 +175,7 @@ public protocol RuuviCloud {
         min: Double?,
         max: Double?,
         counter: Int?,
+        delay: Int?,
         description: String?,
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError>

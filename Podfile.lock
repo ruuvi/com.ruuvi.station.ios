@@ -178,9 +178,9 @@ PODS:
     - RuuviBundleUtils/RuuviBundleUtils (= 0.0.1)
   - RuuviBundleUtils/RuuviBundleUtils (0.0.1)
   - RuuviBundleUtils/Tests (0.0.1)
-  - RuuviCloud (0.0.9):
-    - RuuviCloud/Contract (= 0.0.9)
-  - RuuviCloud/Api (0.0.9):
+  - RuuviCloud (0.1.0):
+    - RuuviCloud/Contract (= 0.1.0)
+  - RuuviCloud/Api (0.1.0):
     - BTKit
     - FutureX
     - RuuviCloud/Contract
@@ -188,13 +188,13 @@ PODS:
     - RuuviOntology/Mappers
     - RuuviPersistence
     - RuuviPool
-  - RuuviCloud/Contract (0.0.9):
+  - RuuviCloud/Contract (0.1.0):
     - FutureX
     - RuuviOntology
     - RuuviPersistence
     - RuuviPool
     - RuuviUser
-  - RuuviCloud/Pure (0.0.9):
+  - RuuviCloud/Pure (0.1.0):
     - FutureX
     - RuuviCloud/Api
     - RuuviCloud/Contract
@@ -202,7 +202,7 @@ PODS:
     - RuuviPersistence
     - RuuviPool
     - RuuviUser
-  - RuuviCloud/Tests (0.0.9)
+  - RuuviCloud/Tests (0.1.0)
   - RuuviContext (0.0.1):
     - RuuviContext/SQLite (= 0.0.1)
   - RuuviContext/Contract (0.0.1)
@@ -856,7 +856,7 @@ SPEC CHECKSUMS:
   RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
   RuuviAnalytics: 1442f702d42ca8a7c4000394a534cd54bf5fd67a
   RuuviBundleUtils: b143f4bb7bbb9b173527bec8836b3a507b6ca8f2
-  RuuviCloud: 9f6f077f279f27df18fc2b1af674ece7bd3984f3
+  RuuviCloud: f488ad2791dea1cee92b648e96e3eca20f5465b6
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
   RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293

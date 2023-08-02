@@ -73,6 +73,16 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let connectionAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertMuteTillDateUDKeyPrefix."
 
+    // connection
+    private let cloudConnectionAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertIsOnUDKeyPrefix."
+    private let cloudConnectionAlertUnseenDurationUDPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertUnseenDurationUDPrefix."
+    private let cloudConnectionAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertDescriptionUDKeyPrefix."
+    private let cloudConnectionAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertMuteTillDateUDKeyPrefix."
+
     // movement
     private let movementAlertIsOnUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertIsOnUDKeyPrefix."
@@ -134,6 +144,15 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                  return nil
             }
+        case .cloudConnection:
+            if prefs.bool(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid),
+               let unseenDuration = prefs.optionalDouble(
+                forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid
+               ) {
+                return .cloudConnection(unseenDuration: unseenDuration)
+            } else {
+                 return nil
+            }
         case .movement:
             if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid),
                 let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid) {
@@ -168,6 +187,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .cloudConnection(let unseenDuration):
+            prefs.set(true, forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(unseenDuration, forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
         case .movement(let last):
             prefs.set(true, forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.set(last, forKey: movementAlertCounterUDPrefix + uuid)
@@ -198,6 +220,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .cloudConnection(let unseenDuration):
+            prefs.set(false, forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(unseenDuration, forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
         case .movement(let last):
             prefs.set(false, forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.set(last, forKey: movementAlertCounterUDPrefix + uuid)
@@ -228,6 +253,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.removeObject(forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .cloudConnection(let unseenDuration):
+            prefs.removeObject(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
         case .movement(let last):
             prefs.removeObject(forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: movementAlertCounterUDPrefix + uuid)
@@ -248,6 +276,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(date, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .cloudConnection:
+            prefs.set(date, forKey: cloudConnectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .movement:
             prefs.set(date, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
         }
@@ -267,6 +297,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(nil, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .cloudConnection:
+            prefs.set(nil, forKey: cloudConnectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .movement:
             prefs.set(nil, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
         }
@@ -286,6 +318,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: signalAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .connection:
             return prefs.value(forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .cloudConnection:
+            return prefs.value(forKey: cloudConnectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .movement:
             return prefs.value(forKey: movementAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         }
@@ -449,6 +483,25 @@ extension AlertPersistenceUserDefaults {
 
     func setConnection(description: String?, for uuid: String) {
         prefs.set(description, forKey: connectionAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Cloud Connection
+extension AlertPersistenceUserDefaults {
+    func cloudConnectionUnseenDuration(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
+    }
+
+    func setCloudConnection(unseenDuration: Double?, for uuid: String) {
+        prefs.set(unseenDuration, forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
+    }
+
+    func cloudConnectionDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: cloudConnectionAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setCloudConnection(description: String?, for uuid: String) {
+        prefs.set(description, forKey: cloudConnectionAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

@@ -395,10 +395,7 @@ extension RuuviNotificationLocalImpl {
                         if !isOn {
                             self?.cancel(.signal, for: uuid)
                         }
-                    case .connection:
-                        // do nothing
-                        break
-                    case .movement:
+                    case .connection, .cloudConnection, .movement:
                         // do nothing
                         break
                     }
