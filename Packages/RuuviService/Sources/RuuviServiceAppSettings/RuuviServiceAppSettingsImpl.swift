@@ -138,6 +138,18 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
+    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        cloud.set(showMinMaxAvg: showMinMaxAvg)
+            .on(success: { show in
+                promise.succeed(value: show)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         cloud.set(cloudMode: cloudMode)

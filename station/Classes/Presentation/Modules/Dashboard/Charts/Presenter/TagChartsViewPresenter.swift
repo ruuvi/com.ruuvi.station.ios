@@ -80,6 +80,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var chartIntervalDidChangeToken: NSObjectProtocol?
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
+    private var chartShowStatsStateDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
@@ -100,6 +101,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
         didSet {
             self.view?.viewModel = self.viewModel
             self.view?.historyLengthInDay = self.settings.chartDurationHours/24
+            self.view?.showChartStat = self.settings.chartStatsOn
         }
     }
 
@@ -261,6 +263,12 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     func viewDidSelectLongerHistory() {
         view?.showLongerHistoryDialog()
     }
+
+    func viewDidSelectTriggerChartStat(show: Bool) {
+        settings.chartStatsOn = show
+        view?.showChartStat = show
+        interactor.updateChartShowMinMaxAvgSetting(with: show)
+    }
 }
 // MARK: - TagChartsInteractorOutput
 extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
@@ -332,6 +340,7 @@ extension TagChartsViewPresenter {
         downsampleDidChangeToken?.invalidate()
         chartIntervalDidChangeToken?.invalidate()
         chartDurationHourDidChangeToken?.invalidate()
+        chartShowStatsStateDidChangeToken?.invalidate()
         chartDrawDotsDidChangeToken?.invalidate()
         sensorSettingsToken?.invalidate()
     }
@@ -474,6 +483,15 @@ extension TagChartsViewPresenter {
                          using: { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.interactor.restartObservingData()
+        })
+        chartShowStatsStateDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartStatsOnDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.view?.showChartStat = sSelf.settings.chartStatsOn
         })
         chartDrawDotsDidChangeToken = NotificationCenter
             .default

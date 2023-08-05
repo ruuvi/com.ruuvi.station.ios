@@ -321,6 +321,32 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .chartShowMinMaxAverage,
+            value: showMinMaxAvg.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: showMinMaxAvg)
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.chartShowMinMaxAverage.rawValue
+                )
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey else {

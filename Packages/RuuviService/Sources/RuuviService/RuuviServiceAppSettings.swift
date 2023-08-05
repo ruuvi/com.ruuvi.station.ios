@@ -31,6 +31,9 @@ public protocol RuuviServiceAppSettings {
     func set(chartDuration: Int) -> Future<Int, RuuviServiceError>
 
     @discardableResult
+    func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviServiceError>
+
+    @discardableResult
     func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError>
 
     @discardableResult

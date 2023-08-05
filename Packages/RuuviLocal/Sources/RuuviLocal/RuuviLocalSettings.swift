@@ -16,6 +16,7 @@ extension Notification.Name {
     public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
+    public static let ChartStatsOnDidChange = Notification.Name("ChartStatsOnDidChange")
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
     public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
     public static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
@@ -67,6 +68,7 @@ public protocol RuuviLocalSettings {
     var chartDurationHours: Int { get set }
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
+    var chartStatsOn: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }

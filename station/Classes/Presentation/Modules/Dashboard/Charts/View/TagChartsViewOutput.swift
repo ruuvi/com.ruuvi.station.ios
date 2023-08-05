@@ -16,4 +16,5 @@ protocol TagChartsViewOutput {
     func viewDidTapOnExport()
     func viewDidSelectChartHistoryLength(day: Int)
     func viewDidSelectLongerHistory()
+    func viewDidSelectTriggerChartStat(show: Bool)
 }

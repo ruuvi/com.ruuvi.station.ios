@@ -25,6 +25,13 @@ class TagChartsView: LineChartView {
         return label
     }()
 
+    private lazy var chartMinMaxAvgLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
+        return label
+    }()
+
     private lazy var markerView = TagChartsMarkerView()
 
     // MARK: - LifeCycle
@@ -42,14 +49,30 @@ class TagChartsView: LineChartView {
     // MARK: - Layout
     private func addSubviews() {
         self.addSubview(chartNameLabel)
-        chartNameLabel.anchor(top: nil,
-                              leading: nil,
-                              bottom: bottomAnchor,
-                              trailing: trailingAnchor,
-                              padding: .init(top: 0,
-                                             left: 0,
-                                             bottom: UIDevice.isTablet() ? 42 : 28,
-                                             right: 16))
+        chartNameLabel.anchor(
+            top: nil,
+            leading: nil,
+            bottom: bottomAnchor,
+            trailing: trailingAnchor,
+            padding: .init(
+                top: 0,
+                left: 0,
+                bottom: UIDevice.isTablet() ? 42 : 28,
+                right: 16
+            )
+        )
+
+        self.addSubview(chartMinMaxAvgLabel)
+        chartMinMaxAvgLabel.anchor(
+            top: nil,
+            leading: nil,
+            bottom: chartNameLabel.topAnchor,
+            trailing: trailingAnchor,
+            padding: .init(
+                top: 0, left: 0, bottom: 4, right: 16
+            )
+        )
+        chartMinMaxAvgLabel.isHidden = true
     }
 
     // MARK: - Private
@@ -235,5 +258,36 @@ extension TagChartsView {
 
     func hideChartNameLabel(hide: Bool) {
         chartNameLabel.alpha = hide ? 0 : 1
+    }
+
+    func setChartStat(
+        min: Double,
+        max: Double,
+        avg: Double,
+        type: MeasurementType
+    ) {
+        var roundedTo: Int = 2
+        switch type {
+        case .temperature:
+            roundedTo = settings.temperatureAccuracy.value
+        case .humidity:
+            roundedTo = settings.humidityAccuracy.value
+        case .pressure:
+            roundedTo = settings.pressureAccuracy.value
+        default:
+            break
+        }
+        let minText = "chart_stat_min".localized() + ": " + min.round(to: roundedTo).stringValue
+        let maxText = "chart_stat_max".localized() + ": " + max.round(to: roundedTo).stringValue
+        let avgText = "chart_stat_avg".localized() + ": " + avg.round(to: roundedTo).stringValue
+        chartMinMaxAvgLabel.text = minText + " " + maxText + " " + avgText
+    }
+
+    func clearChartStat() {
+        chartMinMaxAvgLabel.text = nil
+    }
+
+    func setChartStatVisible(show: Bool) {
+        chartMinMaxAvgLabel.isHidden = !show
     }
 }

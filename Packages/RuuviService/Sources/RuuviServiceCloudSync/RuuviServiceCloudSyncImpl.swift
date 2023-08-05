@@ -88,6 +88,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
                     sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
                 }
+                if let chartShowMinMaxAvg = cloudSettings.chartShowMinMaxAvg,
+                   chartShowMinMaxAvg != sSelf.ruuviLocalSettings.chartStatsOn {
+                    sSelf.ruuviLocalSettings.chartStatsOn = chartShowMinMaxAvg
+                }
                 if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
                    cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
                     sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled

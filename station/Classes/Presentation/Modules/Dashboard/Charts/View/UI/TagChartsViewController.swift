@@ -26,6 +26,12 @@ class TagChartsViewController: UIViewController {
         }
     }
 
+    var showChartStat: Bool = true {
+        didSet {
+            moreButton.menu = moreButtonOptions(showChartStat: showChartStat)
+        }
+    }
+
     var measurementService: RuuviServiceMeasurement! {
         didSet {
             measurementService?.add(self)
@@ -413,7 +419,7 @@ class TagChartsViewController: UIViewController {
         }
     }
 
-    fileprivate func moreButtonOptions() -> UIMenu {
+    fileprivate func moreButtonOptions(showChartStat: Bool = true) -> UIMenu {
         let exportHistoryAction = UIAction(title: "export_history".localized()) {
             [weak self] _ in
             self?.output.viewDidTapOnExport()
@@ -425,14 +431,32 @@ class TagChartsViewController: UIViewController {
             sSelf.output.viewDidTriggerClear(for: sSelf.viewModel)
         }
 
-        return UIMenu(title: "",
-                      children: [exportHistoryAction, clearViewHistory])
+        let minMaxAvgAction = UIAction(
+            title: !showChartStat ? "chart_stat_show".localized() : "chart_stat_hide".localized()
+        ) {
+            [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.output.viewDidSelectTriggerChartStat(show: !showChartStat)
+            sSelf.chartViews.forEach({ chartView in
+                chartView.setChartStatVisible(show: !showChartStat)
+            })
+        }
+
+        return UIMenu(
+            title: "",
+            children: [
+                exportHistoryAction,
+                clearViewHistory,
+                minMaxAvgAction
+            ]
+        )
     }
 }
 
 extension TagChartsViewController: TagChartsViewDelegate {
     func chartDidTranslate(_ chartView: TagChartsView) {
         guard chartViews.count > 1 else {
+            calculateMinMaxForChart(for: chartView)
             return
         }
         let sourceMatrix = chartView.viewPortHandler.touchMatrix
@@ -445,6 +469,10 @@ extension TagChartsViewController: TagChartsViewDelegate {
                 chart: otherChart,
                 invalidate: true
             )
+        }
+
+        for view in chartViews {
+            calculateMinMaxForChart(for: view)
         }
     }
 
@@ -854,15 +882,21 @@ extension TagChartsViewController {
         view.localize()
         view.setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
         view.setXAxisRenderer()
+
+        calculateMinMaxForChart(for: view)
+        view.setChartStatVisible(show: showChartStat)
     }
 
     private func clearChartData() {
         temperatureChartView.clearChartData()
         temperatureChartView.highlightValue(nil)
+        temperatureChartView.clearChartStat()
         humidityChartView.clearChartData()
         humidityChartView.highlightValue(nil)
+        humidityChartView.clearChartStat()
         pressureChartView.clearChartData()
         pressureChartView.highlightValue(nil)
+        pressureChartView.clearChartStat()
     }
 
     // MARK: - UI RELATED METHODS
@@ -904,6 +938,101 @@ extension TagChartsViewController {
                                      block: { [weak self] (_) in
             self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
         })
+    }
+
+    private func calculateMinMaxForChart(for view: TagChartsView) {
+        if let data = view.data,
+           let dataSet = data.dataSets.first as? LineChartDataSet {
+
+            let lowestVisibleX = view.lowestVisibleX
+            let highestVisibleX = view.highestVisibleX
+
+            var minVisibleYValue = Double.greatestFiniteMagnitude
+            var maxVisibleYValue = -Double.greatestFiniteMagnitude
+
+            dataSet.entries.forEach { entry in
+                if entry.x >= lowestVisibleX && entry.x <= highestVisibleX {
+                    minVisibleYValue = min(minVisibleYValue, entry.y)
+                    maxVisibleYValue = max(maxVisibleYValue, entry.y)
+                }
+            }
+
+            let averageYValue = calculateVisibleAverage(chartView: view, dataSet: dataSet)
+            var type: MeasurementType = .temperature
+            if view == temperatureChartView {
+                type = .temperature
+            } else if view == humidityChartView {
+                type = .humidity
+            } else if view == pressureChartView {
+                type = .pressure
+            }
+
+            view.setChartStat(
+                min: minVisibleYValue,
+                max: maxVisibleYValue,
+                avg: averageYValue,
+                type: type
+            )
+
+        }
+    }
+
+    /**
+     Calculate the average value of visible data points on a `LineChartView`.
+     This function computes the average by considering the area under the curve
+     formed by the visible data points and then divides it by the width of the visible x-range.
+     The area under the curve is approximated using the trapezoidal rule.
+
+     - Parameters:
+       - chartView: The `LineChartView` instance whose visible range's average needs to be calculated.
+       - dataSet: The `LineChartDataSet` containing data points to be considered.
+
+     - Returns: The average value of visible data points.
+
+     - Note:
+       The function uses the trapezoidal rule for approximation. The formula for the trapezoidal rule is:
+       A = (b - a) * (f(a) + f(b)) / 2
+       Where:
+       - A is the area of the trapezium.
+       - a and b are the x-coordinates of the two data points.
+       - f(a) and f(b) are the y-coordinates (or values) of the two data points.
+       
+       The average is then computed as the total area divided by the width of the visible x-range.
+    */
+    private func calculateVisibleAverage(chartView: LineChartView, dataSet: LineChartDataSet) -> Double {
+        // Get the x-values defining the visible range of the chart.
+        let lowestVisibleX = chartView.lowestVisibleX
+        let highestVisibleX = chartView.highestVisibleX
+
+        // Filter out the entries that lie within the visible range.
+        let visibleEntries = dataSet.entries.filter { $0.x >= lowestVisibleX && $0.x <= highestVisibleX }
+
+        // If there are no visible entries, return an average of 0.
+        guard !visibleEntries.isEmpty else { return 0.0 }
+
+        var totalArea = 0.0
+        // Compute the area under the curve for each pair of consecutive points.
+        for i in 1..<visibleEntries.count {
+            let x1 = visibleEntries[i-1].x
+            let y1 = visibleEntries[i-1].y
+            let x2 = visibleEntries[i].x
+            let y2 = visibleEntries[i].y
+
+            // Calculate the area of the trapezium formed by two consecutive data points.
+            let area = (x2 - x1) * (y1 + y2) / 2.0
+            totalArea += area
+        }
+
+        // Calculate the width of the visible x-range.
+        let timeSpan = visibleEntries.last!.x - visibleEntries.first!.x
+
+        // If all visible data points have the same x-value, simply return the average of their y-values.
+        if timeSpan == 0 {
+            return visibleEntries.map { $0.y }.reduce(0, +) / Double(visibleEntries.count)
+        }
+
+        // Compute the average using the trapezoidal rule.
+        return totalArea / timeSpan
     }
 }
 

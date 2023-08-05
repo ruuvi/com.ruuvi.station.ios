@@ -209,6 +209,10 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
     func updateChartHistoryDurationSetting(with day: Int) {
         ruuviAppSettingsService.set(chartDuration: day)
     }
+
+    func updateChartShowMinMaxAvgSetting(with show: Bool) {
+        ruuviAppSettingsService.set(showMinMaxAvg: show)
+    }
 }
 
 // MARK: - Private

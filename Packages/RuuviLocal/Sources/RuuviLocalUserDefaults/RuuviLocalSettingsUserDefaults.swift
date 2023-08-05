@@ -369,6 +369,17 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.chartStatsOn", defaultValue: true)
+    var chartStatsOn: Bool {
+        didSet {
+            NotificationCenter
+                .default
+                .post(name: .ChartStatsOnDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
     @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
     var experimentalFeaturesEnabled: Bool
 

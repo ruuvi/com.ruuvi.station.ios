@@ -10,6 +10,7 @@ public protocol RuuviCloudSettings {
     var chartShowAllPoints: Bool? { get }
     var chartDrawDots: Bool? { get }
     var chartViewPeriod: Int? { get }
+    var chartShowMinMaxAvg: Bool? { get }
     var cloudModeEnabled: Bool? { get }
     var dashboardEnabled: Bool? { get }
     var dashboardType: DashboardType? { get }
