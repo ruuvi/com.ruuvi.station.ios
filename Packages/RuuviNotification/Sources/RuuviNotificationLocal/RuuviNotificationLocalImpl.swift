@@ -55,6 +55,9 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     var highPressureAlerts = [String: Date]()
     var lowSignalAlerts = [String: Date]()
     var highSignalAlerts = [String: Date]()
+    var movementAlerts = [String: Date]()
+    var connectAlerts = [String: Date]()
+    var disconnectAlerts = [String: Date]()
 
     private let lowHigh = LocalAlertCategory(
         id: "com.ruuvi.station.alerts.lh",
@@ -96,90 +99,148 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     }
 
     public func showDidConnect(uuid: String, title: String) {
-        if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid),
-           mutedTill > Date() {
-            return // muted
+        var needsToShow: Bool
+        var cache: [String: Date] = connectAlerts
+
+        if let shownDate = cache[uuid] {
+            var intervalPassed: Bool = true
+            if settings.limitAlertNotificationsEnabled {
+                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
+            }
+
+            if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
+                needsToShow = intervalPassed && (Date() > mutedTill)
+            } else {
+                needsToShow = intervalPassed
+            }
+        } else if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
+            needsToShow = Date() > mutedTill
+        } else {
+            needsToShow = true
         }
 
-        let content = UNMutableNotificationContent()
-        content.title = title
-        switch settings.alertSound {
-        case .systemDefault:
-            content.sound = .default
-        default:
-            content.sound = UNNotificationSound(
-                named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
-            )
-        }
-        content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
-        content.categoryIdentifier = blast.id
+        if needsToShow {
+            let content = UNMutableNotificationContent()
+            content.title = title
+            switch settings.alertSound {
+            case .systemDefault:
+                content.sound = .default
+            default:
+                content.sound = UNNotificationSound(
+                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                )
+            }
+            content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
+            content.categoryIdentifier = blast.id
 
-        ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
-            guard let sSelf = self else { return }
-            content.subtitle = ruuviTag.name
-            content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        })
+            ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+                guard let sSelf = self else { return }
+                content.subtitle = ruuviTag.name
+                content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
+
+            connectAlerts[uuid] = Date()
+        }
     }
 
     public func showDidDisconnect(uuid: String, title: String) {
-        if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid),
-           mutedTill > Date() {
-            return // muted
-        }
-        let content = UNMutableNotificationContent()
-        switch settings.alertSound {
-        case .systemDefault:
-            content.sound = .default
-        default:
-            content.sound = UNNotificationSound(
-                named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
-            )
-        }
-        content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
-        content.categoryIdentifier = blast.id
-        content.title = title
+        var needsToShow: Bool
+        var cache: [String: Date] = disconnectAlerts
 
-        ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
-            guard let sSelf = self else { return }
-            content.subtitle = ruuviTag.name
-            content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        })
+        if let shownDate = cache[uuid] {
+            var intervalPassed: Bool = true
+            if settings.limitAlertNotificationsEnabled {
+                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
+            }
+
+            if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
+                needsToShow = intervalPassed && (Date() > mutedTill)
+            } else {
+                needsToShow = intervalPassed
+            }
+        } else if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
+            needsToShow = Date() > mutedTill
+        } else {
+            needsToShow = true
+        }
+
+        if needsToShow {
+            let content = UNMutableNotificationContent()
+            switch settings.alertSound {
+            case .systemDefault:
+                content.sound = .default
+            default:
+                content.sound = UNNotificationSound(
+                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                )
+            }
+            content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
+            content.categoryIdentifier = blast.id
+            content.title = title
+
+            ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+                guard let sSelf = self else { return }
+                content.subtitle = ruuviTag.name
+                content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
+
+            disconnectAlerts[uuid] = Date()
+        }
     }
 
     public func notifyDidMove(for uuid: String, counter: Int, title: String) {
-        if let mutedTill = ruuviAlertService.mutedTill(type: .movement(last: 0), for: uuid),
-           mutedTill > Date() {
-            return // muted
+        var needsToShow: Bool
+        var cache: [String: Date] = movementAlerts
+
+        if let shownDate = cache[uuid] {
+            var intervalPassed: Bool = true
+            if settings.limitAlertNotificationsEnabled {
+                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
+            }
+
+            if let mutedTill = ruuviAlertService.mutedTill(type: .movement(last: 0), for: uuid) {
+                needsToShow = intervalPassed && (Date() > mutedTill)
+            } else {
+                needsToShow = intervalPassed
+            }
+        } else if let mutedTill = ruuviAlertService.mutedTill(type: .movement(last: 0), for: uuid) {
+            needsToShow = Date() > mutedTill
+        } else {
+            needsToShow = true
         }
 
-        let content = UNMutableNotificationContent()
-        switch settings.alertSound {
-        case .systemDefault:
-            content.sound = .default
-        default:
-            content.sound = UNNotificationSound(
-                named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
-            )
+        if needsToShow {
+            let content = UNMutableNotificationContent()
+            switch settings.alertSound {
+            case .systemDefault:
+                content.sound = .default
+            default:
+                content.sound = UNNotificationSound(
+                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                )
+            }
+            content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
+            content.categoryIdentifier = blast.id
+
+            content.title = title
+
+            ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+                guard let sSelf = self else { return }
+                content.subtitle = ruuviTag.name
+                content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
+
+            movementAlerts[uuid] = Date()
         }
-        content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
-        content.categoryIdentifier = blast.id
-
-        content.title = title
-
-        ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
-            guard let sSelf = self else { return }
-            content.subtitle = ruuviTag.name
-            content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        })
     }
 }
 
@@ -225,8 +286,15 @@ extension RuuviNotificationLocalImpl {
         }
 
         if let shownDate = cache[uuid] {
-            let intervalPassed = Date().timeIntervalSince(shownDate) >=
-                TimeInterval(settings.saveHeartbeatsIntervalMinutes * 60)
+            var intervalPassed: Bool = false
+            if settings.limitAlertNotificationsEnabled {
+                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
+            } else {
+                intervalPassed =
+                    Date().timeIntervalSince(shownDate) >=
+                    TimeInterval(settings.saveHeartbeatsIntervalMinutes * 60)
+            }
+
             if let mutedTill = ruuviAlertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
                 needsToShow = intervalPassed && (Date() > mutedTill)
             } else {
@@ -618,6 +686,14 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             value: self.settings.alertsMuteIntervalMinutes,
             to: Date()
         )
+    }
+
+    private func lastTriggerOffset(from shown: Date) -> Date {
+        return Calendar.current.date(
+            byAdding: .minute,
+            value: self.settings.alertsMuteIntervalMinutes,
+            to: shown
+        ) ?? Date()
     }
 }
 

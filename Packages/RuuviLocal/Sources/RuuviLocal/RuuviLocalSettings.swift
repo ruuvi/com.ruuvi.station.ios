@@ -25,6 +25,8 @@ extension Notification.Name {
     public static let AlertSoundSettingsDidChange = Notification.Name("AlertSoundSettingsDidChange")
     public static let EmailAlertSettingsDidChange = Notification.Name("EmailAlertSettingsDidChange")
     public static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
+    public static let LimitAlertNotificationsSettingsDidChange =
+        Notification.Name("LimitAlertNotificationsSettingsDidChange")
 }
 
 public enum DashboardTypeKey: String {
@@ -88,6 +90,7 @@ public protocol RuuviLocalSettings {
     var emailAlertEnabled: Bool { get set }
     var showPushAlertSettings: Bool { get set }
     var pushAlertEnabled: Bool { get set }
+    var limitAlertNotificationsEnabled: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

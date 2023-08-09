@@ -62,6 +62,7 @@ extension NotificationsSettingsPresenter {
             viewModels.append(buildPushSettings())
         }
 
+        viewModels.append(buildLimitAlertNotificationsSettings())
         viewModels.append(buildSoundSettings())
 
         settingsViewModels = viewModels
@@ -96,6 +97,22 @@ extension NotificationsSettingsPresenter {
             let alertEnabled = GlobalHelpers.getBool(from: enabled)
             observer.settings.pushAlertEnabled = alertEnabled
             observer.ruuviAppSettingsService.set(pushAlert: alertEnabled)
+        }
+
+        return viewModel
+    }
+
+    private func buildLimitAlertNotificationsSettings() -> NotificationsSettingsViewModel {
+        let viewModel = NotificationsSettingsViewModel()
+        viewModel.title = "settings_alert_limit_notification".localized()
+        viewModel.subtitle = "settings_alert_limit_notification_description".localized()
+        viewModel.boolean.value = settings.limitAlertNotificationsEnabled
+        viewModel.configType.value = .switcher
+        viewModel.settingsType.value = .limitAlert
+
+        bind(viewModel.boolean, fire: false) { observer, enabled in
+            let isEnabled = GlobalHelpers.getBool(from: enabled)
+            observer.settings.limitAlertNotificationsEnabled = isEnabled
         }
 
         return viewModel

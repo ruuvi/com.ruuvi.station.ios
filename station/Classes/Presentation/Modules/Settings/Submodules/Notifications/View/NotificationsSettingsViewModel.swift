@@ -9,6 +9,7 @@ enum NotificationsSettingsConfigType {
 enum NotificationsSettingsType {
     case email
     case push
+    case limitAlert
     case alertSound
 }
 

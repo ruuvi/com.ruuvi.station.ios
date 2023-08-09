@@ -621,5 +621,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
         }
     }
+
+    @UserDefault("SettingsUserDefaults.limitAlertNotificationsEnabled", defaultValue: true)
+    var limitAlertNotificationsEnabled: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(name: .LimitAlertNotificationsSettingsDidChange,
+                          object: self,
+                          userInfo: nil)
+            }
+        }
+    }
 }
 // swiftlint:enable type_body_length file_length
