@@ -491,7 +491,9 @@ extension TagChartsViewPresenter {
                          queue: .main,
                          using: { [weak self] _ in
                 guard let sSelf = self else { return }
-                sSelf.view?.showChartStat = sSelf.settings.chartStatsOn
+                DispatchQueue.main.async {
+                    sSelf.view?.showChartStat = sSelf.settings.chartStatsOn
+                }
         })
         chartDrawDotsDidChangeToken = NotificationCenter
             .default
