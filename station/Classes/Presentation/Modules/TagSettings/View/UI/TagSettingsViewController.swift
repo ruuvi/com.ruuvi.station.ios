@@ -602,7 +602,9 @@ extension TagSettingsViewController {
         ]
         if showOwner() {
             availableItems.append(tagOwnerSettingItem())
-            if let isOwner = viewModel?.isOwner.value, !isOwner, showPlan {
+            if let isOwner = viewModel?.isOwner.value, !isOwner,
+               let isCloudTag = viewModel?.isNetworkConnected.value,
+                isCloudTag, showPlan {
                 availableItems.append(tagOwnersPlanSettingItem())
             }
         }
