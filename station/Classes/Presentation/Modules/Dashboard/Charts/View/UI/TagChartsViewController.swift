@@ -22,6 +22,19 @@ class TagChartsViewController: UIViewController {
     var historyLengthInDay: Int = 1 {
         didSet {
             historySelectionButton.updateTitle(with: "day_\(historyLengthInDay)".localized())
+        }
+    }
+
+    var historyLengthInHours: Int = 1 {
+        didSet {
+            if historyLengthInHours >= 24 {
+                historyLengthInDay = historyLengthInHours / 24
+            } else {
+                let unit = historyLengthInHours == 1 ? "hour".localized() : "hours".localized()
+                historySelectionButton.updateTitle(
+                        with: "\(historyLengthInHours) " + unit.lowercased()
+                )
+            }
             historySelectionButton.updateMenu(with: historyLengthOptions())
         }
     }
@@ -158,6 +171,7 @@ class TagChartsViewController: UIViewController {
     }()
     // UI END
 
+    private let historyHoursOptions: [Int] = [1, 2, 3, 12]
     private let minimumHistoryLimit: Int = 1 // Day
     private let maximumHistoryLimit: Int = 10 // Days
     private var timer: Timer?
@@ -386,12 +400,26 @@ class TagChartsViewController: UIViewController {
     fileprivate func historyLengthOptions() -> UIMenu {
         var actions: [UIAction] = []
 
+        for hour in historyHoursOptions {
+            let action = UIAction(
+                title: "\(hour) \(hour == 1 ? "hour".localized() : "hours".localized())".lowercased()
+            ) { [weak self] _ in
+                self?.handleHistoryLengthSelection(hours: hour)
+            }
+             if hour == historyLengthInHours {
+                action.state = .on
+             } else {
+                action.state = .off
+             }
+            actions.append(action)
+        }
+
         for day in minimumHistoryLimit...maximumHistoryLimit {
             let action = UIAction(title: "day_\(day)".localized()) {
                 [weak self] _ in
-                self?.handleHistoryLengthSelection(with: day)
+                self?.handleHistoryLengthSelection(hours: day*24)
             }
-            if day == historyLengthInDay {
+            if day == historyLengthInHours / 24 {
                 action.state = .on
             } else {
                 action.state = .off
@@ -401,7 +429,7 @@ class TagChartsViewController: UIViewController {
 
         // Add more at the bottom
         let more_action = UIAction(title: "more".localized()) { [weak self] _ in
-            self?.handleHistoryLengthSelection(with: nil)
+            self?.handleHistoryLengthSelection(hours: nil)
         }
         actions.append(more_action)
 
@@ -409,10 +437,18 @@ class TagChartsViewController: UIViewController {
                       children: actions)
     }
 
-    fileprivate func handleHistoryLengthSelection(with day: Int?) {
-        if let day = day {
-            historySelectionButton.updateTitle(with: "day_\(day)".localized())
-            output.viewDidSelectChartHistoryLength(day: day)
+    fileprivate func handleHistoryLengthSelection(hours: Int?) {
+        if let hours = hours {
+            if hours >= 24 {
+                historySelectionButton.updateTitle(with: "day_\(hours/24)".localized())
+                historySelectionButton.updateMenu(with: historyLengthOptions())
+            } else {
+                let unit = hours == 1 ? "hour".localized() : "hours".localized()
+                historySelectionButton.updateTitle(
+                        with: "\(hours) " + unit.lowercased()
+                )
+            }
+            output.viewDidSelectChartHistoryLength(hours: hours)
             historySelectionButton.updateMenu(with: historyLengthOptions())
         } else {
             output.viewDidSelectLongerHistory()

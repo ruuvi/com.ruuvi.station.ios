@@ -100,7 +100,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
             self.view?.viewModel = self.viewModel
-            self.view?.historyLengthInDay = self.settings.chartDurationHours/24
+            self.view?.historyLengthInHours = self.settings.chartDurationHours
             self.view?.showChartStat = self.settings.chartStatsOn
         }
     }
@@ -255,9 +255,9 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
             })
     }
 
-    func viewDidSelectChartHistoryLength(day: Int) {
-        settings.chartDurationHours = day*24
-        interactor.updateChartHistoryDurationSetting(with: day)
+    func viewDidSelectChartHistoryLength(hours: Int) {
+        settings.chartDurationHours = hours
+        interactor.updateChartHistoryDurationSetting(with: hours)
     }
 
     func viewDidSelectLongerHistory() {

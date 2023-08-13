@@ -85,8 +85,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     sSelf.ruuviLocalSettings.chartDrawDotsOn = false
                 }
                 if let chartViewPeriod = cloudSettings.chartViewPeriod,
-                   (chartViewPeriod*24) != sSelf.ruuviLocalSettings.chartDurationHours {
-                    sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod * 24
+                   (chartViewPeriod) != sSelf.ruuviLocalSettings.chartDurationHours {
+                    sSelf.ruuviLocalSettings.chartDurationHours = chartViewPeriod
                 }
                 if let chartShowMinMaxAvg = cloudSettings.chartShowMinMaxAvg,
                    chartShowMinMaxAvg != sSelf.ruuviLocalSettings.chartStatsOn {
