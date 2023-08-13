@@ -294,6 +294,7 @@
 "Menu.Label.Feedback.text" = "Feedback schicken";
 "Menu.Label.MyRuuviAccount.text" = "Mein Ruuvi Konto";
 "min" = "min";
+"minutes" = "Minuten";
 "TagSettings.Label.moreInfo.text" = "Mehr info";
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "No" = "Nein";
@@ -676,6 +677,9 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "add_your_first_sensor" = "Fügen Sie Ihren ersten Sensor hinzu";
 "changelog" = "(änderungsprotokoll)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
+"chart_stat_min" = "Min";
+"chart_stat_max" = "Max";
+"chart_stat_avg" = "Durchschnitt";
 "shared_to_x" = "Freigegebene %d/%d";
 "settings_alert_notifications" = "Alarmbenachrichtigungen";
 "settings_alert_sound" = "Alarmton";
@@ -706,12 +710,8 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "add_with_nfc" = "Mit NFC hinzufügen";
 "sensor_details" = "Sensordetails";
 "add_sensor" = "Sensor hinzufügen";
-<<<<<<< HEAD
 "copy_mac_address" = "MAC-Adresse kopieren";
 "copy_unique_id" = "Eindeutige ID kopieren";
-=======
-"copy_details" = "Details kopieren";
->>>>>>> testflight
 "name" = "Name:";
 "mac_address" = "MAC-Adresse:";
 "go_to_sensor" = "Gehen Sie zur Sensorkarte";
@@ -727,4 +727,12 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "claim_sensor_ownership" = "Beanspruchen Sie den Besitz des Sensors";
 "do_you_own_sensor" = "Besitzen Sie diesen Sensor?";
 "owners_plan" = "Ruuvi-Plan des Eigentümers";
-"rename" = "Rename";
+"alert_cloud_connection_title" = "Cloud-Verbindung";
+"alert_cloud_connection_description" = "Warnung, wenn Sensordaten länger als %d Minuten nicht in der Cloud aktualisiert wurden.";
+"alert_cloud_connection_dialog_description" = "Geben Sie die gewünschte Verzögerung in Minuten ein, bevor die Warnung ausgelöst wird. Der Mindestwert beträgt 2 Minuten.";
+"alert_cloud_connection_dialog_title" = "Cloud-Verbindungsalarm einstellen";
+"rename" = "Umbenennen";
+"chart_stat_show" = "Show min/max/avg";
+"chart_stat_hide" = "Hide min/max/avg";
+"settings_alert_limit_notification" = "Limit alert notifications";
+"settings_alert_limit_notification_description" = "Trigger Bluetooth alert notification only once per hour even if alert was retriggered.";
