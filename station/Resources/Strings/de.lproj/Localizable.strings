@@ -710,8 +710,12 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "add_with_nfc" = "Mit NFC hinzufügen";
 "sensor_details" = "Sensordetails";
 "add_sensor" = "Sensor hinzufügen";
+<<<<<<< HEAD
 "copy_mac_address" = "MAC-Adresse kopieren";
 "copy_unique_id" = "Eindeutige ID kopieren";
+=======
+"copy_details" = "Details kopieren";
+>>>>>>> testflight
 "name" = "Name:";
 "mac_address" = "MAC-Adresse:";
 "go_to_sensor" = "Gehen Sie zur Sensorkarte";
