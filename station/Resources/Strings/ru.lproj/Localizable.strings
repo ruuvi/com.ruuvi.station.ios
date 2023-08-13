@@ -295,6 +295,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Menu.Label.Feedback.text" = "Отправить Отзыв";
 "Menu.Label.MyRuuviAccount.text" = "My Ruuvi Account";
 "min" = "мин";
+"minutes" = "Минут";
 "TagSettings.Label.moreInfo.text" = "Дополнительно";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "No" = "Нет";
@@ -671,6 +672,9 @@ If you cannot see the Language option in the settings, make sure that you have a
 "add_your_first_sensor" = "Add Your First Sensor";
 "changelog" = "(changelog)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
+"chart_stat_min" = "Min";
+"chart_stat_max" = "Max";
+"chart_stat_avg" = "Average";
 "shared_to_x" = "Shared to %d/%d";
 "settings_alert_notifications" = "Уведомления о тревогах";
 "settings_alert_sound" = "Alert Sound";
@@ -718,4 +722,12 @@ If you cannot see the Language option in the settings, make sure that you have a
 "claim_sensor_ownership" = "Заявить о собственности на датчик";
 "do_you_own_sensor" = "Это ваш датчик?";
 "owners_plan" = "Owner's Ruuvi Plan";
-"rename" = "Rename";
+"alert_cloud_connection_title" = "Cloud Connection";
+"alert_cloud_connection_description" = "Alert if sensor data hasn't been updated to the cloud for longer than %d minutes.";
+"alert_cloud_connection_dialog_description" = "Enter the desired delay to be used in minutes before alert is triggered. Minimum value is 2 minutes.";
+"alert_cloud_connection_dialog_title" = "Set cloud connection alert";
+"rename" = "Переименовать";
+"chart_stat_show" = "Show min/max/avg";
+"chart_stat_hide" = "Hide min/max/avg";
+"settings_alert_limit_notification" = "Limit alert notifications";
+"settings_alert_limit_notification_description" = "Trigger Bluetooth alert notification only once per hour even if alert was retriggered.";
