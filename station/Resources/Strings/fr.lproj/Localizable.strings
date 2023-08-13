@@ -706,12 +706,8 @@ RuuviTag est prêt à être utilisé !";
 "add_with_nfc" = "Ajouter avec NFC";
 "sensor_details" = "Détails du capteur";
 "add_sensor" = "Ajouter un capteur";
-<<<<<<< HEAD
 "copy_mac_address" = "Copier l'adresse MAC";
 "copy_unique_id" = "Copier l'identifiant unique";
-=======
-"copy_details" = "Copier les détails";
->>>>>>> testflight
 "name" = "Nom:";
 "mac_address" = "Adresse Mac:";
 "go_to_sensor" = "Aller à la carte du capteur";

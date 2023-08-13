@@ -705,12 +705,8 @@ RuuviTag on valmis käyttöön!";
 "add_with_nfc" = "Lisää NFC:llä";
 "sensor_details" = "Anturin tiedot";
 "add_sensor" = "Lisää anturi";
-<<<<<<< HEAD
 "copy_mac_address" = "Kopioi MAC-osoite";
 "copy_unique_id" = "Kopioi yksilöivä tunniste";
-=======
-"copy_details" = "Kopioi tiedot";
->>>>>>> testflight
 "name" = "Nimi:";
 "mac_address" = "MAC-osoite:";
 "go_to_sensor" = "Siirry anturikortille";
