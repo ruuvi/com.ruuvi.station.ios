@@ -165,13 +165,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
-        startObservingRuuviTagOwnerCheckResponse()
     }
 
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
         checkAndUpdateFirmwareVersion()
+        startObservingRuuviTagOwnerCheckResponse()
     }
 
     private func startObservingAppState() {
@@ -791,6 +791,9 @@ extension TagSettingsPresenter {
     }
 
     private func startObservingRuuviTagOwnerCheckResponse() {
+        ruuviTagSensorOwnerCheckToken?.invalidate()
+        ruuviTagSensorOwnerCheckToken = nil
+
         ruuviTagSensorOwnerCheckToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagOwnershipCheckDidEnd,

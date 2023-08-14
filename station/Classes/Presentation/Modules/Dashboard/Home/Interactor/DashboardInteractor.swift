@@ -22,6 +22,12 @@ extension DashboardInteractor: DashboardInteractorInput {
               ruuviTag.firmwareVersion == nil ||
                 !ruuviTag.firmwareVersion.hasText() &&
                 settings.firmwareVersion(for: luid) == nil else {
+            // Trigger the method after 2 seconds so that sensor settings page can
+            // be set and start observing for owner check notification. 
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2),
+                                          execute: { [weak self] in
+                self?.checkOwner(for: ruuviTag)
+            })
             return
         }
 
@@ -59,12 +65,12 @@ extension DashboardInteractor: DashboardInteractorInput {
                     return
                 }
                 guard let owner = owner, !owner.isEmpty else {
-                    sSelf.settings.setOwnerCheckDate(for: macId, value: Date())
                     NotificationCenter.default.post(
                         name: .RuuviTagOwnershipCheckDidEnd,
                         object: nil,
                         userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
                     )
+                    sSelf.settings.setOwnerCheckDate(for: macId, value: Date())
                     return
                 }
                 sSelf.ruuviPool.update(ruuviTag
