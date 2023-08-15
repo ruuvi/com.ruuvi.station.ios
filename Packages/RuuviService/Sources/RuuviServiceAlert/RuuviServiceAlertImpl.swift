@@ -437,6 +437,7 @@ extension RuuviServiceAlertImpl {
     }
 }
 
+// swiftlint:disable:next type_body_length
 public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     private let cloud: RuuviCloud
     private let alertPersistence: AlertPersistence
@@ -452,7 +453,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     }
 
     // RuuviCloudAlert
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     public func sync(cloudAlerts: [RuuviCloudSensorAlerts]) {
         cloudAlerts.forEach { cloudSensorAlert in
             guard let macId = cloudSensorAlert.sensor?.mac else { return }
@@ -500,6 +501,12 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 if let type = type {
                     if let enabled = cloudAlert.enabled, enabled {
                         register(type: type, for: physicalSensor)
+                        trigger(
+                            type: type,
+                            trigerred: cloudAlert.triggered,
+                            trigerredAt: cloudAlert.triggeredAt,
+                            for: physicalSensor
+                        )
                     } else {
                         unregister(type: type, for: physicalSensor)
                     }
@@ -614,6 +621,79 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         }
     }
 
+    public func trigger(
+        type: AlertType,
+        trigerred: Bool?,
+        trigerredAt: String?,
+        for sensor: PhysicalSensor
+    ) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.trigger(
+                type: type,
+                trigerred: trigerred,
+                trigerredAt: trigerredAt,
+                for: luid.value
+            )
+            alertPersistence.trigger(
+                type: type,
+                trigerred: trigerred,
+                trigerredAt: trigerredAt,
+                for: macId.value
+            )
+        } else if let luid = sensor.luid {
+            alertPersistence.trigger(
+                type: type,
+                trigerred: trigerred,
+                trigerredAt: trigerredAt,
+                for: luid.value
+            )
+        } else if let macId = sensor.macId {
+            alertPersistence.trigger(
+                type: type,
+                trigerred: trigerred,
+                trigerredAt: trigerredAt,
+                for: macId.value
+            )
+        } else {
+            assertionFailure()
+        }
+        postAlertTriggerDidChange(with: sensor, of: type)
+    }
+
+    public func triggered(
+        for sensor: PhysicalSensor,
+        of type: AlertType
+    ) -> Bool? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.triggered(for: luid.value, of: type)
+                ?? alertPersistence.triggered(for: macId.value, of: type)
+        } else if let luid = sensor.luid {
+            return alertPersistence.triggered(for: luid.value, of: type)
+        } else if let macId = sensor.macId {
+            return alertPersistence.triggered(for: macId.value, of: type)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    public func triggeredAt(
+        for sensor: PhysicalSensor,
+        of type: AlertType
+    ) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.triggeredAt(for: luid.value, of: type)
+                ?? alertPersistence.triggeredAt(for: macId.value, of: type)
+        } else if let luid = sensor.luid {
+            return alertPersistence.triggeredAt(for: luid.value, of: type)
+        } else if let macId = sensor.macId {
+            return alertPersistence.triggeredAt(for: macId.value, of: type)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
     // Virtual Sensor
     public func hasRegistrations(for sensor: VirtualSensor) -> Bool {
         return AlertType.allCases.contains(where: { isOn(type: $0, for: sensor) })
@@ -689,6 +769,19 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 object: nil,
                 userInfo: [
                     RuuviServiceAlertDidChangeKey.virtualSensor: sensor,
+                    RuuviServiceAlertDidChangeKey.type: type
+                ]
+            )
+    }
+
+    private func postAlertTriggerDidChange(with sensor: PhysicalSensor, of type: AlertType) {
+        NotificationCenter
+            .default
+            .post(
+                name: .RuuviServiceAlertTriggerDidChange,
+                object: nil,
+                userInfo: [
+                    RuuviServiceAlertDidChangeKey.physicalSensor: sensor,
                     RuuviServiceAlertDidChangeKey.type: type
                 ]
             )

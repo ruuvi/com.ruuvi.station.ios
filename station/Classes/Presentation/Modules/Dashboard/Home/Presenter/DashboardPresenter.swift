@@ -87,7 +87,8 @@ class DashboardPresenter: DashboardModuleInput {
     private var calibrationSettingsToken: NSObjectProtocol?
     private var dashboardTypeToken: NSObjectProtocol?
     private var dashboardTapActionTypeToken: NSObjectProtocol?
-    private var cloudSyncToken: NSObjectProtocol?
+    private var cloudSyncSuccessStateToken: NSObjectProtocol?
+    private var cloudSyncFailStateToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             startListeningToWebTagsAlertStatus()
@@ -144,7 +145,8 @@ class DashboardPresenter: DashboardModuleInput {
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
         dashboardTapActionTypeToken?.invalidate()
-        cloudSyncToken?.invalidate()
+        cloudSyncSuccessStateToken?.invalidate()
+        cloudSyncFailStateToken?.invalidate()
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
@@ -166,7 +168,8 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingCloudModeNotification()
         startListeningToSettings()
         startObserveCalibrationSettingsChange()
-        startObservingCloudSyncTokenState()
+        startObservingCloudSyncSuccessTokenState()
+        startObservingCloudSyncFailTokenState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -460,6 +463,7 @@ extension DashboardPresenter: RuuviNotifierObserver {
         // No op here.
     }
 
+    // swiftlint:disable:next function_body_length
     func ruuvi(notifier: RuuviNotifier,
                alertType: AlertType,
                isTriggered: Bool,
@@ -495,6 +499,10 @@ extension DashboardPresenter: RuuviNotifierObserver {
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
                     viewModel.movementAlertState.value = newValue
+                case .cloudConnection:
+                    let isTriggered = isTriggered && isFireable
+                    let newValue: AlertState? = isTriggered ? .firing : .registered
+                    viewModel.cloudConnectionAlertState.value = newValue
                 default:
                     break
                 }
@@ -504,7 +512,8 @@ extension DashboardPresenter: RuuviNotifierObserver {
                     viewModel.pressureAlertState.value,
                     viewModel.signalAlertState.value,
                     viewModel.connectionAlertState.value,
-                    viewModel.movementAlertState.value
+                    viewModel.movementAlertState.value,
+                    viewModel.cloudConnectionAlertState.value
                 ]
                 if alertStates.first(where: { alert in
                     alert == .firing
@@ -1320,6 +1329,7 @@ extension DashboardPresenter {
                             sSelf.updateMutedTill(of: type,
                                                   for: physicalSensor.id,
                                                   viewModel: viewModel)
+                            sSelf.triggerAlertsIfNeeded()
                         })
                     }
                     if let virtualSensor
@@ -1549,8 +1559,23 @@ extension DashboardPresenter {
             })
     }
 
-    private func startObservingCloudSyncTokenState() {
-        cloudSyncToken = NotificationCenter
+    private func startObservingCloudSyncSuccessTokenState() {
+        cloudSyncSuccessStateToken?.invalidate()
+        cloudSyncSuccessStateToken = nil
+        cloudSyncSuccessStateToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidComplete,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.triggerAlertsIfNeeded()
+        })
+    }
+
+    private func startObservingCloudSyncFailTokenState() {
+        cloudSyncFailStateToken?.invalidate()
+        cloudSyncFailStateToken = nil
+        cloudSyncFailStateToken = NotificationCenter
             .default
             .addObserver(forName: .NetworkSyncDidFailForAuthorization,
                          object: nil,
@@ -1614,6 +1639,8 @@ extension DashboardPresenter {
                 sync(connection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .movement:
                 sync(movement: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .cloudConnection:
+                sync(cloudConnection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             default:
                 break
             }
@@ -1624,7 +1651,8 @@ extension DashboardPresenter {
                 viewModel.pressureAlertState.value,
                 viewModel.signalAlertState.value,
                 viewModel.connectionAlertState.value,
-                viewModel.movementAlertState.value
+                viewModel.movementAlertState.value,
+                viewModel.cloudConnectionAlertState.value
             ]
 
             if alertService.hasRegistrations(for: ruuviTag) {
@@ -1723,6 +1751,16 @@ extension DashboardPresenter {
                        for: ruuviTag)
     }
 
+    private func sync(cloudConnection: AlertType,
+                      ruuviTag: PhysicalSensor,
+                      viewModel: CardsViewModel) {
+        if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
+            viewModel.isCloudConnectionAlertOn.value = true
+        } else {
+            viewModel.isCloudConnectionAlertOn.value = false
+        }
+    }
+
     private func reloadMutedTill() {
         for viewModel in viewModels {
             if let mutedTill = viewModel.temperatureAlertMutedTill.value,
@@ -1805,6 +1843,8 @@ extension DashboardPresenter {
             observable = viewModel.isConnectionAlertOn
         case .movement:
             observable = viewModel.isMovementAlertOn
+        case .cloudConnection:
+            observable = viewModel.isCloudConnectionAlertOn
         default:
             // Should never be here
             observable = viewModel.isTemperatureAlertOn
@@ -1871,6 +1911,15 @@ extension DashboardPresenter {
             .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
                   object: nil,
                   userInfo: nil)
+    }
+
+    private func triggerAlertsIfNeeded() {
+        for viewModel in viewModels {
+            if let latestRecord = viewModel.latestMeasurement.value {
+                processAlert(record: latestRecord,
+                                   viewModel: viewModel)
+            }
+        }
     }
 }
 // swiftlint:enable file_length trailing_whitespace

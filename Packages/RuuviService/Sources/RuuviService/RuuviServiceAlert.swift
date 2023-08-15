@@ -4,6 +4,8 @@ import RuuviOntology
 
 extension Notification.Name {
     public static let RuuviServiceAlertDidChange = Notification.Name("RuuviServiceAlertDidChange")
+    public static let RuuviServiceAlertTriggerDidChange =
+        Notification.Name("RuuviServiceAlertTriggerDidChange")
 }
 
 public enum RuuviServiceAlertDidChangeKey: String {
@@ -101,6 +103,9 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func mute(type: AlertType, for sensor: PhysicalSensor, till date: Date)
     func unmute(type: AlertType, for sensor: PhysicalSensor)
     func mutedTill(type: AlertType, for sensor: PhysicalSensor) -> Date?
+    func trigger(type: AlertType, trigerred: Bool?, trigerredAt: String?, for sensor: PhysicalSensor)
+    func triggered(for sensor: PhysicalSensor, of type: AlertType) -> Bool?
+    func triggeredAt(for sensor: PhysicalSensor, of type: AlertType) -> String?
 
     /// temperature (celsius)
     func lowerCelsius(for sensor: PhysicalSensor) -> Double?

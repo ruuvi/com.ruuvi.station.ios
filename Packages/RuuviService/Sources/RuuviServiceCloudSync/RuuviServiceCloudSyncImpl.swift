@@ -168,7 +168,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
         queuedRequests.on(success: { _ in
             settings.on(success: { _ in
-                sensors.on(success: { updatedSensors in
+                sensors.on(success: { [weak self] updatedSensors in
+                    self?.ruuviLocalSyncState.setSyncDate(Date())
                     promise.succeed(value: updatedSensors)
                 }, failure: { error in
                     promise.fail(error: error)
@@ -185,7 +186,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func refreshLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        syncSensors().on(success: { _ in
+        syncSensors().on(success: { [weak self] _ in
+            self?.ruuviLocalSyncState.setSyncDate(Date())
             promise.succeed(value: true)
         })
         return promise.future
@@ -288,11 +290,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
-        let since: Date = ruuviLocalSyncState.getSyncDate(for: sensor.macId)
-            ?? networkPuningDate
+        let since: Date = ruuviLocalSyncState.getSyncDate() ?? networkPuningDate
         syncRecordsOperation(for: sensor, since: since)
             .on(success: { [weak self] result in
-                self?.ruuviLocalSyncState.setSyncDate(Date(), for: sensor.macId)
                 promise.succeed(value: result)
              }, failure: { error in
                 promise.fail(error: error)
@@ -506,6 +506,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             // If the latest table already have a data point for the mac update that record
             if let record = record,
                 record.macId?.value == cloudRecord.macId?.value {
+                // Store the record date
+                sSelf.ruuviLocalSyncState.setSyncDate(record.date, for: ruuviTag.macId)
                 // Store cloud point only if the cloud data is newer than the local data
                 let isMeasurementNew = cloudRecord.date > record.date
                 if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {

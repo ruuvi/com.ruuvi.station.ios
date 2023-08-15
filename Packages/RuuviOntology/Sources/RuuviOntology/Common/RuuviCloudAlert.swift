@@ -30,4 +30,6 @@ public protocol RuuviCloudAlert {
     var counter: Int? { get }
     var delay: Int? { get }
     var description: String? { get }
+    var triggered: Bool? { get }
+    var triggeredAt: String? { get }
 }

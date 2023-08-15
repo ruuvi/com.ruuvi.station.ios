@@ -266,6 +266,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             }
             sSelf.viewModel.reset()
             sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
+            sSelf.localSyncState.setSyncDate(nil)
             sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
             sSelf.settings.setOwnerCheckDate(for: sSelf.ruuviTag.macId, value: nil)
             sSelf.output?.tagSettingsDidDeleteTag(module: sSelf,
@@ -1285,6 +1286,11 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 let isOn = viewModel.isMovementAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
                 viewModel.movementAlertState.value = newValue
+            case .cloudConnection:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isCloudConnectionAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.cloudConnectionAlertState.value = newValue
             default:
                 break
             }
@@ -1591,6 +1597,7 @@ extension TagSettingsPresenter {
         if currentState != isOn {
             if isOn {
                 alertService.register(type: type, ruuviTag: ruuviTag)
+                processAlerts()
             } else {
                 alertService.unregister(type: type, ruuviTag: ruuviTag)
             }

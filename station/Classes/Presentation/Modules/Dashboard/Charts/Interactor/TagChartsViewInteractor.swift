@@ -199,6 +199,7 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
                 promise.fail(error: .ruuviService(error))
             }, completion: { [weak self] in
                 self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
+                self?.localSyncState.setSyncDate(nil)
                 self?.localSyncState.setGattSyncDate(nil, for: self?.ruuviTagSensor.macId)
                 self?.restartObservingData()
                 promise.succeed(value: ())

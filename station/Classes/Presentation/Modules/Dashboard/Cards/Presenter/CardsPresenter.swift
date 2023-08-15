@@ -1198,6 +1198,8 @@ extension CardsPresenter {
                 sync(connection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .movement:
                 sync(movement: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .cloudConnection:
+                sync(cloudConnection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             default: break
             }
         }
@@ -1208,7 +1210,8 @@ extension CardsPresenter {
             viewModel.pressureAlertState.value,
             viewModel.signalAlertState.value,
             viewModel.connectionAlertState.value,
-            viewModel.movementAlertState.value
+            viewModel.movementAlertState.value,
+            viewModel.cloudConnectionAlertState.value
         ]
 
         if alertService.hasRegistrations(for: ruuviTag) {
@@ -1314,6 +1317,16 @@ extension CardsPresenter {
                        for: ruuviTag)
     }
 
+    private func sync(cloudConnection: AlertType,
+                      ruuviTag: PhysicalSensor,
+                      viewModel: CardsViewModel) {
+        if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
+            viewModel.isCloudConnectionAlertOn.value = true
+        } else {
+            viewModel.isCloudConnectionAlertOn.value = false
+        }
+    }
+
     private func reloadMutedTill() {
         for viewModel in viewModels {
             if let mutedTill = viewModel.temperatureAlertMutedTill.value,
@@ -1395,6 +1408,8 @@ extension CardsPresenter {
             observable = viewModel.isConnectionAlertOn
         case .movement:
             observable = viewModel.isMovementAlertOn
+        case .cloudConnection:
+            observable = viewModel.isCloudConnectionAlertOn
         default:
             // Should never be here
             observable = viewModel.isTemperatureAlertOn
