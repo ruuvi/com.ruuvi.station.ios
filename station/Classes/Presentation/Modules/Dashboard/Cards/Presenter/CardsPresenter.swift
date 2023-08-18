@@ -348,7 +348,7 @@ extension CardsPresenter {
 
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({ (ruuviTag) in
-            if ruuviTag.isCloud && settings.cloudModeEnabled {
+            if ruuviTag.isCloud {
                 if let macId = ruuviTag.macId {
                     alertHandler.subscribe(self, to: macId.value)
                 }
@@ -862,8 +862,7 @@ extension CardsPresenter {
 
     private func processAlert(record: RuuviTagSensorRecord,
                               viewModel: CardsViewModel) {
-        if let isCloud = viewModel.isCloud.value,
-           isCloud && settings.cloudModeEnabled,
+        if let isCloud = viewModel.isCloud.value, isCloud,
             let macId = viewModel.mac.value {
             alertHandler.processNetwork(record: record,
                                         trigger: false,

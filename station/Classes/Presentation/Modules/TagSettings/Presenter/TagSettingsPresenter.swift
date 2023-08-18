@@ -460,7 +460,7 @@ extension TagSettingsPresenter {
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
-        if ruuviTag.isCloud && settings.cloudModeEnabled {
+        if ruuviTag.isCloud {
             if let macId = ruuviTag.macId {
                 alertHandler.subscribe(self, to: macId.value)
             }
@@ -1200,7 +1200,7 @@ extension TagSettingsPresenter {
             return
         }
 
-        if ruuviTag.isCloud && settings.cloudModeEnabled,
+        if ruuviTag.isCloud,
             let macId = ruuviTag.macId {
             alertHandler.processNetwork(record: lastMeasurement,
                                         trigger: false,

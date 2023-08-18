@@ -679,8 +679,7 @@ extension DashboardPresenter {
 
     private func processAlert(record: RuuviTagSensorRecord,
                               viewModel: CardsViewModel) {
-        if let isCloud = viewModel.isCloud.value,
-           isCloud && settings.cloudModeEnabled,
+        if let isCloud = viewModel.isCloud.value, isCloud,
             let macId = viewModel.mac.value {
             alertHandler.processNetwork(record: record,
                                         trigger: false,
@@ -1359,7 +1358,7 @@ extension DashboardPresenter {
 
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({ (ruuviTag) in
-            if ruuviTag.isCloud && settings.cloudModeEnabled {
+            if ruuviTag.isCloud {
                 if let macId = ruuviTag.macId {
                     alertHandler.subscribe(self, to: macId.value)
                 }
@@ -1916,8 +1915,13 @@ extension DashboardPresenter {
     private func triggerAlertsIfNeeded() {
         for viewModel in viewModels {
             if let latestRecord = viewModel.latestMeasurement.value {
-                processAlert(record: latestRecord,
-                                   viewModel: viewModel)
+                guard let macId = viewModel.mac.value else {
+                    continue
+                }
+                alertHandler.processNetwork(
+                    record: latestRecord,
+                    trigger: false, for: macId
+                )
             }
         }
     }

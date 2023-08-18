@@ -168,7 +168,7 @@ extension RuuviNotifierImpl {
                 isTriggered = isTriggered || isCloudConnection
                 notify(alertType: type,
                        uuid: identifier.value,
-                       isTriggered: isTriggered)
+                       isTriggered: isCloudConnection)
             default:
                 break
             }
@@ -442,9 +442,7 @@ extension RuuviNotifierImpl {
             // If the system sync is within our threshold, check the measurement date
             if let measurementDate = localSyncState.getSyncDate(for: identifier) {
                 // If the measurement date is earlier than our threshold, trigger the alert
-                if measurementDate < thresholdDateTime {
-                    return true
-                }
+                return measurementDate < thresholdDateTime
             }
         }
 
