@@ -991,6 +991,15 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
+    func viewDidTriggerNavigateChart(to viewModel: CardsViewModel) {
+        if let tagCharts = tagCharts, let sensor = ruuviTags
+            .first(where: {
+                ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+            }) {
+            tagCharts.scrollTo(ruuviTag: sensor)
+        }
+    }
+
     func viewDidTriggerDismissChart(for viewModel: CardsViewModel,
                                     dismissParent: Bool) {
         tagCharts?.notifyDismissInstruction(dismissParent: dismissParent)
@@ -1114,6 +1123,19 @@ extension CardsPresenter: TagChartsViewModuleOutput {
                 self?.view?.dismissChart()
             }
         })
+    }
+
+    func tagChartSafeToSwipe(
+        to ruuviTag: AnyRuuviTagSensor, module: TagChartsViewModuleInput
+    ) {
+        if let viewModel = viewModels.first(where: {
+            return ($0.luid.value != nil && $0.luid.value == ruuviTag.luid?.any)
+                || ($0.mac.value != nil && $0.mac.value == ruuviTag.macId?.any)
+        }) {
+            updateVisibleCard(from: viewModel,
+                                    triggerScroll: true)
+            view?.scroll(to: visibleViewModelIndex)
+        }
     }
 }
 

@@ -31,6 +31,7 @@ protocol TagChartsViewInput: ViewInput {
     func showSwipeUpInstruction()
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel)
     func showSyncAbortAlert(dismiss: Bool)
+    func showSyncAbortAlertForSwipe()
     func showExportSheet(with path: URL)
     func showLongerHistoryDialog()
 }

@@ -231,7 +231,7 @@ class TagChartsViewController: UIViewController {
                                  leading: view.safeLeftAnchor,
                                  bottom: nil,
                                  trailing: view.safeRightAnchor,
-                                 padding: .init(top: 18, left: 16, bottom: 0, right: 16))
+                                 padding: .init(top: 10, left: 36, bottom: 0, right: 36))
 
         let chartToolbarView = UIView(color: .clear)
         view.addSubview(chartToolbarView)
@@ -253,7 +253,7 @@ class TagChartsViewController: UIViewController {
                           padding: .init(top: 0,
                                          left: 0,
                                          bottom: 0,
-                                         right: 12),
+                                         right: 8),
                           size: .init(width: 18, height: 18))
         moreButton.centerYInSuperview()
 
@@ -276,7 +276,7 @@ class TagChartsViewController: UIViewController {
                                 bottom: chartToolbarView.bottomAnchor,
                                 trailing: historySelectionButton.leadingAnchor,
                                 padding: .init(top: 0,
-                                               left: 8,
+                                               left: 0,
                                                bottom: 0,
                                                right: 8))
 
@@ -760,6 +760,18 @@ extension TagChartsViewController: TagChartsViewInput {
         present(alertVC, animated: true)
     }
 
+    func showSyncAbortAlertForSwipe() {
+        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
+        let message = "TagCharts.Dismiss.Alert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        let actionTitle = "TagCharts.AbortSync.Button.title".localized()
+        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmAbortSync(dismiss: false)
+        }))
+        present(alertVC, animated: true)
+    }
+
     func showExportSheet(with path: URL) {
         let vc = UIActivityViewController(activityItems: [path],
                                           applicationActivities: [])
@@ -918,9 +930,9 @@ extension TagChartsViewController {
         view.localize()
         view.setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
         view.setXAxisRenderer()
+        view.setChartStatVisible(show: showChartStat)
 
         calculateMinMaxForChart(for: view)
-        view.setChartStatVisible(show: showChartStat)
     }
 
     private func clearChartData() {

@@ -177,6 +177,12 @@ post_install do |installer|
         config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
         config.build_settings['SWIFT_SUPPRESS_WARNINGS'] = "YES"
         config.build_settings["DEVELOPMENT_TEAM"] = "4MUYJ4YYH4"
+        # Need these for Xcode 16 Beta 6
+        xcconfig_path = config.base_configuration_reference.real_path
+        xcconfig = File.read(xcconfig_path)
+        xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
+        File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
+        # End patch for Xcode 15 Beta 6
       end
     end
     # This is specifically for Realm

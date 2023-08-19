@@ -127,6 +127,17 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
         self.ruuviTag = ruuviTag
     }
 
+    func scrollTo(ruuviTag: AnyRuuviTagSensor) {
+        if interactor.isSyncingRecords() {
+            view?.showSyncAbortAlertForSwipe()
+            return
+        }
+
+        output?.tagChartSafeToSwipe(to: ruuviTag, module: self)
+        self.ruuviTag = ruuviTag
+        self.restartObserving()
+    }
+
     func notifyDismissInstruction(dismissParent: Bool) {
         if interactor.isSyncingRecords() {
             view?.showSyncAbortAlert(dismiss: dismissParent)
@@ -324,6 +335,23 @@ extension TagChartsViewPresenter: RuuviNotifierObserver {
 
 // MARK: - Private
 extension TagChartsViewPresenter {
+    private func restartObserving() {
+        startObservingBackgroundChanges()
+        startObservingAlertChanges()
+        startObservingDidConnectDisconnectNotifications()
+        startObservingLocalNotificationsManager()
+        startObservingSensorSettingsChanges()
+        startObservingCloudSyncNotification()
+        observeLastOpenedChart()
+        startObservingRuuviTag()
+        startListeningToSettings()
+        startObservingBluetoothState()
+        startListeningToAlertStatus()
+        tryToShowSwipeUpHint()
+        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
+        interactor.restartObservingTags()
+    }
+
     private func shutDownModule() {
         stateToken?.invalidate()
         advertisementToken?.invalidate()

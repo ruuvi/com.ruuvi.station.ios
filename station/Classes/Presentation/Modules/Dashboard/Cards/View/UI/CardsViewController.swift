@@ -23,7 +23,11 @@ class CardsViewController: UIViewController {
     }
     var scrollIndex: Int = 0
 
-    private var currentPage: Int = 0
+    private var currentPage: Int = 0 {
+        didSet {
+            setArrowButtonsVisibility(with: currentPage)
+        }
+    }
     private static let reuseIdentifier: String = "reuseIdentifier"
 
     func cell(collectionView: UICollectionView,
@@ -116,6 +120,34 @@ class CardsViewController: UIViewController {
     }()
 
     // BODY
+    private lazy var cardLeftArrowButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "chevron.left")
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(cardLeftArrowButtonDidTap)
+            )
+        )
+        return button
+    }()
+
+    private lazy var cardRightArrowButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "chevron.right")
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(cardRightArrowButtonDidTap)
+            )
+        )
+        return button
+    }()
+
     private lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero,
                                   collectionViewLayout: createLayout())
@@ -274,6 +306,25 @@ extension CardsViewController {
                               leading: view.safeLeftAnchor,
                               bottom: view.safeBottomAnchor,
                               trailing: view.safeRightAnchor)
+
+        // Arrow buttons should stay above of collection view
+        view.addSubview(cardLeftArrowButton)
+        cardLeftArrowButton.anchor(
+            top: collectionView.topAnchor,
+            leading: collectionView.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 6, left: 4, bottom: 0, right: 0)
+        )
+
+        view.addSubview(cardRightArrowButton)
+        cardRightArrowButton.anchor(
+            top: collectionView.topAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: collectionView.trailingAnchor,
+            padding: .init(top: 6, left: 0, bottom: 0, right: 4)
+        )
     }
 
     fileprivate func createLayout() -> UICollectionViewLayout {
@@ -326,12 +377,7 @@ extension CardsViewController: UICollectionViewDelegate {
         let yPoint = scrollView.frame.size.height / 2
         let center = CGPoint(x: xPoint, y: yPoint)
         if let currentIndexPath = collectionView.indexPathForItem(at: center) {
-            currentPage = currentIndexPath.row
-            let currentItem = viewModels[currentPage]
-            self.currentVisibleItem = currentItem
-            restartAnimations()
-            output.viewDidScroll(to: currentItem)
-            output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)
+            performPostScrollActions(with: currentIndexPath.row)
         }
     }
 }
@@ -395,7 +441,7 @@ extension CardsViewController {
         collectionView.isHidden = true
         module.willMove(toParent: self)
         addChild(module)
-        view.addSubview(module.view)
+        view.insertSubview(module.view, aboveSubview: collectionView)
         module.view.match(view: collectionView)
         module.didMove(toParent: self)
         isChartsShowing = true
@@ -419,6 +465,22 @@ extension CardsViewController {
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
         output.viewDidTriggerSettings(for: viewModel)
+    }
+
+    @objc fileprivate func cardLeftArrowButtonDidTap() {
+        guard viewModels.count > 0 else { return }
+        let scrollToPageIndex = currentPage - 1
+        if scrollToPageIndex >= 0 && scrollToPageIndex < viewModels.count {
+            performPostScrollActions(with: scrollToPageIndex, scroll: true)
+        }
+    }
+
+    @objc fileprivate func cardRightArrowButtonDidTap() {
+        guard viewModels.count > 0 else { return }
+        let scrollToPageIndex = currentPage + 1
+        if scrollToPageIndex >= 0 && scrollToPageIndex < viewModels.count {
+            performPostScrollActions(with: scrollToPageIndex, scroll: true)
+        }
     }
 }
 
@@ -493,6 +555,7 @@ extension CardsViewController: CardsViewInput {
         }
         let viewModel = viewModels[index]
         currentVisibleItem = viewModel
+        currentPage = index
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
             guard let sSelf = self else { return }
             sSelf.collectionView.scrollTo(index: index, animated: false)
@@ -722,6 +785,47 @@ extension CardsViewController {
             // Hide alert bell for virtual tags
             alertButton.isHidden = true
             alertButtonHidden.isUserInteractionEnabled = false
+        }
+    }
+
+    private func setArrowButtonsVisibility(hidden: Bool, animated: Bool) {
+        if hidden {
+            cardLeftArrowButton.fadeOut(animated: animated)
+            cardRightArrowButton.fadeOut(animated: animated)
+        } else {
+            cardLeftArrowButton.fadeIn(animated: animated)
+            cardRightArrowButton.fadeIn(animated: animated)
+        }
+    }
+
+    private func setArrowButtonsVisibility(with index: Int) {
+        if index == 0 {
+            cardLeftArrowButton.fadeOut()
+        } else {
+            cardLeftArrowButton.fadeIn()
+        }
+
+        if index == viewModels.count - 1 {
+            cardRightArrowButton.fadeOut()
+        } else {
+            cardRightArrowButton.fadeIn()
+        }
+    }
+
+    private func performPostScrollActions(with index: Int, scroll: Bool = false) {
+        let currentItem = viewModels[index]
+        if isChartsShowing {
+            output.viewDidTriggerNavigateChart(to: currentItem)
+        } else {
+            currentPage = index
+            self.currentVisibleItem = currentItem
+            restartAnimations()
+            output.viewDidScroll(to: currentItem)
+            output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)
+
+            if scroll {
+                collectionView.scrollTo(index: index, animated: true)
+            }
         }
     }
 }

@@ -95,7 +95,7 @@ class CardsLargeImageCell: UICollectionViewCell {
                                  leading: container.leadingAnchor,
                                  bottom: nil,
                                  trailing: container.trailingAnchor,
-                                 padding: .init(top: 14, left: 12, bottom: 0, right: 12))
+                                 padding: .init(top: 6, left: 36, bottom: 0, right: 36))
 
         container.addSubview(temperatureLabel)
         temperatureLabel.anchor(top: ruuviTagNameLabel.bottomAnchor,
