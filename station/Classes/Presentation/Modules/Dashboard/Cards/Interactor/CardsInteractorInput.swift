@@ -6,6 +6,4 @@ import RuuviLocal
 protocol CardsInteractorInput: AnyObject {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor,
                                        settings: RuuviLocalSettings)
-    func migrateFWVersionFromDefaults(for ruuviTags: [RuuviTagSensor],
-                                      settings: RuuviLocalSettings)
 }

@@ -1199,10 +1199,6 @@ extension CardsPresenter {
         }
     }
 
-    private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
-        interactor.migrateFWVersionFromDefaults(for: ruuviTags, settings: settings)
-    }
-
     private func syncAlerts(ruuviTag: RuuviTagSensor, viewModel: CardsViewModel) {
         AlertType.allCases.forEach { (type) in
             switch type {

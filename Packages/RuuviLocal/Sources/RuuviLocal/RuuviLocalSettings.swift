@@ -68,6 +68,9 @@ public protocol RuuviLocalSettings {
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
+    // TODO: - Deprecate this once all users are migrated to hours.
+    // This adds supports for version v2.3.0 and below.
+    var chartDurationHoursMigrated: Bool { get set }
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
     var chartStatsOn: Bool { get set }
@@ -97,10 +100,6 @@ public protocol RuuviLocalSettings {
 
     func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
-
-    // TODO: - Deprecate this after version v1.3.2
-    func firmwareVersion(for luid: LocalIdentifier) -> String?
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String?)
 
     func cardToOpenFromWidget() -> String?
     func setCardToOpenFromWidget(for macId: String?)

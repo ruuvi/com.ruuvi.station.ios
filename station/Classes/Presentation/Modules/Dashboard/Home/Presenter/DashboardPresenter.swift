@@ -1034,8 +1034,6 @@ extension DashboardPresenter {
                 let ruuviTags = ruuviTags.reordered()
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
-                // TODO: - Remove this migration code after version v1.3.2
-                sSelf.migrateFirmwareVersion(for: ruuviTags)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
@@ -1617,10 +1615,6 @@ extension DashboardPresenter {
             guard let sSelf = self else { return }
             sSelf.interactor.checkAndUpdateFirmwareVersion(for: ruuviTag)
         }
-    }
-
-    private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
-        interactor.migrateFWVersionFromDefaults(for: ruuviTags)
     }
 
     private func syncAlerts(ruuviTag: PhysicalSensor, viewModel: CardsViewModel) {

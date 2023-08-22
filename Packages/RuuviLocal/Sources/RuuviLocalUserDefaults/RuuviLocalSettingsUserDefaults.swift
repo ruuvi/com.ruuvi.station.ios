@@ -306,6 +306,10 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    // TODO: - Deprecate this once all users are migrated to hours.
+    @UserDefault("SettingsUserDefaults.chartDurationHoursMigrated", defaultValue: false)
+    var chartDurationHoursMigrated: Bool
+
     @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 60)
     var networkPullIntervalSeconds: Int
 
