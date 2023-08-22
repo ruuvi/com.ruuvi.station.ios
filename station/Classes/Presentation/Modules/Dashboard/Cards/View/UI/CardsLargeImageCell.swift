@@ -6,15 +6,6 @@ import RuuviOntology
 
 class CardsLargeImageCell: UICollectionViewCell {
 
-    private lazy var ruuviTagNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.extraBold, size: 20)
-        return label
-    }()
-
     private lazy var temperatureLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -90,15 +81,8 @@ class CardsLargeImageCell: UICollectionViewCell {
         contentView.addSubview(container)
         container.fillSuperview()
 
-        container.addSubview(ruuviTagNameLabel)
-        ruuviTagNameLabel.anchor(top: container.topAnchor,
-                                 leading: container.leadingAnchor,
-                                 bottom: nil,
-                                 trailing: container.trailingAnchor,
-                                 padding: .init(top: 6, left: 36, bottom: 0, right: 36))
-
         container.addSubview(temperatureLabel)
-        temperatureLabel.anchor(top: ruuviTagNameLabel.bottomAnchor,
+        temperatureLabel.anchor(top: container.topAnchor,
                                 leading: nil,
                                 bottom: nil,
                                 trailing: nil,
@@ -215,7 +199,6 @@ class CardsLargeImageCell: UICollectionViewCell {
 extension CardsLargeImageCell {
     override func prepareForReuse() {
         super.prepareForReuse()
-        ruuviTagNameLabel.text = nil
         temperatureLabel.text = nil
         temperatureUnitLabel.text = nil
         humidityView.clearValues()
@@ -237,8 +220,6 @@ extension CardsLargeImageCell {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func configure(with viewModel: CardsViewModel,
                    measurementService: RuuviServiceMeasurement?) {
-
-        ruuviTagNameLabel.text = viewModel.name.value
 
         // Temp
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {

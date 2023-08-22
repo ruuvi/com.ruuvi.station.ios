@@ -148,6 +148,15 @@ class CardsViewController: UIViewController {
         return button
     }()
 
+    lazy var ruuviTagNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.extraBold, size: 20)
+        return label
+    }()
+
     private lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero,
                                   collectionViewLayout: createLayout())
@@ -166,7 +175,10 @@ class CardsViewController: UIViewController {
     private var currentVisibleItem: CardsViewModel? {
         didSet {
             bindCurrentVisibleItem()
-            updateCardBackgroundImage(with: currentVisibleItem?.background.value)
+            updateCardInfo(
+                with: currentVisibleItem?.name.value,
+                image: currentVisibleItem?.background.value
+            )
             updateTopActionButtonVisibility()
         }
     }
@@ -301,30 +313,46 @@ extension CardsViewController {
     }
 
     fileprivate func setUpContentView() {
-        view.addSubview(collectionView)
-        collectionView.anchor(top: view.safeTopAnchor,
-                              leading: view.safeLeftAnchor,
-                              bottom: view.safeBottomAnchor,
-                              trailing: view.safeRightAnchor)
-
+        let swipeToolbarView  = UIView(color: .clear)
         // Arrow buttons should stay above of collection view
-        view.addSubview(cardLeftArrowButton)
+        swipeToolbarView.addSubview(cardLeftArrowButton)
         cardLeftArrowButton.anchor(
-            top: collectionView.topAnchor,
-            leading: collectionView.leadingAnchor,
+            top: swipeToolbarView.topAnchor,
+            leading: swipeToolbarView.leadingAnchor,
             bottom: nil,
             trailing: nil,
             padding: .init(top: 6, left: 4, bottom: 0, right: 0)
         )
 
-        view.addSubview(cardRightArrowButton)
+        swipeToolbarView.addSubview(cardRightArrowButton)
         cardRightArrowButton.anchor(
-            top: collectionView.topAnchor,
+            top: swipeToolbarView.topAnchor,
             leading: nil,
             bottom: nil,
-            trailing: collectionView.trailingAnchor,
-            padding: .init(top: 6, left: 0, bottom: 0, right: 4)
+            trailing: swipeToolbarView.trailingAnchor,
+            padding: .init(top: 4, left: 0, bottom: 0, right: 4)
         )
+
+        swipeToolbarView.addSubview(ruuviTagNameLabel)
+        ruuviTagNameLabel.anchor(
+            top: swipeToolbarView.topAnchor,
+            leading: cardLeftArrowButton.trailingAnchor,
+            bottom: swipeToolbarView.bottomAnchor,
+            trailing: cardRightArrowButton.leadingAnchor,
+            padding: .init(top: 8, left: 8, bottom: 6, right: 8)
+        )
+
+        view.addSubview(swipeToolbarView)
+        swipeToolbarView.anchor(top: view.safeTopAnchor,
+                                leading: view.safeLeftAnchor,
+                                bottom: nil,
+                                trailing: view.safeRightAnchor)
+
+        view.addSubview(collectionView)
+        collectionView.anchor(top: swipeToolbarView.bottomAnchor,
+                              leading: view.safeLeftAnchor,
+                              bottom: view.safeBottomAnchor,
+                              trailing: view.safeRightAnchor)
     }
 
     fileprivate func createLayout() -> UICollectionViewLayout {
@@ -511,7 +539,7 @@ extension CardsViewController: CardsViewInput {
     func changeCardBackground(of viewModel: CardsViewModel,
                               to image: UIImage?) {
         if viewModel == currentVisibleItem {
-            updateCardBackgroundImage(with: image)
+            updateCardInfo(with: viewModel.name.value, image: image)
         }
     }
 
@@ -662,6 +690,10 @@ extension CardsViewController {
             return
         }
 
+        view.bind(currentVisibleItem.name) { [weak self] (_, name) in
+            self?.updateCardInfo(with: name, image: currentVisibleItem.background.value)
+        }
+
         view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] (_, _) in
             self?.restartAnimations()
         }
@@ -705,7 +737,8 @@ extension CardsViewController {
 }
 
 extension CardsViewController {
-    private func updateCardBackgroundImage(with image: UIImage?) {
+    private func updateCardInfo(with name: String?, image: UIImage?) {
+        ruuviTagNameLabel.text = name
         cardBackgroundView.setBackgroundImage(with: image)
     }
 

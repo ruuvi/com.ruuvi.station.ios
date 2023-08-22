@@ -13,11 +13,7 @@ class TagChartsViewController: UIViewController {
     var output: TagChartsViewOutput!
     private var chartModules: [MeasurementType] = []
 
-    var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi) {
-        didSet {
-            bindViewModel()
-        }
-    }
+    var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi)
 
     var historyLengthInDay: Int = 1 {
         didSet {
@@ -56,15 +52,6 @@ class TagChartsViewController: UIViewController {
 
     // MARK: - UI COMPONENTS DECLARATION
     // Body
-    lazy var ruuviTagNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.extraBold, size: 20)
-        return label
-    }()
-
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
         label.text = "Cards.UpdatedLabel.NoData.message".localized()
@@ -226,16 +213,9 @@ class TagChartsViewController: UIViewController {
 
     // swiftlint:disable:next function_body_length
     fileprivate func setUpContentView() {
-        view.addSubview(ruuviTagNameLabel)
-        ruuviTagNameLabel.anchor(top: view.safeTopAnchor,
-                                 leading: view.safeLeftAnchor,
-                                 bottom: nil,
-                                 trailing: view.safeRightAnchor,
-                                 padding: .init(top: 10, left: 36, bottom: 0, right: 36))
-
         let chartToolbarView = UIView(color: .clear)
         view.addSubview(chartToolbarView)
-        chartToolbarView.anchor(top: ruuviTagNameLabel.bottomAnchor,
+        chartToolbarView.anchor(top: view.safeTopAnchor,
                                 leading: view.safeLeftAnchor,
                                 bottom: nil,
                                 trailing: view.safeRightAnchor,
@@ -804,12 +784,6 @@ extension TagChartsViewController: TagChartsViewInput {
 }
 
 extension TagChartsViewController {
-
-    private func bindViewModel() {
-        ruuviTagNameLabel.bind(viewModel.name) { (label, name) in
-            label.text = name ?? "N/A".localized()
-        }
-    }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func updateChartsCollectionConstaints(from: [MeasurementType],
