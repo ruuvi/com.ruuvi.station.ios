@@ -62,6 +62,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
     private let languageUDKey = "SettingsUserDegaults.languageUDKey"
 
+    @UserDefault("SettingsUserDefaults.cardToOpenFromWidgetKey", defaultValue: nil)
+    var cloudProfileLanguageCode: String?
+
     var humidityUnit: HumidityUnit {
         get {
             switch humidityUnitInt {

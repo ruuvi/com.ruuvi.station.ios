@@ -3,6 +3,7 @@ import Foundation
 // swiftlint:disable:next type_name
 public enum RuuviCloudPNTokenRegisterRequestParamsKey: String {
     case sound = "soundFile"
+    case language = "language"
 }
 
 public struct RuuviCloudPNTokenRegisterRequest: Encodable {

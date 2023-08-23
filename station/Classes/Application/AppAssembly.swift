@@ -715,6 +715,7 @@ private final class BusinessAssembly: Assembly {
             let repository = r.resolve(RuuviRepository.self)!
             let localIDs = r.resolve(RuuviLocalIDs.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
+            let ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)!
             return factory.createCloudSync(
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
@@ -724,7 +725,8 @@ private final class BusinessAssembly: Assembly {
                 ruuviLocalImages: localImages,
                 ruuviRepository: repository,
                 ruuviLocalIDs: localIDs,
-                ruuviAlertService: alertService
+                ruuviAlertService: alertService,
+                ruuviAppSettingsService: ruuviAppSettingsService
             )
         }
 

@@ -55,6 +55,9 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var emailAlertEnabled: Bool? {
         return emailAlertEnabledString?.ruuviCloudApiSettingBoolean
     }
+    public var profileLanguageCode: String? {
+        return profileLanguageCodeString
+    }
 
     var unitTemperatureString: String?
     var accuracyTemperatureString: String?
@@ -72,6 +75,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var dashboardTapActionTypeString: String?
     var pushAlertEnabledString: String?
     var emailAlertEnabledString: String?
+    var profileLanguageCodeString: String?
 
     enum CodingKeys: String, CodingKey {
         case unitTemperatureString = "UNIT_TEMPERATURE"
@@ -90,5 +94,6 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case dashboardTapActionTypeString = "DASHBOARD_TAP_ACTION"
         case pushAlertEnabledString = "ALERT_PUSH_ENABLED"
         case emailAlertEnabledString = "ALERT_EMAIL_ENABLED"
+        case profileLanguageCodeString = "PROFILE_LANGUAGE_CODE"
     }
 }

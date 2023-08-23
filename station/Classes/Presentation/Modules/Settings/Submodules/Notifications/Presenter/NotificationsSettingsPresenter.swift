@@ -140,6 +140,7 @@ extension NotificationsSettingsPresenter {
                 DispatchQueue.main.async {
                     sSelf.cloudNotificationService.set(
                         sound: sSelf.settings.alertSound,
+                        language: sSelf.settings.language,
                         deviceName: UIDevice.modelName
                     )
                 }

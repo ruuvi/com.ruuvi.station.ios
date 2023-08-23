@@ -221,4 +221,16 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
+
+    @discardableResult
+    public func set(profileLanguageCode: String) -> Future<String, RuuviServiceError> {
+        let promise = Promise<String, RuuviServiceError>()
+        cloud.set(profileLanguageCode: profileLanguageCode)
+            .on(success: { enabled in
+                promise.succeed(value: profileLanguageCode)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }

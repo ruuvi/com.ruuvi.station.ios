@@ -53,6 +53,7 @@ public protocol RuuviLocalSettings {
     var welcomeShown: Bool { get set }
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
+    var cloudProfileLanguageCode: String? { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
     var isWebTagDaemonOn: Bool { get set }

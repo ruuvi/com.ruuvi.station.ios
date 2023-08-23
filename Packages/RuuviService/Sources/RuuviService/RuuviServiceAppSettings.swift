@@ -50,4 +50,7 @@ public protocol RuuviServiceAppSettings {
 
     @discardableResult
     func set(pushAlert: Bool) -> Future<Bool, RuuviServiceError>
+
+    @discardableResult
+    func set(profileLanguageCode: String) -> Future<String, RuuviServiceError>
 }

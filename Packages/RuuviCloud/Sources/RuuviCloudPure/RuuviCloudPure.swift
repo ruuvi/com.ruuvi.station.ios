@@ -504,6 +504,32 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
+        let promise = Promise<String, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .profileLanguageCode,
+            value: profileLanguageCode,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: profileLanguageCode)
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.profileLanguageCode.rawValue
+                )
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func getCloudSettings() -> Future<RuuviCloudSettings?, RuuviCloudError> {
         let promise = Promise<RuuviCloudSettings?, RuuviCloudError>()
         guard let apiKey = user.apiKey else {

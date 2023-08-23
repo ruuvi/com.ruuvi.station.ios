@@ -53,8 +53,6 @@ class AppStateServiceImpl: AppStateService {
         }
         settings.appOpenedCount += 1
         #endif
-
-        setPreferrerdLanguage()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -97,7 +95,6 @@ class AppStateServiceImpl: AppStateService {
         propertiesDaemon.start()
         pullWebDaemon.start()
         settings.appIsOnForeground = true
-        setPreferrerdLanguage()
     }
 
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
@@ -115,17 +112,6 @@ extension AppStateServiceImpl {
             guard case .success(let infos) = widgetInfos else { return }
             let simpleWidgets = infos.filter({ $0.kind == AppAssemblyConstants.simpleWidgetKindId })
             self?.settings.useSimpleWidget = simpleWidgets.count > 0
-        }
-    }
-
-    fileprivate func setPreferrerdLanguage() {
-        if let languageCode = Bundle.main.preferredLocalizations.first,
-           let language = Language(rawValue: languageCode) {
-            if settings.language != language {
-                settings.language = language
-            }
-        } else {
-            settings.language = .english
         }
     }
 }

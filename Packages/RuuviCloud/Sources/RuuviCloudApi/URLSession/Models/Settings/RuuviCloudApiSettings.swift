@@ -18,6 +18,7 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case dashboardTapActionType = "DASHBOARD_TAP_ACTION"
     case pushAlertEnabled = "ALERT_PUSH_ENABLED"
     case emailAlertEnabled = "ALERT_EMAIL_ENABLED"
+    case profileLanguageCode = "PROFILE_LANGUAGE_CODE"
 }
 
 extension TemperatureUnit {

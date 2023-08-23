@@ -20,6 +20,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviRepository: RuuviRepository
     private let ruuviLocalIDs: RuuviLocalIDs
     private let alertService: RuuviServiceAlert
+    private let ruuviAppSettingsService: RuuviServiceAppSettings
 
     public init(
         ruuviStorage: RuuviStorage,
@@ -30,7 +31,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
-        ruuviAlertService: RuuviServiceAlert
+        ruuviAlertService: RuuviServiceAlert,
+        ruuviAppSettingsService: RuuviServiceAppSettings
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
@@ -41,6 +43,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviRepository = ruuviRepository
         self.ruuviLocalIDs = ruuviLocalIDs
         self.alertService = ruuviAlertService
+        self.ruuviAppSettingsService = ruuviAppSettingsService
     }
 
     @discardableResult
@@ -111,6 +114,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 if let emailAlertEnabled = cloudSettings.emailAlertEnabled,
                    emailAlertEnabled != sSelf.ruuviLocalSettings.emailAlertEnabled {
                     sSelf.ruuviLocalSettings.emailAlertEnabled = emailAlertEnabled
+                }
+                if let cloudProfileLanguageCode = cloudSettings.profileLanguageCode {
+                    if cloudProfileLanguageCode !=
+                        sSelf.ruuviLocalSettings.cloudProfileLanguageCode {
+                        sSelf.ruuviLocalSettings.cloudProfileLanguageCode = cloudProfileLanguageCode
+                    }
+                } else {
+                    let languageCode = sSelf.ruuviLocalSettings.language.rawValue
+                    sSelf.ruuviAppSettingsService.set(
+                        profileLanguageCode: languageCode
+                    )
+                    sSelf.ruuviLocalSettings.cloudProfileLanguageCode = languageCode
                 }
 
                 promise.succeed(value: cloudSettings)
