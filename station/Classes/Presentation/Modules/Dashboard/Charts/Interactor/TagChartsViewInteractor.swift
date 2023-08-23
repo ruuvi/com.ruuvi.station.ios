@@ -207,10 +207,6 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         return promise.future
     }
 
-    func updateChartHistoryDurationSetting(with hours: Int) {
-        ruuviAppSettingsService.set(chartDuration: hours)
-    }
-
     func updateChartShowMinMaxAvgSetting(with show: Bool) {
         ruuviAppSettingsService.set(showMinMaxAvg: show)
     }

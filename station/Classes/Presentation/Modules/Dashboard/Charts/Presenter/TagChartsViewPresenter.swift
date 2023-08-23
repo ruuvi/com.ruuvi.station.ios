@@ -77,7 +77,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var cloudSyncToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
-    private var chartIntervalDidChangeToken: NSObjectProtocol?
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var chartShowStatsStateDidChangeToken: NSObjectProtocol?
@@ -268,7 +267,6 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidSelectChartHistoryLength(hours: Int) {
         settings.chartDurationHours = hours
-        interactor.updateChartHistoryDurationSetting(with: hours)
     }
 
     func viewDidSelectLongerHistory() {
@@ -366,7 +364,6 @@ extension TagChartsViewPresenter {
         lnmDidReceiveToken?.invalidate()
         cloudSyncToken?.invalidate()
         downsampleDidChangeToken?.invalidate()
-        chartIntervalDidChangeToken?.invalidate()
         chartDurationHourDidChangeToken?.invalidate()
         chartShowStatsStateDidChangeToken?.invalidate()
         chartDrawDotsDidChangeToken?.invalidate()
@@ -490,14 +487,6 @@ extension TagChartsViewPresenter {
         downsampleDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .DownsampleOnDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                self?.interactor.restartObservingData()
-        })
-        chartIntervalDidChangeToken = NotificationCenter
-            .default
-            .addObserver(forName: .ChartIntervalDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in

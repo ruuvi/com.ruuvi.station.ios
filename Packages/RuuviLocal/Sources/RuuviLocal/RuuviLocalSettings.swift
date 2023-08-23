@@ -13,7 +13,6 @@ extension Notification.Name {
     public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
     public static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
     public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
-    public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
     public static let ChartStatsOnDidChange = Notification.Name("ChartStatsOnDidChange")
@@ -68,9 +67,6 @@ public protocol RuuviLocalSettings {
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
-    // TODO: - Deprecate this once all users are migrated to hours.
-    // This adds supports for version v2.3.0 and below.
-    var chartDurationHoursMigrated: Bool { get set }
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
     var chartStatsOn: Bool { get set }
