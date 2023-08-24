@@ -274,7 +274,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "About.Privacy.header" = "Политика конфиденциальности";
 "About.Troubleshooting.contents" = "Получите помощь по использованию приложений Ruuvi Station, продуктов Ruuvi и облачной службы Ruuvi в нашем центре поддержки: ruuvi.com/support";
 "About.Troubleshooting.header" = "Решение проблем";
-"Interval.Hour.string" = "Часов";
+"hours" = "Часов";
 "Interval.Days.string" = "Дней";
 "TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
 "HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
@@ -520,6 +520,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Share.title" = "Поделиться";
 "Menu.LoggedIn.title" = "Пользователь:";
 "Interval.Day.string" = "день";
+"hour" = "час";
 "TagSettings.tagNameTitleLabel.rename.text" = "Датчики будут отсортированы в алфавитном порядке.";
 "On" = "Вкл";
 "Off" = "Выкл";

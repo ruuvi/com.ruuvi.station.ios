@@ -273,7 +273,7 @@
 "About.Privacy.header" = "Protection des données personnelles";
 "About.Troubleshooting.contents" = "Trouvez de l'aide en utilisant les applications Ruuvi Station, les produits Ruuvi et le service Ruuvi Cloud depuis notre centre d'assistance : ruuvi.com/support";
 "About.Troubleshooting.header" = "Dépannage technique";
-"Interval.Hour.string" = "Heures";
+"hours" = "Heures";
 "Interval.Days.string" = "Jours";
 "TagSettings.AirHumidityAlert.title" = "Humidité de l'air (%@)";
 "HumidityUnit.gm3.title" = "Absolue (g/m³)";
@@ -519,6 +519,7 @@ RuuviTag est prêt à être utilisé !";
 "TagSettings.Share.title" = "Partager";
 "Menu.LoggedIn.title" = "Connecté :";
 "Interval.Day.string" = "Jour";
+"hour" = "Heure";
 "TagSettings.tagNameTitleLabel.rename.text" = "Les capteurs sont dans l'ordre alphabétique.";
 "On" = "Activé";
 "Off" = "Désactivé";

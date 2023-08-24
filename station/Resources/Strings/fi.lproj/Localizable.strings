@@ -274,7 +274,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "About.Privacy.header" = "Tietosuojakäytäntö";
 "About.Troubleshooting.contents" = "Löydä apua Ruuvi Station -sovellusten, Ruuvi-tuotteiden ja Ruuvi Cloud -palvelun käyttöön tukikeskuksestamme: ruuvi.com/fi/tuki";
 "About.Troubleshooting.header" = "Vianetsintä";
-"Interval.Hour.string" = "tuntia";
+"hours" = "tuntia";
 "Interval.Days.string" = "päivää";
 "TagSettings.AirHumidityAlert.title" = "Ilmankosteus (%@)";
 "HumidityUnit.gm3.title" = "Absoluuttinen (g/m³)";
@@ -520,6 +520,7 @@ RuuviTag on valmis käyttöön!";
 "TagSettings.Share.title" = "Jaa";
 "Menu.LoggedIn.title" = "Kirjautunut:";
 "Interval.Day.string" = "päivä";
+"hour" = "tunti";
 "TagSettings.tagNameTitleLabel.rename.text" = "Anturisi asettuvat automaattisesti aakkosjärjestykseen.";
 "On" = "Päällä";
 "Off" = "Pois";
