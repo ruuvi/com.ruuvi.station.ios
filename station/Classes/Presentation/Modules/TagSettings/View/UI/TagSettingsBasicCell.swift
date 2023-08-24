@@ -73,7 +73,7 @@ class TagSettingsBasicCell: UITableViewCell {
         iconView.centerYInSuperview()
         iconHiddenWidthConstraints = [
             iconView.widthAnchor.constraint(equalToConstant: 0),
-            stack.trailingAnchor.constraint(equalTo: safeRightAnchor, constant: -8)
+            stack.trailingAnchor.constraint(equalTo: safeRightAnchor, constant: -12)
         ]
 
         addSubview(separator)

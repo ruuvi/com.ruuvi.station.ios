@@ -12,6 +12,8 @@ protocol DashboardViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel)
     func viewDidTriggerChart(for viewModel: CardsViewModel)
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel)
+    func viewDidTriggerRename(for viewModel: CardsViewModel)
+    func viewDidTriggerShare(for viewModel: CardsViewModel)
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel)
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel)
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel)
@@ -19,4 +21,6 @@ protocol DashboardViewOutput {
     func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func viewDidChangeDashboardType(dashboardType: DashboardType)
     func viewDidChangeDashboardTapAction(type: DashboardTapActionType)
+    func viewDidTriggerPullToRefresh()
+    func viewDidRenameTag(to name: String, viewModel: CardsViewModel)
 }

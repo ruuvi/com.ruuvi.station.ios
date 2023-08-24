@@ -10,4 +10,13 @@ protocol DiscoverViewInput: UIViewController, Localizable {
     var isCloseEnabled: Bool { get set }
 
     func showBluetoothDisabled(userDeclined: Bool)
+    func startNFCSession()
+    func stopNFCSession()
+    func showSensorDetailsDialog(
+        for tag: NFCSensor?,
+        message: String,
+        showAddSensor: Bool,
+        showGoToSensor: Bool,
+        isDF3: Bool
+    )
 }

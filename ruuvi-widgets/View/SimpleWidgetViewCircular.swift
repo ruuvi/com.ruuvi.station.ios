@@ -5,8 +5,7 @@ struct SimpleWidgetViewCircular: View {
     var entry: WidgetProvider.Entry
     var body: some View {
         ZStack {
-            Color.backgroundColor
-                            .ignoresSafeArea()
+            Color.backgroundColor.edgesIgnoringSafeArea(.all).clipShape(Circle())
         }
 
         VStack(spacing: 0) {
@@ -35,9 +34,9 @@ struct SimpleWidgetViewCircular: View {
                               size: 10,
                               relativeTo: .body))
                 .minimumScaleFactor(0.5)
-                .padding(.top, -4)
+                .padding(.top, -2)
 
-        }.padding(EdgeInsets(top: 4, leading: 10, bottom: 0, trailing: 10))
+        }.padding(EdgeInsets(top: 4, leading: 10, bottom: 4, trailing: 10))
             .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
     }
 }

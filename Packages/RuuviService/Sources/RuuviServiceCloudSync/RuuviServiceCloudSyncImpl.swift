@@ -49,7 +49,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
             .on(success: { [weak self] cloudSettings in
-                guard let sSelf = self else { return }
+                guard let cloudSettings = cloudSettings, let sSelf = self else { return }
                 if let unitTemperature = cloudSettings.unitTemperature,
                    unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature

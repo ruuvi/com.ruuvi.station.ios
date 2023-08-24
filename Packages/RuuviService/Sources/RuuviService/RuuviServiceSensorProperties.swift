@@ -48,7 +48,7 @@ extension RuuviServiceSensorProperties {
             image: image,
             for: sensor,
             progress: nil,
-            maxSize: CGSize(width: 1080, height: 1920)
+            maxSize: CGSize(width: 3000, height: 3000)
         )
     }
 }

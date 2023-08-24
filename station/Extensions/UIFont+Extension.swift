@@ -11,6 +11,7 @@ public extension UIFont {
         case bold = "Bold"
         case regular = "Regular"
         case semiBoldItalic = "SemiBoldItalic"
+        case extraBold = "ExtraBold"
     }
 
     enum OswaldStyles: String {
@@ -28,7 +29,7 @@ public extension UIFont {
 
     static func Muli(_ type: MuliStyles = .regular,
                      size: CGFloat = UIFont.systemFontSize) -> UIFont {
-        let prefix = type == .semiBoldItalic ? "Mulish" : "Muli"
+        let prefix = (type == .semiBoldItalic || type == .extraBold) ? "Mulish" : "Muli"
         return UIFont(name: "\(prefix)-\(type.rawValue)",
                       size: size.adjustedSize()) ??
         UIFont.systemFont(ofSize: size.adjustedSize())

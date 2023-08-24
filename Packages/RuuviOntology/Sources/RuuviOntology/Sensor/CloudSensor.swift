@@ -12,6 +12,7 @@ extension CloudSensor {
             isClaimed: isOwner,
             isOwner: isOwner,
             owner: owner,
+            ownersPlan: ownersPlan,
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo
@@ -25,6 +26,7 @@ extension CloudSensor {
             isClaimed: email == owner,
             isOwner: email == owner,
             owner: owner,
+            ownersPlan: ownersPlan,
             picture: picture,
             offsetTemperature: offsetTemperature,
             offsetHumidity: offsetHumidity,
@@ -49,6 +51,7 @@ public struct CloudSensorStruct: CloudSensor {
     public var isCloudSensor: Bool?
     public var canShare: Bool
     public var sharedTo: [String]
+    public var ownersPlan: String?
 
     public init(
         id: String,
@@ -56,6 +59,7 @@ public struct CloudSensorStruct: CloudSensor {
         isClaimed: Bool,
         isOwner: Bool,
         owner: String?,
+        ownersPlan: String?,
         picture: URL?,
         offsetTemperature: Double?,
         offsetHumidity: Double?,
@@ -69,6 +73,7 @@ public struct CloudSensorStruct: CloudSensor {
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.ownersPlan = ownersPlan
         self.picture = picture
         self.offsetTemperature = offsetTemperature
         self.offsetHumidity = offsetHumidity
@@ -110,6 +115,10 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
 
     public var owner: String? {
         return object.owner
+    }
+
+    public var ownersPlan: String? {
+        return object.ownersPlan
     }
 
     public var picture: URL? {

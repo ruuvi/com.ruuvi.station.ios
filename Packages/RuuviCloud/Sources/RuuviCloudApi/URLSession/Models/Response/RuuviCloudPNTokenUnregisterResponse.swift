@@ -1,5 +1,3 @@
 import Foundation
 
-public struct RuuviCloudPNTokenUnregisterResponse: Decodable {
-
-}
+public struct RuuviCloudPNTokenUnregisterResponse: Decodable {}

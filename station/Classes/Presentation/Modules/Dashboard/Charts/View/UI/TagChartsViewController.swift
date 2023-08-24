@@ -42,8 +42,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        let font = UIFont(name: "Montserrat-Bold", size: 20)
-        label.font = font ?? UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont.Muli(.extraBold, size: 20)
         return label
     }()
 
@@ -53,8 +52,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        let font = UIFont(name: "Montserrat-Bold", size: 14)
-        label.font = font ?? UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.font = UIFont.Montserrat(.bold, size: 14)
         return label
     }()
 
@@ -118,6 +116,7 @@ class TagChartsViewController: UIViewController {
             title: "TagCharts.Sync.title".localized(),
             icon: UIImage(named: "icon_sync_bt"),
             iconTintColor: .white,
+            iconSize: .init(width: 22, height: 22),
             preccedingIcon: true
         )
         button.button.showsMenuAsPrimaryAction = false
@@ -344,7 +343,7 @@ class TagChartsViewController: UIViewController {
                                          left: 16,
                                          bottom: 8,
                                          right: 16),
-                          size: .init(width: 0, height: 24))
+                          size: .init(width: 0, height: 26))
 
         footerView.addSubview(updatedAtLabel)
         updatedAtLabel.anchor(top: footerView.topAnchor,
@@ -365,7 +364,7 @@ class TagChartsViewController: UIViewController {
                                                  left: 6,
                                                  bottom: 0,
                                                  right: 0),
-                                  size: .init(width: 20, height: 20))
+                                  size: .init(width: 22, height: 22))
         dataSourceIconView.centerYInSuperview()
 
     }
@@ -673,7 +672,7 @@ extension TagChartsViewController: TagChartsViewInput {
         let title = "synchronisation".localized()
         let message = "gatt_sync_description".localized()
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "Close".localized(), style: .cancel, handler: nil))
         let actionTitle = "do_not_show_again".localized()
         alertVC.addAction(UIAlertAction(title: actionTitle,
                                         style: .default,

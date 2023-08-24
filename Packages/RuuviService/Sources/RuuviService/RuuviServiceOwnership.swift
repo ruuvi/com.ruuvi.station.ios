@@ -22,7 +22,7 @@ public protocol RuuviServiceOwnership {
     func unclaim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
-    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviServiceError>
+    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier?, RuuviServiceError>
 
     @discardableResult
     func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviServiceError>
@@ -31,7 +31,7 @@ public protocol RuuviServiceOwnership {
     func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviServiceError>
 
     @discardableResult
-    func checkOwner(macId: MACIdentifier) -> Future<String, RuuviServiceError>
+    func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviServiceError>
 
     @discardableResult
     func updateShareable(for sensor: RuuviTagSensor) -> Future<Bool, RuuviServiceError>

@@ -191,6 +191,16 @@ extension SQLiteGRDBDatabase {
                     .defaults(to: "")
             })
         }
+        // v11
+        migrator.registerMigration("Create RuuviTagSQLite ownersPlan column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(where: {$0.name == RuuviTagSQLite.ownersPlan.name}) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagSQLite.ownersPlan.name, .text)
+            })
+        }
 
         try migrator.migrate(dbPool)
     }

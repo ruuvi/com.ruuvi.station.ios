@@ -11,7 +11,7 @@ class CardsLargeImageCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.bold, size: 20)
+        label.font = UIFont.Muli(.extraBold, size: 20)
         return label
     }()
 
@@ -37,7 +37,7 @@ class CardsLargeImageCell: UICollectionViewCell {
     private lazy var pressureView = CardsIndicatorView(icon: RuuviAssets.pressureImage)
     private lazy var movementView = CardsIndicatorView(icon: RuuviAssets.movementCounterImage)
 
-    private lazy var batteryLevelView = BatteryLevelView()
+    private lazy var batteryLevelView = BatteryLevelView(fontSize: 12)
 
     private lazy var syncStateLabel: UILabel = {
         let label = UILabel()
@@ -207,7 +207,7 @@ class CardsLargeImageCell: UICollectionViewCell {
                                                  left: 6,
                                                  bottom: 0,
                                                  right: 0),
-                                  size: .init(width: 20, height: 20))
+                                  size: .init(width: 22, height: 22))
         dataSourceIconView.centerYInSuperview()
     }
 }
@@ -218,9 +218,9 @@ extension CardsLargeImageCell {
         ruuviTagNameLabel.text = nil
         temperatureLabel.text = nil
         temperatureUnitLabel.text = nil
-        humidityView.setValue(with: nil)
-        pressureView.setValue(with: nil)
-        movementView.setValue(with: nil)
+        humidityView.clearValues()
+        pressureView.clearValues()
+        movementView.clearValues()
         updatedAtLabel.text = nil
         dataSourceIconView.image = nil
         syncStateLabel.text = nil
@@ -254,12 +254,20 @@ extension CardsLargeImageCell {
         }
 
         // Humidity
-        if let humidity = viewModel.humidity.value {
+        if let humidity = viewModel.humidity.value,
+            let measurementService = measurementService {
             hideHumidityView(hide: false)
-            let humidityValue = measurementService?.string(for: humidity,
-                                                           temperature: viewModel.temperature.value,
-                                                           allowSettings: true)
-            humidityView.setValue(with: humidityValue)
+            let humidityValue = measurementService.stringWithoutSign(
+                for: humidity,
+                temperature: viewModel.temperature.value
+            )
+            let humidityUnit = measurementService.units.humidityUnit
+            let humidityUnitSymbol = humidityUnit.symbol
+            let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
+            let unit =  humidityUnit == .dew ? temperatureUnitSymbol
+                : humidityUnitSymbol
+            humidityView.setValue(with: humidityValue,
+                                  unit: unit)
         } else {
             hideHumidityView(hide: true)
         }
@@ -267,9 +275,9 @@ extension CardsLargeImageCell {
         // Pressure
         if let pressure = viewModel.pressure.value {
             hidePressureView(hide: false)
-            let pressureValue = measurementService?.string(for: pressure,
-                                                           allowSettings: true)
-            pressureView.setValue(with: pressureValue)
+            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
+            pressureView.setValue(with: pressureValue,
+                                  unit: measurementService?.units.pressureUnit.symbol)
         } else {
             hidePressureView(hide: true)
         }
@@ -279,12 +287,13 @@ extension CardsLargeImageCell {
         case .ruuvi:
             if let movement = viewModel.movementCounter.value {
                 hideMovementView(hide: false)
-                let movementValue = "\(movement) " + "Cards.Movements.title".localized()
-                movementView.setValue(with: movementValue)
+                movementView.setValue(
+                    with: "\(movement)",
+                    unit: "Cards.Movements.title".localized()
+                )
             } else {
                 hideMovementView(hide: true)
             }
-            movementView.setIcon(with: RuuviAssets.movementCounterImage)
         case .web:
             let location = viewModel.location
             if let location = location.value {

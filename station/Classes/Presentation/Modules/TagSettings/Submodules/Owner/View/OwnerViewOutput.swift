@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 
 protocol OwnerViewOutput: AnyObject {
-    func viewDidTapOnClaim()
+    func viewDidTapOnClaim(mode: OwnershipMode)
     func updateOwnerInfo(with email: String)
     func viewDidTriggerFirmwareUpdateDialog()
     func viewDidConfirmFirmwareUpdate()

@@ -1,4 +1,3 @@
 import Foundation
 
-public struct RuuviCloudApiSensorImageResetResponse: Decodable {
-}
+public struct RuuviCloudApiSensorImageResetResponse: Decodable {}

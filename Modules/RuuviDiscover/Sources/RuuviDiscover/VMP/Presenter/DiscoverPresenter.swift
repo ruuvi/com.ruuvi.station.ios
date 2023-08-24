@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import BTKit
 import UIKit
@@ -11,6 +12,7 @@ import RuuviVirtual
 import RuuviCore
 import RuuviPresenters
 import CoreBluetooth
+import CoreNFC
 
 class DiscoverPresenter: NSObject, RuuviDiscover {
     var viewController: UIViewController {
@@ -73,6 +75,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
             }
         }
     }
+    private var nfcSensor: NFCSensor?
 
     private var reloadTimer: Timer?
     private var scanToken: ObservationToken?
@@ -123,15 +126,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any != nil && $0.luid?.any == device.luid?.any }) {
-            ruuviOwnershipService.add(
-                sensor: ruuviTag.with(name: displayName),
-                record: ruuviTag.with(source: .advertisement))
-                .on(success: { [weak self] anyRuuviTagSensor in
-                    guard let sSelf = self else { return }
-                    sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
+            addRuuviTagOwnership(
+                for: ruuviTag,
+                displayName: displayName,
+                firmwareVersion: nil
+            )
         }
     }
 
@@ -147,6 +146,121 @@ extension DiscoverPresenter: DiscoverViewOutput {
         guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized(for: Self.self))
         else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    func viewDidTapUseNFC() {
+        view?.startNFCSession()
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    func viewDidReceiveNFCMessages(messages: [NFCNDEFMessage]) {
+        // Stop NFC session
+        view?.stopNFCSession()
+
+        nfcSensor = NFCSensor(id: "", macId: "", firmwareVersion: "")
+        // Parse the message
+        for message in messages {
+            for record in message.records {
+                if let (key, value) = parse(record: record) {
+                    switch key {
+                    case "idID":
+                        self.nfcSensor?.id = trimNulls(from: value)
+                    case "adMAC":
+                        self.nfcSensor?.macId = trimNulls(from: value)
+                    case "swSW":
+                        self.nfcSensor?.firmwareVersion = trimNulls(from: value)
+                    default:
+                        break
+                    }
+                }
+            }
+        }
+
+        // Stop NFC session
+        view?.stopNFCSession()
+
+        // If tag is already added show the name from RuuviStation alongside
+        // other info.
+        if let addedTag = persistedSensors.first(where: { ruuviTag in
+            ruuviTag.macId?.mac == nfcSensor?.macId
+        }) {
+            guard let message = self.message(
+                for: nfcSensor,
+                displayName: addedTag.name
+            ) else { return }
+            self.view?.showSensorDetailsDialog(
+                for: nfcSensor,
+                message: message,
+                showAddSensor: false,
+                showGoToSensor: true,
+                isDF3: false
+            )
+            return
+        }
+
+        // If tag is not added get the name from the mac and show other info.
+        if let addableTag = ruuviTags.first(where: { ruuviTag in
+            ruuviTag.mac == nfcSensor?.macId
+        }) {
+            guard let message = self.message(
+                for: nfcSensor,
+                displayName: self.displayName(for: nfcSensor)
+            ) else { return }
+            self.view?.showSensorDetailsDialog(
+                for: nfcSensor,
+                message: message,
+                showAddSensor: true,
+                showGoToSensor: false,
+                isDF3: false
+            )
+            return
+        }
+
+        // Got mac id from scan, but no match in the persisted tag or available tag.
+        // which means either its a DF3 tag where mac id is not present or NFC scan
+        // is done when sensor is not yet seen by BT.
+        // Show info for DF3 case to add the tag using BT and update FW.
+        // TODO: Discuss about the other case to handle it.
+        guard let message = self.message(
+            for: nfcSensor,
+            displayName: self.displayName(for: nfcSensor)
+        ) else { return }
+        self.view?.showSensorDetailsDialog(
+            for: nfcSensor,
+            message: message,
+            showAddSensor: false,
+            showGoToSensor: false,
+            isDF3: nfcSensor?.firmwareVersion == "2.5.9"
+        )
+    }
+
+    func viewDidAddDeviceWithNFC(with tag: NFCSensor?) {
+        guard let displayName = displayName(for: tag) else {
+            return
+        }
+        if let ruuviTag = ruuviTags.first(where: { $0.mac != nil && $0.mac == tag?.macId }) {
+            addRuuviTagOwnership(
+                for: ruuviTag,
+                displayName: displayName,
+                firmwareVersion: tag?.firmwareVersion
+            )
+        }
+    }
+
+    func viewDidGoToSensor(with sensor: NFCSensor?) {
+        if let ruuviTag = persistedSensors.first(where: { ruuviTag in
+            ruuviTag.macId?.mac == sensor?.macId
+        }) {
+            output?.ruuvi(discover: self, didSelectFromNFC: ruuviTag)
+        }
+    }
+
+    func viewDidACopyMacAddress(of sensor: NFCSensor?) {
+        UIPasteboard.general.string = sensor?.macId
+    }
+
+    func viewDidACopySecret(of sensor: NFCSensor?) {
+        UIPasteboard.general.string = sensor?.id
     }
 }
 
@@ -277,6 +391,73 @@ extension DiscoverPresenter {
 
         return filtered
     }
+
+    /// Parse the NFC payload
+    private func parse(record: NFCNDEFPayload) -> (String, String)? {
+        let payload = record.payload
+        let prefix = payload.prefix(1)
+        let rest = payload.dropFirst(1)
+
+        switch prefix {
+        case .init([0x02]):
+            guard let restString = String(
+                data: rest, encoding: .utf8
+            ) else { return nil }
+
+            let components = restString.components(separatedBy: ": ")
+            if components.count == 2 {
+                let key = components[0]
+                let value = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                return (key, value)
+            }
+        default:
+            return nil
+        }
+        return nil
+    }
+
+    private func displayName(for tag: NFCSensor?) -> String? {
+        guard let tag = tag else {
+            return nil
+        }
+        return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
+        + " " + tag.macId.replacingOccurrences(of: ":", with: "").suffix(4)
+    }
+
+    private func message(for tag: NFCSensor?, displayName: String?) -> String? {
+        guard let tag = tag,
+                let displayName = displayName else {
+            return nil
+        }
+
+        let nameString = "\("name".localized(for: Self.self))\n\(displayName)"
+        let macIdString = "\("mac_address".localized(for: Self.self))\n\(tag.macId)"
+        let uniqueIdString = "\("unique_id".localized(for: Self.self))\n\(tag.id)"
+        let fwString = "\("firmware_version".localized(for: Self.self))\n\(tag.firmwareVersion)"
+
+        return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n".localized(for: Self.self)
+    }
+
+    private func addRuuviTagOwnership(
+        for ruuviTag: RuuviTag,
+        displayName: String,
+        firmwareVersion: String?
+    ) {
+        ruuviOwnershipService.add(
+            sensor: ruuviTag.with(name: displayName)
+                .with(firmwareVersion: firmwareVersion ?? ""),
+            record: ruuviTag.with(source: .advertisement))
+            .on(success: { [weak self] anyRuuviTagSensor in
+                guard let sSelf = self else { return }
+                sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+    }
+
+    private func trimNulls(from string: String) -> String {
+        return string.replacingOccurrences(of: "\0", with: "")
+    }
 }
 
 extension DiscoverPresenter {
@@ -295,3 +476,4 @@ extension DiscoverPresenter {
         })
     }
 }
+// swiftlint:enable file_length

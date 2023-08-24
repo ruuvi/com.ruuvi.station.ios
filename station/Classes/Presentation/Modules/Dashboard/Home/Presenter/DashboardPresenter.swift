@@ -185,7 +185,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerAddSensors() {
-        router.openDiscover()
+        router.openDiscover(delegate: self)
     }
 
     func viewDidTriggerBuySensors() {
@@ -261,7 +261,17 @@ extension DashboardPresenter: DashboardViewOutput {
         }
         
     }
-    
+
+    func viewDidTriggerRename(for viewModel: CardsViewModel) {
+        view?.showSensorNameRenameDialog(for: viewModel)
+    }
+
+    func viewDidTriggerShare(for viewModel: CardsViewModel) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+            router.openShare(for: ruuviTag)
+        }
+    }
+
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -315,13 +325,31 @@ extension DashboardPresenter: DashboardViewOutput {
         view?.dashboardTapActionType = type
         ruuviAppSettingsService.set(dashboardTapActionType: type)
     }
+
+    func viewDidTriggerPullToRefresh() {
+        cloudSyncDaemon.refreshImmediately()
+    }
+
+    func viewDidRenameTag(to name: String, viewModel: CardsViewModel) {
+        guard let ruuviTag = ruuviTags.first(where: {
+            $0.id == viewModel.id.value
+        }) else {
+            return
+        }
+
+        let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
+        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+            .on(failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+    }
 }
 
 // MARK: - MenuModuleOutput
 extension DashboardPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover()
+        router.openDiscover(delegate: self)
     }
     
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -392,6 +420,30 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
         module.dismiss(completion: {
             AppUtility.lockOrientation(.all)
         })
+    }
+}
+
+extension DashboardPresenter: DiscoverRouterDelegate {
+    func discoverRouterWantsClose(_ router: DiscoverRouter) {
+        router.viewController.dismiss(animated: true)
+    }
+
+    func discoverRouterWantsCloseWithRuuviTagNavigation(
+        _ router: DiscoverRouter,
+        ruuviTag: RuuviTagSensor
+    ) {
+        router.viewController.dismiss(animated: true)
+        if let viewModel = viewModels.first(where: {
+            $0.id.value == ruuviTag.id
+        }) {
+            self.router.openCardImageView(with: viewModels,
+                                     ruuviTagSensors: ruuviTags,
+                                     virtualSensors: virtualSensors,
+                                     sensorSettings: sensorSettingsList,
+                                     scrollTo: viewModel,
+                                     showCharts: false,
+                                     output: self)
+        }
     }
 }
 

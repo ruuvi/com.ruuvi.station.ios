@@ -17,15 +17,15 @@ public enum RuuviCloudAlertSettingType: String {
 }
 
 public protocol RuuviCloudSensorAlerts {
-    var sensor: String { get }
-    var alerts: [RuuviCloudAlert] { get }
+    var sensor: String? { get }
+    var alerts: [RuuviCloudAlert]? { get }
 }
 
 public protocol RuuviCloudAlert {
-    var type: RuuviCloudAlertType { get }
-    var enabled: Bool { get }
-    var min: Double { get }
-    var max: Double { get }
-    var counter: Int { get }
-    var description: String { get }
+    var type: RuuviCloudAlertType? { get }
+    var enabled: Bool? { get }
+    var min: Double? { get }
+    var max: Double? { get }
+    var counter: Int? { get }
+    var description: String? { get }
 }

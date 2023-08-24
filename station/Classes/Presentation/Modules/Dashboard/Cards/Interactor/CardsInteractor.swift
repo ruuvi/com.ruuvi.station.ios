@@ -15,7 +15,8 @@ extension CardsInteractor: CardsInteractorInput {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor,
                                        settings: RuuviLocalSettings) {
         guard let luid = ruuviTag.luid,
-              ruuviTag.firmwareVersion == nil &&
+              ruuviTag.firmwareVersion == nil ||
+                !ruuviTag.firmwareVersion.hasText() &&
                 settings.firmwareVersion(for: luid) == nil else {
             return
         }
@@ -27,9 +28,7 @@ extension CardsInteractor: CardsInteractorInput {
         ) { [weak self] _, result in
             switch result {
             case .success(let version):
-                // TODO: - @priyonto - Handle this prefix properly.
-                let currentVersion = version.replace("Ruuvi FW ", with: "")
-                let tagWithVersion = ruuviTag.with(firmwareVersion: currentVersion)
+                let tagWithVersion = ruuviTag.with(firmwareVersion: version)
                 self?.ruuviPool.update(tagWithVersion)
             default:
                 break

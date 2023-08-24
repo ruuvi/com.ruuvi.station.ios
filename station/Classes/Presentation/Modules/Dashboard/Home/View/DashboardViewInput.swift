@@ -14,4 +14,5 @@ protocol DashboardViewInput: ViewInput {
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()
     func showAlreadyLoggedInAlert(with email: String)
+    func showSensorNameRenameDialog(for viewModel: CardsViewModel)
 }

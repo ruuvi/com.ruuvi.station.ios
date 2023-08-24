@@ -61,7 +61,7 @@ struct EmptyWidgetView: View {
 
         var body: some View {
             ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                Color.backgroundColor.edgesIgnoringSafeArea(.all).clipShape(Circle())
             }
 
             VStack {

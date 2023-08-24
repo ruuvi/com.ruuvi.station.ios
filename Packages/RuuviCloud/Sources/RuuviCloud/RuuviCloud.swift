@@ -16,7 +16,7 @@ public struct ValidateCodeResponse {
 
 public protocol RuuviCloud {
     @discardableResult
-    func requestCode(email: String) -> Future<String, RuuviCloudError>
+    func requestCode(email: String) -> Future<String?, RuuviCloudError>
 
     @discardableResult
     func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError>
@@ -60,13 +60,13 @@ public protocol RuuviCloud {
     func claim(
         name: String,
         macId: MACIdentifier
-    ) -> Future<MACIdentifier, RuuviCloudError>
+    ) -> Future<MACIdentifier?, RuuviCloudError>
 
     @discardableResult
     func contest(
         macId: MACIdentifier,
         secret: String
-    ) -> Future<MACIdentifier, RuuviCloudError>
+    ) -> Future<MACIdentifier?, RuuviCloudError>
 
     @discardableResult
     func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
@@ -75,7 +75,7 @@ public protocol RuuviCloud {
     func share(
         macId: MACIdentifier,
         with email: String
-    ) -> Future<MACIdentifier, RuuviCloudError>
+    ) -> Future<MACIdentifier?, RuuviCloudError>
 
     @discardableResult
     func unshare(
@@ -89,7 +89,7 @@ public protocol RuuviCloud {
     ) -> Future<Set<AnyShareableSensor>, RuuviCloudError>
 
     @discardableResult
-    func checkOwner(macId: MACIdentifier) -> Future<String, RuuviCloudError>
+    func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviCloudError>
 
     @discardableResult
     func update(
@@ -111,7 +111,7 @@ public protocol RuuviCloud {
     ) -> Future<Void, RuuviCloudError>
 
     @discardableResult
-    func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError>
+    func getCloudSettings() -> Future<RuuviCloudSettings?, RuuviCloudError>
 
     @discardableResult
     func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError>

@@ -14,3 +14,17 @@
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";
 "Ruuvi.BuySensors.URL.IOS" = "https://ruuvi.com/products?utm_campaign=app_ua&utm_medium=referral&utm_source=ios";
+"add_with_nfc" = "Add with NFC";
+"sensor_details" = "Sensor Details";
+"add_sensor" = "Add Sensor";
+"copy_mac_address" = "Копировать MAC-адрес";
+"copy_unique_id" = "Скопировать уникальный идентификатор";
+"name" = "Name:";
+"mac_address" = "Mac Address:";
+"go_to_sensor" = "Go to sensor card";
+"unique_id" = "Unique ID:";
+"firmware_version" = "Firmware Version:";
+"close" = "Close";
+"add_sensor_nfc_df3_error" = "This sensor cannot be added with NFC due to old firmware. Please add the sensor with Bluetooth and update firmware.";
+"add_sensor_description" = "Здесь показаны датчики Ruuvi, которые еще не были добавлены в приложение. Нажмите на сенсор, чтобы добавить его.";
+"add_sensor_via_nfc" = "Alternatively, you can add a sensor using NFC by selecting Add with NFC and touching it with your phone.";
