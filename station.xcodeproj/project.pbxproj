@@ -4803,7 +4803,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -6369,7 +6369,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6379,7 +6379,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEVELOPMENT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6401,7 +6401,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6411,7 +6411,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6433,7 +6433,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6446,7 +6446,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
@@ -6470,7 +6470,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6483,7 +6483,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6505,7 +6505,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6518,7 +6518,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
@@ -6541,7 +6541,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6554,7 +6554,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6693,7 +6693,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6735,7 +6735,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6755,7 +6755,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6764,7 +6764,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6869,7 +6869,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6882,7 +6882,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
@@ -6904,7 +6904,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 401;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6917,7 +6917,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.3.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station.pnservice;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7016,7 +7016,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -7039,12 +7039,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */
