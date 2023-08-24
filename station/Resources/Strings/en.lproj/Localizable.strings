@@ -274,7 +274,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "About.Privacy.header" = "Privacy policy";
 "About.Troubleshooting.contents" = "Find help using the Ruuvi Station apps, Ruuvi products and Ruuvi Cloud service from our support center: ruuvi.com/support";
 "About.Troubleshooting.header" = "Troubleshooting";
-"Interval.Hour.string" = "Hours";
+"hours" = "Hours";
 "Interval.Days.string" = "Days";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity (%@)";
 "HumidityUnit.gm3.title" = "Absolute (g/m³)";
@@ -520,6 +520,7 @@ Your RuuviTag sensor is ready for use!";
 "TagSettings.Share.title" = "Share";
 "Menu.LoggedIn.title" = "Signed in:";
 "Interval.Day.string" = "Day";
+"hour" = "Hour";
 "TagSettings.tagNameTitleLabel.rename.text" = "Your sensors are displayed in alphabetical order.";
 "On" = "On";
 "Off" = "Off";

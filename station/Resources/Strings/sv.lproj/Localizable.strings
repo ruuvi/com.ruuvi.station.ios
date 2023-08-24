@@ -274,7 +274,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "About.Privacy.header" = "Integritetspolicy";
 "About.Troubleshooting.contents" = "Hitta hjälp med att använda Ruuvi Station-appar, Ruuvi-produkter och Ruuvi Cloud-tjänst från vårt supportcenter: ruuvi.com/support";
 "About.Troubleshooting.header" = "Felsökning";
-"Interval.Hour.string" = "Timmar";
+"hours" = "Timmar";
 "Interval.Days.string" = "Dagar";
 "TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
 "HumidityUnit.gm3.title" = "Absolut (g/m³)";
@@ -520,6 +520,7 @@ RuuviTag-sensorn är redo att användas!";
 "TagSettings.Share.title" = "Dela";
 "Menu.LoggedIn.title" = "Inloggad:";
 "Interval.Day.string" = "Dag";
+"hour" = "Timme";
 "TagSettings.tagNameTitleLabel.rename.text" = "Dina sensorer kommer att vara i alfabetisk ordning.";
 "On" = "På";
 "Off" = "Av";
