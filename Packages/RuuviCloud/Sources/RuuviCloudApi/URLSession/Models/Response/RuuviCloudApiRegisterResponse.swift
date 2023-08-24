@@ -1,5 +1,5 @@
 import Foundation
 
 public struct RuuviCloudApiRegisterResponse: Decodable {
-    public let email: String
+    public let email: String?
 }

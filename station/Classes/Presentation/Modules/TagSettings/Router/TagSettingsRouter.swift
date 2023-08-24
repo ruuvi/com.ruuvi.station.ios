@@ -67,13 +67,13 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
             .delegate = self
     }
 
-    func openOwner(ruuviTag: RuuviTagSensor) {
+    func openOwner(ruuviTag: RuuviTagSensor, mode: OwnershipMode) {
         let factory = StoryboardFactory(storyboardName: "Owner")
         try! transitionHandler
             .forStoryboard(factory: factory, to: OwnerModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
-                module.configure(ruuviTag: ruuviTag)
+                module.configure(ruuviTag: ruuviTag, mode: mode)
             })
     }
 

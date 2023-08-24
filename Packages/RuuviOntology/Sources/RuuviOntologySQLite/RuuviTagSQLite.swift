@@ -13,6 +13,7 @@ public struct RuuviTagSQLite: RuuviTagSensor {
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
+    public var ownersPlan: String?
     public var isCloudSensor: Bool?
     public var canShare: Bool
     public var sharedTo: [String]
@@ -28,6 +29,7 @@ public struct RuuviTagSQLite: RuuviTagSensor {
         isClaimed: Bool,
         isOwner: Bool,
         owner: String?,
+        ownersPlan: String?,
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String]
@@ -42,6 +44,7 @@ public struct RuuviTagSQLite: RuuviTagSensor {
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
+        self.ownersPlan = ownersPlan
         self.isCloudSensor = isCloudSensor
         self.canShare = canShare
         self.sharedTo = sharedTo
@@ -60,6 +63,7 @@ extension RuuviTagSQLite {
     public static let isClaimedColumn = Column("isClaimed")
     public static let isOwnerColumn = Column("isOwner")
     public static let owner = Column("owner")
+    public static let ownersPlan = Column("ownersPlan")
     public static let isCloudSensor = Column("isCloudSensor")
     public static let canShareColumn = Column("canShare")
     public static let sharedToColumn = Column("sharedTo")
@@ -81,6 +85,7 @@ extension RuuviTagSQLite: FetchableRecord {
         isClaimed = row[RuuviTagSQLite.isClaimedColumn]
         isOwner = row[RuuviTagSQLite.isOwnerColumn]
         owner = row[RuuviTagSQLite.owner]
+        ownersPlan = row[RuuviTagSQLite.ownersPlan]
         isCloudSensor = row[RuuviTagSQLite.isCloudSensor]
         canShare = row[RuuviTagSQLite.canShareColumn]
         if let sharedToColumn = row[RuuviTagSQLite.sharedToColumn] as? String {
@@ -107,6 +112,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.isClaimedColumn] = isClaimed
         container[RuuviTagSQLite.isOwnerColumn] = isOwner
         container[RuuviTagSQLite.owner] = owner
+        container[RuuviTagSQLite.ownersPlan] = ownersPlan
         container[RuuviTagSQLite.isCloudSensor] = isCloudSensor
         container[RuuviTagSQLite.canShareColumn] = canShare
         container[RuuviTagSQLite.sharedToColumn] = sharedTo.joined(separator: ",")
@@ -130,6 +136,7 @@ extension RuuviTagSQLite {
                 .notNull()
                 .defaults(to: true)
             table.column(RuuviTagSQLite.owner.name, .text)
+            table.column(RuuviTagSQLite.ownersPlan.name, .text)
             table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
             table.column(RuuviTagSQLite.canShareColumn.name, .boolean)
             table.column(RuuviTagSQLite.sharedToColumn.name, .text)

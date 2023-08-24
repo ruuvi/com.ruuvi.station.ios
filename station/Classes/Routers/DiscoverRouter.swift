@@ -6,6 +6,10 @@ import RuuviLocationPicker
 
 protocol DiscoverRouterDelegate: AnyObject {
     func discoverRouterWantsClose(_ router: DiscoverRouter)
+    func discoverRouterWantsCloseWithRuuviTagNavigation(
+        _ router: DiscoverRouter,
+        ruuviTag: RuuviTagSensor
+    )
 }
 
 final class DiscoverRouter {
@@ -63,6 +67,10 @@ extension DiscoverRouter: RuuviDiscoverOutput {
 
     func ruuvi(discover: RuuviDiscover, didAdd ruuviTag: AnyRuuviTagSensor) {
         delegate?.discoverRouterWantsClose(self)
+    }
+
+    func ruuvi(discover: RuuviDiscover, didSelectFromNFC ruuviTag: RuuviTagSensor) {
+        delegate?.discoverRouterWantsCloseWithRuuviTagNavigation(self, ruuviTag: ruuviTag)
     }
 }
 

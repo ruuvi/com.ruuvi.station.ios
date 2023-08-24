@@ -111,7 +111,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let croppedImage = coreImage.cropped(image: image, to: maxSize)
-        guard let jpegData = croppedImage.jpegData(compressionQuality: 1.0) else {
+        guard let jpegData = croppedImage.jpegData(compressionQuality: 0.6) else {
             promise.fail(error: .failedToGetJpegRepresentation)
             return promise.future
         }

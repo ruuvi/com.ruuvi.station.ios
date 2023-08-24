@@ -2,6 +2,7 @@ import UIKit
 import RuuviLocal
 import LightRoute
 import RuuviUser
+import RuuviOntology
 
 final class AppRouter {
     var viewController: UIViewController {
@@ -132,5 +133,12 @@ extension AppRouter: DiscoverRouterDelegate {
             let controller = dashboardViewController()
             navigationController.pushViewController(controller, animated: true)
         }
+    }
+
+    func discoverRouterWantsCloseWithRuuviTagNavigation(
+        _ router: DiscoverRouter,
+        ruuviTag: RuuviTagSensor
+    ) {
+        // No op.
     }
 }

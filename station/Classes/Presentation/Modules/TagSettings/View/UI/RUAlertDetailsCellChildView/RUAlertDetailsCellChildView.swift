@@ -12,7 +12,7 @@ class RUAlertDetailsCellChildView: UIView {
     // Private
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .right
+        label.textAlignment = .left
         label.numberOfLines = 0
         label.textColor = .label
         label.font = UIFont.Muli(.regular, size: 14)
@@ -78,5 +78,9 @@ extension RUAlertDetailsCellChildView {
 extension RUAlertDetailsCellChildView {
     func configure(with message: String?) {
         titleLabel.text = message
+    }
+
+    func configure(with message: NSMutableAttributedString?) {
+        titleLabel.attributedText = message
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D0E-ge-INE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D0E-ge-INE">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -142,7 +142,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="handleBuyRuuviSensorsButtonTap:" destination="D0E-ge-INE" eventType="touchUpInside" id="Ub8-fc-zsD"/>
+                                    <action selector="handleActionButtonTap:" destination="D0E-ge-INE" eventType="touchUpInside" id="KpX-z4-1fT"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -168,7 +168,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="buyRuuviSensorsButton" destination="pg7-cc-cA4" id="r8h-af-kih"/>
+                        <outlet property="actionButton" destination="pg7-cc-cA4" id="TqK-bY-WiB"/>
                         <outlet property="closeBarButtonItem" destination="1c0-rk-0ZN" id="DBf-CC-kMF"/>
                         <outlet property="tableView" destination="0mX-s6-EdV" id="7PU-eV-ReJ"/>
                     </connections>

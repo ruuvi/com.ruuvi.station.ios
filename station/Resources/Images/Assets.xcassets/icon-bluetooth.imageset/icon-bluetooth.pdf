@@ -1,51 +1,89 @@
-%PDF-1.4
-%”ÎÈ·
+%PDF-1.7
+
 1 0 obj
-<</Producer (Adobe XD)>>
+  << >>
 endobj
-3 0 obj
-<</ca 1
-/BM /Normal>>
-endobj
-4 0 obj
-<</Filter /FlateDecode
-/Length 221>> stream
-xúmêKn√0D˜:Ö.‡âH}(û Î‰
-ö.ÏE⁄˚%e;â”BÍi8
-\c≤3a‹„«Ó°X‚ƒƒ)kèÈ®™:4˝\œq-æo·tŒÒˆjﬁUYŸ*çÀ+Ìfÿ‚làë6a⁄Y’j™ïÅ:»ê h|TY"ã|âùC˘?⁄≠l¥¥{Ì¢)—†	ÖVá¸¢ıª¢“«« s¯ÚÓ}›eΩhA)√°¢≥œ>Úòˆ¸û≠]M∂?œŒ{3…)Òô=¿¸÷Â>ü·~ µañ
+
+2 0 obj
+  << /Length 3 0 R >>
+stream
+/DeviceRGB CS
+/DeviceRGB cs
+q
+1.000000 0.000000 -0.000000 1.000000 4.000000 2.000000 cm
+1.000000 1.000000 1.000000 scn
+5.700123 0.000000 m
+5.700123 8.004322 l
+0.652349 4.761079 l
+0.000000 5.468104 l
+5.358425 8.938378 l
+0.000000 12.402159 l
+0.652349 13.115677 l
+5.700123 9.872434 l
+5.700123 18.000000 l
+12.992227 12.719991 l
+7.113505 8.918920 l
+13.000000 5.111355 l
+5.700123 0.000000 l
+h
+6.787354 8.004322 m
+6.787354 1.919994 l
+11.307059 5.078911 l
+6.787354 8.004322 l
+h
+6.787354 16.034595 m
+6.787354 9.833516 l
+11.314833 12.758928 l
+6.787354 16.034595 l
+h
+f
+n
+Q
+
 endstream
 endobj
-2 0 obj
-<</Type /Page
-/Resources <</ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
-/ExtGState <</G3 3 0 R>>>>
-/MediaBox [0 0 17 28]
-/Contents 4 0 R
-/StructParents 0
-/Parent 5 0 R>>
+
+3 0 obj
+  562
 endobj
+
+4 0 obj
+  << /Annots []
+     /Type /Page
+     /MediaBox [ 0.000000 0.000000 22.000000 22.000000 ]
+     /Resources 1 0 R
+     /Contents 2 0 R
+     /Parent 5 0 R
+  >>
+endobj
+
 5 0 obj
-<</Type /Pages
-/Count 1
-/Kids [2 0 R]>>
+  << /Kids [ 4 0 R ]
+     /Count 1
+     /Type /Pages
+  >>
 endobj
+
 6 0 obj
-<</Type /Catalog
-/Pages 5 0 R>>
+  << /Pages 5 0 R
+     /Type /Catalog
+  >>
 endobj
+
 xref
 0 7
-0000000000 65535 f 
-0000000015 00000 n 
-0000000383 00000 n 
-0000000055 00000 n 
-0000000092 00000 n 
-0000000569 00000 n 
-0000000624 00000 n 
+0000000000 65535 f
+0000000010 00000 n
+0000000034 00000 n
+0000000652 00000 n
+0000000674 00000 n
+0000000847 00000 n
+0000000921 00000 n
 trailer
-<</Size 7
-/Root 6 0 R
-/Info 1 0 R>>
+<< /ID [ (some) (id) ]
+   /Root 6 0 R
+   /Size 7
+>>
 startxref
-671
+980
 %%EOF

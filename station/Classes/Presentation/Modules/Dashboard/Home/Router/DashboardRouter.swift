@@ -34,11 +34,10 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             })
     }
 
-    func openDiscover() {
+    func openDiscover(delegate: DiscoverRouterDelegate) {
         let discoverRouter = DiscoverRouter()
-        discoverRouter.delegate = self
+        discoverRouter.delegate = delegate
         let viewController = discoverRouter.viewController
-        viewController.presentationController?.delegate = self
         let navigationController = UINavigationController(rootViewController: viewController)
         transitionHandler.present(navigationController, animated: true)
     }
@@ -255,12 +254,18 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             )
     }
 
-}
-
-extension DashboardRouter: DiscoverRouterDelegate {
-    func discoverRouterWantsClose(_ router: DiscoverRouter) {
-        router.viewController.dismiss(animated: true)
+    func openShare(for sensor: RuuviTagSensor) {
+        let restorationId = "ShareViewController"
+        let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
+        try! transitionHandler
+            .forStoryboard(factory: factory,
+                           to: ShareModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(sensor: sensor)
+            })
     }
+
 }
 
 extension DashboardRouter: UIAdaptivePresentationControllerDelegate {

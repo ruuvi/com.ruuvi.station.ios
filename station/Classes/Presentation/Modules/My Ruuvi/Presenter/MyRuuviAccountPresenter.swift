@@ -58,7 +58,7 @@ extension MyRuuviAccountPresenter {
     private func syncViewModel() {
         let viewModel = MyRuuviAccountViewModel()
         if ruuviUser.isAuthorized {
-            viewModel.username.value = ruuviUser.email?.lowercased()
+            viewModel.username.value = ruuviUser.email
         }
         view.viewModel = viewModel
     }

@@ -4,6 +4,7 @@ import RuuviOntology
 import RuuviVirtual
 import RuuviLocalization
 import RuuviBundleUtils
+import CoreNFC
 
 enum DiscoverTableSection {
     case device
@@ -22,7 +23,8 @@ class DiscoverTableViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var closeBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var buyRuuviSensorsButton: UIButton!
+    @IBOutlet weak var actionButton: UIButton!
+    private var discoverTableHeaderView = DiscoverTableHeaderView()
 
     private var alertVC: UIAlertController?
 
@@ -45,6 +47,7 @@ class DiscoverTableViewController: UIViewController {
     }
 
     private let hideAlreadyAddedWebProviders = false
+    private var session: NFCNDEFReaderSession?
 }
 
 // MARK: - DiscoverViewInput
@@ -52,10 +55,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
-        buyRuuviSensorsButton.setTitle(
-            "DiscoverTable.GetMoreSensors.button.title".localized(for: Self.self).capitalized,
-            for: .normal
-        )
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
@@ -76,6 +75,84 @@ extension DiscoverTableViewController: DiscoverViewInput {
         alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
+
+    func startNFCSession() {
+        session?.invalidate()
+        session = nil
+
+        session = NFCNDEFReaderSession(
+            delegate: self,
+            queue: nil,
+            invalidateAfterFirstRead: false
+        )
+        session?.begin()
+    }
+
+    func stopNFCSession() {
+        session?.invalidate()
+        session = nil
+    }
+
+    func showSensorDetailsDialog(
+        for tag: NFCSensor?,
+        message: String,
+        showAddSensor: Bool,
+        showGoToSensor: Bool,
+        isDF3: Bool
+    ) {
+        let title = "sensor_details".localized(for: Self.self)
+
+        // Message
+        var messageString = message
+        // We show extra message for DF3 sensors since they can't be added with NFC.
+        if isDF3 {
+            let df3ErrorMessage = "add_sensor_nfc_df3_error".localized(
+                for: Self.self
+              )
+            messageString = "\n\(df3ErrorMessage)\n" + message
+        }
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .left
+        let messageText = NSAttributedString(
+            string: messageString,
+            attributes: [
+                NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                NSAttributedString.Key.foregroundColor: UIColor.label,
+                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)
+            ]
+        )
+
+        let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alertVC.setValue(messageText, forKey: "attributedMessage")
+
+        if showAddSensor {
+          alertVC.addAction(UIAlertAction(title: "add_sensor".localized(for: Self.self),
+                                          style: .default, handler: { [weak self] _ in
+            self?.output.viewDidAddDeviceWithNFC(with: tag)
+          }))
+        }
+
+        alertVC.addAction(UIAlertAction(title: "copy_mac_address".localized(for: Self.self),
+                                        style: .default, handler: { [weak self] _ in
+            self?.output.viewDidACopyMacAddress(of: tag)
+        }))
+
+        alertVC.addAction(UIAlertAction(title: "copy_unique_id".localized(for: Self.self),
+                                        style: .default, handler: { [weak self] _ in
+            self?.output.viewDidACopySecret(of: tag)
+        }))
+
+        if showGoToSensor {
+          alertVC.addAction(UIAlertAction(title: "go_to_sensor".localized(for: Self.self),
+                                          style: .default, handler: { [weak self] _ in
+            self?.output.viewDidGoToSensor(with: tag)
+          }))
+        }
+
+        alertVC.addAction(UIAlertAction(title: "close".localized(for: Self.self), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -84,8 +161,15 @@ extension DiscoverTableViewController {
         output.viewDidTriggerClose()
     }
 
-    @IBAction func handleBuyRuuviSensorsButtonTap(_ sender: Any) {
+    @IBAction func handleActionButtonTap(_ sender: Any) {
         output.viewDidTriggerBuySensors()
+    }
+}
+
+// MARK: - DiscoverTableHeaderViewDelegate
+extension DiscoverTableViewController: DiscoverTableHeaderViewDelegate {
+    func didTapAddWithNFCButton(sender: DiscoverTableHeaderView) {
+        output.viewDidTapUseNFC()
     }
 }
 
@@ -109,6 +193,23 @@ extension DiscoverTableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let headerView = tableView.tableHeaderView {
+
+            let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            var headerFrame = headerView.frame
+
+            if height != headerFrame.size.height {
+                headerFrame.size.height = height
+                headerView.frame = headerFrame
+                tableView.tableHeaderView = headerView
+            }
+            headerView.translatesAutoresizingMaskIntoConstraints = true
+        }
     }
 }
 
@@ -163,34 +264,6 @@ extension DiscoverTableViewController: UITableViewDelegate {
             }
         }
     }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionType = DiscoverTableSection.section(for: ruuviTags.count)
-        switch sectionType {
-        case .device:
-            return ruuviTags.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
-        case .noDevices:
-            return ruuviTags.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized(for: Self.self) : nil
-        default:
-            return nil
-        }
-    }
-
-    func tableView(_ tableView: UITableView,
-                   willDisplayHeaderView view: UIView,
-                   forSection: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = UIColor(named: "ruuvi_text_color")
-            headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-            if let font = UIFont(name: "Muli-Regular", size: 13) {
-                headerView.textLabel?.font = font
-            }
-        }
-    }
 }
 
 // MARK: - Cell configuration
@@ -224,6 +297,9 @@ extension DiscoverTableViewController {
             navigationController?.navigationBar.titleTextAttributes =
                 [.font: muliBold]
         }
+        actionButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(
+            for: Self.self
+        ).capitalized, for: .normal)
         configureTableView()
     }
 
@@ -231,6 +307,9 @@ extension DiscoverTableViewController {
         tableView.rowHeight = 44
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableHeaderView = discoverTableHeaderView
+        discoverTableHeaderView.delegate = self
+        tableView.tableFooterView = UIView()
     }
 }
 
@@ -253,6 +332,9 @@ extension DiscoverTableViewController {
 
     private func updateTableView() {
         if isViewLoaded {
+            discoverTableHeaderView.handleNFCButtonViewVisibility(
+                show: ruuviTags.count > 0
+            )
             tableView.reloadData()
         }
     }
@@ -275,5 +357,22 @@ extension DiscoverTableViewController {
             return
         }
         UIApplication.shared.open(url)
+    }
+}
+
+// MARK: - NFCNDEFReaderSessionDelegate
+extension DiscoverTableViewController: NFCNDEFReaderSessionDelegate {
+    func readerSession(_ session: NFCNDEFReaderSession,
+                       didInvalidateWithError error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.stopNFCSession()
+        }
+    }
+
+    func readerSession(_ session: NFCNDEFReaderSession,
+                       didDetectNDEFs messages: [NFCNDEFMessage]) {
+        DispatchQueue.main.async { [weak self] in
+            self?.output?.viewDidReceiveNFCMessages(messages: messages)
+        }
     }
 }

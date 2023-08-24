@@ -35,6 +35,8 @@ class TagChartsViewInteractor {
     private let maximumPointsCount: Double = 3000.0
     private let minimumDownsampleThreshold: Int = 1000
 
+    private var gattSyncInterruptedByUser: Bool = false
+
     deinit {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
@@ -163,7 +165,10 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
-            self?.localSyncState.setGattSyncDate(Date(), for: self?.ruuviTagSensor.macId)
+            if let isInterrupted = self?.gattSyncInterruptedByUser, !isInterrupted {
+                self?.localSyncState.setGattSyncDate(Date(), for: self?.ruuviTagSensor.macId)
+            }
+            self?.gattSyncInterruptedByUser = false
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: .ruuviService(error))
@@ -178,7 +183,8 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
             return promise.future
         }
         let op = gattService.stopGattSync(for: luid.value)
-        op.on(success: { response in
+        op.on(success: { [weak self] response in
+            self?.gattSyncInterruptedByUser = true
             promise.succeed(value: (response))
         }, failure: {error in
             promise.fail(error: .ruuviService(error))

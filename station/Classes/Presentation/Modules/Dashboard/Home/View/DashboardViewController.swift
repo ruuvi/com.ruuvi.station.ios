@@ -117,12 +117,25 @@ class DashboardViewController: UIViewController {
         cv.showsVerticalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
+        cv.alwaysBounceVertical = true
+        cv.refreshControl = refresher
         return cv
     }()
+
+    private lazy var refresher: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.tintColor = RuuviColor.ruuviTintColor
+        rc.layer.zPosition = -1
+        rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        return rc
+    }()
+    private var tagNameTextField = UITextField()
+    private let tagNameCharaterLimit: Int = 32
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
 
     private var isListRefreshable: Bool = true
+    private var isRefreshing: Bool = false
     /// The view model when context menu is presented after a card tap.
     private var highlightedViewModel: CardsViewModel?
 
@@ -192,6 +205,19 @@ extension DashboardViewController {
             }
             self?.collectionView.reloadWithoutAnimation()
         }
+    }
+
+    @objc fileprivate func didPullToRefresh() {
+        guard !isRefreshing else {
+          refresher.endRefreshing()
+          return
+        }
+        isRefreshing = true
+        output.viewDidTriggerPullToRefresh()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak self] in
+            self?.refresher.endRefreshing()
+            self?.isRefreshing = false
+        })
     }
 }
 
@@ -280,11 +306,35 @@ extension DashboardViewController {
             }
         }
 
-        return UIMenu(title: "",
-                      children: [fullImageViewAction,
-                                 historyViewAction,
-                                 settingsAction,
-                                 changeBackgroundAction])
+        let renameAction = UIAction(title: "rename".localized()) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                self?.output.viewDidTriggerRename(for: viewModel)
+            }
+        }
+
+        let shareSensorAction = UIAction(title: "TagSettings.ShareButton".localized()) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                self?.output.viewDidTriggerShare(for: viewModel)
+            }
+        }
+
+        var contextMenuActions: [UIAction] = [
+          fullImageViewAction,
+          historyViewAction,
+          settingsAction,
+          changeBackgroundAction,
+          renameAction
+        ]
+
+        let viewModel = viewModels[index]
+        if let canShare = viewModel.canShareTag.value,
+           canShare {
+          contextMenuActions.append(shareSensorAction)
+        }
+
+        return UIMenu(title: "", children: contextMenuActions)
     }
 }
 
@@ -358,7 +408,7 @@ extension DashboardViewController {
                               leading: view.safeLeftAnchor,
                               bottom: view.bottomAnchor,
                               trailing: view.safeRightAnchor,
-                              padding: .init(top: 0,
+                              padding: .init(top: 12,
                                              left: 12,
                                              bottom: 0,
                                              right: 12))
@@ -366,6 +416,8 @@ extension DashboardViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
         collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
+
+        collectionView.addSubview(refresher)
     }
 
     // swiftlint:disable:next function_body_length
@@ -411,7 +463,7 @@ extension DashboardViewController {
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
             section.contentInsets = NSDirectionalEdgeInsets(
-                top: 12,
+                top: 0,
                 leading: 0,
                 bottom: 12,
                 trailing: 0
@@ -631,6 +683,27 @@ extension DashboardViewController: DashboardViewInput {
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alert, animated: true)
     }
+
+    func showSensorNameRenameDialog(for viewModel: CardsViewModel) {
+        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
+                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+                                      preferredStyle: .alert)
+        alert.addTextField { [weak self] alertTextField in
+            guard let self = self else { return }
+            alertTextField.delegate = self
+            alertTextField.text = viewModel.name.value
+            self.tagNameTextField = alertTextField
+        }
+        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            guard let name = self.tagNameTextField.text, !name.isEmpty else { return }
+            self.output.viewDidRenameTag(to: name, viewModel: viewModel)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 extension DashboardViewController: RuuviServiceMeasurementDelegate {
@@ -662,5 +735,26 @@ extension DashboardViewController {
     fileprivate func updateUI() {
         showNoSensorsAddedMessage(show: viewModels.isEmpty)
         collectionView.reloadWithoutAnimation()
+    }
+}
+
+    // MARK: - UITextFieldDelegate
+extension DashboardViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn
+                   range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let text = textField.text else {
+            return true
+        }
+        let limit = text.utf16.count + string.utf16.count - range.length
+        if textField == tagNameTextField {
+            if limit <= tagNameCharaterLimit {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
     }
 }

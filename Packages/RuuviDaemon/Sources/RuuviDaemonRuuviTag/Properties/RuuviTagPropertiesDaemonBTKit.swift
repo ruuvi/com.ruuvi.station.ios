@@ -143,7 +143,9 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             // either by pressing B or by upgrading firmware
             if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
                 // tag is already saved to SQLite
-                ruuviPool.update(pair.ruuviTag.with(macId: mac))
+                ruuviPool.update(pair.ruuviTag
+                    .with(macId: mac)
+                    .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
                         self?.post(error: .ruuviPool(error))
                     })
@@ -199,14 +201,22 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-                ruuviPool.update(pair.ruuviTag.with(macId: mac))
+            if let mac = idPersistence.mac(for: pair.device.uuid.luid),
+                pair.device.version != pair.ruuviTag.version {
+                ruuviPool.update(pair.ruuviTag
+                    .with(macId: mac)
+                    .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
                         self?.post(error: .ruuviPool(error))
                     })
-            } else {
-                // Should never be there
-                return
+            }
+        } else {
+            if pair.device.version != pair.ruuviTag.version {
+                ruuviPool.update(pair.ruuviTag
+                    .with(version: pair.device.version))
+                    .on(failure: { [weak self] error in
+                        self?.post(error: .ruuviPool(error))
+                    })
             }
         }
     }
@@ -235,6 +245,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 isClaimed: ruuviTag.isClaimed,
                 isOwner: ruuviTag.isOwner,
                 owner: ruuviTag.owner,
+                ownersPlan: ruuviTag.ownersPlan,
                 isCloudSensor: ruuviTag.isCloudSensor,
                 canShare: ruuviTag.canShare,
                 sharedTo: ruuviTag.sharedTo)

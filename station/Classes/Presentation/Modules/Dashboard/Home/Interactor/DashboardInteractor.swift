@@ -19,8 +19,15 @@ class DashboardInteractor {
 extension DashboardInteractor: DashboardInteractorInput {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor) {
         guard let luid = ruuviTag.luid,
-              ruuviTag.firmwareVersion == nil &&
+              ruuviTag.firmwareVersion == nil ||
+                !ruuviTag.firmwareVersion.hasText() &&
                 settings.firmwareVersion(for: luid) == nil else {
+            // Trigger the method after 2 seconds so that sensor settings page can
+            // be set and start observing for owner check notification. 
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2),
+                                          execute: { [weak self] in
+                self?.checkOwner(for: ruuviTag)
+            })
             return
         }
 
@@ -31,9 +38,7 @@ extension DashboardInteractor: DashboardInteractorInput {
         ) { [weak self] _, result in
             switch result {
             case .success(let version):
-                // TODO: - @priyonto - Handle this prefix properly.
-                let currentVersion = version.replace("Ruuvi FW ", with: "")
-                let tagWithVersion = ruuviTag.with(firmwareVersion: currentVersion)
+                let tagWithVersion = ruuviTag.with(firmwareVersion: version)
                 self?.ruuviPool.update(tagWithVersion)
                 self?.checkOwner(for: tagWithVersion)
             default:
@@ -56,13 +61,21 @@ extension DashboardInteractor: DashboardInteractorInput {
 
         ruuviOwnershipService.checkOwner(macId: macId)
             .on(success: { [weak self] owner in
-                guard let self = self, !owner.isEmpty else {
-                    self?.settings.setOwnerCheckDate(for: macId, value: Date())
+                guard let sSelf = self else {
                     return
                 }
-                self.ruuviPool.update(ruuviTag
+                guard let owner = owner, !owner.isEmpty else {
+                    NotificationCenter.default.post(
+                        name: .RuuviTagOwnershipCheckDidEnd,
+                        object: nil,
+                        userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
+                    )
+                    sSelf.settings.setOwnerCheckDate(for: macId, value: Date())
+                    return
+                }
+                sSelf.ruuviPool.update(ruuviTag
                     .with(owner: owner)
-                    .with(isOwner: owner == self.ruuviUser.email))
+                    .with(isOwner: owner == sSelf.ruuviUser.email))
             })
     }
 }

@@ -8,6 +8,14 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 
+extension Notification.Name {
+    public static let RuuviTagOwnershipCheckDidEnd = Notification.Name("RuuviTagOwnershipCheckDidEnd")
+}
+
+public enum RuuviTagOwnershipCheckResultKey: String {
+    case hasOwner = "hasTagOwner"
+}
+
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
@@ -51,8 +59,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviServiceError> {
-        let promise = Promise<MACIdentifier, RuuviServiceError>()
+    public func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier?, RuuviServiceError> {
+        let promise = Promise<MACIdentifier?, RuuviServiceError>()
         cloud.share(macId: macId, with: email)
             .on(success: { macId in
                 promise.succeed(value: macId)
@@ -140,6 +148,9 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 guard let sSelf = self else { return }
                 let unclaimedSensor = sensor
                     .with(isClaimed: false)
+                    .with(canShare: false)
+                    .with(sharedTo: [])
+                    .with(isCloudSensor: false)
                     .withoutOwner()
                 sSelf.pool
                     .update(unclaimedSensor)
@@ -212,8 +223,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func checkOwner(macId: MACIdentifier) -> Future<String, RuuviServiceError> {
-        let promise = Promise<String, RuuviServiceError>()
+    public func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviServiceError> {
+        let promise = Promise<String?, RuuviServiceError>()
         cloud.checkOwner(macId: macId)
             .on(success: { owner in
                 promise.succeed(value: owner)
