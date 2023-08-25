@@ -1184,12 +1184,6 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
-    private func showCardSwipeHint() {
-        if !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
-            view?.showSwipeLeftRightHint()
-            settings.cardsSwipeHintWasShown = true
-        }
-    }
 
     private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in

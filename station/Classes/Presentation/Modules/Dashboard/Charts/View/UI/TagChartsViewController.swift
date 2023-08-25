@@ -7,6 +7,7 @@ import RuuviStorage
 import RuuviLocal
 import BTKit
 import RuuviService
+import GestureInstructions
 
 // swiftlint:disable type_body_length
 class TagChartsViewController: UIViewController {

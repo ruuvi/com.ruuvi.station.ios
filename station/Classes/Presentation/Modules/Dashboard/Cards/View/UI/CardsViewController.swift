@@ -4,7 +4,6 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 import RuuviService
-import GestureInstructions
 
 class CardsViewController: UIViewController {
 
@@ -380,7 +379,6 @@ extension CardsViewController {
     }
 
     private func configureGestureViews() {
-        configureGestureInstructor()
         configureRestartAnimationsOnAppDidBecomeActive()
     }
 
@@ -392,10 +390,6 @@ extension CardsViewController {
                          queue: .main) { [weak self] _ in
                 self?.restartAnimations()
         }
-    }
-
-    private func configureGestureInstructor() {
-        GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
 }
 
@@ -570,10 +564,6 @@ extension CardsViewController: CardsViewInput {
         }))
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
-    }
-
-    func showSwipeLeftRightHint() {
-        gestureInstructor.show(.swipeRight, after: 0.1)
     }
 
     func scroll(to index: Int) {
