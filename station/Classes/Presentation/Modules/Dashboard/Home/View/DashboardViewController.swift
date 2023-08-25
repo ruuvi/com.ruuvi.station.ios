@@ -103,7 +103,7 @@ class DashboardViewController: UIViewController {
         RuuviContextMenuButton(menu: viewToggleMenuOptions(),
                                titleColor: RuuviColor.dashboardIndicatorTextColor,
                                title: "view".localized(),
-                               icon: UIImage(named: "dismiss-modal-icon"),
+                               icon: RuuviAssets.dropDownArrowImage,
                                iconTintColor: RuuviColor.logoTintColor,
                                preccedingIcon: false)
 

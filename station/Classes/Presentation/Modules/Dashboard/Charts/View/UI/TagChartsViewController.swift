@@ -67,8 +67,9 @@ class TagChartsViewController: UIViewController {
         RuuviContextMenuButton(menu: historyLengthOptions(),
                                titleColor: .white,
                                title: "1 day".localized(),
-                               icon: UIImage(named: "dismiss-modal-icon"),
-                               iconTintColor: RuuviColor.ruuviTintColor,
+                               icon: RuuviAssets.dropDownArrowImage,
+                               iconTintColor: RuuviColor.logoTintColor,
+                               iconSize: .init(width: 16, height: 16),
                                preccedingIcon: false)
 
     // Chart toolbar

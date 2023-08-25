@@ -41,7 +41,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     lazy var arrowView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
-        iv.image = UIImage(named: "chevron.down")
+        iv.image = RuuviAssets.dropDownArrowImage
         iv.tintColor = RuuviColor.ruuviTintColor
         iv.contentMode = .scaleAspectFit
         return iv
@@ -110,7 +110,7 @@ class TagSettingsExpandableSectionHeader: UIView {
                                                left: 8,
                                                bottom: 0,
                                                right: 12),
-                                size: .init(width: 22, height: 22))
+                                size: .init(width: 16, height: 16))
         arrowView.centerYInSuperview()
 
         addSubview(seprator)
