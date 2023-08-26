@@ -266,17 +266,7 @@ extension TagChartsView {
         avg: Double,
         type: MeasurementType
     ) {
-        var roundedTo: Int = 2
-        switch type {
-        case .temperature:
-            roundedTo = settings.temperatureAccuracy.value
-        case .humidity:
-            roundedTo = settings.humidityAccuracy.value
-        case .pressure:
-            roundedTo = settings.pressureAccuracy.value
-        default:
-            break
-        }
+        let roundedTo: Int = 2
         let minText = "chart_stat_min".localized() + ": " + min.round(to: roundedTo).stringValue
         let maxText = "chart_stat_max".localized() + ": " + max.round(to: roundedTo).stringValue
         let avgText = "chart_stat_avg".localized() + ": " + avg.round(to: roundedTo).stringValue

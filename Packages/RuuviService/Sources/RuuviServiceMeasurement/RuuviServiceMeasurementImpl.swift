@@ -438,7 +438,7 @@ extension String {
 
 public extension Double {
     var stringValue: String {
-        return String(self)
+        return self == 0.0 ? formattedStringValue(places: 0) : String(self)
     }
     func formattedStringValue(places: Int) -> String {
         return String(format: "%.\(places)f", self)
@@ -446,6 +446,6 @@ public extension Double {
     func round(to places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
         let rounded = (self * divisor).rounded(.toNearestOrAwayFromZero) / divisor
-        return rounded
+        return rounded.isInfinite ? 0 : rounded
     }
 }
