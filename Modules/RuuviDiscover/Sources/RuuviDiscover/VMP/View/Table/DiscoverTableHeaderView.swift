@@ -152,10 +152,12 @@ class DiscoverTableHeaderView: UIView {
 
 extension DiscoverTableHeaderView {
     func handleNFCButtonViewVisibility(show: Bool) {
-        nfcButtonTopConstraint.isActive = show
-        nfcButtonBottomConstraint.isActive = show
+        if isBluetoothPermissionGranted && isNFCAvailable {
+            nfcButtonTopConstraint.isActive = show
+            nfcButtonBottomConstraint.isActive = show
+            nfcButton.isHidden = !show
+        }
         descriptionLabelBottomConstraint.isActive = !show
-        nfcButton.isHidden = !show
         let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
         let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
         let descriptionString =
