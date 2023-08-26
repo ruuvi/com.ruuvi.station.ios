@@ -126,6 +126,7 @@ class DashboardViewController: UIViewController {
         let rc = UIRefreshControl()
         rc.tintColor = RuuviColor.ruuviTintColor
         rc.layer.zPosition = -1
+        rc.alpha = 0
         rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         return rc
     }()
@@ -212,11 +213,13 @@ extension DashboardViewController {
           refresher.endRefreshing()
           return
         }
+        refresher.fadeIn()
         isRefreshing = true
         output.viewDidTriggerPullToRefresh()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak self] in
             self?.refresher.endRefreshing()
             self?.isRefreshing = false
+            self?.refresher.fadeOut()
         })
     }
 }
@@ -416,8 +419,6 @@ extension DashboardViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
         collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
-
-        collectionView.addSubview(refresher)
     }
 
     // swiftlint:disable:next function_body_length
@@ -562,6 +563,7 @@ extension DashboardViewController: UICollectionViewDelegate {
                 with: nil,
                 afterDelay: 0.3)
         if scrollView.isDragging {
+            refresher.fadeIn()
             isListRefreshable = false
         }
     }
