@@ -70,7 +70,7 @@ class TagChartsViewController: UIViewController {
                                title: "1 day".localized(),
                                icon: RuuviAssets.dropDownArrowImage,
                                iconTintColor: RuuviColor.logoTintColor,
-                               iconSize: .init(width: 16, height: 16),
+                               iconSize: .init(width: 14, height: 14),
                                preccedingIcon: false)
 
     // Chart toolbar

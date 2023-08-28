@@ -105,6 +105,7 @@ class DashboardViewController: UIViewController {
                                title: "view".localized(),
                                icon: RuuviAssets.dropDownArrowImage,
                                iconTintColor: RuuviColor.logoTintColor,
+                               iconSize: .init(width: 14, height: 14),
                                preccedingIcon: false)
 
     // BODY

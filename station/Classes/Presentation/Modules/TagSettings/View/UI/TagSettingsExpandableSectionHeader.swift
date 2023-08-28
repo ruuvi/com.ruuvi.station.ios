@@ -110,7 +110,7 @@ class TagSettingsExpandableSectionHeader: UIView {
                                                left: 8,
                                                bottom: 0,
                                                right: 12),
-                                size: .init(width: 16, height: 16))
+                                size: .init(width: 14, height: 14))
         arrowView.centerYInSuperview()
 
         addSubview(seprator)
