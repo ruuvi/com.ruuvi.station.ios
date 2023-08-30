@@ -53,6 +53,7 @@ class CardsLargeImageCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.alpha = 0.7
+        iv.tintColor = .white.withAlphaComponent(0.8)
         return iv
     }()
 
