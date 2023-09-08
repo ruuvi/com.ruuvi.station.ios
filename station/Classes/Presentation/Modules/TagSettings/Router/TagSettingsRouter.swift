@@ -30,7 +30,7 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     func openShare(for sensor: RuuviTagSensor) {
         let restorationId = "ShareViewController"
         let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
-        try! transitionHandler
+        try? transitionHandler
             .forStoryboard(factory: factory,
                            to: ShareModuleInput.self)
             .to(preferred: .navigation(style: .push))
@@ -43,7 +43,7 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
                               ruuviTag: RuuviTagSensor,
                               sensorSettings: SensorSettings?) {
         let factory = StoryboardFactory(storyboardName: "OffsetCorrection")
-        try! transitionHandler
+        try? transitionHandler
             .forStoryboard(factory: factory, to: OffsetCorrectionModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ (module) -> Any? in
@@ -69,7 +69,7 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
 
     func openOwner(ruuviTag: RuuviTagSensor, mode: OwnershipMode) {
         let factory = StoryboardFactory(storyboardName: "Owner")
-        try! transitionHandler
+        try? transitionHandler
             .forStoryboard(factory: factory, to: OwnerModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
