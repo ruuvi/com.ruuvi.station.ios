@@ -301,8 +301,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
-        let since: Date = ruuviLocalSyncState.getSyncDate() ?? networkPuningDate
-        syncRecordsOperation(for: sensor, since: since)
+        let since: Date = ruuviLocalSyncState.getSyncDate(for: sensor.macId) ?? networkPuningDate
+        syncRecordsOperation(for: sensor, since: networkPuningDate)
             .on(success: { [weak self] result in
                 promise.succeed(value: result)
              }, failure: { error in
