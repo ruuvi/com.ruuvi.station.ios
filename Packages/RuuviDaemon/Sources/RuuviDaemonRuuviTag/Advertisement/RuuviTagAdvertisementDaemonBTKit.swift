@@ -215,17 +215,15 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     @objc private func persist(wrapper: RuuviTagWrapper) {
-        guard wrapper.device.luid != nil else { return }
         let uuid = wrapper.device.uuid
         // If the tag chart is on foreground store all advertisements
         // Otherwise respect the settings
+        guard wrapper.device.luid != nil else { return }
         if settings.appIsOnForeground {
-            let previous = advertisementSequence[uuid]
-            if previous != nil && previous!! != nil {
-                guard let next = wrapper.device.measurementSequenceNumber, next > previous!! else {
-                    return
+            if let previous = advertisementSequence[uuid], let previous = previous {
+                if let next = wrapper.device.measurementSequenceNumber, next > previous {
+                    persist(wrapper.device, uuid)
                 }
-                persist(wrapper.device, uuid)
             } else {
                 // Tags with data format 3 doesn't sent duplicates packets*
                 if wrapper.device.version == 3 {
