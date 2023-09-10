@@ -779,6 +779,15 @@ extension DashboardPresenter {
         )
     }
 
+    private func syncHasCloudSensorToAppGroupContainer(with sensors: [AnyRuuviTagSensor]) {
+        let cloudSensors = sensors.filter({ $0.isCloudSensor ?? false })
+        appGroupDefaults?.set(
+            cloudSensors.count > 0,
+            forKey: AppGroupConstants.hasCloudSensorsKey
+        )
+        appGroupDefaults?.synchronize()
+    }
+
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn || !self.isBluetoothPermissionGranted {
@@ -1039,11 +1048,13 @@ extension DashboardPresenter {
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: ruuviTags)
             case .insert(let sensor):
                 sSelf.notifyRestartAdvertisementDaemon()
                 sSelf.notifyRestartHeartBeatDaemon()
                 sSelf.checkFirmwareVersion(for: sensor)
                 sSelf.ruuviTags.append(sensor.any)
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
 
                 // Avoid triggering the method when big changes is happening
                 // such as login.
@@ -1083,6 +1094,7 @@ extension DashboardPresenter {
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
             case .update(let sensor):
@@ -1098,6 +1110,7 @@ extension DashboardPresenter {
                     sSelf.restartObserveRuuviTagAdvertisements()
                 }
                 sSelf.startObservingWebTags()
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             }
         }
     }
