@@ -337,6 +337,17 @@ extension RuuviCloudApiURLSession {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
+            #if DEBUG
+            request.setValue("Station_iOS_Debug/Build_\(buildNumber)/\(endpoint.rawValue)",
+                             forHTTPHeaderField: "User-Agent")
+            #else
+            request.setValue("Station_iOS/Build_\(buildNumber)/\(endpoint.rawValue)",
+                             forHTTPHeaderField: "User-Agent")
+            #endif
+        }
+
         let config = URLSessionConfiguration.default
         if #available(iOS 11.0, *) {
             config.waitsForConnectivity = true
