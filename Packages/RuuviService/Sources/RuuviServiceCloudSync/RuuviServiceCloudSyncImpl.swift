@@ -301,9 +301,22 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
-        let since: Date = ruuviLocalSyncState.getSyncDate(for: sensor.macId) ?? networkPuningDate
-        syncRecordsOperation(for: sensor, since: networkPuningDate)
+        let lastSynDate = ruuviLocalSyncState.getSyncDate(for: sensor.macId)
+
+        var syncFullHistory: Bool = false
+        if let syncFull = ruuviLocalSyncState.downloadFullHistory(for: sensor.macId),
+           syncFull {
+            syncFullHistory = true
+        }
+
+        let since: Date = syncFullHistory ? networkPuningDate : (lastSynDate ?? networkPuningDate)
+        syncRecordsOperation(for: sensor, since: since)
             .on(success: { [weak self] result in
+                self?.ruuviLocalSyncState.setDownloadFullHistory(for: sensor.macId, downloadFull: false)
+                self?.ruuviLocalSyncState.setSyncDate(
+                    Date(),
+                    for: sensor.macId
+                )
                 promise.succeed(value: result)
              }, failure: { error in
                 promise.fail(error: error)
@@ -386,15 +399,32 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             let sensors = sSelf.syncSensors(cloudSensors: cloudSensors)
             sensors.on(success: { updatedSensors in
 
-                let filteredDenseSensors = denseSensors.filter { sensor in
+                let filteredDenseSensorsWithHistory = denseSensors.filter { sensor in
                     guard let maxHistoryDays = sensor.subscription?.maxHistoryDays else {
                         return false
                     }
                     return maxHistoryDays > 0
                 }
 
+                let filteredDenseSensorsWithoutHistory = denseSensors.filter { sensor in
+                    guard let maxHistoryDays = sensor.subscription?.maxHistoryDays else {
+                        return false
+                    }
+                    return maxHistoryDays <= 0
+                }
+
+                // Store the latest measurement record date for the sensors without history
+                // as the sync date. For the rest this value will be set after successful sync.
+                filteredDenseSensorsWithoutHistory.forEach({ [weak self]
+                    ruuviTag in
+                    self?.ruuviLocalSyncState.setSyncDate(
+                        ruuviTag.record?.date,
+                        for: ruuviTag.sensor.ruuviTagSensor.macId
+                    )
+                })
+
                 let updatedSensorsEligibleForHistory = updatedSensors.filter { updatedSensor in
-                    return filteredDenseSensors.contains { denseSensor in
+                    return filteredDenseSensorsWithHistory.contains { denseSensor in
                         denseSensor.sensor.any.id == updatedSensor.id
                     }
                 }
@@ -442,6 +472,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         updatedSensors.insert(localSensor)
                         // Update the local sensor data with cloud data
                         // if there's a match of sensor in local storage and cloud
+                        // TODO: @priyonto - Need to improve this once backend flattens and improves the plans
+                        // If user goes from free to pro or above plan, download full history
+                        if localSensor.ownersPlan?.lowercased() == "free" &&
+                            localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased() {
+                            self.ruuviLocalSyncState.setDownloadFullHistory(for: localSensor.macId, downloadFull: true)
+                        }
+
                         return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
                     } else {
                         let unclaimed = localSensor.unclaimed()
@@ -454,6 +491,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             // delete it from local storage
                             // Otherwise keep it stored
                             if localSensor.isCloud {
+                                self.ruuviLocalSyncState.setDownloadFullHistory(
+                                    for: localSensor.macId,
+                                    downloadFull: nil
+                                )
                                 return self.ruuviPool.delete(localSensor)
                             } else {
                                 return nil
@@ -512,9 +553,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             promise.succeed(value: false)
             return promise.future
         }
-
-        // Store the record date
-        ruuviLocalSyncState.setSyncDate(cloudRecord.date, for: ruuviTag.macId)
 
         ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
             guard let sSelf = self else { return }

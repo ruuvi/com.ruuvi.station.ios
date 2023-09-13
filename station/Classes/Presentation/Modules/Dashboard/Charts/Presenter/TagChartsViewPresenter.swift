@@ -75,7 +75,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
-    private var cloudSyncToken: NSObjectProtocol?
+    private var historySyncToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
@@ -362,7 +362,7 @@ extension TagChartsViewPresenter {
         didConnectToken?.invalidate()
         didDisconnectToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
-        cloudSyncToken?.invalidate()
+        historySyncToken?.invalidate()
         downsampleDidChangeToken?.invalidate()
         chartDurationHourDidChangeToken?.invalidate()
         chartShowStatsStateDidChangeToken?.invalidate()
@@ -644,15 +644,13 @@ extension TagChartsViewPresenter {
     }
 
     private func startObservingCloudSyncNotification() {
-        cloudSyncToken = NotificationCenter
+        historySyncToken = NotificationCenter
             .default
-            .addObserver(forName: .NetworkSyncDidChangeStatus,
+            .addObserver(forName: .NetworkHistorySyncDidCompleteForSensor,
                          object: nil,
                          queue: .main,
                          using: { [weak self] notification in
             guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                  let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                  status == .complete,
                   mac.any == self?.ruuviTag.macId?.any else {
                 return
             }
