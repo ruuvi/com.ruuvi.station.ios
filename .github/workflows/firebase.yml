@@ -49,6 +49,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pods-
 
+    - name: Install Adhoc Provisioning Profile
+      run: bundle exec fastlane match adhoc --readonly
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        LC_ALL: en_US.UTF-8
+        LANG: en_US.UTF-8
+
     - name: Build Project
       run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
 
