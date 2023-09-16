@@ -1,0 +1,40 @@
+name: Upload to Firebase
+
+on:
+  push:
+    branches: [ github-actions-v1 ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
+    - name: Clone localization submodule
+      run: |
+        git submodule add -b dev git@github.com:ruuvi/station.localization.git
+        git submodule update --init --recursive
+
+    - name: Fastlane
+      run: bundle exec fastlane upload_to_firebase group:YOUR_FIREBASE_GROUP
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        LC_ALL: en_US.UTF-8
+        LANG: en_US.UTF-8
