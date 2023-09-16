@@ -58,7 +58,7 @@ jobs:
         security set-keychain-settings fastlane_tmp_keychain
 
     - name: Install Adhoc Provisioning Profile
-      run: bundle exec fastlane match --verbose adhoc --readonly --keychain_name fastlane_tmp_keychain
+      run: bundle exec fastlane match --verbose adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
