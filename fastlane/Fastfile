@@ -79,6 +79,18 @@ platform :ios do
 #    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
 #    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
 
+    sh("security create-keychain -p '' fastlane_tmp_keychain")
+    sh("security list-keychains -s fastlane_tmp_keychain")
+    sh("security default-keychain -s fastlane_tmp_keychain")
+    sh("security unlock-keychain -p '' fastlane_tmp_keychain")
+    sh("security set-keychain-settings fastlane_tmp_keychain")
+
+    match(
+        type: "development",
+        readonly: true,
+        keychain_name: "fastlane_tmp_keychain",
+        app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets", "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
+      )
     match(
       type: "adhoc",
       readonly: true,
