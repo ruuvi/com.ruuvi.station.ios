@@ -25,9 +25,11 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
 
-    - name: Add localisation submodule
-      run: |
-        git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
+    - name: Remove existing localisation directory
+      run: rm -rf ${{ github.workspace }}/station.localization
+
+    - name: Clone localisation submodule
+      run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
     - name: Fastlane
       run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
