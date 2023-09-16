@@ -53,7 +53,7 @@ jobs:
       run: security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} ~/Library/Keychains/login.keychain-db
 
     - name: Install Adhoc Provisioning Profile
-      run: bundle exec fastlane match adhoc --readonly --keychain_password ${{ secrets.KEYCHAIN_PASSWORD }}
+      run: bundle exec fastlane match development --readonly --keychain_password ${{ secrets.KEYCHAIN_PASSWORD }}
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
