@@ -74,7 +74,7 @@ jobs:
     #   run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
 
     - name: Fastlane
-      run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
+      run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
