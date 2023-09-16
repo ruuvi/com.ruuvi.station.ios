@@ -53,7 +53,7 @@ jobs:
       run: bundle exec fastlane run setup_ci
 
     - name: Install Adhoc Provisioning Profile
-      run: bundle exec fastlane match --verbose adhoc --readonly
+      run: bundle exec fastlane match --verbose adhoc --readonly --keychain_name fastlane_tmp_keychain
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

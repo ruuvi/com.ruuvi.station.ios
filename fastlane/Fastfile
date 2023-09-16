@@ -59,6 +59,10 @@ platform :ios do
   fastlane upload_to_firebase group:AlphaTest scheme:station_dev
   """
   lane :upload_to_firebase do |options|
+    setup_ci(
+      provider: "github-actions"
+    )
+
     BUILD_NUMBER = options[:build_number]
     UI.crash!('build_number parameter is required') unless BUILD_NUMBER
     SCHEME = options[:scheme]
@@ -74,10 +78,18 @@ platform :ios do
     set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
 
     configuration = SCHEME == "station" ? "Release" : "Debug"
-    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.widgets", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station.widgets", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
+
+    match(
+      type: "adhoc",
+      readonly: true,
+      keychain_name: "fastlane_tmp_keychain",
+      app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets", "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
+    )
+
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
