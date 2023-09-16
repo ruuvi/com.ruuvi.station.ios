@@ -50,7 +50,7 @@ jobs:
           ${{ runner.os }}-pods-
 
     - name: Build Project
-      run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build | xcpretty
+      run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
 
     # - name: Fastlane
     #   run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
