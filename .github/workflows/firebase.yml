@@ -49,14 +49,11 @@ jobs:
     #     restore-keys: |
     #       ${{ runner.os }}-pods-
 
-    - name: Unlock keychain
-      run: security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} ~/Library/Keychains/login.keychain-db
-
     - name: Setup CI
       run: bundle exec fastlane run setup_ci
 
     - name: Install Adhoc Provisioning Profile
-      run: bundle exec fastlane match --verbose development --readonly --keychain_password ${{ secrets.KEYCHAIN_PASSWORD }}
+      run: bundle exec fastlane match --verbose adhoc --readonly --keychain_password ${{ secrets.KEYCHAIN_PASSWORD }}
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -64,14 +61,14 @@ jobs:
         LC_ALL: en_US.UTF-8
         LANG: en_US.UTF-8
 
-    - name: Build Project
-      run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
+    # - name: Build Project
+    #   run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
 
-    # - name: Fastlane
-    #   run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
-    #   env:
-    #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-    #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-    #     FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-    #     LC_ALL: en_US.UTF-8
-    #     LANG: en_US.UTF-8
+    - name: Fastlane
+      run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        LC_ALL: en_US.UTF-8
+        LANG: en_US.UTF-8
