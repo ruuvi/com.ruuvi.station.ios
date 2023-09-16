@@ -9,16 +9,26 @@ jobs:
 
     runs-on: macos-latest
 
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
 
-    - name: Set up Ruby
+    - name: Setup SSH
+          uses: webfactory/ssh-agent@v0.5.3
+          with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Setup ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.6
+        ruby-version: '3.2.3'
+        bundler-cache: true
+
+    - name: Update RubyGems
+      run: gem update --system 3.2.3
 
     - name: Install dependencies
       run: |
