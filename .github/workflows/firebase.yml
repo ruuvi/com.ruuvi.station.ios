@@ -49,8 +49,13 @@ jobs:
     #     restore-keys: |
     #       ${{ runner.os }}-pods-
 
-    - name: Setup CI
-      run: bundle exec fastlane run setup_ci
+    - name: Create temporary keychain
+      run: |
+        security create-keychain -p "" fastlane_tmp_keychain
+        security list-keychains -s fastlane_tmp_keychain
+        security default-keychain -s fastlane_tmp_keychain
+        security unlock-keychain -p "" fastlane_tmp_keychain
+        security set-keychain-settings fastlane_tmp_keychain
 
     - name: Install Adhoc Provisioning Profile
       run: bundle exec fastlane match --verbose adhoc --readonly --keychain_name fastlane_tmp_keychain

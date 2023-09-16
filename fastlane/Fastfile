@@ -59,10 +59,6 @@ platform :ios do
   fastlane upload_to_firebase group:AlphaTest scheme:station_dev
   """
   lane :upload_to_firebase do |options|
-    setup_ci(
-      provider: "github-actions"
-    )
-
     BUILD_NUMBER = options[:build_number]
     UI.crash!('build_number parameter is required') unless BUILD_NUMBER
     SCHEME = options[:scheme]
