@@ -27,8 +27,7 @@ jobs:
 
     - name: Clone localization submodule
       run: |
-        git submodule add -b dev git@github.com:ruuvi/station.localization.git
-        git submodule update --init --recursive
+        git clone -b dev git@github.com:ruuvi/station.localization.git
 
     - name: Fastlane
       run: bundle exec fastlane upload_to_firebase group:YOUR_FIREBASE_GROUP
