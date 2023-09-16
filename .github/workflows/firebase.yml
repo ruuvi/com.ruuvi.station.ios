@@ -17,9 +17,9 @@ jobs:
         submodules: 'recursive'
 
     - name: Setup SSH
-          uses: webfactory/ssh-agent@v0.5.3
-          with:
-            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Setup ruby
       uses: ruby/setup-ruby@v1
