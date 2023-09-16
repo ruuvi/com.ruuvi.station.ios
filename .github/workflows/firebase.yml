@@ -32,6 +32,9 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
 
+    - name: Install SwiftLint
+      run: brew install swiftlint
+
     - name: Remove existing localisation directory
       run: rm -rf ${{ github.workspace }}/station.localization
 
