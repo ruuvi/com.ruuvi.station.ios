@@ -38,16 +38,15 @@ jobs:
     - name: Clone localisation submodule
       run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
-    # - name: CocoaPods Install
-    #   run: pod install
- 
-    # - name: Cocoapods Cache
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: Pods
-    #     key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-pods-
+    - name: Cocoapods Cache
+      uses: actions/cache@v2
+      with:
+        path: Pods
+        key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+        restore-keys: |
+                ${{ runner.os }}-pods-
+    - name: CocoaPods Install
+      run: pod install
 
     - name: Create temporary keychain
       run: |
