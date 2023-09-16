@@ -52,6 +52,9 @@ jobs:
     - name: Unlock keychain
       run: security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} ~/Library/Keychains/login.keychain-db
 
+    - name: Setup CI
+      run: bundle exec fastlane run setup_ci
+
     - name: Install Adhoc Provisioning Profile
       run: bundle exec fastlane match --verbose development --readonly --keychain_password ${{ secrets.KEYCHAIN_PASSWORD }}
       env:
