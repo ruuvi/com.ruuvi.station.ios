@@ -51,24 +51,24 @@ jobs:
     - name: CocoaPods Install
       run: pod install
 
-    - name: Create temporary keychain
-      run: |
-        security create-keychain -p "" fastlane_tmp_keychain
-        security list-keychains -s fastlane_tmp_keychain
-        security default-keychain -s fastlane_tmp_keychain
-        security unlock-keychain -p "" fastlane_tmp_keychain
-        security set-keychain-settings fastlane_tmp_keychain
+    # - name: Create temporary keychain
+    #   run: |
+    #     security create-keychain -p "" fastlane_tmp_keychain
+    #     security list-keychains -s fastlane_tmp_keychain
+    #     security default-keychain -s fastlane_tmp_keychain
+    #     security unlock-keychain -p "" fastlane_tmp_keychain
+    #     security set-keychain-settings fastlane_tmp_keychain
 
-    - name: Install Provisioning Profiles
-      run: |
-        bundle exec fastlane match --verbose adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
-        bundle exec fastlane match --verbose development -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
-      env:
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-        LC_ALL: en_US.UTF-8
-        LANG: en_US.UTF-8
+    # - name: Install Provisioning Profiles
+    #   run: |
+    #     bundle exec fastlane match --verbose adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
+    #     bundle exec fastlane match --verbose development -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
+    #   env:
+    #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+    #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+    #     FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+    #     LC_ALL: en_US.UTF-8
+    #     LANG: en_US.UTF-8
 
     # - name: Build Project
     #   run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
