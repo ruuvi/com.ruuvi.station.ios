@@ -38,19 +38,22 @@ jobs:
     - name: Clone localisation submodule
       run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
-    - name: CocoaPods Install
-      run: pod install
+    # - name: CocoaPods Install
+    #   run: pod install
  
-    - name: Cocoapods Cache
-      uses: actions/cache@v2
-      with:
-        path: Pods
-        key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-pods-
+    # - name: Cocoapods Cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: Pods
+    #     key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pods-
+
+    - name: Unlock keychain
+      run: security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} ~/Library/Keychains/login.keychain-db
 
     - name: Install Adhoc Provisioning Profile
-      run: bundle exec fastlane match adhoc --readonly
+      run: bundle exec fastlane match adhoc --readonly --keychain_password ${{ secrets.KEYCHAIN_PASSWORD }}
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
