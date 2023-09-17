@@ -33,10 +33,6 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle update
 
-    - name: Update dependencies
-      run: |
-        bundle update fastlane
-
     - name: Install SwiftLint
       run: brew install swiftlint
 
