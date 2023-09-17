@@ -115,6 +115,7 @@ platform :ios do
       output_directory: "./Build",
       export_options: {
         method: "ad-hoc",
+        signingStyle: "manual",
         provisioningProfiles: {
           "com.ruuvi.station" => "match AdHoc com.ruuvi.station",
           "com.ruuvi.station.widgets" => "match AdHoc com.ruuvi.station.widgets",
