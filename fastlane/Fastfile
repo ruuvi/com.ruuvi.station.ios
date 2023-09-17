@@ -3,28 +3,12 @@ fastlane_require 'fileutils'
 
 default_platform(:ios)
 
-#before_all do
-#  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
-#  sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
-#  ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
-#  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
-#  ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
-#end
-
-lane :setup_keychain do
-    sh("security create-keychain -p '' fastlane_tmp_keychain")
-    sh("security list-keychains -s fastlane_tmp_keychain")
-    sh("security default-keychain -s fastlane_tmp_keychain")
-    sh("security unlock-keychain -p '' fastlane_tmp_keychain")
-    sh("security set-keychain-settings fastlane_tmp_keychain")
-end
-
-lane :setup_secrets do
-    sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
-    sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
-    ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
-    ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
-    ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
+before_all do
+  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
+  sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
+  ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
+  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
+  ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
 end
 
 def remove_artifacts
@@ -95,15 +79,6 @@ platform :ios do
 #    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
 #    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
 
-    setup_keychain
-    setup_secrets
-
-#    match(
-#        type: "development",
-#        readonly: true,
-#        keychain_name: "fastlane_tmp_keychain",
-#        app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets", "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
-#      )
     match(
       type: "adhoc",
       readonly: true,
