@@ -72,7 +72,7 @@ jobs:
         LANG: en_US.UTF-8
 
     - name: Build Project
-      run: xcodebuild -workspace station.xcworkspace -scheme station -sdk iphoneos -configuration Release build
+      run: xcodebuild -workspace station.xcworkspace -scheme station -sdk iphoneos -configuration Release CODE_SIGN_STYLE=Manual build
 
     # - name: Fastlane
     #   run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
