@@ -70,14 +70,14 @@ jobs:
     #     LC_ALL: en_US.UTF-8
     #     LANG: en_US.UTF-8
 
-    # - name: Build Project
-    #   run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
+    - name: Build Project
+      run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
 
-    - name: Fastlane
-      run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
-      env:
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-        LC_ALL: en_US.UTF-8
-        LANG: en_US.UTF-8
+    # - name: Fastlane
+    #   run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
+    #   env:
+    #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+    #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+    #     FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+    #     LC_ALL: en_US.UTF-8
+    #     LANG: en_US.UTF-8
