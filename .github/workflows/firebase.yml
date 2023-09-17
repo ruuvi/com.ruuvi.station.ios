@@ -61,6 +61,7 @@ jobs:
 
     - name: Install Provisioning Profiles
       run: |
+        bundle exec fastlane --verbose setup_keychain
         bundle exec fastlane match --verbose adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
         bundle exec fastlane match --verbose development -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly --keychain_name fastlane_tmp_keychain
       env:
