@@ -33,7 +33,7 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle update
 
-      name: Update dependencies
+    - name: Update dependencies
       run: |
         bundle update fastlane
 
