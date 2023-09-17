@@ -22,15 +22,16 @@ jobs:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Setup ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@359bebbc29cbe6c87da6bc9ea3bc930432750108
       with:
-        ruby-version: '3.2.2'
+        ruby-version: '3.1' # Not needed with a .ruby-version file
         bundler-cache: true
+    - run: bundle install
 
-    - name: Install dependencies
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
+    # - name: Install dependencies
+    #   run: |
+    #     gem install bundler
+    #     bundle install --jobs 4 --retry 3
 
     - name: Install SwiftLint
       run: brew install swiftlint
@@ -74,7 +75,7 @@ jobs:
     #   run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
 
     - name: Fastlane
-      run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station
+      run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
