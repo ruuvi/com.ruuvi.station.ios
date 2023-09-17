@@ -82,7 +82,6 @@ platform :ios do
     match(
       type: "adhoc",
       readonly: true,
-      keychain_name: "fastlane_tmp_keychain",
       app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets", "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
     )
 
