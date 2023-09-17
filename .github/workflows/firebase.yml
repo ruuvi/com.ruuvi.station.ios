@@ -31,6 +31,7 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
+        bundle update
 
     - name: Install SwiftLint
       run: brew install swiftlint
@@ -72,7 +73,7 @@ jobs:
         LANG: en_US.UTF-8
 
     - name: Build Project
-      run: xcodebuild -workspace station.xcworkspace -scheme station_dev -sdk iphoneos -configuration Debug build
+      run: xcodebuild -workspace station.xcworkspace -scheme station -sdk iphoneos -configuration Release build
 
     # - name: Fastlane
     #   run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
