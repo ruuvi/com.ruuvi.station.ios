@@ -82,7 +82,8 @@ platform :ios do
     match(
       type: "adhoc",
       readonly: true,
-      app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets", "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
+      app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets",
+          "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
     )
 
     build_app(
