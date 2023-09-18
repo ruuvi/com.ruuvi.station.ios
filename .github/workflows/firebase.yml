@@ -53,8 +53,8 @@ jobs:
 
     - name: Install Provisioning Profiles
       run: |
-        bundle exec fastlane match --verbose adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly
-        bundle exec fastlane match --verbose development -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly
+        bundle exec fastlane match adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly
+        bundle exec fastlane match development -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
