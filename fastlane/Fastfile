@@ -89,7 +89,7 @@ platform :ios do
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
-      configuration: configuration,
+      configuration: "Release",
       output_directory: "./Build",
       export_options: {
         method: "ad-hoc",
