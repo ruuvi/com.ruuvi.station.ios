@@ -17,6 +17,22 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Remove existing localisation directory
+        run: rm -rf ${{ github.workspace }}/station.localization
+
+      - name: Clone localisation submodule
+        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
+
+      - name: Cocoapods Cache
+        uses: actions/cache@v2
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+                  ${{ runner.os }}-pods-
+      - name: CocoaPods Install
+        run: pod install
+
       - name: Install the Apple certificate and provisioning profiles
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
