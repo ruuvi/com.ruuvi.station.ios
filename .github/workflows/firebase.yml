@@ -1,79 +1,3 @@
-# name: Upload to Firebase
-
-# on:
-#   push:
-#     branches: [ github-actions-v1 ]
-
-# jobs:
-#   build:
-#     runs-on: macos-latest
-
-
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v2
-#       with:
-#         submodules: 'recursive'
-  
-#     - name: Setup Keychain
-#       uses: sinoru/actions-setup-keychain@v1.0
-
-#     - name: Setup SSH
-#       uses: webfactory/ssh-agent@v0.5.3
-#       with:
-#         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-#     - name: Setup ruby
-#       uses: ruby/setup-ruby@v1
-#       with:
-#         ruby-version: '3.2.2'
-#         bundler-cache: true
-
-#     - name: Install dependencies
-#       run: |
-#         gem install bundler
-#         bundle install --jobs 4 --retry 3
-
-#     - name: Remove existing localisation directory
-#       run: rm -rf ${{ github.workspace }}/station.localization
-
-#     - name: Clone localisation submodule
-#       run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
-
-#     - name: Cocoapods Cache
-#       uses: actions/cache@v2
-#       with:
-#         path: Pods
-#         key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-#         restore-keys: |
-#                 ${{ runner.os }}-pods-
-#     - name: CocoaPods Install
-#       run: pod install
-
-#     # - name: Install Provisioning Profiles
-#     #   run: |
-#     #     bundle exec fastlane match adhoc -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly
-#     #     bundle exec fastlane match development -a com.ruuvi.station,com.ruuvi.station.widgets,com.ruuvi.station.intents,com.ruuvi.station.pnservice --readonly
-#     #   env:
-#     #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-#     #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-#     #     FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-#     #     KEYCHAIN_PASSWORD: ${{ secrets. KEYCHAIN_PASSWORD }}
-#     #     LC_ALL: en_US.UTF-8
-#     #     LANG: en_US.UTF-8
-
-#     - name: Fastlane
-#       run: bundle exec fastlane --verbose upload_to_firebase build_number:407 scheme:station_dev
-#       env:
-#         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-#         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-#         FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-#         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-#         FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
-#         LC_ALL: en_US.UTF-8
-#         LANG: en_US.UTF-8
-
-
 name: Upload to Firebase
 
 on:
@@ -81,14 +5,14 @@ on:
     branches: [ github-actions-v1 ]
 
 jobs:
-  build_with_signing:
+  build:
     runs-on: macos-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-    - name: Setup SSH
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -112,7 +36,6 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          # Repeat for each provisioning profile. Assume you stored each profile in a separate secret.
           echo -n "${{ secrets.MAIN_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.mobileprovision
           echo -n "${{ secrets.WIDGETS_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
           echo -n "${{ secrets.INTENTS_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
