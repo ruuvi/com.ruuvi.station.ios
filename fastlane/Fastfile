@@ -74,17 +74,17 @@ platform :ios do
     set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
 
     configuration = SCHEME == "station" ? "Release" : "Debug"
-    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.widgets", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station.widgets", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
 
-#    match(
-#      type: "adhoc",
-#      readonly: true,
-#      app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets",
-#          "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
-#    )
+    match(
+      type: "adhoc",
+      readonly: false,
+      app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets",
+          "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
+    )
 
     build_app(
       scheme: SCHEME,
