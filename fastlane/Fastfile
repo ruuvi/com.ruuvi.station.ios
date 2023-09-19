@@ -79,13 +79,7 @@ platform :ios do
 #    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
 #    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
 
-    match(
-      type: "adhoc",
-      readonly: true,
-      app_identifier: ["com.ruuvi.station", "com.ruuvi.station.widgets",
-          "com.ruuvi.station.intents", "com.ruuvi.station.pnservice"]
-    )
-
+    get_provisioning_profile(adhoc: true)
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
