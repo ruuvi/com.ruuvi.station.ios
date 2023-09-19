@@ -53,9 +53,9 @@ jobs:
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo -n "${{ secrets.MAIN_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.mobileprovision
-          echo -n "${{ secrets.WIDGETS_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
-          echo -n "${{ secrets.INTENTS_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
-          echo -n "${{ secrets.PNSERVICE_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.pnservice.mobileprovision
+          echo -n "${{ secrets.WIDGETS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
+          echo -n "${{ secrets.INTENTS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
+          echo -n "${{ secrets.PNSERVICE_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.pnservice.mobileprovision
 
       - name: Build app
         run: |
