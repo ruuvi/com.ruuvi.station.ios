@@ -7,22 +7,38 @@ import RuuviStorage
 import RuuviLocal
 import BTKit
 import RuuviService
+import GestureInstructions
 
 // swiftlint:disable type_body_length
 class TagChartsViewController: UIViewController {
     var output: TagChartsViewOutput!
     private var chartModules: [MeasurementType] = []
 
-    var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi) {
-        didSet {
-            bindViewModel()
-        }
-    }
+    var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi)
 
     var historyLengthInDay: Int = 1 {
         didSet {
             historySelectionButton.updateTitle(with: "day_\(historyLengthInDay)".localized())
+        }
+    }
+
+    var historyLengthInHours: Int = 1 {
+        didSet {
+            if historyLengthInHours >= 24 {
+                historyLengthInDay = historyLengthInHours / 24
+            } else {
+                let unit = historyLengthInHours == 1 ? "hour".localized() : "hours".localized()
+                historySelectionButton.updateTitle(
+                        with: "\(historyLengthInHours) " + unit.lowercased()
+                )
+            }
             historySelectionButton.updateMenu(with: historyLengthOptions())
+        }
+    }
+
+    var showChartStat: Bool = true {
+        didSet {
+            moreButton.menu = moreButtonOptions(showChartStat: showChartStat)
         }
     }
 
@@ -37,15 +53,6 @@ class TagChartsViewController: UIViewController {
 
     // MARK: - UI COMPONENTS DECLARATION
     // Body
-    lazy var ruuviTagNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.extraBold, size: 20)
-        return label
-    }()
-
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
         label.text = "Cards.UpdatedLabel.NoData.message".localized()
@@ -61,8 +68,9 @@ class TagChartsViewController: UIViewController {
         RuuviContextMenuButton(menu: historyLengthOptions(),
                                titleColor: .white,
                                title: "1 day".localized(),
-                               icon: UIImage(named: "dismiss-modal-icon"),
-                               iconTintColor: RuuviColor.ruuviTintColor,
+                               icon: RuuviAssets.dropDownArrowImage,
+                               iconTintColor: RuuviColor.logoTintColor,
+                               iconSize: .init(width: 14, height: 14),
                                preccedingIcon: false)
 
     // Chart toolbar
@@ -148,10 +156,12 @@ class TagChartsViewController: UIViewController {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.alpha = 0.7
+        iv.tintColor = .white.withAlphaComponent(0.8)
         return iv
     }()
     // UI END
 
+    private let historyHoursOptions: [Int] = [1, 2, 3, 12]
     private let minimumHistoryLimit: Int = 1 // Day
     private let maximumHistoryLimit: Int = 10 // Days
     private var timer: Timer?
@@ -206,16 +216,9 @@ class TagChartsViewController: UIViewController {
 
     // swiftlint:disable:next function_body_length
     fileprivate func setUpContentView() {
-        view.addSubview(ruuviTagNameLabel)
-        ruuviTagNameLabel.anchor(top: view.safeTopAnchor,
-                                 leading: view.safeLeftAnchor,
-                                 bottom: nil,
-                                 trailing: view.safeRightAnchor,
-                                 padding: .init(top: 18, left: 16, bottom: 0, right: 16))
-
         let chartToolbarView = UIView(color: .clear)
         view.addSubview(chartToolbarView)
-        chartToolbarView.anchor(top: ruuviTagNameLabel.bottomAnchor,
+        chartToolbarView.anchor(top: view.safeTopAnchor,
                                 leading: view.safeLeftAnchor,
                                 bottom: nil,
                                 trailing: view.safeRightAnchor,
@@ -233,7 +236,7 @@ class TagChartsViewController: UIViewController {
                           padding: .init(top: 0,
                                          left: 0,
                                          bottom: 0,
-                                         right: 12),
+                                         right: 8),
                           size: .init(width: 18, height: 18))
         moreButton.centerYInSuperview()
 
@@ -256,7 +259,7 @@ class TagChartsViewController: UIViewController {
                                 bottom: chartToolbarView.bottomAnchor,
                                 trailing: historySelectionButton.leadingAnchor,
                                 padding: .init(top: 0,
-                                               left: 8,
+                                               left: 0,
                                                bottom: 0,
                                                right: 8))
 
@@ -380,12 +383,26 @@ class TagChartsViewController: UIViewController {
     fileprivate func historyLengthOptions() -> UIMenu {
         var actions: [UIAction] = []
 
+        for hour in historyHoursOptions {
+            let action = UIAction(
+                title: "\(hour) \(hour == 1 ? "hour".localized() : "hours".localized())".lowercased()
+            ) { [weak self] _ in
+                self?.handleHistoryLengthSelection(hours: hour)
+            }
+             if hour == historyLengthInHours {
+                action.state = .on
+             } else {
+                action.state = .off
+             }
+            actions.append(action)
+        }
+
         for day in minimumHistoryLimit...maximumHistoryLimit {
             let action = UIAction(title: "day_\(day)".localized()) {
                 [weak self] _ in
-                self?.handleHistoryLengthSelection(with: day)
+                self?.handleHistoryLengthSelection(hours: day*24)
             }
-            if day == historyLengthInDay {
+            if day == historyLengthInHours / 24 {
                 action.state = .on
             } else {
                 action.state = .off
@@ -395,7 +412,7 @@ class TagChartsViewController: UIViewController {
 
         // Add more at the bottom
         let more_action = UIAction(title: "more".localized()) { [weak self] _ in
-            self?.handleHistoryLengthSelection(with: nil)
+            self?.handleHistoryLengthSelection(hours: nil)
         }
         actions.append(more_action)
 
@@ -403,17 +420,25 @@ class TagChartsViewController: UIViewController {
                       children: actions)
     }
 
-    fileprivate func handleHistoryLengthSelection(with day: Int?) {
-        if let day = day {
-            historySelectionButton.updateTitle(with: "day_\(day)".localized())
-            output.viewDidSelectChartHistoryLength(day: day)
+    fileprivate func handleHistoryLengthSelection(hours: Int?) {
+        if let hours = hours {
+            if hours >= 24 {
+                historySelectionButton.updateTitle(with: "day_\(hours/24)".localized())
+                historySelectionButton.updateMenu(with: historyLengthOptions())
+            } else {
+                let unit = hours == 1 ? "hour".localized() : "hours".localized()
+                historySelectionButton.updateTitle(
+                        with: "\(hours) " + unit.lowercased()
+                )
+            }
+            output.viewDidSelectChartHistoryLength(hours: hours)
             historySelectionButton.updateMenu(with: historyLengthOptions())
         } else {
             output.viewDidSelectLongerHistory()
         }
     }
 
-    fileprivate func moreButtonOptions() -> UIMenu {
+    fileprivate func moreButtonOptions(showChartStat: Bool = true) -> UIMenu {
         let exportHistoryAction = UIAction(title: "export_history".localized()) {
             [weak self] _ in
             self?.output.viewDidTapOnExport()
@@ -425,14 +450,32 @@ class TagChartsViewController: UIViewController {
             sSelf.output.viewDidTriggerClear(for: sSelf.viewModel)
         }
 
-        return UIMenu(title: "",
-                      children: [exportHistoryAction, clearViewHistory])
+        let minMaxAvgAction = UIAction(
+            title: !showChartStat ? "chart_stat_show".localized() : "chart_stat_hide".localized()
+        ) {
+            [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.output.viewDidSelectTriggerChartStat(show: !showChartStat)
+            sSelf.chartViews.forEach({ chartView in
+                chartView.setChartStatVisible(show: !showChartStat)
+            })
+        }
+
+        return UIMenu(
+            title: "",
+            children: [
+                exportHistoryAction,
+                clearViewHistory,
+                minMaxAvgAction
+            ]
+        )
     }
 }
 
 extension TagChartsViewController: TagChartsViewDelegate {
     func chartDidTranslate(_ chartView: TagChartsView) {
         guard chartViews.count > 1 else {
+            calculateMinMaxForChart(for: chartView)
             return
         }
         let sourceMatrix = chartView.viewPortHandler.touchMatrix
@@ -445,6 +488,10 @@ extension TagChartsViewController: TagChartsViewDelegate {
                 chart: otherChart,
                 invalidate: true
             )
+        }
+
+        for view in chartViews {
+            calculateMinMaxForChart(for: view)
         }
     }
 
@@ -696,6 +743,18 @@ extension TagChartsViewController: TagChartsViewInput {
         present(alertVC, animated: true)
     }
 
+    func showSyncAbortAlertForSwipe() {
+        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
+        let message = "TagCharts.Dismiss.Alert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        let actionTitle = "TagCharts.AbortSync.Button.title".localized()
+        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmAbortSync(dismiss: false)
+        }))
+        present(alertVC, animated: true)
+    }
+
     func showExportSheet(with path: URL) {
         let vc = UIActivityViewController(activityItems: [path],
                                           applicationActivities: [])
@@ -728,12 +787,6 @@ extension TagChartsViewController: TagChartsViewInput {
 }
 
 extension TagChartsViewController {
-
-    private func bindViewModel() {
-        ruuviTagNameLabel.bind(viewModel.name) { (label, name) in
-            label.text = name ?? "N/A".localized()
-        }
-    }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func updateChartsCollectionConstaints(from: [MeasurementType],
@@ -854,15 +907,21 @@ extension TagChartsViewController {
         view.localize()
         view.setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
         view.setXAxisRenderer()
+        view.setChartStatVisible(show: showChartStat)
+
+        calculateMinMaxForChart(for: view)
     }
 
     private func clearChartData() {
         temperatureChartView.clearChartData()
         temperatureChartView.highlightValue(nil)
+        temperatureChartView.clearChartStat()
         humidityChartView.clearChartData()
         humidityChartView.highlightValue(nil)
+        humidityChartView.clearChartStat()
         pressureChartView.clearChartData()
         pressureChartView.highlightValue(nil)
+        pressureChartView.clearChartStat()
     }
 
     // MARK: - UI RELATED METHODS
@@ -904,6 +963,101 @@ extension TagChartsViewController {
                                      block: { [weak self] (_) in
             self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
         })
+    }
+
+    private func calculateMinMaxForChart(for view: TagChartsView) {
+        if let data = view.data,
+           let dataSet = data.dataSets.first as? LineChartDataSet {
+
+            let lowestVisibleX = view.lowestVisibleX
+            let highestVisibleX = view.highestVisibleX
+
+            var minVisibleYValue = Double.greatestFiniteMagnitude
+            var maxVisibleYValue = -Double.greatestFiniteMagnitude
+
+            dataSet.entries.forEach { entry in
+                if entry.x >= lowestVisibleX && entry.x <= highestVisibleX {
+                    minVisibleYValue = min(minVisibleYValue, entry.y)
+                    maxVisibleYValue = max(maxVisibleYValue, entry.y)
+                }
+            }
+
+            let averageYValue = calculateVisibleAverage(chartView: view, dataSet: dataSet)
+            var type: MeasurementType = .temperature
+            if view == temperatureChartView {
+                type = .temperature
+            } else if view == humidityChartView {
+                type = .humidity
+            } else if view == pressureChartView {
+                type = .pressure
+            }
+
+            view.setChartStat(
+                min: minVisibleYValue,
+                max: maxVisibleYValue,
+                avg: averageYValue,
+                type: type
+            )
+
+        }
+    }
+
+    /**
+     Calculate the average value of visible data points on a `LineChartView`.
+     This function computes the average by considering the area under the curve
+     formed by the visible data points and then divides it by the width of the visible x-range.
+     The area under the curve is approximated using the trapezoidal rule.
+
+     - Parameters:
+       - chartView: The `LineChartView` instance whose visible range's average needs to be calculated.
+       - dataSet: The `LineChartDataSet` containing data points to be considered.
+
+     - Returns: The average value of visible data points.
+
+     - Note:
+       The function uses the trapezoidal rule for approximation. The formula for the trapezoidal rule is:
+       A = (b - a) * (f(a) + f(b)) / 2
+       Where:
+       - A is the area of the trapezium.
+       - a and b are the x-coordinates of the two data points.
+       - f(a) and f(b) are the y-coordinates (or values) of the two data points.
+       
+       The average is then computed as the total area divided by the width of the visible x-range.
+    */
+    private func calculateVisibleAverage(chartView: LineChartView, dataSet: LineChartDataSet) -> Double {
+        // Get the x-values defining the visible range of the chart.
+        let lowestVisibleX = chartView.lowestVisibleX
+        let highestVisibleX = chartView.highestVisibleX
+
+        // Filter out the entries that lie within the visible range.
+        let visibleEntries = dataSet.entries.filter { $0.x >= lowestVisibleX && $0.x <= highestVisibleX }
+
+        // If there are no visible entries, return an average of 0.
+        guard !visibleEntries.isEmpty else { return 0.0 }
+
+        var totalArea = 0.0
+        // Compute the area under the curve for each pair of consecutive points.
+        for i in 1..<visibleEntries.count {
+            let x1 = visibleEntries[i-1].x
+            let y1 = visibleEntries[i-1].y
+            let x2 = visibleEntries[i].x
+            let y2 = visibleEntries[i].y
+
+            // Calculate the area of the trapezium formed by two consecutive data points.
+            let area = (x2 - x1) * (y1 + y2) / 2.0
+            totalArea += area
+        }
+
+        // Calculate the width of the visible x-range.
+        let timeSpan = visibleEntries.last!.x - visibleEntries.first!.x
+
+        // If all visible data points have the same x-value, simply return the average of their y-values.
+        if timeSpan == 0 {
+            return visibleEntries.map { $0.y }.reduce(0, +) / Double(visibleEntries.count)
+        }
+
+        // Compute the average using the trapezoidal rule.
+        return totalArea / timeSpan
     }
 }
 

@@ -25,10 +25,13 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
     public let min: Double?
     public let max: Double?
     public let counter: Int?
+    public let delay: Int?
     public let description: String?
+    public let triggered: Bool?
+    public let triggeredAt: String?
 
     enum CodingKeys: String, CodingKey {
-        case type, enabled, min, max, counter, description
+        case type, enabled, min, max, counter, delay, description, triggered, triggeredAt
     }
 
     public init(from decoder: Decoder) throws {
@@ -46,5 +49,14 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
         max = try container.decode(Double.self, forKey: .max)
         counter = try container.decode(Int.self, forKey: .counter)
         description = try container.decode(String.self, forKey: .description)
+
+        if let delay = try? container.decode(Int.self, forKey: .delay) {
+            self.delay = delay
+        } else {
+            self.delay = nil
+        }
+
+        triggered = try container.decode(Bool.self, forKey: .triggered)
+        triggeredAt = try container.decode(String.self, forKey: .triggeredAt)
     }
 }

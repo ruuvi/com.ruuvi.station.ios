@@ -416,6 +416,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Ogiltig MAC-address";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Datalagringsfel";
 "UserApiError.ER_SUB_NO_USER" = "Ingen användare";
+"UserApiError.ER_THROTTLED" = "För många förfrågningar";
 "OffsetCorrection.CalibrationDescription.text" = "Vid normal användning är det inte nödvändigt att kalibrera sensorerna.\n\nOm du är en avancerad användare och vill kalibrera manuellt är det möjligt att göra det.\n\nKalibreringstips finns på ruuvi.com/support";
 "OffsetCorrection.Dialog.Calibration.ClearConfirm" = "Renas kalibereringsinställningar?";
 "OffsetCorrection.Dialog.Calibration.Title" = "Kalibreringsinställningar";

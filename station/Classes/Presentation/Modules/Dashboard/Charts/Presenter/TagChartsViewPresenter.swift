@@ -75,11 +75,11 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
-    private var cloudSyncToken: NSObjectProtocol?
+    private var historySyncToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
-    private var chartIntervalDidChangeToken: NSObjectProtocol?
     private var chartDurationHourDidChangeToken: NSObjectProtocol?
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
+    private var chartShowStatsStateDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
@@ -99,7 +99,8 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
             self.view?.viewModel = self.viewModel
-            self.view?.historyLengthInDay = self.settings.chartDurationHours/24
+            self.view?.historyLengthInHours = self.settings.chartDurationHours
+            self.view?.showChartStat = self.settings.chartStatsOn
         }
     }
 
@@ -123,6 +124,17 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
     func configure(ruuviTag: AnyRuuviTagSensor) {
         self.ruuviTag = ruuviTag
+    }
+
+    func scrollTo(ruuviTag: AnyRuuviTagSensor) {
+        if interactor.isSyncingRecords() {
+            view?.showSyncAbortAlertForSwipe()
+            return
+        }
+
+        output?.tagChartSafeToSwipe(to: ruuviTag, module: self)
+        self.ruuviTag = ruuviTag
+        self.restartObserving()
     }
 
     func notifyDismissInstruction(dismissParent: Bool) {
@@ -253,13 +265,18 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
             })
     }
 
-    func viewDidSelectChartHistoryLength(day: Int) {
-        settings.chartDurationHours = day*24
-        interactor.updateChartHistoryDurationSetting(with: day)
+    func viewDidSelectChartHistoryLength(hours: Int) {
+        settings.chartDurationHours = hours
     }
 
     func viewDidSelectLongerHistory() {
         view?.showLongerHistoryDialog()
+    }
+
+    func viewDidSelectTriggerChartStat(show: Bool) {
+        settings.chartStatsOn = show
+        view?.showChartStat = show
+        interactor.updateChartShowMinMaxAvgSetting(with: show)
     }
 }
 // MARK: - TagChartsInteractorOutput
@@ -316,6 +333,23 @@ extension TagChartsViewPresenter: RuuviNotifierObserver {
 
 // MARK: - Private
 extension TagChartsViewPresenter {
+    private func restartObserving() {
+        startObservingBackgroundChanges()
+        startObservingAlertChanges()
+        startObservingDidConnectDisconnectNotifications()
+        startObservingLocalNotificationsManager()
+        startObservingSensorSettingsChanges()
+        startObservingCloudSyncNotification()
+        observeLastOpenedChart()
+        startObservingRuuviTag()
+        startListeningToSettings()
+        startObservingBluetoothState()
+        startListeningToAlertStatus()
+        tryToShowSwipeUpHint()
+        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
+        interactor.restartObservingTags()
+    }
+
     private func shutDownModule() {
         stateToken?.invalidate()
         advertisementToken?.invalidate()
@@ -328,10 +362,10 @@ extension TagChartsViewPresenter {
         didConnectToken?.invalidate()
         didDisconnectToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
-        cloudSyncToken?.invalidate()
+        historySyncToken?.invalidate()
         downsampleDidChangeToken?.invalidate()
-        chartIntervalDidChangeToken?.invalidate()
         chartDurationHourDidChangeToken?.invalidate()
+        chartShowStatsStateDidChangeToken?.invalidate()
         chartDrawDotsDidChangeToken?.invalidate()
         sensorSettingsToken?.invalidate()
     }
@@ -458,14 +492,6 @@ extension TagChartsViewPresenter {
                          using: { [weak self] _ in
                 self?.interactor.restartObservingData()
         })
-        chartIntervalDidChangeToken = NotificationCenter
-            .default
-            .addObserver(forName: .ChartIntervalDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                self?.interactor.restartObservingData()
-        })
         chartDurationHourDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .ChartDurationHourDidChange,
@@ -474,6 +500,17 @@ extension TagChartsViewPresenter {
                          using: { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.interactor.restartObservingData()
+        })
+        chartShowStatsStateDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartStatsOnDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                DispatchQueue.main.async {
+                    sSelf.view?.showChartStat = sSelf.settings.chartStatsOn
+                }
         })
         chartDrawDotsDidChangeToken = NotificationCenter
             .default
@@ -607,15 +644,13 @@ extension TagChartsViewPresenter {
     }
 
     private func startObservingCloudSyncNotification() {
-        cloudSyncToken = NotificationCenter
+        historySyncToken = NotificationCenter
             .default
-            .addObserver(forName: .NetworkSyncDidChangeStatus,
+            .addObserver(forName: .NetworkHistorySyncDidCompleteForSensor,
                          object: nil,
                          queue: .main,
                          using: { [weak self] notification in
             guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                  let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                  status == .complete,
                   mac.any == self?.ruuviTag.macId?.any else {
                 return
             }

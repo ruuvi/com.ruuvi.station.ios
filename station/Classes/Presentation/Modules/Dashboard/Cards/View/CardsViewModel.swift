@@ -64,11 +64,14 @@ struct CardsViewModel {
 
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let connectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
 
     let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let connectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+
+    let isCloudConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let cloudConnectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 

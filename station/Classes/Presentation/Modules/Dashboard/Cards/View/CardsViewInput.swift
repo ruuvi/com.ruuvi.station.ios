@@ -9,7 +9,6 @@ protocol CardsViewInput: ViewInput {
     func changeCardBackground(of viewModel: CardsViewModel, to image: UIImage?)
     func scroll(to index: Int)
     func showBluetoothDisabled(userDeclined: Bool)
-    func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel)

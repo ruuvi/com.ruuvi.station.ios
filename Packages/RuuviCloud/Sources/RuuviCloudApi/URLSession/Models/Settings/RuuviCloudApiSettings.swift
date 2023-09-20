@@ -11,12 +11,14 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case chartViewPeriod = "CHART_VIEW_PERIOD"
     case chartShowAllPoints = "CHART_SHOW_ALL_POINTS"
     case chartDrawDots = "CHART_DRAW_DOTS"
+    case chartShowMinMaxAverage = "CHART_SHOW_MIN_MAX_AVG"
     case cloudModeEnabled = "CLOUD_MODE_ENABLED"
     case dashboardEnabled = "DASHBOARD_ENABLED"
     case dashboardType = "DASHBOARD_TYPE"
     case dashboardTapActionType = "DASHBOARD_TAP_ACTION"
     case pushAlertEnabled = "ALERT_PUSH_ENABLED"
     case emailAlertEnabled = "ALERT_EMAIL_ENABLED"
+    case profileLanguageCode = "PROFILE_LANGUAGE_CODE"
 }
 
 extension TemperatureUnit {

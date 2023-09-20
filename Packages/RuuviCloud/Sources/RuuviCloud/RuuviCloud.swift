@@ -141,6 +141,9 @@ public protocol RuuviCloud {
     func set(chartDuration: Int) -> Future<Int, RuuviCloudError>
 
     @discardableResult
+    func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError>
+
+    @discardableResult
     func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
@@ -159,6 +162,9 @@ public protocol RuuviCloud {
     func set(pushAlert: Bool) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
+    func set(profileLanguageCode: String) -> Future<String, RuuviCloudError>
+
+    @discardableResult
     func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,
@@ -175,6 +181,7 @@ public protocol RuuviCloud {
         min: Double?,
         max: Double?,
         counter: Int?,
+        delay: Int?,
         description: String?,
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError>

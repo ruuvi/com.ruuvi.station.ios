@@ -21,7 +21,7 @@ public final class WidgetViewModel: ObservableObject {
 extension WidgetViewModel {
 
     public func fetchRuuviTags(completion: @escaping ([RuuviCloudSensorDense]) -> Void) {
-        guard isAuthorized() else {
+        guard isAuthorized() && hasCloudSensors() else {
             return
         }
         ruuviCloud.loadSensorsDense(for: nil,
@@ -132,6 +132,10 @@ extension WidgetViewModel {
 
 // MARK: - Private methods
 extension WidgetViewModel {
+
+    private func hasCloudSensors() -> Bool {
+        return appGroupDefaults?.bool(forKey: Constants.hasCloudSensorsKey.rawValue) ?? false
+    }
 
     private func getAppSettings() -> MeasurementServiceSettings {
         let temperatureUnit = temperatureUnit(from: appGroupDefaults)

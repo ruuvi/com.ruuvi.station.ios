@@ -13,9 +13,9 @@ extension Notification.Name {
     public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
     public static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
     public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
-    public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
+    public static let ChartStatsOnDidChange = Notification.Name("ChartStatsOnDidChange")
     public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
     public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
     public static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
@@ -24,6 +24,8 @@ extension Notification.Name {
     public static let AlertSoundSettingsDidChange = Notification.Name("AlertSoundSettingsDidChange")
     public static let EmailAlertSettingsDidChange = Notification.Name("EmailAlertSettingsDidChange")
     public static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
+    public static let LimitAlertNotificationsSettingsDidChange =
+        Notification.Name("LimitAlertNotificationsSettingsDidChange")
 }
 
 public enum DashboardTypeKey: String {
@@ -51,6 +53,7 @@ public protocol RuuviLocalSettings {
     var welcomeShown: Bool { get set }
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
+    var cloudProfileLanguageCode: String? { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
     var isWebTagDaemonOn: Bool { get set }
@@ -67,6 +70,7 @@ public protocol RuuviLocalSettings {
     var chartDurationHours: Int { get set }
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
+    var chartStatsOn: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }
@@ -86,16 +90,13 @@ public protocol RuuviLocalSettings {
     var emailAlertEnabled: Bool { get set }
     var showPushAlertSettings: Bool { get set }
     var pushAlertEnabled: Bool { get set }
+    var limitAlertNotificationsEnabled: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
 
     func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
-
-    // TODO: - Deprecate this after version v1.3.2
-    func firmwareVersion(for luid: LocalIdentifier) -> String?
-    func setFirmwareVersion(for luid: LocalIdentifier, value: String?)
 
     func cardToOpenFromWidget() -> String?
     func setCardToOpenFromWidget(for macId: String?)

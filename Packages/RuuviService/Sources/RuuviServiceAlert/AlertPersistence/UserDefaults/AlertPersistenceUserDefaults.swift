@@ -16,6 +16,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
     private let temperatureAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.temperatureAlertMuteTillDateUDKeyPrefix."
+    private let temperatureAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureAlertIsTriggeredUDKeyPrefix."
+    private let temperatureAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureAlertTriggeredAtUDKeyPrefix."
 
     // Humidity
     private let humidityLowerBoundUDKeyPrefix
@@ -28,6 +32,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
     private let humidityAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.humidityAlertMuteTillDateUDKeyPrefix."
+    private let humidityAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.humidityAlertIsTriggeredUDKeyPrefix."
+    private let humidityAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.humidityAlertTriggeredAtUDKeyPrefix."
 
     // Humidity
     private let relativeHumidityLowerBoundUDKeyPrefix
@@ -40,6 +48,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
     private let relativeHumidityAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.relativeHumidityAlertMuteTillDateUDKeyPrefix."
+    private let relativeHumidityAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertIsTriggeredUDKeyPrefix."
+    private let relativeHumidityAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertTriggeredAtUDKeyPrefix."
 
     // pressure
     private let pressureLowerBoundUDKeyPrefix
@@ -52,6 +64,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.pressureAlertDescriptionUDKeyPrefix."
     private let pressureAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.pressureAlertMuteTillDateUDKeyPrefix."
+    private let pressureAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pressureAlertIsTriggeredUDKeyPrefix."
+    private let pressureAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pressureAlertTriggeredAtUDKeyPrefix."
 
     // signal
     private let signalLowerBoundUDKeyPrefix
@@ -64,6 +80,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.signalAlertDescriptionUDKeyPrefix."
     private let signalAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.signalAlertMuteTillDateUDKeyPrefix."
+    private let signalAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalAlertIsTriggeredUDKeyPrefix."
+    private let signalAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.signalAlertTriggeredAtUDKeyPrefix."
 
     // connection
     private let connectionAlertIsOnUDKeyPrefix
@@ -72,6 +92,20 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.connectionAlertDescriptionUDKeyPrefix."
     private let connectionAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertMuteTillDateUDKeyPrefix."
+
+    // cloud connection
+    private let cloudConnectionAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertIsOnUDKeyPrefix."
+    private let cloudConnectionAlertUnseenDurationUDPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertUnseenDurationUDPrefix."
+    private let cloudConnectionAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertDescriptionUDKeyPrefix."
+    private let cloudConnectionAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertMuteTillDateUDKeyPrefix."
+    private let cloudConnectionAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertIsTriggeredUDKeyPrefix."
+    private let cloudConnectionAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.cloudConnectionAlertTriggeredAtUDKeyPrefix."
 
     // movement
     private let movementAlertIsOnUDKeyPrefix
@@ -82,6 +116,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
     private let movementAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertMuteTillDateUDKeyPrefix."
+    private let movementAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.movementAlertIsTriggeredUDKeyPrefix."
+    private let movementAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.movementAlertTriggeredAtUDKeyPrefix."
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
@@ -134,6 +172,15 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                  return nil
             }
+        case .cloudConnection:
+            if prefs.bool(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid),
+               let unseenDuration = prefs.optionalDouble(
+                forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid
+               ) {
+                return .cloudConnection(unseenDuration: unseenDuration)
+            } else {
+                 return nil
+            }
         case .movement:
             if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid),
                 let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid) {
@@ -168,6 +215,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .cloudConnection(let unseenDuration):
+            prefs.set(true, forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(unseenDuration, forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
         case .movement(let last):
             prefs.set(true, forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.set(last, forKey: movementAlertCounterUDPrefix + uuid)
@@ -180,27 +230,44 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
         case .relativeHumidity(let lower, let upper):
             prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
         case .humidity(let lower, let upper):
             prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
         case .pressure(let lower, let upper):
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
         case .signal(let lower, let upper):
             prefs.set(false, forKey: signalAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: signalLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .cloudConnection(let unseenDuration):
+            prefs.set(false, forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(unseenDuration, forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
+            prefs.set(false, forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
         case .movement(let last):
             prefs.set(false, forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.set(last, forKey: movementAlertCounterUDPrefix + uuid)
+            prefs.set(false, forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: movementAlertTriggeredAtUDKeyPrefix + uuid)
         }
     }
 
@@ -210,27 +277,44 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: temperatureLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
         case .relativeHumidity(let lower, let upper):
             prefs.removeObject(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
         case .humidity(let lower, let upper):
             prefs.removeObject(forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
         case .pressure(let lower, let upper):
             prefs.removeObject(forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
         case .signal(let lower, let upper):
             prefs.removeObject(forKey: signalAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
             prefs.removeObject(forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .cloudConnection(let unseenDuration):
+            prefs.removeObject(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
+            prefs.removeObject(forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
         case .movement(let last):
             prefs.removeObject(forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: movementAlertCounterUDPrefix + uuid)
+            prefs.removeObject(forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: movementAlertTriggeredAtUDKeyPrefix + uuid)
         }
     }
 
@@ -248,6 +332,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(date, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .cloudConnection:
+            prefs.set(date, forKey: cloudConnectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .movement:
             prefs.set(date, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
         }
@@ -267,6 +353,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(nil, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .cloudConnection:
+            prefs.set(nil, forKey: cloudConnectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .movement:
             prefs.set(nil, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
         }
@@ -286,8 +374,80 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: signalAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .connection:
             return prefs.value(forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .cloudConnection:
+            return prefs.value(forKey: cloudConnectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .movement:
             return prefs.value(forKey: movementAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        }
+    }
+
+    func trigger(type: AlertType, trigerred: Bool?, trigerredAt: String?, for uuid: String) {
+        switch type {
+        case .temperature:
+            prefs.set(trigerred, forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerred, forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            prefs.set(trigerred, forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .humidity:
+            prefs.set(trigerred, forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .pressure:
+            prefs.set(trigerred, forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
+        case .signal:
+            prefs.set(trigerred, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .cloudConnection:
+            prefs.set(trigerred, forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
+        case .movement:
+            prefs.set(trigerred, forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: movementAlertTriggeredAtUDKeyPrefix + uuid)
+        case .connection:
+            break
+        }
+    }
+
+    func triggered(for uuid: String, of type: AlertType) -> Bool? {
+        switch type {
+        case .temperature:
+            return prefs.bool(forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            return prefs.bool(forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
+        case .humidity:
+            return prefs.bool(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
+        case .pressure:
+            return prefs.bool(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
+        case .signal:
+            return prefs.bool(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+        case .cloudConnection:
+            return prefs.bool(forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
+        case .movement:
+            return prefs.bool(forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
+        case .connection:
+            return nil
+        }
+    }
+
+    func triggeredAt(for uuid: String, of type: AlertType) -> String? {
+        switch type {
+        case .temperature:
+            return prefs.string(forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            return prefs.string(forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .humidity:
+            return prefs.string(forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .pressure:
+            return prefs.string(forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
+        case .signal:
+            return prefs.string(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .cloudConnection:
+            return prefs.string(forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
+        case .movement:
+            return prefs.string(forKey: movementAlertTriggeredAtUDKeyPrefix + uuid)
+        case .connection:
+            return nil
         }
     }
 }
@@ -449,6 +609,25 @@ extension AlertPersistenceUserDefaults {
 
     func setConnection(description: String?, for uuid: String) {
         prefs.set(description, forKey: connectionAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Cloud Connection
+extension AlertPersistenceUserDefaults {
+    func cloudConnectionUnseenDuration(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
+    }
+
+    func setCloudConnection(unseenDuration: Double?, for uuid: String) {
+        prefs.set(unseenDuration, forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
+    }
+
+    func cloudConnectionDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: cloudConnectionAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setCloudConnection(description: String?, for uuid: String) {
+        prefs.set(description, forKey: cloudConnectionAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

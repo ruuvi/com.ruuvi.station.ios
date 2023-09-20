@@ -62,6 +62,7 @@ extension NotificationsSettingsPresenter {
             viewModels.append(buildPushSettings())
         }
 
+        viewModels.append(buildLimitAlertNotificationsSettings())
         viewModels.append(buildSoundSettings())
 
         settingsViewModels = viewModels
@@ -101,6 +102,22 @@ extension NotificationsSettingsPresenter {
         return viewModel
     }
 
+    private func buildLimitAlertNotificationsSettings() -> NotificationsSettingsViewModel {
+        let viewModel = NotificationsSettingsViewModel()
+        viewModel.title = "settings_alert_limit_notification".localized()
+        viewModel.subtitle = "settings_alert_limit_notification_description".localized()
+        viewModel.boolean.value = settings.limitAlertNotificationsEnabled
+        viewModel.configType.value = .switcher
+        viewModel.settingsType.value = .limitAlert
+
+        bind(viewModel.boolean, fire: false) { observer, enabled in
+            let isEnabled = GlobalHelpers.getBool(from: enabled)
+            observer.settings.limitAlertNotificationsEnabled = isEnabled
+        }
+
+        return viewModel
+    }
+
     private func buildSoundSettings() -> NotificationsSettingsViewModel {
         let viewModel = NotificationsSettingsViewModel()
         viewModel.title = "settings_alert_sound".localized()
@@ -123,6 +140,7 @@ extension NotificationsSettingsPresenter {
                 DispatchQueue.main.async {
                     sSelf.cloudNotificationService.set(
                         sound: sSelf.settings.alertSound,
+                        language: sSelf.settings.language,
                         deviceName: UIDevice.modelName
                     )
                 }
