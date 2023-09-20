@@ -12,10 +12,6 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: macos-latest
 
-jobs:
-  build:
-    runs-on: macos-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
