@@ -12,10 +12,6 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: macos-latest
 
-jobs:
-  build:
-    runs-on: macos-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,6 +57,12 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+
+          echo -n "${{ secrets.MAIN_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Development_com.ruuvi.station.mobileprovision
+          echo -n "${{ secrets.WIDGETS_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Development_com.ruuvi.station.widgets.mobileprovision
+          echo -n "${{ secrets.INTENTS_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Developmente_com.ruuvi.station.intents.mobileprovision
+          echo -n "${{ secrets.PNSERVICE_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Development_com.ruuvi.station.pnservice.mobileprovision
+
           echo -n "${{ secrets.MAIN_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.mobileprovision
           echo -n "${{ secrets.WIDGETS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
           echo -n "${{ secrets.INTENTS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
@@ -68,7 +70,7 @@ jobs:
 
           echo -n "${{ secrets.MAIN_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.mobileprovision
           echo -n "${{ secrets.WIDGETS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.widgets.mobileprovision
-          echo -n "${{ secrets.INTENTS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match__AppStore_com.ruuvi.station.intents.mobileprovision
+          echo -n "${{ secrets.INTENTS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.intents.mobileprovision
           echo -n "${{ secrets.PNSERVICE_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.pnservice.mobileprovision
 
       - name: Build app
