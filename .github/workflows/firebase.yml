@@ -1,0 +1,91 @@
+name: Upload to Firebase
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches: 
+      - alpha
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Remove existing localisation directory
+        run: rm -rf ${{ github.workspace }}/station.localization
+
+      - name: Clone localisation submodule
+        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
+
+      - name: Cocoapods Cache
+        uses: actions/cache@v2
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: CocoaPods Install
+        run: pod install
+
+      - name: Install the Apple certificate and provisioning profiles
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.NEW_KEYCHAIN_PASSWORD }}
+        run: |
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $CERTIFICATE_PATH
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo -n "${{ secrets.MAIN_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.mobileprovision
+          echo -n "${{ secrets.WIDGETS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
+          echo -n "${{ secrets.INTENTS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
+          echo -n "${{ secrets.PNSERVICE_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.pnservice.mobileprovision
+
+      - name: Build app
+        run: |
+          xcodebuild -workspace station.xcworkspace -scheme station_dev -configuration Debug -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
+      
+      - name: Export IPA
+        env:
+          EXPORT_PLIST: ${{ secrets.ADHOC_EXPORT_OPTIONS }}
+        run: |
+          EXPORT_PLIST_PATH=${{ runner.temp }}/ExportOptions.plist
+          echo -n "$EXPORT_PLIST" | base64 --decode > $EXPORT_PLIST_PATH
+          xcodebuild -exportArchive -archivePath ./Build/Station_Dev.xcarchive -exportOptionsPlist $EXPORT_PLIST_PATH -exportPath ${{ runner.temp }}/export
+
+      - name: Distribute to Firebase
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa \
+            --app ${{ secrets.GOOGLE_APP_ID }} \
+            --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
+            --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
+            --release-notes "Features, enhancements and bug fixes."
+
+      - name: Clean up keychain and provisioning profiles
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm -rf ~/Library/MobileDevice/Provisioning\ Profiles/*
+
