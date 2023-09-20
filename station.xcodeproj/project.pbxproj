@@ -4803,7 +4803,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -5148,7 +5148,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\nif [[ ! -z \"$CI\" ]]; then \n    exit 1;\nfi\ngit clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Missing OpenWeatherMap API key. In order to make Virtual Sensors work please obtain API key on https://openweathermap.org and put into station/Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: Demo GoogleServices credentials. If you want to use your own GoogleServices credentials, please replace the station/Resources/Plists/GoogleService-Info.plist file\"\n    fi\nfi\n";
+			shellScript = "git clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Missing OpenWeatherMap API key. In order to make Virtual Sensors work please obtain API key on https://openweathermap.org and put into station/Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: Demo GoogleServices credentials. If you want to use your own GoogleServices credentials, please replace the station/Resources/Plists/GoogleService-Info.plist file\"\n    fi\nfi\n";
 		};
 		A9AB575A2413CCEC006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7016,7 +7016,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -7039,12 +7039,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */
