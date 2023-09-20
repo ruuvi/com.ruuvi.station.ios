@@ -9,6 +9,9 @@ protocol AlertPersistence {
     func mute(type: AlertType, for uuid: String, till date: Date)
     func unmute(type: AlertType, for uuid: String)
     func mutedTill(type: AlertType, for uuid: String) -> Date?
+    func trigger(type: AlertType, trigerred: Bool?, trigerredAt: String?, for uuid: String)
+    func triggered(for uuid: String, of type: AlertType) -> Bool?
+    func triggeredAt(for uuid: String, of type: AlertType) -> String?
 
     // temperature (celsius)
     func lowerCelsius(for uuid: String) -> Double?
@@ -53,6 +56,12 @@ protocol AlertPersistence {
     // connection
     func connectionDescription(for uuid: String) -> String?
     func setConnection(description: String?, for uuid: String)
+
+    // cloud connection
+    func cloudConnectionUnseenDuration(for uuid: String) -> Double?
+    func setCloudConnection(unseenDuration: Double?, for uuid: String)
+    func cloudConnectionDescription(for uuid: String) -> String?
+    func setCloudConnection(description: String?, for uuid: String)
 
     // movement counter
     func movementCounter(for uuid: String) -> Int?

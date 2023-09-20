@@ -50,6 +50,7 @@ public final class RuuviCloudPure: RuuviCloud {
         min: Double?,
         max: Double?,
         counter: Int?,
+        delay: Int?,
         description: String?,
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {
@@ -66,6 +67,7 @@ public final class RuuviCloudPure: RuuviCloud {
             max: max,
             description: description,
             counter: counter,
+            delay: delay,
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postAlert(request, authorization: apiKey)
@@ -319,6 +321,32 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .chartShowMinMaxAverage,
+            value: showMinMaxAvg.chartBoolSettingString,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: showMinMaxAvg)
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.chartShowMinMaxAverage.rawValue
+                )
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
@@ -469,6 +497,32 @@ public final class RuuviCloudPure: RuuviCloud {
                     from: request,
                     type: .settings,
                     uniqueKey: RuuviCloudApiSetting.pushAlertEnabled.rawValue
+                )
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
+        let promise = Promise<String, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .profileLanguageCode,
+            value: profileLanguageCode,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: profileLanguageCode)
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .settings,
+                    uniqueKey: RuuviCloudApiSetting.profileLanguageCode.rawValue
                 )
                 promise.fail(error: .api(error))
             })

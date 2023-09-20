@@ -415,6 +415,7 @@
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Ungültige MAC-Adresse";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Datenspeicherfehler";
 "UserApiError.ER_SUB_NO_USER" = "Kein Benutzer";
+"UserApiError.ER_THROTTLED" = "Zu viele Anfragen";
 "OffsetCorrection.CalibrationDescription.text" = "Bei normalem Gebrauch ist es nicht erforderlich, den Offset anzupassen.\n\nWenn Sie ein fortgeschrittener Benutzer sind und die werkseitig kalibrierten Sensoren manuell konfigurieren möchten, ist dies möglich.\n\nTipps zur Kalibrierung sind auf ruuvi.com/support verfügbar";
 "OffsetCorrection.Dialog.Calibration.ClearConfirm" = "Kalibrierungseinstellungen löschen?";
 "OffsetCorrection.Dialog.Calibration.Title" = "Kalibriereinrichtung";

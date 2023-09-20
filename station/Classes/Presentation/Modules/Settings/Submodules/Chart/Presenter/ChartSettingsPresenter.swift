@@ -9,8 +9,6 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     var featureToggleService: FeatureToggleService!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
 
-    private var timer: Timer?
-    private var chartIntervalDidChanged: Bool = false
     private var viewModel: ChartSettingsViewModel = ChartSettingsViewModel(sections: []) {
         didSet {
             view.viewModel = viewModel
@@ -43,33 +41,12 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
             ]
         )
     }
-
-    private func buildChartHistorySection() -> ChartSettingsSection {
-        return ChartSettingsSection(
-            note: "ChartSettings.Duration.description".localized(),
-            cells: [
-                buildChartHistory()
-            ]
-        )
-    }
 }
 
 // MARK: - ChartSettingsViewOutput
 extension ChartSettingsPresenter: ChartSettingsViewOutput {
     func viewWillDisappear() {
-        if chartIntervalDidChanged {
-            NotificationCenter
-                .default
-                .post(name: .ChartIntervalDidChange, object: self)
-        }
-
-        // If there's a timer running it refers that user changed the chart duration value
-        // and before leaving the screen it is necessary to sync the value to the cloud
-        if timer != nil {
-            DispatchQueue.main.async { [weak self] in
-                self?.syncChartDuratingSettings()
-            }
-        }
+        // No op.
     }
 }
 
@@ -106,45 +83,4 @@ extension ChartSettingsPresenter {
         return cell
     }
 
-    // TODO: @priyonto - Remove this eventually since its moved on charts page on v2.0
-    private func buildChartHistory() -> ChartSettingsCell {
-        let title = "ChartSettings.Duration.title".localized()
-        let value = settings.chartDurationHours / 24
-        let unitSingular = ChartSettingsIntegerUnit.day
-        let unitPlural = ChartSettingsIntegerUnit.days
-        let type: ChartSettingsCellType = .stepper(
-            title: title,
-            value: value,
-            unitSingular: unitSingular,
-            unitPlural: unitPlural
-        )
-        let cell = ChartSettingsCell(type: type)
-        cell.integer.value = value
-        bind(cell.integer, fire: false) { [weak self] observer, value in
-            guard let value = value else { return }
-            observer.settings.chartDurationHours = value * 24
-            self?.invalidateTimer()
-            self?.scheduleChartDurationSettingsRequest()
-        }
-        return cell
-    }
-
-    /// Sync the chart duration on cloud after four four of value being changed.
-    /// This method avoid making several requests when user changes the stepped value.
-    private func scheduleChartDurationSettingsRequest() {
-        timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true, block: { [weak self] (_) in
-            guard let self = self else { return }
-            self.syncChartDuratingSettings()
-        })
-    }
-    /// Invalidates the running timer
-    private func invalidateTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-    /// This method syncs the local settings to the cloud
-    private func syncChartDuratingSettings() {
-        ruuviAppSettingsService.set(chartDuration: settings.chartDurationHours / 24)
-        invalidateTimer()
-    }
 }

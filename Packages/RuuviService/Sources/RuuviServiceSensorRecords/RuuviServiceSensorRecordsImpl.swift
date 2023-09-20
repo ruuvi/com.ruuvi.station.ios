@@ -24,6 +24,7 @@ public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
             .on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
+                sSelf.localSyncState.setSyncDate(nil)
                 sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
                 promise.succeed(value: ())
             }, failure: { error in

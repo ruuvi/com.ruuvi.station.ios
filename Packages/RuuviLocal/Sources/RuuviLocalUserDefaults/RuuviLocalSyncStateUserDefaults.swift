@@ -5,6 +5,8 @@ import RuuviLocal
 final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let syncStatusPrefix = "RuuviLocalSyncStateUserDefaults.syncState."
     private let syncDatePrefix = "RuuviLocalSyncStateUserDefaults.syncDate."
+    private let syncDateAllIDKey = "RuuviLocalSyncStateUserDefaults.syncDateAllIDKey."
+    private let fullHistorySyncPrefix = "RuuviLocalSyncStateUserDefaults.fullHistorySyncPrefix."
     private let gattSyncDatePrefix = "RuuviLocalSyncStateUserDefaults.gattSyncDate."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
@@ -43,6 +45,15 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?) {
         guard let macId = macId else { return }
         UserDefaults.standard.set(date, forKey: syncDatePrefix + macId.mac)
+        DispatchQueue.main.async {
+            NotificationCenter
+                .default
+                .post(name: .NetworkHistorySyncDidCompleteForSensor,
+                      object: nil,
+                      userInfo: [
+                    NetworkSyncStatusKey.mac: macId
+                ])
+        }
     }
 
     func getSyncDate(for macId: MACIdentifier?) -> Date? {
@@ -58,6 +69,32 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     func getGattSyncDate(for macId: MACIdentifier?) -> Date? {
         guard let macId = macId else { assertionFailure(); return nil }
         return UserDefaults.standard.value(forKey: gattSyncDatePrefix + macId.mac) as? Date
+    }
+
+    func setSyncDate(_ date: Date?) {
+        UserDefaults.standard.set(date, forKey: syncDateAllIDKey)
+
+        NotificationCenter
+            .default
+            .post(name: .NetworkSyncDidComplete, object: self, userInfo: nil)
+    }
+
+    func getSyncDate() -> Date? {
+        return UserDefaults.standard.value(forKey: syncDateAllIDKey) as? Date
+    }
+
+    func setDownloadFullHistory(for macId: MACIdentifier?, downloadFull: Bool?) {
+        guard let macId = macId else { return }
+        if let downloadFull = downloadFull {
+            UserDefaults.standard.set(downloadFull, forKey: fullHistorySyncPrefix + macId.mac)
+        } else {
+            UserDefaults.standard.removeObject(forKey: fullHistorySyncPrefix + macId.mac)
+        }
+    }
+
+    func downloadFullHistory(for macId: MACIdentifier?) -> Bool? {
+        guard let macId = macId else { assertionFailure(); return nil }
+        return UserDefaults.standard.value(forKey: fullHistorySyncPrefix + macId.mac) as? Bool
     }
 
     @UserDefault("RuuviLocalSyncStateUserDefaults.syncStatus", defaultValue: 0)

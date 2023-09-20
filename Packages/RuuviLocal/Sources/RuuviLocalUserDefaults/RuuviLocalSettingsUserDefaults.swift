@@ -62,6 +62,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
     private let languageUDKey = "SettingsUserDegaults.languageUDKey"
 
+    @UserDefault("SettingsUserDefaults.cardToOpenFromWidgetKey", defaultValue: nil)
+    var cloudProfileLanguageCode: String?
+
     var humidityUnit: HumidityUnit {
         get {
             switch humidityUnitInt {
@@ -369,6 +372,17 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.chartStatsOn", defaultValue: true)
+    var chartStatsOn: Bool {
+        didSet {
+            NotificationCenter
+                .default
+                .post(name: .ChartStatsOnDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
     @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
     var experimentalFeaturesEnabled: Bool
 
@@ -605,6 +619,19 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 NotificationCenter
                     .default
                     .post(name: .PushAlertSettingsDidChange,
+                          object: self,
+                          userInfo: nil)
+            }
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.limitAlertNotificationsEnabled", defaultValue: true)
+    var limitAlertNotificationsEnabled: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(name: .LimitAlertNotificationsSettingsDidChange,
                           object: self,
                           userInfo: nil)
             }

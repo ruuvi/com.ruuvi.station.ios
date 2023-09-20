@@ -87,7 +87,8 @@ class DashboardPresenter: DashboardModuleInput {
     private var calibrationSettingsToken: NSObjectProtocol?
     private var dashboardTypeToken: NSObjectProtocol?
     private var dashboardTapActionTypeToken: NSObjectProtocol?
-    private var cloudSyncToken: NSObjectProtocol?
+    private var cloudSyncSuccessStateToken: NSObjectProtocol?
+    private var cloudSyncFailStateToken: NSObjectProtocol?
     private var virtualSensors = [AnyVirtualTagSensor]() {
         didSet {
             startListeningToWebTagsAlertStatus()
@@ -144,7 +145,8 @@ class DashboardPresenter: DashboardModuleInput {
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
         dashboardTapActionTypeToken?.invalidate()
-        cloudSyncToken?.invalidate()
+        cloudSyncSuccessStateToken?.invalidate()
+        cloudSyncFailStateToken?.invalidate()
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
@@ -166,7 +168,8 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingCloudModeNotification()
         startListeningToSettings()
         startObserveCalibrationSettingsChange()
-        startObservingCloudSyncTokenState()
+        startObservingCloudSyncSuccessTokenState()
+        startObservingCloudSyncFailTokenState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -460,6 +463,7 @@ extension DashboardPresenter: RuuviNotifierObserver {
         // No op here.
     }
 
+    // swiftlint:disable:next function_body_length
     func ruuvi(notifier: RuuviNotifier,
                alertType: AlertType,
                isTriggered: Bool,
@@ -495,6 +499,10 @@ extension DashboardPresenter: RuuviNotifierObserver {
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
                     viewModel.movementAlertState.value = newValue
+                case .cloudConnection:
+                    let isTriggered = isTriggered && isFireable
+                    let newValue: AlertState? = isTriggered ? .firing : .registered
+                    viewModel.cloudConnectionAlertState.value = newValue
                 default:
                     break
                 }
@@ -504,7 +512,8 @@ extension DashboardPresenter: RuuviNotifierObserver {
                     viewModel.pressureAlertState.value,
                     viewModel.signalAlertState.value,
                     viewModel.connectionAlertState.value,
-                    viewModel.movementAlertState.value
+                    viewModel.movementAlertState.value,
+                    viewModel.cloudConnectionAlertState.value
                 ]
                 if alertStates.first(where: { alert in
                     alert == .firing
@@ -670,8 +679,7 @@ extension DashboardPresenter {
 
     private func processAlert(record: RuuviTagSensorRecord,
                               viewModel: CardsViewModel) {
-        if let isCloud = viewModel.isCloud.value,
-           isCloud && settings.cloudModeEnabled,
+        if let isCloud = viewModel.isCloud.value, isCloud,
             let macId = viewModel.mac.value {
             alertHandler.processNetwork(record: record,
                                         trigger: false,
@@ -769,6 +777,15 @@ extension DashboardPresenter {
         WidgetCenter.shared.reloadTimelines(
             ofKind: AppAssemblyConstants.simpleWidgetKindId
         )
+    }
+
+    private func syncHasCloudSensorToAppGroupContainer(with sensors: [AnyRuuviTagSensor]) {
+        let cloudSensors = sensors.filter({ $0.isCloudSensor ?? false })
+        appGroupDefaults?.set(
+            cloudSensors.count > 0,
+            forKey: AppGroupConstants.hasCloudSensorsKey
+        )
+        appGroupDefaults?.synchronize()
     }
 
     private func startObservingBluetoothState() {
@@ -1026,18 +1043,18 @@ extension DashboardPresenter {
                 let ruuviTags = ruuviTags.reordered()
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
-                // TODO: - Remove this migration code after version v1.3.2
-                sSelf.migrateFirmwareVersion(for: ruuviTags)
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: ruuviTags)
             case .insert(let sensor):
                 sSelf.notifyRestartAdvertisementDaemon()
                 sSelf.notifyRestartHeartBeatDaemon()
                 sSelf.checkFirmwareVersion(for: sensor)
                 sSelf.ruuviTags.append(sensor.any)
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
 
                 // Avoid triggering the method when big changes is happening
                 // such as login.
@@ -1077,6 +1094,7 @@ extension DashboardPresenter {
                 sSelf.observeRuuviTags()
                 sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
             case .update(let sensor):
@@ -1092,6 +1110,7 @@ extension DashboardPresenter {
                     sSelf.restartObserveRuuviTagAdvertisements()
                 }
                 sSelf.startObservingWebTags()
+                sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             }
         }
     }
@@ -1320,6 +1339,7 @@ extension DashboardPresenter {
                             sSelf.updateMutedTill(of: type,
                                                   for: physicalSensor.id,
                                                   viewModel: viewModel)
+                            sSelf.triggerAlertsIfNeeded()
                         })
                     }
                     if let virtualSensor
@@ -1349,7 +1369,7 @@ extension DashboardPresenter {
 
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({ (ruuviTag) in
-            if ruuviTag.isCloud && settings.cloudModeEnabled {
+            if ruuviTag.isCloud {
                 if let macId = ruuviTag.macId {
                     alertHandler.subscribe(self, to: macId.value)
                 }
@@ -1549,8 +1569,23 @@ extension DashboardPresenter {
             })
     }
 
-    private func startObservingCloudSyncTokenState() {
-        cloudSyncToken = NotificationCenter
+    private func startObservingCloudSyncSuccessTokenState() {
+        cloudSyncSuccessStateToken?.invalidate()
+        cloudSyncSuccessStateToken = nil
+        cloudSyncSuccessStateToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidComplete,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.triggerAlertsIfNeeded()
+        })
+    }
+
+    private func startObservingCloudSyncFailTokenState() {
+        cloudSyncFailStateToken?.invalidate()
+        cloudSyncFailStateToken = nil
+        cloudSyncFailStateToken = NotificationCenter
             .default
             .addObserver(forName: .NetworkSyncDidFailForAuthorization,
                          object: nil,
@@ -1595,10 +1630,6 @@ extension DashboardPresenter {
         }
     }
 
-    private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
-        interactor.migrateFWVersionFromDefaults(for: ruuviTags)
-    }
-
     private func syncAlerts(ruuviTag: PhysicalSensor, viewModel: CardsViewModel) {
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -1614,6 +1645,8 @@ extension DashboardPresenter {
                 sync(connection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .movement:
                 sync(movement: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .cloudConnection:
+                sync(cloudConnection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             default:
                 break
             }
@@ -1624,7 +1657,8 @@ extension DashboardPresenter {
                 viewModel.pressureAlertState.value,
                 viewModel.signalAlertState.value,
                 viewModel.connectionAlertState.value,
-                viewModel.movementAlertState.value
+                viewModel.movementAlertState.value,
+                viewModel.cloudConnectionAlertState.value
             ]
 
             if alertService.hasRegistrations(for: ruuviTag) {
@@ -1723,6 +1757,16 @@ extension DashboardPresenter {
                        for: ruuviTag)
     }
 
+    private func sync(cloudConnection: AlertType,
+                      ruuviTag: PhysicalSensor,
+                      viewModel: CardsViewModel) {
+        if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
+            viewModel.isCloudConnectionAlertOn.value = true
+        } else {
+            viewModel.isCloudConnectionAlertOn.value = false
+        }
+    }
+
     private func reloadMutedTill() {
         for viewModel in viewModels {
             if let mutedTill = viewModel.temperatureAlertMutedTill.value,
@@ -1805,6 +1849,8 @@ extension DashboardPresenter {
             observable = viewModel.isConnectionAlertOn
         case .movement:
             observable = viewModel.isMovementAlertOn
+        case .cloudConnection:
+            observable = viewModel.isCloudConnectionAlertOn
         default:
             // Should never be here
             observable = viewModel.isTemperatureAlertOn
@@ -1871,6 +1917,20 @@ extension DashboardPresenter {
             .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
                   object: nil,
                   userInfo: nil)
+    }
+
+    private func triggerAlertsIfNeeded() {
+        for viewModel in viewModels {
+            if let latestRecord = viewModel.latestMeasurement.value {
+                guard let macId = viewModel.mac.value else {
+                    continue
+                }
+                alertHandler.processNetwork(
+                    record: latestRecord,
+                    trigger: false, for: macId
+                )
+            }
+        }
     }
 }
 // swiftlint:enable file_length trailing_whitespace
