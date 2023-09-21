@@ -2,7 +2,7 @@ name: Upload to Firebase
 
 on:
   push:
-    branches: [ github-actions-v1 ]
+    branches: [ github-actions-v2 ]
 
 jobs:
   build:
