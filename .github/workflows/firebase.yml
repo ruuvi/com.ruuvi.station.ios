@@ -4,8 +4,7 @@ on:
   pull_request:
     types:
       - closed
-    branches: 
-      - alpha
+    branches: [ alpha ]
 
 jobs:
   build:
@@ -42,7 +41,7 @@ jobs:
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.NEW_KEYCHAIN_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
@@ -57,21 +56,11 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-
-          echo -n "${{ secrets.MAIN_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Development_com.ruuvi.station.mobileprovision
-          echo -n "${{ secrets.WIDGETS_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Development_com.ruuvi.station.widgets.mobileprovision
-          echo -n "${{ secrets.INTENTS_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Developmente_com.ruuvi.station.intents.mobileprovision
-          echo -n "${{ secrets.PNSERVICE_APP_DEVELOPMENT_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_Development_com.ruuvi.station.pnservice.mobileprovision
-
           echo -n "${{ secrets.MAIN_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.mobileprovision
           echo -n "${{ secrets.WIDGETS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
           echo -n "${{ secrets.INTENTS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
           echo -n "${{ secrets.PNSERVICE_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.pnservice.mobileprovision
 
-          echo -n "${{ secrets.MAIN_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.mobileprovision
-          echo -n "${{ secrets.WIDGETS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.widgets.mobileprovision
-          echo -n "${{ secrets.INTENTS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.intents.mobileprovision
-          echo -n "${{ secrets.PNSERVICE_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.pnservice.mobileprovision
       - name: Build app
         run: |
           xcodebuild -workspace station.xcworkspace -scheme station_dev -configuration Debug -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
@@ -91,11 +80,18 @@ jobs:
             --app ${{ secrets.GOOGLE_APP_ID }} \
             --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-            --release-notes "Features, enhancements and bug fixes."
+            --release-notes "Features, enhancements and bug fixes." 
 
+      - name: Zip dSYM files
+        run: |
+          find ${{ runner.temp }}/export -name '*.dSYM' | xargs -I \{\} zip -r \{\}.zip \{\}
+
+      - name: Upload dSYM to Firebase
+        run: |
+          find ${{ runner.temp }}/export -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
+      
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}
         run: |
           security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
           rm -rf ~/Library/MobileDevice/Provisioning\ Profiles/*
-
