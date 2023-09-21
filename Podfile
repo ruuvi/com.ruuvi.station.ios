@@ -177,6 +177,8 @@ post_install do |installer|
         config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
         config.build_settings['SWIFT_SUPPRESS_WARNINGS'] = "YES"
         config.build_settings["DEVELOPMENT_TEAM"] = "4MUYJ4YYH4"
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        config.build_settings['CODE_SIGN_STYLE'] = 'Manual'
         # Need these for Xcode 16 Beta 6
         xcconfig_path = config.base_configuration_reference.real_path
         xcconfig = File.read(xcconfig_path)
