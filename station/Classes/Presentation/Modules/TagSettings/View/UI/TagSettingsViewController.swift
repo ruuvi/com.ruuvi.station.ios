@@ -3638,12 +3638,12 @@ extension TagSettingsViewController {
                 return
             }
 
-            let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+            let currentDuration = self.viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
             if durationInput == (currentDuration/60) {
                 return
             }
 
-            output.viewDidChangeCloudConnectionAlertUnseenDuration(duration: durationInput*60)
+            self.output.viewDidChangeCloudConnectionAlertUnseenDuration(duration: durationInput*60)
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
         alert.addAction(action)
