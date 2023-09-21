@@ -9,7 +9,7 @@ import RuuviAnalytics
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
-// Test
+
 class AppStateServiceImpl: AppStateService {
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
     var backgroundTaskService: BackgroundTaskService!
