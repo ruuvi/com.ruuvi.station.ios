@@ -24,7 +24,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>389</string>
+	<string>407</string>
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -64,7 +64,7 @@
 		<string>Muli-Regular.ttf</string>
 		<string>Muli-Bold.ttf</string>
 		<string>Muli-SemiBoldItalic.ttf</string>
-        <string>Muli-ExtraBold.ttf</string>
+		<string>Muli-ExtraBold.ttf</string>
 		<string>Montserrat-Bold.ttf</string>
 		<string>Montserrat-Regular.ttf</string>
 		<string>Montserrat-ExtraBold.ttf</string>
