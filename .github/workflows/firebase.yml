@@ -38,7 +38,7 @@ jobs:
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.NEW_KEYCHAIN_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
@@ -73,7 +73,11 @@ jobs:
       - name: Distribute to Firebase
         run: |
           curl -sL https://firebase.tools | bash
-          firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa --app ${{ secrets.GOOGLE_APP_ID }} --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} --groups ${{ secrets.ALPHA_TESTERS_GROUP }}
+          firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa \
+            --app ${{ secrets.GOOGLE_APP_ID }} \
+            --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
+            --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
+            --release-notes "Features, enhancements and bug fixes." 
       
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}
