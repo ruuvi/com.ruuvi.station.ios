@@ -4980,7 +4980,6 @@
 		};
 		0E8301592393FC2B0003F2EF /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -5077,7 +5076,6 @@
 		};
 		A96B1EF925A7208900D3ED9C /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -5148,12 +5146,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "git clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Missing OpenWeatherMap API key. In order to make Virtual Sensors work please obtain API key on https://openweathermap.org and put into station/Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: Demo GoogleServices credentials. If you want to use your own GoogleServices credentials, please replace the station/Resources/Plists/GoogleService-Info.plist file\"\n    fi\nfi\n";
+			shellScript = "BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\ngit clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Missing OpenWeatherMap API key. In order to make Virtual Sensors work please obtain API key on https://openweathermap.org and put into station/Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: Demo GoogleServices credentials. If you want to use your own GoogleServices credentials, please replace the station/Resources/Plists/GoogleService-Info.plist file\"\n    fi\nfi\n";
 		};
 		A9AB575A2413CCEC006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
