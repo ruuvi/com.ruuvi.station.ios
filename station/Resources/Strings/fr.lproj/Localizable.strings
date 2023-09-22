@@ -544,7 +544,7 @@ RuuviTag est prêt à être utilisé !";
 "Widgets.Description.message" = "Créez des widgets de vos capteurs Ruuvi préférés. Les widgets sont mis à jour depuis le Ruuvi Cloud. Un routeur Ruuvi Gateway est nécessaire.";
 "settings_appearance" = "Apparition";
 "app_theme" = "App Theme";
-"follow_system_theme" = "Suivre le thème du système";
+"follow_system_theme" = "Thème système";
 "dark_theme" = "Thème sombre";
 "light_theme" = "Thème de la lumière";
 "Settings.Temperature.Resolution.title" = "Résolution de la température";
