@@ -545,7 +545,7 @@ RuuviTag on valmis käyttöön!";
 "Widgets.Description.message" = "Luo widgettejä Ruuvi-antureistasi. Widgetit päivittyvät Ruuvin pilvipalvelun kautta ja vaativat toimiakseen Ruuvi Gateway -reitittimen.";
 "settings_appearance" = "Sovelluksen ulkoasuasetukset";
 "app_theme" = "Sovelluksen teema";
-"follow_system_theme" = "Käytä järjestelmän oletusta";
+"follow_system_theme" = "Järjestelmä";
 "dark_theme" = "Tumma teema";
 "light_theme" = "Vaalea teema";
 "Settings.Temperature.Resolution.title" = "Lämpötilan resoluutio";

@@ -6,7 +6,7 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         let label = UILabel()
         label.textColor = RuuviColor.ruuviMenuTextColor
         label.textAlignment = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
         return label
     }()
@@ -15,7 +15,7 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         let label = UILabel()
         label.textColor = RuuviColor.ruuviMenuTextColor
         label.textAlignment = .right
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 16)
         return label
     }()
@@ -41,12 +41,10 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         stack.spacing = 4
         stack.distribution = .fillProportionally
         stack.axis = .horizontal
-        addSubview(stack)
-        stack.anchor(top: safeTopAnchor,
-                     leading: safeLeftAnchor,
-                     bottom: safeBottomAnchor,
-                     trailing: contentView.safeRightAnchor,
-                     padding: .init(top: 12, left: 20, bottom: 12, right: 8))
+        contentView.addSubview(stack)
+        stack.fillSuperviewToSafeArea(
+            padding: .init(top: 12, left: 20, bottom: 12, right: 8)
+        )
     }
 }
 

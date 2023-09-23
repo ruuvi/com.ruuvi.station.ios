@@ -545,7 +545,7 @@ Your RuuviTag sensor is ready for use!";
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from the Ruuvi Cloud. A Ruuvi Gateway router is required.";
 "settings_appearance" = "Appearance";
 "app_theme" = "App Theme";
-"follow_system_theme" = "Follow system theme";
+"follow_system_theme" = "System theme";
 "dark_theme" = "Dark theme";
 "light_theme" = "Light theme";
 "Settings.Temperature.Resolution.title" = "Temperature Resolution";

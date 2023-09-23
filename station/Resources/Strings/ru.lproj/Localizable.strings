@@ -545,7 +545,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from the Ruuvi Cloud. A Ruuvi Gateway router is required.";
 "settings_appearance" = "Внешний вид";
 "app_theme" = "Тема приложения";
-"follow_system_theme" = "Как в системе";
+"follow_system_theme" = "Системная тема";
 "dark_theme" = "Темная тема";
 "light_theme" = "Светлая тема";
 "Settings.Temperature.Resolution.title" = "Temperature Resolution";
