@@ -545,7 +545,7 @@ RuuviTag-sensorn är redo att användas!";
 "Widgets.Description.message" = "Skapa widgets av dina favorit Ruuvi-sensorer. Widgetdatan kommer från Ruuvi Cloud och kräver en Ruuvi Gateway-router.";
 "settings_appearance" = "Utseende";
 "app_theme" = "App tema";
-"follow_system_theme" = "Följ systemtema";
+"follow_system_theme" = "Systemtema";
 "dark_theme" = "Mörkt tema";
 "light_theme" = "Ljust tema";
 "Settings.Temperature.Resolution.title" = "Temperaturupplösning";

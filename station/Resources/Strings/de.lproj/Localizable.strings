@@ -544,7 +544,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "Widgets.Description.message" = "Erstellen Sie Widgets mit Ihren bevorzugten Ruuvi-Sensoren. Widgets werden über die Ruuvi Cloud aktualisiert. Ein Ruuvi Gateway-Router ist erforderlich.";
 "settings_appearance" = "Erscheinungsbild";
 "app_theme" = "App Thema";
-"follow_system_theme" = "Dem Systemthema folgen";
+"follow_system_theme" = "Systemthema";
 "dark_theme" = "Dunkles Thema";
 "light_theme" = "Thema Licht";
 "Settings.Temperature.Resolution.title" = "Auflösung der Temperatur";
