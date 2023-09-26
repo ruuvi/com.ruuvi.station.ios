@@ -138,6 +138,18 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
+    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        cloud.set(showMinMaxAvg: showMinMaxAvg)
+            .on(success: { show in
+                promise.succeed(value: show)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         cloud.set(cloudMode: cloudMode)
@@ -204,6 +216,18 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         cloud.set(pushAlert: pushAlert)
             .on(success: { enabled in
                 promise.succeed(value: enabled)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(profileLanguageCode: String) -> Future<String, RuuviServiceError> {
+        let promise = Promise<String, RuuviServiceError>()
+        cloud.set(profileLanguageCode: profileLanguageCode)
+            .on(success: { profileLanguageCode in
+                promise.succeed(value: profileLanguageCode)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })

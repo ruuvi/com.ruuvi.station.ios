@@ -415,6 +415,7 @@
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Ungültige MAC-Adresse";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Datenspeicherfehler";
 "UserApiError.ER_SUB_NO_USER" = "Kein Benutzer";
+"UserApiError.ER_THROTTLED" = "Zu viele Anfragen";
 "OffsetCorrection.CalibrationDescription.text" = "Bei normalem Gebrauch ist es nicht erforderlich, den Offset anzupassen.\n\nWenn Sie ein fortgeschrittener Benutzer sind und die werkseitig kalibrierten Sensoren manuell konfigurieren möchten, ist dies möglich.\n\nTipps zur Kalibrierung sind auf ruuvi.com/support verfügbar";
 "OffsetCorrection.Dialog.Calibration.ClearConfirm" = "Kalibrierungseinstellungen löschen?";
 "OffsetCorrection.Dialog.Calibration.Title" = "Kalibriereinrichtung";
@@ -543,7 +544,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "Widgets.Description.message" = "Erstellen Sie Widgets mit Ihren bevorzugten Ruuvi-Sensoren. Widgets werden über die Ruuvi Cloud aktualisiert. Ein Ruuvi Gateway-Router ist erforderlich.";
 "settings_appearance" = "Erscheinungsbild";
 "app_theme" = "App Thema";
-"follow_system_theme" = "Dem Systemthema folgen";
+"follow_system_theme" = "Systemthema";
 "dark_theme" = "Dunkles Thema";
 "light_theme" = "Thema Licht";
 "Settings.Temperature.Resolution.title" = "Auflösung der Temperatur";
@@ -721,7 +722,7 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "Close" = "Schließen";
 "add_sensor_nfc_df3_error" = "Dieser Sensor kann aufgrund der alten Firmware nicht mit NFC hinzugefügt werden. Bitte fügen Sie den Sensor über Bluetooth hinzu und aktualisieren Sie die Firmware.";
 "add_sensor_description" = "Auf dieser Seite werden Ruuvi-Sensoren in der Nähe angezeigt, die der App noch nicht hinzugefügt wurden. Tippen Sie auf einen Sensor, um ihn hinzuzufügen.";
-"add_sensor_via_nfc" = "Alternatively, you can add a sensor using NFC by selecting Add with NFC and touching it with your phone.";
+"add_sensor_via_nfc" = "Alternativ können Sie einen Sensor über NFC hinzufügen, indem Sie Mit NFC hinzufügen auswählen und ihn mit Ihrem Telefon berühren.";
 "unclaim_sensor" = "Anspruch auf Eigentum zurückziehen";
 "unclaim" = "Anspruch aufheben";
 "unclaim_sensor_description" = "Das Eigentum an diesem Sensor wurde Ihrem Ruuvi-Konto zugeordnet. Klicken Sie auf „Anspruch aufheben“, um die Einstellungen dieses Sensors und die zugehörigen Daten aus Ihrem Ruuvi-Konto zu entfernen.";
@@ -733,7 +734,7 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "alert_cloud_connection_dialog_description" = "Geben Sie die gewünschte Verzögerung in Minuten ein, bevor die Warnung ausgelöst wird. Der Mindestwert beträgt 2 Minuten.";
 "alert_cloud_connection_dialog_title" = "Cloud-Verbindungsalarm einstellen";
 "rename" = "Umbenennen";
-"chart_stat_show" = "Show min/max/avg";
-"chart_stat_hide" = "Hide min/max/avg";
-"settings_alert_limit_notification" = "Limit alert notifications";
-"settings_alert_limit_notification_description" = "Trigger Bluetooth alert notification only once per hour even if alert was retriggered.";
+"chart_stat_show" = "Min./Max./Durchschnitt anzeigen";
+"chart_stat_hide" = "Min./Max./Durchschnitt ausblenden";
+"settings_alert_limit_notification" = "Beschränken Sie Warnmeldungen";
+"settings_alert_limit_notification_description" = "Lösen Sie die Bluetooth-Benachrichtigung nur einmal pro Stunde aus, auch wenn die Warnung erneut ausgelöst wurde.";

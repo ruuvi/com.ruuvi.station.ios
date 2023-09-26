@@ -532,10 +532,12 @@ private final class BusinessAssembly: Assembly {
         container.register(RuuviNotifier.self) { r in
             let notificationLocal = r.resolve(RuuviNotificationLocal.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
+            let localSyncState = r.resolve(RuuviLocalSyncState.self)!
             let titles = RuuviNotifierTitlesImpl()
             let service = RuuviNotifierImpl(
                 ruuviAlertService: ruuviAlertService,
                 ruuviNotificationLocal: notificationLocal,
+                localSyncState: localSyncState,
                 titles: titles
             )
             return service
@@ -713,6 +715,7 @@ private final class BusinessAssembly: Assembly {
             let repository = r.resolve(RuuviRepository.self)!
             let localIDs = r.resolve(RuuviLocalIDs.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
+            let ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)!
             return factory.createCloudSync(
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
@@ -722,7 +725,8 @@ private final class BusinessAssembly: Assembly {
                 ruuviLocalImages: localImages,
                 ruuviRepository: repository,
                 ruuviLocalIDs: localIDs,
-                ruuviAlertService: alertService
+                ruuviAlertService: alertService,
+                ruuviAppSettingsService: ruuviAppSettingsService
             )
         }
 

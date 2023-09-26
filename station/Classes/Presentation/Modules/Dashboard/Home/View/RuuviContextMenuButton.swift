@@ -24,6 +24,7 @@ class RuuviContextMenuButton: UIView {
 
     private var preccedingIcon: Bool = false
     private var iconSize: CGSize = .init(width: 16, height: 16)
+    private var interimSpacing: CGFloat = 6.0
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,6 +40,7 @@ class RuuviContextMenuButton: UIView {
                      icon: UIImage?,
                      iconTintColor: UIColor?,
                      iconSize: CGSize = .init(width: 16, height: 16),
+                     interimSpacing: CGFloat = 6.0,
                      preccedingIcon: Bool = false) {
         self.init()
         self.preccedingIcon = preccedingIcon
@@ -48,6 +50,7 @@ class RuuviContextMenuButton: UIView {
         self.buttonIconView.tintColor = iconTintColor
         self.buttonIconView.image = icon
         self.iconSize = iconSize
+        self.interimSpacing = interimSpacing
         self.setUpUI()
     }
 }
@@ -74,7 +77,7 @@ extension RuuviContextMenuButton {
             lessThanOrEqualToConstant: iconSize.width
         ).isActive = true
         stackView.axis = .horizontal
-        stackView.spacing = 6
+        stackView.spacing = interimSpacing
         stackView.distribution = .fill
         addSubview(stackView)
         stackView.fillSuperview()

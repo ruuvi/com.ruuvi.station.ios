@@ -266,6 +266,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             }
             sSelf.viewModel.reset()
             sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
+            sSelf.localSyncState.setSyncDate(nil)
             sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
             sSelf.settings.setOwnerCheckDate(for: sSelf.ruuviTag.macId, value: nil)
             sSelf.output?.tagSettingsDidDeleteTag(module: sSelf,
@@ -321,6 +322,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setSignalAlertState(isOn: isOn)
         case .connection:
             setConnectionAlertState(isOn: isOn)
+        case .cloudConnection:
+            setCloudConnectionAlertState(isOn: isOn)
         case .movement:
             setMovementAlertState(isOn: isOn)
         }
@@ -356,6 +359,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
     }
 
+    func viewDidChangeCloudConnectionAlertUnseenDuration(duration: Int) {
+        setCloudConnectionAlertDelay(unseenDuration: duration)
+    }
+
     func viewDidChangeAlertDescription(
         for type: AlertType,
         description: String?
@@ -373,6 +380,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setSignalAlertDescription(description: description)
         case .connection:
             setConnectionAlertDescription(description: description)
+        case .cloudConnection:
+            setCloudConnectionAlertDescription(description: description)
         case .movement:
             setMovementAlertDescription(description: description)
         }
@@ -451,7 +460,7 @@ extension TagSettingsPresenter {
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
-        if ruuviTag.isCloud && settings.cloudModeEnabled {
+        if ruuviTag.isCloud {
             if let macId = ruuviTag.macId {
                 alertHandler.subscribe(self, to: macId.value)
             }
@@ -544,6 +553,9 @@ extension TagSettingsPresenter {
         // Set isOwner value
         viewModel.isOwner.value = ruuviTag.isOwner
         viewModel.ownersPlan.value = ruuviTag.ownersPlan
+        viewModel.isOwnersPlanProPlus.value =
+            ruuviTag.ownersPlan?.lowercased() != "basic" &&
+            ruuviTag.ownersPlan?.lowercased() != "free"
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
@@ -615,6 +627,8 @@ extension TagSettingsPresenter {
             sync(signal: type, ruuviTag: ruuviTag)
         case .connection:
             sync(connection: type, ruuviTag: ruuviTag)
+        case .cloudConnection:
+            sync(cloudConnection: type, ruuviTag: ruuviTag)
         case .movement:
             sync(movement: type, ruuviTag: ruuviTag)
         }
@@ -713,6 +727,26 @@ extension TagSettingsPresenter {
             viewModel.isConnectionAlertOn.value = false
         }
         viewModel.connectionAlertMutedTill.value = alertService.mutedTill(type: connection, for: ruuviTag)
+    }
+
+    private func sync(cloudConnection: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.cloudConnectionAlertDescription.value =
+            alertService.cloudConnectionDescription(for: ruuviTag)
+        if case .cloudConnection(let unseenDuration) = alertService.alert(
+            for: ruuviTag, of: cloudConnection
+        ) {
+            viewModel.isCloudConnectionAlertOn.value = true
+            viewModel.cloudConnectionAlertUnseenDuration.value = unseenDuration
+        } else {
+            viewModel.isCloudConnectionAlertOn.value = false
+            if let unseenDuration = alertService.cloudConnectionUnseenDuration(for: ruuviTag) {
+                viewModel.cloudConnectionAlertUnseenDuration.value = unseenDuration
+            } else {
+                viewModel.cloudConnectionAlertUnseenDuration.value = 900
+            }
+        }
+        viewModel.cloudConnectionAlertMutedTill.value =
+            alertService.mutedTill(type: cloudConnection, for: ruuviTag)
     }
 
     private func sync(movement: AlertType, ruuviTag: RuuviTagSensor) {
@@ -1121,6 +1155,8 @@ extension TagSettingsPresenter {
             observable = viewModel.signalAlertMutedTill
         case .connection:
             observable = viewModel.connectionAlertMutedTill
+        case .cloudConnection:
+            observable = viewModel.cloudConnectionAlertMutedTill
         case .movement:
             observable = viewModel.movementAlertMutedTill
         }
@@ -1146,6 +1182,8 @@ extension TagSettingsPresenter {
             observable = viewModel.isSignalAlertOn
         case .connection:
             observable = viewModel.isConnectionAlertOn
+        case .cloudConnection:
+            observable = viewModel.isCloudConnectionAlertOn
         case .movement:
             observable = viewModel.isMovementAlertOn
         }
@@ -1162,7 +1200,7 @@ extension TagSettingsPresenter {
             return
         }
 
-        if ruuviTag.isCloud && settings.cloudModeEnabled,
+        if ruuviTag.isCloud,
             let macId = ruuviTag.macId {
             alertHandler.processNetwork(record: lastMeasurement,
                                         trigger: false,
@@ -1248,6 +1286,11 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 let isOn = viewModel.isMovementAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
                 viewModel.movementAlertState.value = newValue
+            case .cloudConnection:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isCloudConnectionAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.cloudConnectionAlertState.value = newValue
             default:
                 break
             }
@@ -1554,6 +1597,7 @@ extension TagSettingsPresenter {
         if currentState != isOn {
             if isOn {
                 alertService.register(type: type, ruuviTag: ruuviTag)
+                processAlerts()
             } else {
                 alertService.unregister(type: type, ruuviTag: ruuviTag)
             }
@@ -1568,7 +1612,50 @@ extension TagSettingsPresenter {
             for: ruuviTag
         )
     }
+}
 
+// MARK: - CLOUD CONNECTION
+extension TagSettingsPresenter {
+    private func setCloudConnectionAlertState(isOn: Bool) {
+        viewModel.isCloudConnectionAlertOn.value = isOn
+        let unseenDuration = viewModel.cloudConnectionAlertUnseenDuration.value ?? 900
+
+        let type: AlertType = .cloudConnection(unseenDuration: unseenDuration)
+        let currentState = alertService.isOn(type: type, for: ruuviTag)
+        if currentState != isOn {
+            if isOn {
+                alertService.register(type: type, ruuviTag: ruuviTag)
+            } else {
+                alertService.unregister(type: type, ruuviTag: ruuviTag)
+            }
+            alertService.unmute(type: type, for: ruuviTag)
+        }
+    }
+
+    private func setCloudConnectionAlertDelay(unseenDuration: Int) {
+        let debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.cloudConnectionAlertUnseenDuration.value = Double(unseenDuration)
+
+        debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setCloudConnection(
+                unseenDuration: Double(unseenDuration),
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setCloudConnectionAlertDescription(description: String?) {
+        viewModel.cloudConnectionAlertDescription.value = description
+        alertService.setCloudConnection(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+extension TagSettingsPresenter {
     private func notifyRestartAdvertisementDaemon() {
             // Notify daemon to restart
         NotificationCenter
@@ -1590,8 +1677,7 @@ extension TagSettingsPresenter {
     func checkAndUpdateFirmwareVersion() {
         guard let luid = ruuviTag.luid,
               ruuviTag.firmwareVersion == nil ||
-                !ruuviTag.firmwareVersion.hasText() &&
-                settings.firmwareVersion(for: luid) == nil else {
+                !ruuviTag.firmwareVersion.hasText() else {
             return
         }
 

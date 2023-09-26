@@ -416,6 +416,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Недопустимый MAC-адрес";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Ошибка сохранения данных";
 "UserApiError.ER_SUB_NO_USER" = "Нет пользователя";
+"UserApiError.ER_THROTTLED" = "Слишком много запросов";
 "OffsetCorrection.CalibrationDescription.text" = "Обычно нет необходимости калибровать датчики.\n\nОднако, если вы продивнутый пользователь и хотите вручную откалибровать настроенные на заводе сенсоры, это возможно.\n\nПодсказки и информация доступны на сайте ruuvi.com/support";
 "OffsetCorrection.Dialog.Calibration.ClearConfirm" = "Сбросить настройки калибровки?";
 "OffsetCorrection.Dialog.Calibration.Title" = "Настройка калибровок";
@@ -544,7 +545,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from the Ruuvi Cloud. A Ruuvi Gateway router is required.";
 "settings_appearance" = "Внешний вид";
 "app_theme" = "Тема приложения";
-"follow_system_theme" = "Как в системе";
+"follow_system_theme" = "Системная тема";
 "dark_theme" = "Темная тема";
 "light_theme" = "Светлая тема";
 "Settings.Temperature.Resolution.title" = "Temperature Resolution";

@@ -43,7 +43,8 @@ public protocol RuuviServiceFactory {
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
-        ruuviAlertService: RuuviServiceAlert
+        ruuviAlertService: RuuviServiceAlert,
+        ruuviAppSettingsService: RuuviServiceAppSettings
     ) -> RuuviServiceCloudSync
 
     // swiftlint:disable:next function_parameter_count
@@ -118,7 +119,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
-        ruuviAlertService: RuuviServiceAlert
+        ruuviAlertService: RuuviServiceAlert,
+        ruuviAppSettingsService: RuuviServiceAppSettings
     ) -> RuuviServiceCloudSync {
         return RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
@@ -129,7 +131,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             ruuviLocalImages: ruuviLocalImages,
             ruuviRepository: ruuviRepository,
             ruuviLocalIDs: ruuviLocalIDs,
-            ruuviAlertService: ruuviAlertService
+            ruuviAlertService: ruuviAlertService,
+            ruuviAppSettingsService: ruuviAppSettingsService
         )
     }
 

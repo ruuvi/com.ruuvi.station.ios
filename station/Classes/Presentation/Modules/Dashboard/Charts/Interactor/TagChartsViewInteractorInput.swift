@@ -18,5 +18,5 @@ protocol TagChartsViewInteractorInput: AnyObject {
     func stopSyncRecords() -> Future<Bool, RUError>
     func isSyncingRecords() -> Bool
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
-    func updateChartHistoryDurationSetting(with day: Int)
+    func updateChartShowMinMaxAvgSetting(with show: Bool)
 }

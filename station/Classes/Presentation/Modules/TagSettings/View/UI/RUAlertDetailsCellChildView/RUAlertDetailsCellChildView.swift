@@ -22,7 +22,7 @@ class RUAlertDetailsCellChildView: UIView {
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
-        iv.image = UIImage(systemName: "pencil")
+        iv.image = RuuviAssets.editPenImage
         iv.tintColor = RuuviColor.ruuviTintColor
         iv.contentMode = .scaleAspectFit
         return iv
@@ -59,7 +59,7 @@ extension RUAlertDetailsCellChildView {
                          bottom: nil,
                          trailing: trailingAnchor,
                          padding: .init(top: 0, left: 16, bottom: 0, right: 16),
-                         size: .init(width: 20, height: 20))
+                         size: .init(width: 16, height: 16))
         imageView.centerYInSuperview()
 
         isUserInteractionEnabled = true

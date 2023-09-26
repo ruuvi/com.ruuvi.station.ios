@@ -20,8 +20,7 @@ extension DashboardInteractor: DashboardInteractorInput {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor) {
         guard let luid = ruuviTag.luid,
               ruuviTag.firmwareVersion == nil ||
-                !ruuviTag.firmwareVersion.hasText() &&
-                settings.firmwareVersion(for: luid) == nil else {
+                !ruuviTag.firmwareVersion.hasText() else {
             // Trigger the method after 2 seconds so that sensor settings page can
             // be set and start observing for owner check notification. 
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2),
@@ -77,18 +76,5 @@ extension DashboardInteractor: DashboardInteractorInput {
                     .with(owner: owner)
                     .with(isOwner: owner == sSelf.ruuviUser.email))
             })
-    }
-}
-
-// TODO: - Deprecate this after version v1.3.2
-extension DashboardInteractor {
-    func migrateFWVersionFromDefaults(for ruuviTags: [RuuviTagSensor]) {
-        for ruuviTag in ruuviTags {
-            if let luid = ruuviTag.luid,
-               let fwVersion = settings.firmwareVersion(for: luid) {
-                ruuviPool.update(ruuviTag.with(firmwareVersion: fwVersion))
-                settings.setFirmwareVersion(for: luid, value: nil)
-            }
-        }
     }
 }

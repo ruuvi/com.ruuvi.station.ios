@@ -30,6 +30,7 @@ class TagSettingsBasicCell: UITableViewCell {
 
     private lazy var iconView: UIImageView = {
         let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
         return iv
     }()
 
@@ -69,7 +70,8 @@ class TagSettingsBasicCell: UITableViewCell {
                         leading: stack.trailingAnchor,
                         bottom: nil,
                         trailing: safeRightAnchor,
-                        padding: .init(top: 0, left: 8, bottom: 0, right: 12))
+                        padding: .init(top: 0, left: 8, bottom: 0, right: 12),
+                        size: .init(width: 16, height: 16))
         iconView.centerYInSuperview()
         iconHiddenWidthConstraints = [
             iconView.widthAnchor.constraint(equalToConstant: 0),
@@ -100,7 +102,7 @@ class TagSettingsBasicCell: UITableViewCell {
     func setAccessory(type: TagSettingsBasicAccessory) {
         switch type {
         case .pencil:
-            iconView.image = UIImage(systemName: "pencil")
+            iconView.image = RuuviAssets.editPenImage
             iconView.tintColor = RuuviColor.ruuviTintColor
             iconHiddenWidthConstraints.forEach({ anchor in
                 anchor.isActive = false

@@ -4,7 +4,6 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 import RuuviService
-import GestureInstructions
 
 class CardsViewController: UIViewController {
 
@@ -23,7 +22,11 @@ class CardsViewController: UIViewController {
     }
     var scrollIndex: Int = 0
 
-    private var currentPage: Int = 0
+    private var currentPage: Int = 0 {
+        didSet {
+            setArrowButtonsVisibility(with: currentPage)
+        }
+    }
     private static let reuseIdentifier: String = "reuseIdentifier"
 
     func cell(collectionView: UICollectionView,
@@ -116,6 +119,43 @@ class CardsViewController: UIViewController {
     }()
 
     // BODY
+    private lazy var cardLeftArrowButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "chevron.left")
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(cardLeftArrowButtonDidTap)
+            )
+        )
+        return button
+    }()
+
+    private lazy var cardRightArrowButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "chevron.right")
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(cardRightArrowButtonDidTap)
+            )
+        )
+        return button
+    }()
+
+    lazy var ruuviTagNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.extraBold, size: 20)
+        return label
+    }()
+
     private lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero,
                                   collectionViewLayout: createLayout())
@@ -134,7 +174,10 @@ class CardsViewController: UIViewController {
     private var currentVisibleItem: CardsViewModel? {
         didSet {
             bindCurrentVisibleItem()
-            updateCardBackgroundImage(with: currentVisibleItem?.background.value)
+            updateCardInfo(
+                with: currentVisibleItem?.name.value,
+                image: currentVisibleItem?.background.value
+            )
             updateTopActionButtonVisibility()
         }
     }
@@ -269,8 +312,43 @@ extension CardsViewController {
     }
 
     fileprivate func setUpContentView() {
+        let swipeToolbarView  = UIView(color: .clear)
+        // Arrow buttons should stay above of collection view
+        swipeToolbarView.addSubview(cardLeftArrowButton)
+        cardLeftArrowButton.anchor(
+            top: swipeToolbarView.topAnchor,
+            leading: swipeToolbarView.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 6, left: 4, bottom: 0, right: 0)
+        )
+
+        swipeToolbarView.addSubview(cardRightArrowButton)
+        cardRightArrowButton.anchor(
+            top: swipeToolbarView.topAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: swipeToolbarView.trailingAnchor,
+            padding: .init(top: 4, left: 0, bottom: 0, right: 4)
+        )
+
+        swipeToolbarView.addSubview(ruuviTagNameLabel)
+        ruuviTagNameLabel.anchor(
+            top: swipeToolbarView.topAnchor,
+            leading: cardLeftArrowButton.trailingAnchor,
+            bottom: swipeToolbarView.bottomAnchor,
+            trailing: cardRightArrowButton.leadingAnchor,
+            padding: .init(top: 8, left: 8, bottom: 6, right: 8)
+        )
+
+        view.addSubview(swipeToolbarView)
+        swipeToolbarView.anchor(top: view.safeTopAnchor,
+                                leading: view.safeLeftAnchor,
+                                bottom: nil,
+                                trailing: view.safeRightAnchor)
+
         view.addSubview(collectionView)
-        collectionView.anchor(top: view.safeTopAnchor,
+        collectionView.anchor(top: swipeToolbarView.bottomAnchor,
                               leading: view.safeLeftAnchor,
                               bottom: view.safeBottomAnchor,
                               trailing: view.safeRightAnchor)
@@ -301,7 +379,6 @@ extension CardsViewController {
     }
 
     private func configureGestureViews() {
-        configureGestureInstructor()
         configureRestartAnimationsOnAppDidBecomeActive()
     }
 
@@ -314,10 +391,6 @@ extension CardsViewController {
                 self?.restartAnimations()
         }
     }
-
-    private func configureGestureInstructor() {
-        GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
-    }
 }
 
 extension CardsViewController: UICollectionViewDelegate {
@@ -326,12 +399,7 @@ extension CardsViewController: UICollectionViewDelegate {
         let yPoint = scrollView.frame.size.height / 2
         let center = CGPoint(x: xPoint, y: yPoint)
         if let currentIndexPath = collectionView.indexPathForItem(at: center) {
-            currentPage = currentIndexPath.row
-            let currentItem = viewModels[currentPage]
-            self.currentVisibleItem = currentItem
-            restartAnimations()
-            output.viewDidScroll(to: currentItem)
-            output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)
+            performPostScrollActions(with: currentIndexPath.row)
         }
     }
 }
@@ -395,7 +463,7 @@ extension CardsViewController {
         collectionView.isHidden = true
         module.willMove(toParent: self)
         addChild(module)
-        view.addSubview(module.view)
+        view.insertSubview(module.view, aboveSubview: collectionView)
         module.view.match(view: collectionView)
         module.didMove(toParent: self)
         isChartsShowing = true
@@ -419,6 +487,22 @@ extension CardsViewController {
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
         output.viewDidTriggerSettings(for: viewModel)
+    }
+
+    @objc fileprivate func cardLeftArrowButtonDidTap() {
+        guard viewModels.count > 0 else { return }
+        let scrollToPageIndex = currentPage - 1
+        if scrollToPageIndex >= 0 && scrollToPageIndex < viewModels.count {
+            performPostScrollActions(with: scrollToPageIndex, scroll: true)
+        }
+    }
+
+    @objc fileprivate func cardRightArrowButtonDidTap() {
+        guard viewModels.count > 0 else { return }
+        let scrollToPageIndex = currentPage + 1
+        if scrollToPageIndex >= 0 && scrollToPageIndex < viewModels.count {
+            performPostScrollActions(with: scrollToPageIndex, scroll: true)
+        }
     }
 }
 
@@ -449,7 +533,7 @@ extension CardsViewController: CardsViewInput {
     func changeCardBackground(of viewModel: CardsViewModel,
                               to image: UIImage?) {
         if viewModel == currentVisibleItem {
-            updateCardBackgroundImage(with: image)
+            updateCardInfo(with: viewModel.name.value, image: image)
         }
     }
 
@@ -482,10 +566,6 @@ extension CardsViewController: CardsViewInput {
         present(alertVC, animated: true)
     }
 
-    func showSwipeLeftRightHint() {
-        gestureInstructor.show(.swipeRight, after: 0.1)
-    }
-
     func scroll(to index: Int) {
         guard viewModels.count > 0,
               index < viewModels.count else {
@@ -493,6 +573,7 @@ extension CardsViewController: CardsViewInput {
         }
         let viewModel = viewModels[index]
         currentVisibleItem = viewModel
+        currentPage = index
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
             guard let sSelf = self else { return }
             sSelf.collectionView.scrollTo(index: index, animated: false)
@@ -599,6 +680,10 @@ extension CardsViewController {
             return
         }
 
+        view.bind(currentVisibleItem.name) { [weak self] (_, name) in
+            self?.updateCardInfo(with: name, image: currentVisibleItem.background.value)
+        }
+
         view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] (_, _) in
             self?.restartAnimations()
         }
@@ -642,7 +727,8 @@ extension CardsViewController {
 }
 
 extension CardsViewController {
-    private func updateCardBackgroundImage(with image: UIImage?) {
+    private func updateCardInfo(with name: String?, image: UIImage?) {
+        ruuviTagNameLabel.text = name
         cardBackgroundView.setBackgroundImage(with: image)
     }
 
@@ -722,6 +808,47 @@ extension CardsViewController {
             // Hide alert bell for virtual tags
             alertButton.isHidden = true
             alertButtonHidden.isUserInteractionEnabled = false
+        }
+    }
+
+    private func setArrowButtonsVisibility(hidden: Bool, animated: Bool) {
+        if hidden {
+            cardLeftArrowButton.fadeOut(animated: animated)
+            cardRightArrowButton.fadeOut(animated: animated)
+        } else {
+            cardLeftArrowButton.fadeIn(animated: animated)
+            cardRightArrowButton.fadeIn(animated: animated)
+        }
+    }
+
+    private func setArrowButtonsVisibility(with index: Int) {
+        if index == 0 {
+            cardLeftArrowButton.fadeOut()
+        } else {
+            cardLeftArrowButton.fadeIn()
+        }
+
+        if index == viewModels.count - 1 {
+            cardRightArrowButton.fadeOut()
+        } else {
+            cardRightArrowButton.fadeIn()
+        }
+    }
+
+    private func performPostScrollActions(with index: Int, scroll: Bool = false) {
+        let currentItem = viewModels[index]
+        if isChartsShowing {
+            output.viewDidTriggerNavigateChart(to: currentItem)
+        } else {
+            currentPage = index
+            self.currentVisibleItem = currentItem
+            restartAnimations()
+            output.viewDidScroll(to: currentItem)
+            output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)
+
+            if scroll {
+                collectionView.scrollTo(index: index, animated: true)
+            }
         }
     }
 }
