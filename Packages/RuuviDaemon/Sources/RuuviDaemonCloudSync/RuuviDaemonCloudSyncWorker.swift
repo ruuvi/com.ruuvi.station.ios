@@ -2,14 +2,12 @@ import Foundation
 import RuuviLocal
 import RuuviService
 import RuuviDaemon
-import Network
 
 class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSettings: RuuviLocalSettings
     private var localSyncState: RuuviLocalSyncState
     private let cloudSyncService: RuuviServiceCloudSync
     private var pullTimer: Timer?
-    private let monitor = NWPathMonitor()
 
     init(
         localSettings: RuuviLocalSettings,
@@ -35,8 +33,6 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
             RunLoop.current.add(timer, forMode: .common)
             sSelf.pullTimer = timer
         }
-
-        self.startMonitoringNetwork()
     }
 
     func stop() {
@@ -53,18 +49,6 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     @objc private func stopDaemon() {
         pullTimer?.invalidate()
         stopWork()
-    }
-
-    private func startMonitoringNetwork() {
-        guard monitor.pathUpdateHandler == nil else { return }
-
-        monitor.pathUpdateHandler = { [weak self] update in
-            if update.status == .satisfied {
-                self?.refreshImmediately()
-            }
-        }
-
-        monitor.start(queue: DispatchQueue(label: "ConnectionChangeMonitor"))
     }
 
     @objc

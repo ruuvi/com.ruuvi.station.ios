@@ -1459,10 +1459,6 @@ extension DashboardPresenter {
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
-        // Sync with cloud if cloud mode is turned on
-        if ruuviUser.isAuthorized && settings.cloudModeEnabled {
-            cloudSyncDaemon.refreshLatestRecord()
-        }
         // Restart observing
         restartObserveRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
