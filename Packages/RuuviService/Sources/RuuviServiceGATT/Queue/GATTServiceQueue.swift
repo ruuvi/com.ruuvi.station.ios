@@ -71,6 +71,9 @@ public final class GATTServiceQueue: GATTService {
         let promise = Promise<Bool, RuuviServiceError>()
         if isSyncingLogs(with: uuid) {
             if let operation = queue.operations.filter({ ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }).first {
+                if let queueOperation = operation as? RuuviTagReadLogsOperation {
+                    queueOperation.stopSync()
+                }
                 operation.cancel()
                 promise.succeed(value: operation.isCancelled)
             }
