@@ -576,6 +576,7 @@ RuuviTag on valmis käyttöön!";
 "day_10" = "10 päivää";
 "day_x" = "%0.f päivää";
 "more" = "Lisää...";
+"all" = "All";
 "longer_history_title" = "Pidempi historia";
 "longer_history_message" = "Ruuvi Station -mobiilisovellus tukee maksimissaan 10 päivän historiaa. Ruuvi Cloud -tilaajat voivat tarkastella historiatietoja jopa 2 vuoden ajalta web-sovelluksessa osoitteessa ruuvi.com/fi/station (vaatii Ruuvi Gateway -reitittimen).";
 "reading_history_x" = "Bluetooth-lataus: %0.f";

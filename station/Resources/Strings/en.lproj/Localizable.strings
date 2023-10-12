@@ -576,6 +576,7 @@ Your RuuviTag sensor is ready for use!";
 "day_10" = "10 days";
 "day_x" = "%0.f days";
 "more" = "More...";
+"all" = "All";
 "longer_history_title" = "Longer history";
 "longer_history_message" = "Ruuvi Station mobile app supports maximum 10 days of history. Ruuvi Cloud subscribers are able to view up to 2 years of historical data using web app at ruuvi.com/station (requires Ruuvi Gateway router).";
 "reading_history_x" = "Reading Bluetooth: %0.f";

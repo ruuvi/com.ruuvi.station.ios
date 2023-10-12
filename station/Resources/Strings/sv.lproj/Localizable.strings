@@ -576,6 +576,7 @@ RuuviTag-sensorn är redo att användas!";
 "day_10" = "10 dagar";
 "day_x" = "%0.f dagar";
 "more" = "Mer...";
+"all" = "All";
 "longer_history_title" = "Längre historik";
 "longer_history_message" = "Ruuvi Station mobilapp stöder högst 10 dagars historik. Ruuvi Cloud-prenumeranter kan se upp till 2 års historisk data med hjälp av webbappen på ruuvi.com/station (kräver Ruuvi Gateway-router).";
 "reading_history_x" = "Läser Bluetooth: %0.f";

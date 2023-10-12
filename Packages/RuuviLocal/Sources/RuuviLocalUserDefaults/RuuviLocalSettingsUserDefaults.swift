@@ -383,6 +383,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.chartShowAll", defaultValue: true)
+    var chartShowAll: Bool
+
     @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
     var experimentalFeaturesEnabled: Bool
 

@@ -71,6 +71,7 @@ public protocol RuuviLocalSettings {
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
     var chartStatsOn: Bool { get set }
+    var chartShowAll: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }
