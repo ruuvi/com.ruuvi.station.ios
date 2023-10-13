@@ -1,18 +1,18 @@
 import UIKit
 extension ShareViewController {
     enum Section: Int {
-        case description = 0
-        case addFriend
+        case addFriend = 0
         case sharedEmails
+        case description
 
         init(value: Int) {
             switch value {
             case 0:
-                self = .description
-            case 1:
                 self = .addFriend
-            case 2:
+            case 1:
                 self = .sharedEmails
+            case 2:
+                self = .description
             default:
                 fatalError()
             }
