@@ -575,6 +575,7 @@ RuuviTag est prêt à être utilisé !";
 "day_10" = "10 jours";
 "day_x" = "%0.f jours";
 "more" = "Plus...";
+"all" = "All";
 "longer_history_title" = "Une histoire plus longue";
 "longer_history_message" = "L'application mobile Ruuvi Station prend en charge un maximum de 10 jours d'historique. Les abonnés à Ruuvi Cloud peuvent consulter jusqu'à 2 ans d'historique en utilisant l'application web à ruuvi.com/station (nécessite le routeur Ruuvi Gateway).";
 "reading_history_x" = "Bluetooth sync: %0.f";
