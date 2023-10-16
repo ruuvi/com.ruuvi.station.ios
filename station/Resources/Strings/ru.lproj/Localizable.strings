@@ -575,7 +575,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "day_9" = "9 дней";
 "day_10" = "10 дней";
 "day_x" = "%0.f days";
-"more" = "More...";
+"more" = "Больше...";
+"all" = "All";
 "longer_history_title" = "Longer history";
 "longer_history_message" = "Ruuvi Station mobile app supports maximum 10 days of history. Ruuvi Cloud subscribers are able to view up to 2 years of historical data using web app at ruuvi.com/station (requires Ruuvi Gateway router).";
 "reading_history_x" = "Bluetooth sync: %0.f";
@@ -671,7 +672,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "lets_do_it" = "Let's Sign In";
 "enter_code" = "Enter Code";
 "dashboard_no_sensors_message" = "Seems that you don't have any Ruuvi sensors added yet.";
-"add_your_first_sensor" = "Add Your First Sensor";
+"dashboard_no_sensors_message_signed_out" = "You are not signed in.\n\nIf you have an account and have already added Ruuvi sensors to it, they will automatically synchronise with Ruuvi Station mobile app when you sign in.";
+"add_a_sensor" = "Add a Sensor";
 "changelog" = "(changelog)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "chart_stat_min" = "Min";

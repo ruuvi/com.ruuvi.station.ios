@@ -507,7 +507,6 @@ extension TagSettingsPresenter {
             let isCl = isCloudAlertsAvailable?.value ?? false
             let isCo = isConnected ?? false
             observer.viewModel.isAlertsEnabled.value = isCl || isCo
-            self.processAlerts()
         }
 
         let isConnected = viewModel.isConnected

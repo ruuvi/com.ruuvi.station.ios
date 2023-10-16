@@ -575,6 +575,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "day_10" = "10 Tage";
 "day_x" = "%0.f Tage";
 "more" = "Mehr...";
+"all" = "All";
 "longer_history_title" = "Längere Geschichte";
 "longer_history_message" = "Die Ruuvi Station Mobile App unterstützt maximal 10 Tage Historie. Ruuvi-Cloud-Abonnenten können mit der Web-App unter ruuvi.com/station (erfordert Ruuvi-Gateway-Router) bis zu 2 Jahre historische Daten anzeigen.";
 "reading_history_x" = "Bluetooth-Sync: %0.f";
@@ -676,7 +677,8 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "lets_do_it" = "Gehen Sie zum Anmelden";
 "enter_code" = "Code eingeben";
 "dashboard_no_sensors_message" = "Scheint, als hätten Sie noch keine Ruuvi-Sensoren hinzugefügt.";
-"add_your_first_sensor" = "Fügen Sie Ihren ersten Sensor hinzu";
+"dashboard_no_sensors_message_signed_out" = "You are not signed in.\n\nIf you have an account and have already added Ruuvi sensors to it, they will automatically synchronise with Ruuvi Station mobile app when you sign in.";
+"add_a_sensor" = "Add a Sensor";
 "changelog" = "(änderungsprotokoll)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "chart_stat_min" = "Min";

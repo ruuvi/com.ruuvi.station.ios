@@ -132,7 +132,6 @@ class TagChartsView: LineChartView {
     private func reloadData() {
         data?.notifyDataChanged()
         notifyDataSetChanged()
-        invalidate()
     }
 }
 
@@ -185,7 +184,6 @@ extension TagChartsView {
             axis: leftAxis,
             transformer: getTransformer(forAxis: .left)
         )
-        leftAxis.setLabelCount(5, force: false)
     }
 
     func setXAxisRenderer() {
@@ -196,7 +194,16 @@ extension TagChartsView {
             transformer: getTransformer(forAxis: .left)
         )
         xAxisRenderer = axisRenderer
-        xAxis.setLabelCount(5, force: false)
+
+        if !settings.chartShowAll {
+            let from = Calendar.autoupdatingCurrent.date(
+                byAdding: .hour,
+                value: -settings.chartDurationHours,
+                to: Date()
+            ) ?? Date.distantFuture
+            xAxis.axisMinimum = from.timeIntervalSince1970
+            xAxis.axisMaximum = Date().timeIntervalSince1970
+        }
     }
 
     func resetCustomAxisMinMax() {

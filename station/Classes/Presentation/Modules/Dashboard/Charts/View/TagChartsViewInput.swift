@@ -8,6 +8,7 @@ protocol TagChartsViewInput: ViewInput {
     var viewModel: TagChartsViewModel { get set }
     var historyLengthInHours: Int { get set }
     var showChartStat: Bool { get set }
+    var showChartAll: Bool { get set }
     var viewIsVisible: Bool { get }
     func createChartViews(from: [MeasurementType])
     func clearChartHistory()
