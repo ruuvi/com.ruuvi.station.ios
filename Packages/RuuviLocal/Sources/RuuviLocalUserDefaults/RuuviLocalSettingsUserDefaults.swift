@@ -5,6 +5,9 @@ import RuuviLocal
 // swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
+    @UserDefault("SettingsUserDefaults.signedInAtleastOnce", defaultValue: false)
+    var signedInAtleastOnce: Bool
+
     @UserDefault("SettingsUserDefaults.isSyncing", defaultValue: false)
     var isSyncing: Bool
 

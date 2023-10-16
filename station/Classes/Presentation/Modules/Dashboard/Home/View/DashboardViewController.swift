@@ -36,6 +36,12 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    var userSignedInOnce: Bool = false {
+        didSet {
+            noSensorView.userSignedInOnce = userSignedInOnce
+        }
+    }
+
     private func cell(collectionView: UICollectionView,
                       indexPath: IndexPath,
                       viewModel: CardsViewModel) -> UICollectionViewCell? {
@@ -72,6 +78,7 @@ class DashboardViewController: UIViewController {
         view.layer.cornerRadius = 12
         view.clipsToBounds = true
         view.delegate = self
+        view.userSignedInOnce = userSignedInOnce
         return view
     }()
 
@@ -640,6 +647,7 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showNoSensorsAddedMessage(show: Bool) {
+        noSensorView.updateView(userSignInOnce: userSignedInOnce)
         noSensorView.isHidden = !show
         collectionView.isHidden = show
     }
@@ -725,6 +733,10 @@ extension DashboardViewController: DashboardCellDelegate {
 }
 
 extension DashboardViewController: NoSensorViewDelegate {
+    func didTapSignInButton(sender: NoSensorView) {
+        output.viewDidTriggerSignIn()
+    }
+
     func didTapAddSensorButton(sender: NoSensorView) {
         output.viewDidTriggerAddSensors()
     }

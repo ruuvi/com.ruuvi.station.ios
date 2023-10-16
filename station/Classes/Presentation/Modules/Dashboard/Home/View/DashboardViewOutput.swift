@@ -5,6 +5,7 @@ protocol DashboardViewOutput {
     func viewDidLoad()
     func viewWillAppear()
     func viewWillDisappear()
+    func viewDidTriggerSignIn()
     func viewDidTriggerAddSensors()
     func viewDidTriggerMenu()
     func viewDidTriggerBuySensors()
