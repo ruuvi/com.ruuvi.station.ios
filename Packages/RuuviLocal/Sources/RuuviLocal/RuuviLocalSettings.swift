@@ -41,6 +41,7 @@ public enum AppearanceTypeKey: String {
 }
 
 public protocol RuuviLocalSettings {
+    var signedInAtleastOnce: Bool { get set }
     /// When syncing for the first time (after sign in) or extensive changes
     /// like cloud sync
     var isSyncing: Bool { get set }

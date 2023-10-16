@@ -187,6 +187,10 @@ extension DashboardPresenter: DashboardViewOutput {
         router.openMenu(output: self)
     }
 
+    func viewDidTriggerSignIn() {
+        router.openSignIn(output: self)
+    }
+
     func viewDidTriggerAddSensors() {
         router.openDiscover(delegate: self)
     }
@@ -559,6 +563,7 @@ extension DashboardPresenter {
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
 
+        view?.userSignedInOnce = settings.signedInAtleastOnce
         view?.dashboardType = settings.dashboardType
         view?.dashboardTapActionType = settings.dashboardTapActionType
 
