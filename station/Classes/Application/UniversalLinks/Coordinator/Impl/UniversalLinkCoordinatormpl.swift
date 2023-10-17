@@ -4,11 +4,14 @@ import RuuviLocal
 
 enum UniversalLinkType: String {
     case verify = "/verify"
+    case dashboard = "/mobile"
 
     var handlerType: UIViewController.Type {
         switch self {
         case .verify:
             return SignInViewController.self
+        case .dashboard:
+            return DashboardViewController.self
         }
     }
 }
@@ -56,6 +59,8 @@ extension UniversalLinkCoordinatorImpl {
                 switch path {
                 case .verify:
                     self?.openVerify(from: topViewController)
+                case .dashboard:
+                    self?.openDashboard(from: topViewController)
                 }
             }
         }
@@ -72,6 +77,11 @@ extension UniversalLinkCoordinatorImpl {
             return
         }
         router.openSignInVerify(with: token, from: topViewController)
+    }
+
+    private func openDashboard(from topViewController: UIViewController) {
+        // No action needed here since root view controller is dashboard, and
+        // we will be opening dashboard anyway on deeplink tap.
     }
 
     private func postNotification(with path: UniversalLinkType) {
