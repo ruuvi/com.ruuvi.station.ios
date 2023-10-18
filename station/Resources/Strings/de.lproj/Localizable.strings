@@ -631,6 +631,7 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "Widgets.Sensor.Type.title" = "Ausgewählter Sensortyp";
 "Settings.SectionHeader.General.title" = "ALLGEMEINES";
 "Settings.SectionHeader.Application.title" = "ANWENDUNG";
+"empty_chart_message" = "Im gewählten Verlaufsfenster sind keine Daten verfügbar.";
 "onboarding_measure_your_world" = "Measure Your World";
 "onboarding_with_ruuvi_sensors" = "Lernen Sie Ihre Ruuvi Station -App kennen.";
 "onboarding_swipe_to_continue" = "Wischen Sie zum Fortfahren →";
@@ -677,8 +678,8 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "lets_do_it" = "Gehen Sie zum Anmelden";
 "enter_code" = "Code eingeben";
 "dashboard_no_sensors_message" = "Scheint, als hätten Sie noch keine Ruuvi-Sensoren hinzugefügt.";
-"dashboard_no_sensors_message_signed_out" = "You are not signed in.\n\nIf you have an account and have already added Ruuvi sensors to it, they will automatically synchronise with Ruuvi Station mobile app when you sign in.";
-"add_a_sensor" = "Add a Sensor";
+"dashboard_no_sensors_message_signed_out" = "Sie sind nicht angemeldet.\n\nWenn Sie ein Konto haben und diesem bereits Ruuvi-Sensoren hinzugefügt haben, werden diese automatisch mit der mobilen Ruuvi Station-App synchronisiert, wenn Sie sich anmelden.";
+"add_a_sensor" = "Fügen Sie einen Sensor hinzu";
 "changelog" = "(änderungsprotokoll)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "chart_stat_min" = "Min";

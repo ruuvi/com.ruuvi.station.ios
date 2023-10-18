@@ -66,7 +66,7 @@ class TagChartsViewController: UIViewController {
     // Body
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
-        label.text = "Cards.UpdatedLabel.NoData.message".localized()
+        label.text = "empty_chart_message".localized()
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
