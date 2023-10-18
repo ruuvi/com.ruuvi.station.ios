@@ -626,6 +626,7 @@ Your RuuviTag sensor is ready for use!";
 "Widgets.Sensor.Type.title" = "Selected sensor type";
 "Settings.SectionHeader.General.title" = "GENERAL";
 "Settings.SectionHeader.Application.title" = "APPLICATION";
+"empty_chart_message" = "No data available \nin the selected history window.";
 "onboarding_measure_your_world" = "Measure Your World";
 "onboarding_with_ruuvi_sensors" = "Let's get to know your Ruuvi Station app.";
 "onboarding_swipe_to_continue" = "Swipe to continue →";
