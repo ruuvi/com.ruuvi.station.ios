@@ -157,6 +157,13 @@ extension ShareViewController: ShareViewInput {
             message: "Share.Success.message".localized()
         )
     }
+
+    func showSuccessfullyInvited() {
+        showAlert(
+            title: "share_pending".localized(),
+            message: "share_pending_message".localized()
+        )
+    }
 }
 extension ShareViewController: ShareEmailTableViewCellDelegate {
     func didTapUnshare(for email: String) {

@@ -736,3 +736,5 @@ RuuviTag-sensorn är redo att användas!";
 "chart_stat_hide" = "Dölj min/max/genomsnitt";
 "settings_alert_limit_notification" = "Begränsa varningsmeddelanden";
 "settings_alert_limit_notification_description" = "Utlös Bluetooth-varningsavisering endast en gång i timmen även om varningen återutlöstes.";
+"share_pending" = "Delning pågår";
+"share_pending_message" = "Delat framgångsrikt! Den här e-postadressen är ännu inte kopplad till ett Ruuvi-konto. En inbjudan att skapa ett gratis konto har skickats. När kontot har skapats kommer du att se det i delningslistan.";
