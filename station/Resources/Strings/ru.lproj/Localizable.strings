@@ -736,3 +736,5 @@ If you cannot see the Language option in the settings, make sure that you have a
 "chart_stat_hide" = "Hide min/max/avg";
 "settings_alert_limit_notification" = "Limit alert notifications";
 "settings_alert_limit_notification_description" = "Trigger Bluetooth alert notification only once per hour even if alert was retriggered.";
+"share_pending" = "Share pending";
+"share_pending_message" = "Shared successfully! This email address isn't linked to a Ruuvi account yet. An invite to create a free account has been sent. Once created, you'll see it in the sharee listing.";

@@ -737,4 +737,6 @@ RuuviTag est prêt à être utilisé !";
 "chart_stat_hide" = "Masquer min/max/moy";
 "settings_alert_limit_notification" = "Limiter les notifications d'alerte";
 "settings_alert_limit_notification_description" = "Déclenchez la notification d'alerte Bluetooth une seule fois par heure, même si l'alerte a été redéclenchée.";
+"share_pending" = "Partage en attente";
+"share_pending_message" = "Partagé avec succès ! Cette adresse e-mail n'est pas encore liée à un compte Ruuvi. Une invitation pour créer un compte gratuit a été envoyée. Une fois créé, vous le verrez dans la liste des partages.";
 

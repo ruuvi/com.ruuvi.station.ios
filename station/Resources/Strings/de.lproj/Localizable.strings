@@ -741,3 +741,5 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "chart_stat_hide" = "Min./Max./Durchschnitt ausblenden";
 "settings_alert_limit_notification" = "Beschränken Sie Warnmeldungen";
 "settings_alert_limit_notification_description" = "Lösen Sie die Bluetooth-Benachrichtigung nur einmal pro Stunde aus, auch wenn die Warnung erneut ausgelöst wurde.";
+"share_pending" = "Freigabe ausstehend";
+"share_pending_message" = "Erfolgreich geteilt! Diese E-Mail-Adresse ist noch nicht mit einem Ruuvi-Konto verknüpft. Eine Einladung zur Erstellung eines kostenlosen Kontos wurde gesendet. Nach der Erstellung werden Sie es in der Freigabeliste sehen.";

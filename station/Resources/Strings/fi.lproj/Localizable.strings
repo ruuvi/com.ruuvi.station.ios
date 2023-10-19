@@ -736,3 +736,5 @@ RuuviTag on valmis käyttöön!";
 "chart_stat_hide" = "Piilota min/maks/ka";
 "settings_alert_limit_notification" = "Rajoita hälytysilmoituksia";
 "settings_alert_limit_notification_description" = "Näytä Bluetooth-hälytysilmoitus vain kerran tunnissa, vaikka hälytys laukeaisi useammin.";
+"share_pending" = "Jakamista odotetaan";
+"share_pending_message" = "Jako onnistui! Tämä sähköpostiosoite ei ole vielä liitetty Ruuvi-tiliin. Kutsu ilmaisen tilin luomiseen on lähetetty. Kun tili on luotu, näet sen jakolistanäkymässä.";

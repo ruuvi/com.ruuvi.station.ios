@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import RuuviOntology
+import RuuviCloud
 
 public protocol RuuviServiceOwnership {
     @discardableResult
@@ -22,7 +23,7 @@ public protocol RuuviServiceOwnership {
     func unclaim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
-    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier?, RuuviServiceError>
+    func share(macId: MACIdentifier, with email: String) -> Future<ShareSensorResponse, RuuviServiceError>
 
     @discardableResult
     func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviServiceError>

@@ -770,8 +770,8 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    public func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier?, RuuviCloudError> {
-        let promise = Promise<MACIdentifier?, RuuviCloudError>()
+    public func share(macId: MACIdentifier, with email: String) -> Future<ShareSensorResponse, RuuviCloudError> {
+        let promise = Promise<ShareSensorResponse, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
@@ -779,7 +779,11 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiShareRequest(user: email, sensor: macId.value)
         api.share(request, authorization: apiKey)
             .on(success: { response in
-                promise.succeed(value: response.sensor?.mac)
+                let result = ShareSensorResponse(
+                    macId: response.sensor?.mac,
+                    invited: response.invited
+                )
+                promise.succeed(value: result)
             }, failure: { error in
                 promise.fail(error: .api(error))
             })
