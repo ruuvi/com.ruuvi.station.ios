@@ -696,19 +696,27 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showSensorNameRenameDialog(for viewModel: CardsViewModel) {
+        let defaultName = GlobalHelpers.ruuviTagDefaultName(
+            from: viewModel.mac.value?.mac,
+            luid: viewModel.luid.value?.value
+        )
         let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
                                       message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
             alertTextField.delegate = self
-            alertTextField.text = viewModel.name.value
+            alertTextField.text = (defaultName == viewModel.name.value) ? nil : viewModel.name.value
+            alertTextField.placeholder = defaultName
             self.tagNameTextField = alertTextField
         }
         let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
             guard let self = self else { return }
-            guard let name = self.tagNameTextField.text, !name.isEmpty else { return }
-            self.output.viewDidRenameTag(to: name, viewModel: viewModel)
+            if let name = self.tagNameTextField.text, !name.isEmpty {
+                self.output.viewDidRenameTag(to: name, viewModel: viewModel)
+            } else {
+                self.output.viewDidRenameTag(to: defaultName, viewModel: viewModel)
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
         alert.addAction(action)

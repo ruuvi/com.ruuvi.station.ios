@@ -344,8 +344,7 @@ extension DashboardPresenter: DashboardViewOutput {
             return
         }
 
-        let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
-        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+        ruuviSensorPropertiesService.set(name: name, for: ruuviTag)
             .on(failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
