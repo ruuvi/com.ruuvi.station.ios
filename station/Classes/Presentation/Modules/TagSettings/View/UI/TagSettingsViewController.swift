@@ -3445,19 +3445,27 @@ extension TagSettingsViewController: TagSettingsBackgroundSelectionViewDelegate 
 // MARK: - Sensor name rename dialog
 extension TagSettingsViewController {
     private func showSensorNameRenameDialog(name: String?) {
+        let defaultName = GlobalHelpers.ruuviTagDefaultName(
+            from: self.viewModel?.mac.value,
+            luid: self.viewModel?.uuid.value
+        )
         let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
                                       message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
             alertTextField.delegate = self
-            alertTextField.text = name
+            alertTextField.text = (defaultName == name) ? nil : name
+            alertTextField.placeholder = defaultName
             self.tagNameTextField = alertTextField
         }
         let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
             guard let self = self else { return }
-            guard let name = self.tagNameTextField.text, !name.isEmpty else { return }
-            self.output.viewDidChangeTag(name: name)
+            if let name = self.tagNameTextField.text, !name.isEmpty {
+                self.output.viewDidChangeTag(name: name)
+            } else {
+                self.output.viewDidChangeTag(name: defaultName)
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
         alert.addAction(action)
