@@ -124,7 +124,7 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     }
 
     public func unclaim(
-        _ requestModel: RuuviCloudApiClaimRequest,
+        _ requestModel: RuuviCloudApiUnclaimRequest,
         authorization: String
     ) -> Future<RuuviCloudApiUnclaimResponse, RuuviCloudApiError> {
         return request(endpoint: Routes.unclaim,

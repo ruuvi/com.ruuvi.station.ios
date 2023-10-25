@@ -120,8 +120,12 @@ extension OwnerPresenter {
     }
 
     private func unclaimSensor() {
+        // TODO (Discuss): Update the UI to allow delete cloud history while unclaiming.
         ruuviOwnershipService
-            .unclaim(sensor: ruuviTag)
+            .unclaim(
+                sensor: ruuviTag,
+                removeCloudHistory: false
+            )
             .on(success: { [weak self] _ in
                 self?.router.dismiss()
             }, failure: { [weak self] error in

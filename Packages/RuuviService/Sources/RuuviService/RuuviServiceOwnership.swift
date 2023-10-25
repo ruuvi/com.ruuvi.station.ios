@@ -11,7 +11,10 @@ public protocol RuuviServiceOwnership {
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
-    func remove(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    func remove(
+        sensor: RuuviTagSensor,
+        removeCloudHistory: Bool
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
     func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
@@ -20,7 +23,10 @@ public protocol RuuviServiceOwnership {
     func contest(sensor: RuuviTagSensor, secret: String) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
-    func unclaim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    func unclaim(
+        sensor: RuuviTagSensor,
+        removeCloudHistory: Bool
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
     func share(macId: MACIdentifier, with email: String) -> Future<ShareSensorResponse, RuuviServiceError>

@@ -855,13 +855,19 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    public func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError> {
+    public func unclaim(
+        macId: MACIdentifier,
+        removeCloudHistory: Bool
+    ) -> Future<MACIdentifier, RuuviCloudError> {
         let promise = Promise<MACIdentifier, RuuviCloudError>()
         guard let apiKey = user.apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiClaimRequest(name: nil, sensor: macId.value)
+        let request = RuuviCloudApiUnclaimRequest(
+            sensor: macId.value,
+            deleteData: removeCloudHistory
+        )
         api.unclaim(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: macId)
@@ -1104,7 +1110,7 @@ public final class RuuviCloudPure: RuuviCloud {
         case .unclaim:
             do {
                 let request = try decoder.decode(
-                    RuuviCloudApiClaimRequest.self,
+                    RuuviCloudApiUnclaimRequest.self,
                     from: requestBody
                 )
 

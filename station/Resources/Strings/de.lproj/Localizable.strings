@@ -743,3 +743,10 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "settings_alert_limit_notification_description" = "Lösen Sie die Bluetooth-Benachrichtigung nur einmal pro Stunde aus, auch wenn die Warnung erneut ausgelöst wurde.";
 "share_pending" = "Freigabe ausstehend";
 "share_pending_message" = "Erfolgreich geteilt! Diese E-Mail-Adresse ist noch nicht mit einem Ruuvi-Konto verknüpft. Eine Einladung zur Erstellung eines kostenlosen Kontos wurde gesendet. Nach der Erstellung werden Sie es in der Freigabeliste sehen.";
+"dialog_are_you_sure" = "Sind Sie sicher?";
+"dialog_operation_undone" = "Dieser Vorgang kann nicht rückgängig gemacht werden.";
+"remove_cloud_history_title" = "Cloud-Historie entfernen";
+"remove_cloud_history_description" = "Ich möchte auch die Sensorverlaufsdaten aus Ruuvi Cloud entfernen.";
+"remove_claimed_sensor_description" = "Durch das Entfernen des Sensors wird Ihr Sensor-Eigentumsstatus aufgehoben, und Sensor-Einstellungen wie Name, Hintergrundbild, Kalibrierungseinstellungen und Alarmeinstellungen werden entfernt. Nach der Entfernung kann jemand anderes das Eigentum am Sensor beanspruchen. Jeder Ruuvi-Sensor kann nur einen Besitzer haben.";
+"remove_shared_sensor_description" = "If you choose to remove this shared sensor, the owner of the sensor will be notified and you will not be able to access the sensor anymore.\n\nYou will also lose any related sensor settings like name, background image and alert configurations.";
+"remove_local_sensor_description" = "If you choose to remove this sensor, it will result in the deletion of your locally stored measurement history, along with the removal of any related sensor settings like name, background image, calibration, and alert configurations.\n\nYou can add this sensor later again, if needed.";

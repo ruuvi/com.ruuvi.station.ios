@@ -79,7 +79,10 @@ public protocol RuuviCloud {
     ) -> Future<MACIdentifier?, RuuviCloudError>
 
     @discardableResult
-    func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
+    func unclaim(
+        macId: MACIdentifier,
+        removeCloudHistory: Bool
+    ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
     func share(

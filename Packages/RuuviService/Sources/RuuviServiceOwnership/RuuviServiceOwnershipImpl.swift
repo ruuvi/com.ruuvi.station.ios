@@ -140,31 +140,37 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func unclaim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
+    public func unclaim(
+        sensor: RuuviTagSensor,
+        removeCloudHistory: Bool
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         guard let macId = sensor.macId else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
-        cloud.unclaim(macId: macId)
-            .on(success: { [weak self] _ in
-                guard let sSelf = self else { return }
-                let unclaimedSensor = sensor
-                    .with(isClaimed: false)
-                    .with(canShare: false)
-                    .with(sharedTo: [])
-                    .with(isCloudSensor: false)
-                    .withoutOwner()
-                sSelf.pool
-                    .update(unclaimedSensor)
-                    .on(success: { _ in
-                        promise.succeed(value: unclaimedSensor.any)
-                    }, failure: { error in
-                        promise.fail(error: .ruuviPool(error))
-                    })
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
+        cloud.unclaim(
+            macId: macId,
+            removeCloudHistory: removeCloudHistory
+        )
+        .on(success: { [weak self] _ in
+            guard let sSelf = self else { return }
+            let unclaimedSensor = sensor
+                .with(isClaimed: false)
+                .with(canShare: false)
+                .with(sharedTo: [])
+                .with(isCloudSensor: false)
+                .withoutOwner()
+            sSelf.pool
+                .update(unclaimedSensor)
+                .on(success: { _ in
+                    promise.succeed(value: unclaimedSensor.any)
+                }, failure: { error in
+                    promise.fail(error: .ruuviPool(error))
+                })
+        }, failure: { error in
+            promise.fail(error: .ruuviCloud(error))
+        })
         return promise.future
     }
 
@@ -186,7 +192,10 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func remove(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
+    public func remove(
+        sensor: RuuviTagSensor,
+        removeCloudHistory: Bool
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         let deleteTagOperation = pool.delete(sensor)
         let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
@@ -197,7 +206,10 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         if let macId = sensor.macId,
            sensor.isCloud {
             if sensor.isOwner {
-                unclaimOperation = unclaim(sensor: sensor)
+                unclaimOperation = unclaim(
+                    sensor: sensor,
+                    removeCloudHistory: removeCloudHistory
+                )
             } else {
                 unshareOperation = unshare(macId: macId, with: nil)
             }

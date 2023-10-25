@@ -739,4 +739,11 @@ RuuviTag est prêt à être utilisé !";
 "settings_alert_limit_notification_description" = "Déclenchez la notification d'alerte Bluetooth une seule fois par heure, même si l'alerte a été redéclenchée.";
 "share_pending" = "Partage en attente";
 "share_pending_message" = "Partagé avec succès ! Cette adresse e-mail n'est pas encore liée à un compte Ruuvi. Une invitation pour créer un compte gratuit a été envoyée. Une fois créé, vous le verrez dans la liste des partages.";
+"dialog_are_you_sure" = "Êtes-vous sûr ?";
+"dialog_operation_undone" = "Cette opération ne peut pas être annulée.";
+"remove_cloud_history_title" = "Supprimer l'historique cloud";
+"remove_cloud_history_description" = "Je veux également supprimer les données d'historique du capteur de Ruuvi Cloud.";
+"remove_claimed_sensor_description" = "En supprimant le capteur, votre statut de propriétaire du capteur sera révoqué, et les paramètres du capteur, tels que le nom, l'image d'arrière-plan, les paramètres de calibration et les paramètres d'alerte, seront supprimés. Après la suppression, quelqu'un d'autre peut revendiquer la propriété du capteur. Chaque capteur Ruuvi ne peut avoir qu'un seul propriétaire.";
+"remove_shared_sensor_description" = "If you choose to remove this shared sensor, the owner of the sensor will be notified and you will not be able to access the sensor anymore.\n\nYou will also lose any related sensor settings like name, background image and alert configurations.";
+"remove_local_sensor_description" = "If you choose to remove this sensor, it will result in the deletion of your locally stored measurement history, along with the removal of any related sensor settings like name, background image, calibration, and alert configurations.\n\nYou can add this sensor later again, if needed.";
 
