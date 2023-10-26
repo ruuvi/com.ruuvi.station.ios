@@ -344,8 +344,7 @@ extension DashboardPresenter: DashboardViewOutput {
             return
         }
 
-        let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
-        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+        ruuviSensorPropertiesService.set(name: name, for: ruuviTag)
             .on(failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
@@ -1442,10 +1441,22 @@ extension DashboardPresenter {
             .addObserver(forName: .DidOpenWithUniversalLink,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (_) in
-                guard let email = self?.ruuviUser.email else { return }
-                self?.view?.showAlreadyLoggedInAlert(with: email)
+                         using: { [weak self] (notification) in
+                guard let self = self,
+                    let userInfo = notification.userInfo else {
+                    guard let email = self?.ruuviUser.email else { return }
+                    self?.view?.showAlreadyLoggedInAlert(with: email)
+                    return
+                }
+                self.processLink(userInfo)
         })
+    }
+
+    private func processLink(_ userInfo: [AnyHashable: Any]) {
+        guard let path = userInfo["path"] as? UniversalLinkType,
+              path == .dashboard,
+              !ruuviUser.isAuthorized else { return }
+        router.openSignIn(output: self)
     }
 
     private func startObservingCloudModeNotification() {

@@ -17,4 +17,15 @@ struct GlobalHelpers {
             return false
         }
     }
+
+    static func ruuviTagDefaultName(from macId: String?, luid: String?) -> String {
+        // identifier
+        if let mac = macId {
+            return "DiscoverTable.RuuviDevice.prefix".localized()
+                + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
+        } else {
+            return "DiscoverTable.RuuviDevice.prefix".localized()
+                + " " + (luid?.prefix(4) ?? "")
+        }
+    }
 }

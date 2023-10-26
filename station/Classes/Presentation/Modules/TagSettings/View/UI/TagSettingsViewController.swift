@@ -626,9 +626,7 @@ extension TagSettingsViewController {
         if let tagOwnerCell = tagOwnerCell {
             tagOwnerCell.bind(viewModel.owner) { cell, owner in
                 cell.configure(value: owner)
-                if let isClaimed = isClaimed, let isOwner = isOwner {
-                    cell.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron)
-                }
+                cell.setAccessory(type: .chevron)
             }
         }
 
@@ -711,7 +709,7 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?.tagOwnerCell?.configure(title: "TagSettings.NetworkInfo.Owner".localized(),
                                value: self?.viewModel?.owner.value)
-                self?.tagOwnerCell?.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron )
+                self?.tagOwnerCell?.setAccessory(type: .chevron)
                 self?.tagOwnerCell?.hideSeparator(hide: false)
                 return self?.tagOwnerCell ?? UITableViewCell()
             },
@@ -3445,19 +3443,27 @@ extension TagSettingsViewController: TagSettingsBackgroundSelectionViewDelegate 
 // MARK: - Sensor name rename dialog
 extension TagSettingsViewController {
     private func showSensorNameRenameDialog(name: String?) {
+        let defaultName = GlobalHelpers.ruuviTagDefaultName(
+            from: self.viewModel?.mac.value,
+            luid: self.viewModel?.uuid.value
+        )
         let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
                                       message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
             alertTextField.delegate = self
-            alertTextField.text = name
+            alertTextField.text = (defaultName == name) ? nil : name
+            alertTextField.placeholder = defaultName
             self.tagNameTextField = alertTextField
         }
         let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
             guard let self = self else { return }
-            guard let name = self.tagNameTextField.text, !name.isEmpty else { return }
-            self.output.viewDidChangeTag(name: name)
+            if let name = self.tagNameTextField.text, !name.isEmpty {
+                self.output.viewDidChangeTag(name: name)
+            } else {
+                self.output.viewDidChangeTag(name: defaultName)
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
         alert.addAction(action)
@@ -3657,21 +3663,6 @@ extension TagSettingsViewController: TagSettingsViewInput {
         // No op.
     }
 
-    func showTagRemovalConfirmationDialog(isOwner: Bool) {
-        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = isOwner ?
-        "TagSettings.confirmTagRemovalDialog.message".localized() :
-        "TagSettings.confirmSharedTagRemovalDialog.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: isOwner ? "Confirm".localized() : "OK".localized(),
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-                                            self?.output.viewDidConfirmTagRemoval()
-                                           }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
     func showTagClaimDialog() {
         let title = "claim_sensor_ownership".localized()
         let message = "do_you_own_sensor".localized()
@@ -3682,19 +3673,6 @@ extension TagSettingsViewController: TagSettingsViewInput {
             self?.output.viewDidConfirmClaimTag()
         }))
         controller.addAction(UIAlertAction(title: "No".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
-    func showUnclaimAndRemoveConfirmationDialog() {
-        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = "TagSettings.confirmTagUnclaimAndRemoveDialog.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-                                            self?.output.viewDidConfirmTagRemoval()
-                                           }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 

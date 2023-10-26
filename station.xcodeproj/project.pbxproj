@@ -1012,6 +1012,24 @@
 		E1B5800C29859EEB00B441FB /* DevicesInteractorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5800A29859EEB00B441FB /* DevicesInteractorOutput.swift */; };
 		E1B5800E2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5800D2986AE0800B441FB /* RuuviContextMenuButton.swift */; };
 		E1B5800F2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5800D2986AE0800B441FB /* RuuviContextMenuButton.swift */; };
+		E1B7B5242AE989ED009D747E /* SensorRemovalModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5232AE989ED009D747E /* SensorRemovalModuleFactory.swift */; };
+		E1B7B5252AE989ED009D747E /* SensorRemovalModuleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5232AE989ED009D747E /* SensorRemovalModuleFactory.swift */; };
+		E1B7B5282AE98A37009D747E /* SensorRemovalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5272AE98A37009D747E /* SensorRemovalViewController.swift */; };
+		E1B7B5292AE98A37009D747E /* SensorRemovalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5272AE98A37009D747E /* SensorRemovalViewController.swift */; };
+		E1B7B52B2AE98A9F009D747E /* SensorRemovalViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B52A2AE98A9F009D747E /* SensorRemovalViewOutput.swift */; };
+		E1B7B52C2AE98A9F009D747E /* SensorRemovalViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B52A2AE98A9F009D747E /* SensorRemovalViewOutput.swift */; };
+		E1B7B52E2AE98AC4009D747E /* SensorRemovalViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B52D2AE98AC4009D747E /* SensorRemovalViewInput.swift */; };
+		E1B7B52F2AE98AC4009D747E /* SensorRemovalViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B52D2AE98AC4009D747E /* SensorRemovalViewInput.swift */; };
+		E1B7B5312AE98B00009D747E /* SensorRemovalRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5302AE98B00009D747E /* SensorRemovalRouter.swift */; };
+		E1B7B5322AE98B00009D747E /* SensorRemovalRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5302AE98B00009D747E /* SensorRemovalRouter.swift */; };
+		E1B7B5342AE98B16009D747E /* SensorRemovalRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5332AE98B16009D747E /* SensorRemovalRouterInput.swift */; };
+		E1B7B5352AE98B16009D747E /* SensorRemovalRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5332AE98B16009D747E /* SensorRemovalRouterInput.swift */; };
+		E1B7B5372AE98B72009D747E /* SensorRemovalModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5362AE98B72009D747E /* SensorRemovalModuleInput.swift */; };
+		E1B7B5382AE98B72009D747E /* SensorRemovalModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5362AE98B72009D747E /* SensorRemovalModuleInput.swift */; };
+		E1B7B53A2AE98B86009D747E /* SensorRemovalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5392AE98B86009D747E /* SensorRemovalPresenter.swift */; };
+		E1B7B53B2AE98B86009D747E /* SensorRemovalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B5392AE98B86009D747E /* SensorRemovalPresenter.swift */; };
+		E1B7B53F2AEAD61A009D747E /* SensorRemovalModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B53E2AEAD61A009D747E /* SensorRemovalModuleOutput.swift */; };
+		E1B7B5402AEAD61A009D747E /* SensorRemovalModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B7B53E2AEAD61A009D747E /* SensorRemovalModuleOutput.swift */; };
 		E1BAC13A2A7598F000EA820E /* Muli-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1BAC1392A7598F000EA820E /* Muli-ExtraBold.ttf */; };
 		E1BAC13B2A7598F000EA820E /* Muli-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1BAC1392A7598F000EA820E /* Muli-ExtraBold.ttf */; };
 		E1C395D329B26044009301D3 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */; };
@@ -1743,6 +1761,15 @@
 		E1B5800729859EDE00B441FB /* DevicesInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesInteractorInput.swift; sourceTree = "<group>"; };
 		E1B5800A29859EEB00B441FB /* DevicesInteractorOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesInteractorOutput.swift; sourceTree = "<group>"; };
 		E1B5800D2986AE0800B441FB /* RuuviContextMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviContextMenuButton.swift; sourceTree = "<group>"; };
+		E1B7B5232AE989ED009D747E /* SensorRemovalModuleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalModuleFactory.swift; sourceTree = "<group>"; };
+		E1B7B5272AE98A37009D747E /* SensorRemovalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalViewController.swift; sourceTree = "<group>"; };
+		E1B7B52A2AE98A9F009D747E /* SensorRemovalViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalViewOutput.swift; sourceTree = "<group>"; };
+		E1B7B52D2AE98AC4009D747E /* SensorRemovalViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalViewInput.swift; sourceTree = "<group>"; };
+		E1B7B5302AE98B00009D747E /* SensorRemovalRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalRouter.swift; sourceTree = "<group>"; };
+		E1B7B5332AE98B16009D747E /* SensorRemovalRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalRouterInput.swift; sourceTree = "<group>"; };
+		E1B7B5362AE98B72009D747E /* SensorRemovalModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalModuleInput.swift; sourceTree = "<group>"; };
+		E1B7B5392AE98B86009D747E /* SensorRemovalPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalPresenter.swift; sourceTree = "<group>"; };
+		E1B7B53E2AEAD61A009D747E /* SensorRemovalModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorRemovalModuleOutput.swift; sourceTree = "<group>"; };
 		E1BAC1392A7598F000EA820E /* Muli-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-ExtraBold.ttf"; sourceTree = "<group>"; };
 		E1C395D229B26044009301D3 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		E1CA28AD29201F34009E4423 /* RUAlertExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUAlertExpandButton.swift; sourceTree = "<group>"; };
@@ -3275,6 +3302,7 @@
 		66BC44812657AED400A03253 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				E1B7B51E2AE9888C009D747E /* Removal */,
 				E1AB90572A0EAF4F00543F61 /* Force Claim */,
 				340BE37727B54F37006D6C34 /* Owner */,
 				0E97D782268C826400FE9D5B /* DFU */,
@@ -4442,6 +4470,62 @@
 			path = Interactor;
 			sourceTree = "<group>";
 		};
+		E1B7B51E2AE9888C009D747E /* Removal */ = {
+			isa = PBXGroup;
+			children = (
+				E1B7B5222AE989C6009D747E /* Assembly */,
+				E1B7B5212AE989BD009D747E /* Presenter */,
+				E1B7B5202AE989B7009D747E /* View */,
+				E1B7B51F2AE989AF009D747E /* Router */,
+			);
+			path = Removal;
+			sourceTree = "<group>";
+		};
+		E1B7B51F2AE989AF009D747E /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				E1B7B5302AE98B00009D747E /* SensorRemovalRouter.swift */,
+				E1B7B5332AE98B16009D747E /* SensorRemovalRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		E1B7B5202AE989B7009D747E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E1B7B5262AE98A2E009D747E /* UI */,
+				E1B7B52A2AE98A9F009D747E /* SensorRemovalViewOutput.swift */,
+				E1B7B52D2AE98AC4009D747E /* SensorRemovalViewInput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E1B7B5212AE989BD009D747E /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E1B7B5362AE98B72009D747E /* SensorRemovalModuleInput.swift */,
+				E1B7B53E2AEAD61A009D747E /* SensorRemovalModuleOutput.swift */,
+				E1B7B5392AE98B86009D747E /* SensorRemovalPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E1B7B5222AE989C6009D747E /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				E1B7B5232AE989ED009D747E /* SensorRemovalModuleFactory.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		E1B7B5262AE98A2E009D747E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E1B7B5272AE98A37009D747E /* SensorRemovalViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E1BCF0B52A06390A005729F4 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -5270,6 +5354,7 @@
 				A9646485247BAE6B0001D55D /* ChartSettingsPresenter.swift in Sources */,
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				E1CE5E4329FC39D000391109 /* DefaultsModuleOutput.swift in Sources */,
+				E1B7B5382AE98B72009D747E /* SensorRemovalModuleInput.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
 				E19EAF98299E6083005827E4 /* SignInBenefitsRouterInput.swift in Sources */,
 				E186AB2C2844A273004926FC /* RuuviWidgetsConfiguration.intentdefinition in Sources */,
@@ -5288,6 +5373,7 @@
 				A92A66BE2450C64A002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
 				E1198A3029BA76A8002245CF /* ASSelectionTableViewCell.swift in Sources */,
+				E1B7B5292AE98A37009D747E /* SensorRemovalViewController.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				E1AB90652A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */,
 				A91D02F52511207300694733 /* SelectionPresenter.swift in Sources */,
@@ -5356,6 +5442,7 @@
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
 				340BE37627B54EE2006D6C34 /* AppAssemblyConstants.swift in Sources */,
 				E1E3C331298C601200A59CB8 /* CardsViewModuleFactory.swift in Sources */,
+				E1B7B5322AE98B00009D747E /* SensorRemovalRouter.swift in Sources */,
 				E19EAF73299ADB2F005827E4 /* UIButton+Extension.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8BD2F4238566AB008B31EF /* DefaultsRouterInput.swift in Sources */,
@@ -5423,6 +5510,7 @@
 				E191F222296A00CE00F1FEA6 /* TagSettingsFooterCell.swift in Sources */,
 				66BC44A52657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
 				A9E5994B2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
+				E1B7B53B2AE98B86009D747E /* SensorRemovalPresenter.swift in Sources */,
 				A91D0312251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
 				0EA796722664A7E0002BA25D /* RuuviCloudError+LocalizedError.swift in Sources */,
@@ -5447,6 +5535,7 @@
 				660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
 				E196917D2A06E03300DC360E /* PushAlertSoundSelectionModuleFactory.swift in Sources */,
 				E1D0238F29EB3F7D00EC0FFD /* YAxisValueFormatter.swift in Sources */,
+				E1B7B5252AE989ED009D747E /* SensorRemovalModuleFactory.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0EA796862664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
 				0EF4E34126824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
@@ -5490,6 +5579,7 @@
 				3414BFC92806D19C00C63BE9 /* RuuviCodeView.swift in Sources */,
 				0E197C7523C5C7A20074015B /* InfoProvider.swift in Sources */,
 				E1CE4C722959CE61005C023F /* DashboardViewController.swift in Sources */,
+				E1B7B5402AEAD61A009D747E /* SensorRemovalModuleOutput.swift in Sources */,
 				0E2513602684AEAD004A522A /* RuuviNotifierTitlesImpl.swift in Sources */,
 				E1B5800F2986AE0800B441FB /* RuuviContextMenuButton.swift in Sources */,
 				0E8BD34E238566AB008B31EF /* WebTagSettingsRouterInput.swift in Sources */,
@@ -5528,6 +5618,7 @@
 				E1CD77F928782F2200F1F0EB /* UnitSettingsPresenter.swift in Sources */,
 				340BE39927B54F38006D6C34 /* OwnerRouterInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
+				E1B7B5352AE98B16009D747E /* SensorRemovalRouterInput.swift in Sources */,
 				E191F21F2969FF6900F1FEA6 /* TagSettingsSwitchCell.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
 				E1395BFD2954DAAD00C403C6 /* CardsInteractor.swift in Sources */,
@@ -5535,6 +5626,7 @@
 				E196916D2A06DCEF00DC360E /* NotificationsSettingsPresenter.swift in Sources */,
 				E191F21C2969EF7B00F1FEA6 /* TagSettingsModuleFactory.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
+				E1B7B52C2AE98A9F009D747E /* SensorRemovalViewOutput.swift in Sources */,
 				E1CD78022878302100F1F0EB /* UnitSettingsViewInput.swift in Sources */,
 				E19EAF84299C1383005827E4 /* SignInModuleFactory.swift in Sources */,
 				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
@@ -5610,6 +5702,7 @@
 				0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */,
 				E1AB907C2A0ECB6D00543F61 /* SensorForceClaimViewOutput.swift in Sources */,
 				340BE39C27B54FEC006D6C34 /* String+Email.swift in Sources */,
+				E1B7B52F2AE98AC4009D747E /* SensorRemovalViewInput.swift in Sources */,
 				E10E18B5297D67B8002C78C3 /* RuuviCloudViewModel.swift in Sources */,
 				E1198A2229BA6EC6002245CF /* RuuviTheme+Extension.swift in Sources */,
 				0E8BD3AA238566AB008B31EF /* AppDelegate.swift in Sources */,
@@ -5777,6 +5870,7 @@
 				340BE39B27B54FEC006D6C34 /* String+Email.swift in Sources */,
 				E116707929634363002DF7BF /* BackgroundSelectionViewOutput.swift in Sources */,
 				0E00C4F12684D97B009B3C24 /* ExportHeadersProvider.swift in Sources */,
+				E1B7B5312AE98B00009D747E /* SensorRemovalRouter.swift in Sources */,
 				A9646472247BAE6B0001D55D /* ChartSettingsTableViewController.swift in Sources */,
 				0EF4E34026824EF500D83CC7 /* DfuFirmware+Log.swift in Sources */,
 				E11989F529B7A46E002245CF /* UIView+Extension.swift in Sources */,
@@ -5820,6 +5914,7 @@
 				E19EAF6929997711005827E4 /* SignInViewController.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language+Localization.swift in Sources */,
 				66BC44982657AED400A03253 /* OffsetCorrectionAppleInitializer.swift in Sources */,
+				E1B7B53F2AEAD61A009D747E /* SensorRemovalModuleOutput.swift in Sources */,
 				0E84BF592397F3C600A37E1A /* HeartbeatViewModel.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0EB8ED472692018000C6B0FA /* RuuviColor.swift in Sources */,
@@ -5845,6 +5940,7 @@
 				0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				E1395BF92954DAA200C403C6 /* CardsInteractorInput.swift in Sources */,
+				E1B7B52E2AE98AC4009D747E /* SensorRemovalViewInput.swift in Sources */,
 				E191F20F2969E1C300F1FEA6 /* TagSettingsPresenter.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				E1E3C339298EC9DC00A59CB8 /* DashboardModuleFactory.swift in Sources */,
@@ -6000,6 +6096,7 @@
 				E19691682A06DCE500DC360E /* NotificationsSettingsViewOutput.swift in Sources */,
 				E1E3C342299007B700A59CB8 /* TagSettingsModuleInput.swift in Sources */,
 				E1ED427028FF261D00302179 /* XAxisValueFormatter.swift in Sources */,
+				E1B7B53A2AE98B86009D747E /* SensorRemovalPresenter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0EB8ED3C268F8CD900C6B0FA /* FirmwareRepository.swift in Sources */,
@@ -6075,6 +6172,7 @@
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
 				E19EAF75299AE3B0005827E4 /* SignInView.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
+				E1B7B5282AE98A37009D747E /* SensorRemovalViewController.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
 				0EE36E4226957E200021B746 /* LatestRelease.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
@@ -6134,6 +6232,7 @@
 				E1597A43295CD58600DFB70B /* DashboardRouterDelegate.swift in Sources */,
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				E18D04A528E8A5A3008EF5EC /* TagChartsViewConfigurator.swift in Sources */,
+				E1B7B5242AE989ED009D747E /* SensorRemovalModuleFactory.swift in Sources */,
 				0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
@@ -6158,10 +6257,12 @@
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				E1198A1529BA6A06002245CF /* AppearanceSettingsViewOutput.swift in Sources */,
 				E16051E6285A15A1003FCA70 /* RuuviTagBatteryStatusProvider.swift in Sources */,
+				E1B7B5342AE98B16009D747E /* SensorRemovalRouterInput.swift in Sources */,
 				A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				E19EAF6629983650005827E4 /* AppUtility.swift in Sources */,
 				0EA796752664B0FC002BA25D /* RuuviCloudApiError+LocalizedError.swift in Sources */,
+				E1B7B5372AE98B72009D747E /* SensorRemovalModuleInput.swift in Sources */,
 				E18D04D428F1D52A008EF5EC /* TagChartsViewOutput.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
 				0E046F3F22F0702D00BD4E9C /* WebTagSettingsViewModel.swift in Sources */,
@@ -6218,6 +6319,7 @@
 				A91D03002511207300694733 /* SelectionTableViewController.swift in Sources */,
 				E1AB90642A0EB13400543F61 /* SensorForceClaimModuleInput.swift in Sources */,
 				A964646F247BAE6B0001D55D /* ChartSettingsSwitchTableViewCell.swift in Sources */,
+				E1B7B52B2AE98A9F009D747E /* SensorRemovalViewOutput.swift in Sources */,
 				A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
 				340BE39027B54F37006D6C34 /* OwnerViewInput.swift in Sources */,
@@ -6366,7 +6468,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6398,7 +6500,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6430,7 +6532,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6467,7 +6569,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6502,7 +6604,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6538,7 +6640,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6689,9 +6791,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
@@ -6739,7 +6841,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.ruuvi.station";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.ruuvi.station";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -6752,9 +6854,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
@@ -6769,7 +6871,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.ruuvi.station";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.ruuvi.station";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.ruuvi.station";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -6868,7 +6970,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -6903,7 +7005,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 413;
+				CURRENT_PROJECT_VERSION = 414;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4MUYJ4YYH4;
 				GENERATE_INFOPLIST_FILE = YES;
