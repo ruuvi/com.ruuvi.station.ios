@@ -14,6 +14,11 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
         completion?()
     }
 
+    func dismissToRoot(completion: (() -> Void)?) {
+        transitionHandler.navigationController?.popViewController(animated: true)
+        completion?()
+    }
+
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
         let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
         let module = factory.create(for: ruuviTag, virtualTag: nil)
@@ -88,6 +93,23 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
             )
         if let presenter = module.output as? SensorForceClaimModuleInput {
             presenter.configure(ruuviTag: ruuviTag)
+        }
+    }
+
+    func openSensorRemoval(
+        ruuviTag: RuuviTagSensor,
+        output: SensorRemovalModuleOutput
+    ) {
+        let factory: SensorRemovalModuleFactory = SensorRemovalModuleFactoryImpl()
+        let module = factory.create()
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+        if let presenter = module.output as? SensorRemovalModuleInput {
+            presenter.configure(ruuviTag: ruuviTag, output: output)
         }
     }
 }

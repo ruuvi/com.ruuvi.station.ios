@@ -8,7 +8,6 @@ protocol TagSettingsViewOutput {
     func viewDidConfirmClaimTag()
     func viewDidTriggerChangeBackground()
     func viewDidAskToRemoveRuuviTag()
-    func viewDidConfirmTagRemoval()
     func viewDidChangeTag(name: String)
     func viewDidTapOnMacAddress()
     func viewDidTapOnTxPower()

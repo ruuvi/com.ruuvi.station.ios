@@ -10,7 +10,9 @@ class CardsRouter: NSObject, CardsRouterInput {
     private weak var dfuModule: DFUModuleInput?
 
     func dismiss() {
-        try? transitionHandler?.closeCurrentModule().perform()
+        transitionHandler?
+            .navigationController?
+            .popToRootViewController(animated: true)
     }
 
     func openTagSettings(ruuviTag: RuuviTagSensor,
