@@ -1799,7 +1799,9 @@ extension TagSettingsViewController {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
         if let min = min, let max = max {
-            return attributedString(from: String(format: format, min, max))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 min, max))
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
@@ -1817,7 +1819,11 @@ extension TagSettingsViewController {
                                                         with: "%0.\(decimalPointToConsider)f")
             }
 
-            let message = String(format: format, l.value.round(to: 2), u.value.round(to: 2))
+            let message = String(format: format,
+                locale: Locale.autoupdatingCurrent,
+                l.value.round(to: 2),
+                u.value.round(to: 2)
+            )
             return attributedString(from: message)
 
         } else {
@@ -1863,7 +1869,9 @@ extension TagSettingsViewController {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
         if let min = min, let max = max {
-            return attributedString(from: String(format: format, min, max))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 min, max))
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
            let u = viewModel?.relativeHumidityUpperBound.value {
@@ -1876,7 +1884,9 @@ extension TagSettingsViewController {
                 let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l.round(to: 2), u.round(to: 2))
+            let message = String(format: format,
+                                 locale: Locale.autoupdatingCurrent,
+                                 l.round(to: 2), u.round(to: 2))
             return attributedString(from: message)
         } else {
             return nil
@@ -1916,7 +1926,9 @@ extension TagSettingsViewController {
         var format = "TagSettings.Alerts.Temperature.description".localized()
 
         if let minValue = minValue, let maxValue = maxValue {
-            return attributedString(from: String(format: format, minValue, maxValue))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 minValue, maxValue))
         }
 
         if let pu = viewModel?.pressureUnit.value,
@@ -1939,7 +1951,9 @@ extension TagSettingsViewController {
                 let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l.round(to: 2), u.round(to: 2))
+            let message = String(format: format,
+                                 locale: Locale.autoupdatingCurrent,
+                                 l.round(to: 2), u.round(to: 2))
             return attributedString(from: message)
         } else {
             return nil
@@ -1993,12 +2007,16 @@ extension TagSettingsViewController {
         let format = "TagSettings.Alerts.Temperature.description".localized()
 
         if let min = min, let max = max {
-            return attributedString(from: String(format: format, min, max))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 min, max))
         }
 
         if let lower = viewModel?.signalLowerBound.value,
            let upper = viewModel?.signalUpperBound.value {
-            let message = String(format: format, lower, upper)
+            let message = String(format: format,
+                                 locale: Locale.autoupdatingCurrent,
+                                 lower, upper)
             return attributedString(from: message)
         } else {
             return nil
@@ -2035,7 +2053,7 @@ extension TagSettingsViewController {
         if let message = message {
             let attributedString = NSMutableAttributedString(string: message)
             let boldFont = UIFont.Muli(.bold, size: 14)
-            let numberRegex = try? NSRegularExpression(pattern: "\\d+(\\.\\d+)?")
+            let numberRegex = try? NSRegularExpression(pattern: "\\d+([.,]\\d+)?")
             let range = NSRange(location: 0, length: message.utf16.count)
             if let matches = numberRegex?.matches(in: message, options: [], range: range) {
                 for match in matches {
@@ -2060,7 +2078,9 @@ extension TagSettingsViewController {
         let format = "alert_cloud_connection_description".localized()
 
         if let delay = delay {
-            return attributedString(from: String(format: format, delay))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 delay))
         } else {
             return nil
         }
@@ -3554,7 +3574,9 @@ extension TagSettingsViewController {
             guard let self = self else { return }
             alertTextField.delegate = self
             let format = "TagSettings.AlertSettings.Dialog.Min".localized()
-            alertTextField.placeholder = String(format: format, minimumBound)
+            alertTextField.placeholder = String(format: format,
+                                                locale: Locale.autoupdatingCurrent,
+                                                minimumBound)
             alertTextField.keyboardType = .decimalPad
             self.alertMinRangeTextField = alertTextField
             if minimumBound < 0 {
@@ -3576,7 +3598,9 @@ extension TagSettingsViewController {
             guard let self = self else { return }
             alertTextField.delegate = self
             let format = "TagSettings.AlertSettings.Dialog.Max".localized()
-            alertTextField.placeholder = String(format: format, maximumBound)
+            alertTextField.placeholder = String(format: format,
+                                                locale: Locale.autoupdatingCurrent,
+                                                maximumBound)
             alertTextField.keyboardType = .decimalPad
             self.alertMaxRangeTextField = alertTextField
             if maximumBound < 0 {
