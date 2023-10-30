@@ -7,6 +7,7 @@ public enum AlertType: CaseIterable {
     case pressure(lower: Double, upper: Double) // hPa
     case signal(lower: Double, upper: Double) // dB
     case connection
+    case cloudConnection(unseenDuration: Double)
     case movement(last: Int)
 
     public static var allCases: [AlertType] {
@@ -17,6 +18,7 @@ public enum AlertType: CaseIterable {
                 .pressure(lower: 0, upper: 0),
                 .signal(lower: 0, upper: 0),
                 .connection,
+                .cloudConnection(unseenDuration: 0),
                 .movement(last: 0)]
     }
 }

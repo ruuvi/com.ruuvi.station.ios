@@ -35,6 +35,7 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     public func set(token: String?,
                     name: String?,
                     data: String?,
+                    language: Language,
                     sound: RuuviAlertSound) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
         guard ruuviUser.isAuthorized, let token = token else {
@@ -61,7 +62,8 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
             name: name,
             data: data,
             params: [
-                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue
+                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue,
+                RuuviCloudPNTokenRegisterRequestParamsKey.language.rawValue: language.rawValue
             ]
         )
         .on(success: { [weak self] tokenId in
@@ -77,6 +79,7 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
 
     @discardableResult
     public func set(sound: RuuviAlertSound,
+                    language: Language,
                     deviceName: String?) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
         guard ruuviUser.isAuthorized, let token = pnManager.fcmToken else {
@@ -89,7 +92,8 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
             name: deviceName,
             data: nil,
             params: [
-                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue
+                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue,
+                RuuviCloudPNTokenRegisterRequestParamsKey.language.rawValue: language.rawValue
             ]
         )
         .on(success: { [weak self] tokenId in

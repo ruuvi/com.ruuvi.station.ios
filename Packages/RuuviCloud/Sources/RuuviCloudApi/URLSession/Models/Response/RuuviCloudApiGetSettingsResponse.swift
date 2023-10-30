@@ -34,6 +34,9 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var chartViewPeriod: Int? {
         return chartViewPeriodString?.ruuviCloudApiSettingChartViewPeriod
     }
+    public var chartShowMinMaxAvg: Bool? {
+        return chartShowMinMaxAverageString?.ruuviCloudApiSettingBoolean
+    }
     public var cloudModeEnabled: Bool? {
         return cloudModeEnabledString?.ruuviCloudApiSettingBoolean
     }
@@ -52,6 +55,9 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var emailAlertEnabled: Bool? {
         return emailAlertEnabledString?.ruuviCloudApiSettingBoolean
     }
+    public var profileLanguageCode: String? {
+        return profileLanguageCodeString
+    }
 
     var unitTemperatureString: String?
     var accuracyTemperatureString: String?
@@ -62,12 +68,14 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var chartShowAllPointsString: String?
     var chartDrawDotsString: String?
     var chartViewPeriodString: String?
+    var chartShowMinMaxAverageString: String?
     var cloudModeEnabledString: String?
     var dashboardEnabledString: String?
     var dashboardTypeString: String?
     var dashboardTapActionTypeString: String?
     var pushAlertEnabledString: String?
     var emailAlertEnabledString: String?
+    var profileLanguageCodeString: String?
 
     enum CodingKeys: String, CodingKey {
         case unitTemperatureString = "UNIT_TEMPERATURE"
@@ -79,11 +87,13 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case chartShowAllPointsString = "CHART_SHOW_ALL_POINTS"
         case chartDrawDotsString = "CHART_DRAW_DOTS"
         case chartViewPeriodString = "CHART_VIEW_PERIOD"
+        case chartShowMinMaxAverageString = "CHART_SHOW_MIN_MAX_AVG"
         case cloudModeEnabledString = "CLOUD_MODE_ENABLED"
         case dashboardEnabledString = "DASHBOARD_ENABLED"
         case dashboardTypeString = "DASHBOARD_TYPE"
         case dashboardTapActionTypeString = "DASHBOARD_TAP_ACTION"
         case pushAlertEnabledString = "ALERT_PUSH_ENABLED"
         case emailAlertEnabledString = "ALERT_EMAIL_ENABLED"
+        case profileLanguageCodeString = "PROFILE_LANGUAGE_CODE"
     }
 }

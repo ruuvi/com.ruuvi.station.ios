@@ -199,8 +199,7 @@ extension TagSettingsAlertConfigCell {
         alertLimitDescriptionView.anchor(top: customDescriptionSeparator.bottomAnchor,
                                          leading: self.safeLeftAnchor,
                                          bottom: nil,
-                                         trailing: self.safeRightAnchor,
-                                         size: .init(width: 0, height: 44))
+                                         trailing: self.safeRightAnchor)
         alertLimitDescriptionViewHiddenHeight = alertLimitDescriptionView
             .heightAnchor
             .constraint(equalToConstant: 0)
@@ -295,15 +294,31 @@ extension TagSettingsAlertConfigCell {
     }
 
     func hideAlertRangeSetter() {
+        hideAlertLimitDescription()
+        hideAlertRangeSlider()
+    }
+
+    func showAlertRangeSetter() {
+        showAlertLimitDescription()
+        showAlertRangeSlider()
+    }
+
+    func hideAlertLimitDescription() {
         alertLimitDescriptionViewHiddenHeight.isActive = true
         alertLimitDescriptionView.alpha = 0
+    }
+
+    func showAlertLimitDescription() {
+        alertLimitDescriptionViewHiddenHeight.isActive = false
+        alertLimitDescriptionView.alpha = 1
+    }
+
+    func hideAlertRangeSlider() {
         alertLimitSliderViewHiddenHeight.isActive = true
         alertLimitSliderView.alpha = 0
     }
 
-    func showAlertRangeSetter() {
-        alertLimitDescriptionViewHiddenHeight.isActive = false
-        alertLimitDescriptionView.alpha = 1
+    func showAlertRangeSlider() {
         alertLimitSliderViewHiddenHeight.isActive = false
         alertLimitSliderView.alpha = 1
     }

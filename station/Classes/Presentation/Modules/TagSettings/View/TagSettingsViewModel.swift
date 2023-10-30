@@ -63,6 +63,12 @@ struct TagSettingsViewModel {
     let connectionAlertDescription: Observable<String?> = Observable<String?>()
     let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
 
+    let isCloudConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let cloudConnectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let cloudConnectionAlertUnseenDuration: Observable<Double?> = Observable<Double?>()
+    let cloudConnectionAlertDescription: Observable<String?> = Observable<String?>()
+    let cloudConnectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
+
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
@@ -76,6 +82,7 @@ struct TagSettingsViewModel {
     let owner: Observable<String?> = Observable<String?>()
     let isOwner: Observable<Bool?> = Observable<Bool?>(false)
     let ownersPlan: Observable<String?> = Observable<String?>()
+    let isOwnersPlanProPlus: Observable<Bool?> = Observable<Bool?>(false)
 
     let temperatureOffsetCorrection: Observable<Double?> = Observable<Double?>()
     let humidityOffsetCorrection: Observable<Double?> = Observable<Double?>()

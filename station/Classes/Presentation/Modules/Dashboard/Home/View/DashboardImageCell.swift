@@ -104,6 +104,11 @@ class DashboardImageCell: UICollectionViewCell {
     private var emptyViewHeight: NSLayoutConstraint!
     private var movementViewHeight: NSLayoutConstraint!
 
+    private var dataSourceIconViewHeightConstraint: NSLayoutConstraint!
+    private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
+    private let dataSourceIconViewRegularHeight: CGFloat = 22
+    private let dataSourceIconViewCompactHeight: CGFloat = 16
+
     private var timer: Timer?
 
     private var viewModel: CardsViewModel?
@@ -252,7 +257,13 @@ class DashboardImageCell: UICollectionViewCell {
         sourceAndUpdateStack.axis = .horizontal
         sourceAndUpdateStack.spacing = 6
         sourceAndUpdateStack.distribution = .fill
-        dataSourceIconView.size(width: 22, height: 22)
+
+        dataSourceIconViewWidthConstraint = dataSourceIconView.widthAnchor
+            .constraint(equalToConstant: dataSourceIconViewCompactHeight)
+        dataSourceIconViewHeightConstraint = dataSourceIconView.heightAnchor
+            .constraint(equalToConstant: dataSourceIconViewCompactHeight)
+        dataSourceIconViewWidthConstraint.isActive = true
+        dataSourceIconViewHeightConstraint.isActive = true
 
         let footerStack = UIStackView(arrangedSubviews: [
             sourceAndUpdateStack, batteryLevelView
@@ -290,6 +301,8 @@ extension DashboardImageCell {
         alertIcon.image = nil
         alertIcon.layer.removeAllAnimations()
         highlightTemperatureValues(highlight: false)
+        dataSourceIconViewHeightConstraint.constant = dataSourceIconViewCompactHeight
+        dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactHeight
     }
 }
 
@@ -397,6 +410,16 @@ extension DashboardImageCell {
         } else {
             dataSourceIconView.image = nil
         }
+
+        switch viewModel.source.value {
+        case .ruuviNetwork, .weatherProvider:
+            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularHeight
+            dataSourceIconViewHeightConstraint.constant = dataSourceIconViewRegularHeight
+        default:
+            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactHeight
+            dataSourceIconViewHeightConstraint.constant = dataSourceIconViewCompactHeight
+        }
+
         dataSourceIconView.image = dataSourceIconView
             .image?
             .withRenderingMode(.alwaysTemplate)

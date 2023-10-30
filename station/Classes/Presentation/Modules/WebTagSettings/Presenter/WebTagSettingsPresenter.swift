@@ -485,7 +485,7 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.isHumidityAlertOn
         case .pressure:
             observable = view.viewModel.isPressureAlertOn
-        case .connection, .movement, .signal:
+        case .connection, .cloudConnection, .movement, .signal:
             observable = nil
         }
 
@@ -526,7 +526,7 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.humidityAlertMutedTill
         case .pressure:
             observable = view.viewModel.pressureAlertMutedTill
-        case .connection, .movement, .signal:
+        case .connection, .cloudConnection, .movement, .signal:
             observable = nil
         }
 

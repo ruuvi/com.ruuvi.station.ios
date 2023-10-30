@@ -4,6 +4,8 @@ import RuuviOntology
 
 extension Notification.Name {
     public static let RuuviServiceAlertDidChange = Notification.Name("RuuviServiceAlertDidChange")
+    public static let RuuviServiceAlertTriggerDidChange =
+        Notification.Name("RuuviServiceAlertTriggerDidChange")
 }
 
 public enum RuuviServiceAlertDidChangeKey: String {
@@ -45,6 +47,10 @@ public protocol RuuviServiceAlertRuuviTag {
 
     // movement
     func setMovement(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Cloud connection
+    func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor)
+    func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor)
 }
 
 public protocol RuuviServiceAlertCloud {
@@ -97,6 +103,9 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func mute(type: AlertType, for sensor: PhysicalSensor, till date: Date)
     func unmute(type: AlertType, for sensor: PhysicalSensor)
     func mutedTill(type: AlertType, for sensor: PhysicalSensor) -> Date?
+    func trigger(type: AlertType, trigerred: Bool?, trigerredAt: String?, for sensor: PhysicalSensor)
+    func triggered(for sensor: PhysicalSensor, of type: AlertType) -> Bool?
+    func triggeredAt(for sensor: PhysicalSensor, of type: AlertType) -> String?
 
     /// temperature (celsius)
     func lowerCelsius(for sensor: PhysicalSensor) -> Double?
@@ -129,6 +138,12 @@ public protocol RuuviServiceAlertPhysicalSensor {
     /// connection
     func connectionDescription(for sensor: PhysicalSensor) -> String?
     func setConnection(description: String?, for sensor: PhysicalSensor)
+
+    /// cloud connection
+    func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor)
+    func cloudConnectionUnseenDuration(for sensor: PhysicalSensor) -> Double?
+    func cloudConnectionDescription(for sensor: PhysicalSensor) -> String?
+    func setCloudConnection(description: String?, for sensor: PhysicalSensor)
 
     /// movement
     func movementCounter(for sensor: PhysicalSensor) -> Int?

@@ -14,6 +14,7 @@ public enum RuuviCloudAlertSettingType: String {
     case lowerBound
     case upperBound
     case description
+    case delay
 }
 
 public protocol RuuviCloudSensorAlerts {
@@ -27,5 +28,8 @@ public protocol RuuviCloudAlert {
     var min: Double? { get }
     var max: Double? { get }
     var counter: Int? { get }
+    var delay: Int? { get }
     var description: String? { get }
+    var triggered: Bool? { get }
+    var triggeredAt: String? { get }
 }

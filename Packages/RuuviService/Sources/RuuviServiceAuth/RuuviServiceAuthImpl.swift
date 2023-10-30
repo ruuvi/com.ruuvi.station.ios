@@ -52,6 +52,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     sSelf.propertiesService.removeImage(for: sensor)
                     sSelf.localIDs.clear(sensor: sensor)
                     sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
+                    sSelf.localSyncState.setSyncDate(nil)
                     sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
                     AlertType.allCases.forEach { (type) in
                         sSelf.alertService.remove(type: type, ruuviTag: sensor)

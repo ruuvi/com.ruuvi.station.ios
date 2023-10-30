@@ -8,6 +8,7 @@ protocol CardsViewOutput {
     func viewDidScroll(to viewModel: CardsViewModel)
     func viewDidTriggerSettings(for viewModel: CardsViewModel)
     func viewDidTriggerShowChart(for viewModel: CardsViewModel)
+    func viewDidTriggerNavigateChart(to viewModel: CardsViewModel)
     func viewDidTriggerDismissChart(for viewModel: CardsViewModel, dismissParent: Bool)
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel)
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel)

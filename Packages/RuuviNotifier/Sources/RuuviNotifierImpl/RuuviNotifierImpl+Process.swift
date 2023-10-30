@@ -110,6 +110,7 @@ extension RuuviNotifierImpl {
 }
 // MARK: - Process Network Sensors
 extension RuuviNotifierImpl {
+    // swiftlint:disable:next function_body_length
     public func processNetwork(record: RuuviTagSensorRecord,
                                trigger: Bool,
                                for identifier: MACIdentifier) {
@@ -159,6 +160,15 @@ extension RuuviNotifierImpl {
                 notify(alertType: type,
                        uuid: identifier.value,
                        isTriggered: isSignal)
+            case .cloudConnection:
+                let isCloudConnection = processCloudConnection(
+                    alertType: type,
+                    identifier: identifier
+                )
+                isTriggered = isTriggered || isCloudConnection
+                notify(alertType: type,
+                       uuid: identifier.value,
+                       isTriggered: isCloudConnection)
             default:
                 break
             }
@@ -405,4 +415,39 @@ extension RuuviNotifierImpl {
             return false
         }
     }
+
+    private func processCloudConnection(
+        alertType: AlertType,
+        identifier: MACIdentifier?
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
+
+        if case .cloudConnection(let unseenDuration) = ruuviAlertService
+            .alert(for: identifier.value,
+                   of: alertType) {
+
+            let calendar = Calendar.current
+            let thresholdDateTime = calendar.date(
+                byAdding: .second, value: -Int(unseenDuration), to: Date()
+            ) ?? Date()
+
+            // Check the last successful system sync with the cloud
+            if let lastSystemCloudSyncDate = localSyncState.getSyncDate() {
+                // If the sync date is earlier than our threshold, don't trigger the alert
+                if lastSystemCloudSyncDate < thresholdDateTime {
+                    return false
+                }
+            }
+
+            // If the system sync is within our threshold, check the measurement date
+            if let measurementDate = localSyncState.getSyncDate(for: identifier) {
+                // If the measurement date is earlier than our threshold, trigger the alert
+                return measurementDate < thresholdDateTime
+            }
+        }
+
+        // Default case, don't trigger alert
+        return false
+    }
+
 }

@@ -20,4 +20,6 @@ struct RuuviAssets {
     static let pressureImage = UIImage(named: "icon-measure-pressure")
     static let movementCounterImage = UIImage(named: "icon-measure-movement")
     static let locationImage = UIImage(named: "icon-measure-location")
+    static let editPenImage = UIImage(named: "edit_pen")
+    static let dropDownArrowImage = UIImage(named: "arrow_drop_down")
 }

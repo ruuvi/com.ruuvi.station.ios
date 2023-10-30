@@ -9,6 +9,7 @@ public struct RuuviCloudApiPostAlertRequest: Codable {
     let max: Double?
     let description: String?
     let counter: Int?
+    let delay: Int?
     let timestamp: Int?
 
     public init(
@@ -19,6 +20,7 @@ public struct RuuviCloudApiPostAlertRequest: Codable {
         max: Double?,
         description: String?,
         counter: Int?,
+        delay: Int?,
         timestamp: Int?
     ) {
         self.sensor = sensor
@@ -28,6 +30,7 @@ public struct RuuviCloudApiPostAlertRequest: Codable {
         self.max = max
         self.description = description
         self.counter = counter
+        self.delay = delay
         self.timestamp = timestamp
     }
 }

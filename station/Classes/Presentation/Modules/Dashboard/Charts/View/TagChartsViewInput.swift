@@ -6,7 +6,8 @@ import RuuviOntology
 
 protocol TagChartsViewInput: ViewInput {
     var viewModel: TagChartsViewModel { get set }
-    var historyLengthInDay: Int { get set }
+    var historyLengthInHours: Int { get set }
+    var showChartStat: Bool { get set }
     var viewIsVisible: Bool { get }
     func createChartViews(from: [MeasurementType])
     func clearChartHistory()
@@ -30,6 +31,7 @@ protocol TagChartsViewInput: ViewInput {
     func showSwipeUpInstruction()
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel)
     func showSyncAbortAlert(dismiss: Bool)
+    func showSyncAbortAlertForSwipe()
     func showExportSheet(with path: URL)
     func showLongerHistoryDialog()
 }

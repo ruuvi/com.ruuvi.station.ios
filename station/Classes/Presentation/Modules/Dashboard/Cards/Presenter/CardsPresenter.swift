@@ -348,7 +348,7 @@ extension CardsPresenter {
 
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({ (ruuviTag) in
-            if ruuviTag.isCloud && settings.cloudModeEnabled {
+            if ruuviTag.isCloud {
                 if let macId = ruuviTag.macId {
                     alertHandler.subscribe(self, to: macId.value)
                 }
@@ -862,8 +862,7 @@ extension CardsPresenter {
 
     private func processAlert(record: RuuviTagSensorRecord,
                               viewModel: CardsViewModel) {
-        if let isCloud = viewModel.isCloud.value,
-           isCloud && settings.cloudModeEnabled,
+        if let isCloud = viewModel.isCloud.value, isCloud,
             let macId = viewModel.mac.value {
             alertHandler.processNetwork(record: record,
                                         trigger: false,
@@ -992,6 +991,15 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
+    func viewDidTriggerNavigateChart(to viewModel: CardsViewModel) {
+        if let tagCharts = tagCharts, let sensor = ruuviTags
+            .first(where: {
+                ($0.macId != nil && ($0.macId?.any == viewModel.mac.value))
+            }) {
+            tagCharts.scrollTo(ruuviTag: sensor)
+        }
+    }
+
     func viewDidTriggerDismissChart(for viewModel: CardsViewModel,
                                     dismissParent: Bool) {
         tagCharts?.notifyDismissInstruction(dismissParent: dismissParent)
@@ -1116,6 +1124,19 @@ extension CardsPresenter: TagChartsViewModuleOutput {
             }
         })
     }
+
+    func tagChartSafeToSwipe(
+        to ruuviTag: AnyRuuviTagSensor, module: TagChartsViewModuleInput
+    ) {
+        if let viewModel = viewModels.first(where: {
+            return ($0.luid.value != nil && $0.luid.value == ruuviTag.luid?.any)
+                || ($0.mac.value != nil && $0.mac.value == ruuviTag.macId?.any)
+        }) {
+            updateVisibleCard(from: viewModel,
+                                    triggerScroll: true)
+            view?.scroll(to: visibleViewModelIndex)
+        }
+    }
 }
 
 // MARK: - RuuviNotifierObserver
@@ -1163,12 +1184,6 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
-    private func showCardSwipeHint() {
-        if !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
-            view?.showSwipeLeftRightHint()
-            settings.cardsSwipeHintWasShown = true
-        }
-    }
 
     private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
@@ -1176,10 +1191,6 @@ extension CardsPresenter {
             sSelf.interactor.checkAndUpdateFirmwareVersion(for: ruuviTag,
                                                            settings: sSelf.settings)
         }
-    }
-
-    private func migrateFirmwareVersion(for ruuviTags: [RuuviTagSensor]) {
-        interactor.migrateFWVersionFromDefaults(for: ruuviTags, settings: settings)
     }
 
     private func syncAlerts(ruuviTag: RuuviTagSensor, viewModel: CardsViewModel) {
@@ -1198,6 +1209,8 @@ extension CardsPresenter {
                 sync(connection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .movement:
                 sync(movement: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .cloudConnection:
+                sync(cloudConnection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             default: break
             }
         }
@@ -1208,7 +1221,8 @@ extension CardsPresenter {
             viewModel.pressureAlertState.value,
             viewModel.signalAlertState.value,
             viewModel.connectionAlertState.value,
-            viewModel.movementAlertState.value
+            viewModel.movementAlertState.value,
+            viewModel.cloudConnectionAlertState.value
         ]
 
         if alertService.hasRegistrations(for: ruuviTag) {
@@ -1314,6 +1328,16 @@ extension CardsPresenter {
                        for: ruuviTag)
     }
 
+    private func sync(cloudConnection: AlertType,
+                      ruuviTag: PhysicalSensor,
+                      viewModel: CardsViewModel) {
+        if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
+            viewModel.isCloudConnectionAlertOn.value = true
+        } else {
+            viewModel.isCloudConnectionAlertOn.value = false
+        }
+    }
+
     private func reloadMutedTill() {
         for viewModel in viewModels {
             if let mutedTill = viewModel.temperatureAlertMutedTill.value,
@@ -1395,6 +1419,8 @@ extension CardsPresenter {
             observable = viewModel.isConnectionAlertOn
         case .movement:
             observable = viewModel.isMovementAlertOn
+        case .cloudConnection:
+            observable = viewModel.isCloudConnectionAlertOn
         default:
             // Should never be here
             observable = viewModel.isTemperatureAlertOn
