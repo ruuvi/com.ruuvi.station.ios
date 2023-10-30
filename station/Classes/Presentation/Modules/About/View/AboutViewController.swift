@@ -112,7 +112,9 @@ extension AboutViewController {
             "About.OpenSource.header".localized() + twoNewlines +
             "About.OpenSource.contents".localized() + fourNewlines +
             "About.More.header".localized() + twoNewlines +
-            "About.More.contents".localized() + "\n"
+            "About.More.contents".localized() + fourNewlines +
+            "About.Privacy.header".localized() + twoNewlines +
+            "About.Privacy.contents".localized() + "\n"
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
@@ -124,7 +126,8 @@ extension AboutViewController {
         let makeBold = ["About.OperationsManual.header".localized(),
                         "About.Troubleshooting.header".localized(),
                         "About.OpenSource.header".localized(),
-                        "About.More.header".localized()]
+                        "About.More.header".localized(),
+                        "About.Privacy.header".localized()]
         let boldFont = UIFont.Muli(.bold, size: 16)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)

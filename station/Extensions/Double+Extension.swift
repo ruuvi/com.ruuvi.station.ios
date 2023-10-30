@@ -12,3 +12,18 @@ extension Double {
         return decimalCount
     }
 }
+
+extension Optional where Wrapped == Double {
+    var intValue: Int {
+        guard let self = self else {
+            return 0
+        }
+        return Int(self)
+    }
+}
+
+extension Double {
+    var intValue: Int {
+        return Int(self)
+    }
+}

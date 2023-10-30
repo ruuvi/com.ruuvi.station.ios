@@ -416,6 +416,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Invalid MAC-address";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Data storage error";
 "UserApiError.ER_SUB_NO_USER" = "No user";
+"UserApiError.ER_THROTTLED" = "Too many requests";
 "OffsetCorrection.CalibrationDescription.text" = "In normal use, it's not necessary to adjust the offset.\n\nIf you're an advanced user and you'd like to manually configure the factory calibrated sensors, it's possible to do so.\n\nCalibration tips are available on ruuvi.com/support";
 "OffsetCorrection.Dialog.Calibration.ClearConfirm" = "Clear calibration settings?";
 "OffsetCorrection.Dialog.Calibration.Title" = "Calibration setup";
@@ -544,7 +545,7 @@ Your RuuviTag sensor is ready for use!";
 "Widgets.Description.message" = "Create widgets of your favourite Ruuvi sensors. Widgets update from the Ruuvi Cloud. A Ruuvi Gateway router is required.";
 "settings_appearance" = "Appearance";
 "app_theme" = "App Theme";
-"follow_system_theme" = "Follow system theme";
+"follow_system_theme" = "System theme";
 "dark_theme" = "Dark theme";
 "light_theme" = "Light theme";
 "Settings.Temperature.Resolution.title" = "Temperature Resolution";

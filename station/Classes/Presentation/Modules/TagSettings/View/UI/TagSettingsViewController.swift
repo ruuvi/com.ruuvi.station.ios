@@ -18,6 +18,7 @@ enum TagSettingsSectionIdentifier {
     case alertRSSI
     case alertMovement
     case alertConnection
+    case alertCloudConnection
     case offsetCorrection
     case moreInfo
     case firmware
@@ -124,6 +125,8 @@ class TagSettingsViewController: UIViewController {
     private let customAlertDescriptionCharacterLimit = 32
     private var alertMinRangeTextField = UITextField()
     private var alertMaxRangeTextField = UITextField()
+    private var cloudConnectionAlertDelayTextField = UITextField()
+    private let cloudConnectionAlertDelayCharaterLimit: Int = 2
 
     private let pairedString = "TagSettings.PairAndBackgroundScan.Paired.title".localized()
     private let pairingString = "TagSettings.PairAndBackgroundScan.Pairing.title".localized()
@@ -268,6 +271,16 @@ class TagSettingsViewController: UIViewController {
                                           reuseIdentifier: Self.ReuseIdentifier)
     }()
 
+    // Cloud Connection
+    private lazy var cloudConnectionAlertSectionHeaderView:
+    TagSettingsExpandableSectionHeader? = {
+        return TagSettingsExpandableSectionHeader()
+    }()
+    private lazy var cloudConnectionAlertCell: TagSettingsAlertConfigCell? = {
+        return TagSettingsAlertConfigCell(style: .value1,
+                                          reuseIdentifier: Self.ReuseIdentifier)
+    }()
+
     // Offset correction
     private lazy var tempOffsetCorrectionCell: TagSettingsBasicCell? = {
         return TagSettingsBasicCell(style: .value1,
@@ -354,6 +367,8 @@ class TagSettingsViewController: UIViewController {
         movementAlertCell = nil
         connectionAlertSectionHeaderView = nil
         connectionAlertCell = nil
+        cloudConnectionAlertSectionHeaderView = nil
+        cloudConnectionAlertCell = nil
         tempOffsetCorrectionCell = nil
         humidityOffsetCorrectionCell = nil
         pressureOffsetCorrectionCell = nil
@@ -434,6 +449,7 @@ extension TagSettingsViewController {
         tableView.reloadSections(section, with: .fade)
     }
 
+    // swiftlint:disable:next function_body_length
     private func reloadSection(identifier: TagSettingsSectionIdentifier) {
         switch identifier {
         case .btPair:
@@ -456,6 +472,45 @@ extension TagSettingsViewController {
                     removeSection(with: .offsetCorrection)
                 }
             }
+        case .alertCloudConnection:
+            let newSection = configureCloudConnectionAlertSection()
+            if let index = tableViewSections.firstIndex(
+                where: { $0.identifier == identifier }
+            ) {
+                // If section exists but it is not supposed to be visible because
+                // of owners plan being lower than pro, delete the section.
+                UIView.setAnimationsEnabled(false)
+                tableView.performBatchUpdates({
+                    if !cloudConnectionAlertVisible() {
+                        // Updating data source
+                        tableViewSections.remove(at: index)
+                        let indexSet = IndexSet(integer: index)
+                        // Updating UITableView
+                        tableView.deleteSections(indexSet, with: .none)
+                    }
+                }, completion: nil)
+                UIView.setAnimationsEnabled(true)
+            } else {
+                // If section doesn't exist and it supposed to be visible, find the
+                // index of the Connection alert section, and insert new section on index+1 position
+                // since Cloud Connection section should go below that.
+                if cloudConnectionAlertVisible() {
+                    if let index = tableViewSections.firstIndex(
+                        where: { $0.identifier == .alertConnection }
+                    ) {
+                        let newIndex = index + 1
+                        UIView.setAnimationsEnabled(false)
+                        tableView.performBatchUpdates({
+                            // Updating data source
+                            tableViewSections.insert(newSection, at: newIndex)
+                            // Updating UITableView
+                            let indexSet = IndexSet(integer: newIndex)
+                            tableView.insertSections(indexSet, with: .none)
+                        }, completion: nil)
+                        UIView.setAnimationsEnabled(true)
+                    }
+                }
+            }
         default:
             break
         }
@@ -468,6 +523,7 @@ extension TagSettingsViewController {
         if let index = tableViewSections.firstIndex(
             where: { $0.identifier == identifier }
         ) {
+            UIView.setAnimationsEnabled(false)
             tableView.performBatchUpdates({
                 // Updating data source
                 tableViewSections.remove(at: index)
@@ -477,6 +533,7 @@ extension TagSettingsViewController {
                 tableView.deleteSections(indexSet, with: .none)
                 tableView.insertSections(indexSet, with: .none)
             }, completion: nil)
+            UIView.setAnimationsEnabled(true)
         }
     }
 
@@ -487,10 +544,12 @@ extension TagSettingsViewController {
             $0.identifier == indentifier
         }) {
             let indexSet = NSIndexSet(index: index) as IndexSet
+            UIView.setAnimationsEnabled(false)
             tableView.performBatchUpdates({
                 tableViewSections.remove(at: index)
                 tableView.deleteSections(indexSet, with: .none)
             })
+            UIView.setAnimationsEnabled(true)
         }
     }
 
@@ -516,11 +575,13 @@ extension TagSettingsViewController {
                     newIndexPaths.append(indexPath)
                 }
 
+                UIView.setAnimationsEnabled(false)
                 tableView.performBatchUpdates({
                     currentSection.cells = availableItems
                     tableView.deleteRows(at: oldIndexPaths, with: .none)
                     tableView.insertRows(at: newIndexPaths, with: .none)
                 }, completion: nil)
+                UIView.setAnimationsEnabled(true)
             }
         default:
             break
@@ -1276,6 +1337,64 @@ extension TagSettingsViewController {
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
             }
         }
+
+        // Cloud Connection
+        tableView.bind(viewModel.isOwnersPlanProPlus) {
+            [weak self] _, _ in
+            self?.reloadSection(identifier: .alertCloudConnection)
+        }
+
+        if let cloudConnectionAlertCell = cloudConnectionAlertCell {
+            cloudConnectionAlertCell.bind(viewModel.isCloudConnectionAlertOn) { cell, value in
+                cell.setStatus(with: value)
+            }
+
+            cloudConnectionAlertCell.bind(viewModel.cloudConnectionAlertUnseenDuration) {
+                [weak self] cell, duration in
+                guard let durationInt = duration?.intValue, durationInt >= 60 else {
+                    return
+                }
+
+                cell.setAlertLimitDescription(
+                    description: self?.cloudConnectionAlertRangeDescription(from: durationInt/60)
+                )
+            }
+
+            cloudConnectionAlertCell.bind(viewModel.cloudConnectionAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+        }
+
+        if let cloudConnectionAlertSectionHeaderView = cloudConnectionAlertSectionHeaderView {
+            cloudConnectionAlertSectionHeaderView.bind(
+                viewModel.cloudConnectionAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isCloudConnectionAlertOn.value)
+                    let alertState = viewModel.cloudConnectionAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+            }
+
+            cloudConnectionAlertSectionHeaderView
+                .bind(viewModel.isCloudConnectionAlertOn) { [weak self] header, isOn in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.cloudConnectionAlertState.value
+                    let mutedTill = viewModel.cloudConnectionAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+            }
+
+            cloudConnectionAlertSectionHeaderView
+                .bind(viewModel.cloudConnectionAlertState) { [weak self] header, state in
+                    guard let self = self else { return }
+                    let isOn = self.alertsAvailable() &&
+                    GlobalHelpers.getBool(from: viewModel.isCloudConnectionAlertOn.value)
+                    let mutedTill = viewModel.cloudConnectionAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+            }
+        }
     }
 
     private func configureAlertSections() -> [TagSettingsSection] {
@@ -1291,6 +1410,12 @@ extension TagSettingsViewController {
             configureMovementAlertSection(),
             configureConnectionAlertSection()
         ]
+
+        if cloudConnectionAlertVisible() {
+            sections += [
+                configureCloudConnectionAlertSection()
+            ]
+        }
 
         return sections
     }
@@ -1527,6 +1652,46 @@ extension TagSettingsViewController {
         return settingItem
     }
 
+    // MARK: - CLOUD CONNECTION ALERTS
+    private func configureCloudConnectionAlertSection() -> TagSettingsSection {
+        let section = TagSettingsSection(
+            identifier: .alertCloudConnection,
+            title: "alert_cloud_connection_title".localized(),
+            cells: [
+                cloudConnectionAlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func cloudConnectionAlertItem() -> TagSettingsItem {
+        let duration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+        let settingItem = TagSettingsItem(
+            createdCell: { [weak self] in
+                self?.cloudConnectionAlertCell?.hideAlertRangeSlider()
+                self?.cloudConnectionAlertCell?.showAlertLimitDescription()
+                self?.cloudConnectionAlertCell?.hideNoticeView()
+                self?.cloudConnectionAlertCell?.hideAdditionalTextview()
+                self?.cloudConnectionAlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .cloudConnectionAlertDescription.value))
+                self?.cloudConnectionAlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.cloudConnectionAlertRangeDescription(
+                            from: duration/60
+                        )
+                    )
+                self?.cloudConnectionAlertCell?.delegate = self
+                return self?.cloudConnectionAlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
     // MARK: - Alerts helpers
     private func alertsAvailable() -> Bool {
         return (viewModel?.isCloudAlertsAvailable.value ?? false ||
@@ -1609,6 +1774,18 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.connectionAlertMutedTill.value
         let alertState = viewModel?.connectionAlertState.value
         connectionAlertSectionHeaderView?
+            .setAlertState(with: mutedTill,
+                           isOn: isOn,
+                           alertState: alertState)
+    }
+
+    private func reloadCloudConnectionAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isCloudConnectionAlertOn.value
+        )
+        let mutedTill = viewModel?.cloudConnectionAlertMutedTill.value
+        let alertState = viewModel?.cloudConnectionAlertState.value
+        cloudConnectionAlertSectionHeaderView?
             .setAlertState(with: mutedTill,
                            isOn: isOn,
                            alertState: alertState)
@@ -1872,6 +2049,32 @@ extension TagSettingsViewController {
             return nil
         }
     }
+
+    // Cloud Connection
+    private func cloudConnectionAlertVisible() -> Bool {
+        return viewModel?.isOwnersPlanProPlus.value ?? false
+    }
+
+    private func cloudConnectionAlertRangeDescription(
+        from delay: Int? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = "alert_cloud_connection_description".localized()
+
+        if let delay = delay {
+            return attributedString(from: String(format: format, delay))
+        } else {
+            return nil
+        }
+    }
+
+    private func cloudConnectionMinUnseenDuration() -> Int {
+        return 2 // mins
+    }
+
+    private func cloudConnectionDefaultUnseenDuration() -> Int {
+        return 15 // mins
+    }
 }
 
 extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
@@ -1892,6 +2095,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             description = viewModel?.movementAlertDescription.value
         case connectionAlertCell:
             description = viewModel?.connectionAlertDescription.value
+        case cloudConnectionAlertCell:
+            description = viewModel?.cloudConnectionAlertDescription.value
         default:
             break
         }
@@ -1911,6 +2116,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             showPressureAlertSetDialog(sender: sender)
         case rssiAlertCell:
             showRSSIAlertSetDialog(sender: sender)
+        case cloudConnectionAlertCell:
+            showCloudConnectionAlertSetDialog(sender: sender)
         default:
             break
         }
@@ -1951,6 +2158,12 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         case connectionAlertCell:
             output.viewDidChangeAlertState(
                 for: .connection,
+                isOn: isOn
+            )
+
+        case cloudConnectionAlertCell:
+            output.viewDidChangeAlertState(
+                for: .cloudConnection(unseenDuration: 0),
                 isOn: isOn
             )
 
@@ -2116,6 +2329,24 @@ extension TagSettingsViewController {
                                          currentLowerBound: minimumValue,
                                          currentUpperBound: maximumValue,
                                          sender: sender)
+    }
+
+    private func showCloudConnectionAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = "alert_cloud_connection_dialog_title".localized()
+        let message = "alert_cloud_connection_dialog_description".localized()
+
+        let minimumDuration = cloudConnectionMinUnseenDuration()
+        let defaultDuration = cloudConnectionDefaultUnseenDuration()
+        let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            message: message,
+            minimum: minimumDuration,
+            default: defaultDuration,
+            current: currentDuration/60,
+            sender: sender
+        )
     }
 
     private func temperatureAlertRange() -> (minimum: Double, maximum: Double) {
@@ -2923,6 +3154,17 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                     alertState: viewModel?.connectionAlertState.value,
                     section: section
                 )
+            case .alertCloudConnection:
+                return alertSectionHeaderView(
+                    from: cloudConnectionAlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.cloudConnectionAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isCloudConnectionAlertOn.value
+                    ),
+                    alertState: viewModel?.cloudConnectionAlertState.value,
+                    section: section
+                )
             case .moreInfo:
                 moreInfoSectionHeaderView?.delegate = self
                 moreInfoSectionHeaderView?.setTitle(with: sectionItem.title,
@@ -3014,6 +3256,8 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             reloadMovementAlertSectionHeader()
         case .alertConnection:
             reloadConnectionAlertSectionHeader()
+        case .alertCloudConnection:
+            reloadCloudConnectionAlertSectionHeader()
         default:
             break
         }
@@ -3094,6 +3338,8 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         identifier: currentSection.identifier
                     )
                 }
+            case .alertCloudConnection:
+                break
             case .offsetCorrection:
                 if let tempOffsetCorrectionCell = tempOffsetCorrectionCell {
                     tempOffsetCorrectionCell.disableEditing(!hasMeasurement())
@@ -3270,6 +3516,11 @@ extension TagSettingsViewController {
                     for: .connection,
                     description: inputText
                 )
+            case self.cloudConnectionAlertCell:
+                self.output.viewDidChangeAlertDescription(
+                    for: .cloudConnection(unseenDuration: 0),
+                    description: inputText
+                )
             default:
                 break
             }
@@ -3352,6 +3603,47 @@ extension TagSettingsViewController {
             self.didSetAlertRange(sender: sender,
                                   minValue: minimumInputText.doubleValue,
                                   maxValue: maximumInputText.doubleValue )
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Cloud connection alert delay settings
+extension TagSettingsViewController {
+    // swiftlint:disable:next function_parameter_count
+    private func showSensorCustomAlertRangeDialog(title: String?,
+                                                  message: String?,
+                                                  minimum: Int,
+                                                  default: Int,
+                                                  current: Int?,
+                                                  sender: TagSettingsAlertConfigCell) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addTextField { [weak self] alertTextField in
+            guard let self = self else { return }
+            alertTextField.delegate = self
+            alertTextField.keyboardType = .numberPad
+            self.cloudConnectionAlertDelayTextField = alertTextField
+            alertTextField.text = current?.stringValue
+        }
+
+        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            guard let durationInput = self.cloudConnectionAlertDelayTextField.text?.intValue,
+                  durationInput >= minimum else {
+                return
+            }
+
+            let currentDuration = self.viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+            if durationInput == (currentDuration/60) {
+                return
+            }
+
+            self.output.viewDidChangeCloudConnectionAlertUnseenDuration(duration: durationInput*60)
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
         alert.addAction(action)
@@ -3550,6 +3842,12 @@ extension TagSettingsViewController: UITextFieldDelegate {
                 return false
             }
 
+        } else if textField == cloudConnectionAlertDelayTextField {
+            if limit <= cloudConnectionAlertDelayCharaterLimit {
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }

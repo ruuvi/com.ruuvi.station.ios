@@ -19,7 +19,7 @@ class TagChartsMarkerView: MarkerImage {
     private let hPadding: CGFloat = 10.0
     private let vPadding: CGFloat = 4.0
     private let cornerRadius: CGFloat = 4.0
-    private let yBottomPadding: CGFloat = 14.0
+    private let yBottomPadding: CGFloat = 32.0
 
     init(color: UIColor? = RuuviColor.ruuviGraphMarkerColor,
          font: UIFont = UIFont.Muli(.regular, size: 8),

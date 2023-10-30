@@ -10,6 +10,7 @@ import RuuviNotification
 import RuuviMigration
 import RuuviContext
 import RuuviService
+import RuuviOntology
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
+        self.settings = r.resolve(RuuviLocalSettings.self)
+        setPreferrerdLanguage()
 
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -72,8 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = appRouter.viewController
         self.window?.makeKeyAndVisible()
         self.appRouter = appRouter
-
-        self.settings = r.resolve(RuuviLocalSettings.self)
         self.window?.overrideUserInterfaceStyle = settings.theme.uiInterfaceStyle
 
         return true
@@ -137,8 +138,21 @@ extension AppDelegate: MessagingDelegate {
         cloudNotificationService.set(token: fcmToken,
                                      name: UIDevice.modelName,
                                      data: nil,
+                                     language: settings.language,
                                      sound: settings.alertSound)
     }
+
+    fileprivate func setPreferrerdLanguage() {
+        if let languageCode = Bundle.main.preferredLocalizations.first,
+           let language = Language(rawValue: languageCode) {
+            if settings.language != language {
+                settings.language = language
+            }
+        } else {
+            settings.language = .english
+        }
+    }
+
 }
 
 // MARK: - UniversalLins

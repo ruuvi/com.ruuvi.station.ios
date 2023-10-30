@@ -3,20 +3,24 @@ import RuuviOntology
 import RuuviService
 import RuuviNotification
 import RuuviNotifier
+import RuuviLocal
 
 public final class RuuviNotifierImpl: RuuviNotifier {
     var observations = [String: NSPointerArray]()
     let titles: RuuviNotifierTitles
     let ruuviAlertService: RuuviServiceAlert
     let localNotificationsManager: RuuviNotificationLocal
+    let localSyncState: RuuviLocalSyncState
 
     public init(
         ruuviAlertService: RuuviServiceAlert,
         ruuviNotificationLocal: RuuviNotificationLocal,
+        localSyncState: RuuviLocalSyncState,
         titles: RuuviNotifierTitles
     ) {
         self.ruuviAlertService = ruuviAlertService
         self.localNotificationsManager = ruuviNotificationLocal
+        self.localSyncState = localSyncState
         self.titles = titles
     }
 
