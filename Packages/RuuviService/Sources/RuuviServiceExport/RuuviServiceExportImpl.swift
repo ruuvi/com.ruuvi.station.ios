@@ -63,20 +63,17 @@ extension RuuviServiceExportImpl {
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd-HHmm"
+        dateFormatter.dateFormat = "yyyyMMdd'T'HHmmssZ"
         let date = dateFormatter.string(from: Date())
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let group = DispatchGroup()
         let units = measurementService.units
 
-        // Timezone offset
-        let timezoneOffset = TimeZone.autoupdatingCurrent.offsetFromUTC()
-
         queue.async {
             autoreleasepool {
                 group.enter()
 
-                let fileName = ruuviTag.name + "_" + date + "_" + timezoneOffset + ".csv"
+                let fileName = ruuviTag.name + "_" + date + ".csv"
                 let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
                 let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
                 let headersString = self.headersProvider.getHeaders(units)
@@ -172,15 +169,5 @@ extension RuuviServiceExportImpl {
             }
         }
         return promise.future
-    }
-}
-
-extension TimeZone {
-    func offsetFromUTC() -> String {
-        let localTimeZoneFormatter = DateFormatter()
-        localTimeZoneFormatter.timeZone = self
-        localTimeZoneFormatter.dateFormat = "Z"
-        let offset = localTimeZoneFormatter.string(from: Date())
-        return "UTC" + offset
     }
 }
