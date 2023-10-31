@@ -4,7 +4,7 @@ import RuuviLocal
 
 enum UniversalLinkType: String {
     case verify = "/verify"
-    case dashboard = "/mobile"
+    case dashboard = "/dashboard"
 
     var handlerType: UIViewController.Type {
         switch self {
