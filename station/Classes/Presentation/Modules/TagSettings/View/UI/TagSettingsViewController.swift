@@ -621,8 +621,6 @@ extension TagSettingsViewController {
             }
         }
 
-        let isClaimed = viewModel.isClaimedTag.value
-        let isOwner = viewModel.isOwner.value
         if let tagOwnerCell = tagOwnerCell {
             tagOwnerCell.bind(viewModel.owner) { cell, owner in
                 cell.configure(value: owner)
@@ -702,8 +700,6 @@ extension TagSettingsViewController {
     }
 
     private func tagOwnerSettingItem() -> TagSettingsItem {
-        let isClaimed = GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
-        let isOwner = GlobalHelpers.getBool(from: viewModel?.isOwner.value)
         let settingItem = TagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
