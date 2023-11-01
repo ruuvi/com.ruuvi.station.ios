@@ -28,4 +28,12 @@ struct GlobalHelpers {
                 + " " + (luid?.prefix(4) ?? "")
         }
     }
+
+    func formattedString(from double: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.autoupdatingCurrent
+        formatter.numberStyle = .decimal
+        return formatter.string(from: NSNumber(value: double)) ?? "0"
+    }
+
 }
