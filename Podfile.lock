@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.4.3)
+  - BTKit (0.4.4)
   - Firebase (10.7.0):
     - Firebase/Core (= 10.7.0)
   - Firebase/Analytics (10.7.0):
@@ -808,7 +808,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BTKit:
-    :commit: dd339f9847567e543277221de5ccdfac2cb5b683
+    :commit: 3f8d3742fe7fb1721627853fa14827ca0e7b36f1
     :git: https://github.com/ruuvi/BTKit.git
   Humidity:
     :commit: fb909b332a1f17a6453587dbeaebcfe7c6712a72
@@ -821,7 +821,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
 
 SPEC CHECKSUMS:
-  BTKit: 1954b38982256d6ce0cdfeada1dcc587c250d3ee
+  BTKit: f4e41362078035f6f91b3fb4f3e106881fa501ee
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
   FirebaseABTesting: 76c8297fd026074e0366dc941d265d1be80a56d5
   FirebaseAnalytics: f8133442ee6f8512e28ff19e62ce15398bfaeace
