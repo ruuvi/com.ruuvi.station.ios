@@ -722,8 +722,9 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showFailedToSyncIn() {
+        let title = "TagCharts.FailedToSyncDialog.title".localized()
         let message = "TagCharts.FailedToSyncDialog.message".localized()
-        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         alertVC.addAction(UIAlertAction(title: "TagCharts.TryAgain.title".localized(),
                                         style: .default,

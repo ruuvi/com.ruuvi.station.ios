@@ -585,6 +585,7 @@ Ihr RuuviTag-Sensor ist einsatzbereit!";
 "download" = "Download";
 "clear_local_history" = "Lokaler Verlauf löschen";
 "clear_local_history_description" = "Möchten Sie lokal gespeicherte historische Daten aus der App löschen? Dies löscht nicht den intern gespeicherten Verlauf des Sensors oder die im Ruuvi Cloud-Dienst gespeicherten historischen Daten.";
+"TagCharts.FailedToSyncDialog.title" = "Download failed";
 "TagCharts.FailedToSyncDialog.message" = "Download der Bluetooth-Historie fehlgeschlagen. Stellen Sie sicher, dass Sie sich in Bluetooth-Reichweite befinden, dass Ihr Sensor über eine Firmware verfügt, die das Herunterladen unterstützt, und dass der Sensor nicht gleichzeitig mit einem anderen iOS-Gerät verbunden ist. Die Sensorverbindung ist für die Ruuvi Station reserviert, wenn der Verbindungsmodus in iOS verwendet wird.";
 "TagCharts.TryAgain.title" = "Erneut versuchen";
 "support" = "Unterstützung";
