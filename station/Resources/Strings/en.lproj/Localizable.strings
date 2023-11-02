@@ -586,6 +586,7 @@ Your RuuviTag sensor is ready for use!";
 "download" = "Download";
 "clear_local_history" = "Clear local history";
 "clear_local_history_description" = "Do you want to clear locally stored history data from the app? This won't clear internally stored history from the sensor or history data stored on the Ruuvi Cloud service.";
+"TagCharts.FailedToSyncDialog.title" = "Download failed";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth history download failed. Check that you're within Bluetooth range, your sensor has firmware that supports downloading and that the sensor is not simultaneously connected to another iOS device. Sensor connection is reserved for Ruuvi Station when using connected mode in iOS.";
 "TagCharts.TryAgain.title" = "Try again";
 "support" = "Support";
