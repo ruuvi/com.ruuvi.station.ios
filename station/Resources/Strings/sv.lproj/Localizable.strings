@@ -586,6 +586,7 @@ RuuviTag-sensorn är redo att användas!";
 "download" = "Ladda ner";
 "clear_local_history" = "Rensa lokal historik";
 "clear_local_history_description" = "Vill du rensa lokalt lagrad historisk data från appen? Detta kommer inte att rensa internt lagrad historik i sensorer eller historisk data lagrad i Ruuvi Cloud-tjänst.";
+"TagCharts.FailedToSyncDialog.title" = "Download failed";
 "TagCharts.FailedToSyncDialog.message" = "Nedladdning av Bluetooth-historik misslyckades. Kontrollera att du är inom Bluetooth-räckvidd, att din sensor har firmware som stöder nedladdning och att sensorn inte samtidigt är ansluten till en annan iOS-enhet. Sensoranslutning är reserverad för Ruuvi Station vid användning av anslutet läge i iOS.";
 "TagCharts.TryAgain.title" = "Försök igen";
 "support" = "Support";
