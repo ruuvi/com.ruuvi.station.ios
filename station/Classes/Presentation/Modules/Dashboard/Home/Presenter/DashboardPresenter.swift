@@ -622,9 +622,7 @@ extension DashboardPresenter {
             askAppStoreReview(with: vms.count)
         }
 
-        if !vms.isEmpty {
-            self.viewModels = vms
-        }
+        self.viewModels = vms
     }
 
     private func syncViewModel(ruuviTagSensor: RuuviTagSensor?,
