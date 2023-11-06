@@ -370,7 +370,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "SignIn.RequestCode" = "Begär en inloggningskod";
 "SignIn.SubmitCode" = "Skicka";
 "SignIn.EmailSent" = "E-post skickat";
-"SignIn.CheckMailbox" = "Vi har skickat ett engångslösenord till din e-post. Logga in genom att ange den här:";
+"SignIn.CheckMailbox" = "Vi har skickat ett engångslösenord till din e-post %@. Logga in genom att ange den här:";
 "SignIn.CodeHint" = "Kod";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Sensorer som du har verifierat äganderätten till på inställningssidan tas automatiskt bort från appen när du loggar ut. Sensordata hämtas från molnet igen om du loggar in med samma e-postadress.\n\nÄr du säker på att du vill logga ut? ";
 "TagSettings.ClaimTagButton.Claim" = "Bekräfta ägandet";
@@ -586,7 +586,7 @@ RuuviTag-sensorn är redo att användas!";
 "download" = "Ladda ner";
 "clear_local_history" = "Rensa lokal historik";
 "clear_local_history_description" = "Vill du rensa lokalt lagrad historisk data från appen? Detta kommer inte att rensa internt lagrad historik i sensorer eller historisk data lagrad i Ruuvi Cloud-tjänst.";
-"TagCharts.FailedToSyncDialog.title" = "Download failed";
+"TagCharts.FailedToSyncDialog.title" = "Nedladdning misslyckad";
 "TagCharts.FailedToSyncDialog.message" = "Nedladdning av Bluetooth-historik misslyckades. Kontrollera att du är inom Bluetooth-räckvidd, att din sensor har firmware som stöder nedladdning och att sensorn inte samtidigt är ansluten till en annan iOS-enhet. Sensoranslutning är reserverad för Ruuvi Station vid användning av anslutet läge i iOS.";
 "TagCharts.TryAgain.title" = "Försök igen";
 "support" = "Support";

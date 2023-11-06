@@ -140,35 +140,49 @@ extension RuuviCodeView: UITextFieldDelegate {
         textField.layer.borderColor = inactiveBorderColor.cgColor
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn
-                   range: NSRange,
-                   replacementString string: String) -> Bool {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
         guard let textField = textField as? RuuviCodeTextField else {
             return true
         }
-        let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
-        if code.count > 1 {
-            textField.resignFirstResponder()
-            populateRuuviCodeFields(with: code)
-            return false
-        } else {
-            guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
+
+        // Define the allowed characters
+        let allowedCharacters = CharacterSet.alphanumerics
+
+        // Check if the string contains only allowed characters
+        let isStringValid = string.rangeOfCharacter(from: allowedCharacters.inverted) == nil
+
+        // Proceed only if the string contains allowed characters
+        if isStringValid {
+            let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            if code.count > 1 {
+                textField.resignFirstResponder()
+                populateRuuviCodeFields(with: code)
                 return false
-            }
-            if range.length == 0 && code == "" {
-                return false
-            } else if range.length == 0 {
-                if textField.nextEntry == nil {
-                    textField.text? = code.uppercased()
-                    textField.resignFirstResponder()
-                } else {
-                    textField.text? = code.uppercased()
-                    textField.nextEntry?.becomeFirstResponder()
+            } else {
+                guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
+                    return false
                 }
-                return false
+                if range.length == 0 && code == "" {
+                    return false
+                } else if range.length == 0 {
+                    if textField.nextEntry == nil {
+                        textField.text? = code.uppercased()
+                        textField.resignFirstResponder()
+                    } else {
+                        textField.text? = code.uppercased()
+                        textField.nextEntry?.becomeFirstResponder()
+                    }
+                    return false
+                }
             }
-            return true
         }
+
+        // Return false if the string contains disallowed characters
+        return isStringValid
     }
 
 }
