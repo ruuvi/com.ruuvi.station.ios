@@ -48,13 +48,16 @@ final class OwnerPresenter: OwnerModuleInput {
 extension OwnerPresenter: OwnerViewOutput {
     /// This method is responsible for claiming/unclaiming the sensor
     func viewDidTapOnClaim(mode: OwnershipMode) {
-        isLoading = true
         switch mode {
         case .claim:
             claimSensor()
         case .unclaim:
-            unclaimSensor()
+            view.showUnclaimHistoryDataRemovalConfirmationDialog()
         }
+    }
+
+    func viewDidConfirmUnclaim(removeCloudHistory: Bool) {
+        unclaimSensor(removeCloudHistory: removeCloudHistory)
     }
 
     /// Update the tag with owner information
@@ -99,6 +102,7 @@ extension OwnerPresenter {
     }
 
     private func claimSensor() {
+        isLoading = true
         ruuviOwnershipService
             .claim(sensor: ruuviTag)
             .on(success: { [weak self] _ in
@@ -119,12 +123,12 @@ extension OwnerPresenter {
             })
     }
 
-    private func unclaimSensor() {
-        // TODO (Discuss): Update the UI to allow delete cloud history while unclaiming.
+    private func unclaimSensor(removeCloudHistory: Bool) {
+        isLoading = true
         ruuviOwnershipService
             .unclaim(
                 sensor: ruuviTag,
-                removeCloudHistory: false
+                removeCloudHistory: removeCloudHistory
             )
             .on(success: { [weak self] _ in
                 self?.router.dismiss()
