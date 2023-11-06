@@ -585,7 +585,6 @@ RuuviTag est prêt à être utilisé !";
 "download" = "Téléchargement";
 "clear_local_history" = "Effacer l'histoire locale";
 "clear_local_history_description" = "Voulez-vous effacer les données historiques stockées localement dans l'application ? Cela n'effacera pas l'historique stocké en interne par le capteur ou les données historiques stockées sur le service Ruuvi Cloud.";
-"TagCharts.FailedToSyncDialog.title" = "Download failed";
 "TagCharts.FailedToSyncDialog.message" = "Le téléchargement de l'historique Bluetooth a échoué. Vérifiez que vous êtes à portée Bluetooth, que votre capteur possède un micrologiciel prenant en charge le téléchargement et que le capteur n'est pas simultanément connecté à un autre appareil iOS. La connexion du capteur est réservée à la Ruuvi Station lorsque vous utilisez le mode connecté dans iOS.";
 "TagCharts.TryAgain.title" = "Essayez à nouveau";
 "support" = "Soutien";

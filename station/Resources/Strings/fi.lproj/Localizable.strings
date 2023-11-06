@@ -586,7 +586,6 @@ RuuviTag on valmis käyttöön!";
 "download" = "Lataa";
 "clear_local_history" = "Tyhjennä paikallinen historia";
 "clear_local_history_description" = "Haluatko tyhjentää sovelluksen muistiin tallennetun mittaushistorian? Tämä ei tyhjennä anturin sisäistä historiaa eikä Ruuvi Cloud -pilvipalveluun tallennettua historiaa.";
-"TagCharts.FailedToSyncDialog.title" = "Download failed";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth-historian lataus epäonnistui. Tarkasta, että olet Bluetooth-kantaman sisällä, että anturissa on latausta tukeva laiteohjelmisto ja ettei anturi ole yhteydessä toiseen iOS-laitteeseen samanaikaisesti. Ruuvi Stationin iOS-versio varaa anturin yhteyden käyttöönsä jatkuvaa yhteystilaa käytettäessä.";
 "TagCharts.TryAgain.title" = "Yritä uudelleen";
 "support" = "Tuki";
