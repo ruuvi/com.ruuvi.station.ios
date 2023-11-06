@@ -152,6 +152,7 @@ extension SignInViewController: SignInViewDelegate {
     func didTapRequestCodeButton(sender: SignInView) {
         let email = sender.enteredEmail()
         output.viewDidTapRequestCodeButton(for: email)
+        signInVerifyView.updateMessage(with: email)
     }
 }
 
