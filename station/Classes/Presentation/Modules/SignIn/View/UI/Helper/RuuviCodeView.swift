@@ -149,11 +149,12 @@ extension RuuviCodeView: UITextFieldDelegate {
             return true
         }
 
-        // Define the allowed characters
-        let allowedCharacters = CharacterSet.alphanumerics
+        // Define the allowed characters as a CharacterSet
+        let allowedChars = "ABCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz23456789"
+        let allowedCharacterSet = CharacterSet(charactersIn: allowedChars)
 
         // Check if the string contains only allowed characters
-        let isStringValid = string.rangeOfCharacter(from: allowedCharacters.inverted) == nil
+        let isStringValid = string.rangeOfCharacter(from: allowedCharacterSet.inverted) == nil
 
         // Proceed only if the string contains allowed characters
         if isStringValid {
@@ -166,23 +167,19 @@ extension RuuviCodeView: UITextFieldDelegate {
                 guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
                     return false
                 }
-                if range.length == 0 && code == "" {
+                if range.length == 0 && code.isEmpty {
                     return false
                 } else if range.length == 0 {
+                    textField.text = code.uppercased()
                     if textField.nextEntry == nil {
-                        textField.text? = code.uppercased()
                         textField.resignFirstResponder()
                     } else {
-                        textField.text? = code.uppercased()
                         textField.nextEntry?.becomeFirstResponder()
                     }
                     return false
                 }
             }
         }
-
-        // Return false if the string contains disallowed characters
         return isStringValid
     }
-
 }
