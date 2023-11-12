@@ -5,7 +5,9 @@ import Future
 import BTKit
 import RuuviPool
 import RuuviService
+#if canImport(RuuviServiceOwnership)
 import RuuviServiceOwnership
+#endif
 import RuuviUser
 
 class DashboardInteractor {

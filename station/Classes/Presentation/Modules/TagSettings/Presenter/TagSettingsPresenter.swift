@@ -8,7 +8,9 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+#if canImport(RuuviServiceOwnership)
 import RuuviServiceOwnership
+#endif
 import RuuviUser
 import RuuviCore
 import RuuviPresenters

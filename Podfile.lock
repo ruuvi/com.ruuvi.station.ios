@@ -610,6 +610,7 @@ DEPENDENCIES:
   - RuuviAnalytics/Impl (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviAnalytics/Tests (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviCloud (from `Packages/RuuviCloud/RuuviCloud.podspec`)
+  - RuuviCloud/Api (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Pure (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Tests (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviContext (from `Packages/RuuviContext/RuuviContext.podspec`)
@@ -873,6 +874,6 @@ SPEC CHECKSUMS:
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: d82a8769608cb261047565960f99c12faea030dc
+PODFILE CHECKSUM: 678248a5443826612f8c9f943ea15daf54e24fe5
 
 COCOAPODS: 1.12.1
