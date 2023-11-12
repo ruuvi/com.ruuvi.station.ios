@@ -8,6 +8,7 @@ import RuuviDaemon
 import FirebaseMessaging
 import RuuviLocal
 import WidgetKit
+import UIKit
 
 class SignInPresenter: NSObject {
     enum State {

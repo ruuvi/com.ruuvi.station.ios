@@ -8,6 +8,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
+import RuuviServiceOwnership
 import RuuviUser
 import RuuviCore
 import RuuviPresenters

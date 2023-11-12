@@ -1,6 +1,7 @@
 import Foundation
 import RuuviContext
 import RuuviStorage
+import UIKit
 
 final class AboutPresenter: AboutModuleInput {
     weak var view: AboutViewInput!

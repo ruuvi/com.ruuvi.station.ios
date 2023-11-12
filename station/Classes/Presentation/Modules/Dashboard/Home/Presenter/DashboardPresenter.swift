@@ -18,6 +18,7 @@ import RuuviUser
 import WidgetKit
 import CoreBluetooth
 import Future
+import UIKit
 
 class DashboardPresenter: DashboardModuleInput {
     weak var view: DashboardViewInput?

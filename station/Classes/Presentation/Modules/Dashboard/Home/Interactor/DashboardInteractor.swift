@@ -5,6 +5,7 @@ import Future
 import BTKit
 import RuuviPool
 import RuuviService
+import RuuviServiceOwnership
 import RuuviUser
 
 class DashboardInteractor {

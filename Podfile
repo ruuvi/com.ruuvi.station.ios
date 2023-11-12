@@ -31,7 +31,6 @@ def shared_pods
   pod 'RealmSwift', '~> 10.33.0'
   # common
   pod 'RuuviPresenters', :path => 'Common/RuuviPresenters/RuuviPresenters.podspec', :testspecs => ['Tests']
-  pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
   pod 'RuuviLocalization', :path => 'Common/RuuviLocalization/RuuviLocalization.podspec', :testspecs => ['Tests']
   # modules
   pod 'RuuviDiscover', :path => 'Modules/RuuviDiscover/RuuviDiscover.podspec', :testspecs => ['Tests']
@@ -118,7 +117,6 @@ def widget_pods
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
   pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
   pod 'KeychainAccess'
-  pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
   pod 'RuuviPool', :path => 'Packages/RuuviPool/RuuviPool.podspec', :testspecs => ['Tests']
   pod 'RuuviPool/Coordinator', :path => 'Packages/RuuviPool/RuuviPool.podspec'
   pod 'RuuviLocal/UserDefaults', :path => 'Packages/RuuviLocal/RuuviLocal.podspec'

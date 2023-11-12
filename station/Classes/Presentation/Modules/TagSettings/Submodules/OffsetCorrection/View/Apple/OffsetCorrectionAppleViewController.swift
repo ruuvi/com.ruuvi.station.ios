@@ -1,6 +1,7 @@
 import UIKit
 import RuuviOntology
 import RuuviService
+import RuuviServiceMeasurement
 
 class OffsetCorrectionAppleViewController: UIViewController {
     var output: OffsetCorrectionViewOutput!

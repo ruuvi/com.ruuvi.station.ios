@@ -35,7 +35,7 @@ extension RuuviCloudApiBaseResponse {
             return .success(data)
         case .error:
             guard let code = code else {
-                if let description = errorDescription {
+                if errorDescription != nil {
                     return .failure(.api(.erInternal))
                 } else {
                     return .failure(.emptyResponse)

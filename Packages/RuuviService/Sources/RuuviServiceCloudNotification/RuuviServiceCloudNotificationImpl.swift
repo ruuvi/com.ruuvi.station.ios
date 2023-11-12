@@ -3,6 +3,7 @@ import Future
 import RuuviOntology
 import RuuviStorage
 import RuuviCloud
+import RuuviCloudApi
 import RuuviPool
 import RuuviLocal
 import RuuviService

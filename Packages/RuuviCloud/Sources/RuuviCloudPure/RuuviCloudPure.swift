@@ -752,7 +752,7 @@ public final class RuuviCloudPure: RuuviCloud {
                             offsetHumidity: sensor.offsetHumidity,
                             offsetPressure: sensor.offsetPressure,
                             isCloudSensor: true,
-                            canShare: sensor.canShare ?? false,
+                            canShare: sensor.canShare,
                             sharedTo: sensor.sharedTo ?? []
                         ),
                         record: self?.decodeSensorRecord(

@@ -7,6 +7,12 @@ import RuuviCore
 import RuuviRepository
 import RuuviService
 import RuuviUser
+#if canImport(RuuviServiceAuth)
+import RuuviServiceAuth
+#endif
+#if canImport(RuuviServiceCloudNotification)
+import RuuviServiceCloudNotification
+#endif
 #if canImport(RuuviServiceAlert)
 import RuuviServiceAlert
 #endif

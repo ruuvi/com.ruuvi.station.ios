@@ -1,6 +1,5 @@
 import UIKit
 import RuuviUser
-import RuuviBundleUtils
 
 // swiftlint:disable file_length
 

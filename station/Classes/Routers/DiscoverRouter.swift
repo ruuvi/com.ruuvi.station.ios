@@ -3,6 +3,7 @@ import RuuviDiscover
 import RuuviOntology
 import BTKit
 import RuuviLocationPicker
+import UIKit
 
 protocol DiscoverRouterDelegate: AnyObject {
     func discoverRouterWantsClose(_ router: DiscoverRouter)

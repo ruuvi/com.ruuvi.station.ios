@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -37,7 +37,7 @@ let package = Package(
         .package(path: "../RuuviPersistence"),
         .package(path: "../RuuviNotifier"),
         .package(path: "../RuuviNotification"),
-        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0"))
+        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3"))
     ],
     targets: [
         .target(
