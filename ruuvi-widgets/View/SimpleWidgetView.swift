@@ -1,12 +1,10 @@
 import SwiftUI
 
 struct SimpleWidgetView: View {
+    @Environment(\.canShowWidgetContainerBackground) private var canShowBackground
     private let viewModel = WidgetViewModel()
     var entry: WidgetProvider.Entry
     var body: some View {
-        ZStack {
-            Color.backgroundColor.edgesIgnoringSafeArea(.all)
-        }
         GeometryReader { geometry in
             VStack {
                 HStack {
@@ -19,7 +17,11 @@ struct SimpleWidgetView: View {
                     Spacer()
                     Text(viewModel.measurementTime(from: entry))
                         .foregroundColor(Color.sensorNameColor1)
-                        .font(.custom(Constants.muliRegular.rawValue, size: 10, relativeTo: .body))
+                        .font(.custom(
+                            Constants.muliRegular.rawValue,
+                            size: canShowBackground ? 10 : 14,
+                            relativeTo: .body
+                        ))
                         .minimumScaleFactor(0.5)
                 }.padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
 
@@ -29,7 +31,11 @@ struct SimpleWidgetView: View {
                     HStack {
                         Text(entry.tag.displayString)
                             .foregroundColor(Color.sensorNameColor1)
-                            .font(.custom(Constants.muliBold.rawValue, size: 16, relativeTo: .headline))
+                            .font(.custom(
+                                Constants.muliBold.rawValue,
+                                size: canShowBackground ? 16 : 22,
+                                relativeTo: .headline)
+                            )
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
                             .minimumScaleFactor(0.5)
@@ -42,13 +48,13 @@ struct SimpleWidgetView: View {
                             .environment(\.locale, viewModel.locale())
                             .foregroundColor(.bodyTextColor)
                             .font(.custom(Constants.oswaldBold.rawValue,
-                                          size: 36,
+                                          size: canShowBackground ? 36 : 66,
                                           relativeTo: .largeTitle))
                             .minimumScaleFactor(0.5)
                         Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                             .foregroundColor(Color.unitTextColor)
                             .font(.custom(Constants.oswaldExtraLight.rawValue,
-                                          size: 16,
+                                          size: canShowBackground ? 16 : 24,
                                           relativeTo: .title3))
                             .baselineOffset(14)
                             .minimumScaleFactor(0.5)
@@ -56,6 +62,16 @@ struct SimpleWidgetView: View {
                     }
                 }.padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
             }.widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
+        }
+    }
+}
+
+extension EnvironmentValues {
+    var canShowWidgetContainerBackground: Bool {
+        if #available(iOSApplicationExtension 15.0, *) {
+            return self.showsWidgetContainerBackground
+        } else {
+            return false
         }
     }
 }
