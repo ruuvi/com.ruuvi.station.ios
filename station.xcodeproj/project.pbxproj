@@ -1163,6 +1163,13 @@
 			remoteGlobalIDString = E17C469829956732008CFDD7;
 			remoteInfo = pnservice;
 		};
+		E196D5B02B0137A100B60A90 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64333D1D20B0C45900CDF4B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E17C469829956732008CFDD7;
+			remoteInfo = pnservice;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -4758,16 +4765,17 @@
 				64333D2120B0C45900CDF4B6 /* Sources */,
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
 				64333D2320B0C45900CDF4B6 /* Resources */,
-				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 				60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */,
-				A986147C248CD47A0030F197 /* Crashlytics */,
 				34D458E82821A06E00EA9F93 /* Embed Foundation Extensions */,
+				A986147C248CD47A0030F197 /* Crashlytics */,
+				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				34D458E72821A06E00EA9F93 /* PBXTargetDependency */,
 				34D458EB2821A07600EA9F93 /* PBXTargetDependency */,
+				34D458E72821A06E00EA9F93 /* PBXTargetDependency */,
+				E196D5B12B0137A100B60A90 /* PBXTargetDependency */,
 			);
 			name = station;
 			packageProductDependencies = (
@@ -6404,6 +6412,11 @@
 			isa = PBXTargetDependency;
 			target = E17C469829956732008CFDD7 /* pnservice */;
 			targetProxy = E17C469E29956732008CFDD7 /* PBXContainerItemProxy */;
+		};
+		E196D5B12B0137A100B60A90 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E17C469829956732008CFDD7 /* pnservice */;
+			targetProxy = E196D5B02B0137A100B60A90 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
