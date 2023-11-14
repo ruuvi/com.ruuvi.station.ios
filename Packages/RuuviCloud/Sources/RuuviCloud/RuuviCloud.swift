@@ -14,6 +14,16 @@ public struct ValidateCodeResponse {
     }
 }
 
+public struct ShareSensorResponse {
+    public var macId: MACIdentifier?
+    public var invited: Bool?
+
+    init(macId: MACIdentifier? = nil, invited: Bool? = nil) {
+        self.macId = macId
+        self.invited = invited
+    }
+}
+
 public protocol RuuviCloud {
     @discardableResult
     func requestCode(email: String) -> Future<String?, RuuviCloudError>
@@ -69,13 +79,16 @@ public protocol RuuviCloud {
     ) -> Future<MACIdentifier?, RuuviCloudError>
 
     @discardableResult
-    func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
+    func unclaim(
+        macId: MACIdentifier,
+        removeCloudHistory: Bool
+    ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
     func share(
         macId: MACIdentifier,
         with email: String
-    ) -> Future<MACIdentifier?, RuuviCloudError>
+    ) -> Future<ShareSensorResponse, RuuviCloudError>
 
     @discardableResult
     func unshare(

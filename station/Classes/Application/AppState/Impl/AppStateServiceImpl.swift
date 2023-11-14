@@ -36,6 +36,10 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
+
+            if !settings.signedInAtleastOnce {
+                settings.signedInAtleastOnce = true
+            }
         } else {
             ruuviUser.logout()
         }

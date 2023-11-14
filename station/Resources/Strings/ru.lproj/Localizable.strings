@@ -370,7 +370,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "SignIn.RequestCode" = "Запросить код";
 "SignIn.SubmitCode" = "Отправить";
 "SignIn.EmailSent" = "Email отправлен";
-"SignIn.CheckMailbox" = "Мы отправили одноразовый пароль на вашу электронную почту. Войдите, введя его здесь:";
+"SignIn.CheckMailbox" = "Мы отправили одноразовый пароль на вашу электронную почту %@. Войдите, введя его здесь:";
 "SignIn.CodeHint" = "Код для входа";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "После выхода все датчики, которые зарегистрованы на вас, будут удалены из приложения. Если вы повторно войдете с тем же email адресом, список ваших датчиков будет загружен из облака. \n\nВы хотите выйти из сети?";
 "TagSettings.ClaimTagButton.Claim" = "Заявить о собственности";
@@ -575,7 +575,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "day_9" = "9 дней";
 "day_10" = "10 дней";
 "day_x" = "%0.f days";
-"more" = "More...";
+"more" = "Больше...";
+"all" = "All";
 "longer_history_title" = "Longer history";
 "longer_history_message" = "Ruuvi Station mobile app supports maximum 10 days of history. Ruuvi Cloud subscribers are able to view up to 2 years of historical data using web app at ruuvi.com/station (requires Ruuvi Gateway router).";
 "reading_history_x" = "Bluetooth sync: %0.f";
@@ -585,6 +586,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "download" = "Download";
 "clear_local_history" = "Clear local history";
 "clear_local_history_description" = "Do you want to clear locally stored history data from the app? This won't clear internally stored history from the sensor or history data stored on the Ruuvi Cloud service.";
+"TagCharts.FailedToSyncDialog.title" = "Download failed";
 "TagCharts.FailedToSyncDialog.message" = "Bluetooth history download failed. Check that you're within Bluetooth range, your sensor has firmware that supports downloading and that the sensor is not simultaneously connected to another iOS device. Sensor connection is reserved for Ruuvi Station when using connected mode in iOS.";
 "TagCharts.TryAgain.title" = "Try again";
 "support" = "Support";
@@ -625,6 +627,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "Widgets.Sensor.Type.title" = "Selected sensor type";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
 "Settings.SectionHeader.Application.title" = "ПРИЛОЖЕНИЕ";
+"empty_chart_message" = "No data available \nin the selected history window.";
 "onboarding_measure_your_world" = "Measure Your World";
 "onboarding_with_ruuvi_sensors" = "Let's get to know your Ruuvi Station app.";
 "onboarding_swipe_to_continue" = "Swipe to continue →";
@@ -671,7 +674,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "lets_do_it" = "Let's Sign In";
 "enter_code" = "Enter Code";
 "dashboard_no_sensors_message" = "Seems that you don't have any Ruuvi sensors added yet.";
-"add_your_first_sensor" = "Add Your First Sensor";
+"dashboard_no_sensors_message_signed_out" = "You are not signed in.\n\nIf you have an account and have already added Ruuvi sensors to it, they will automatically synchronise with Ruuvi Station mobile app when you sign in.";
+"add_a_sensor" = "Add a Sensor";
 "changelog" = "(changelog)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
 "chart_stat_min" = "Min";
@@ -731,5 +735,14 @@ If you cannot see the Language option in the settings, make sure that you have a
 "rename" = "Переименовать";
 "chart_stat_show" = "Show min/max/avg";
 "chart_stat_hide" = "Hide min/max/avg";
-"settings_alert_limit_notification" = "Limit alert notifications";
-"settings_alert_limit_notification_description" = "Trigger Bluetooth alert notification only once per hour even if alert was retriggered.";
+"settings_alert_limit_notification" = "Ограничить количество уведомлений";
+"settings_alert_limit_notification_description" = "Показывать уведомления не чаще одного раза в час, даже если тревога сработала повторно.";
+"share_pending" = "Share pending";
+"share_pending_message" = "Shared successfully! This email address isn't linked to a Ruuvi account yet. An invite to create a free account has been sent. Once created, you'll see it in the sharee listing.";
+"dialog_are_you_sure" = "Вы уверены?";
+"dialog_operation_undone" = "This operation cannot be undone.";
+"remove_cloud_history_title" = "Remove cloud history";
+"remove_cloud_history_description" = "I also want to remove sensor history data from Ruuvi Cloud.";
+"remove_claimed_sensor_description" = "By removing the sensor, your sensor ownership status will be revoked and sensor settings, such as name, background image, calibration settings and alert settings will be removed. After removal, someone else can claim ownership of the sensor. Each Ruuvi sensor can have only one owner.";
+"remove_shared_sensor_description" = "If you choose to remove this shared sensor, the owner of the sensor will be notified and you will not be able to access the sensor anymore.\n\nYou will also lose any related sensor settings like name, background image and alert configurations.";
+"remove_local_sensor_description" = "If you choose to remove this sensor, it will result in the deletion of your locally stored measurement history, along with the removal of any related sensor settings like name, background image, calibration, and alert configurations.\n\nYou can add this sensor later again, if needed.";

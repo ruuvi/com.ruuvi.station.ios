@@ -104,10 +104,9 @@ class DashboardImageCell: UICollectionViewCell {
     private var emptyViewHeight: NSLayoutConstraint!
     private var movementViewHeight: NSLayoutConstraint!
 
-    private var dataSourceIconViewHeightConstraint: NSLayoutConstraint!
     private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
-    private let dataSourceIconViewRegularHeight: CGFloat = 22
-    private let dataSourceIconViewCompactHeight: CGFloat = 16
+    private let dataSourceIconViewRegularWidth: CGFloat = 22
+    private let dataSourceIconViewCompactWidth: CGFloat = 16
 
     private var timer: Timer?
 
@@ -257,13 +256,11 @@ class DashboardImageCell: UICollectionViewCell {
         sourceAndUpdateStack.axis = .horizontal
         sourceAndUpdateStack.spacing = 6
         sourceAndUpdateStack.distribution = .fill
+        dataSourceIconView.constrainHeight(constant: 22)
 
         dataSourceIconViewWidthConstraint = dataSourceIconView.widthAnchor
-            .constraint(equalToConstant: dataSourceIconViewCompactHeight)
-        dataSourceIconViewHeightConstraint = dataSourceIconView.heightAnchor
-            .constraint(equalToConstant: dataSourceIconViewCompactHeight)
+            .constraint(lessThanOrEqualToConstant: dataSourceIconViewRegularWidth)
         dataSourceIconViewWidthConstraint.isActive = true
-        dataSourceIconViewHeightConstraint.isActive = true
 
         let footerStack = UIStackView(arrangedSubviews: [
             sourceAndUpdateStack, batteryLevelView
@@ -301,8 +298,7 @@ extension DashboardImageCell {
         alertIcon.image = nil
         alertIcon.layer.removeAllAnimations()
         highlightTemperatureValues(highlight: false)
-        dataSourceIconViewHeightConstraint.constant = dataSourceIconViewCompactHeight
-        dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactHeight
+        dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
     }
 }
 
@@ -413,11 +409,9 @@ extension DashboardImageCell {
 
         switch viewModel.source.value {
         case .ruuviNetwork, .weatherProvider:
-            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularHeight
-            dataSourceIconViewHeightConstraint.constant = dataSourceIconViewRegularHeight
+            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularWidth
         default:
-            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactHeight
-            dataSourceIconViewHeightConstraint.constant = dataSourceIconViewCompactHeight
+            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
         }
 
         dataSourceIconView.image = dataSourceIconView

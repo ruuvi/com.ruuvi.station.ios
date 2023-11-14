@@ -140,35 +140,46 @@ extension RuuviCodeView: UITextFieldDelegate {
         textField.layer.borderColor = inactiveBorderColor.cgColor
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn
-                   range: NSRange,
-                   replacementString string: String) -> Bool {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
         guard let textField = textField as? RuuviCodeTextField else {
             return true
         }
-        let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
-        if code.count > 1 {
-            textField.resignFirstResponder()
-            populateRuuviCodeFields(with: code)
-            return false
-        } else {
-            guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
-                return false
-            }
-            if range.length == 0 && code == "" {
-                return false
-            } else if range.length == 0 {
-                if textField.nextEntry == nil {
-                    textField.text? = code.uppercased()
-                    textField.resignFirstResponder()
-                } else {
-                    textField.text? = code.uppercased()
-                    textField.nextEntry?.becomeFirstResponder()
-                }
-                return false
-            }
-            return true
-        }
-    }
 
+        // Define the allowed characters as a CharacterSet
+        let allowedChars = "ABCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz23456789"
+        let allowedCharacterSet = CharacterSet(charactersIn: allowedChars)
+
+        // Check if the string contains only allowed characters
+        let isStringValid = string.rangeOfCharacter(from: allowedCharacterSet.inverted) == nil
+
+        // Proceed only if the string contains allowed characters
+        if isStringValid {
+            let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            if code.count > 1 {
+                textField.resignFirstResponder()
+                populateRuuviCodeFields(with: code)
+                return false
+            } else {
+                guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
+                    return false
+                }
+                if range.length == 0 && code.isEmpty {
+                    return false
+                } else if range.length == 0 {
+                    textField.text = code.uppercased()
+                    if textField.nextEntry == nil {
+                        textField.resignFirstResponder()
+                    } else {
+                        textField.nextEntry?.becomeFirstResponder()
+                    }
+                    return false
+                }
+            }
+        }
+        return isStringValid
+    }
 }

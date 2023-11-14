@@ -6,4 +6,5 @@ protocol ShareViewInput: ViewInput {
     func clearInput()
     func showInvalidEmail()
     func showSuccessfullyShared()
+    func showSuccessfullyInvited()
 }

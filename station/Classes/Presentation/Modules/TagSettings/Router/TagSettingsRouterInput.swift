@@ -4,6 +4,7 @@ import RuuviOntology
 
 protocol TagSettingsRouterInput {
     func dismiss(completion: (() -> Void)?)
+    func dismissToRoot(completion: (() -> Void)?)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
     func openShare(for sensor: RuuviTagSensor)
     func openOffsetCorrection(type: OffsetCorrectionType,
@@ -12,6 +13,10 @@ protocol TagSettingsRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openOwner(ruuviTag: RuuviTagSensor, mode: OwnershipMode)
     func openContest(ruuviTag: RuuviTagSensor)
+    func openSensorRemoval(
+        ruuviTag: RuuviTagSensor,
+        output: SensorRemovalModuleOutput
+    )
 }
 
 extension TagSettingsRouterInput {

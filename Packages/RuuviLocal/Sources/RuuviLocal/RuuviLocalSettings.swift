@@ -41,6 +41,7 @@ public enum AppearanceTypeKey: String {
 }
 
 public protocol RuuviLocalSettings {
+    var signedInAtleastOnce: Bool { get set }
     /// When syncing for the first time (after sign in) or extensive changes
     /// like cloud sync
     var isSyncing: Bool { get set }
@@ -71,6 +72,7 @@ public protocol RuuviLocalSettings {
     var chartDownsamplingOn: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
     var chartStatsOn: Bool { get set }
+    var chartShowAll: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }

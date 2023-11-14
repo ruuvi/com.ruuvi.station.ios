@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
-    <device id="retina4_0" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,17 +22,17 @@
             <objects>
                 <viewController id="Y6W-OH-hqX" customClass="OwnerViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hqY-lT-xal" userLabel="ContentView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tt2-JQ-Lyg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Snr-bv-x2g">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="494"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sa5-R9-s2b">
-                                                <rect key="frame" x="16" y="20" width="288" height="402"/>
+                                                <rect key="frame" x="16" y="20" width="361" height="381.66666666666669"/>
                                                 <string key="text">Do you own this sensor? If yes, please claim ownership of the sensor and it'll be added to your Ruuvi account. Every Ruuvi sensor can have only one owner.
 
 Benefits:
@@ -48,8 +48,12 @@ Benefits:
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sdf-03-sQW">
+                                                <rect key="frame" x="16" y="421.66666666666674" width="361" height="358.33333333333326"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TMq-hd-Z5t">
-                                                <rect key="frame" x="57" y="442" width="206" height="44"/>
+                                                <rect key="frame" x="93.666666666666686" y="800" width="206" height="44"/>
                                                 <color key="backgroundColor" name="RuuviTintColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="44" id="74S-Kg-20W"/>
@@ -72,11 +76,14 @@ Benefits:
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="TMq-hd-Z5t" firstAttribute="top" secondItem="sa5-R9-s2b" secondAttribute="bottom" constant="20" id="173-LK-zTr"/>
                                             <constraint firstItem="sa5-R9-s2b" firstAttribute="top" secondItem="Snr-bv-x2g" secondAttribute="top" constant="20" id="1Pj-SM-cjo"/>
                                             <constraint firstItem="TMq-hd-Z5t" firstAttribute="centerX" secondItem="Snr-bv-x2g" secondAttribute="centerX" id="AUG-Jj-oR9"/>
                                             <constraint firstAttribute="trailing" secondItem="sa5-R9-s2b" secondAttribute="trailing" constant="16" id="Fcg-Nk-4rZ"/>
                                             <constraint firstAttribute="bottom" secondItem="TMq-hd-Z5t" secondAttribute="bottom" constant="8" id="KQV-qY-c8Z"/>
+                                            <constraint firstItem="sdf-03-sQW" firstAttribute="trailing" secondItem="sa5-R9-s2b" secondAttribute="trailing" id="aRb-AG-afR"/>
+                                            <constraint firstItem="TMq-hd-Z5t" firstAttribute="top" secondItem="sdf-03-sQW" secondAttribute="bottom" priority="750" constant="20" id="edL-Aq-NpE"/>
+                                            <constraint firstItem="sdf-03-sQW" firstAttribute="leading" secondItem="sa5-R9-s2b" secondAttribute="leading" id="efg-PJ-CWK"/>
+                                            <constraint firstItem="sdf-03-sQW" firstAttribute="top" secondItem="sa5-R9-s2b" secondAttribute="bottom" constant="20" id="fp4-LG-g2r"/>
                                             <constraint firstItem="sa5-R9-s2b" firstAttribute="leading" secondItem="Snr-bv-x2g" secondAttribute="leading" constant="16" id="hzA-fI-W8D"/>
                                         </constraints>
                                     </view>
@@ -104,6 +111,7 @@ Benefits:
                     <connections>
                         <outlet property="claimOwnershipButton" destination="TMq-hd-Z5t" id="Gaw-zF-YO1"/>
                         <outlet property="claimOwnershipDescriptionLabel" destination="sa5-R9-s2b" id="pv5-cO-S5i"/>
+                        <outlet property="removeCloudHistoryActionContainer" destination="sdf-03-sQW" id="whM-Z0-aXO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -113,7 +121,7 @@ Benefits:
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="112.5" y="71.25"/>
+            <point key="canvasLocation" x="112.21374045801527" y="71.126760563380287"/>
         </scene>
     </scenes>
     <resources>

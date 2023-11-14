@@ -101,6 +101,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
             self.view?.viewModel = self.viewModel
             self.view?.historyLengthInHours = self.settings.chartDurationHours
             self.view?.showChartStat = self.settings.chartStatsOn
+            self.view?.showChartAll = self.settings.chartShowAll
         }
     }
 
@@ -266,7 +267,13 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     }
 
     func viewDidSelectChartHistoryLength(hours: Int) {
+        settings.chartShowAll = false
         settings.chartDurationHours = hours
+    }
+
+    func viewDidSelectAllChartHistory() {
+        settings.chartShowAll = true
+        settings.chartDurationHours = 240
     }
 
     func viewDidSelectLongerHistory() {
@@ -334,6 +341,7 @@ extension TagChartsViewPresenter: RuuviNotifierObserver {
 // MARK: - Private
 extension TagChartsViewPresenter {
     private func restartObserving() {
+        shutDownModule()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
         startObservingDidConnectDisconnectNotifications()
