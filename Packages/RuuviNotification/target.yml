@@ -1,0 +1,13 @@
+---
+targets:
+  RuuviNotification:
+    templates:
+    - Framework
+    dependencies:
+    - package: Future
+    - package: Humidity
+    - target: RuuviOntology
+    - target: RuuviLocal
+    - target: RuuviVirtual
+    - target: RuuviStorage
+    - target: RuuviService

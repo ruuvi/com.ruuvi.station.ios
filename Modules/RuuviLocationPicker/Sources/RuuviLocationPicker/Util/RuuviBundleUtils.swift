@@ -3,10 +3,15 @@ import UIKit
 
 extension Bundle {
     public static func pod(_ clazz: AnyClass) -> Bundle {
-        if let module = NSStringFromClass(clazz).components(separatedBy: ".").first,
-           let bundleURL = Bundle(for: clazz).resourceURL?.appendingPathComponent("\(module).bundle"),
-           let bundle = Bundle(url: bundleURL) {
-            return bundle
+        if let module = NSStringFromClass(clazz).components(separatedBy: ".").first {
+            if let bundleURL = Bundle(for: clazz).resourceURL?.appendingPathComponent("\(module).bundle"), let bundle = Bundle(url: bundleURL) {
+                return bundle
+            } else if let bundleURL = Bundle(for: clazz).resourceURL, let bundle = Bundle(url: bundleURL) {
+                return bundle
+            } else {
+                assertionFailure()
+                return Bundle.main
+            }
         } else {
             assertionFailure()
             return Bundle.main

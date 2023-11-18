@@ -1,0 +1,7 @@
+---
+targets:
+  RuuviDFU:
+    templates:
+    - Framework
+    dependencies:
+    - package: NordicDFU

@@ -1,0 +1,16 @@
+---
+targets:
+  RuuviDiscover:
+    templates:
+    - Module
+    dependencies:
+    - package: BTKit
+    - package: Future
+    - target: RuuviOntology
+    - target: RuuviContext
+    - target: RuuviReactor
+    - target: RuuviLocal
+    - target: RuuviService
+    - target: RuuviVirtual
+    - target: RuuviPresenters
+    - target: RuuviLocalization

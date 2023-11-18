@@ -5,9 +5,6 @@ import RuuviOntology
 import RuuviVirtual
 import RuuviNotifier
 import RuuviDaemon
-#if canImport(RuuviDaemonOperation)
-import RuuviDaemonOperation
-#endif
 
 public final class VirtualTagDaemonImpl: RuuviDaemonWorker, VirtualTagDaemon {
     private let virtualService: VirtualService

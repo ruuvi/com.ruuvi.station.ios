@@ -1,0 +1,7 @@
+---
+targets:
+  RuuviUser:
+    templates:
+    - Framework
+    dependencies:
+    - package: KeychainAccess

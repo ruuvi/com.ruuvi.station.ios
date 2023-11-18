@@ -3,9 +3,6 @@ import Combine
 import RealmSwift
 import RuuviOntology
 import RuuviContext
-#if canImport(RuuviVirtualModel)
-import RuuviVirtualModel
-#endif
 
 class VirtualTagSubjectCombine {
     var realm: RealmContext

@@ -19,6 +19,98 @@ options:
   deploymentTarget:
     iOS: 14.0
 
+targetTemplates:
+  Framework:
+    name: "${target_name}"
+    type: framework
+    platform: iOS
+    info:
+      path: Packages/${target_name}/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+    sources:
+    - path: Packages/${target_name}
+      excludes:
+      - target.yml
+      - Info.plist
+      - .swiftpm
+      - Package.swift
+      - Package.resolved
+      - .gitignore
+      - README.md
+      - "*.podspec"
+      - Tests
+    settings:
+      base:
+        DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
+        TARGETED_DEVICE_FAMILY: 1,2
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruuvi.station.${target_name}
+        PRODUCT_NAME: "${target_name}"
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+  Module:
+    name: "${target_name}"
+    type: framework
+    platform: iOS
+    info:
+      path: Modules/${target_name}/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+    sources:
+    - path: Modules/${target_name}
+      excludes:
+      - target.yml
+      - Info.plist
+      - .swiftpm
+      - Package.swift
+      - Package.resolved
+      - .gitignore
+      - README.md
+      - "*.podspec"
+      - Tests
+    settings:
+      base:
+        DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
+        TARGETED_DEVICE_FAMILY: 1,2
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruuvi.station.${target_name}
+        PRODUCT_NAME: "${target_name}"
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+  CommonFramework:
+    name: "${target_name}"
+    type: framework
+    platform: iOS
+    info:
+      path: Common/${target_name}/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+    sources:
+    - path: Common/${target_name}
+      excludes:
+      - target.yml
+      - Info.plist
+      - .swiftpm
+      - Package.swift
+      - Package.resolved
+      - .gitignore
+      - README.md
+      - "*.podspec"
+      - Tests
+    settings:
+      base:
+        DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
+        TARGETED_DEVICE_FAMILY: 1,2
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruuvi.station.${target_name}
+        PRODUCT_NAME: "${target_name}"
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
@@ -34,61 +126,58 @@ packages:
     from: 2.8.3
   Firebase: 
     url: https://github.com/firebase/firebase-ios-sdk
-    from: 10.7.0
+    from: 10.18.0
   RangeSeekSlider:
     url: https://github.com/rinat-enikeev/RangeSeekSlider
     from: 1.8.2
   GestureInstructions:
     url: https://github.com/rinat-enikeev/GestureInstructions
     from: 0.0.2
-  RuuviAnalytics:
-    path: Packages/RuuviAnalytics
-  RuuviCloud: 
-    path: Packages/RuuviCloud
-  RuuviContext:
-    path: Packages/RuuviContext
-  RuuviCore:
-    path: Packages/RuuviCore
-  RuuviDaemon: 
-    path: Packages/RuuviDaemon
-  RuuviDFU:
-    path: Packages/RuuviDFU
-  RuuviLocation:
-    path: Packages/RuuviLocation
-  RuuviLocal:
-    path: Packages/RuuviLocal
-  RuuviMigration:
-    path: Packages/RuuviMigration
-  RuuviNotification:
-    path: Packages/RuuviNotification
-  RuuviNotifier:
-    path: Packages/RuuviNotifier
-  RuuviOntology:
-    path: Packages/RuuviOntology
-  RuuviPersistence:
-    path: Packages/RuuviPersistence
-  RuuviPool: 
-    path: Packages/RuuviPool
-  RuuviReactor: 
-    path: Packages/RuuviReactor
-  RuuviRepository:
-    path: Packages/RuuviRepository
-  RuuviService:
-    path: Packages/RuuviService
-  RuuviStorage:
-    path: Packages/RuuviStorage
-  RuuviUser:
-    path: Packages/RuuviUser  
-  RuuviVirtual:
-    path: Packages/RuuviVirtual
-  RuuviPresenters:
-    path: Common/RuuviPresenters
-  RuuviDiscover:
-    path: Modules/RuuviDiscover
-  RuuviLocationPicker:
-    path: Modules/RuuviLocationPicker
-  RuuviOnboard:
-    path: Modules/RuuviOnboard
+  Humidity:
+    url: https://github.com/rinat-enikeev/Humidity
+    from: 0.1.5
+  Future:
+    url: https://github.com/kean/Future
+    from: 1.3.0
+  NordicDFU:
+    url: https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library
+    from: 4.10.3
+  KeychainAccess: 
+    url: https://github.com/kishikawakatsumi/KeychainAccess
+    from: 4.2.1
+  Realm: 
+    url: https://github.com/realm/realm-cocoa
+    from: 10.8.0
+  GRDB: 
+    url: https://github.com/groue/GRDB.swift
+    from: 4.14.0
+
+include:
+- Packages/RuuviAnalytics/target.yml
+- Packages/RuuviCloud/target.yml
+- Packages/RuuviContext/target.yml
+- Packages/RuuviCore/target.yml
+- Packages/RuuviDaemon/target.yml
+- Packages/RuuviDFU/target.yml
+- Packages/RuuviLocation/target.yml
+- Packages/RuuviLocal/target.yml
+- Packages/RuuviMigration/target.yml
+- Packages/RuuviNotification/target.yml
+- Packages/RuuviNotifier/target.yml
+- Packages/RuuviOntology/target.yml
+- Packages/RuuviPersistence/target.yml
+- Packages/RuuviPool/target.yml
+- Packages/RuuviReactor/target.yml
+- Packages/RuuviRepository/target.yml
+- Packages/RuuviService/target.yml
+- Packages/RuuviStorage/target.yml
+- Packages/RuuviUser/target.yml
+- Packages/RuuviVirtual/target.yml
+- Common/RuuviPresenters/target.yml
+- Common/RuuviLocalization/target.yml
+- Modules/RuuviDiscover/target.yml
+- Modules/RuuviLocationPicker/target.yml
+- Modules/RuuviOnboard/target.yml
 
 targets:
   station:
@@ -99,6 +188,7 @@ targets:
     dependencies:
       - package: BTKit
       - package: Charts
+      - package: GRDB
       - package: LightRoute
       - package: Swinject
       - package: RangeSeekSlider
@@ -107,102 +197,36 @@ targets:
         product: FirebaseMessaging
       - package: Firebase
         product: FirebaseRemoteConfig
-      - package: RuuviAnalytics
-      - package: RuuviAnalytics
-        product: RuuviAnalyticsImpl
-      - package: RuuviCloud
-      - package: RuuviCloud
-        product: RuuviCloudPure
-      - package: RuuviContext
-      - package: RuuviContext
-        product: RuuviContextRealm
-      - package: RuuviContext
-        product: RuuviContextSQLite
-      - package: RuuviCore
-      - package: RuuviCore
-        product: RuuviCoreImage
-      - package: RuuviCore
-        product: RuuviCorePN
-      - package: RuuviCore
-        product: RuuviCorePermission
-      - package: RuuviCore
-        product: RuuviCoreLocation
-      - package: RuuviDaemon
-      - package: RuuviDaemon
-        product: RuuviDaemonBackground
-      - package: RuuviDaemon
-        product: RuuviDaemonVirtualTag
-      - package: RuuviDaemon
-        product: RuuviDaemonRuuviTag
-      - package: RuuviDaemon
-        product: RuuviDaemonCloudSync
-      - package: RuuviDFU
-      - package: RuuviDFU
-        product: RuuviDFUImpl
-      - package: RuuviLocation
-      - package: RuuviLocation
-        product: RuuviLocationService
-      - package: RuuviLocal
-      - package: RuuviLocal
-        product: RuuviLocalUserDefaults
-      - package: RuuviMigration
-      - package: RuuviMigration
-        product: RuuviMigrationImpl
-      - package: RuuviNotification
-      - package: RuuviNotification
-        product: RuuviNotificationLocal
-      - package: RuuviNotifier
-      - package: RuuviNotifier
-        product: RuuviNotifierImpl
-      - package: RuuviOntology
-      - package: RuuviPersistence
-      - package: RuuviPersistence
-        product: RuuviPersistenceRealm
-      - package: RuuviPersistence
-        product: RuuviPersistenceSQLite
-      - package: RuuviPool
-      - package: RuuviPool
-        product: RuuviPoolCoordinator
-      - package: RuuviReactor
-      - package: RuuviReactor
-        product: RuuviReactorImpl
-      - package: RuuviRepository
-      - package: RuuviRepository
-        product: RuuviRepositoryCoordinator
-      - package: RuuviService
-      - package: RuuviService
-        product: RuuviServiceFactory
-      - package: RuuviService
-        product: RuuviServiceMeasurement
-      - package: RuuviService
-        product: RuuviServiceOwnership
-      - package: RuuviService
-        product: RuuviServiceExport
-      - package: RuuviService
-        product: RuuviServiceGATT
-      - package: RuuviStorage
-      - package: RuuviStorage
-        product: RuuviStorageCoordinator
-      - package: RuuviUser
-      - package: RuuviUser
-        product: RuuviUserCoordinator
-      - package: RuuviVirtual
-      - package: RuuviVirtual
-        product: RuuviVirtualOWM
-      - package: RuuviVirtual
-        product: RuuviVirtualPersistence
-      - package: RuuviVirtual
-        product: RuuviVirtualReactor
-      - package: RuuviVirtual
-        product: RuuviVirtualRepository
-      - package: RuuviVirtual
-        product: RuuviVirtualStorage
-      - package: RuuviVirtual
-        product: RuuviVirtualService
-      - package: RuuviPresenters
-      - package: RuuviDiscover
-      - package: RuuviLocationPicker
-      - package: RuuviOnboard
+      - package: Humidity
+      - package: Future
+      - package: Realm
+      - package: Realm
+        product: RealmSwift
+      - target: RuuviAnalytics
+      - target: RuuviCloud
+      - target: RuuviContext
+      - target: RuuviCore
+      - target: RuuviDaemon
+      - target: RuuviDFU
+      - target: RuuviLocation
+      - target: RuuviLocal
+      - target: RuuviMigration
+      - target: RuuviNotification
+      - target: RuuviNotifier
+      - target: RuuviOntology
+      - target: RuuviPersistence
+      - target: RuuviPool
+      - target: RuuviReactor
+      - target: RuuviRepository
+      - target: RuuviService
+      - target: RuuviStorage
+      - target: RuuviUser
+      - target: RuuviVirtual
+      - target: RuuviPresenters
+      - target: RuuviDiscover
+      - target: RuuviLocationPicker
+      - target: RuuviOnboard
+      - target: RuuviLocalization
     info:
       path: station/Resources/Plists/Info.plist
       properties:
