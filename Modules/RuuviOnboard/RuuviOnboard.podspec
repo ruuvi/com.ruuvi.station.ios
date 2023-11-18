@@ -19,7 +19,6 @@ Pod::Spec.new do |s|
     ss.resource_bundles = {
         'RuuviOnboard' => ['Sources/**/Resources/**/*']
     }
-    ss.dependency 'RuuviBundleUtils'
     ss.dependency 'RuuviUser'
   end
 

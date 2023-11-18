@@ -1,6 +1,7 @@
 import Foundation
 import BTKit
 import RuuviOntology
+import UIKit
 
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }

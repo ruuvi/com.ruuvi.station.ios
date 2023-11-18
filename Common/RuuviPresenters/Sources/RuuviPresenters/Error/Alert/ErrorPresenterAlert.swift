@@ -1,5 +1,4 @@
 import UIKit
-import RuuviBundleUtils
 
 public final class ErrorPresenterAlert: ErrorPresenter {
     public init() {}

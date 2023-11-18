@@ -3,6 +3,7 @@ import CoreLocation
 import RuuviLocation
 import RuuviCore
 import RuuviPresenters
+import UIKit
 
 class LocationPickerPresenter: RuuviLocationPicker {
     var viewController: UIViewController {

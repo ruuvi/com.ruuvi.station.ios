@@ -3,7 +3,6 @@ import BTKit
 import RuuviOntology
 import RuuviVirtual
 import RuuviLocalization
-import RuuviBundleUtils
 import CoreNFC
 
 enum DiscoverTableSection {

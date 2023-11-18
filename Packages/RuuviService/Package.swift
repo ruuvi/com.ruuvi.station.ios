@@ -1,11 +1,11 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviService",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviService",
@@ -13,6 +13,12 @@ let package = Package(
         .library(
             name: "RuuviServiceAlert",
             targets: ["RuuviServiceAlert"]),
+        .library(
+            name: "RuuviServiceAuth",
+            targets: ["RuuviServiceAuth"]),
+        .library(
+            name: "RuuviServiceCloudNotification",
+            targets: ["RuuviServiceCloudNotification"]),
         .library(
             name: "RuuviServiceAppSettings",
             targets: ["RuuviServiceAppSettings"]),
@@ -48,7 +54,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
-        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0")),
+        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviCloud"),
@@ -73,6 +79,18 @@ let package = Package(
         ),
         .target(
             name: "RuuviServiceAlert",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceAuth",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceCloudNotification",
             dependencies: [
                 "RuuviService"
             ]
@@ -139,13 +157,15 @@ let package = Package(
             name: "RuuviServiceFactory",
             dependencies: [
                 "RuuviService",
+                "RuuviServiceAuth",
                 "RuuviServiceAlert",
                 "RuuviServiceAppSettings",
                 "RuuviServiceCloudSync",
                 "RuuviServiceOffsetCalibration",
                 "RuuviServiceOwnership",
                 "RuuviServiceSensorProperties",
-                "RuuviServiceSensorRecords"
+                "RuuviServiceSensorRecords",
+                "RuuviServiceCloudNotification"
             ]
         ),
         .testTarget(

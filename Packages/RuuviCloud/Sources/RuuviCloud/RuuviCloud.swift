@@ -18,7 +18,7 @@ public struct ShareSensorResponse {
     public var macId: MACIdentifier?
     public var invited: Bool?
 
-    init(macId: MACIdentifier? = nil, invited: Bool? = nil) {
+    public init(macId: MACIdentifier? = nil, invited: Bool? = nil) {
         self.macId = macId
         self.invited = invited
     }

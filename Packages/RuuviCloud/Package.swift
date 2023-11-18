@@ -1,11 +1,11 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviCloud",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviCloud",
@@ -19,9 +19,10 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
-        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0")),
+        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
         .package(path: "../RuuviOntology"),
-        .package(path: "../RuuviUser")
+        .package(path: "../RuuviUser"),
+        .package(path: "../RuuviPool")
     ],
     targets: [
         .target(
@@ -29,6 +30,7 @@ let package = Package(
             dependencies: [
                 "Future",
                 "RuuviOntology",
+                "RuuviPool",
                 "RuuviUser"
             ]
         ),

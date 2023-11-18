@@ -1,5 +1,4 @@
 import UIKit
-import RuuviBundleUtils
 
 public final class ActivityPresenterRuuviLogo: ActivityPresenter {
     var counter = 0 {

@@ -1,5 +1,6 @@
 import UIKit
-import Firebase
+import FirebaseCore
+import FirebaseMessaging
 #if canImport(FLEX)
 import FLEX
 #endif

@@ -3,6 +3,9 @@ import Future
 import RuuviOntology
 import RuuviStorage
 import RuuviCloud
+#if canImport(RuuviCloudApi)
+import RuuviCloudApi
+#endif
 import RuuviPool
 import RuuviLocal
 import RuuviService

@@ -6,6 +6,7 @@ import RuuviCloud
 import RuuviCore
 import Future
 import RuuviLocal
+import UIKit
 
 #if canImport(WidgetKit)
 import WidgetKit

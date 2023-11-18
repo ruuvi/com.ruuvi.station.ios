@@ -4895,7 +4895,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -7130,7 +7130,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -7153,12 +7153,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */
