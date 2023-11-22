@@ -23,6 +23,9 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         start { [weak self] in
             guard let sSelf = self else { return }
             sSelf.pullTimer?.invalidate()
+            // Call the refreshImmediately method to execute it right away when
+            // thread is started.
+            sSelf.refreshImmediately()
             let timer = Timer.scheduledTimer(
                 timeInterval: TimeInterval(sSelf.localSettings.networkPullIntervalSeconds),
                 target: sSelf,
