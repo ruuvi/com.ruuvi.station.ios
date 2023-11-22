@@ -93,7 +93,6 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
-            cloudSyncDaemon.refreshImmediately()
         }
         propertiesDaemon.start()
         pullWebDaemon.start()
