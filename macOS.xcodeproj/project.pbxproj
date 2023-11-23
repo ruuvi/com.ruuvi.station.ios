@@ -4536,10 +4536,10 @@
 		};
 		0EBE42D2267CA889002888EC /* XCRemoteSwiftPackageReference "BTKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
+			repositoryURL = "https://github.com/ruuvi/BTKit";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.4.3;
 			};
 		};
 		0EE1125A267BC327008DA8D9 /* XCRemoteSwiftPackageReference "LightRoute" */ = {

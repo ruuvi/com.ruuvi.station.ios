@@ -3,9 +3,6 @@ import Combine
 import RuuviContext
 import RuuviOntology
 import RealmSwift
-#if canImport(RuuviVirtualModel)
-import RuuviVirtualModel
-#endif
 
 final class VirtualTagLastRecordSubjectCombine {
     var isServing: Bool = false

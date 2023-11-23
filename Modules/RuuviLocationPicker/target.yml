@@ -1,0 +1,12 @@
+---
+targets:
+  RuuviLocationPicker:
+    templates:
+    - Module
+    dependencies:
+    - package: Future
+    - target: RuuviOntology
+    - target: RuuviPresenters
+    - target: RuuviLocalization
+    - target: RuuviCore
+    - target: RuuviLocation

@@ -1,0 +1,11 @@
+---
+targets:
+  RuuviContext:
+    templates:
+    - Framework
+    dependencies:
+    - package: Realm
+    - package: Realm
+      product: RealmSwift
+    - package: GRDB
+    - target: RuuviOntology

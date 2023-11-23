@@ -1,0 +1,240 @@
+APP_NAME: &APP_NAME Ruuvi Station SPM
+DEVELOPMENT_TEAM: &DEVELOPMENT_TEAM 4MUYJ4YYH4
+BUNDLE_ID_PREFIX: &BUNDLE_ID_PREFIX com.ruuvi
+
+attributes:
+  ORGANIZATIONNAME: Ruuvi Innovations Oy
+
+settings:
+  base:
+    CURRENT_PROJECT_VERSION: 420
+    MARKETING_VERSION: "2.5.0"
+    DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
+
+name: *APP_NAME
+
+options:
+  bundleIdPrefix: *BUNDLE_ID_PREFIX
+  developmentLanguage: en
+  deploymentTarget:
+    iOS: 14.0
+
+packages:
+  BTKit:
+    url: https://github.com/ruuvi/BTKit
+    from: 0.4.3
+  Charts:
+    url: https://github.com/danielgindi/Charts
+    from: 4.1.0
+  LightRoute:
+    url: https://github.com/rinat-enikeev/LightRoute
+    from: 2.2.2
+  Swinject: 
+    url: https://github.com/Swinject/Swinject
+    from: 2.8.3
+  Firebase: 
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: 10.7.0
+  RangeSeekSlider:
+    url: https://github.com/rinat-enikeev/RangeSeekSlider
+    from: 1.8.2
+  GestureInstructions:
+    url: https://github.com/rinat-enikeev/GestureInstructions
+    from: 0.0.2
+  RuuviAnalytics:
+    path: Packages/RuuviAnalytics
+  RuuviCloud: 
+    path: Packages/RuuviCloud
+  RuuviContext:
+    path: Packages/RuuviContext
+  RuuviCore:
+    path: Packages/RuuviCore
+  RuuviDaemon: 
+    path: Packages/RuuviDaemon
+  RuuviDFU:
+    path: Packages/RuuviDFU
+  RuuviLocation:
+    path: Packages/RuuviLocation
+  RuuviLocal:
+    path: Packages/RuuviLocal
+  RuuviMigration:
+    path: Packages/RuuviMigration
+  RuuviNotification:
+    path: Packages/RuuviNotification
+  RuuviNotifier:
+    path: Packages/RuuviNotifier
+  RuuviOntology:
+    path: Packages/RuuviOntology
+  RuuviPersistence:
+    path: Packages/RuuviPersistence
+  RuuviPool: 
+    path: Packages/RuuviPool
+  RuuviReactor: 
+    path: Packages/RuuviReactor
+  RuuviRepository:
+    path: Packages/RuuviRepository
+  RuuviService:
+    path: Packages/RuuviService
+  RuuviStorage:
+    path: Packages/RuuviStorage
+  RuuviUser:
+    path: Packages/RuuviUser  
+  RuuviVirtual:
+    path: Packages/RuuviVirtual
+  RuuviPresenters:
+    path: Common/RuuviPresenters
+  RuuviDiscover:
+    path: Modules/RuuviDiscover
+  RuuviLocationPicker:
+    path: Modules/RuuviLocationPicker
+  RuuviOnboard:
+    path: Modules/RuuviOnboard
+
+targets:
+  station:
+    type: application
+    platform: iOS
+    sources:
+      - path: station
+    dependencies:
+      - package: BTKit
+      - package: Charts
+      - package: LightRoute
+      - package: Swinject
+      - package: RangeSeekSlider
+      - package: GestureInstructions
+      - package: Firebase
+        product: FirebaseMessaging
+      - package: Firebase
+        product: FirebaseRemoteConfig
+      - package: RuuviAnalytics
+      - package: RuuviAnalytics
+        product: RuuviAnalyticsImpl
+      - package: RuuviCloud
+      - package: RuuviCloud
+        product: RuuviCloudPure
+      - package: RuuviContext
+      - package: RuuviContext
+        product: RuuviContextRealm
+      - package: RuuviContext
+        product: RuuviContextSQLite
+      - package: RuuviCore
+      - package: RuuviCore
+        product: RuuviCoreImage
+      - package: RuuviCore
+        product: RuuviCorePN
+      - package: RuuviCore
+        product: RuuviCorePermission
+      - package: RuuviCore
+        product: RuuviCoreLocation
+      - package: RuuviDaemon
+      - package: RuuviDaemon
+        product: RuuviDaemonBackground
+      - package: RuuviDaemon
+        product: RuuviDaemonVirtualTag
+      - package: RuuviDaemon
+        product: RuuviDaemonRuuviTag
+      - package: RuuviDaemon
+        product: RuuviDaemonCloudSync
+      - package: RuuviDFU
+      - package: RuuviDFU
+        product: RuuviDFUImpl
+      - package: RuuviLocation
+      - package: RuuviLocation
+        product: RuuviLocationService
+      - package: RuuviLocal
+      - package: RuuviLocal
+        product: RuuviLocalUserDefaults
+      - package: RuuviMigration
+      - package: RuuviMigration
+        product: RuuviMigrationImpl
+      - package: RuuviNotification
+      - package: RuuviNotification
+        product: RuuviNotificationLocal
+      - package: RuuviNotifier
+      - package: RuuviNotifier
+        product: RuuviNotifierImpl
+      - package: RuuviOntology
+      - package: RuuviPersistence
+      - package: RuuviPersistence
+        product: RuuviPersistenceRealm
+      - package: RuuviPersistence
+        product: RuuviPersistenceSQLite
+      - package: RuuviPool
+      - package: RuuviPool
+        product: RuuviPoolCoordinator
+      - package: RuuviReactor
+      - package: RuuviReactor
+        product: RuuviReactorImpl
+      - package: RuuviRepository
+      - package: RuuviRepository
+        product: RuuviRepositoryCoordinator
+      - package: RuuviService
+      - package: RuuviService
+        product: RuuviServiceFactory
+      - package: RuuviService
+        product: RuuviServiceMeasurement
+      - package: RuuviService
+        product: RuuviServiceOwnership
+      - package: RuuviService
+        product: RuuviServiceExport
+      - package: RuuviService
+        product: RuuviServiceGATT
+      - package: RuuviStorage
+      - package: RuuviStorage
+        product: RuuviStorageCoordinator
+      - package: RuuviUser
+      - package: RuuviUser
+        product: RuuviUserCoordinator
+      - package: RuuviVirtual
+      - package: RuuviVirtual
+        product: RuuviVirtualOWM
+      - package: RuuviVirtual
+        product: RuuviVirtualPersistence
+      - package: RuuviVirtual
+        product: RuuviVirtualReactor
+      - package: RuuviVirtual
+        product: RuuviVirtualRepository
+      - package: RuuviVirtual
+        product: RuuviVirtualStorage
+      - package: RuuviVirtual
+        product: RuuviVirtualService
+      - package: RuuviPresenters
+      - package: RuuviDiscover
+      - package: RuuviLocationPicker
+      - package: RuuviOnboard
+    info:
+      path: station/Resources/Plists/Info.plist
+      properties:
+        CFBundleDisplayName: Ruuvi Station
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight, UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
+        BGTaskSchedulerPermittedIdentifiers: [com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh, com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning]
+        FirebaseMessagingAutoInitEnabled: false
+        LSApplicationQueriesSchemes: [https, http, mailto]
+        LSRequiresIPhoneOS: true
+        NFCReaderUsageDescription: Allows user to claim a RuuviTag using NFC when the user has physical access to the sensor
+        NSBluetoothAlwaysUsageDescription: The app uses Bluetooth LE to read data from Ruuvi Sensors
+        NSBluetoothPeripheralUsageDescription: The app uses Bluetooth LE to read data from RuuviTag sensors.
+        NSCameraUsageDescription: Ruuvi Station needs to access your camera in order to be able to capture photos and use them as sensor background.
+        NSLocationAlwaysAndWhenInUseUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
+        NSLocationAlwaysUsageDescription: Ruuvi Station needs to access your location while being in background in order to pull data for Virtual Sensors for your current location and display alerts.
+        NSLocationUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
+        NSLocationWhenInUseUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
+        NSPhotoLibraryUsageDescription: Ruuvi Station needs to access your camera roll to enable selecting the background for the sensor.
+        NSUserActivityTypes: [RuuviTagSelectionIntent]
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Muli-SemiBoldItalic.ttf,Muli-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
+        UIBackgroundModes: [bluetooth-central, processing, remote-notification]
+        UIRequiredDeviceCapabilities: [armv7]
+        UIRequiresFullScreen: true
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight,UIInterfaceOrientationPortrait,  UIInterfaceOrientationPortraitUpsideDown]
+        UIViewControllerBasedStatusBarAppearance: true
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: 1,2
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
+        CODE_SIGN_ENTITLEMENTS: station/station.entitlements

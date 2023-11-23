@@ -1,0 +1,8 @@
+---
+targets:
+  RuuviLocation:
+    templates:
+    - Framework
+    dependencies:
+    - package: Future
+    - target: RuuviOntology

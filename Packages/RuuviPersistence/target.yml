@@ -1,0 +1,14 @@
+---
+targets:
+  RuuviPersistence:
+    templates:
+    - Framework
+    dependencies:
+    - package: Humidity
+    - package: Future
+    - package: Realm
+    - package: Realm
+      product: RealmSwift
+    - package: GRDB
+    - target: RuuviOntology
+    - target: RuuviContext

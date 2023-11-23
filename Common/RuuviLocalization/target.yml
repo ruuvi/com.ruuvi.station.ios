@@ -1,0 +1,5 @@
+---
+targets:
+  RuuviLocalization:
+    templates:
+    - CommonFramework
