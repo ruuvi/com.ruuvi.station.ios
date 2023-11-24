@@ -50,6 +50,7 @@ targetTemplates:
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        MERGEABLE_LIBRARY: true
   Module:
     name: "${target_name}"
     type: framework
@@ -80,6 +81,7 @@ targetTemplates:
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        MERGEABLE_LIBRARY: true
   CommonFramework:
     name: "${target_name}"
     type: framework
@@ -110,6 +112,7 @@ targetTemplates:
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        MERGEABLE_LIBRARY: true
 
 packages:
   BTKit:
@@ -259,6 +262,7 @@ targets:
         UIViewControllerBasedStatusBarAppearance: true
     settings:
       base:
+        MERGED_BINARY_TYPE: "manual"
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements

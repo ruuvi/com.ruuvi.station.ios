@@ -1,6 +1,10 @@
 ---
 targets:
   RuuviPersistence:
+    # https://github.com/groue/GRDB.swift/issues/642
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
     templates:
     - Framework
     dependencies:
