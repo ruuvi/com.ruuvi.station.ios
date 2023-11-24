@@ -1,6 +1,9 @@
 import Foundation
 import RuuviLocal
 import RuuviDaemon
+#if canImport(RuuviDaemonOperation)
+import RuuviDaemonOperation
+#endif
 
 public final class PullWebDaemonOperations: RuuviDaemonWorker, PullWebDaemon {
     private let settings: RuuviLocalSettings
