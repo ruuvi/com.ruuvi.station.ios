@@ -1,5 +1,6 @@
 # Generated
-Ruuvi Station.xcodeproj
+spm.xcodeproj
+frameworks.xcodeproj
 
 # Private 
 station/Resources/Plists/GoogleService-Info.plist

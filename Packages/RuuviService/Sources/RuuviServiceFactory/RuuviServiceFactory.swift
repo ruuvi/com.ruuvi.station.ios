@@ -7,6 +7,33 @@ import RuuviCore
 import RuuviRepository
 import RuuviService
 import RuuviUser
+#if canImport(RuuviServiceCloudSync)
+import RuuviServiceCloudSync
+#endif
+#if canImport(RuuviServiceOwnership)
+import RuuviServiceOwnership
+#endif
+#if canImport(RuuviServiceSensorProperties)
+import RuuviServiceSensorProperties
+#endif
+#if canImport(RuuviServiceSensorRecords)
+import RuuviServiceSensorRecords
+#endif
+#if canImport(RuuviServiceAppSettings)
+import RuuviServiceAppSettings
+#endif
+#if canImport(RuuviServiceOffsetCalibration)
+import RuuviServiceOffsetCalibration
+#endif
+#if canImport(RuuviServiceAlert)
+import RuuviServiceAlert
+#endif
+#if canImport(RuuviServiceAuth)
+import RuuviServiceAuth
+#endif
+#if canImport(RuuviServiceCloudNotification)
+import RuuviServiceCloudNotification
+#endif
 
 public protocol RuuviServiceFactory {
     // swiftlint:disable:next function_parameter_count

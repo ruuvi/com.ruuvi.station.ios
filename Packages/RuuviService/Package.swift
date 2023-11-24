@@ -92,7 +92,11 @@ let package = Package(
         .target(
             name: "RuuviServiceCloudNotification",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
+                .product(
+                    name: "RuuviCloudApi",
+                    package: "RuuviCloud"
+                )
             ]
         ),
         .target(

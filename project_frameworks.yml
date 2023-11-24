@@ -1,4 +1,4 @@
-APP_NAME: &APP_NAME Ruuvi Station
+APP_NAME: &APP_NAME frameworks
 DEVELOPMENT_TEAM: &DEVELOPMENT_TEAM 4MUYJ4YYH4
 BUNDLE_ID_PREFIX: &BUNDLE_ID_PREFIX com.ruuvi
 
@@ -114,7 +114,7 @@ targetTemplates:
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
-    from: 0.4.3
+    version: 0.4.3
   Charts:
     url: https://github.com/danielgindi/Charts
     from: 4.1.0
