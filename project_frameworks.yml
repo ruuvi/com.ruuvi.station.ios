@@ -259,6 +259,7 @@ targets:
         UIViewControllerBasedStatusBarAppearance: true
     settings:
       base:
+        MERGED_BINARY_TYPE: "manual"
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
