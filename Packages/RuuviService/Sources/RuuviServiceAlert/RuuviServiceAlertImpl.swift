@@ -694,43 +694,6 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         }
     }
 
-    // Virtual Sensor
-    public func hasRegistrations(for sensor: VirtualSensor) -> Bool {
-        return AlertType.allCases.contains(where: { isOn(type: $0, for: sensor) })
-    }
-
-    public func isOn(type: AlertType, for sensor: VirtualSensor) -> Bool {
-        return alert(for: sensor, of: type) != nil
-    }
-
-    public func alert(for sensor: VirtualSensor, of type: AlertType) -> AlertType? {
-        return alertPersistence.alert(for: sensor.id, of: type)
-    }
-
-    public func mutedTill(type: AlertType, for sensor: VirtualSensor) -> Date? {
-        alertPersistence.mutedTill(type: type, for: sensor.id)
-    }
-
-    public func register(type: AlertType, for sensor: VirtualSensor) {
-        alertPersistence.register(type: type, for: sensor.id)
-        postAlertDidChange(with: sensor, of: type)
-    }
-
-    public func unregister(type: AlertType, for sensor: VirtualSensor) {
-        alertPersistence.unregister(type: type, for: sensor.id)
-        postAlertDidChange(with: sensor, of: type)
-    }
-
-    public func mute(type: AlertType, for sensor: VirtualSensor, till date: Date) {
-        alertPersistence.mute(type: type, for: sensor.id, till: date)
-        postAlertDidChange(with: sensor, of: type)
-    }
-
-    public func unmute(type: AlertType, for sensor: VirtualSensor) {
-        alertPersistence.unmute(type: type, for: sensor.id)
-        postAlertDidChange(with: sensor, of: type)
-    }
-
     // UUID
     func hasRegistrations(for uuid: String) -> Bool {
         return AlertType.allCases.contains(where: { isOn(type: $0, for: uuid) })
@@ -756,19 +719,6 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 object: nil,
                 userInfo: [
                     RuuviServiceAlertDidChangeKey.physicalSensor: sensor,
-                    RuuviServiceAlertDidChangeKey.type: type
-                ]
-            )
-    }
-
-    private func postAlertDidChange(with sensor: VirtualSensor, of type: AlertType) {
-        NotificationCenter
-            .default
-            .post(
-                name: .RuuviServiceAlertDidChange,
-                object: nil,
-                userInfo: [
-                    RuuviServiceAlertDidChangeKey.virtualSensor: sensor,
                     RuuviServiceAlertDidChangeKey.type: type
                 ]
             )
@@ -883,39 +833,6 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func lowerCelsius(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.lowerCelsius(for: sensor.id)
-    }
-
-    public func setLower(celsius: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setLower(celsius: celsius, for: sensor.id)
-        if let l = celsius, let u = upperCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
-        }
-    }
-
-    public func upperCelsius(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.upperCelsius(for: sensor.id)
-    }
-
-    public func setUpper(celsius: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setUpper(celsius: celsius, for: sensor.id)
-        if let u = celsius, let l = lowerCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
-        }
-    }
-
-    public func temperatureDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.temperatureDescription(for: sensor.id)
-    }
-
-    public func setTemperature(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setTemperature(description: description, for: sensor.id)
-        if let l = lowerCelsius(for: sensor), let u = upperCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
-        }
-    }
-
     public func lowerCelsius(for uuid: String) -> Double? {
         return alertPersistence.lowerCelsius(for: uuid)
     }
@@ -1017,39 +934,6 @@ extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
-        if let l = lowerRelativeHumidity(for: sensor), let u = upperRelativeHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
-        }
-    }
-
-    public func lowerRelativeHumidity(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.lowerRelativeHumidity(for: sensor.id)
-    }
-
-    public func setLower(relativeHumidity: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setLower(relativeHumidity: relativeHumidity, for: sensor.id)
-        if let l = relativeHumidity, let u = upperRelativeHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
-        }
-    }
-
-    public func upperRelativeHumidity(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.upperRelativeHumidity(for: sensor.id)
-    }
-
-    public func setUpper(relativeHumidity: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: sensor.id)
-        if let u = relativeHumidity, let l = lowerRelativeHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
-        }
-    }
-
-    public func relativeHumidityDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.relativeHumidityDescription(for: sensor.id)
-    }
-
-    public func setRelativeHumidity(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setRelativeHumidity(description: description, for: sensor.id)
         if let l = lowerRelativeHumidity(for: sensor), let u = upperRelativeHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
         }
@@ -1162,40 +1046,6 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func lowerHumidity(for sensor: VirtualSensor) -> Humidity? {
-        return alertPersistence.lowerHumidity(for: sensor.id)
-    }
-
-    public func setLower(humidity: Humidity?, for sensor: VirtualSensor) {
-        alertPersistence.setLower(humidity: humidity, for: sensor.id)
-        if let l = humidity, let u = upperHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
-        }
-    }
-
-    public func upperHumidity(for sensor: VirtualSensor) -> Humidity? {
-        return alertPersistence.upperHumidity(for: sensor.id)
-    }
-
-    public func setUpper(humidity: Humidity?, for sensor: VirtualSensor) {
-        alertPersistence.setUpper(humidity: humidity, for: sensor.id)
-        if let u = humidity, let l = lowerHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
-        }
-    }
-
-    public func humidityDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.humidityDescription(for: sensor.id)
-    }
-
-    public func setHumidity(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setHumidity(description: description, for: sensor.id)
-        if let l = lowerHumidity(for: sensor),
-           let u = upperHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
-        }
-    }
-
     public func lowerHumidity(for uuid: String) -> Humidity? {
         return alertPersistence.lowerHumidity(for: uuid)
     }
@@ -1299,39 +1149,6 @@ extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
-        if let l = lowerPressure(for: sensor), let u = upperPressure(for: sensor) {
-            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
-        }
-    }
-
-    public func lowerPressure(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.lowerPressure(for: sensor.id)
-    }
-
-    public func setLower(pressure: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setLower(pressure: pressure, for: sensor.id)
-        if let l = pressure, let u = upperPressure(for: sensor) {
-            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
-        }
-    }
-
-    public func upperPressure(for sensor: VirtualSensor) -> Double? {
-        return alertPersistence.upperPressure(for: sensor.id)
-    }
-
-    public func setUpper(pressure: Double?, for sensor: VirtualSensor) {
-        alertPersistence.setUpper(pressure: pressure, for: sensor.id)
-        if let u = pressure, let l = lowerPressure(for: sensor) {
-            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
-        }
-    }
-
-    public func pressureDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.pressureDescription(for: sensor.id)
-    }
-
-    public func setPressure(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setPressure(description: description, for: sensor.id)
         if let l = lowerPressure(for: sensor), let u = upperPressure(for: sensor) {
             postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
         }
@@ -1488,15 +1305,6 @@ extension RuuviServiceAlertImpl {
         postAlertDidChange(with: sensor, of: .connection)
     }
 
-    public func connectionDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.connectionDescription(for: sensor.id)
-    }
-
-    public func setConnection(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setConnection(description: description, for: sensor.id)
-        postAlertDidChange(with: sensor, of: .connection)
-    }
-
     public func connectionDescription(for uuid: String) -> String? {
         return alertPersistence.connectionDescription(for: uuid)
     }
@@ -1529,10 +1337,6 @@ extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
-    }
-
-    public func cloudConnectionDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.cloudConnectionDescription(for: sensor.id)
     }
 
     public func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor) {
@@ -1622,26 +1426,6 @@ extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
-        if let c = movementCounter(for: sensor) {
-            postAlertDidChange(with: sensor, of: .movement(last: c))
-        }
-    }
-
-    public func movementCounter(for sensor: VirtualSensor) -> Int? {
-        return alertPersistence.movementCounter(for: sensor.id)
-    }
-
-    public func setMovement(counter: Int?, for sensor: VirtualSensor) {
-        alertPersistence.setMovement(counter: counter, for: sensor.id)
-        // no need to post an update, this is not user initiated action
-    }
-
-    public func movementDescription(for sensor: VirtualSensor) -> String? {
-        return alertPersistence.movementDescription(for: sensor.id)
-    }
-
-    public func setMovement(description: String?, for sensor: VirtualSensor) {
-        alertPersistence.setMovement(description: description, for: sensor.id)
         if let c = movementCounter(for: sensor) {
             postAlertDidChange(with: sensor, of: .movement(last: c))
         }

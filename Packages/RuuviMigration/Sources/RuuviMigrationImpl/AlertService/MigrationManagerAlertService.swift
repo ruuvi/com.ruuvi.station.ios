@@ -4,20 +4,16 @@ import RuuviOntology
 import RuuviContext
 import RuuviStorage
 import RuuviService
-import RuuviVirtual
 import RuuviMigration
 
 final class MigrationManagerAlertService: RuuviMigration {
-    private let virtualStorage: VirtualStorage
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
 
     init(
-        virtualStorage: VirtualStorage,
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert
     ) {
-        self.virtualStorage = virtualStorage
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
     }
@@ -79,18 +75,6 @@ extension MigrationManagerAlertService {
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
         let group = DispatchGroup()
         group.enter()
-        fetchVirtualSensors { virtualSensors in
-            self.queue.async {
-                virtualSensors.forEach { virtualSensor in
-                    group.enter()
-                    self.migrateTo1Version(element: virtualSensor, completion: {
-                        group.leave()
-                    })
-                }
-                group.leave()
-            }
-        }
-        group.enter()
         fetchRuuviSensors { ruuviTagSensors in
             self.queue.async {
                 ruuviTagSensors.forEach({ element in
@@ -146,67 +130,6 @@ extension MigrationManagerAlertService {
         ruuviAlertService.setHumidity(description: humidityDescription, for: element.0)
 
         completion()
-    }
-
-    private func migrateTo1Version(element: (VirtualSensor, Temperature?), completion: @escaping (() -> Void)) {
-        let id = element.0.id
-        if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
-           let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
-           let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
-           let temperature = element.1 {
-            prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity: Humidity = Humidity(value: lower / 100,
-                                                   unit: .relative(temperature: temperature))
-            let upperHumidity: Humidity = Humidity(value: upper / 100,
-                                                   unit: .relative(temperature: temperature))
-            ruuviAlertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
-                                  for: element.0)
-        } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
-                  let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
-                  let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
-            prefs.set(false, forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity: Humidity = Humidity(value: lower,
-                                                   unit: .absolute)
-            let upperHumidity: Humidity = Humidity(value: upper,
-                                                   unit: .absolute)
-            ruuviAlertService.register(type: .humidity(lower: lowerHumidity,
-                                                  upper: upperHumidity),
-                                  for: element.0)
-        } else {
-            debugPrint("do nothing")
-        }
-
-        // pick one description, relative preffered
-        let humidityDescription = prefs.string(forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + id)
-            ?? prefs.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + id)
-        ruuviAlertService.setHumidity(description: humidityDescription, for: element.0)
-
-        completion()
-    }
-
-    private func fetchVirtualSensors(completion: @escaping ([(VirtualSensor, Temperature?)]) -> Void) {
-
-        queue.async {
-            let group = DispatchGroup()
-            group.enter()
-            var result = [(VirtualSensor, Temperature?)]()
-            self.virtualStorage.readAll().on(success: {sensors in
-                sensors.forEach({ sensor in
-                    group.enter()
-                    self.virtualStorage.readLast(sensor)
-                        .on(success: { record in
-                            result.append((sensor, record?.temperature))
-                            group.leave()
-                        })
-                })
-                group.leave()
-            }, failure: { _ in
-                group.leave()
-            })
-            group.notify(queue: .main, execute: {
-                completion(result)
-            })
-        }
     }
 
     private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {

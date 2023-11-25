@@ -19,7 +19,6 @@ let package = Package(
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviService"),
-        .package(path: "../RuuviVirtual")
     ],
     targets: [
         .target(
@@ -29,7 +28,6 @@ let package = Package(
             name: "RuuviNotificationLocal",
             dependencies: [
                 "RuuviNotification",
-                "RuuviVirtual",
                 "RuuviService",
                 "RuuviLocal",
                 "RuuviStorage",

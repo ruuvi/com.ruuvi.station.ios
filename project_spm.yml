@@ -97,14 +97,10 @@ packages:
     path: Packages/RuuviStorage
   RuuviUser:
     path: Packages/RuuviUser  
-  RuuviVirtual:
-    path: Packages/RuuviVirtual
   RuuviPresenters:
     path: Common/RuuviPresenters
   RuuviDiscover:
     path: Modules/RuuviDiscover
-  RuuviLocationPicker:
-    path: Modules/RuuviLocationPicker
   RuuviOnboard:
     path: Modules/RuuviOnboard
 
@@ -220,22 +216,8 @@ targets:
       - package: RuuviUser
       - package: RuuviUser
         product: RuuviUserCoordinator
-      - package: RuuviVirtual
-      - package: RuuviVirtual
-        product: RuuviVirtualOWM
-      - package: RuuviVirtual
-        product: RuuviVirtualPersistence
-      - package: RuuviVirtual
-        product: RuuviVirtualReactor
-      - package: RuuviVirtual
-        product: RuuviVirtualRepository
-      - package: RuuviVirtual
-        product: RuuviVirtualStorage
-      - package: RuuviVirtual
-        product: RuuviVirtualService
       - package: RuuviPresenters
       - package: RuuviDiscover
-      - package: RuuviLocationPicker
       - package: RuuviOnboard
     info:
       path: station/Resources/Plists/Info.plist
@@ -246,7 +228,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight, UIInterfaceOrientationPortrait]
         UILaunchStoryboardName: LaunchScreen
-        BGTaskSchedulerPermittedIdentifiers: [com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh, com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning]
+        BGTaskSchedulerPermittedIdentifiers: [com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning]
         FirebaseMessagingAutoInitEnabled: false
         LSApplicationQueriesSchemes: [https, http, mailto]
         LSRequiresIPhoneOS: true

@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import RuuviOntology
-import RuuviVirtual
 import RuuviLocalization
 
 protocol DiscoverViewInput: UIViewController, Localizable {

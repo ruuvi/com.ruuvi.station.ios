@@ -18,7 +18,6 @@ let package = Package(
         .package(path: "../../Packages/RuuviReactor"),
         .package(path: "../../Packages/RuuviLocal"),
         .package(path: "../../Packages/RuuviService"),
-        .package(path: "../../Packages/RuuviVirtual"),
         .package(path: "../../Common/RuuviPresenters"),
         .package(path: "../../Common/RuuviLocalization"),
         .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
@@ -32,7 +31,6 @@ let package = Package(
                 "RuuviReactor",
                 "RuuviLocal",
                 "RuuviService",
-                "RuuviVirtual",
                 "RuuviPresenters",
                 "BTKit",
                 "RuuviLocalization"

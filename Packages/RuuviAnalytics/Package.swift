@@ -19,7 +19,6 @@ let package = Package(
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviOntology"),
-        .package(path: "../RuuviVirtual"),
         .package(path: "../RuuviUser"),
         .package(path: "../RuuviService")
     ],
@@ -35,7 +34,6 @@ let package = Package(
                 "RuuviLocal",
                 "RuuviStorage",
                 "RuuviOntology",
-                "RuuviVirtual",
                 "RuuviUser",
                 "RuuviService"
             ]),

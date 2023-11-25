@@ -7,5 +7,4 @@ targets:
     - package: Humidity
     - target: RuuviOntology
     - target: RuuviNotification
-    - target: RuuviVirtual
     - target: RuuviService

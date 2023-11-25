@@ -10,7 +10,6 @@ targets:
     - target: RuuviOntology
     - target: RuuviLocal
     - target: RuuviService
-    - target: RuuviVirtual
     - target: RuuviStorage
     - target: RuuviReactor
     - target: RuuviPool

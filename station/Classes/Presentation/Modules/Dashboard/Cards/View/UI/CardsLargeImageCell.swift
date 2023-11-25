@@ -276,16 +276,6 @@ extension CardsLargeImageCell {
             } else {
                 hideMovementView(hide: true)
             }
-        case .web:
-            let location = viewModel.location
-            if let location = location.value {
-                movementView.setValue(with: location.city ?? location.country)
-            } else if let currentLocation = viewModel.currentLocation.value {
-                movementView.setValue(with: currentLocation.description)
-            } else {
-                movementView.setValue(with: "N/A".localized())
-            }
-            movementView.setIcon(with: RuuviAssets.locationImage)
         }
 
         // Ago

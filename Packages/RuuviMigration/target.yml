@@ -13,6 +13,5 @@ targets:
     - target: RuuviLocal
     - target: RuuviPool
     - target: RuuviContext
-    - target: RuuviVirtual
     - target: RuuviStorage
     - target: RuuviService

@@ -30,7 +30,6 @@ let package = Package(
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviService"),
-        .package(path: "../RuuviVirtual"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviReactor"),
         .package(path: "../RuuviPool"),
@@ -45,7 +44,6 @@ let package = Package(
             dependencies: [
                 "RuuviLocal",
                 "RuuviService",
-                "RuuviVirtual",
                 "RuuviStorage",
                 "RuuviReactor",
                 "RuuviPool",
@@ -68,7 +66,6 @@ let package = Package(
                 "RuuviDaemon",
                 "RuuviNotifier",
                 "RuuviOntology",
-                "RuuviVirtual"
             ]
         ),
         .target(

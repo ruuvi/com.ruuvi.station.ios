@@ -11,6 +11,5 @@ targets:
     - target: RuuviReactor
     - target: RuuviLocal
     - target: RuuviService
-    - target: RuuviVirtual
     - target: RuuviPresenters
     - target: RuuviLocalization

@@ -9,6 +9,7 @@ import RuuviService
 import RuuviNotification
 import RuuviNotifier
 import RuuviDaemon
+
 // swiftlint:disable file_length
 public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHeartbeatDaemon {
     private let background: BTBackground
@@ -20,7 +21,6 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     private let alertService: RuuviServiceAlert
     private let alertHandler: RuuviNotifier
     private let settings: RuuviLocalSettings
-    private let pullWebDaemon: PullWebDaemon
     private let titles: RuuviTagHeartbeatDaemonTitles
 
     private var ruuviTags = [AnyRuuviTagSensor]()
@@ -46,7 +46,6 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
         alertService: RuuviServiceAlert,
         alertHandler: RuuviNotifier,
         settings: RuuviLocalSettings,
-        pullWebDaemon: PullWebDaemon,
         titles: RuuviTagHeartbeatDaemonTitles
     ) {
         self.background = background
@@ -58,7 +57,6 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
         self.alertService = alertService
         self.alertHandler = alertHandler
         self.settings = settings
-        self.pullWebDaemon = pullWebDaemon
         self.titles = titles
         super.init()
         connectionAddedToken = NotificationCenter
@@ -202,7 +200,6 @@ extension RuuviTagHeartbeatDaemonBTKit {
 
     private func heartbeatHandler() -> ((RuuviTagHeartbeatDaemonBTKit, BTDevice) -> Void)? {
         return { observer, device in
-            observer.pullWebDaemon.wakeUp()
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings?
                 if let ruuviTagSensor = observer.ruuviTags

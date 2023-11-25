@@ -42,7 +42,6 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviStorage'
     ss.dependency 'RuuviLocal'
     ss.dependency 'RuuviPool'
-    ss.dependency 'RuuviVirtual'
     ss.dependency 'RuuviOntology'
     ss.dependency 'RuuviNotifier'
     ss.dependency 'FutureX'
@@ -69,7 +68,6 @@ Pod::Spec.new do |s|
     ss.dependency 'BTKit'
     ss.dependency 'RuuviLocal'
     ss.dependency 'RuuviOntology'
-    ss.dependency 'RuuviVirtual'
     ss.dependency 'RuuviNotifier'
   end
 

@@ -3,7 +3,6 @@ import UIKit
 import RuuviLocal
 import RuuviPool
 import RuuviContext
-import RuuviVirtual
 import RuuviStorage
 import RuuviService
 import RuuviMigration
