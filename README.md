@@ -50,6 +50,7 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 1. Clone the repo with the recursive parameter  
 ```zsh
 git clone --recursive https://github.com/ruuvi/com.ruuvi.station.ios.git
+cd com.ruuvi.station.ios
 ```
 
 2. Make and open the `frameworks.xcodeproj`
