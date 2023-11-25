@@ -195,6 +195,7 @@ targets:
       - package: LightRoute
       - package: Swinject
       - package: RangeSeekSlider
+      - package: NordicDFU
       - package: GestureInstructions
       - package: Firebase
         product: FirebaseMessaging
