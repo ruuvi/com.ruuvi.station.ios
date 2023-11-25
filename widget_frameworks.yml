@@ -6,8 +6,7 @@ targets:
       path: ruuvi-widgets/Info.plist
       properties:
         NSExtension: 
-          NSExtensionPointIdentifier: com.apple.widget-extension
-          NSExtensionPrincipalClass: RuuviWidgets
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
         UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf]
         CFBundleDisplayName: Ruuvi Station
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)

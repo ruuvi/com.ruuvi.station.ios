@@ -23,9 +23,7 @@
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.widget-extension</string>
-		<key>NSExtensionPrincipalClass</key>
-		<string>RuuviWidgets</string>
+		<string>com.apple.widgetkit-extension</string>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2023 Ruuvi Innovations Oy. All rights reserved.</string>
