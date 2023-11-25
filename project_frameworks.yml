@@ -183,6 +183,7 @@ include:
 - Modules/RuuviOnboard/target.yml
 - widget_frameworks.yml
 - pnservice.yml
+- intents_frameworks.yml
 
 targets:
   station:
@@ -195,6 +196,8 @@ targets:
       - path: pnservice.entitlements
     dependencies:
       - target: "station.widgets"
+      - target: "station.intents"
+      - target: "station.pnservice"
       - package: BTKit
       - package: Charts
       - package: GRDB

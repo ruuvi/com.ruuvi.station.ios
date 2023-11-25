@@ -111,6 +111,7 @@ packages:
 include:
 - widget_spm.yml
 - pnservice.yml
+- intents_spm.yml
 
 targets:
   station:
@@ -123,6 +124,8 @@ targets:
       - path: pnservice.entitlements
     dependencies:
       - target: "station.widgets"
+      - target: "station.intents"
+      - target: "station.pnservice"
       - package: BTKit
       - package: Charts
       - package: LightRoute
