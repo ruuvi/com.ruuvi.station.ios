@@ -272,7 +272,14 @@ targets:
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
-
+    postBuildScripts:
+      - path: scripts/build/load_keystore.sh
+        name: Load Keystore
+        inputFiles:
+          - $(SRCROOT)/station/Classes/Networking/Assembly/Networking.plist
+          - $(SRCROOT)/station/Resources/Plists/GoogleService-Info.plist
+        runOnlyWhenInstalling: true
+        basedOnDependencyAnalysis: false
 schemes:
   station:
     build:
