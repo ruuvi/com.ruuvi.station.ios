@@ -22,9 +22,6 @@ let package = Package(
         .library(
             name: "RuuviDaemonRuuviTag",
             targets: ["RuuviDaemonRuuviTag"]),
-        .library(
-            name: "RuuviDaemonVirtualTag",
-            targets: ["RuuviDaemonVirtualTag"])
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
@@ -70,13 +67,6 @@ let package = Package(
         ),
         .target(
             name: "RuuviDaemonBackground",
-            dependencies: [
-                "RuuviDaemon",
-                "RuuviDaemonOperation"
-            ]
-        ),
-        .target(
-            name: "RuuviDaemonVirtualTag",
             dependencies: [
                 "RuuviDaemon",
                 "RuuviDaemonOperation"
