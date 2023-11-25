@@ -159,8 +159,6 @@ targets:
       - package: RuuviDaemon
         product: RuuviDaemonBackground
       - package: RuuviDaemon
-        product: RuuviDaemonVirtualTag
-      - package: RuuviDaemon
         product: RuuviDaemonRuuviTag
       - package: RuuviDaemon
         product: RuuviDaemonCloudSync

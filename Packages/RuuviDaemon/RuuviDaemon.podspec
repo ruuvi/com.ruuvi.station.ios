@@ -62,15 +62,6 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviNotifier'
   end
 
-  s.subspec 'VirtualTag' do |ss|
-    ss.source_files = 'Sources/RuuviDaemonVirtualTag/**/*.{h,m,swift}', 'Sources/RuuviDaemonVirtualTag/*.{h,m,swift}'
-    ss.dependency 'RuuviDaemon/Contract'
-    ss.dependency 'BTKit'
-    ss.dependency 'RuuviLocal'
-    ss.dependency 'RuuviOntology'
-    ss.dependency 'RuuviNotifier'
-  end
-
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end
