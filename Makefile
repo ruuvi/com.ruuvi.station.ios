@@ -1,8 +1,15 @@
 .PHONY: installed_xcodegen
 
 # generates xcodeproj for frameworks build configuration
-xcodeproj_with_frameworks: installed_xcodegen
+xcodeproj_with_frameworks: installed_xcodegen installed_swiftgen
 	.tools/xcodegen/bin/xcodegen -s project_frameworks.yml
+
+# install swiftgen
+installed_swiftgen: .tools/swiftgen/bin/swiftgen
+
+.tools/swiftgen/bin/swiftgen: scripts/install/install_swiftgen.sh
+	scripts/install/install_swiftgen.sh
+	touch $@
 
 # install xcodegen
 installed_xcodegen: .tools/xcodegen/bin/xcodegen

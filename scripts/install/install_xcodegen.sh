@@ -30,9 +30,6 @@ unzip ".tools/xcodegen.zip" -d ".tools"
 # remove the downloaded file
 rm ".tools/xcodegen.zip"
 
-# echo the hash of downloaded xcodegen
-echo "$(md5 .tools/xcodegen)"
-
 # if the hash of downloaded xcodegen is not the expected value, exit with an error
 INSTALLED_XCODEGEN_HASH="$(find "$OUTPUT_DIR" -type f -exec md5 {} \; | md5)"
 if [ "$INSTALLED_XCODEGEN_HASH" != "$EXPECTED_XCODEGEN_HASH" ]; then

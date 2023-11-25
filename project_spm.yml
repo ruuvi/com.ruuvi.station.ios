@@ -272,6 +272,18 @@ targets:
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
+    preBuildScripts:
+      - path: scripts/build/generate_l10n.sh
+        name: Generate L10N
+        inputFiles:
+          - $(SRCROOT)/station.localization/station.localization.json
+        outputFiles:
+          - $(SRCROOT)/station/Resources/Strings/en.lproj/Localizable.strings
+          - $(SRCROOT)/station/Resources/Strings/sv.lproj/Localizable.strings
+          - $(SRCROOT)/station/Resources/Strings/ru.lproj/Localizable.strings
+          - $(SRCROOT)/station/Resources/Strings/fi.lproj/Localizable.strings
+          - $(SRCROOT)/station/Resources/Strings/fr.lproj/Localizable.strings
+          - $(SRCROOT)/station/Resources/Strings/de.lproj/Localizable.strings
     postBuildScripts:
       - path: scripts/build/load_keystore.sh
         name: Load Keystore
