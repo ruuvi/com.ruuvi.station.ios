@@ -1,0 +1,37 @@
+targets: 
+  station.widgets:
+    type: app-extension
+    platform: iOS
+    info:
+      path: ruuvi-widgets/Info.plist
+      properties:
+        NSExtension: 
+          NSExtensionPointIdentifier: com.apple.widget-extension
+          NSExtensionPrincipalClass: RuuviWidgets
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf]
+        CFBundleDisplayName: Ruuvi Station Widgets
+    sources:
+      - path: ruuvi-widgets
+    dependencies:
+      - package: Swinject
+      - package: BTKit
+      - package: Future
+      - package: GRDB
+      - package: Humidity
+      - package: Realm
+      - package: KeychainAccess
+      - package: Realm
+        product: RealmSwift
+      - package: RuuviUser
+      - package: RuuviUser
+        product: RuuviUserCoordinator
+      - package: RuuviCloud
+      - package: RuuviCloud
+        product: RuuviCloudPure
+      - package: RuuviCloud
+        product: RuuviCloudApi
+      - package: RuuviOntology
+      - package: RuuviPool
+      - package: RuuviLocal
+      - package: RuuviPersistence
+      - package: RuuviContext

@@ -181,6 +181,7 @@ include:
 - Modules/RuuviDiscover/target.yml
 - Modules/RuuviLocationPicker/target.yml
 - Modules/RuuviOnboard/target.yml
+- widget_frameworks.yml
 
 targets:
   station:
@@ -189,6 +190,7 @@ targets:
     sources:
       - path: station
     dependencies:
+      - target: "station.widgets"
       - package: BTKit
       - package: Charts
       - package: GRDB
@@ -201,6 +203,7 @@ targets:
         product: FirebaseMessaging
       - package: Firebase
         product: FirebaseRemoteConfig
+      - package: KeychainAccess
       - package: Humidity
       - package: Future
       - package: Realm

@@ -41,6 +41,24 @@ packages:
   GestureInstructions:
     url: https://github.com/rinat-enikeev/GestureInstructions
     from: 0.0.2
+  KeychainAccess: 
+    url: https://github.com/kishikawakatsumi/KeychainAccess
+    from: 4.2.1
+  Realm: 
+    url: https://github.com/realm/realm-cocoa
+    from: 10.8.0
+  GRDB: 
+    url: https://github.com/groue/GRDB.swift
+    from: 4.14.0
+  Humidity:
+    url: https://github.com/rinat-enikeev/Humidity
+    from: 0.1.5
+  Future:
+    url: https://github.com/kean/Future
+    from: 1.3.0
+  NordicDFU:
+    url: https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library
+    from: 4.10.3
   RuuviAnalytics:
     path: Packages/RuuviAnalytics
   RuuviCloud: 
@@ -90,6 +108,9 @@ packages:
   RuuviOnboard:
     path: Modules/RuuviOnboard
 
+include:
+- widget_spm.yml
+
 targets:
   station:
     type: application
@@ -97,6 +118,7 @@ targets:
     sources:
       - path: station
     dependencies:
+      - target: "station.widgets"
       - package: BTKit
       - package: Charts
       - package: LightRoute
@@ -107,6 +129,11 @@ targets:
         product: FirebaseMessaging
       - package: Firebase
         product: FirebaseRemoteConfig
+      - package: KeychainAccess
+      - package: Realm
+      - package: Realm
+        product: RealmSwift
+      - package: NordicDFU
       - package: RuuviAnalytics
       - package: RuuviAnalytics
         product: RuuviAnalyticsImpl

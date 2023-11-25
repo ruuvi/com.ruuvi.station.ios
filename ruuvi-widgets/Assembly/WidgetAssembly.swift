@@ -1,6 +1,13 @@
+import Foundation
 import Swinject
 import RuuviCloud
 import RuuviUser
+#if canImport(RuuviCloudPure)
+import RuuviCloudPure
+#endif
+#if canImport(RuuviUserCoordinator)
+import RuuviUserCoordinator
+#endif
 
 final class WidgetAssembly {
     static let shared = WidgetAssembly()
