@@ -182,6 +182,8 @@ include:
 - Modules/RuuviLocationPicker/target.yml
 - Modules/RuuviOnboard/target.yml
 - widget_frameworks.yml
+- pnservice.yml
+- intents_frameworks.yml
 
 targets:
   station:
@@ -194,6 +196,8 @@ targets:
       - path: pnservice.entitlements
     dependencies:
       - target: "station.widgets"
+      - target: "station.intents"
+      - target: "station.pnservice"
       - package: BTKit
       - package: Charts
       - package: GRDB
@@ -273,7 +277,14 @@ targets:
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
-
+    postBuildScripts:
+      - path: scripts/build/load_keystore.sh
+        name: Load Keystore
+        inputFiles:
+          - $(SRCROOT)/station/Classes/Networking/Assembly/Networking.plist
+          - $(SRCROOT)/station/Resources/Plists/GoogleService-Info.plist
+        runOnlyWhenInstalling: true
+        basedOnDependencyAnalysis: false
 schemes:
   station:
     build:
