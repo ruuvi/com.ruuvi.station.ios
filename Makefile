@@ -1,4 +1,4 @@
-.PHONY: installed_xcodegen
+.PHONY: installed_xcodegen installed_swiftgen
 
 # generates xcodeproj for frameworks build configuration
 xcodeproj_with_frameworks: installed_xcodegen installed_swiftgen
