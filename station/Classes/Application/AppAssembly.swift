@@ -17,7 +17,6 @@ import RuuviDaemon
 import RuuviNotifier
 import RuuviNotification
 import RuuviRepository
-import RuuviLocation
 import RuuviCore
 import RuuviDiscover
 import RuuviPresenters
@@ -96,9 +95,6 @@ import RuuviUserCoordinator
 #if canImport(RuuviCoreLocation)
 import RuuviCoreLocation
 #endif
-#if canImport(RuuviLocationService)
-import RuuviLocationService
-#endif
 #if canImport(RuuviNotificationLocal)
 import RuuviNotificationLocal
 #endif
@@ -107,9 +103,6 @@ import RuuviCoreImage
 #endif
 #if canImport(RuuviCoreLocation)
 import RuuviCoreLocation
-#endif
-#if canImport(RuuviLocationService)
-import RuuviLocationService
 #endif
 #if canImport(RuuviCorePN)
 import RuuviCorePN
@@ -489,11 +482,6 @@ private final class BusinessAssembly: Assembly {
             let provider = LocalFeatureToggleProvider()
             return provider
         }.inObjectScope(.container)
-
-        container.register(RuuviLocationService.self) { _ in
-            let service = RuuviLocationServiceApple()
-            return service
-        }
 
         container.register(RemoteConfigService.self) { _ in
             let service = FirebaseRemoteConfigService()

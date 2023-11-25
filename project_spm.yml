@@ -71,8 +71,6 @@ packages:
     path: Packages/RuuviDaemon
   RuuviDFU:
     path: Packages/RuuviDFU
-  RuuviLocation:
-    path: Packages/RuuviLocation
   RuuviLocal:
     path: Packages/RuuviLocal
   RuuviMigration:
@@ -169,9 +167,6 @@ targets:
       - package: RuuviDFU
       - package: RuuviDFU
         product: RuuviDFUImpl
-      - package: RuuviLocation
-      - package: RuuviLocation
-        product: RuuviLocationService
       - package: RuuviLocal
       - package: RuuviLocal
         product: RuuviLocalUserDefaults

@@ -162,7 +162,6 @@ include:
 - Packages/RuuviCore/target.yml
 - Packages/RuuviDaemon/target.yml
 - Packages/RuuviDFU/target.yml
-- Packages/RuuviLocation/target.yml
 - Packages/RuuviLocal/target.yml
 - Packages/RuuviMigration/target.yml
 - Packages/RuuviNotification/target.yml
@@ -220,7 +219,6 @@ targets:
       - target: RuuviCore
       - target: RuuviDaemon
       - target: RuuviDFU
-      - target: RuuviLocation
       - target: RuuviLocal
       - target: RuuviMigration
       - target: RuuviNotification
