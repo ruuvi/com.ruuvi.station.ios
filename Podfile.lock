@@ -294,23 +294,6 @@ PODS:
     - RuuviLocalization/RuuviLocalization (= 0.0.1)
   - RuuviLocalization/RuuviLocalization (0.0.1)
   - RuuviLocalization/Tests (0.0.1)
-  - RuuviLocation (0.0.1):
-    - RuuviLocation/Contract (= 0.0.1)
-  - RuuviLocation/Contract (0.0.1):
-    - FutureX
-    - RuuviOntology
-  - RuuviLocation/Service (0.0.1):
-    - RuuviLocation/Contract
-    - RuuviOntology
-  - RuuviLocation/Tests (0.0.1)
-  - RuuviLocationPicker (0.0.1):
-    - RuuviLocationPicker/RuuviLocationPicker (= 0.0.1)
-  - RuuviLocationPicker/RuuviLocationPicker (0.0.1):
-    - RuuviCore
-    - RuuviLocalization
-    - RuuviLocation
-    - RuuviPresenters
-  - RuuviLocationPicker/Tests (0.0.1)
   - RuuviMigration (0.0.1):
     - RuuviMigration/Contract (= 0.0.1)
   - RuuviMigration/Contract (0.0.1)
@@ -593,11 +576,6 @@ DEPENDENCIES:
   - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
   - RuuviLocalization (from `Common/RuuviLocalization/RuuviLocalization.podspec`)
   - RuuviLocalization/Tests (from `Common/RuuviLocalization/RuuviLocalization.podspec`)
-  - RuuviLocation (from `Packages/RuuviLocation/RuuviLocation.podspec`)
-  - RuuviLocation/Service (from `Packages/RuuviLocation/RuuviLocation.podspec`)
-  - RuuviLocation/Tests (from `Packages/RuuviLocation/RuuviLocation.podspec`)
-  - RuuviLocationPicker (from `Modules/RuuviLocationPicker/RuuviLocationPicker.podspec`)
-  - RuuviLocationPicker/Tests (from `Modules/RuuviLocationPicker/RuuviLocationPicker.podspec`)
   - RuuviMigration (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Impl (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Tests (from `Packages/RuuviMigration/RuuviMigration.podspec`)
@@ -712,10 +690,6 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviLocal/RuuviLocal.podspec
   RuuviLocalization:
     :path: Common/RuuviLocalization/RuuviLocalization.podspec
-  RuuviLocation:
-    :path: Packages/RuuviLocation/RuuviLocation.podspec
-  RuuviLocationPicker:
-    :path: Modules/RuuviLocationPicker/RuuviLocationPicker.podspec
   RuuviMigration:
     :path: Packages/RuuviMigration/RuuviMigration.podspec
   RuuviNotification:
@@ -800,8 +774,6 @@ SPEC CHECKSUMS:
   RuuviDiscover: b5c4f470541f50ad68e785542f7839ba067c5614
   RuuviLocal: 5d711ed6933bbea2c958bd805186bbde012bc4e3
   RuuviLocalization: 04e829bac8113cc8edb49c22a243da88b8383210
-  RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
-  RuuviLocationPicker: ec6fb89f5b0a5ff85d00036a2847e0ffac3b9076
   RuuviMigration: 9db6edb260c58fedfc816bb8561d3f070113bdba
   RuuviNotification: 9985612f76fd661cf26473518e503c3ac224c928
   RuuviNotifier: c417691a212ca07ab4fae7095cb9e0bc25e19084
@@ -819,6 +791,6 @@ SPEC CHECKSUMS:
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 71209303e15c241d8b88a880628cd3b19e0442d2
+PODFILE CHECKSUM: b310e01f364c17dd00c1de3d944fa2a1ad2776b8
 
 COCOAPODS: 1.12.1
