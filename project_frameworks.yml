@@ -182,6 +182,7 @@ include:
 - Modules/RuuviLocationPicker/target.yml
 - Modules/RuuviOnboard/target.yml
 - widget_frameworks.yml
+- pnservice.yml
 
 targets:
   station:

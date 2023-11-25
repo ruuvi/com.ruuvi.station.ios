@@ -110,6 +110,7 @@ packages:
 
 include:
 - widget_spm.yml
+- pnservice.yml
 
 targets:
   station:
