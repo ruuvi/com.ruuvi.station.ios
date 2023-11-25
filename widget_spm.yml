@@ -18,6 +18,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: ruuvi_widgets.entitlements
     sources:
       - path: ruuvi-widgets
+      - path: station/Resources/Strings/
     dependencies:
       - package: Swinject
       - package: BTKit

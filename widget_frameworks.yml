@@ -18,6 +18,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: ruuvi_widgets.entitlements
     sources:
       - path: ruuvi-widgets
+      - path: station/Resources/Strings/
     dependencies:
       - package: Swinject
       - package: BTKit
@@ -29,9 +30,16 @@ targets:
       - package: Realm
         product: RealmSwift
       - target: RuuviUser
+        embed: true
       - target: RuuviCloud
+        embed: true
       - target: RuuviOntology
+        embed: true
       - target: RuuviPool
+        embed: true
       - target: RuuviLocal
+        embed: true
       - target: RuuviPersistence
+        embed: true
       - target: RuuviContext
+        embed: true
