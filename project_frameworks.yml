@@ -181,6 +181,7 @@ include:
 - Modules/RuuviDiscover/target.yml
 - Modules/RuuviLocationPicker/target.yml
 - Modules/RuuviOnboard/target.yml
+- widget_frameworks.yml
 
 targets:
   station:
@@ -188,7 +189,11 @@ targets:
     platform: iOS
     sources:
       - path: station
+      - path: ruuvi_widgets.entitlements
+      - path: station_intents.entitlements
+      - path: pnservice.entitlements
     dependencies:
+      - target: "station.widgets"
       - package: BTKit
       - package: Charts
       - package: GRDB
@@ -201,6 +206,7 @@ targets:
         product: FirebaseMessaging
       - package: Firebase
         product: FirebaseRemoteConfig
+      - package: KeychainAccess
       - package: Humidity
       - package: Future
       - package: Realm
@@ -267,3 +273,9 @@ targets:
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
+
+schemes:
+  station:
+    build:
+      targets:
+        station: all
