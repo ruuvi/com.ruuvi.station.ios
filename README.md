@@ -60,13 +60,16 @@ xed frameworks.xcodeproj
 
 3. Configure Signing
    
+4. Build and Run on your device!
+
 <details>
 <summary>Optionally</summary>
-1. Obtain [OpenWeatherMap](https://openweathermap.org) API Key and put it into ```/station/Classes/Networking/Assembly/Networking.plist```
-2. Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
-</details>
 
-Build and Run on your device!
+1. Obtain [OpenWeatherMap](https://openweathermap.org) API Key and put it into ```/station/Classes/Networking/Assembly/Networking.plist```
+   
+2. Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
+   
+</details>
 
 ## Get in touch
 
