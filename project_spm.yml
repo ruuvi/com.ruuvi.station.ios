@@ -117,6 +117,9 @@ targets:
     platform: iOS
     sources:
       - path: station
+      - path: ruuvi_widgets.entitlements
+      - path: station_intents.entitlements
+      - path: pnservice.entitlements
     dependencies:
       - target: "station.widgets"
       - package: BTKit
@@ -265,3 +268,9 @@ targets:
         TARGETED_DEVICE_FAMILY: 1,2
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
+
+schemes:
+  station:
+    build:
+      targets:
+        station: all
