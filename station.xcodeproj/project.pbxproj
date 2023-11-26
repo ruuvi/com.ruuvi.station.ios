@@ -352,6 +352,8 @@
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
 		0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
 		0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */; };
+		0ECA196A2B138C3A00BEE4DB /* FeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECA19692B138C3A00BEE4DB /* FeatureTogglesViewController.swift */; };
+		0ECA196B2B138C3A00BEE4DB /* FeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECA19692B138C3A00BEE4DB /* FeatureTogglesViewController.swift */; };
 		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0EE36E3F26957E010021B746 /* DFUInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */; };
 		0EE36E4026957E010021B746 /* DFUInteractorInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */; };
@@ -361,8 +363,6 @@
 		0EE36EB1269DC71B0021B746 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB0269DC71B0021B746 /* Algorithms */; };
 		0EE36EB4269DC7D90021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB3269DC7D90021B746 /* Charts */; };
 		0EE36EB6269DC7E40021B746 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE36EB5269DC7E40021B746 /* Charts */; };
-		0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */; };
-		0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */; };
 		0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C522B7915C0015F9E0 /* CardsViewModel.swift */; };
 		0EEB20C722B7A7200015F9E0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CA22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift */; };
@@ -1363,13 +1363,13 @@
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
 		0EC50F5522CCE46D00172EEB /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenter.swift; sourceTree = "<group>"; };
+		0ECA19692B138C3A00BEE4DB /* FeatureTogglesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeatureTogglesViewController.swift; sourceTree = "<group>"; };
 		0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
 		0EE36E3E26957E000021B746 /* DFUInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUInteractorInput.swift; sourceTree = "<group>"; };
 		0EE36E4126957E200021B746 /* LatestRelease.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestRelease.swift; sourceTree = "<group>"; };
 		0EE49BB123B8C40D003012C2 /* MacInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = "<group>"; };
 		0EE49BB223B8C40D003012C2 /* DevInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = DevInfo.plist; sourceTree = "<group>"; };
-		0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLEXFeatureTogglesViewController.swift; sourceTree = "<group>"; };
 		0EEB20C522B7915C0015F9E0 /* CardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsViewModel.swift; sourceTree = "<group>"; };
 		0EEB20C822B7A7200015F9E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0EEB20CA22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableEmbededViewController.swift; sourceTree = "<group>"; };
@@ -2860,7 +2860,7 @@
 		0EE98A772649386000AAB3ED /* FLEX */ = {
 			isa = PBXGroup;
 			children = (
-				0EE98A7826493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift */,
+				0ECA19692B138C3A00BEE4DB /* FeatureTogglesViewController.swift */,
 			);
 			path = FLEX;
 			sourceTree = "<group>";
@@ -4895,7 +4895,7 @@
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
 				0EE36EAD269DC70E0021B746 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */,
+				0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -5396,7 +5396,6 @@
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
 				E1198A3629BA76CB002245CF /* ASSelectionViewInput.swift in Sources */,
 				0E3CA70D267365B1000D9B25 /* Debouncer.swift in Sources */,
-				0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				E116707A29634363002DF7BF /* BackgroundSelectionViewOutput.swift in Sources */,
 				66BC449C2657AED400A03253 /* OffsetCorrectionConfigurator.swift in Sources */,
 				E10E18BB297D67FC002C78C3 /* RuuviCloudViewOutput.swift in Sources */,
@@ -5756,6 +5755,7 @@
 				0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
 				E10E18BE297D68EB002C78C3 /* RuuviCloudModuleInput.swift in Sources */,
+				0ECA196B2B138C3A00BEE4DB /* FeatureTogglesViewController.swift in Sources */,
 				E10E18C2297DD0CA002C78C3 /* RuuviCloudTableViewCell.swift in Sources */,
 				E1198A2D29BA769A002245CF /* ASSelectionTableViewController.swift in Sources */,
 				A9646488247BAE6B0001D55D /* ChartSettingsRouterInput.swift in Sources */,
@@ -5874,6 +5874,7 @@
 				A92A66BD2450C640002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				A93CDCDE25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
 				E1B57FEE29859CC900B441FB /* DevicesModuleInput.swift in Sources */,
+				0ECA196A2B138C3A00BEE4DB /* FeatureTogglesViewController.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				340BE39B27B54FEC006D6C34 /* String+Email.swift in Sources */,
 				E116707929634363002DF7BF /* BackgroundSelectionViewOutput.swift in Sources */,
@@ -6185,7 +6186,6 @@
 				0EE36E4226957E200021B746 /* LatestRelease.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
 				0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
-				0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				E1198A3229BA76C1002245CF /* ASSelectionViewOutput.swift in Sources */,
 				E19691882A06E03300DC360E /* PushAlertSoundSelectionViewOutput.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
@@ -7130,7 +7130,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */ = {
+		0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
 			requirement = {
@@ -7153,12 +7153,12 @@
 		};
 		0EE36EB3269DC7D90021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 		0EE36EB5269DC7E40021B746 /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts.git" */;
+			package = 0EE36EB2269DC7D90021B746 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */

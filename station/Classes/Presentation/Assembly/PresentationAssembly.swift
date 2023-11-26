@@ -19,8 +19,8 @@ class PresentationAssembly: Assembly {
             return presenter
         }
 
-        container.register(FLEXFeatureTogglesViewController.self) { r in
-            let controller = FLEXFeatureTogglesViewController()
+        container.register(FeatureTogglesViewController.self) { r in
+            let controller = FeatureTogglesViewController()
             controller.featureToggleService = r.resolve(FeatureToggleService.self)
             return controller
         }

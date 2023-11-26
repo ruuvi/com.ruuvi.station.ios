@@ -54,7 +54,7 @@ class SettingsRouter: SettingsRouterInput {
 
     func openFeatureToggles() {
         let r = AppAssembly.shared.assembler.resolver
-        if let viewController = r.resolve(FLEXFeatureTogglesViewController.self) {
+        if let viewController = r.resolve(FeatureTogglesViewController.self) {
             transitionHandler.navigationController?.pushViewController(
                 viewController,
                 animated: true
