@@ -10,8 +10,6 @@ extension Notification.Name {
     public static let PressureUnitAccuracyChange = Notification.Name("Settings.PressureUnitAccuracyChange")
     public static let LanguageDidChange = Notification.Name("LanguageDidChange")
     public static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
-    public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
-    public static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
     public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
     public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
     public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
@@ -57,8 +55,6 @@ public protocol RuuviLocalSettings {
     var cloudProfileLanguageCode: String? { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
-    var isWebTagDaemonOn: Bool { get set }
-    var webTagDaemonIntervalMinutes: Int { get set }
     var connectionTimeout: TimeInterval { get set }
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }

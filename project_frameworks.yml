@@ -165,7 +165,6 @@ include:
 - Packages/RuuviCore/target.yml
 - Packages/RuuviDaemon/target.yml
 - Packages/RuuviDFU/target.yml
-- Packages/RuuviLocation/target.yml
 - Packages/RuuviLocal/target.yml
 - Packages/RuuviMigration/target.yml
 - Packages/RuuviNotification/target.yml
@@ -178,11 +177,9 @@ include:
 - Packages/RuuviService/target.yml
 - Packages/RuuviStorage/target.yml
 - Packages/RuuviUser/target.yml
-- Packages/RuuviVirtual/target.yml
 - Common/RuuviPresenters/target.yml
 - Common/RuuviLocalization/target.yml
 - Modules/RuuviDiscover/target.yml
-- Modules/RuuviLocationPicker/target.yml
 - Modules/RuuviOnboard/target.yml
 - widget_frameworks.yml
 - pnservice.yml
@@ -226,7 +223,6 @@ targets:
       - target: RuuviCore
       - target: RuuviDaemon
       - target: RuuviDFU
-      - target: RuuviLocation
       - target: RuuviLocal
       - target: RuuviMigration
       - target: RuuviNotification
@@ -239,10 +235,8 @@ targets:
       - target: RuuviService
       - target: RuuviStorage
       - target: RuuviUser
-      - target: RuuviVirtual
       - target: RuuviPresenters
       - target: RuuviDiscover
-      - target: RuuviLocationPicker
       - target: RuuviOnboard
       - target: RuuviLocalization
     info:
@@ -254,7 +248,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight, UIInterfaceOrientationPortrait]
         UILaunchStoryboardName: LaunchScreen
-        BGTaskSchedulerPermittedIdentifiers: [com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh, com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning]
+        BGTaskSchedulerPermittedIdentifiers: [com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning]
         FirebaseMessagingAutoInitEnabled: false
         LSApplicationQueriesSchemes: [https, http, mailto]
         LSRequiresIPhoneOS: true

@@ -10,13 +10,11 @@ extension Notification.Name {
 
 public enum RuuviServiceAlertDidChangeKey: String {
     case physicalSensor
-    case virtualSensor
     case type
 }
 
 public protocol RuuviServiceAlert: RuuviServiceAlertRuuviTag,
                                    RuuviServiceAlertPhysicalSensor,
-                                   RuuviServiceAlertVirtualSensor,
                                    RuuviServiceAlertCloud,
                                    RuuviServiceAlertDeprecated {}
 
@@ -149,58 +147,4 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func movementCounter(for sensor: PhysicalSensor) -> Int?
     func setMovement(counter: Int?, for sensor: PhysicalSensor)
     func movementDescription(for sensor: PhysicalSensor) -> String?
-}
-
-public protocol RuuviServiceAlertVirtualSensor {
-    // virtual sensor
-    func hasRegistrations(for sensor: VirtualSensor) -> Bool
-    func isOn(type: AlertType, for sensor: VirtualSensor) -> Bool
-    func alert(for sensor: VirtualSensor, of type: AlertType) -> AlertType?
-    func register(type: AlertType, for sensor: VirtualSensor)
-    func unregister(type: AlertType, for sensor: VirtualSensor)
-    func mute(type: AlertType, for sensor: VirtualSensor, till date: Date)
-    func unmute(type: AlertType, for sensor: VirtualSensor)
-    func mutedTill(type: AlertType, for sensor: VirtualSensor) -> Date?
-
-    /// temperature (celsius)
-    func lowerCelsius(for sensor: VirtualSensor) -> Double?
-    func setLower(celsius: Double?, for sensor: VirtualSensor)
-    func upperCelsius(for sensor: VirtualSensor) -> Double?
-    func setUpper(celsius: Double?, for sensor: VirtualSensor)
-    func temperatureDescription(for sensor: VirtualSensor) -> String?
-    func setTemperature(description: String?, for sensor: VirtualSensor)
-
-    /// relative humidity (fraction of one)
-    func lowerRelativeHumidity(for sensor: VirtualSensor) -> Double?
-    func setLower(relativeHumidity: Double?, for sensor: VirtualSensor)
-    func upperRelativeHumidity(for sensor: VirtualSensor) -> Double?
-    func setUpper(relativeHumidity: Double?, for sensor: VirtualSensor)
-    func relativeHumidityDescription(for sensor: VirtualSensor) -> String?
-    func setRelativeHumidity(description: String?, for sensor: VirtualSensor)
-
-    /// humidity (unitHumidity)
-    func lowerHumidity(for sensor: VirtualSensor) -> Humidity?
-    func setLower(humidity: Humidity?, for sensor: VirtualSensor)
-    func upperHumidity(for sensor: VirtualSensor) -> Humidity?
-    func setUpper(humidity: Humidity?, for sensor: VirtualSensor)
-    func humidityDescription(for sensor: VirtualSensor) -> String?
-    func setHumidity(description: String?, for sensor: VirtualSensor)
-
-    /// pressure (hPa)
-    func lowerPressure(for sensor: VirtualSensor) -> Double?
-    func setLower(pressure: Double?, for sensor: VirtualSensor)
-    func upperPressure(for sensor: VirtualSensor) -> Double?
-    func setUpper(pressure: Double?, for sensor: VirtualSensor)
-    func pressureDescription(for sensor: VirtualSensor) -> String?
-    func setPressure(description: String?, for sensor: VirtualSensor)
-
-    /// connection
-    func connectionDescription(for sensor: VirtualSensor) -> String?
-    func setConnection(description: String?, for sensor: VirtualSensor)
-
-    /// movement
-    func movementCounter(for sensor: VirtualSensor) -> Int?
-    func setMovement(counter: Int?, for sensor: VirtualSensor)
-    func movementDescription(for sensor: VirtualSensor) -> String?
-    func setMovement(description: String?, for sensor: VirtualSensor)
 }

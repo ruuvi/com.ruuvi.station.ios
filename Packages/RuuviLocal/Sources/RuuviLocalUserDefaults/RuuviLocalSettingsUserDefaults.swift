@@ -251,29 +251,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDegaults.isWebTagDaemonOn", defaultValue: true)
-    var isWebTagDaemonOn: Bool {
-        didSet {
-            NotificationCenter
-            .default
-            .post(name: .isWebTagDaemonOnDidChange,
-                  object: self,
-                  userInfo: nil)
-        }
-    }
-
-    @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 60)
-    var webTagDaemonIntervalMinutes: Int {
-
-        didSet {
-            NotificationCenter
-            .default
-            .post(name: .WebTagDaemonIntervalDidChange,
-             object: self,
-             userInfo: nil)
-        }
-    }
-
     @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 30)
     var connectionTimeout: TimeInterval
 

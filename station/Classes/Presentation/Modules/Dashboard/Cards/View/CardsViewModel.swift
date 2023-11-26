@@ -3,11 +3,9 @@ import BTKit
 import Humidity
 import RuuviOntology
 import RuuviLocal
-import RuuviVirtual
 
 enum CardType {
     case ruuvi
-    case web
 }
 
 struct CardsViewModel {
@@ -31,7 +29,6 @@ struct CardsViewModel {
     var currentLocation: Observable<Location?> = Observable<Location?>()
     var animateRSSI: Observable<Bool?> = Observable<Bool?>()
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
-    var provider: VirtualProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var isCloud: Observable<Bool?> = Observable<Bool?>()
     var isOwner: Observable<Bool?> = Observable<Bool?>()
@@ -76,46 +73,6 @@ struct CardsViewModel {
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
     private let batteryStatusProvider = RuuviTagBatteryStatusProvider()
-
-    init(_ virtualSensor: VirtualTagSensor) {
-        type = .web
-        id.value = virtualSensor.id
-        luid.value = virtualSensor.id.luid.any
-        name.value = virtualSensor.name
-        // TODO: @rinat fetch one
-//        temperature.value = virtualSensor.lastRecord?.temperature
-//        humidity.value = virtualSensor.lastRecord?.humidity
-//        pressure.value = virtualSensor.lastRecord?.pressure
-        isConnectable.value = false
-        isConnected.value = false
-        isCloud.value = false
-        isOwner.value = true
-//        date.value = virtualSensor.data.last?.date
-//        location.value = virtualSensor.location?.location
-        provider = virtualSensor.provider
-        source.value = .weatherProvider
-    }
-
-    func update(_ record: VirtualTagSensorRecord) {
-        temperature.value = record.temperature
-        humidity.value = record.humidity
-        pressure.value = record.pressure
-        isConnectable.value = false
-        isConnected.value = false
-        isCloud.value = false
-        isOwner.value = true
-        currentLocation.value = record.location
-        date.value = record.date
-    }
-
-    func update(_ wpsData: VirtualData, current: Location?) {
-        isConnectable.value = false
-        temperature.value = wpsData.temperature
-        humidity.value = wpsData.humidity
-        pressure.value = wpsData.pressure
-        currentLocation.value = current
-        date.value = Date()
-    }
 
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi

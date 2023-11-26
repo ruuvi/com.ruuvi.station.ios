@@ -25,7 +25,6 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviStorage'
     ss.dependency 'RuuviLocal'
     ss.dependency 'RuuviService'
-    ss.dependency 'RuuviVirtual'
   end
 
   s.test_spec 'Tests' do |test_spec|

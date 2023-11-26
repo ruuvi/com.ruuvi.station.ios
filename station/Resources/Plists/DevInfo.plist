@@ -4,7 +4,6 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh</string>
 		<string>com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>

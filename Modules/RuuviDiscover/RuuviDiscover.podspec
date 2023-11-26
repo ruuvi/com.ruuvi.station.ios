@@ -25,7 +25,6 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviReactor'
     ss.dependency 'RuuviLocal'
     ss.dependency 'RuuviService'
-    ss.dependency 'RuuviVirtual'
     ss.dependency 'RuuviCore'
     ss.dependency 'RuuviLocalization'
     ss.dependency 'RuuviPresenters'

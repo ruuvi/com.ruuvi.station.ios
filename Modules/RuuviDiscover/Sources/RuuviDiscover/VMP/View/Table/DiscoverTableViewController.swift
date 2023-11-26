@@ -1,7 +1,6 @@
 import UIKit
 import BTKit
 import RuuviOntology
-import RuuviVirtual
 import RuuviLocalization
 import CoreNFC
 
@@ -64,13 +63,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
                                         style: .default, handler: { [weak self] _ in
             self?.takeUserToBTSettings(userDeclined: userDeclined)
         }))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
-
-    func showWebTagInfoDialog() {
-        let message = "DiscoverTable.WebTagsInfoDialog.message".localized(for: Self.self)
-        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }

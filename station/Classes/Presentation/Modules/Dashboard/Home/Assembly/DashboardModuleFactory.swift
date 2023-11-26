@@ -5,7 +5,6 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviCore
 import RuuviNotifier
 import RuuviPresenters
@@ -36,7 +35,6 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
-        presenter.webTagService = r.resolve(VirtualService.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)
         presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
@@ -49,7 +47,6 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
-        presenter.virtualReactor = r.resolve(VirtualReactor.self)
         presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)

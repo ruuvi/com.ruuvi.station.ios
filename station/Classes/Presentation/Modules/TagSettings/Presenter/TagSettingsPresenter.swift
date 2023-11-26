@@ -1101,13 +1101,6 @@ extension TagSettingsPresenter {
                         self?.updateMutedTill(of: type, for: physicalSensor.id)
                         self?.syncAlerts(of: type)
                     }
-                    if let virtualSensor
-                        = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
-                       virtualSensor.id == self?.viewModel.uuid.value,
-                       let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
-                        self?.updateIsOnState(of: type, for: virtualSensor.id)
-                        self?.updateMutedTill(of: type, for: virtualSensor.id)
-                    }
                 }
             })
     }

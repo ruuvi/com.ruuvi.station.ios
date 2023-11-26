@@ -25,7 +25,6 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviAnalytics/Contract'
     ss.dependency 'RuuviStorage'
     ss.dependency 'RuuviLocal'
-    ss.dependency 'RuuviVirtual'
     ss.dependency 'RuuviUser'
     ss.dependency 'RuuviService/Alert'
   end

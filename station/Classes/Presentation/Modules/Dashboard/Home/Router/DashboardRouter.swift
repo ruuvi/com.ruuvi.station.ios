@@ -3,7 +3,6 @@ import Foundation
 import UIKit
 import RuuviOntology
 import RuuviLocal
-import RuuviVirtual
 
 class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: UIViewController!
@@ -111,24 +110,9 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                              sensorSettings: sensorSettings)
         }
     }
-
-    func openVirtualSensorSettings(
-        sensor: VirtualTagSensor,
-        temperature: Temperature?
-    ) {
-        let factory = StoryboardFactory(storyboardName: "WebTagSettings")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
-                module.configure(sensor: sensor, temperature: temperature)
-            })
-    }
-
     // swiftlint:disable:next function_parameter_count
     func openCardImageView(with viewModels: [CardsViewModel],
                            ruuviTagSensors: [AnyRuuviTagSensor],
-                           virtualSensors: [AnyVirtualTagSensor],
                            sensorSettings: [SensorSettings],
                            scrollTo: CardsViewModel?,
                            showCharts: Bool,
@@ -158,7 +142,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             cards.configure(output: output)
             cards.configure(viewModels: viewModels,
                             ruuviTagSensors: ruuviTagSensors,
-                            virtualSensors: virtualSensors,
                             sensorSettings: sensorSettings)
             cards.configure(scrollTo: scrollTo,
                             openChart: showCharts)
@@ -168,7 +151,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     // swiftlint:disable:next function_parameter_count
     func openTagSettings(with viewModels: [CardsViewModel],
                          ruuviTagSensors: [AnyRuuviTagSensor],
-                         virtualSensors: [AnyVirtualTagSensor],
                          sensorSettings: [SensorSettings],
                          scrollTo: CardsViewModel?,
                          ruuviTag: RuuviTagSensor,
@@ -187,7 +169,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             cardsPresenter.configure(output: output)
             cardsPresenter.configure(viewModels: viewModels,
                             ruuviTagSensors: ruuviTagSensors,
-                            virtualSensors: virtualSensors,
                             sensorSettings: sensorSettings)
             cardsPresenter.configure(scrollTo: scrollTo,
                             openChart: false)
@@ -231,7 +212,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
 
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
         let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
-        let module = factory.create(for: ruuviTag, virtualTag: nil)
+        let module = factory.create(for: ruuviTag)
         self.backgroundSelectionModule = module
         transitionHandler
             .navigationController?
@@ -240,18 +221,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                 animated: true
             )
 
-    }
-
-    func openBackgroundSelectionView(virtualSensor: VirtualTagSensor) {
-        let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
-        let module = factory.create(for: nil, virtualTag: virtualSensor)
-        self.backgroundSelectionModule = module
-        transitionHandler
-            .navigationController?
-            .pushViewController(
-                module.viewController,
-                animated: true
-            )
     }
 
     func openShare(for sensor: RuuviTagSensor) {

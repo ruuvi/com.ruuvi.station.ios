@@ -22,7 +22,6 @@ Pod::Spec.new do |s|
     ss.source_files = 'Sources/RuuviNotifierImpl/**/*.{h,m,swift}', 'Sources/RuuviNotifierImpl/*.{h,m,swift}'
     ss.dependency 'RuuviNotifier/Contract'
     ss.dependency 'RuuviOntology'
-    ss.dependency 'RuuviVirtual'
     ss.dependency 'RuuviNotification'
   end
 

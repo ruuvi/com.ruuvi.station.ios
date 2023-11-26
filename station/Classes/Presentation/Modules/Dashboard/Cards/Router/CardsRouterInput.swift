@@ -1,6 +1,5 @@
 import Foundation
 import RuuviOntology
-import RuuviVirtual
 
 protocol CardsRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
@@ -9,10 +8,6 @@ protocol CardsRouterInput {
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
         output: TagSettingsModuleOutput
-    )
-    func openVirtualSensorSettings(
-        sensor: VirtualTagSensor,
-        temperature: Temperature?
     )
     func dismiss()
 }

@@ -5,7 +5,6 @@ import RuuviOntology
 
 enum TagChartsType {
     case ruuvi
-    case virtual
 }
 
 struct TagChartsViewModel {
@@ -22,14 +21,6 @@ struct TagChartsViewModel {
 
     init(type: TagChartsType) {
         self.type = type
-    }
-
-    init(_ virtualSensor: VirtualTagSensor) {
-        type = .virtual
-        uuid.value = virtualSensor.id
-        name.value = virtualSensor.name
-        isConnectable.value = false
-        isCloud.value = false
     }
 
     init(_ ruuviTag: RuuviTagSensor) {

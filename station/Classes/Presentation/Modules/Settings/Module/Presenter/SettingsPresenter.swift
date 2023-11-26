@@ -4,7 +4,6 @@ import RuuviContext
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviPresenters
 import RuuviUser
 import RuuviStorage

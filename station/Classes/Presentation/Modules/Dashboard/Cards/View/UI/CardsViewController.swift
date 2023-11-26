@@ -541,14 +541,6 @@ extension CardsViewController: CardsViewInput {
         // No op.
     }
 
-    func showWebTagAPILimitExceededError() {
-        let title = "Cards.WebTagAPILimitExcededError.Alert.title".localized()
-        let message = "Cards.WebTagAPILimitExcededError.Alert.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
-
     func showBluetoothDisabled(userDeclined: Bool) {
         let title = "Cards.BluetoothDisabledAlert.title".localized()
         let message = "Cards.BluetoothDisabledAlert.message".localized()
@@ -804,10 +796,6 @@ extension CardsViewController {
                 alertButton.isHidden = !viewModel.isConnected.value.bound
                 alertButtonHidden.isUserInteractionEnabled = viewModel.isConnected.value.bound
             }
-        case .web:
-            // Hide alert bell for virtual tags
-            alertButton.isHidden = true
-            alertButtonHidden.isUserInteractionEnabled = false
         }
     }
 

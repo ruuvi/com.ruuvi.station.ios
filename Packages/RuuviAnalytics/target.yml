@@ -12,6 +12,5 @@ targets:
     - target: RuuviStorage
     - target: RuuviLocal
     - target: RuuviOntology
-    - target: RuuviVirtual
     - target: RuuviUser
     - target: RuuviService

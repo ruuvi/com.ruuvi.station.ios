@@ -6,7 +6,6 @@ import RuuviOntology
 import RuuviStorage
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviNotification
 
 struct LocalAlertCategory {
@@ -24,7 +23,6 @@ enum BlastNotificationType: String {
 
 public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal {
     private let ruuviStorage: RuuviStorage
-    private let virtualTagTrunk: VirtualStorage
     private let idPersistence: RuuviLocalIDs
     private let settings: RuuviLocalSettings
     private let ruuviAlertService: RuuviServiceAlert
@@ -33,13 +31,11 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public init(
         ruuviStorage: RuuviStorage,
-        virtualTagTrunk: VirtualStorage,
         idPersistence: RuuviLocalIDs,
         settings: RuuviLocalSettings,
         ruuviAlertService: RuuviServiceAlert
     ) {
         self.ruuviStorage = ruuviStorage
-        self.virtualTagTrunk = virtualTagTrunk
         self.idPersistence = idPersistence
         self.settings = settings
         self.ruuviAlertService = ruuviAlertService
@@ -341,13 +337,6 @@ extension RuuviNotificationLocalImpl {
                                                     content: content, trigger: trigger)
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             })
-            virtualTagTrunk.readOne(id(for: uuid)).on(success: { virtualTag in
-                content.subtitle = virtualTag.name
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-                let request = UNNotificationRequest(identifier: uuid + type.rawValue,
-                                                    content: content, trigger: trigger)
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            })
 
             switch reason {
             case .low:
@@ -420,18 +409,14 @@ extension RuuviNotificationLocalImpl {
             if let userInfo = notification.userInfo,
                 let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
 
-                let virtualSensor = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor
                 let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
 
                 var isOn = false
-                if let virtualSensor = virtualSensor {
-                    isOn = self?.ruuviAlertService.isOn(type: type, for: virtualSensor) ?? false
-                }
                 if let physicalSensor = physicalSensor {
                     isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
                 }
 
-                if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value ?? virtualSensor?.id {
+                if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value {
                     switch type {
                     case .temperature:
                         self?.lowTemperatureAlerts[uuid] = nil
@@ -555,8 +540,6 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     sharedTo: []
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
-                let virtualSensor = VirtualSensorStruct(id: uuid)
-                ruuviAlertService.unregister(type: Self.alertType(from: type), for: virtualSensor)
             case lowHigh.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -585,8 +568,6 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     sharedTo: []
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
-                let virtualSensor = VirtualSensorStruct(id: uuid)
-                ruuviAlertService.unregister(type: Self.alertType(from: type), for: virtualSensor)
             case blast.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -639,12 +620,6 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             for: ruuviTag,
             till: date
         )
-        let virtualSensor = VirtualSensorStruct(id: uuid)
-        ruuviAlertService.mute(
-            type: Self.alertType(from: type),
-            for: virtualSensor,
-            till: date
-        )
     }
 
     private func mute(type: BlastNotificationType, uuid: String) {
@@ -670,12 +645,6 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         ruuviAlertService.mute(
             type: Self.alertType(from: type),
             for: ruuviTag,
-            till: date
-        )
-        let virtualSensor = VirtualSensorStruct(id: uuid)
-        ruuviAlertService.mute(
-            type: Self.alertType(from: type),
-            for: virtualSensor,
             till: date
         )
     }

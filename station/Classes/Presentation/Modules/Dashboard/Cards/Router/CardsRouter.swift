@@ -3,7 +3,6 @@ import Foundation
 import UIKit
 import RuuviOntology
 import RuuviLocal
-import RuuviVirtual
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController?
@@ -33,19 +32,6 @@ class CardsRouter: NSObject, CardsRouterInput {
                              latestMeasurement: latestMeasurement,
                              sensorSettings: sensorSettings)
         }
-    }
-
-    func openVirtualSensorSettings(
-        sensor: VirtualTagSensor,
-        temperature: Temperature?
-    ) {
-        let factory = StoryboardFactory(storyboardName: "WebTagSettings")
-        try? transitionHandler?
-            .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
-                module.configure(sensor: sensor, temperature: temperature)
-            })
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {

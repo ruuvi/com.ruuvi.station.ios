@@ -5,7 +5,6 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviCore
 import RuuviNotifier
 import RuuviPresenters
@@ -41,7 +40,6 @@ final class CardsViewModuleFactoryImpl: CardsViewModuleFactory {
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
-        presenter.virtualReactor = r.resolve(VirtualReactor.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
 

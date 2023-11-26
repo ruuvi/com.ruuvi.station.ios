@@ -1,7 +1,6 @@
 import RuuviLocal
 import RuuviPool
 import RuuviContext
-import RuuviVirtual
 import RuuviStorage
 import RuuviService
 import RuuviMigration
@@ -11,7 +10,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let idPersistence: RuuviLocalIDs
     private let realmContext: RealmContext
     private let ruuviPool: RuuviPool
-    private let virtualStorage: VirtualStorage
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
     private let ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration
@@ -21,7 +19,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         idPersistence: RuuviLocalIDs,
         realmContext: RealmContext,
         ruuviPool: RuuviPool,
-        virtualStorage: VirtualStorage,
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert,
         ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration
@@ -30,7 +27,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         self.idPersistence = idPersistence
         self.realmContext = realmContext
         self.ruuviPool = ruuviPool
-        self.virtualStorage = virtualStorage
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
         self.ruuviOffsetCalibrationService = ruuviOffsetCalibrationService
@@ -43,7 +39,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             ruuviPool: ruuviPool
         )
         let toAlertService = MigrationManagerAlertService(
-            virtualStorage: virtualStorage,
             ruuviStorage: ruuviStorage,
             ruuviAlertService: ruuviAlertService
         )

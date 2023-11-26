@@ -2,13 +2,9 @@ import RealmSwift
 import Foundation
 import RuuviOntology
 import RuuviLocal
-import RuuviVirtual
 import RuuviMigration
 #if canImport(RuuviOntologyRealm)
 import RuuviOntologyRealm
-#endif
-#if canImport(RuuviVirtualModel)
-import RuuviVirtualModel
 #endif
 
 public final class MigrationManagerToVIPER: RuuviMigration {
@@ -34,7 +30,7 @@ public final class MigrationManagerToVIPER: RuuviMigration {
                 } else if oldSchemaVersion < 4 {
                     self?.from3to4(migration)
                 } else if oldSchemaVersion < 8 {
-                    self?.deleteRuuviTagAndWebTagData(migration)
+                    self?.deleteRuuviTagData(migration)
                 }
         }, shouldCompactOnLaunch: { totalBytes, usedBytes in
             let fiveHundredMegabytes = 500 * 1024 * 1024
@@ -139,19 +135,11 @@ public final class MigrationManagerToVIPER: RuuviMigration {
     }
 
     private func from3to4(_ migration: Migration) {
-        migration.enumerateObjects(ofType: WebTagRealm.className(), { (oldObject, newObject) in
-            if let location = oldObject?["location"] as? WebTagLocationRealm, let city = location.city {
-                newObject?["name"] = city
-            } else {
-                newObject?["name"] = ""
-            }
-        })
-        deleteRuuviTagAndWebTagData(migration)
+        deleteRuuviTagData(migration)
     }
 
-    private func deleteRuuviTagAndWebTagData(_ migration: Migration) {
+    private func deleteRuuviTagData(_ migration: Migration) {
         migration.deleteData(forType: RuuviTagDataRealm.className())
-        migration.deleteData(forType: WebTagDataRealm.className())
     }
 
     private func real(_ name: String, _ mac: String, _ uuid: String) -> String {

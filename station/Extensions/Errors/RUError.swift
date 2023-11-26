@@ -5,13 +5,9 @@ import RuuviPersistence
 import RuuviPool
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviDFU
 
 enum RUError: Error {
-    case virtualService(VirtualServiceError)
-    case virtualStorage(VirtualStorageError)
-    case virtualPersistence(VirtualPersistenceError)
     case ruuviLocal(RuuviLocalError)
     case ruuviPool(RuuviPoolError)
     case ruuviStorage(RuuviStorageError)
@@ -34,12 +30,6 @@ enum RUError: Error {
 extension RUError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .virtualService(let error):
-            return error.localizedDescription
-        case .virtualPersistence(let error):
-            return error.localizedDescription
-        case .virtualStorage(let error):
-            return error.localizedDescription
         case .ruuviLocal(let error):
             return error.localizedDescription
         case .ruuviPool(let error):
@@ -152,7 +142,6 @@ enum UnexpectedError: Error {
     case callerDeinitedDuringOperation
     case failedToReverseGeocodeCoordinate
     case failedToFindRuuviTag
-    case failedToFindVirtualTag
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
     case attemptToReadDataFromRealmWithoutLUID
@@ -180,8 +169,6 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.viewModelUUIDIsNil".localized()
         case .attemptToReadDataFromRealmWithoutLUID:
             return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
-        case .failedToFindVirtualTag:
-            return "UnexpectedError.failedToFindVirtualTag".localized()
         case .failedToConstructURL:
             return "UnexpectedError.failedToConstructURL".localized()
         case .notAHttpResponse:
