@@ -1,6 +1,6 @@
 import UIKit
 
-final class FLEXFeatureTogglesViewController: UITableViewController {
+final class FeatureTogglesViewController: UITableViewController {
     var featureToggleService: FeatureToggleService!
 
     init() {
@@ -78,7 +78,7 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
 }
 
 // MARK: - UITableViewDelegate
-extension FLEXFeatureTogglesViewController {
+extension FeatureTogglesViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard self.sourceSwitch.isOn else { return }
@@ -93,7 +93,7 @@ extension FLEXFeatureTogglesViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension FLEXFeatureTogglesViewController {
+extension FeatureTogglesViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.features.count
     }
@@ -116,7 +116,7 @@ extension FLEXFeatureTogglesViewController {
 }
 
 // MARK: - Helpers
-extension FLEXFeatureTogglesViewController {
+extension FeatureTogglesViewController {
     private static func title(for feature: Feature) -> String {
         switch feature {
         case .legacyFirmwareUpdatePopup:
@@ -126,7 +126,7 @@ extension FLEXFeatureTogglesViewController {
 }
 
 // MARK: - Factory
-extension FLEXFeatureTogglesViewController {
+extension FeatureTogglesViewController {
     private static func makeSourceLabel() -> UILabel {
         let label = UILabel()
         label.text = "Use local feature toggles"

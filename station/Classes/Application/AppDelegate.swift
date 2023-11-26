@@ -1,7 +1,7 @@
 import UIKit
 import FirebaseCore
 import FirebaseMessaging
-#if canImport(FLEX)
+#if DEBUG && canImport(FLEX)
 import FLEX
 #endif
 import UserNotifications
@@ -62,10 +62,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
 
-        #if canImport(FLEX)
+        #if DEBUG && canImport(FLEX)
         FLEXManager.shared.registerGlobalEntry(
             withName: "Feature Toggles",
-            viewControllerFutureBlock: { r.resolve(FLEXFeatureTogglesViewController.self) ?? UIViewController()
+            viewControllerFutureBlock: { r.resolve(FeatureTogglesViewController.self) ?? UIViewController()
             }
         )
         #endif
