@@ -16,6 +16,20 @@ targets:
     settings:
       base:
         CODE_SIGN_ENTITLEMENTS: pnservice.entitlements
+      configs:
+        Alpha: 
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.pnservice"
+        Beta:
+          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.pnservice"
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.pnservice"
     sources:
       - path: pnservice
     resources:
