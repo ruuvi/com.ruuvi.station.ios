@@ -621,14 +621,10 @@ extension TagSettingsViewController {
             }
         }
 
-        let isClaimed = viewModel.isClaimedTag.value
-        let isOwner = viewModel.isOwner.value
         if let tagOwnerCell = tagOwnerCell {
             tagOwnerCell.bind(viewModel.owner) { cell, owner in
                 cell.configure(value: owner)
-                if let isClaimed = isClaimed, let isOwner = isOwner {
-                    cell.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron)
-                }
+                cell.setAccessory(type: .chevron)
             }
         }
 
@@ -704,14 +700,12 @@ extension TagSettingsViewController {
     }
 
     private func tagOwnerSettingItem() -> TagSettingsItem {
-        let isClaimed = GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
-        let isOwner = GlobalHelpers.getBool(from: viewModel?.isOwner.value)
         let settingItem = TagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
                 self?.tagOwnerCell?.configure(title: "TagSettings.NetworkInfo.Owner".localized(),
                                value: self?.viewModel?.owner.value)
-                self?.tagOwnerCell?.setAccessory(type: (isClaimed && isOwner) ? .none : .chevron )
+                self?.tagOwnerCell?.setAccessory(type: .chevron)
                 self?.tagOwnerCell?.hideSeparator(hide: false)
                 return self?.tagOwnerCell ?? UITableViewCell()
             },
@@ -1801,7 +1795,9 @@ extension TagSettingsViewController {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
         if let min = min, let max = max {
-            return attributedString(from: String(format: format, min, max))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 min, max))
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
@@ -1819,7 +1815,11 @@ extension TagSettingsViewController {
                                                         with: "%0.\(decimalPointToConsider)f")
             }
 
-            let message = String(format: format, l.value.round(to: 2), u.value.round(to: 2))
+            let message = String(format: format,
+                locale: Locale.autoupdatingCurrent,
+                l.value.round(to: 2),
+                u.value.round(to: 2)
+            )
             return attributedString(from: message)
 
         } else {
@@ -1865,7 +1865,9 @@ extension TagSettingsViewController {
         guard isViewLoaded else { return nil }
         var format = "TagSettings.Alerts.Temperature.description".localized()
         if let min = min, let max = max {
-            return attributedString(from: String(format: format, min, max))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 min, max))
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
            let u = viewModel?.relativeHumidityUpperBound.value {
@@ -1878,7 +1880,9 @@ extension TagSettingsViewController {
                 let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l.round(to: 2), u.round(to: 2))
+            let message = String(format: format,
+                                 locale: Locale.autoupdatingCurrent,
+                                 l.round(to: 2), u.round(to: 2))
             return attributedString(from: message)
         } else {
             return nil
@@ -1918,7 +1922,9 @@ extension TagSettingsViewController {
         var format = "TagSettings.Alerts.Temperature.description".localized()
 
         if let minValue = minValue, let maxValue = maxValue {
-            return attributedString(from: String(format: format, minValue, maxValue))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 minValue, maxValue))
         }
 
         if let pu = viewModel?.pressureUnit.value,
@@ -1941,7 +1947,9 @@ extension TagSettingsViewController {
                 let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format, l.round(to: 2), u.round(to: 2))
+            let message = String(format: format,
+                                 locale: Locale.autoupdatingCurrent,
+                                 l.round(to: 2), u.round(to: 2))
             return attributedString(from: message)
         } else {
             return nil
@@ -1995,12 +2003,16 @@ extension TagSettingsViewController {
         let format = "TagSettings.Alerts.Temperature.description".localized()
 
         if let min = min, let max = max {
-            return attributedString(from: String(format: format, min, max))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 min, max))
         }
 
         if let lower = viewModel?.signalLowerBound.value,
            let upper = viewModel?.signalUpperBound.value {
-            let message = String(format: format, lower, upper)
+            let message = String(format: format,
+                                 locale: Locale.autoupdatingCurrent,
+                                 lower, upper)
             return attributedString(from: message)
         } else {
             return nil
@@ -2037,7 +2049,7 @@ extension TagSettingsViewController {
         if let message = message {
             let attributedString = NSMutableAttributedString(string: message)
             let boldFont = UIFont.Muli(.bold, size: 14)
-            let numberRegex = try? NSRegularExpression(pattern: "\\d+(\\.\\d+)?")
+            let numberRegex = try? NSRegularExpression(pattern: "\\d+([.,]\\d+)?")
             let range = NSRange(location: 0, length: message.utf16.count)
             if let matches = numberRegex?.matches(in: message, options: [], range: range) {
                 for match in matches {
@@ -2062,7 +2074,9 @@ extension TagSettingsViewController {
         let format = "alert_cloud_connection_description".localized()
 
         if let delay = delay {
-            return attributedString(from: String(format: format, delay))
+            return attributedString(from: String(format: format,
+                                                 locale: Locale.autoupdatingCurrent,
+                                                 delay))
         } else {
             return nil
         }
@@ -3445,19 +3459,27 @@ extension TagSettingsViewController: TagSettingsBackgroundSelectionViewDelegate 
 // MARK: - Sensor name rename dialog
 extension TagSettingsViewController {
     private func showSensorNameRenameDialog(name: String?) {
+        let defaultName = GlobalHelpers.ruuviTagDefaultName(
+            from: self.viewModel?.mac.value,
+            luid: self.viewModel?.uuid.value
+        )
         let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
                                       message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
             alertTextField.delegate = self
-            alertTextField.text = name
+            alertTextField.text = (defaultName == name) ? nil : name
+            alertTextField.placeholder = defaultName
             self.tagNameTextField = alertTextField
         }
         let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
             guard let self = self else { return }
-            guard let name = self.tagNameTextField.text, !name.isEmpty else { return }
-            self.output.viewDidChangeTag(name: name)
+            if let name = self.tagNameTextField.text, !name.isEmpty {
+                self.output.viewDidChangeTag(name: name)
+            } else {
+                self.output.viewDidChangeTag(name: defaultName)
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
         alert.addAction(action)
@@ -3548,7 +3570,9 @@ extension TagSettingsViewController {
             guard let self = self else { return }
             alertTextField.delegate = self
             let format = "TagSettings.AlertSettings.Dialog.Min".localized()
-            alertTextField.placeholder = String(format: format, minimumBound)
+            alertTextField.placeholder = String(format: format,
+                                                locale: Locale.autoupdatingCurrent,
+                                                minimumBound)
             alertTextField.keyboardType = .decimalPad
             self.alertMinRangeTextField = alertTextField
             if minimumBound < 0 {
@@ -3570,7 +3594,9 @@ extension TagSettingsViewController {
             guard let self = self else { return }
             alertTextField.delegate = self
             let format = "TagSettings.AlertSettings.Dialog.Max".localized()
-            alertTextField.placeholder = String(format: format, maximumBound)
+            alertTextField.placeholder = String(format: format,
+                                                locale: Locale.autoupdatingCurrent,
+                                                maximumBound)
             alertTextField.keyboardType = .decimalPad
             self.alertMaxRangeTextField = alertTextField
             if maximumBound < 0 {
@@ -3657,21 +3683,6 @@ extension TagSettingsViewController: TagSettingsViewInput {
         // No op.
     }
 
-    func showTagRemovalConfirmationDialog(isOwner: Bool) {
-        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = isOwner ?
-        "TagSettings.confirmTagRemovalDialog.message".localized() :
-        "TagSettings.confirmSharedTagRemovalDialog.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: isOwner ? "Confirm".localized() : "OK".localized(),
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-                                            self?.output.viewDidConfirmTagRemoval()
-                                           }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
     func showTagClaimDialog() {
         let title = "claim_sensor_ownership".localized()
         let message = "do_you_own_sensor".localized()
@@ -3682,19 +3693,6 @@ extension TagSettingsViewController: TagSettingsViewInput {
             self?.output.viewDidConfirmClaimTag()
         }))
         controller.addAction(UIAlertAction(title: "No".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
-
-    func showUnclaimAndRemoveConfirmationDialog() {
-        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
-        let message = "TagSettings.confirmTagUnclaimAndRemoveDialog.message".localized()
-        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-                                            self?.output.viewDidConfirmTagRemoval()
-                                           }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 

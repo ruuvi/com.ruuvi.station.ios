@@ -12,7 +12,7 @@ final class MigrationManagerToTimeouts: RuuviMigration {
     func migrateIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }
         settings.connectionTimeout = 30
-        settings.serviceTimeout = 300
+        settings.serviceTimeout = 60
         UserDefaults.standard.set(true, forKey: migratedUdKey)
     }
 

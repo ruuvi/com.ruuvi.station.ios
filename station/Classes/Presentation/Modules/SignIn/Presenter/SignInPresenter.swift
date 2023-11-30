@@ -145,6 +145,9 @@ extension SignInPresenter {
             .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
                 if sSelf.ruuviUser.email == result.email {
+                    if !sSelf.settings.signedInAtleastOnce {
+                        sSelf.settings.signedInAtleastOnce = true
+                    }
                     sSelf.ruuviUser.login(apiKey: result.apiKey)
                     sSelf.reloadWidgets()
                     sSelf.state = .isSyncing
