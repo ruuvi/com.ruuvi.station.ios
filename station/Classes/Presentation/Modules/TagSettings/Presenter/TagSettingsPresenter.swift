@@ -238,47 +238,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRemoveRuuviTag() {
-        if viewModel.isClaimedTag.value == true && ruuviTag.isOwner {
-            view.showUnclaimAndRemoveConfirmationDialog()
-        } else {
-            view.showTagRemovalConfirmationDialog(isOwner: ruuviTag.isOwner)
-        }
-    }
-
-    func viewDidConfirmTagRemoval() {
-        ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
-            guard let sSelf = self else { return }
-            // Disconnect the sensor first if paired.
-            // Otherwise proceed to removal directly.
-            if let luid = sSelf.ruuviTag.luid,
-               let isConnected = sSelf.viewModel.isConnected.value,
-               isConnected {
-                sSelf.connectionPersistence.setKeepConnection(false, for: luid)
-                sSelf.notifyRestartHeartBeatDaemon()
-            }
-
-            if sSelf.ruuviTag.isOwner {
-                sSelf.notifyRestartAdvertisementDaemon()
-                if let isConnected = sSelf.viewModel.isConnected.value,
-                isConnected {
-                    sSelf.notifyRestartHeartBeatDaemon()
-                }
-            }
-            sSelf.viewModel.reset()
-            sSelf.localSyncState.setSyncDate(nil, for: sSelf.ruuviTag.macId)
-            sSelf.localSyncState.setSyncDate(nil)
-            sSelf.localSyncState.setGattSyncDate(nil, for: sSelf.ruuviTag.macId)
-            sSelf.settings.setOwnerCheckDate(for: sSelf.ruuviTag.macId, value: nil)
-            sSelf.output?.tagSettingsDidDeleteTag(module: sSelf,
-                                                 ruuviTag: sSelf.ruuviTag)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        router.openSensorRemoval(ruuviTag: ruuviTag, output: self)
     }
 
     func viewDidChangeTag(name: String) {
-        let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
-        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+        ruuviSensorPropertiesService.set(name: name, for: ruuviTag)
             .on(failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
@@ -446,6 +410,39 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 }
 
+// MARK: - SensorRemovalModuleOutput
+extension TagSettingsPresenter: SensorRemovalModuleOutput {
+    func sensorRemovalDidRemoveTag(
+        module: SensorRemovalModuleInput,
+        ruuviTag: RuuviTagSensor
+    ) {
+        module.dismiss(completion: { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.removeTagAndCleanup()
+            sSelf.ruuviStorage.readAll().on(success: { [weak self] sensors in
+                if sensors.count == 0 {
+                    self?.router.dismissToRoot(completion: {
+                        sSelf.output?.tagSettingsDidDeleteTag(
+                            module: sSelf, ruuviTag: ruuviTag
+                        )
+                    })
+                } else {
+                    sSelf.output?.tagSettingsDidDeleteTag(
+                        module: sSelf, ruuviTag: ruuviTag
+                    )
+                }
+            })
+        })
+    }
+
+    func sensorRemovalDidDismiss(module: SensorRemovalModuleInput) {
+        module.dismiss(completion: { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.output?.tagSettingsDidDismiss(module: sSelf)
+        })
+    }
+}
+
 // MARK: - Private
 extension TagSettingsPresenter {
     private func startMutedTillTimer() {
@@ -507,7 +504,6 @@ extension TagSettingsPresenter {
             let isCl = isCloudAlertsAvailable?.value ?? false
             let isCo = isConnected ?? false
             observer.viewModel.isAlertsEnabled.value = isCl || isCo
-            self.processAlerts()
         }
 
         let isConnected = viewModel.isConnected
@@ -1695,6 +1691,30 @@ extension TagSettingsPresenter {
                 break
             }
         }
+    }
+
+    private func removeTagAndCleanup() {
+        // Disconnect the sensor first if paired.
+        // Otherwise proceed to removal directly.
+        if let luid = ruuviTag.luid,
+           let isConnected = viewModel.isConnected.value,
+           isConnected {
+            connectionPersistence.setKeepConnection(false, for: luid)
+            notifyRestartHeartBeatDaemon()
+        }
+
+        if ruuviTag.isOwner {
+            notifyRestartAdvertisementDaemon()
+            if let isConnected = viewModel.isConnected.value,
+               isConnected {
+                notifyRestartHeartBeatDaemon()
+            }
+        }
+        viewModel.reset()
+        localSyncState.setSyncDate(nil, for: ruuviTag.macId)
+        localSyncState.setSyncDate(nil)
+        localSyncState.setGattSyncDate(nil, for: ruuviTag.macId)
+        settings.setOwnerCheckDate(for: ruuviTag.macId, value: nil)
     }
 }
 

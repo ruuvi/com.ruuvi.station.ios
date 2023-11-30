@@ -76,6 +76,14 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         }
     }
 
+    public func stopSync() {
+        background.services.ruuvi.nus.disconnect(
+            for: self,
+            uuid: uuid,
+            options: [],
+            result: { _, _ in })
+    }
+
     private func post(started date: Date, with uuid: String) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart,

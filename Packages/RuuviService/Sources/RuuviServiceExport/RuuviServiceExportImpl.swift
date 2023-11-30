@@ -63,11 +63,12 @@ extension RuuviServiceExportImpl {
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd-HHmm"
+        dateFormatter.dateFormat = "yyyyMMdd'T'HHmmssZ"
         let date = dateFormatter.string(from: Date())
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let group = DispatchGroup()
         let units = measurementService.units
+
         queue.async {
             autoreleasepool {
                 group.enter()

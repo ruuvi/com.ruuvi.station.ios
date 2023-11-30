@@ -36,6 +36,10 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
+
+            if !settings.signedInAtleastOnce {
+                settings.signedInAtleastOnce = true
+            }
         } else {
             ruuviUser.logout()
         }
@@ -89,7 +93,6 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.start()
-            cloudSyncDaemon.refreshImmediately()
         }
         propertiesDaemon.start()
         pullWebDaemon.start()

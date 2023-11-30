@@ -132,7 +132,6 @@ class TagChartsView: LineChartView {
     private func reloadData() {
         data?.notifyDataChanged()
         notifyDataSetChanged()
-        invalidate()
     }
 }
 
@@ -185,7 +184,6 @@ extension TagChartsView {
             axis: leftAxis,
             transformer: getTransformer(forAxis: .left)
         )
-        leftAxis.setLabelCount(5, force: false)
     }
 
     func setXAxisRenderer() {
@@ -196,7 +194,16 @@ extension TagChartsView {
             transformer: getTransformer(forAxis: .left)
         )
         xAxisRenderer = axisRenderer
-        xAxis.setLabelCount(5, force: false)
+
+        if !settings.chartShowAll {
+            let from = Calendar.autoupdatingCurrent.date(
+                byAdding: .hour,
+                value: -settings.chartDurationHours,
+                to: Date()
+            ) ?? Date.distantFuture
+            xAxis.axisMinimum = from.timeIntervalSince1970
+            xAxis.axisMaximum = Date().timeIntervalSince1970
+        }
     }
 
     func resetCustomAxisMinMax() {
@@ -267,9 +274,13 @@ extension TagChartsView {
         type: MeasurementType
     ) {
         let roundedTo: Int = 2
-        let minText = "chart_stat_min".localized() + ": " + min.round(to: roundedTo).stringValue
-        let maxText = "chart_stat_max".localized() + ": " + max.round(to: roundedTo).stringValue
-        let avgText = "chart_stat_avg".localized() + ": " + avg.round(to: roundedTo).stringValue
+        let minText = "chart_stat_min".localized() + ": " +
+                GlobalHelpers().formattedString(from: min.round(to: roundedTo))
+        let maxText = "chart_stat_max".localized() + ": " +
+                GlobalHelpers().formattedString(from: max.round(to: roundedTo))
+        let avgText = "chart_stat_avg".localized() + ": " +
+                GlobalHelpers().formattedString(from: avg.round(to: roundedTo))
+
         chartMinMaxAvgLabel.text = minText + " " + maxText + " " + avgText
     }
 

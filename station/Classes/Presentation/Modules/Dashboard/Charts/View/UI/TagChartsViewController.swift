@@ -29,7 +29,7 @@ class TagChartsViewController: UIViewController {
             } else {
                 let unit = historyLengthInHours == 1 ? "hour".localized() : "hours".localized()
                 historySelectionButton.updateTitle(
-                        with: "\(historyLengthInHours) " + unit.lowercased()
+                    with: "\(historyLengthInHours) " + unit.lowercased()
                 )
             }
             historySelectionButton.updateMenu(with: historyLengthOptions())
@@ -39,6 +39,17 @@ class TagChartsViewController: UIViewController {
     var showChartStat: Bool = true {
         didSet {
             moreButton.menu = moreButtonOptions(showChartStat: showChartStat)
+        }
+    }
+
+    var showChartAll: Bool = true {
+        didSet {
+            historySelectionButton.updateMenu(with: historyLengthOptions())
+            if showChartAll {
+                historySelectionButton.updateTitle(
+                    with: "all".localized()
+                )
+            }
         }
     }
 
@@ -55,7 +66,7 @@ class TagChartsViewController: UIViewController {
     // Body
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
-        label.text = "Cards.UpdatedLabel.NoData.message".localized()
+        label.text = "empty_chart_message".localized()
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -383,13 +394,20 @@ class TagChartsViewController: UIViewController {
     fileprivate func historyLengthOptions() -> UIMenu {
         var actions: [UIAction] = []
 
+        // Add 'All' at the top
+        let all_action = UIAction(title: "all".localized()) { [weak self] _ in
+            self?.handleHistorySelectionAll()
+        }
+        all_action.state = showChartAll ? .on : .off
+        actions.append(all_action)
+
         for hour in historyHoursOptions {
             let action = UIAction(
                 title: "\(hour) \(hour == 1 ? "hour".localized() : "hours".localized())".lowercased()
             ) { [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: hour)
             }
-             if hour == historyLengthInHours {
+             if hour == historyLengthInHours && !showChartAll {
                 action.state = .on
              } else {
                 action.state = .off
@@ -402,7 +420,7 @@ class TagChartsViewController: UIViewController {
                 [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: day*24)
             }
-            if day == historyLengthInHours / 24 {
+            if day == historyLengthInHours / 24 && !showChartAll {
                 action.state = .on
             } else {
                 action.state = .off
@@ -436,6 +454,11 @@ class TagChartsViewController: UIViewController {
         } else {
             output.viewDidSelectLongerHistory()
         }
+    }
+
+    fileprivate func handleHistorySelectionAll() {
+        resetXAxisTimeline()
+        output.viewDidSelectAllChartHistory()
     }
 
     fileprivate func moreButtonOptions(showChartStat: Bool = true) -> UIMenu {
@@ -699,8 +722,9 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showFailedToSyncIn() {
+        let title = "TagCharts.FailedToSyncDialog.title".localized()
         let message = "TagCharts.FailedToSyncDialog.message".localized()
-        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         alertVC.addAction(UIAlertAction(title: "TagCharts.TryAgain.title".localized(),
                                         style: .default,
@@ -922,6 +946,12 @@ extension TagChartsViewController {
         pressureChartView.clearChartData()
         pressureChartView.highlightValue(nil)
         pressureChartView.clearChartStat()
+    }
+
+    private func resetXAxisTimeline() {
+        temperatureChartView.resetCustomAxisMinMax()
+        humidityChartView.resetCustomAxisMinMax()
+        pressureChartView.resetCustomAxisMinMax()
     }
 
     // MARK: - UI RELATED METHODS

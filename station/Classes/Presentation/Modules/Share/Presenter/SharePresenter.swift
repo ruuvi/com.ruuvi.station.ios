@@ -51,10 +51,15 @@ extension SharePresenter: ShareViewOutput {
         activityPresenter.increment()
         ruuviOwnershipService
             .share(macId: sensor.id.mac, with: email)
-            .on(success: { [weak self] _ in
+            .on(success: { [weak self] result in
                 self?.view.clearInput()
-                self?.updateShared(email: email, add: true)
-                self?.view.showSuccessfullyShared()
+                if let invited = result.invited, invited {
+                    self?.view.showSuccessfullyInvited()
+                } else {
+                    self?.updateShared(email: email, add: true)
+                    self?.view.showSuccessfullyShared()
+                }
+
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in

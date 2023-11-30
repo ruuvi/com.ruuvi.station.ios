@@ -120,7 +120,7 @@ extension AppRouter: OnboardRouterDelegate {
         AppUtility.lockOrientation(.all)
         let controller = dashboardViewController()
         navigationController.setNavigationBarHidden(false, animated: false)
-        navigationController.pushViewController(controller, animated: true)
+        navigationController.setViewControllers([controller], animated: true)
     }
 }
 
@@ -131,7 +131,7 @@ extension AppRouter: DiscoverRouterDelegate {
                                                     animated: true)
         } else {
             let controller = dashboardViewController()
-            navigationController.pushViewController(controller, animated: true)
+            navigationController.setViewControllers([controller], animated: true)
         }
     }
 

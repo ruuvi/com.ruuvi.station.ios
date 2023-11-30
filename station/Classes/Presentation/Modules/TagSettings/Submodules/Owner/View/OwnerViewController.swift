@@ -6,7 +6,34 @@ final class OwnerViewController: UIViewController {
     var mode: OwnershipMode = .claim
 
     @IBOutlet weak var claimOwnershipDescriptionLabel: UILabel!
+    @IBOutlet weak var removeCloudHistoryActionContainer: UIView!
     @IBOutlet weak var claimOwnershipButton: UIButton!
+
+    private lazy var removeCloudHistoryTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "remove_cloud_history_title".localized()
+        label.textColor = RuuviColor.ruuviTextColor
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.bold, size: 14)
+        return label
+    }()
+
+    private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "remove_cloud_history_description".localized()
+        label.textColor = RuuviColor.ruuviTextColor
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.regular, size: 14)
+        return label
+    }()
+
+    lazy var removeCloudHistorySwitch: RuuviUISwitch = {
+        let toggle = RuuviUISwitch()
+        toggle.isOn = false
+        return toggle
+    }()
 
     private lazy var backButton: UIButton = {
         let button  = UIButton()
@@ -20,6 +47,9 @@ final class OwnerViewController: UIViewController {
         return button
     }()
 
+    var removeCloudHistoryContainerVisibleConstraint: NSLayoutConstraint!
+    var removeCloudHistoryContainerHiddenConstraint: NSLayoutConstraint!
+
     @IBAction func claimOwnershipButtonTouchUpInside(_ sender: Any) {
         output.viewDidTapOnClaim(mode: mode)
     }
@@ -27,6 +57,7 @@ final class OwnerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCustomBackButton()
+        setUpCloudHistoryContentView()
         setupLocalization()
         output.viewDidTriggerFirmwareUpdateDialog()
     }
@@ -59,6 +90,10 @@ extension OwnerViewController: OwnerViewInput {
             claimOwnershipDescriptionLabel.text = "unclaim_sensor_description".localized()
             claimOwnershipButton.setTitle("unclaim".localized().capitalized, for: .normal)
         }
+        removeCloudHistoryContainerVisibleConstraint.isActive = mode == .unclaim
+        removeCloudHistoryContainerHiddenConstraint.isActive =  mode == .claim
+
+        removeCloudHistoryActionContainer.isHidden = mode == .claim
     }
 
     func showFirmwareUpdateDialog() {
@@ -86,6 +121,20 @@ extension OwnerViewController: OwnerViewInput {
         }))
         present(alert, animated: true)
     }
+
+    func showUnclaimHistoryDataRemovalConfirmationDialog() {
+        let title = "dialog_are_you_sure".localized()
+        let message = "dialog_operation_undone".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.output?.viewDidConfirmUnclaim(removeCloudHistory: self.removeCloudHistorySwitch.isOn)
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
 }
 
 extension OwnerViewController {
@@ -99,6 +148,52 @@ extension OwnerViewController {
                           padding: .init(top: 0, left: -12, bottom: 0, right: 0),
                           size: .init(width: 40, height: 40))
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
+    }
+
+    private func setUpCloudHistoryContentView() {
+
+        let horizontalStackView = UIStackView(arrangedSubviews: [
+            removeCloudHistoryTitleLabel, removeCloudHistorySwitch
+        ])
+        horizontalStackView.spacing = 8
+        horizontalStackView.distribution = .fill
+        horizontalStackView.axis = .horizontal
+        removeCloudHistorySwitch.constrainWidth(constant: 51)
+
+        let verticalStackView = UIStackView(arrangedSubviews: [
+            horizontalStackView, removeCloudHistoryDescriptionLabel
+        ])
+        verticalStackView.spacing = 10
+        verticalStackView.distribution = .fill
+        verticalStackView.axis = .vertical
+
+        removeCloudHistoryActionContainer.addSubview(verticalStackView)
+        verticalStackView.fillSuperview()
+
+        view.addSubview(removeCloudHistoryActionContainer)
+        removeCloudHistoryActionContainer.anchor(
+            top: claimOwnershipDescriptionLabel.bottomAnchor,
+            leading: claimOwnershipDescriptionLabel.leadingAnchor,
+            bottom: nil,
+            trailing: claimOwnershipDescriptionLabel.trailingAnchor,
+            padding: .init(top: 30, left: 0, bottom: 0, right: 0)
+        )
+        removeCloudHistoryActionContainer.isHidden = true
+
+        removeCloudHistoryContainerVisibleConstraint =
+        claimOwnershipButton
+            .topAnchor
+            .constraint(
+                equalTo: removeCloudHistoryActionContainer.bottomAnchor,
+                constant: 40
+            )
+        removeCloudHistoryContainerHiddenConstraint =
+        claimOwnershipButton
+            .topAnchor
+            .constraint(
+                equalTo: claimOwnershipDescriptionLabel.bottomAnchor,
+                constant: 40
+            )
     }
 
     @objc fileprivate func backButtonDidTap() {
