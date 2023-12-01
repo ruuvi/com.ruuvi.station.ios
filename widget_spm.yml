@@ -16,6 +16,16 @@ targets:
     settings:
       base:
         CODE_SIGN_ENTITLEMENTS: ruuvi_widgets.entitlements
+      configs:
+        Alpha: 
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
+          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
     sources:
       - path: ruuvi-widgets
     resources:

@@ -7,8 +7,8 @@ attributes:
 
 settings:
   base:
-    CURRENT_PROJECT_VERSION: 420
-    MARKETING_VERSION: "2.5.0"
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: "2.5.2"
     DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
 
 name: *APP_NAME
@@ -109,6 +109,11 @@ include:
 - widget_spm.yml
 - pnservice.yml
 - intents_spm.yml
+
+configs:
+  Alpha: debug
+  Debug: debug
+  Release: release
 
 targets:
   station:
@@ -252,8 +257,15 @@ targets:
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
       configs:
+        Alpha: 
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
+        Debug:
+          CODE_SIGN_STYLE: Automatic
         Release:
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
     preBuildScripts:
       - path: scripts/build/generate_l10n.sh
         name: Generate L10N
