@@ -48,10 +48,10 @@
 	<string>iPhone 5S</string>
 	<key>iPhone6,2</key>
 	<string>iPhone 5S</string>
-	<key>iPhone7,2</key>
-	<string>iPhone 6</string>
 	<key>iPhone7,1</key>
 	<string>iPhone 6 Plus</string>
+	<key>iPhone7,2</key>
+	<string>iPhone 6</string>
 	<key>iPhone8,1</key>
 	<string>iPhone 6S</string>
 	<key>iPhone8,2</key>
@@ -68,14 +68,14 @@
 	<string>iPhone 7 Plus</string>
 	<key>iPhone10,1</key>
 	<string>iPhone 8</string>
-	<key>iPhone10,4</key>
-	<string>iPhone 8</string>
 	<key>iPhone10,2</key>
-	<string>iPhone 8 Plus</string>
-	<key>iPhone10,5</key>
 	<string>iPhone 8 Plus</string>
 	<key>iPhone10,3</key>
 	<string>iPhone X</string>
+	<key>iPhone10,4</key>
+	<string>iPhone 8</string>
+	<key>iPhone10,5</key>
+	<string>iPhone 8 Plus</string>
 	<key>iPhone10,6</key>
 	<string>iPhone X</string>
 	<key>iPhone11,2</key>
@@ -94,8 +94,6 @@
 	<string>iPhone 11 Pro Max</string>
 	<key>iPhone12,8</key>
 	<string>iPhone SE 2nd Gen</string>
-    <key>iPhone14,6</key>
-    <string>iPhone SE 3rd Gen</string>
 	<key>iPhone13,1</key>
 	<string>iPhone 12 Mini</string>
 	<key>iPhone13,2</key>
@@ -104,22 +102,32 @@
 	<string>iPhone 12 Pro</string>
 	<key>iPhone13,4</key>
 	<string>iPhone 12 Pro Max</string>
-    <key>iPhone14,4</key>
-    <string>iPhone 13 mini</string>
-    <key>iPhone14,5</key>
-    <string>iPhone 13</string>
-    <key>iPhone14,2</key>
-    <string>iPhone 13 Pro</string>
-    <key>iPhone14,3</key>
-    <string>iPhone 13 Pro Max</string>
-    <key>iPhone14,7</key>
-    <string>iPhone 14</string>
-    <key>iPhone14,8</key>
-    <string>iPhone 14 Plus</string>
-    <key>iPhone15,2</key>
-    <string>iPhone 14 Pro</string>
-    <key>iPhone15,3</key>
-    <string>iPhone 14 Pro Max</string>
+	<key>iPhone14,2</key>
+	<string>iPhone 13 Pro</string>
+	<key>iPhone14,3</key>
+	<string>iPhone 13 Pro Max</string>
+	<key>iPhone14,4</key>
+	<string>iPhone 13 mini</string>
+	<key>iPhone14,5</key>
+	<string>iPhone 13</string>
+	<key>iPhone14,6</key>
+	<string>iPhone SE 3rd Gen</string>
+	<key>iPhone14,7</key>
+	<string>iPhone 14</string>
+	<key>iPhone14,8</key>
+	<string>iPhone 14 Plus</string>
+	<key>iPhone15,2</key>
+	<string>iPhone 14 Pro</string>
+	<key>iPhone15,3</key>
+	<string>iPhone 14 Pro Max</string>
+	<key>iPhone15,4</key>
+	<string>iPhone 15</string>
+	<key>iPhone15,5</key>
+	<string>iPhone 15 Plus</string>
+	<key>iPhone16,1</key>
+	<string>iPhone 15 Pro</string>
+	<key>iPhone16,2</key>
+	<string>iPhone 15 Pro Max</string>
 	<key>iPad1,1</key>
 	<string>iPad</string>
 	<key>iPad1,2</key>
@@ -138,48 +146,24 @@
 	<string>iPad 3rd Gen</string>
 	<key>iPad3,3</key>
 	<string>iPad 3rd Gen</string>
-	<key>iPad3,4</key>
-	<string>iPad 4th Gen</string>
-	<key>iPad3,5</key>
-	<string>iPad 4th Gen</string>
-	<key>iPad3,6</key>
-	<string>iPad 4th Gen</string>
-    <key>iPad6,11</key>
-    <string>iPad 5th Gen</string>
-    <key>iPad6,12</key>
-    <string>iPad 5th Gen</string>
-    <key>iPad7,5</key>
-    <string>iPad 6th Gen</string>
-    <key>iPad7,6</key>
-    <string>iPad 6th Gen</string>
-    <key>iPad7,11</key>
-    <string>iPad 7th Gen</string>
-    <key>iPad7,12</key>
-    <string>iPad 7th Gen</string>
-    <key>iPad11,6</key>
-    <string>iPad 8th Gen</string>
-    <key>iPad11,7</key>
-    <string>iPad 8th Gen</string>
-    <key>iPad12,1</key>
-    <string>iPad 7th Gen</string>
-    <key>iPad12,2</key>
-    <string>iPad 9th Gen</string>
-    <key>iPad13,18</key>
-    <string>iPad 10th Gen</string>
-    <key>iPad13,19</key>
-    <string>iPad 10th Gen</string>
-	<key>iPad4,1</key>
-	<string>iPad Air</string>
-	<key>iPad4,2</key>
-	<string>iPad Air</string>
-	<key>iPad4,3</key>
-	<string>iPad Air</string>
 	<key>iPad2,5</key>
 	<string>iPad Mini 1st Gen</string>
 	<key>iPad2,6</key>
 	<string>iPad Mini 1st Gen</string>
 	<key>iPad2,7</key>
 	<string>iPad Mini 1st Gen</string>
+	<key>iPad3,4</key>
+	<string>iPad 4th Gen</string>
+	<key>iPad3,5</key>
+	<string>iPad 4th Gen</string>
+	<key>iPad3,6</key>
+	<string>iPad 4th Gen</string>
+	<key>iPad4,1</key>
+	<string>iPad Air</string>
+	<key>iPad4,2</key>
+	<string>iPad Air</string>
+	<key>iPad4,3</key>
+	<string>iPad Air</string>
 	<key>iPad4,4</key>
 	<string>iPad Mini 2nd Gen</string>
 	<key>iPad4,5</key>
@@ -252,10 +236,26 @@
 	<string>iPad Pro 12.9 inch 4th Gen (WiFi)</string>
 	<key>iPad8,12</key>
 	<string>iPad Pro 12.9 inch 4th Gen (WiFi+Cellular)</string>
+	<key>iPad11,1</key>
+	<string>iPad mini 5th Gen (WiFi)</string>
+	<key>iPad11,2</key>
+	<string>iPad mini 5th Gen</string>
+	<key>iPad11,3</key>
+	<string>iPad Air 3rd Gen (WiFi)</string>
+	<key>iPad11,4</key>
+	<string>iPad Air 3rd Gen</string>
 	<key>iPad11,6</key>
 	<string>iPad 8th Gen (WiFi)</string>
 	<key>iPad11,7</key>
 	<string>iPad 8th Gen (WiFi+Cellular)</string>
+	<key>iPad12,1</key>
+	<string>iPad 7th Gen</string>
+	<key>iPad12,2</key>
+	<string>iPad 9th Gen</string>
+	<key>iPad14,1</key>
+	<string>iPad mini 6th Gen (WiFi)</string>
+	<key>iPad14,2</key>
+	<string>iPad mini 6th Gen (WiFi+Cellular)</string>
 	<key>iPad13,1</key>
 	<string>iPad air 4th Gen (WiFi)</string>
 	<key>iPad13,2</key>
@@ -276,14 +276,22 @@
 	<string>iPad Pro 12.9 inch 5th Gen</string>
 	<key>iPad13,11</key>
 	<string>iPad Pro 12.9 inch 5th Gen</string>
-	<key>iPad11,1</key>
-	<string>iPad mini 5th Gen (WiFi)</string>
-	<key>iPad11,2</key>
-	<string>iPad mini 5th Gen</string>
-	<key>iPad11,3</key>
-	<string>iPad Air 3rd Gen (WiFi)</string>
-	<key>iPad11,4</key>
-	<string>iPad Air 3rd Gen</string>
+	<key>iPad13,16</key>
+	<string>iPad Air 5th Gen (WiFi)</string>
+	<key>iPad13,17</key>
+	<string>iPad Air 5th Gen (WiFi+Cellular)</string>
+	<key>iPad13,18</key>
+	<string>iPad 10th Gen</string>
+	<key>iPad13,19</key>
+	<string>iPad 10th Gen</string>
+	<key>iPad14,3</key>
+	<string>iPad Pro 11 inch 4th Gen</string>
+	<key>iPad14,4</key>
+	<string>iPad Pro 11 inch 4th Gen</string>
+	<key>iPad14,5</key>
+	<string>iPad Pro 12.9 inch 6th Gen</string>
+	<key>iPad14,6</key>
+	<string>iPad Pro 12.9 inch 6th Gen</string>
 	<key>Watch1,1</key>
 	<string>Apple Watch 38mm case</string>
 	<key>Watch1,2</key>
@@ -336,5 +344,41 @@
 	<string>Apple Watch Series 6 40mm case (GPS+Cellular)</string>
 	<key>Watch6,4</key>
 	<string>Apple Watch Series 6 44mm case (GPS+Cellular)</string>
+	<key>Watch6,6</key>
+	<string>Apple Watch Series 7 41mm case (GPS)</string>
+	<key>Watch6,7</key>
+	<string>Apple Watch Series 7 45mm case (GPS)</string>
+	<key>Watch6,8</key>
+	<string>Apple Watch Series 7 41mm case (GPS+Cellular)</string>
+	<key>Watch6,9</key>
+	<string>Apple Watch Series 7 45mm case (GPS+Cellular)</string>
+	<key>Watch6,10</key>
+	<string>Apple Watch SE 40mm case (GPS)</string>
+	<key>Watch6,11</key>
+	<string>Apple Watch SE 44mm case (GPS)</string>
+	<key>Watch6,12</key>
+	<string>Apple Watch SE 40mm case (GPS+Cellular)</string>
+	<key>Watch6,13</key>
+	<string>Apple Watch SE 44mm case (GPS+Cellular)</string>
+	<key>Watch6,14</key>
+	<string>Apple Watch Series 8 41mm case (GPS)</string>
+	<key>Watch6,15</key>
+	<string>Apple Watch Series 8 45mm case (GPS)</string>
+	<key>Watch6,16</key>
+	<string>Apple Watch Series 8 41mm case (GPS+Cellular)</string>
+	<key>Watch6,17</key>
+	<string>Apple Watch Series 8 45mm case (GPS+Cellular)</string>
+	<key>Watch6,18</key>
+	<string>Apple Watch Ultra</string>
+	<key>Watch7,1</key>
+	<string>Apple Watch Series 9 41mm case (GPS)</string>
+	<key>Watch7,2</key>
+	<string>Apple Watch Series 9 45mm case (GPS)</string>
+	<key>Watch7,3</key>
+	<string>Apple Watch Series 9 41mm case (GPS+Cellular)</string>
+	<key>Watch7,4</key>
+	<string>Apple Watch Series 9 45mm case (GPS+Cellular)</string>
+	<key>Watch7,5</key>
+	<string>Apple Watch Ultra 2</string>
 </dict>
 </plist>
