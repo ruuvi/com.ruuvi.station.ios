@@ -186,9 +186,8 @@ include:
 - intents_frameworks.yml
 
 configs:
-  Debug: debug
   Alpha: debug
-  Beta: release
+  Debug: debug
   Release: release
 
 targets:
@@ -283,10 +282,6 @@ targets:
         CODE_SIGN_ENTITLEMENTS: station/station.entitlements
       configs:
         Alpha: 
-          CODE_SIGN_IDENTITY: "iPhone Distribution"
-          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
-        Beta:
-          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
         Debug:

@@ -24,10 +24,6 @@ targets:
         Alpha: 
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.intents"
-        Beta:
-          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
-          CODE_SIGN_IDENTITY: "iPhone Distribution"
-          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.intents"
         Debug:
           CODE_SIGN_STYLE: Automatic
         Release:
