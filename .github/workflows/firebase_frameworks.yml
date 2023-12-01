@@ -2,9 +2,6 @@ name: Deploy to Firebase [frameworks]
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feature/1649
 
 jobs:
   build:
@@ -81,22 +78,22 @@ jobs:
           echo -n "$EXPORT_PLIST" | base64 --decode > $EXPORT_PLIST_PATH
           xcodebuild -exportArchive -archivePath ./Build/Station_Dev.xcarchive -exportOptionsPlist $EXPORT_PLIST_PATH -exportPath ${{ runner.temp }}/export
 
-      #   - name: Distribute to Firebase
-      #     run: |
-      #       curl -sL https://firebase.tools | bash
-      #       firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa \
-      #         --app ${{ secrets.GOOGLE_APP_ID }} \
-      #         --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
-      #         --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-      #         --release-notes "Features, enhancements and bug fixes."
+      - name: Distribute to Firebase
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa \
+            --app ${{ secrets.GOOGLE_APP_ID }} \
+            --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
+            --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
+            --release-notes "Features, enhancements and bug fixes."
 
       - name: Zip dSYM files
         run: |
           find ${{ runner.temp }}/export -name '*.dSYM' | xargs -I \{\} zip -r \{\}.zip \{\}
 
-      #   - name: Upload dSYM to Firebase
-      #     run: |
-      #       find ${{ runner.temp }}/export -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
+      - name: Upload dSYM to Firebase
+        run: |
+          find ${{ runner.temp }}/export -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
 
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}
