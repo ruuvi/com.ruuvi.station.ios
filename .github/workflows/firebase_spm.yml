@@ -89,7 +89,7 @@ jobs:
             --app ${{ secrets.GOOGLE_APP_ID }} \
             --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-            --release-notes ${{ steps.build_changelog.outputs.changelog }}
+            --release-notes "${{ steps.build_changelog.outputs.changelog }}"
 
       - name: Zip dSYM files
         run: |
