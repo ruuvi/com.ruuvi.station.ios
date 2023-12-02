@@ -1,10 +1,14 @@
 name: Deploy to Firebase [frameworks]
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types:
+      - closed
+    branches: [alpha]
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     runs-on: macos-13
 
     steps:
@@ -69,7 +73,7 @@ jobs:
 
       - name: Build app
         run: |
-          xcodebuild -project frameworks.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive  -allowProvisioningUpdates
+          xcodebuild -project frameworks.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
       - name: Export IPA
         env:
           EXPORT_PLIST: ${{ secrets.ADHOC_EXPORT_OPTIONS }}
@@ -89,7 +93,7 @@ jobs:
             --app ${{ secrets.GOOGLE_APP_ID }} \
             --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-            --release-notes ${{ steps.build_changelog.outputs.changelog }}
+            --release-notes "${{ steps.build_changelog.outputs.changelog }}"
 
       - name: Zip dSYM files
         run: |

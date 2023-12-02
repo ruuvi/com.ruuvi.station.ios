@@ -1,14 +1,10 @@
 name: Upload to Firebase
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches: [ alpha ]
+  workflow_dispatch:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
     runs-on: macos-latest
 
     steps:
@@ -64,7 +60,7 @@ jobs:
       - name: Build app
         run: |
           xcodebuild -workspace station.xcworkspace -scheme station_dev -configuration Debug -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
-      
+
       - name: Export IPA
         env:
           EXPORT_PLIST: ${{ secrets.ADHOC_EXPORT_OPTIONS }}
@@ -80,7 +76,7 @@ jobs:
             --app ${{ secrets.GOOGLE_APP_ID }} \
             --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-            --release-notes "Features, enhancements and bug fixes." 
+            --release-notes "Features, enhancements and bug fixes."
 
       - name: Zip dSYM files
         run: |
@@ -89,7 +85,7 @@ jobs:
       - name: Upload dSYM to Firebase
         run: |
           find ${{ runner.temp }}/export -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
-      
+
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}
         run: |
