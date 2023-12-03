@@ -11,14 +11,22 @@ final class FirmwarePresenter: RuuviFirmware {
         if let view = self.weakView {
             return view
         } else {
+            let viewModel = FirmwareViewModel(
+                uuid: uuid,
+                currentFirmware: currentFirmware,
+                interactor: interactor
+            )
+            viewModel.output = self
             let view = UIHostingController(rootView: FirmwareView(viewModel: viewModel))
             self.weakView = view
             return view
         }
     }
     private weak var weakView: UIViewController?
-    private let viewModel: FirmwareViewModel
-    
+    private let interactor: FirmwareInteractor
+    private let uuid: String
+    private let currentFirmware: String?
+
     init(
         uuid: String,
         currentFirmware: String?,
@@ -26,21 +34,17 @@ final class FirmwarePresenter: RuuviFirmware {
         ruuviDFU: RuuviDFU,
         firmwareRepository: FirmwareRepository
     ) {
-        let interactor = FirmwareInteractor(
+        self.uuid = uuid
+        self.currentFirmware = currentFirmware
+        self.interactor = FirmwareInteractor(
             background: background,
             ruuviDFU: ruuviDFU,
             firmwareRepository: firmwareRepository
         )
-        self.viewModel = FirmwareViewModel(
-            uuid: uuid,
-            currentFirmware: currentFirmware,
-            interactor: interactor
-        )
-        self.viewModel.delegate = self
     }
 }
 
-extension FirmwarePresenter: FirmwareViewModelDelegate {
+extension FirmwarePresenter: FirmwareViewModelOutput {
     func firmwareUpgradeDidFinishSuccessfully() {
         output?.ruuviFirmwareSuccessfullyUpgraded(self)
     }

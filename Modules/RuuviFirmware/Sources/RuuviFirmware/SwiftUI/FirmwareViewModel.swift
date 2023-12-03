@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-protocol FirmwareViewModelDelegate: AnyObject {
+protocol FirmwareViewModelOutput: AnyObject {
     func firmwareUpgradeDidFinishSuccessfully()
 }
 
@@ -9,7 +9,7 @@ final class FirmwareViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published var downloadProgress: Double = 0
     @Published var flashProgress: Double = 0
-    weak var delegate: FirmwareViewModelDelegate?
+    var output: FirmwareViewModelOutput?
     private let input = PassthroughSubject<Event, Never>()
     private let uuid: String
     private var currentFirmware: String?
@@ -48,7 +48,7 @@ final class FirmwareViewModel: ObservableObject {
     }
     
     func finish() {
-        delegate?.firmwareUpgradeDidFinishSuccessfully()
+        output?.firmwareUpgradeDidFinishSuccessfully()
     }
 }
 
