@@ -36,7 +36,6 @@ final class FirmwareViewModel: ObservableObject {
                 self.whenListening(),
                 self.whenReadyToUpdate(),
                 self.whenFlashing(),
-                self.whenFlashed(),
                 self.userInput(input: input.eraseToAnyPublisher())
             ]
         )
@@ -211,19 +210,6 @@ extension FirmwareViewModel {
             .eraseToAnyPublisher()
         }
     }
-
-    func whenFlashed() -> Feedback<State, Event> {
-        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .successfulyFlashed = state, let sSelf = self else {
-                return Empty().eraseToAnyPublisher()
-            }
-            return sSelf.interactor.serveCurrentRelease(uuid: sSelf.uuid)
-                .receive(on: RunLoop.main)
-                .map(Event.onServedAfterUpdate)
-                .catch { _ in Just(Event.onServedAfterUpdate(nil)) }
-                .eraseToAnyPublisher()
-        }
-    }
 }
 
 extension FirmwareViewModel {
@@ -258,7 +244,6 @@ extension FirmwareViewModel {
             fullUrl: URL
         )
         case successfulyFlashed(GitHubRelease)
-        case firmwareAfterUpdate(CurrentRelease?)
         case error(Error)
     }
 
@@ -409,15 +394,8 @@ extension FirmwareViewModel {
                 return state
             }
         case .successfulyFlashed:
-            switch event {
-            case let .onServedAfterUpdate(currentRelease):
-                return .firmwareAfterUpdate(currentRelease)
-            default:
-                return state
-            }
-        case .error:
             return state
-        case .firmwareAfterUpdate:
+        case .error:
             return state
         }
     }

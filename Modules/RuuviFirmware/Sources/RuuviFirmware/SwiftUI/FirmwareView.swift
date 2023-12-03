@@ -385,17 +385,6 @@ struct FirmwareView: View {
             .padding()
             .eraseToAnyView()
         case .successfulyFlashed:
-            return Text(texts.updatingTitle)
-                .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-                .padding()
-                .eraseToAnyView()
-        case .firmwareAfterUpdate:
             return VStack {
                 Text(texts.successfulTitle)
                     .font(muliRegular16)
