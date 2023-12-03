@@ -3,6 +3,7 @@ import Combine
 import BTKit
 import RuuviOntology
 import RuuviDFU
+import RuuviFirmware
 
 final class DFUInteractor {
     var ruuviDFU: RuuviDFU!

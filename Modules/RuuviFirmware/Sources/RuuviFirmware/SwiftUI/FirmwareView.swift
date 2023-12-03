@@ -1,72 +1,42 @@
-import RuuviFirmware
 import SwiftUI
 
-// swiftlint:disable file_length
-// swiftlint:disable:next type_body_length
-struct DFUUIView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var viewModel: DFUViewModel
+struct FirmwareView: View {
+    @ObservedObject var viewModel: FirmwareViewModel
 
     private struct Texts {
-        let navigationTitle = "DFUUIView.navigationTitle".localized()
-        let latestTitle = "DFUUIView.latestTitle".localized()
-        let currentTitle = "DFUUIView.currentTitle".localized()
-        let lowBatteryWarningMessage = "DFUUIView.lowBattery.warning.message".localized()
-        let okTitle = "ErrorPresenterAlert.OK".localized()
-        let notReportingDescription = "DFUUIView.notReportingDescription".localized()
-        let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized()
-        let startUpdateProcess = "DFUUIView.startUpdateProcess".localized()
-        let downloadingTitle = "DFUUIView.downloadingTitle".localized()
-        let prepareTitle = "DFUUIView.prepareTitle".localized()
-        let openCoverTitle = "DFUUIView.openCoverTitle".localized()
-        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized()
-        let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized()
-        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized()
-        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized()
-        let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized()
-        let updatingTitle = "DFUUIView.updatingTitle".localized()
-        let searchingTitle = "DFUUIView.searchingTitle".localized()
-        let startTitle = "DFUUIView.startTitle".localized()
-        let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized()
-        let successfulTitle = "DFUUIView.successfulTitle".localized()
-        let errorTitle = "ErrorPresenterAlert.Error".localized()
-        let dbMigrationErrorTitle = "DFUUIView.DBMigration.Error.message".localized()
+        let navigationTitle = "DFUUIView.navigationTitle".localized(for: FirmwareViewModel.self)
+        let latestTitle = "DFUUIView.latestTitle".localized(for: FirmwareViewModel.self)
+        let currentTitle = "DFUUIView.currentTitle".localized(for: FirmwareViewModel.self)
+        let lowBatteryWarningMessage = "DFUUIView.lowBattery.warning.message".localized(for: FirmwareViewModel.self)
+        let okTitle = "ErrorPresenterAlert.OK".localized(for: FirmwareViewModel.self)
+        let notReportingDescription = "DFUUIView.notReportingDescription".localized(for: FirmwareViewModel.self)
+        let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized(for: FirmwareViewModel.self)
+        let startUpdateProcess = "DFUUIView.startUpdateProcess".localized(for: FirmwareViewModel.self)
+        let downloadingTitle = "DFUUIView.downloadingTitle".localized(for: FirmwareViewModel.self)
+        let prepareTitle = "DFUUIView.prepareTitle".localized(for: FirmwareViewModel.self)
+        let openCoverTitle = "DFUUIView.openCoverTitle".localized(for: FirmwareViewModel.self)
+        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized(for: FirmwareViewModel.self)
+        let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized(for: FirmwareViewModel.self)
+        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized(for: FirmwareViewModel.self)
+        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized(for: FirmwareViewModel.self)
+        let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized(for: FirmwareViewModel.self)
+        let updatingTitle = "DFUUIView.updatingTitle".localized(for: FirmwareViewModel.self)
+        let searchingTitle = "DFUUIView.searchingTitle".localized(for: FirmwareViewModel.self)
+        let startTitle = "DFUUIView.startTitle".localized(for: FirmwareViewModel.self)
+        let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized(for: FirmwareViewModel.self)
+        let successfulTitle = "DFUUIView.successfulTitle".localized(for: FirmwareViewModel.self)
+        let finish = "DfuFlash.Finish.text".localized(for: FirmwareViewModel.self)
     }
 
-    private let muliBold16 = Font(UIFont.Muli(.bold, size: 16))
-    private let muliRegular16 = Font(UIFont.Muli(.regular, size: 16))
     private let texts = Texts()
-    @State private var isBatteryLow = false
-
-    var body: some View {
-        VStack {
-            content
-                .alert(isPresented: $viewModel.isMigrationFailed) {
-                    Alert(title: Text(texts.errorTitle),
-                          message: Text(texts.dbMigrationErrorTitle),
-                          dismissButton: .cancel(Text(texts.okTitle)))
-                }
-        }
-        .background(Color(RuuviColor.ruuviPrimarySUI!).edgesIgnoringSafeArea(.all))
-        .navigationBarTitle(
-            texts.navigationTitle
-        )
-        .accentColor(.red)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: goBack) {
-            HStack {
-                Image("chevron_back")
-                    .foregroundColor(.primary)
-            }
-        })
-        .onAppear {
-            self.viewModel.send(event: .onAppear)
-        }
-        .onDisappear {
-            self.viewModel.restartPropertiesDaemon()
-        }
-    }
-
+    private static let fontSize: CGFloat = 16
+    private let muliBold16 = Font(
+        UIFont(name: "Muli-Bold", size: fontSize.adjustedFontSize()) ??
+        UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .bold))
+    private let muliRegular16 = Font(
+        UIFont(name: "Muli-Regular", size: fontSize.adjustedFontSize()) ??
+        UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .regular))
+    
     private var content: some View {
         switch viewModel.state {
         case .idle:
@@ -159,18 +129,38 @@ struct DFUUIView: View {
             .padding()
             .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
-        case .noNeedToUpgrade(_, let currentRelease):
-            return Text(texts.alreadyOnLatest)
-                .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
+        case .noNeedToUpgrade:
+            return VStack {
+                Text(texts.alreadyOnLatest)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .topLeading
+                    )
+                    .padding()
+                Button(
+                    action: {
+                        self.viewModel.finish()
+                    },
+                    label: {
+                        Text(texts.finish)
+                            .font(muliBold16)
+                            .frame(maxWidth: .infinity)
+                    }
+                )
+                .buttonStyle(
+                    LargeButtonStyle(
+                        backgroundColor: RuuviColor.ruuviTintColorSUI,
+                        foregroundColor: Color.white,
+                        isDisabled: false
+                    )
                 )
                 .padding()
-                .onAppear { self.viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
-                .eraseToAnyView()
+                .frame(maxWidth: .infinity)
+            }
+            .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
@@ -221,16 +211,6 @@ struct DFUUIView: View {
                 maxHeight: .infinity,
                 alignment: .topLeading
             )
-            .onAppear(perform: {
-                viewModel.checkBatteryState(completion: { isLow in
-                    isBatteryLow = isLow
-                })
-            })
-            .alert(isPresented: $isBatteryLow) {
-                Alert(title: Text(""),
-                      message: Text(texts.lowBatteryWarningMessage),
-                      dismissButton: .cancel(Text(texts.okTitle)))
-            }
             .padding()
             .eraseToAnyView()
         case .reading:
@@ -405,43 +385,54 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case .successfulyFlashed:
-            return Text(texts.updatingTitle)
-                .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
+            return VStack {
+                Text(texts.successfulTitle)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .topLeading
+                    )
+                    .padding()
+                Button(
+                    action: {
+                        self.viewModel.finish()
+                    },
+                    label: {
+                        Text(texts.finish)
+                            .font(muliBold16)
+                            .frame(maxWidth: .infinity)
+                    }
+                )
+                .buttonStyle(
+                    LargeButtonStyle(
+                        backgroundColor: RuuviColor.ruuviTintColorSUI,
+                        foregroundColor: Color.white,
+                        isDisabled: false
+                    )
                 )
                 .padding()
-                .eraseToAnyView()
-        case .servingAfterUpdate:
-            return Text(texts.updatingTitle)
-                .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-                .padding()
-                .eraseToAnyView()
-        case .firmwareAfterUpdate(let currentRelease):
-            viewModel.storeUpdatedFirmware(currentRelease: currentRelease)
-            return Text(texts.successfulTitle)
-                .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-                .padding()
-                .eraseToAnyView()
+                .frame(maxWidth: .infinity)
+            }
+            .eraseToAnyView()
         }
     }
+    
+    var body: some View {
+        VStack {
+            content
+        }
+        .accentColor(.red)
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            self.viewModel.send(event: .onAppear)
+        }
+    }
+}
 
-    func goBack() {
-        self.presentationMode.wrappedValue.dismiss()
+private extension CGFloat {
+    func adjustedFontSize() -> CGFloat {
+        return UIDevice.current.userInterfaceIdiom == .pad ? self + 4 : self
     }
 }

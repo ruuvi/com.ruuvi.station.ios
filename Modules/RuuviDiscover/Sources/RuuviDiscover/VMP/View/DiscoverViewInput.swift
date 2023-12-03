@@ -16,6 +16,7 @@ protocol DiscoverViewInput: UIViewController, Localizable {
         message: String,
         showAddSensor: Bool,
         showGoToSensor: Bool,
+        showUpgradeFirmware: Bool,
         isDF3: Bool
     )
 }
