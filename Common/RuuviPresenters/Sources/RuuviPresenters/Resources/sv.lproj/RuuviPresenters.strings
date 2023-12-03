@@ -6,3 +6,6 @@
 "PermissionPresenter.settings" = "Inställningar";
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station behöver behörighett ill Push-meddelanden för att aktivera den här funktionen.";
 "Cancel" = "Avbryt";
+"activity_ongoing_generic" = "Please wait...";
+"activity_success_generic" = "Operation successful.";
+"activity_failed_generic" = "Operation failed.";

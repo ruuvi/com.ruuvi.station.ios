@@ -6,3 +6,6 @@
 "PermissionPresenter.settings" = "Asetukset";
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Tämä ominaisuus vaatii oikeuden palveluilmoitusten näyttämiseen.";
 "Cancel" = "Peruuta";
+"activity_ongoing_generic" = "Please wait...";
+"activity_success_generic" = "Operation successful.";
+"activity_failed_generic" = "Operation failed.";

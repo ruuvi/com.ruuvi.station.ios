@@ -6,3 +6,6 @@
 "PermissionPresenter.settings" = "Настройки";
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию";
 "Cancel" = "Отмена";
+"activity_ongoing_generic" = "Please wait...";
+"activity_success_generic" = "Operation successful.";
+"activity_failed_generic" = "Operation failed.";
