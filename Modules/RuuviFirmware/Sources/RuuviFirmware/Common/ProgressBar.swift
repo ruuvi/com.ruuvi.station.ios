@@ -16,14 +16,14 @@ public struct ProgressBar: View {
                         height: geometry.size.height
                     )
                     .opacity(0.3)
-                    .foregroundColor(.green) // TODO: @rinat RuuviColor.green
+                    .foregroundColor(RuuviColor.green)
 
                 Rectangle()
                     .frame(
                         width: min(CGFloat(self.value) * geometry.size.width, geometry.size.width),
                         height: geometry.size.height
                     )
-                    .foregroundColor(.green) // TODO: @rinat RuuviColor.green
+                    .foregroundColor(RuuviColor.green)
                     .animation(.linear)
             }.cornerRadius(6)
         }
