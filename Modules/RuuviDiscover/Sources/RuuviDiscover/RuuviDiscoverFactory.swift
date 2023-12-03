@@ -6,6 +6,7 @@ import RuuviLocal
 import RuuviService
 import RuuviCore
 import RuuviPresenters
+import RuuviFirmware
 
 public struct RuuviDiscoverDependencies {
     var errorPresenter: ErrorPresenter
@@ -15,6 +16,7 @@ public struct RuuviDiscoverDependencies {
     var foreground: BTForeground
     var ruuviReactor: RuuviReactor
     var ruuviOwnershipService: RuuviServiceOwnership
+    var firmwareBuilder: RuuviFirmwareBuilder
 
     public init(
         errorPresenter: ErrorPresenter,
@@ -23,7 +25,8 @@ public struct RuuviDiscoverDependencies {
         permissionPresenter: PermissionPresenter,
         foreground: BTForeground,
         ruuviReactor: RuuviReactor,
-        ruuviOwnershipService: RuuviServiceOwnership
+        ruuviOwnershipService: RuuviServiceOwnership,
+        firmwareBuilder: RuuviFirmwareBuilder
     ) {
         self.errorPresenter = errorPresenter
         self.activityPresenter = activityPresenter
@@ -32,6 +35,7 @@ public struct RuuviDiscoverDependencies {
         self.foreground = foreground
         self.ruuviReactor = ruuviReactor
         self.ruuviOwnershipService = ruuviOwnershipService
+        self.firmwareBuilder = firmwareBuilder
     }
 }
 
@@ -47,6 +51,7 @@ public final class RuuviDiscoverFactory {
         presenter.foreground = dependencies.foreground
         presenter.ruuviReactor = dependencies.ruuviReactor
         presenter.ruuviOwnershipService = dependencies.ruuviOwnershipService
+        presenter.firmwareBuilder = dependencies.firmwareBuilder
         return presenter
     }
 }

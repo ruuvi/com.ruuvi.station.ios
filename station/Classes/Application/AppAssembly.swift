@@ -18,6 +18,7 @@ import RuuviNotifier
 import RuuviNotification
 import RuuviRepository
 import RuuviCore
+import RuuviFirmware
 import RuuviDiscover
 import RuuviPresenters
 #if canImport(RuuviCloudPure)
@@ -776,7 +777,8 @@ private final class ModulesAssembly: Assembly {
                 permissionPresenter: permissionPresenter,
                 foreground: foreground,
                 ruuviReactor: ruuviReactor,
-                ruuviOwnershipService: ruuviOwnershipService
+                ruuviOwnershipService: ruuviOwnershipService,
+                firmwareBuilder: RuuviFirmwareBuilder()
             )
             return factory.create(dependencies: dependencies)
         }

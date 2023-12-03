@@ -16,4 +16,5 @@ protocol DiscoverViewOutput {
     func viewDidGoToSensor(with sensor: NFCSensor?)
     func viewDidACopyMacAddress(of sensor: NFCSensor?)
     func viewDidACopySecret(of sensor: NFCSensor?)
+    func viewDidAskToUpgradeFirmware(of sensor: NFCSensor?)
 }

@@ -13,3 +13,4 @@ targets:
     - target: RuuviService
     - target: RuuviPresenters
     - target: RuuviLocalization
+    - target: RuuviFirmware

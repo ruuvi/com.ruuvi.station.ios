@@ -10,6 +10,7 @@ import RuuviLocal
 import RuuviService
 import RuuviCore
 import RuuviPresenters
+import RuuviFirmware
 import CoreBluetooth
 import CoreNFC
 
@@ -37,6 +38,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var permissionPresenter: PermissionPresenter!
     var ruuviReactor: RuuviReactor!
     var ruuviOwnershipService: RuuviServiceOwnership!
+    var firmwareBuilder: RuuviFirmwareBuilder!
 
     private weak var view: DiscoverViewInput?
     private var accessQueue = DispatchQueue(
@@ -190,6 +192,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 message: message,
                 showAddSensor: false,
                 showGoToSensor: true,
+                showUpgradeFirmware: false,
                 isDF3: false
             )
             return
@@ -208,6 +211,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 message: message,
                 showAddSensor: true,
                 showGoToSensor: false,
+                showUpgradeFirmware: false,
                 isDF3: false
             )
             return
@@ -227,6 +231,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             message: message,
             showAddSensor: false,
             showGoToSensor: false,
+            showUpgradeFirmware: true,
             isDF3: nfcSensor?.firmwareVersion == "2.5.9"
         )
     }
@@ -252,12 +257,26 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
 
+    func viewDidAskToUpgradeFirmware(of sensor: NFCSensor?) {
+        guard let sensor else { return }
+        let firmwareModule = firmwareBuilder.build(uuid: sensor.id, currentFirmware: sensor.firmwareVersion)
+        firmwareModule.output = self
+        viewController.present(firmwareModule.viewController, animated: true)
+    }
+
     func viewDidACopyMacAddress(of sensor: NFCSensor?) {
         UIPasteboard.general.string = sensor?.macId
     }
 
     func viewDidACopySecret(of sensor: NFCSensor?) {
         UIPasteboard.general.string = sensor?.id
+    }
+}
+
+// MARK: - RuuviFirmwareOutput
+extension DiscoverPresenter: RuuviFirmwareOutput {
+    func ruuviFirmwareSuccessfullyUpgraded(_ ruuviDiscover: RuuviFirmware) {
+        ruuviDiscover.viewController.dismiss(animated: true)
     }
 }
 

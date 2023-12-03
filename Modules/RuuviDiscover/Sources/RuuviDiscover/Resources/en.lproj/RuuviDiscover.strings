@@ -28,3 +28,4 @@
 "add_sensor_nfc_df3_error" = "This tag cannot be added with NFC due to old firmware. Please add the tag with Bluetooth and update firmware.";
 "add_sensor_description" = "This page shows nearby Ruuvi sensors not yet added to the app. Tap a sensor to add it.";
 "add_sensor_via_nfc" = "Alternatively, you can add a sensor using NFC by selecting Add with NFC and touching it with your phone.";
+"upgrade_firmware" = "Upgrade Firmware";

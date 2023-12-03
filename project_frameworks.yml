@@ -181,6 +181,7 @@ include:
 - Common/RuuviLocalization/target.yml
 - Modules/RuuviDiscover/target.yml
 - Modules/RuuviOnboard/target.yml
+- Modules/RuuviFirmware/target.yml
 - widget_frameworks.yml
 - pnservice.yml
 - intents_frameworks.yml
@@ -243,6 +244,7 @@ targets:
       - target: RuuviPresenters
       - target: RuuviDiscover
       - target: RuuviOnboard
+      - target: RuuviFirmware
       - target: RuuviLocalization
     info:
       path: station/Resources/Plists/Info.plist
