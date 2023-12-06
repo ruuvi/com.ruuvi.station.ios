@@ -56,8 +56,7 @@ jobs:
 
       - name: Increment build number
         run: |
-          buildNumber=$(date '+%y%m%d%H%M')
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $buildNumber" ${{ github.workspace }}/station/Resources/Plists/Info.plist
+          make set_build_number_frameworks
 
       - name: Make xcodeproj
         run: |
