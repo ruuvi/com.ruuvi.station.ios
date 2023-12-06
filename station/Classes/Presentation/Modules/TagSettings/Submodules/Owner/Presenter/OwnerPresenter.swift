@@ -29,15 +29,6 @@ final class OwnerPresenter: OwnerModuleInput {
             view.mode = ownershipMode
         }
     }
-    private var isLoading: Bool = false {
-        didSet {
-            if isLoading {
-                activityPresenter.increment()
-            } else {
-                activityPresenter.decrement()
-            }
-        }
-    }
 
     func configure(ruuviTag: RuuviTagSensor, mode: OwnershipMode) {
         self.ruuviTag = ruuviTag
@@ -102,12 +93,13 @@ extension OwnerPresenter {
     }
 
     private func claimSensor() {
-        isLoading = true
+        activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
             .claim(sensor: ruuviTag)
             .on(success: { [weak self] _ in
                 self?.router.dismiss()
                 self?.removeConnection()
+                self?.activityPresenter.show(with: .success(message: nil))
             }, failure: { [weak self] error in
                 switch error {
                 case .ruuviCloud(.api(.api(.erSensorAlreadyClaimed))):
@@ -116,15 +108,15 @@ extension OwnerPresenter {
                     }
                     self?.view.showSensorAlreadyClaimedDialog()
                 default:
-                    self?.errorPresenter.present(error: error)
+                    self?.activityPresenter.show(with: .failed(message: error.localizedDescription))
                 }
             }, completion: { [weak self] in
-                self?.isLoading = false
+                self?.activityPresenter.dismiss()
             })
     }
 
     private func unclaimSensor(removeCloudHistory: Bool) {
-        isLoading = true
+        activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
             .unclaim(
                 sensor: ruuviTag,
@@ -132,10 +124,11 @@ extension OwnerPresenter {
             )
             .on(success: { [weak self] _ in
                 self?.router.dismiss()
+                self?.activityPresenter.update(with: .success(message: nil))
             }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
+                self?.activityPresenter.show(with: .failed(message: error.localizedDescription))
             }, completion: { [weak self] in
-                self?.isLoading = false
+                self?.activityPresenter.dismiss()
             })
     }
 }

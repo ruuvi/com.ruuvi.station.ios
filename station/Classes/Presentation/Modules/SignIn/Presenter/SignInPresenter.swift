@@ -126,7 +126,7 @@ extension SignInPresenter {
     }
 
     private func sendVerificationCode(for email: String) {
-        activityPresenter.increment()
+        activityPresenter.show(with: .loading(message: nil))
         ruuviCloud.requestCode(email: email)
             .on(success: { [weak self] email in
                 guard let sSelf = self else { return }
@@ -136,12 +136,12 @@ extension SignInPresenter {
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
-                self?.activityPresenter.decrement()
+                self?.activityPresenter.dismiss()
             })
     }
 
     private func verify(_ code: String) {
-        activityPresenter.increment(with: "SignIn.Sync.message".localized())
+        activityPresenter.show(with: .loading(message: "SignIn.Sync.message".localized()))
         ruuviCloud.validateCode(code: code)
             .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
@@ -156,26 +156,26 @@ extension SignInPresenter {
                     sSelf.registerFCMToken()
                     sSelf.cloudSyncService.syncAllRecords().on(success: { [weak sSelf] _ in
                         guard let ssSelf = sSelf else { return }
-                        ssSelf.activityPresenter.decrement()
                         ssSelf.cloudSyncDaemon.start()
                         ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)
                         sSelf?.settings.isSyncing = false
                     }, failure: { [weak self] error in
-                        self?.activityPresenter.decrement()
                         self?.errorPresenter.present(error: error)
+                    }, completion: { [weak self] in
+                        self?.activityPresenter.dismiss()
                     })
                 } else if let requestedEmail = sSelf.ruuviUser.email {
-                    sSelf.activityPresenter.decrement()
+                    sSelf.activityPresenter.dismiss()
                     sSelf.view.showEmailsAreDifferent(
                         requestedEmail: requestedEmail,
                         validatedEmail: result.email
                     )
                 } else {
                     sSelf.view.showFailedToGetRequestedEmail()
-                    sSelf.activityPresenter.decrement()
+                    sSelf.activityPresenter.dismiss()
                 }
             }, failure: { [weak self] (error) in
-                self?.activityPresenter.decrement()
+                self?.activityPresenter.dismiss()
                 self?.view.showInvalidTokenEntered()
                 self?.errorPresenter.present(error: error)
             })
@@ -214,7 +214,7 @@ extension SignInPresenter {
     @objc private func handleAppEnterForgroundState() {
         switch state {
         case .isSyncing:
-            activityPresenter.increment(with: "SignIn.Sync.message".localized())
+            activityPresenter.show(with: .loading(message: "SignIn.Sync.message".localized()))
         default:
             return
         }
@@ -223,7 +223,7 @@ extension SignInPresenter {
     @objc private func handleAppEnterBackgroundState() {
         switch state {
         case .isSyncing:
-            activityPresenter.decrement()
+            activityPresenter.dismiss()
         default:
             return
         }

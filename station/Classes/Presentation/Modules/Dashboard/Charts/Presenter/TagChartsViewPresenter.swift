@@ -52,15 +52,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     var infoProvider: InfoProvider!
 
     private var isSyncing: Bool = false
-    var isLoading: Bool = false {
-        didSet {
-            if isLoading {
-                activityPresenter.increment()
-            } else {
-                activityPresenter.decrement()
-            }
-        }
-    }
 
     private var output: TagChartsViewModuleOutput?
     private var advertisementToken: ObservationToken?
@@ -235,12 +226,12 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
-        isLoading = true
+        activityPresenter.show(with: .loading(message: nil))
         interactor.deleteAllRecords(for: ruuviTag)
             .on(failure: {[weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
-                 self?.isLoading = false
+                self?.activityPresenter.dismiss(immediately: true)
             })
     }
 
@@ -254,14 +245,14 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
     }
 
     func viewDidTapOnExport() {
-        isLoading = true
+        activityPresenter.show(with: .loading(message: nil))
         exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
             .on(success: { [weak self] url in
                 self?.view?.showExportSheet(with: url)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
-                self?.isLoading = false
+                self?.activityPresenter.dismiss(immediately: true)
             })
     }
 

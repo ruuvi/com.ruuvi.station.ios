@@ -1,6 +1,19 @@
 import UIKit
+import SwiftUI
 
-@IBDesignable
+// UIViewRepresentable wrapper for ActivitySpinnerView
+struct ActivitySpinnerViewRepresentable: UIViewRepresentable {
+    func makeUIView(context: Context) -> ActivitySpinnerView {
+        let spinnerView = ActivitySpinnerView()
+        spinnerView.animate()
+        return spinnerView
+    }
+    
+    func updateUIView(_ uiView: ActivitySpinnerView, context: Context) {
+        // No op
+    }
+}
+
 class ActivitySpinnerView: UIView {
 
     private var strokeColor = UIColor(red: 0.21, green: 0.68, blue: 0.62, alpha: 1.00)

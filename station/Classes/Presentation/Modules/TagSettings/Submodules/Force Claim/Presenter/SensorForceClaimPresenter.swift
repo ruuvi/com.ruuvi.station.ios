@@ -21,15 +21,7 @@ final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
 
     private var ruuviTag: RuuviTagSensor?
     private var secret: String?
-    private var isLoading: Bool = false {
-        didSet {
-            if isLoading {
-                activityPresenter.increment()
-            } else {
-                activityPresenter.decrement()
-            }
-        }
-    }
+
     private var timer: Timer?
     private var gattTimeoutSeconds: Double = 15
 
@@ -90,7 +82,7 @@ extension SensorForceClaimPresenter {
             withTimeInterval: gattTimeoutSeconds,
             repeats: true,
             block: { [weak self] (_) in
-                self?.isLoading = false
+                self?.activityPresenter.dismiss()
                 self?.invalidateTimer()
                 self?.view?.showGATTConnectionTimeoutDialog()
             })
@@ -106,8 +98,7 @@ extension SensorForceClaimPresenter {
         guard let luid = ruuviTag?.luid else {
             return
         }
-        isLoading = true
-        // TODO: Check the timeout issue. Timeout not trigerred now.
+        activityPresenter.show(with: .loading(message: nil))
         background.services.gatt.serialRevision(
             for: self,
             uuid: luid.value,
@@ -117,8 +108,8 @@ extension SensorForceClaimPresenter {
             case .success(let secret):
                 self?.contestSensor(with: secret)
             case .failure(let error):
+                self?.activityPresenter.dismiss()
                 self?.errorPresenter.present(error: error)
-                self?.isLoading = false
             }
         }
     }
@@ -128,7 +119,7 @@ extension SensorForceClaimPresenter {
         guard let ruuviTag = ruuviTag,
               let secret = secret else { return }
 
-        isLoading = true
+        activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
             .contest(sensor: ruuviTag, secret: secret)
             .on(success: { [weak self] _ in
@@ -136,7 +127,7 @@ extension SensorForceClaimPresenter {
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
-                self?.isLoading = false
+                self?.activityPresenter.dismiss()
             })
     }
 
