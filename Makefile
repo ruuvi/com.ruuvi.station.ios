@@ -1,8 +1,15 @@
-.PHONY: installed_xcodegen installed_swiftgen
+.PHONY: installed_xcodegen installed_swiftgen installed_firebase
 
 # generates xcodeproj for frameworks build configuration
 xcodeproj_with_frameworks: installed_xcodegen installed_swiftgen
 	.tools/xcodegen/bin/xcodegen -s project_frameworks.yml
+
+# install firebase
+installed_firebase: .tools/firebase/firebase
+
+.tools/firebase/firebase: scripts/install/install_firebase.sh
+	scripts/install/install_firebase.sh
+	touch $@
 
 # install swiftgen
 installed_swiftgen: .tools/swiftgen/bin/swiftgen
