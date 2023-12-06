@@ -36,7 +36,7 @@ final class DFUViewModel: ObservableObject {
 
     var isLoading: Bool = false {
         didSet {
-            isLoading ? activityPresenter.increment() : activityPresenter.decrement()
+            isLoading ? activityPresenter.show(with: .loading(message: nil)) : activityPresenter.dismiss()
         }
     }
 

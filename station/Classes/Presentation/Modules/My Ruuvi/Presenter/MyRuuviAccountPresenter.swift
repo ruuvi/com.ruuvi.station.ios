@@ -34,14 +34,16 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
 
     func viewDidTapDeleteButton() {
         guard let email = ruuviUser.email else { return }
-        activityPresenter.increment()
+        activityPresenter.show(with: .loading(message: nil))
         ruuviCloud.deleteAccount(email: email).on(success: {
             [weak self] _ in
+            self?.activityPresenter.update(with: .success(message: nil))
             self?.view.viewDidShowAccountDeletionConfirmation()
         }, failure: { [weak self] error in
+            self?.activityPresenter.update(with: .failed(message: nil))
             self?.errorPresenter.present(error: error)
         }, completion: { [weak self] in
-            self?.activityPresenter.decrement()
+            self?.activityPresenter.dismiss(immediately: false)
         })
     }
 
@@ -75,13 +77,14 @@ extension MyRuuviAccountPresenter {
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             guard let sSelf = self else { return }
-            sSelf.activityPresenter.increment()
+            sSelf.activityPresenter.show(with: .loading(message: nil))
             sSelf.cloudNotificationService.unregister(
                 token: sSelf.pnManager.fcmToken,
                 tokenId: nil
             ).on(success: { _ in
                 sSelf.pnManager.fcmToken = nil
                 sSelf.pnManager.fcmTokenLastRefreshed = nil
+                sSelf.activityPresenter.update(with: .success(message: nil))
             })
 
             sSelf.authService.logout()
@@ -91,7 +94,7 @@ extension MyRuuviAccountPresenter {
                     sSelf.syncViewModel()
                     sSelf.reloadWidgets()
                 }, completion: { [weak self] in
-                    self?.activityPresenter.decrement()
+                    self?.activityPresenter.dismiss()
                 })
         }
         let cancleAction = UIAlertAction(title: cancelActionTitle,

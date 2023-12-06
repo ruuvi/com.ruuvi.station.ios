@@ -48,7 +48,7 @@ extension SharePresenter: ShareViewOutput {
             return
         }
 
-        activityPresenter.increment()
+        activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
             .share(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] result in
@@ -63,12 +63,12 @@ extension SharePresenter: ShareViewOutput {
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
-                self?.activityPresenter.decrement()
+                self?.activityPresenter.dismiss()
             })
     }
 
     private func unshareTag(_ email: String) {
-        activityPresenter.increment()
+        activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
             .unshare(macId: sensor.id.mac, with: email)
             .on(success: { [weak self] _ in
@@ -76,7 +76,7 @@ extension SharePresenter: ShareViewOutput {
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
-                self?.activityPresenter.decrement()
+                self?.activityPresenter.dismiss()
             })
     }
 

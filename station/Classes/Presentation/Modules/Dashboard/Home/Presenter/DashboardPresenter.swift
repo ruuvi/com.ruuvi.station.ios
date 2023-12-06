@@ -1682,7 +1682,7 @@ extension DashboardPresenter {
     /// Log out user if the auth token is expired.
     private func forceLogoutUser() {
         guard ruuviUser.isAuthorized else { return }
-        activityPresenter.increment()
+        activityPresenter.show(with: .loading(message: nil))
         cloudNotificationService.unregister(
             token: pnManager.fcmToken,
             tokenId: nil
@@ -1703,7 +1703,7 @@ extension DashboardPresenter {
                 self?.reloadWidgets()
                 self?.handleCloudModeState()
             }, completion: { [weak self] in
-                self?.activityPresenter.decrement()
+                self?.activityPresenter.dismiss()
             })
     }
 

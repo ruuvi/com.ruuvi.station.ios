@@ -86,15 +86,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             syncOffsetCorrection()
         }
     }
-    private var isLoading: Bool = false {
-        didSet {
-            if isLoading {
-                activityPresenter.increment()
-            } else {
-                activityPresenter.decrement()
-            }
-        }
-    }
+
     private var firmwareUpdateDialogShown: Bool = false
 
     private var timer: Timer?
