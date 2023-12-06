@@ -40,3 +40,7 @@ build_with_pods:
 	d=$$(date +%s)\
 	; xcodebuild -workspace station.xcworkspace -scheme station -configuration Release -sdk iphoneos17.0 build\
 	&& echo "Build took $$(($$(date +%s)-d)) seconds"
+
+# sets the build number to current datetime
+set_build_number_frameworks:
+	scripts/build/set_build_number.sh project_frameworks.yml
