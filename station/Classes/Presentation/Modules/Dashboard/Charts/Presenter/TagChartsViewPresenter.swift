@@ -9,7 +9,6 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviNotification
 import RuuviNotifier
 import RuuviPresenters

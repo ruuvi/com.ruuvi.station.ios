@@ -9,6 +9,7 @@ import RuuviDaemon
 import RuuviPresenters
 import BTKit
 import RuuviPersistence
+import RuuviFirmware
 
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle

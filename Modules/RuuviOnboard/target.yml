@@ -1,0 +1,7 @@
+---
+targets:
+  RuuviOnboard:
+    templates:
+    - Module
+    dependencies:
+    - target: RuuviUser

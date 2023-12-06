@@ -6,5 +6,7 @@
 	<string>{ set your API key here }</string>
 	<key>RuuviCloudURL</key>
 	<string>https://network.ruuvi.com</string>
+	<key>RuuviCloudURLDev</key>
+	<string>https://testnet.ruuvi.com</string>
 </dict>
 </plist>

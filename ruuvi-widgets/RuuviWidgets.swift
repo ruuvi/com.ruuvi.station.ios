@@ -27,7 +27,7 @@ struct RuuviWidgetEntryView: View {
             } else {
                 UnauthorizedView()
             }
-        }
+        }.containerBackground()
     }
 }
 
@@ -51,15 +51,40 @@ struct RuuviWidgets: Widget {
     }
 
     var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind,
-                            intent: RuuviTagSelectionIntent.self,
-                            provider: WidgetProvider()) { entry in
+        IntentConfiguration(
+            kind: kind,
+            intent: RuuviTagSelectionIntent.self,
+            provider: WidgetProvider()
+        ) { entry in
             RuuviWidgetEntryView(entry: entry)
                 .environment(\.locale, viewModel.locale())
+        }.configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
+            .description(LocalizedStringKey("Widgets.Description.message"))
+            .supportedFamilies(supportedFamilies)
+            .contentMarginsDisabledIfAvailable()
+    }
+}
+
+extension WidgetConfiguration {
+    func contentMarginsDisabledIfAvailable() -> some WidgetConfiguration {
+        if #available(iOSApplicationExtension 17.0, *) {
+            return self.contentMarginsDisabled()
+        } else {
+            return self
         }
-                            .configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
-                            .description(LocalizedStringKey("Widgets.Description.message"))
-                            .supportedFamilies(supportedFamilies)
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func containerBackground() -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            self.containerBackground(for: .widget) {
+                Color.backgroundColor
+            }
+        } else {
+            self
+        }
     }
 }
 
@@ -68,6 +93,9 @@ struct RuuviWidgets_Previews: PreviewProvider {
         if #available(iOSApplicationExtension 16.0, *) {
             RuuviWidgetEntryView(entry: .placeholder())
                 .previewContext(WidgetPreviewContext(family: .accessoryCircular))
+        } else if #available(iOSApplicationExtension 17.0, *) {
+            RuuviWidgetEntryView(entry: .placeholder())
+                .previewContext(WidgetPreviewContext(family: .systemSmall))
         } else {
             RuuviWidgetEntryView(entry: .placeholder())
                 .previewContext(WidgetPreviewContext(family: .systemSmall))

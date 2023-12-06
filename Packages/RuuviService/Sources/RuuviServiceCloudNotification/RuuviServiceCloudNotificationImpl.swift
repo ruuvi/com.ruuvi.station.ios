@@ -8,6 +8,9 @@ import RuuviLocal
 import RuuviService
 import RuuviUser
 import RuuviCore
+#if canImport(RuuviCloudApi)
+import RuuviCloudApi
+#endif
 
 public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotification {
 

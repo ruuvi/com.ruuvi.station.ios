@@ -8,7 +8,6 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviCore
 import RuuviNotification
 import RuuviNotifier
@@ -18,6 +17,7 @@ import RuuviUser
 import WidgetKit
 import CoreBluetooth
 import Future
+import UIKit
 
 class DashboardPresenter: DashboardModuleInput {
     weak var view: DashboardViewInput?
@@ -28,7 +28,6 @@ class DashboardPresenter: DashboardModuleInput {
     var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var background: BTBackground!
-    var webTagService: VirtualService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: RuuviCorePN!
     var permissionsManager: RuuviCorePermission!
@@ -41,7 +40,6 @@ class DashboardPresenter: DashboardModuleInput {
     var infoProvider: InfoProvider!
     var ruuviReactor: RuuviReactor!
     var ruuviStorage: RuuviStorage!
-    var virtualReactor: VirtualReactor!
     var measurementService: RuuviServiceMeasurement!
     var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
@@ -55,13 +53,10 @@ class DashboardPresenter: DashboardModuleInput {
     var cloudNotificationService: RuuviServiceCloudNotification!
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
-    private var virtualSensorsToken: VirtualReactorToken?
-    private var virtualSensorsDataTokens = [VirtualReactorToken]()
     private var advertisementTokens = [ObservationToken]()
     private var heartbeatTokens = [ObservationToken]()
     private var sensorSettingsTokens = [RuuviReactorToken]()
     private var backgroundToken: NSObjectProtocol?
-    private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagPropertiesDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
@@ -89,11 +84,6 @@ class DashboardPresenter: DashboardModuleInput {
     private var dashboardTapActionTypeToken: NSObjectProtocol?
     private var cloudSyncSuccessStateToken: NSObjectProtocol?
     private var cloudSyncFailStateToken: NSObjectProtocol?
-    private var virtualSensors = [AnyVirtualTagSensor]() {
-        didSet {
-            startListeningToWebTagsAlertStatus()
-        }
-    }
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
     private var viewModels: [CardsViewModel] = [] {
@@ -102,7 +92,6 @@ class DashboardPresenter: DashboardModuleInput {
         }
     }
     private var didLoadInitialRuuviTags = false
-    private var didLoadInitialWebTags = false
     private let appGroupDefaults = UserDefaults(
         suiteName: AppGroupConstants.appGroupSuiteIdentifier
     )
@@ -112,15 +101,12 @@ class DashboardPresenter: DashboardModuleInput {
     
     deinit {
         ruuviTagToken?.invalidate()
-        virtualSensorsToken?.invalidate()
         ruuviTagObserveLastRecordTokens.forEach({ $0.invalidate() })
         advertisementTokens.forEach({ $0.invalidate() })
         heartbeatTokens.forEach({ $0.invalidate() })
-        virtualSensorsDataTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         backgroundToken?.invalidate()
-        webTagDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagHeartbeatDaemonFailureToken?.invalidate()
         ruuviTagReadLogsOperationFailureToken?.invalidate()
@@ -159,7 +145,6 @@ class DashboardPresenter: DashboardModuleInput {
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
-        startObservingWebTags()
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
         startObservingConnectionPersistenceNotifications()
@@ -214,12 +199,6 @@ extension DashboardPresenter: DashboardViewOutput {
             } else {
                 openTagSettingsScreens(viewModel: viewModel)
             }
-        } else if viewModel.type == .web,
-                  let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
-            router.openVirtualSensorSettings(
-                sensor: webTag,
-                temperature: viewModel.temperature.value
-            )
         }
     }
 
@@ -262,9 +241,6 @@ extension DashboardPresenter: DashboardViewOutput {
             if let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 router.openBackgroundSelectionView(ruuviTag: ruuviTagSensor)
             }
-        } else if viewModel.type == .web,
-                  let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
-            router.openBackgroundSelectionView(virtualSensor: webTag)
         }
         
     }
@@ -444,7 +420,6 @@ extension DashboardPresenter: DiscoverRouterDelegate {
         }) {
             self.router.openCardImageView(with: viewModels,
                                      ruuviTagSensors: ruuviTags,
-                                     virtualSensors: virtualSensors,
                                      sensorSettings: sensorSettingsList,
                                      scrollTo: viewModel,
                                      showCharts: false,
@@ -599,25 +574,9 @@ extension DashboardPresenter {
 
             return viewModel
         })
-        let virtualViewModels = virtualSensors.compactMap({ virtualSensor -> CardsViewModel in
-            let viewModel = CardsViewModel(virtualSensor)
-            ruuviSensorPropertiesService.getImage(for: virtualSensor)
-                .on(success: { [weak self] image in
-                    viewModel.background.value = image
-                    self?.notifyViewModelUpdate(for: viewModel)
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
-            viewModel.alertState.value = alertService
-                .hasRegistrations(for: virtualSensor) ? .registered : .empty
-            viewModel.isConnected.value = false
-            notifyViewModelUpdate(for: viewModel)
-            return viewModel
-        })
 
-        let vms = reorder(ruuviViewModels + virtualViewModels)
-        if didLoadInitialRuuviTags
-            && didLoadInitialWebTags {
+        let vms = reorder(ruuviViewModels)
+        if didLoadInitialRuuviTags{
             view?.showNoSensorsAddedMessage(show: vms.isEmpty)
             askAppStoreReview(with: vms.count)
         }
@@ -625,8 +584,7 @@ extension DashboardPresenter {
         self.viewModels = vms
     }
 
-    private func syncViewModel(ruuviTagSensor: RuuviTagSensor?,
-                               virtualSensor: VirtualTagSensor?) {
+    private func syncViewModel(ruuviTagSensor: RuuviTagSensor?) {
         if let ruuviTag = ruuviTagSensor {
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
@@ -657,22 +615,6 @@ extension DashboardPresenter {
                     self?.processAlert(record: record, viewModel: viewModel)
                 }
             }
-
-            viewModels.append(viewModel)
-            viewModels = reorder(viewModels)
-        }
-
-        if let virtualSensor = virtualSensor {
-            let viewModel = CardsViewModel(virtualSensor)
-            ruuviSensorPropertiesService.getImage(for: virtualSensor)
-                .on(success: { [weak self] image in
-                    viewModel.background.value = image
-                    self?.notifyViewModelUpdate(for: viewModel)
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
-            viewModel.alertState.value = alertService.hasRegistrations(for: virtualSensor) ? .registered : .empty
-            viewModel.isConnected.value = false
 
             viewModels.append(viewModel)
             viewModels = reorder(viewModels)
@@ -973,68 +915,6 @@ extension DashboardPresenter {
         }
     }
 
-    private func restartObservingVirtualSensorsData() {
-        virtualSensorsDataTokens.forEach({ $0.invalidate() })
-        virtualSensorsDataTokens.removeAll()
-        virtualSensors.forEach { virtualSensor in
-            virtualSensorsDataTokens
-                .append(virtualReactor.observeLast(virtualSensor, { [weak self] changes in
-                    if case .update(let anyRecord) = changes,
-                       let viewModel = self?.viewModels
-                        .first(where: { $0.id.value == anyRecord?.sensorId }),
-                       let record = anyRecord {
-                        let previousDate = viewModel.date.value ?? Date.distantPast
-                        if previousDate <= record.date {
-                            viewModel.update(record)
-                            self?.notifyViewModelUpdate(for: viewModel)
-                        }
-                    }
-                }))
-        }
-    }
-
-    private func startObservingWebTags() {
-        virtualSensorsToken?.invalidate()
-        virtualSensorsToken = virtualReactor.observe { [weak self] change in
-            guard let sSelf = self else { return }
-            switch change {
-            case .initial(let sensors):
-                sSelf.didLoadInitialWebTags = true
-                sSelf.virtualSensors = sensors
-                sSelf.restartObservingVirtualSensorsData()
-            case .delete(let sensor):
-                sSelf.virtualSensors.removeAll(where: { $0.id == sensor.id })
-                sSelf.syncViewModels()
-                sSelf.restartObservingVirtualSensorsData()
-            case .update(let sensor):
-                if let index = sSelf.virtualSensors
-                    .firstIndex(
-                        where: {
-                            $0.id == sensor.id
-                        }) {
-                    sSelf.virtualSensors[index] = sensor
-                    sSelf.syncViewModels()
-                    sSelf.restartObservingVirtualSensorsData()
-                }
-            case .insert(let sensor):
-                sSelf.virtualSensors.append(sensor)
-                sSelf.syncViewModel(ruuviTagSensor: nil,
-                                    virtualSensor: sensor)
-                if let viewModel = sSelf.viewModels.first(where: {
-                    $0.id.value == sensor.id
-                }) {
-                    sSelf.router.openVirtualSensorSettings(
-                        sensor: sensor,
-                        temperature: viewModel.temperature.value
-                    )
-                }
-                sSelf.restartObservingVirtualSensorsData()
-            case .error(let error):
-                sSelf.errorPresenter.present(error: error)
-            }
-        }
-    }
-
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
@@ -1048,7 +928,6 @@ extension DashboardPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
-                sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: ruuviTags)
             case .insert(let sensor):
@@ -1061,13 +940,11 @@ extension DashboardPresenter {
                 // Avoid triggering the method when big changes is happening
                 // such as login.
                 if !sSelf.settings.isSyncing {
-                    sSelf.syncViewModel(ruuviTagSensor: sensor,
-                                        virtualSensor: nil)
+                    sSelf.syncViewModel(ruuviTagSensor: sensor)
                 }
 
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
-                sSelf.startObservingWebTags()
                 if !sSelf.settings.isSyncing,
                     let viewModel = sSelf.viewModels.first(where: {
                     return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
@@ -1094,7 +971,6 @@ extension DashboardPresenter {
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
-                sSelf.startObservingWebTags()
                 sSelf.restartObservingRuuviTagLastRecords()
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             case .error(let error):
@@ -1111,7 +987,6 @@ extension DashboardPresenter {
                     sSelf.syncViewModels()
                     sSelf.restartObserveRuuviTagAdvertisements()
                 }
-                sSelf.startObservingWebTags()
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             }
         }
@@ -1137,7 +1012,6 @@ extension DashboardPresenter {
                             .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
                             ?? sSelf.ruuviTags
                             .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
-                        let webTag = sSelf.virtualSensors.first(where: { $0.id == luid?.value })
                         if let ruuviTag = ruuviTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                                 .on(success: { image in
@@ -1147,15 +1021,6 @@ extension DashboardPresenter {
                                     self?.errorPresenter.present(error: error)
                                 })
                         }
-                        if let webTag = webTag {
-                            sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
-                                .on(success: { image in
-                                    viewModel.background.value = image
-                                    self?.notifyViewModelUpdate(for: viewModel)
-                                }, failure: { [weak sSelf] error in
-                                    sSelf?.errorPresenter.present(error: error)
-                                })
-                        }
                     }
                 }
             }
@@ -1163,38 +1028,6 @@ extension DashboardPresenter {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func startObservingDaemonsErrors() {
-        webTagDaemonFailureToken?.invalidate()
-        webTagDaemonFailureToken = NotificationCenter
-            .default
-            .addObserver(forName: .WebTagDaemonDidFail,
-                         object: nil,
-                         queue: .main) { [weak self] notification in
-                if let userInfo = notification.userInfo,
-                   let error = userInfo[WebTagDaemonDidFailKey.error] as? RUError {
-                    if case .core(let coreError) = error, coreError == .locationPermissionDenied {
-                        self?.permissionPresenter.presentNoLocationPermission()
-                    } else if case .core(let coreError) = error, coreError == .locationPermissionNotDetermined {
-                        self?.permissionsManager.requestLocationPermission { [weak self] (granted) in
-                            if !granted {
-                                self?.permissionPresenter.presentNoLocationPermission()
-                            }
-                        }
-                    } else if case .virtualService(let serviceError) = error,
-                              case .openWeatherMap(let owmError) = serviceError,
-                              owmError == OWMError.apiLimitExceeded {
-                        self?.view?.showWebTagAPILimitExceededError()
-                    } else if case .map(let mapError) = error {
-                        let nsError = mapError as NSError
-                        if nsError.code == 2, nsError.domain == "kCLErrorDomain" {
-                            self?.view?.showReverseGeocodingFailed()
-                        } else {
-                            self?.errorPresenter.present(error: error)
-                        }
-                    } else {
-                        self?.errorPresenter.present(error: error)
-                    }
-                }
-            }
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter
             .default
@@ -1344,27 +1177,6 @@ extension DashboardPresenter {
                             sSelf.triggerAlertsIfNeeded()
                         })
                     }
-                    if let virtualSensor
-                        = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
-                       let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
-                        sSelf.viewModels.filter({
-                            ($0.id.value != nil && ($0.id.value == virtualSensor.id))
-                        }).forEach({ (viewModel) in
-                            if sSelf.alertService.hasRegistrations(for: virtualSensor) {
-                                viewModel.alertState.value = .registered
-                                sSelf.notifyViewModelUpdate(for: viewModel)
-                            } else {
-                                viewModel.alertState.value = .empty
-                                sSelf.notifyViewModelUpdate(for: viewModel)
-                            }
-                            sSelf.updateIsOnState(of: type,
-                                                  for: virtualSensor.id,
-                                                  viewModel: viewModel)
-                            sSelf.updateMutedTill(of: type,
-                                                  for: virtualSensor.id,
-                                                  viewModel: viewModel)
-                        })
-                    }
                 }
             })
     }
@@ -1383,10 +1195,6 @@ extension DashboardPresenter {
                 }
             }
         })
-    }
-
-    private func startListeningToWebTagsAlertStatus() {
-        virtualSensors.forEach({ alertHandler.subscribe(self, to: $0.id) })
     }
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
@@ -1408,7 +1216,6 @@ extension DashboardPresenter {
             self.router.openTagSettings(
                 with: viewModels,
                 ruuviTagSensors: ruuviTags,
-                virtualSensors: virtualSensors,
                 sensorSettings: sensorSettingsList,
                 scrollTo: viewModel,
                 ruuviTag: ruuviTag,
@@ -1426,7 +1233,6 @@ extension DashboardPresenter {
     private func openCardView(viewModel: CardsViewModel, showCharts: Bool) {
         router.openCardImageView(with: viewModels,
                                  ruuviTagSensors: ruuviTags,
-                                 virtualSensors: virtualSensors,
                                  sensorSettings: sensorSettingsList,
                                  scrollTo: viewModel,
                                  showCharts: showCharts,

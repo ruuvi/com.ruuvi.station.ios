@@ -1,0 +1,12 @@
+---
+targets:
+  RuuviCloud:
+    templates:
+    - Framework
+    dependencies:
+    - package: Humidity
+    - package: BTKit
+    - package: Future
+    - target: RuuviOntology
+    - target: RuuviUser
+    - target: RuuviPool

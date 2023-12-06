@@ -1,9 +1,7 @@
 import UIKit
 import BTKit
 import RuuviOntology
-import RuuviVirtual
 import RuuviLocalization
-import RuuviBundleUtils
 import CoreNFC
 
 enum DiscoverTableSection {
@@ -69,13 +67,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         present(alertVC, animated: true)
     }
 
-    func showWebTagInfoDialog() {
-        let message = "DiscoverTable.WebTagsInfoDialog.message".localized(for: Self.self)
-        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
-
     func startNFCSession() {
         session?.invalidate()
         session = nil
@@ -98,6 +89,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         message: String,
         showAddSensor: Bool,
         showGoToSensor: Bool,
+        showUpgradeFirmware: Bool,
         isDF3: Bool
     ) {
         let title = "sensor_details".localized(for: Self.self)
@@ -148,6 +140,13 @@ extension DiscoverTableViewController: DiscoverViewInput {
                                           style: .default, handler: { [weak self] _ in
             self?.output.viewDidGoToSensor(with: tag)
           }))
+        }
+        
+        if showUpgradeFirmware {
+            alertVC.addAction(UIAlertAction(title: "upgrade_firmware".localized(for: Self.self),
+                                            style: .default, handler: { [weak self] _ in
+              self?.output.viewDidAskToUpgradeFirmware(of: tag)
+            }))
         }
 
         alertVC.addAction(UIAlertAction(title: "close".localized(for: Self.self), style: .cancel, handler: nil))

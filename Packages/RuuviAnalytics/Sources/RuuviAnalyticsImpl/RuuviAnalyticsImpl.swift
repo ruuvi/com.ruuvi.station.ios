@@ -6,7 +6,6 @@ import RuuviAnalytics
 import RuuviOntology
 import RuuviStorage
 import RuuviLocal
-import RuuviVirtual
 import RuuviUser
 import RuuviService
 
@@ -20,8 +19,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case claimedTags(Int)
         // Quantity of offline tags[only local tags](if greater that 10, then "10+")
         case offlineTags(Int)
-        // Quantity of virtual tags(if greater that 10, then "10+")
-        case virtualTags(Int)
         // Quantity of tags using data format 2
         case df2_tags(Int)
         // Quantity of tags using data format 3
@@ -77,8 +74,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
                 return "claimed_tags"
             case .offlineTags:
                 return "offline_tags"
-            case .virtualTags:
-                return "virtual_tags"
             case .df2_tags:
                 return "use_df2"
             case .df3_tags:
@@ -129,20 +124,17 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
 
     private let ruuviUser: RuuviUser
     private let ruuviStorage: RuuviStorage
-    private let virtualPersistence: VirtualPersistence
     private let settings: RuuviLocalSettings
     private let alertService: RuuviServiceAlert
 
     public init(
         ruuviUser: RuuviUser,
         ruuviStorage: RuuviStorage,
-        virtualPersistence: VirtualPersistence,
         settings: RuuviLocalSettings,
         alertService: RuuviServiceAlert
     ) {
         self.ruuviUser = ruuviUser
         self.ruuviStorage = ruuviStorage
-        self.virtualPersistence = virtualPersistence
         self.settings = settings
         self.alertService = alertService
     }
@@ -179,9 +171,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         ruuviStorage.getOfflineTagsCount().on(success: { count in
             self.set(.offlineTags(count))
         })
-        virtualPersistence.readAll().on(success: { tags in
-            self.set(.virtualTags(tags.count))
-        })
         set(.backgroundScanEnabled(settings.saveHeartbeats))
         set(.backgroundScanInterval(settings.saveHeartbeatsIntervalMinutes * 60))
         set(.dashboardEnabled(false))
@@ -206,7 +195,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case .addedTags(let count),
             .claimedTags(let count),
             .offlineTags(let count),
-            .virtualTags(let count),
             .df2_tags(let count),
             .df3_tags(let count),
             .df4_tags(let count),

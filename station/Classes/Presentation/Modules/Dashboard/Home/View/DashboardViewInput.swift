@@ -10,7 +10,6 @@ protocol DashboardViewInput: ViewInput {
     func applyUpdate(to viewModel: CardsViewModel)
     func showNoSensorsAddedMessage(show: Bool)
     func showBluetoothDisabled(userDeclined: Bool)
-    func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func showReverseGeocodingFailed()

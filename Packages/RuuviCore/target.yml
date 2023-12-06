@@ -1,0 +1,7 @@
+---
+targets:
+  RuuviCore:
+    templates:
+    - Framework
+    dependencies:
+    - package: Future

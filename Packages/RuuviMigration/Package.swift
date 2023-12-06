@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -19,7 +19,6 @@ let package = Package(
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviContext"),
-        .package(path: "../RuuviVirtual"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviService")
     ],
@@ -34,11 +33,9 @@ let package = Package(
                 "RuuviLocal",
                 "RuuviPool",
                 "RuuviContext",
-                "RuuviVirtual",
                 "RuuviStorage",
                 "RuuviService",
                 .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
-                .product(name: "RuuviVirtualModel", package: "RuuviVirtual")
             ]),
         .testTarget(
             name: "RuuviMigrationTests",

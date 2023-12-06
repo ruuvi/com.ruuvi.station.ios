@@ -172,12 +172,7 @@ PODS:
     - RuuviService/Alert
     - RuuviStorage
     - RuuviUser
-    - RuuviVirtual
   - RuuviAnalytics/Tests (0.0.3)
-  - RuuviBundleUtils (0.0.1):
-    - RuuviBundleUtils/RuuviBundleUtils (= 0.0.1)
-  - RuuviBundleUtils/RuuviBundleUtils (0.0.1)
-  - RuuviBundleUtils/Tests (0.0.1)
   - RuuviCloud (0.1.0):
     - RuuviCloud/Contract (= 0.1.0)
   - RuuviCloud/Api (0.1.0):
@@ -248,7 +243,6 @@ PODS:
     - RuuviOntology
     - RuuviPool
     - RuuviStorage
-    - RuuviVirtual
   - RuuviDaemon/RuuviTag (0.0.1):
     - BTKit
     - RuuviDaemon/Contract
@@ -268,7 +262,6 @@ PODS:
     - RuuviLocal
     - RuuviNotifier
     - RuuviOntology
-    - RuuviVirtual
   - RuuviDaemon/Worker (0.0.1)
   - RuuviDFU (0.0.1):
     - RuuviDFU/Contract (= 0.0.1)
@@ -287,7 +280,6 @@ PODS:
     - RuuviPresenters
     - RuuviReactor
     - RuuviService
-    - RuuviVirtual
   - RuuviDiscover/Tests (0.0.2)
   - RuuviLocal (0.0.3):
     - RuuviLocal/Contract (= 0.0.3)
@@ -302,23 +294,6 @@ PODS:
     - RuuviLocalization/RuuviLocalization (= 0.0.1)
   - RuuviLocalization/RuuviLocalization (0.0.1)
   - RuuviLocalization/Tests (0.0.1)
-  - RuuviLocation (0.0.1):
-    - RuuviLocation/Contract (= 0.0.1)
-  - RuuviLocation/Contract (0.0.1):
-    - FutureX
-    - RuuviOntology
-  - RuuviLocation/Service (0.0.1):
-    - RuuviLocation/Contract
-    - RuuviOntology
-  - RuuviLocation/Tests (0.0.1)
-  - RuuviLocationPicker (0.0.1):
-    - RuuviLocationPicker/RuuviLocationPicker (= 0.0.1)
-  - RuuviLocationPicker/RuuviLocationPicker (0.0.1):
-    - RuuviCore
-    - RuuviLocalization
-    - RuuviLocation
-    - RuuviPresenters
-  - RuuviLocationPicker/Tests (0.0.1)
   - RuuviMigration (0.0.1):
     - RuuviMigration/Contract (= 0.0.1)
   - RuuviMigration/Contract (0.0.1)
@@ -328,7 +303,6 @@ PODS:
     - RuuviOntology
     - RuuviService
     - RuuviStorage
-    - RuuviVirtual
   - RuuviMigration/Tests (0.0.1)
   - RuuviNotification (0.0.2):
     - RuuviNotification/Contract (= 0.0.2)
@@ -339,7 +313,6 @@ PODS:
     - RuuviOntology
     - RuuviService
     - RuuviStorage
-    - RuuviVirtual
   - RuuviNotification/Tests (0.0.2)
   - RuuviNotifier (0.0.1):
     - RuuviNotifier/Contract (= 0.0.1)
@@ -348,12 +321,10 @@ PODS:
     - RuuviNotification
     - RuuviNotifier/Contract
     - RuuviOntology
-    - RuuviVirtual
   - RuuviNotifier/Tests (0.0.1)
   - RuuviOnboard (0.0.4):
     - RuuviOnboard/RuuviOnboard (= 0.0.4)
   - RuuviOnboard/RuuviOnboard (0.0.4):
-    - RuuviBundleUtils
     - RuuviUser
   - RuuviOnboard/Tests (0.0.4)
   - RuuviOntology (0.0.6):
@@ -412,8 +383,7 @@ PODS:
   - RuuviPool/Tests (0.0.1)
   - RuuviPresenters (0.0.1):
     - RuuviPresenters/RuuviPresenters (= 0.0.1)
-  - RuuviPresenters/RuuviPresenters (0.0.1):
-    - RuuviBundleUtils
+  - RuuviPresenters/RuuviPresenters (0.0.1)
   - RuuviPresenters/Tests (0.0.1)
   - RuuviReactor (0.0.1):
     - RuuviReactor/Contract (= 0.0.1)
@@ -550,42 +520,6 @@ PODS:
     - KeychainAccess
     - RuuviUser/Contract
   - RuuviUser/Tests (0.0.1)
-  - RuuviVirtual (0.0.1):
-    - RuuviVirtual/Contract (= 0.0.1)
-  - RuuviVirtual/Contract (0.0.1):
-    - FutureX
-    - RuuviOntology
-  - RuuviVirtual/Model (0.0.1):
-    - FutureX
-    - RealmSwift
-    - RuuviOntology
-    - RuuviVirtual/Contract
-  - RuuviVirtual/OWM (0.0.1):
-    - FutureX
-    - RuuviVirtual/Contract
-  - RuuviVirtual/Persistence (0.0.1):
-    - RealmSwift
-    - RuuviContext/Realm
-    - RuuviLocal
-    - RuuviOntology
-    - RuuviVirtual/Contract
-  - RuuviVirtual/Reactor (0.0.1):
-    - RuuviContext/Realm
-    - RuuviOntology
-    - RuuviVirtual/Contract
-  - RuuviVirtual/Repository (0.0.1):
-    - RuuviOntology
-    - RuuviVirtual/Contract
-  - RuuviVirtual/Service (0.0.1):
-    - RuuviCore/Location
-    - RuuviLocation/Service
-    - RuuviOntology
-    - RuuviVirtual/Contract
-    - RuuviVirtual/OWM
-  - RuuviVirtual/Storage (0.0.1):
-    - RuuviOntology
-    - RuuviVirtual/Contract
-  - RuuviVirtual/Tests (0.0.1)
   - SwiftGen (6.6.2)
   - Swinject (2.8.3)
   - ZIPFoundation (0.9.11)
@@ -615,9 +549,8 @@ DEPENDENCIES:
   - RuuviAnalytics (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviAnalytics/Impl (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
   - RuuviAnalytics/Tests (from `Packages/RuuviAnalytics/RuuviAnalytics.podspec`)
-  - RuuviBundleUtils (from `Common/RuuviBundleUtils/RuuviBundleUtils.podspec`)
-  - RuuviBundleUtils/Tests (from `Common/RuuviBundleUtils/RuuviBundleUtils.podspec`)
   - RuuviCloud (from `Packages/RuuviCloud/RuuviCloud.podspec`)
+  - RuuviCloud/Api (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Pure (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Tests (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviContext (from `Packages/RuuviContext/RuuviContext.podspec`)
@@ -643,11 +576,6 @@ DEPENDENCIES:
   - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
   - RuuviLocalization (from `Common/RuuviLocalization/RuuviLocalization.podspec`)
   - RuuviLocalization/Tests (from `Common/RuuviLocalization/RuuviLocalization.podspec`)
-  - RuuviLocation (from `Packages/RuuviLocation/RuuviLocation.podspec`)
-  - RuuviLocation/Service (from `Packages/RuuviLocation/RuuviLocation.podspec`)
-  - RuuviLocation/Tests (from `Packages/RuuviLocation/RuuviLocation.podspec`)
-  - RuuviLocationPicker (from `Modules/RuuviLocationPicker/RuuviLocationPicker.podspec`)
-  - RuuviLocationPicker/Tests (from `Modules/RuuviLocationPicker/RuuviLocationPicker.podspec`)
   - RuuviMigration (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Impl (from `Packages/RuuviMigration/RuuviMigration.podspec`)
   - RuuviMigration/Tests (from `Packages/RuuviMigration/RuuviMigration.podspec`)
@@ -697,15 +625,6 @@ DEPENDENCIES:
   - RuuviUser (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviUser/Coordinator (from `Packages/RuuviUser/RuuviUser.podspec`)
   - RuuviUser/Tests (from `Packages/RuuviUser/RuuviUser.podspec`)
-  - RuuviVirtual (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Model (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/OWM (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Persistence (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Reactor (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Repository (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Service (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Storage (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
-  - RuuviVirtual/Tests (from `Packages/RuuviVirtual/RuuviVirtual.podspec`)
   - SwiftGen (~> 6.0)
   - Swinject
 
@@ -755,8 +674,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
   RuuviAnalytics:
     :path: Packages/RuuviAnalytics/RuuviAnalytics.podspec
-  RuuviBundleUtils:
-    :path: Common/RuuviBundleUtils/RuuviBundleUtils.podspec
   RuuviCloud:
     :path: Packages/RuuviCloud/RuuviCloud.podspec
   RuuviContext:
@@ -773,10 +690,6 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviLocal/RuuviLocal.podspec
   RuuviLocalization:
     :path: Common/RuuviLocalization/RuuviLocalization.podspec
-  RuuviLocation:
-    :path: Packages/RuuviLocation/RuuviLocation.podspec
-  RuuviLocationPicker:
-    :path: Modules/RuuviLocationPicker/RuuviLocationPicker.podspec
   RuuviMigration:
     :path: Packages/RuuviMigration/RuuviMigration.podspec
   RuuviNotification:
@@ -803,8 +716,6 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviStorage/RuuviStorage.podspec
   RuuviUser:
     :path: Packages/RuuviUser/RuuviUser.podspec
-  RuuviVirtual:
-    :path: Packages/RuuviVirtual/RuuviVirtual.podspec
 
 CHECKOUT OPTIONS:
   BTKit:
@@ -854,36 +765,32 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: d4f810e161fa2c2c589b9860b6eb09238deacd73
   RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
-  RuuviAnalytics: 1442f702d42ca8a7c4000394a534cd54bf5fd67a
-  RuuviBundleUtils: b143f4bb7bbb9b173527bec8836b3a507b6ca8f2
+  RuuviAnalytics: 57b1793c6d12cce0f0232179625962e7ee5d8eb3
   RuuviCloud: f488ad2791dea1cee92b648e96e3eca20f5465b6
   RuuviContext: 3c3a03e1791189e57d35252cac2448b30cb5c8c4
   RuuviCore: c42d46fd24adec33663aa61a7b73430b448a56e4
-  RuuviDaemon: 029c2bcced7d9fdfc3aa32d452701a7d1306f293
+  RuuviDaemon: 49929276bac8f6d1a73c31326bdebbf29ac513ac
   RuuviDFU: f032417ccbb62cbaa35d62918cdb51b420010c78
-  RuuviDiscover: 6b710fc2c5124dba67807aec126c99d1d6e723c3
+  RuuviDiscover: b5c4f470541f50ad68e785542f7839ba067c5614
   RuuviLocal: 5d711ed6933bbea2c958bd805186bbde012bc4e3
   RuuviLocalization: 04e829bac8113cc8edb49c22a243da88b8383210
-  RuuviLocation: 39860779e7ea8330ef0c9bbddc0d6088687767d8
-  RuuviLocationPicker: ec6fb89f5b0a5ff85d00036a2847e0ffac3b9076
-  RuuviMigration: e2d397eba79436eef6e8b982b1e188a5f6426a2e
-  RuuviNotification: 4907402a0962abd2513dc511ade32ee6a05da6a1
-  RuuviNotifier: 2fdb2579b48c2ff5ad28ae5d651b01831e8b1b90
-  RuuviOnboard: a17e7b9ded33af7c7f3c622444fcf3d5b8770ad1
+  RuuviMigration: 9db6edb260c58fedfc816bb8561d3f070113bdba
+  RuuviNotification: 9985612f76fd661cf26473518e503c3ac224c928
+  RuuviNotifier: c417691a212ca07ab4fae7095cb9e0bc25e19084
+  RuuviOnboard: c9c5556007c56b4491df3ad8e1ef9c3c57ebbd34
   RuuviOntology: 174c688dc2083e7afe1d98d941c9db0fd6c7a063
   RuuviPersistence: 0be00598293866c79a94636247e9365b2a2e3da5
   RuuviPool: 663c3b125b2f865b0e5174abcd88c148c4c7ed6b
-  RuuviPresenters: 9e7ab27726604db02b29bf8c8a8289bbc624e303
+  RuuviPresenters: b883212d32138c00dd61680547ce33dcac922b37
   RuuviReactor: 5fd4dcff29ba553c36e26b0a0334dc5007d26fcd
   RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
   RuuviService: 87d15c3b9758850079b91a7823f4de41e7b90cac
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RuuviUser: 7222200bae9f4a7d1309f0b77013890d764b3c28
-  RuuviVirtual: ac6530563120c022842cc2f2ff9e8c1237f36eb6
   SwiftGen: 1366a7f71aeef49954ca5a63ba4bef6b0f24138c
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 217f39abb07c737f33db5c642a3168eeeaee16d7
+PODFILE CHECKSUM: b310e01f364c17dd00c1de3d944fa2a1ad2776b8
 
 COCOAPODS: 1.12.1

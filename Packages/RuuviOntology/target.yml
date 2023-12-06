@@ -1,0 +1,16 @@
+---
+targets:
+  RuuviOntology:
+    # https://github.com/groue/GRDB.swift/issues/642
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - Framework
+    dependencies:
+    - package: Humidity
+    - package: BTKit
+    - package: Realm
+    - package: Realm
+      product: RealmSwift
+    - package: GRDB

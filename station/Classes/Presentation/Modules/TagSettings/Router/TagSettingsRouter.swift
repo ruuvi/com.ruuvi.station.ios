@@ -21,7 +21,7 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
 
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
         let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
-        let module = factory.create(for: ruuviTag, virtualTag: nil)
+        let module = factory.create(for: ruuviTag)
         self.backgroundSelectionModule = module
         transitionHandler
             .navigationController?

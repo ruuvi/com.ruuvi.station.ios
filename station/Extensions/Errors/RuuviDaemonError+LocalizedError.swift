@@ -1,5 +1,4 @@
 import Foundation
-import RuuviVirtual
 import RuuviStorage
 import RuuviReactor
 import RuuviPool
@@ -19,8 +18,6 @@ extension RuuviDaemonError: LocalizedError {
         case .ruuviReactor(let error):
             return error.errorDescription
         case .ruuviStorage(let error):
-            return error.errorDescription
-        case .virtualStorage(let error):
             return error.errorDescription
         }
     }

@@ -20,7 +20,6 @@ final class BackgroundSelectionPresenter: BackgroundSelectionModuleInput {
     }
     private weak var weakView: UIViewController?
     private let ruuviTag: RuuviTagSensor?
-    private let virtualSensor: VirtualTagSensor?
     private var viewModel: BackgroundSelectionViewModel! {
         didSet {
             prepareDefaultImages()
@@ -41,10 +40,8 @@ final class BackgroundSelectionPresenter: BackgroundSelectionModuleInput {
     var ruuviLocalImages: RuuviLocalImages!
     var errorPresenter: ErrorPresenter!
 
-    init(ruuviTag: RuuviTagSensor?,
-         virtualSensor: VirtualTagSensor?) {
+    init(ruuviTag: RuuviTagSensor?) {
         self.ruuviTag = ruuviTag
-        self.virtualSensor = virtualSensor
 
         // swiftlint:disable:next inert_defer
         defer { self.viewModel = BackgroundSelectionViewModel() }
@@ -68,8 +65,6 @@ extension BackgroundSelectionPresenter: BackgroundSelectionViewOutput {
         if let photo = model.image {
             if let ruuviTag = ruuviTag {
                 performPhotoUpload(with: photo, ruuviTag: ruuviTag)
-            } else if let virtualSensor = virtualSensor {
-                performPhotoUpload(with: photo, virtualSensor: virtualSensor)
             }
         }
     }
@@ -164,8 +159,6 @@ extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
         if let ruuviTag = ruuviTag {
             performPhotoUpload(with: photo, ruuviTag: ruuviTag)
-        } else if let virtualSensor = virtualSensor {
-            performPhotoUpload(with: photo, virtualSensor: virtualSensor)
         }
     }
 
@@ -181,17 +174,5 @@ extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
             self?.viewModel.isUploadingBackground.value = false
             self?.errorPresenter.present(error: error)
         })
-    }
-
-    private func performPhotoUpload(with photo: UIImage, virtualSensor: VirtualTagSensor) {
-        ruuviSensorPropertiesService.set(image: photo, for: virtualSensor)
-            .on(success: { [weak self] _ in
-                self?.viewModel.background.value = photo
-                if let weakView = self?.weakView as? BackgroundSelectionViewController {
-                    weakView.viewShouldDismiss()
-                }
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
     }
 }

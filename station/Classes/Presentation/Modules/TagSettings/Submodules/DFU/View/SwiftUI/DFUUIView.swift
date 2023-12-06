@@ -1,4 +1,6 @@
+import RuuviFirmware
 import SwiftUI
+
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 struct DFUUIView: View {
@@ -441,32 +443,5 @@ struct DFUUIView: View {
 
     func goBack() {
         self.presentationMode.wrappedValue.dismiss()
-    }
-
-    struct RuuviBoardView: View {
-        @State private var isPortrait = false
-        private let boardImageName = "ruuvitag-b8-and-older-button-location"
-        var body: some View {
-            HStack {
-                if isPortrait {
-                    Image(boardImageName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } else {
-                    Spacer()
-                    Image(boardImageName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .scaledToFit()
-                        .frame(width: 300, height: 147)
-                    Spacer()
-                }
-            }
-            .padding()
-            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-                guard let scene = UIApplication.shared.windows.first?.windowScene else { return }
-                self.isPortrait = scene.interfaceOrientation.isPortrait
-            }
-        }
     }
 }

@@ -5,6 +5,7 @@ import RuuviStorage
 import RuuviPool
 import RuuviLocal
 import RuuviOntology
+import RuuviService
 
 public final class RuuviServiceAuthImpl: RuuviServiceAuth {
     private let ruuviUser: RuuviUser

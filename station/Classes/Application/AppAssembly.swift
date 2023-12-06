@@ -5,7 +5,6 @@ import BTKit
 import RuuviLocal
 import RuuviPool
 import RuuviContext
-import RuuviVirtual
 import RuuviStorage
 import RuuviService
 import RuuviDFU
@@ -18,16 +17,12 @@ import RuuviDaemon
 import RuuviNotifier
 import RuuviNotification
 import RuuviRepository
-import RuuviLocation
 import RuuviCore
+import RuuviFirmware
 import RuuviDiscover
 import RuuviPresenters
-import RuuviLocationPicker
 #if canImport(RuuviCloudPure)
 import RuuviCloudPure
-#endif
-#if canImport(RuuviVirtualOWM)
-import RuuviVirtualOWM
 #endif
 #if canImport(RuuviContextRealm)
 import RuuviContextRealm
@@ -62,18 +57,6 @@ import RuuviDFUImpl
 #if canImport(RuuviMigrationImpl)
 import RuuviMigrationImpl
 #endif
-#if canImport(RuuviVirtualPersistence)
-import RuuviVirtualPersistence
-#endif
-#if canImport(RuuviVirtualReactor)
-import RuuviVirtualReactor
-#endif
-#if canImport(RuuviVirtualRepository)
-import RuuviVirtualRepository
-#endif
-#if canImport(RuuviVirtualStorage)
-import RuuviVirtualStorage
-#endif
 #if canImport(RuuviDaemonOperation)
 import RuuviDaemonOperation
 #endif
@@ -82,9 +65,6 @@ import RuuviDaemonBackground
 #endif
 #if canImport(RuuviDaemonRuuviTag)
 import RuuviDaemonRuuviTag
-#endif
-#if canImport(RuuviDaemonVirtualTag)
-import RuuviDaemonVirtualTag
 #endif
 #if canImport(RuuviServiceGATT)
 import RuuviServiceGATT
@@ -116,15 +96,6 @@ import RuuviUserCoordinator
 #if canImport(RuuviCoreLocation)
 import RuuviCoreLocation
 #endif
-#if canImport(RuuviLocationService)
-import RuuviLocationService
-#endif
-#if canImport(RuuviVirtualOWM)
-import RuuviVirtualOWM
-#endif
-#if canImport(RuuviVirtualService)
-import RuuviVirtualService
-#endif
 #if canImport(RuuviNotificationLocal)
 import RuuviNotificationLocal
 #endif
@@ -133,9 +104,6 @@ import RuuviCoreImage
 #endif
 #if canImport(RuuviCoreLocation)
 import RuuviCoreLocation
-#endif
-#if canImport(RuuviLocationService)
-import RuuviLocationService
 #endif
 #if canImport(RuuviCorePN)
 import RuuviCorePN
@@ -163,7 +131,6 @@ final class AppAssembly {
                 PersistenceAssembly(),
                 PresentationAssembly(),
                 DfuAssembly(),
-                VirtualAssembly()
             ])
     }
 }
@@ -189,7 +156,6 @@ private final class MigrationAssembly: Assembly {
             let idPersistence = r.resolve(RuuviLocalIDs.self)!
             let realmContext = r.resolve(RealmContext.self)!
             let ruuviPool = r.resolve(RuuviPool.self)!
-            let virtualStorage = r.resolve(VirtualStorage.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
             let ruuviOffsetCalibrationService = r.resolve(RuuviServiceOffsetCalibration.self)!
@@ -198,7 +164,6 @@ private final class MigrationAssembly: Assembly {
                 idPersistence: idPersistence,
                 realmContext: realmContext,
                 ruuviPool: ruuviPool,
-                virtualStorage: virtualStorage,
                 ruuviStorage: ruuviStorage,
                 ruuviAlertService: ruuviAlertService,
                 ruuviOffsetCalibrationService: ruuviOffsetCalibrationService
@@ -326,12 +291,6 @@ private final class PersistenceAssembly: Assembly {
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
 
-        container.register(OpenWeatherMapAPI.self) { _ in
-            let apiKey: String = AppAssemblyConstants.openWeatherMapApiKey
-            let api = OpenWeatherMapAPIURLSession(apiKey: apiKey)
-            return api
-        }
-
         let appGroupDefaults = UserDefaults(
             suiteName: AppGroupConstants.appGroupSuiteIdentifier
         )
@@ -359,32 +318,6 @@ private final class NetworkingAssembly: Assembly {
     }
 }
 
-private final class VirtualAssembly: Assembly {
-    func assemble(container: Container) {
-        container.register(VirtualPersistence.self) { r in
-            let context = r.resolve(RealmContext.self)!
-            let settings = r.resolve(RuuviLocalSettings.self)!
-            return VirtualPersistenceRealm(context: context, settings: settings)
-        }
-
-        container.register(VirtualReactor.self) { r in
-            let context = r.resolve(RealmContext.self)!
-            let persistence = r.resolve(VirtualPersistence.self)!
-            return VirtualReactorImpl(context: context, persistence: persistence)
-        }.inObjectScope(.container)
-
-        container.register(VirtualRepository.self) { r in
-            let persistence = r.resolve(VirtualPersistence.self)!
-            return VirtualRepositoryCoordinator(persistence: persistence)
-        }
-
-        container.register(VirtualStorage.self) { r in
-            let persistence = r.resolve(VirtualPersistence.self)!
-            return VirtualStorageCoordinator(persistence: persistence)
-        }
-    }
-}
-
 private final class DaemonAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
@@ -396,39 +329,17 @@ private final class DaemonAssembly: Assembly {
             return service
         }.inObjectScope(.container)
 
-        container.register(BackgroundTaskService.self) { r in
-            let webTagOperationsManager = r.resolve(WebTagOperationsManager.self)!
-            let service = BackgroundTaskServiceiOS13(
-                webTagOperationsManager: webTagOperationsManager
-            )
-            return service
-        }.inObjectScope(.container)
-
         container.register(DataPruningOperationsManager.self) { r in
             let settings = r.resolve(RuuviLocalSettings.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
-            let virtualStorage = r.resolve(VirtualStorage.self)!
-            let virtualRepository = r.resolve(VirtualRepository.self)!
             let ruuviPool = r.resolve(RuuviPool.self)!
             let manager = DataPruningOperationsManager(
                 settings: settings,
-                virtualStorage: virtualStorage,
-                virtualRepository: virtualRepository,
                 ruuviStorage: ruuviStorage,
                 ruuviPool: ruuviPool
             )
             return manager
         }
-
-        container.register(PullWebDaemon.self) { r in
-            let settings = r.resolve(RuuviLocalSettings.self)!
-            let webTagOperationsManager = r.resolve(WebTagOperationsManager.self)!
-            let daemon = PullWebDaemonOperations(
-                settings: settings,
-                webTagOperationsManager: webTagOperationsManager
-            )
-            return daemon
-        }.inObjectScope(.container)
 
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let settings = r.resolve(RuuviLocalSettings.self)!
@@ -456,7 +367,6 @@ private final class DaemonAssembly: Assembly {
             let alertHandler = r.resolve(RuuviNotifier.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
             let settings = r.resolve(RuuviLocalSettings.self)!
-            let pullWebDaemon = r.resolve(PullWebDaemon.self)!
             let daemon = RuuviTagHeartbeatDaemonBTKit(
                 background: background,
                 localNotificationsManager: localNotificationsManager,
@@ -467,7 +377,6 @@ private final class DaemonAssembly: Assembly {
                 alertService: alertService,
                 alertHandler: alertHandler,
                 settings: settings,
-                pullWebDaemon: pullWebDaemon,
                 titles: HeartbeatDaemonTitles()
             )
             return daemon
@@ -490,38 +399,6 @@ private final class DaemonAssembly: Assembly {
             )
             return daemon
         }.inObjectScope(.container)
-
-        container.register(VirtualTagDaemon.self) { r in
-            let virtualService = r.resolve(VirtualService.self)!
-            let settings = r.resolve(RuuviLocalSettings.self)!
-            let virtualPersistence = r.resolve(VirtualPersistence.self)!
-            let alertService = r.resolve(RuuviNotifier.self)!
-            let virtualReactor = r.resolve(VirtualReactor.self)!
-            let daemon = VirtualTagDaemonImpl(
-                virtualService: virtualService,
-                settings: settings,
-                virtualPersistence: virtualPersistence,
-                alertService: alertService,
-                virtualReactor: virtualReactor
-            )
-            return daemon
-        }.inObjectScope(.container)
-
-        container.register(WebTagOperationsManager.self) { r in
-            let alertService = r.resolve(RuuviServiceAlert.self)!
-            let ruuviNotifier = r.resolve(RuuviNotifier.self)!
-            let virtualProviderService = r.resolve(VirtualProviderService.self)!
-            let virtualStorage = r.resolve(VirtualStorage.self)!
-            let virtualPersistence = r.resolve(VirtualPersistence.self)!
-            let manager = WebTagOperationsManager(
-                virtualProviderService: virtualProviderService,
-                alertService: alertService,
-                alertHandler: ruuviNotifier,
-                virtualStorage: virtualStorage,
-                virtualPersistence: virtualPersistence
-            )
-            return manager
-        }
     }
 }
 
@@ -548,12 +425,9 @@ private final class BusinessAssembly: Assembly {
             service.settings = r.resolve(RuuviLocalSettings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
-            service.webTagDaemon = r.resolve(VirtualTagDaemon.self)
             service.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.ruuviUser = r.resolve(RuuviUser.self)
-            service.pullWebDaemon = r.resolve(PullWebDaemon.self)
-            service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
             #if canImport(RuuviAnalytics)
             service.userPropertiesService = r.resolve(RuuviAnalytics.self)
@@ -609,11 +483,6 @@ private final class BusinessAssembly: Assembly {
             let provider = LocalFeatureToggleProvider()
             return provider
         }.inObjectScope(.container)
-
-        container.register(RuuviLocationService.self) { _ in
-            let service = RuuviLocationServiceApple()
-            return service
-        }
 
         container.register(RemoteConfigService.self) { _ in
             let service = FirebaseRemoteConfigService()
@@ -785,40 +654,15 @@ private final class BusinessAssembly: Assembly {
             return factory.createUser()
         }.inObjectScope(.container)
 
-        container.register(VirtualProviderService.self) { r in
-            let owmApi = r.resolve(OpenWeatherMapAPI.self)!
-            let locationManager = r.resolve(RuuviCoreLocation.self)!
-            let locationService = r.resolve(RuuviLocationService.self)!
-            let service = VirtualProviderServiceImpl(
-                owmApi: owmApi,
-                ruuviCoreLocation: locationManager,
-                ruuviLocationService: locationService
-            )
-            return service
-        }
-
-        container.register(VirtualService.self) { r in
-            let virtualPersistence = r.resolve(VirtualPersistence.self)!
-            let weatherProviderService = r.resolve(VirtualProviderService.self)!
-            let ruuviLocalImages = r.resolve(RuuviLocalImages.self)!
-            let service = VirtualServiceImpl(
-                ruuviLocalImages: ruuviLocalImages,
-                virtualPersistence: virtualPersistence,
-                virtualProviderService: weatherProviderService
-            )
-            return service
-        }
         #if canImport(RuuviAnalytics)
         container.register(RuuviAnalytics.self) { r in
             let ruuviUser = r.resolve(RuuviUser.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
-            let virtualPersistence = r.resolve(VirtualPersistence.self)!
             let settings = r.resolve(RuuviLocalSettings.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
             let service = RuuviAnalyticsImpl(
                 ruuviUser: ruuviUser,
                 ruuviStorage: ruuviStorage,
-                virtualPersistence: virtualPersistence,
                 settings: settings,
                 alertService: alertService
             )
@@ -871,12 +715,10 @@ private final class CoreAssembly: Assembly {
         container.register(RuuviNotificationLocal.self) { r in
             let settings = r.resolve(RuuviLocalSettings.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
-            let virtualTagTrunk = r.resolve(VirtualStorage.self)!
             let idPersistence = r.resolve(RuuviLocalIDs.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
             let manager = RuuviNotificationLocalImpl(
                 ruuviStorage: ruuviStorage,
-                virtualTagTrunk: virtualTagTrunk,
                 idPersistence: idPersistence,
                 settings: settings,
                 ruuviAlertService: ruuviAlertService
@@ -919,10 +761,8 @@ private final class CoreAssembly: Assembly {
 private final class ModulesAssembly: Assembly {
     func assemble(container: Container) {
         container.register(RuuviDiscover.self) { r in
-            let virtualReactor = r.resolve(VirtualReactor.self)!
             let errorPresenter = r.resolve(ErrorPresenter.self)!
             let activityPresenter = r.resolve(ActivityPresenter.self)!
-            let virtualService = r.resolve(VirtualService.self)!
             let permissionsManager = r.resolve(RuuviCorePermission.self)!
             let permissionPresenter = r.resolve(PermissionPresenter.self)!
             let foreground = r.resolve(BTForeground.self)!
@@ -931,35 +771,15 @@ private final class ModulesAssembly: Assembly {
 
             let factory = RuuviDiscoverFactory()
             let dependencies = RuuviDiscoverDependencies(
-                virtualReactor: virtualReactor,
                 errorPresenter: errorPresenter,
                 activityPresenter: activityPresenter,
-                virtualService: virtualService,
                 permissionsManager: permissionsManager,
                 permissionPresenter: permissionPresenter,
                 foreground: foreground,
                 ruuviReactor: ruuviReactor,
-                ruuviOwnershipService: ruuviOwnershipService
+                ruuviOwnershipService: ruuviOwnershipService,
+                firmwareBuilder: RuuviFirmwareBuilder()
             )
-            return factory.create(dependencies: dependencies)
-        }
-
-        container.register(RuuviLocationPicker.self) { r in
-            let locationService = r.resolve(RuuviLocationService.self)!
-            let activityPresenter = r.resolve(ActivityPresenter.self)!
-            let errorPresenter = r.resolve(ErrorPresenter.self)!
-            let permissionsManager = r.resolve(RuuviCorePermission.self)!
-            let permissionPresenter = r.resolve(PermissionPresenter.self)!
-            let locationManager = r.resolve(RuuviCoreLocation.self)!
-            let dependencies = RuuviLocationPickerDependencies(
-                locationService: locationService,
-                activityPresenter: activityPresenter,
-                errorPresenter: errorPresenter,
-                permissionsManager: permissionsManager,
-                permissionPresenter: permissionPresenter,
-                locationManager: locationManager
-            )
-            let factory = RuuviLocationPickerFactory()
             return factory.create(dependencies: dependencies)
         }
     }

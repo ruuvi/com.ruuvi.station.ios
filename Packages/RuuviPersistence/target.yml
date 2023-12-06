@@ -1,0 +1,18 @@
+---
+targets:
+  RuuviPersistence:
+    # https://github.com/groue/GRDB.swift/issues/642
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - Framework
+    dependencies:
+    - package: Humidity
+    - package: Future
+    - package: Realm
+    - package: Realm
+      product: RealmSwift
+    - package: GRDB
+    - target: RuuviOntology
+    - target: RuuviContext

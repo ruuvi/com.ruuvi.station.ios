@@ -1,5 +1,4 @@
 import UIKit
-import RuuviBundleUtils
 
 public final class ActivityPresenterRuuviLogo: ActivityPresenter {
     var counter = 0 {
@@ -21,11 +20,7 @@ public final class ActivityPresenterRuuviLogo: ActivityPresenter {
     weak var appWindow: UIWindow?
 
     public init() {
-        // swiftlint:disable force_cast
-        hudViewController = UIStoryboard.named("ActivityRuuviLogo", for: Self.self)
-            .instantiateViewController(withIdentifier: "ActivityRuuviLogoViewController")
-            as! ActivityRuuviLogoViewController
-        // swiftlint:enable force_cast
+        hudViewController = ActivityRuuviLogoViewController()
         window.windowLevel = .normal
         hudViewController.view.translatesAutoresizingMaskIntoConstraints = false
         window.rootViewController = hudViewController

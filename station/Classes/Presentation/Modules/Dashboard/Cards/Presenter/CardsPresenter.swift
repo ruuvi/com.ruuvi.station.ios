@@ -7,12 +7,12 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviService
-import RuuviVirtual
 import RuuviNotification
 import RuuviNotifier
 import RuuviPresenters
 import RuuviDaemon
 import RuuviCore
+import UIKit
 
 class CardsPresenter {
     weak var view: CardsViewInput?
@@ -30,16 +30,12 @@ class CardsPresenter {
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var localSyncState: RuuviLocalSyncState!
     var ruuviStorage: RuuviStorage!
-    var virtualReactor: VirtualReactor!
     var permissionPresenter: PermissionPresenter!
     var permissionsManager: RuuviCorePermission!
 
     // MARK: - PRIVATE VARIABLES
     /// Collection of the sensor
     private var ruuviTags = [AnyRuuviTagSensor]()
-    /// Collection of virtual sensors
-    private var virtualSensors = [AnyVirtualTagSensor]()
-    /// Collection of virtual sensors
     private var sensorSettings = [SensorSettings]()
     /// Collection of the card view model.
     private var viewModels: [CardsViewModel] = [] {
@@ -72,16 +68,13 @@ class CardsPresenter {
 
     // MARK: - OBSERVERS
     private var ruuviTagToken: RuuviReactorToken?
-    private var virtualSensorsToken: VirtualReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
-    private var virtualSensorsDataTokens = [VirtualReactorToken]()
     private var advertisementTokens = [ObservationToken]()
     private var heartbeatTokens = [ObservationToken]()
     private var sensorSettingsTokens = [RuuviReactorToken]()
     private var stateToken: ObservationToken?
     private var backgroundToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
-    private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagPropertiesDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
@@ -106,14 +99,13 @@ class CardsPresenter {
 
 // MARK: - CardsModuleInput
 extension CardsPresenter: CardsModuleInput {
-    func configure(viewModels: [CardsViewModel],
-                   ruuviTagSensors: [AnyRuuviTagSensor],
-                   virtualSensors: [AnyVirtualTagSensor],
-                   sensorSettings: [SensorSettings]
+    func configure(
+        viewModels: [CardsViewModel],
+        ruuviTagSensors: [AnyRuuviTagSensor],
+        sensorSettings: [SensorSettings]
     ) {
         self.viewModels = viewModels
         self.ruuviTags = ruuviTagSensors
-        self.virtualSensors = virtualSensors
         self.sensorSettings = sensorSettings
     }
 
@@ -132,13 +124,10 @@ extension CardsPresenter: CardsModuleInput {
 extension CardsPresenter {
     private func startObservingVisibleTag() {
         startObservingRuuviTags()
-        startObservingWebTags()
         observeSensorSettings()
         observeRuuviTagBTMesurements()
         startListeningLatestRecords()
-        startObservingVirtualSensorData()
         startListeningToRuuviTagsAlertStatus()
-        startListeningToWebTagsAlertStatus()
         startObservingAlertChanges()
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
@@ -176,58 +165,6 @@ extension CardsPresenter {
         }
 
         startObservingVisibleTag()
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    private func startObservingWebTags() {
-        virtualSensorsToken?.invalidate()
-        virtualSensorsToken = virtualReactor.observe { [weak self] change in
-            guard let sSelf = self else { return }
-            switch change {
-            case .delete(let sensor):
-                sSelf.virtualSensors.removeAll(where: { $0.id == sensor.id })
-                sSelf.syncViewModels()
-
-                // If a sensor is deleted, and there's no more sensor take
-                // user to dashboard.
-                guard sSelf.viewModels.count > 0 else {
-                    sSelf.viewShouldDismiss()
-                    return
-                }
-
-                if let first = sSelf.viewModels.first {
-                    sSelf.updateVisibleCard(from: first, triggerScroll: true)
-                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
-                }
-            case .update(let sensor):
-                if let index = sSelf.virtualSensors
-                    .firstIndex(
-                        where: {
-                            $0.id == sensor.id
-                        }) {
-                    sSelf.virtualSensors[index] = sensor
-                    sSelf.syncViewModels()
-                    if let viewModel = sSelf.viewModels.first(where: {
-                        $0.id.value == sensor.id
-                    }) {
-                        sSelf.notifyUpdate(for: viewModel)
-                    }
-                }
-            case .insert(let sensor):
-                sSelf.virtualSensors.append(sensor)
-                sSelf.syncViewModels()
-                if let viewModel = sSelf.viewModels.first(where: {
-                    $0.id.value == sensor.id
-                }) {
-                    sSelf.updateVisibleCard(from: viewModel,
-                                            triggerScroll: true)
-                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
-                }
-            case .error(let error):
-                sSelf.errorPresenter.present(error: error)
-            default: break
-            }
-        }
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -326,26 +263,6 @@ extension CardsPresenter {
         }
     }
 
-    private func startObservingVirtualSensorData() {
-        virtualSensorsDataTokens.forEach({ $0.invalidate() })
-        virtualSensorsDataTokens.removeAll()
-        virtualSensors.forEach { virtualSensor in
-            virtualSensorsDataTokens
-                .append(virtualReactor.observeLast(virtualSensor, { [weak self] changes in
-                    if case .update(let anyRecord) = changes,
-                       let viewModel = self?.viewModels
-                        .first(where: { $0.id.value == anyRecord?.sensorId }),
-                       let record = anyRecord {
-                        let previousDate = viewModel.date.value ?? Date.distantPast
-                        if previousDate <= record.date {
-                            viewModel.update(record)
-                            self?.notifyUpdate(for: viewModel)
-                        }
-                    }
-                }))
-        }
-    }
-
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({ (ruuviTag) in
             if ruuviTag.isCloud {
@@ -360,10 +277,6 @@ extension CardsPresenter {
                 }
             }
         })
-    }
-
-    private func startListeningToWebTagsAlertStatus() {
-        virtualSensors.forEach({ alertHandler.subscribe(self, to: $0.id) })
     }
 
     // swiftlint:disable:next function_body_length
@@ -394,26 +307,6 @@ extension CardsPresenter {
                                                   viewModel: viewModel)
                             sSelf.updateMutedTill(of: type,
                                                   for: physicalSensor.id,
-                                                  viewModel: viewModel)
-                            self?.notifyUpdate(for: viewModel)
-                        })
-                    }
-                    if let virtualSensor
-                        = userInfo[RuuviServiceAlertDidChangeKey.virtualSensor] as? VirtualSensor,
-                       let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
-                        sSelf.viewModels.filter({
-                            ($0.id.value != nil && ($0.id.value == virtualSensor.id))
-                        }).forEach({ (viewModel) in
-                            if sSelf.alertService.hasRegistrations(for: virtualSensor) {
-                                viewModel.alertState.value = .registered
-                            } else {
-                                viewModel.alertState.value = .empty
-                            }
-                            self?.updateIsOnState(of: type,
-                                                  for: virtualSensor.id,
-                                                  viewModel: viewModel)
-                            self?.updateMutedTill(of: type,
-                                                  for: virtualSensor.id,
                                                   viewModel: viewModel)
                             self?.notifyUpdate(for: viewModel)
                         })
@@ -595,7 +488,6 @@ extension CardsPresenter {
                             .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
                         ?? sSelf.ruuviTags
                             .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
-                        let webTag = sSelf.virtualSensors.first(where: { $0.id == luid?.value })
                         if let ruuviTag = ruuviTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                                 .on(success: { image in
@@ -605,15 +497,6 @@ extension CardsPresenter {
                                     self?.errorPresenter.present(error: error)
                                 })
                         }
-                        if let webTag = webTag {
-                            sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
-                                .on(success: { image in
-                                    viewModel.background.value = image
-                                    self?.view?.changeCardBackground(of: viewModel, to: image)
-                                }, failure: { [weak sSelf] error in
-                                    sSelf?.errorPresenter.present(error: error)
-                                })
-                        }
                     }
                 }
             }
@@ -621,38 +504,6 @@ extension CardsPresenter {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func startObservingDaemonsErrors() {
-        webTagDaemonFailureToken?.invalidate()
-        webTagDaemonFailureToken = NotificationCenter
-            .default
-            .addObserver(forName: .WebTagDaemonDidFail,
-                         object: nil,
-                         queue: .main) { [weak self] notification in
-                if let userInfo = notification.userInfo,
-                   let error = userInfo[WebTagDaemonDidFailKey.error] as? RUError {
-                    if case .core(let coreError) = error, coreError == .locationPermissionDenied {
-                        self?.permissionPresenter.presentNoLocationPermission()
-                    } else if case .core(let coreError) = error, coreError == .locationPermissionNotDetermined {
-                        self?.permissionsManager.requestLocationPermission { [weak self] (granted) in
-                            if !granted {
-                                self?.permissionPresenter.presentNoLocationPermission()
-                            }
-                        }
-                    } else if case .virtualService(let serviceError) = error,
-                              case .openWeatherMap(let owmError) = serviceError,
-                              owmError == OWMError.apiLimitExceeded {
-                        self?.view?.showWebTagAPILimitExceededError()
-                    } else if case .map(let mapError) = error {
-                        let nsError = mapError as NSError
-                        if nsError.code == 2, nsError.domain == "kCLErrorDomain" {
-                            self?.view?.showReverseGeocodingFailed()
-                        } else {
-                            self?.errorPresenter.present(error: error)
-                        }
-                    } else {
-                        self?.errorPresenter.present(error: error)
-                    }
-                }
-            }
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter
             .default
@@ -795,23 +646,8 @@ extension CardsPresenter {
 
             return viewModel
         })
-        let virtualViewModels = virtualSensors.compactMap({ virtualSensor -> CardsViewModel in
-            let viewModel = CardsViewModel(virtualSensor)
-            ruuviSensorPropertiesService.getImage(for: virtualSensor)
-                .on(success: { [weak self] image in
-                    viewModel.background.value = image
-                    self?.view?.changeCardBackground(of: viewModel, to: image)
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
-            viewModel.alertState.value = alertService
-                .hasRegistrations(for: virtualSensor) ? .registered : .empty
-            viewModel.isConnected.value = false
-            notifyUpdate(for: viewModel)
-            return viewModel
-        })
 
-        viewModels = reorder(ruuviViewModels + virtualViewModels)
+        viewModels = reorder(ruuviViewModels)
 
         guard viewModels.count > 0 else {
             output?.cardsViewDidDismiss(module: self)
@@ -885,16 +721,13 @@ extension CardsPresenter {
 
     private func shutdownModule() {
         ruuviTagToken?.invalidate()
-        virtualSensorsToken?.invalidate()
         ruuviTagObserveLastRecordTokens.forEach({ $0.invalidate() })
-        virtualSensorsDataTokens.forEach({ $0.invalidate() })
         advertisementTokens.forEach({ $0.invalidate() })
         heartbeatTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         backgroundToken?.invalidate()
         alertDidChangeToken?.invalidate()
-        webTagDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagPropertiesDaemonFailureToken?.invalidate()
         ruuviTagHeartbeatDaemonFailureToken?.invalidate()
@@ -954,12 +787,6 @@ extension CardsPresenter: CardsViewOutput {
             } else {
                 openTagSettingsScreens(viewModel: viewModel)
             }
-        } else if viewModel.type == .web,
-                  let webTag = virtualSensors.first(where: { $0.id == viewModel.id.value }) {
-            router.openVirtualSensorSettings(
-                sensor: webTag,
-                temperature: viewModel.temperature.value
-            )
         }
     }
 

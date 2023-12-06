@@ -1,0 +1,11 @@
+---
+targets:
+  RuuviFirmware:
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - Module
+    dependencies:
+    - package: BTKit
+    - target: RuuviDFU

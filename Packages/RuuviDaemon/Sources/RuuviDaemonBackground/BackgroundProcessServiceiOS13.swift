@@ -40,9 +40,8 @@ public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
         schedule()
 
         let ruuviTags = dataPruningOperationsManager.ruuviTagPruningOperations()
-        let virtualTags = dataPruningOperationsManager.webTagPruningOperations()
-        Future.zip(ruuviTags, virtualTags).on(success: { (ruuviTagOperations, virtualTagsOperations) in
-            let operations = ruuviTagOperations + virtualTagsOperations
+        ruuviTags.on(success: { ruuviTagOperations in
+            let operations = ruuviTagOperations
             if operations.count > 0 {
                 let queue = OperationQueue()
                 queue.maxConcurrentOperationCount = 1

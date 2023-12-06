@@ -26,7 +26,6 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildChartIntervalSeconds(),
                            buildChartDurationHours(),
                            saveAdvertisementsInterval(),
-                           buildSaveAndLoadFromWebIntervalMinutues(),
                            buildAskForReviewFirstTime(),
                            buildAskForReviewLater(),
                            buildDashboardCardTapAction(),
@@ -195,19 +194,6 @@ extension DefaultsPresenter {
             observer.settings.advertisementDaemonIntervalMinutes = interval.bound
         }
         return advertisementInterval
-    }
-
-    private func buildSaveAndLoadFromWebIntervalMinutues() -> DefaultsViewModel {
-        let webSaveAndLoadInterval = DefaultsViewModel()
-        webSaveAndLoadInterval.title = "ForegroundRow.webTags.title".localized()
-        webSaveAndLoadInterval.integer.value = settings.webTagDaemonIntervalMinutes
-        webSaveAndLoadInterval.unit = .minutes
-        webSaveAndLoadInterval.type.value = .stepper
-
-        bind(webSaveAndLoadInterval.integer, fire: false) { observer, interval in
-            observer.settings.webTagDaemonIntervalMinutes = interval.bound
-        }
-        return webSaveAndLoadInterval
     }
 
     private func buildAskForReviewFirstTime() -> DefaultsViewModel {

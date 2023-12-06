@@ -31,12 +31,10 @@ def shared_pods
   pod 'RealmSwift', '~> 10.33.0'
   # common
   pod 'RuuviPresenters', :path => 'Common/RuuviPresenters/RuuviPresenters.podspec', :testspecs => ['Tests']
-  pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
   pod 'RuuviLocalization', :path => 'Common/RuuviLocalization/RuuviLocalization.podspec', :testspecs => ['Tests']
   # modules
   pod 'RuuviDiscover', :path => 'Modules/RuuviDiscover/RuuviDiscover.podspec', :testspecs => ['Tests']
   pod 'RuuviOnboard', :path => 'Modules/RuuviOnboard/RuuviOnboard.podspec', :testspecs => ['Tests']
-  pod 'RuuviLocationPicker', :path => 'Modules/RuuviLocationPicker/RuuviLocationPicker.podspec', :testspecs => ['Tests']
   # packages
   pod 'RuuviAnalytics', :path => 'Packages/RuuviAnalytics/RuuviAnalytics.podspec', :testspecs => ['Tests']
   pod 'RuuviAnalytics/Impl', :path => 'Packages/RuuviAnalytics/RuuviAnalytics.podspec'
@@ -49,6 +47,7 @@ def shared_pods
   pod 'RuuviCore/Permission', :path => 'Packages/RuuviCore/RuuviCore.podspec'
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
   pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
+  pod 'RuuviCloud/Api', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
   pod 'RuuviDFU', :path => 'Packages/RuuviDFU/RuuviDFU.podspec', :testspecs => ['Tests']
   pod 'RuuviDFU/Impl', :path => 'Packages/RuuviDFU/RuuviDFU.podspec'
   pod 'RuuviDaemon', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec', :testspecs => ['Tests']
@@ -58,8 +57,6 @@ def shared_pods
   pod 'RuuviDaemon/VirtualTag', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
   pod 'RuuviDaemon/Background', :path => 'Packages/RuuviDaemon/RuuviDaemon.podspec'
   pod 'RuuviLocal/UserDefaults', :path => 'Packages/RuuviLocal/RuuviLocal.podspec'
-  pod 'RuuviLocation', :path => 'Packages/RuuviLocation/RuuviLocation.podspec', :testspecs => ['Tests']
-  pod 'RuuviLocation/Service', :path => 'Packages/RuuviLocation/RuuviLocation.podspec'
   pod 'RuuviNotification', :path => 'Packages/RuuviNotification/RuuviNotification.podspec', :testspecs => ['Tests']
   pod 'RuuviNotification/Local', :path => 'Packages/RuuviNotification/RuuviNotification.podspec'
   pod 'RuuviNotifier', :path => 'Packages/RuuviNotifier/RuuviNotifier.podspec', :testspecs => ['Tests']
@@ -91,14 +88,6 @@ def shared_pods
   pod 'RuuviRepository/Coordinator', :path => 'Packages/RuuviRepository/RuuviRepository.podspec'
   pod 'RuuviUser', :path => 'Packages/RuuviUser/RuuviUser.podspec', :testspecs => ['Tests']
   pod 'RuuviUser/Coordinator', :path => 'Packages/RuuviUser/RuuviUser.podspec'
-  pod 'RuuviVirtual', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec', :testspecs => ['Tests']
-  pod 'RuuviVirtual/Storage', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
-  pod 'RuuviVirtual/Reactor', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
-  pod 'RuuviVirtual/Persistence', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
-  pod 'RuuviVirtual/Model', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
-  pod 'RuuviVirtual/Repository', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
-  pod 'RuuviVirtual/Service', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
-  pod 'RuuviVirtual/OWM', :path => 'Packages/RuuviVirtual/RuuviVirtual.podspec'
   pod 'Swinject'
   pod 'SwiftGen', '~> 6.0'
   pod 'KeychainAccess'
@@ -118,7 +107,6 @@ def widget_pods
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
   pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
   pod 'KeychainAccess'
-  pod 'RuuviBundleUtils', :path => 'Common/RuuviBundleUtils/RuuviBundleUtils.podspec', :testspecs => ['Tests']
   pod 'RuuviPool', :path => 'Packages/RuuviPool/RuuviPool.podspec', :testspecs => ['Tests']
   pod 'RuuviPool/Coordinator', :path => 'Packages/RuuviPool/RuuviPool.podspec'
   pod 'RuuviLocal/UserDefaults', :path => 'Packages/RuuviLocal/RuuviLocal.podspec'

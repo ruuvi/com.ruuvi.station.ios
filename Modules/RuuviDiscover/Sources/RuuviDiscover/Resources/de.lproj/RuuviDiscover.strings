@@ -28,3 +28,4 @@
 "add_sensor_nfc_df3_error" = "Dieser Sensor kann aufgrund der alten Firmware nicht mit NFC hinzugefügt werden. Bitte fügen Sie den Sensor über Bluetooth hinzu und aktualisieren Sie die Firmware.";
 "add_sensor_description" = "Auf dieser Seite werden Ruuvi-Sensoren in der Nähe angezeigt, die der App noch nicht hinzugefügt wurden. Tippen Sie auf einen Sensor, um ihn hinzuzufügen.";
 "add_sensor_via_nfc" = "Alternatively, you can add a sensor using NFC by selecting Add with NFC and touching it with your phone.";
+"upgrade_firmware" = "Firmware Update";

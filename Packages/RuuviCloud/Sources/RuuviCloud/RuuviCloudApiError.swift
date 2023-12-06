@@ -11,3 +11,7 @@ public enum RuuviCloudApiError: Error {
     case failedToGetDataFromResponse
     case unauthorized
 }
+
+public struct RuuviCloudApiClaimError: Decodable {
+    public let error, code: String?
+}

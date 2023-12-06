@@ -1,0 +1,56 @@
+targets: 
+  station.widgets:
+    type: app-extension
+    platform: iOS
+    info:
+      path: ruuvi-widgets/Info.plist
+      properties:
+        NSExtension: 
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf]
+        CFBundleDisplayName: Ruuvi Station
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSHumanReadableCopyright: Copyright © 2023 Ruuvi Innovations Oy. All rights reserved.
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: ruuvi_widgets.entitlements
+      configs:
+        Alpha: 
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
+          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
+    sources:
+      - path: ruuvi-widgets
+    resources:
+      - path: station/Resources/Strings/
+    dependencies:
+      - package: Swinject
+      - package: BTKit
+      - package: Future
+      - package: GRDB
+      - package: Humidity
+      - package: Realm
+      - package: KeychainAccess
+      - package: Realm
+        product: RealmSwift
+      - target: RuuviUser
+        embed: true
+      - target: RuuviCloud
+        embed: true
+      - target: RuuviOntology
+        embed: true
+      - target: RuuviPool
+        embed: true
+      - target: RuuviLocal
+        embed: true
+      - target: RuuviPersistence
+        embed: true
+      - target: RuuviContext
+        embed: true

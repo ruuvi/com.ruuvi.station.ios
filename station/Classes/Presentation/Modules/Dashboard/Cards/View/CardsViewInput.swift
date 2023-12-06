@@ -1,6 +1,7 @@
 import Foundation
 import BTKit
 import RuuviOntology
+import UIKit
 
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
@@ -9,7 +10,6 @@ protocol CardsViewInput: ViewInput {
     func changeCardBackground(of viewModel: CardsViewModel, to image: UIImage?)
     func scroll(to index: Int)
     func showBluetoothDisabled(userDeclined: Bool)
-    func showWebTagAPILimitExceededError()
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel)
     func showFirmwareUpdateDialog(for viewModel: CardsViewModel)

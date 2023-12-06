@@ -1,7 +1,6 @@
 // swiftlint:disable file_length
 import Foundation
 import RuuviOntology
-import RuuviVirtual
 import RuuviNotifier
 
 // MARK: - Process Physical Sensors
@@ -73,41 +72,6 @@ extension RuuviNotifierImpl {
     }
 }
 
-// MARK: - Process Virtual Sensors
-extension RuuviNotifierImpl {
-    public func process(data: VirtualData, for sensor: VirtualSensor) {
-        var isTriggered = false
-        AlertType.allCases.forEach { (type) in
-            switch type {
-            case .temperature:
-                isTriggered = process(temperature: data.temperature,
-                                      alertType: type,
-                                      identifier: sensor.id.luid)
-                    || isTriggered
-            case .relativeHumidity:
-                let isRelativeHumidity = process(
-                    relativeHumidity: data.humidity,
-                    temperature: data.temperature,
-                    alertType: type,
-                    identifier: sensor.id.luid
-                )
-                isTriggered = isTriggered || isRelativeHumidity
-                    || isTriggered
-            case .pressure:
-                isTriggered = process(pressure: data.pressure,
-                                      alertType: type,
-                                      identifier: sensor.id.luid)
-            default:
-                break
-            }
-        }
-
-        if ruuviAlertService.hasRegistrations(for: sensor) {
-            notify(uuid: sensor.id, isTriggered: isTriggered)
-        }
-    }
-
-}
 // MARK: - Process Network Sensors
 extension RuuviNotifierImpl {
     // swiftlint:disable:next function_body_length
