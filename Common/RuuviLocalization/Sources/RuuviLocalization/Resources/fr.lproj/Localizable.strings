@@ -279,7 +279,7 @@
 "HumidityUnit.gm3.title" = "Absolue (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relative (%)";
-"%" = "%";
+"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "Adresse MAC";
 "Menu.Label.AboutHelp.text" = "Infos/Aide";
 "Menu.Label.AddAnNewSensor.text" = "Ajouter un capteur";
@@ -750,7 +750,7 @@ RuuviTag est prêt à être utilisé !";
 "activity_saving_to_cloud" = "Enregistrement dans le cloud... veuillez patienter.";
 "activity_saving_success" = "Enregistré avec succès.";
 "activity_saving_fail" = "Impossible d'enregistrer les modifications dans le cloud.";
-"activity_ongoing_generic" = "Please wait...";
-"activity_success_generic" = "Operation successful.";
-"activity_failed_generic" = "Operation failed.";
+"activity_ongoing_generic" = "S'il vous plaît, attendez...";
+"activity_success_generic" = "Opération réussie.";
+"activity_failed_generic" = "L'opération a échoué.";
 

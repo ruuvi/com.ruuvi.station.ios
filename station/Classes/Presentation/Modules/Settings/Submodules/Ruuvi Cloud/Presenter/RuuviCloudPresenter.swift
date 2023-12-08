@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import UIKit
 import RuuviService
@@ -40,7 +41,7 @@ extension RuuviCloudPresenter {
 
     fileprivate func ruuviCloudIsOn() -> RuuviCloudViewModel {
         let cloudMode = RuuviCloudViewModel()
-        cloudMode.title = "Settings.Label.CloudMode".localized()
+        cloudMode.title = RuuviLocalization.Settings.Label.cloudMode
         cloudMode.boolean.value = settings.cloudModeEnabled
         bind(cloudMode.boolean, fire: false) { observer, isOn in
             observer.settings.cloudModeEnabled = isOn.bound

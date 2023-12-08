@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 
 class AppDateFormatter {
     static let shared = AppDateFormatter()
@@ -45,7 +46,7 @@ extension AppDateFormatter {
         if let formattedDate = calendar.date(from: dateComponents) {
             return graphXAxisDateFormatter.string(from: formattedDate)
         } else {
-            return "N/A".localized()
+            return RuuviLocalization.na
         }
     }
 

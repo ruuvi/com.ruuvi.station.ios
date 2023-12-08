@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 
 struct ChartSettingsViewModel {
     let sections: [ChartSettingsSection]
@@ -22,9 +23,9 @@ enum ChartSettingsIntegerUnit {
     var unitString: String {
         switch self {
         case .day:
-            return "Interval.Day.string".localized()
+            return RuuviLocalization.Interval.Day.string
         case .days:
-            return "Interval.Days.string".localized()
+            return RuuviLocalization.Interval.Days.string
         }
     }
 }

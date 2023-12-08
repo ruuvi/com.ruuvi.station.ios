@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 #if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 #endif
@@ -30,7 +31,7 @@ class HeartbeatViewController: UIViewController {
 
 extension HeartbeatViewController: HeartbeatViewInput {
     func localize() {
-        navigationItem.title = "Settings.BackgroundScanning.title".localized()
+        navigationItem.title = RuuviLocalization.Settings.BackgroundScanning.title
     }
 }
 

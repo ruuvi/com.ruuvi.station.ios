@@ -1,16 +1,17 @@
+import RuuviLocalization
 import Foundation
 import RuuviNotifier
 
 struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
-    let lowTemperature = "LocalNotificationsManager.LowTemperature.title".localized()
-    let highTemperature = "LocalNotificationsManager.HighTemperature.title".localized()
-    let lowHumidity = "LocalNotificationsManager.LowHumidity.title".localized()
-    let highHumidity = "LocalNotificationsManager.HighHumidity.title".localized()
-    let lowDewPoint = "LocalNotificationsManager.LowDewPoint.title".localized()
-    let highDewPoint = "LocalNotificationsManager.HighDewPoint.title".localized()
-    let lowPressure = "LocalNotificationsManager.LowPressure.title".localized()
-    let highPressure = "LocalNotificationsManager.HighPressure.title".localized()
-    let lowSignal = "LocalNotificationsManager.LowSignal.title".localized()
-    let highSignal = "LocalNotificationsManager.HighSignal.title".localized()
-    let didMove = "LocalNotificationsManager.DidMove.title".localized()
+    let lowTemperature = RuuviLocalization.LocalNotificationsManager.LowTemperature.title
+    let highTemperature = RuuviLocalization.LocalNotificationsManager.HighTemperature.title
+    let lowHumidity = RuuviLocalization.LocalNotificationsManager.LowHumidity.title
+    let highHumidity = RuuviLocalization.LocalNotificationsManager.HighHumidity.title
+    let lowDewPoint = RuuviLocalization.LocalNotificationsManager.LowDewPoint.title
+    let highDewPoint = RuuviLocalization.LocalNotificationsManager.HighDewPoint.title
+    let lowPressure = RuuviLocalization.LocalNotificationsManager.LowPressure.title
+    let highPressure = RuuviLocalization.LocalNotificationsManager.HighPressure.title
+    let lowSignal = RuuviLocalization.LocalNotificationsManager.LowSignal.title
+    let highSignal = RuuviLocalization.LocalNotificationsManager.HighSignal.title
+    let didMove = RuuviLocalization.LocalNotificationsManager.DidMove.title
 }

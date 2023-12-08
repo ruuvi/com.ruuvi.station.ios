@@ -1,18 +1,19 @@
 import Foundation
 import RuuviOntology
+import RuuviLocalization
 
 extension UnitPressure: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
         case .hectopascals:
-            return "UnitPressure.hectopascal.title".localized()
+            return { _ in RuuviLocalization.UnitPressure.Hectopascal.title }
         case .inchesOfMercury:
-            return "UnitPressure.inchOfMercury.title".localized()
+            return { _ in RuuviLocalization.UnitPressure.InchOfMercury.title }
         case .millimetersOfMercury:
-            return "UnitPressure.millimetreOfMercury.title".localized()
+            return { _ in RuuviLocalization.UnitPressure.MillimetreOfMercury.title }
         default:
             assert(false, "Not allowed")
-            return .init()
+            return { _ in .init() }
         }
     }
     var alertRange: Range<Double> {

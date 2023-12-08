@@ -1,25 +1,34 @@
 json:
   - inputs: ./station.localization/station.localization.json
     outputs:
-      - templatePath: ./templates/Localizable_en.strings.stencil
-        output: ./station/Resources/Strings/en.lproj/Localizable.strings
+      - templatePath: ./Common/RuuviLocalization/Templates/Localizable_en.strings.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/en.lproj/Localizable.strings
   - inputs: ./station.localization/station.localization.json
     outputs:
-      - templatePath: ./templates/Localizable_sv.strings.stencil
-        output: ./station/Resources/Strings/sv.lproj/Localizable.strings
+      - templatePath: ./Common/RuuviLocalization/Templates/Localizable_sv.strings.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/sv.lproj/Localizable.strings
   - inputs: ./station.localization/station.localization.json
     outputs:
-      - templatePath: ./templates/Localizable_ru.strings.stencil
-        output: ./station/Resources/Strings/ru.lproj/Localizable.strings
+      - templatePath: ./Common/RuuviLocalization/Templates/Localizable_ru.strings.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/ru.lproj/Localizable.strings
   - inputs: ./station.localization/station.localization.json
     outputs:
-      - templatePath: ./templates/Localizable_fi.strings.stencil
-        output: ./station/Resources/Strings/fi.lproj/Localizable.strings
+      - templatePath: ./Common/RuuviLocalization/Templates/Localizable_fi.strings.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/fi.lproj/Localizable.strings
   - inputs: ./station.localization/station.localization.json
     outputs:
-      - templatePath: ./templates/Localizable_fr.strings.stencil
-        output: ./station/Resources/Strings/fr.lproj/Localizable.strings
+      - templatePath: ./Common/RuuviLocalization/Templates/Localizable_fr.strings.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/fr.lproj/Localizable.strings
   - inputs: ./station.localization/station.localization.json
     outputs:
-      - templatePath: ./templates/Localizable_de.strings.stencil
+      - templatePath: ./Common/RuuviLocalization/Templates/Localizable_de.strings.stencil
         output: ./station/Resources/Strings/de.lproj/Localizable.strings
+strings:
+  inputs: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/en.lproj/Localizable.strings
+  outputs:
+    templateName: structured-swift5
+    params:
+      forceProvidesNamespaces: true 
+      publicAccess: true             
+      enumName: RuuviLocalization          
+    output: ./Common/RuuviLocalization/Sources/RuuviLocalization/RuuviLocalization.swift

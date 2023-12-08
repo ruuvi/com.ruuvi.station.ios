@@ -279,7 +279,7 @@
 "HumidityUnit.gm3.title" = "Absolut (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relative (%)";
-"humidity_relative_unit" = "%";
+"%" = "%";
 "TagSettings.Mac.Alert.title" = "MAC-Adresse";
 "Menu.Label.AboutHelp.text" = "Über / Hilfe";
 "Menu.Label.AddAnNewSensor.text" = "Neuen Sensor hinzufügen";
@@ -751,9 +751,3 @@ Wenn die Beanspruchung nicht erfolgreich war oder NFC auf Ihrem Gerät nicht ver
 "remove_claimed_sensor_description" = "Durch das Entfernen des Sensors wird Ihr Sensor-Eigentumsstatus aufgehoben, und Sensor-Einstellungen wie Name, Hintergrundbild, Kalibrierungseinstellungen und Alarmeinstellungen werden entfernt. Nach der Entfernung kann jemand anderes das Eigentum am Sensor beanspruchen. Jeder Ruuvi-Sensor kann nur einen Besitzer haben.";
 "remove_shared_sensor_description" = "Wenn Sie diesen freigegebenen Sensor entfernen, wird der Eigentümer des Sensors benachrichtigt und Sie können nicht mehr auf den Sensor zugreifen.\n\nSie verlieren außerdem alle zugehörigen Sensoreinstellungen wie Name, Hintergrundbild und Alarmkonfigurationen .";
 "remove_local_sensor_description" = "Wenn Sie diesen Sensor entfernen, führt dies zur Löschung Ihres lokal gespeicherten Messverlaufs sowie zur Entfernung aller zugehörigen Sensoreinstellungen wie Name, Hintergrundbild, Kalibrierung und Alarmkonfigurationen.\n\nSie können hinzufügen diesen Sensor später bei Bedarf erneut.";
-"activity_saving_to_cloud" = "Speichern in der Cloud...bitte warten.";
-"activity_saving_success" = "Erfolgreich gespeichert.";
-"activity_saving_fail" = "Die Änderungen konnten nicht in der Cloud gespeichert werden.";
-"activity_ongoing_generic" = "Bitte warten...";
-"activity_success_generic" = "Operation erfolgreich.";
-"activity_failed_generic" = "Operation fehlgeschlagen.";

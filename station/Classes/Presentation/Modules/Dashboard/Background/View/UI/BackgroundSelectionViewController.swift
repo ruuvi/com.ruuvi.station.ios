@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 class BackgroundSelectionViewController: UIViewController {
     // View configure
@@ -209,8 +210,8 @@ extension BackgroundSelectionViewController {
 
         uploadProgressView.progressLabel.bind(viewModel.uploadingBackgroundPercentage) { lb, percentage in
             if let percentage = percentage {
-                lb.text = String(format: "uploading_progress".localized(),
-                                 percentage * 100.0, "%")
+                // TODO: @rinat check
+                lb.text = RuuviLocalization.uploadingProgress(Float(percentage) * 100) + " %"
             }
         }
     }
@@ -218,7 +219,7 @@ extension BackgroundSelectionViewController {
 
 extension BackgroundSelectionViewController: BackgroundSelectionViewInput {
     func localize() {
-        self.title = "change_background".localized()
+        self.title = RuuviLocalization.changeBackground
     }
 
     func viewShouldDismiss() {

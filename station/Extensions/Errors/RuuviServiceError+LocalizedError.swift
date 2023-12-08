@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import RuuviService
 
@@ -21,19 +22,19 @@ extension RuuviServiceError: LocalizedError {
         case .networking(let error):
             return error.localizedDescription
         case .pictureUrlIsNil:
-            return "RuuviServiceError.pictureUrlIsNil".localized()
+            return RuuviLocalization.RuuviServiceError.pictureUrlIsNil
         case .macIdIsNil:
-            return "RuuviServiceError.macIdIsNil".localized()
+            return RuuviLocalization.RuuviServiceError.macIdIsNil
         case .bothLuidAndMacAreNil:
-            return "RuuviServiceError.bothLuidAndMacAreNil".localized()
+            return RuuviLocalization.RuuviServiceError.bothLuidAndMacAreNil
         case .failedToParseNetworkResponse:
-            return "RuuviServiceError.failedToParseNetworkResponse".localized()
+            return RuuviLocalization.RuuviServiceError.failedToParseNetworkResponse
         case .failedToFindOrGenerateBackgroundImage:
-            return "RuuviServiceError.failedToFindOrGenerateBackgroundImage".localized()
+            return RuuviLocalization.RuuviServiceError.failedToFindOrGenerateBackgroundImage
         case .failedToGetJpegRepresentation:
-            return "RuuviServiceError.failedToGetJpegRepresentation".localized()
+            return RuuviLocalization.RuuviServiceError.failedToGetJpegRepresentation
         case .isAlreadySyncingLogsWithThisTag:
-            return "ExpectedError.isAlreadySyncingLogsWithThisTag".localized()
+            return RuuviLocalization.ExpectedError.isAlreadySyncingLogsWithThisTag
         }
     }
 }

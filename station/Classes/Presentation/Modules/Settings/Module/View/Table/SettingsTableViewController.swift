@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 import RuuviOntology
 
@@ -72,29 +73,29 @@ class SettingsTableViewController: UITableViewController {
 // MARK: - SettingsViewInput
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
-        navigationItem.title = "Settings.navigationItem.title".localized()
-        temperatureTitleLabel.text = "Settings.Label.Temperature".localized()
-        humidityTitleLabel.text = "Settings.Label.Humidity".localized()
-        pressureTitleLabel.text = "Settings.Label.Pressure".localized()
-        languageTitleLabel.text = "Settings.Label.Language.text".localized()
-        defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
-        devicesTitleLabel.text = "DfuDevicesScanner.Title.text".localized()
-        heartbeatTitleLabel.text = "Settings.BackgroundScanning.title".localized()
-        chartTitleLabel.text = "Settings.Label.Chart".localized()
-        ruuviCloudTitleLabel.text = "ruuvi_cloud".localized()
-        appearanceTitleLabel.text = "settings_appearance".localized()
-        alertNotificationsTitleLabel.text = "settings_alert_notifications".localized()
+        navigationItem.title = RuuviLocalization.Settings.NavigationItem.title
+        temperatureTitleLabel.text = RuuviLocalization.Settings.Label.temperature
+        humidityTitleLabel.text = RuuviLocalization.Settings.Label.humidity
+        pressureTitleLabel.text = RuuviLocalization.Settings.Label.pressure
+        languageTitleLabel.text = RuuviLocalization.Settings.Label.Language.text
+        defaultsTitleLabel.text = RuuviLocalization.Settings.Label.defaults
+        devicesTitleLabel.text = RuuviLocalization.DfuDevicesScanner.Title.text
+        heartbeatTitleLabel.text = RuuviLocalization.Settings.BackgroundScanning.title
+        chartTitleLabel.text = RuuviLocalization.Settings.Label.chart
+        ruuviCloudTitleLabel.text = RuuviLocalization.ruuviCloud
+        appearanceTitleLabel.text = RuuviLocalization.settingsAppearance
+        alertNotificationsTitleLabel.text = RuuviLocalization.settingsAlertNotifications
         updateUILanguage()
         tableView.reloadData()
     }
 
     func viewDidShowLanguageChangeDialog() {
-        let title = "Settings.Language.Dialog.title".localized()
-        let message = "Settings.Language.Dialog.message".localized()
+        let title = RuuviLocalization.Settings.Language.Dialog.title
+        let message = RuuviLocalization.Settings.Language.Dialog.message
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let cancelTitle = "Cancel".localized()
+        let cancelTitle = RuuviLocalization.cancel
         alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: nil))
-        let settingsTitle = "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title".localized()
+        let settingsTitle = RuuviLocalization.WebTagSettings.AlertsAreDisabled.Dialog.Settings.title
         alert.addAction(UIAlertAction(title: settingsTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidSelectChangeLanguage()
         }))

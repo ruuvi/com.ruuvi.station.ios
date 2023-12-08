@@ -1,4 +1,5 @@
 // swiftlint:disable file_length
+import RuuviLocalization
 import Foundation
 import BTKit
 import UIKit
@@ -295,17 +296,16 @@ extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
     }
 
     func interactorDidSyncComplete(_ recordsCount: Int) {
-        let okAction = UIAlertAction(title: "OK".localized(),
+        let okAction = UIAlertAction(title: RuuviLocalization.ok,
                                      style: .default,
                                      handler: nil)
         let title, message: String
         if recordsCount > 0 {
-            title = "TagCharts.Status.Success".localized()
-            message = String(format: "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork".localized(),
-                             String(recordsCount))
+            title = RuuviLocalization.TagCharts.Status.success
+            message = RuuviLocalization.TagChartsPresenter.numberOfPointsSynchronizedOverNetwork(String(recordsCount))
         } else {
-            title = "TagChartsPresenter.NetworkSync".localized()
-            message = "TagChartsPresenter.NoNewMeasurementsFromNetwork".localized()
+            title = "TagChartsPresenter.NetworkSync" // TODO: @rinat localize
+            message = "TagChartsPresenter.NoNewMeasurementsFromNetwork" // TODO: @rinat localize
         }
 
         let alertViewModel: AlertViewModel = AlertViewModel(

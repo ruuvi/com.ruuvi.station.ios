@@ -74,7 +74,7 @@ extension AppearanceSettingsTableViewController {
             fatalError()
         }
         let viewModel = viewModels[indexPath.row]
-        cell.configure(title: viewModel.title, value: viewModel.selection.title)
+        cell.configure(title: viewModel.title, value: viewModel.selection.title(""))
         return cell
     }
 }

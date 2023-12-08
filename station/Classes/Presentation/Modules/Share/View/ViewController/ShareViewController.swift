@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 extension ShareViewController {
     enum Section: Int {
@@ -18,14 +19,14 @@ extension ShareViewController {
             }
         }
 
-        var title: String? {
+        var title: ((Int, Int) -> String)? {
             switch self {
             case .description:
                 return nil
             case .addFriend:
-                return "ShareViewController.addFriend.Title".localized()
+                return { _, _ in RuuviLocalization.ShareViewController.AddFriend.title }
             case .sharedEmails:
-                return "ShareViewController.sharedEmails.Title".localized()
+                return { a, b in RuuviLocalization.ShareViewController.SharedEmails.title(a, b) }
             }
         }
     }
@@ -93,12 +94,10 @@ class ShareViewController: UITableViewController {
         case .sharedEmails:
             if let count = viewModel.sharedEmails.value?.count,
                let title = section.title {
-                titleLabel.text = String(format: title,
-                                         count,
-                                         viewModel.maxCount)
+                titleLabel.text = title(count, viewModel.maxCount)
             }
         default:
-            titleLabel.text = section.title
+            titleLabel.text = section.title?(0, 0)
         }
         headerView.addSubview(titleLabel)
         titleLabel.fillSuperviewToSafeArea(
@@ -129,7 +128,7 @@ class ShareViewController: UITableViewController {
 // MARK: - ShareViewInput
 extension ShareViewController: ShareViewInput {
     func localize() {
-        title = "ShareViewController.Title".localized()
+        title = RuuviLocalization.ShareViewController.title
     }
 
     func reloadTableView() {
@@ -147,21 +146,21 @@ extension ShareViewController: ShareViewInput {
     func showInvalidEmail() {
         showAlert(
             title: nil,
-            message: "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
+            message: RuuviLocalization.UserApiError.erInvalidEmailAddress
         )
     }
 
     func showSuccessfullyShared() {
         showAlert(
             title: nil,
-            message: "Share.Success.message".localized()
+            message: RuuviLocalization.Share.Success.message
         )
     }
 
     func showSuccessfullyInvited() {
         showAlert(
-            title: "share_pending".localized(),
-            message: "share_pending_message".localized()
+            title: RuuviLocalization.sharePending,
+            message: RuuviLocalization.sharePendingMessage
         )
     }
 }
@@ -194,10 +193,10 @@ extension ShareViewController {
         if let canShare = viewModel.canShare.value, canShare {
             cell.sharingDisabledLabel.text = ""
         } else {
-            cell.sharingDisabledLabel.text = "network_sharing_disabled".localized()
+            cell.sharingDisabledLabel.text = RuuviLocalization.networkSharingDisabled
         }
 
-        let description = "ShareViewController.Description".localized()
+        let description = RuuviLocalization.ShareViewController.description
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.descriptionLabel.textColor = RuuviColor.ruuviTextColor
         return cell
@@ -206,7 +205,7 @@ extension ShareViewController {
     private func getAddFriendCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareEmailInputTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareEmailInputTableViewCell.self, for: indexPath)
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
-        cell.emailTextField.placeholder = "ShareViewController.emailTextField.placeholder".localized()
+        cell.emailTextField.placeholder = RuuviLocalization.ShareViewController.EmailTextField.placeholder
         cell.emailTextField.delegate = self
         return cell
     }
@@ -214,7 +213,7 @@ extension ShareViewController {
     private func getButtonCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareSendButtonTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareSendButtonTableViewCell.self, for: indexPath)
         cell.sendButton.addTarget(self, action: #selector(didTapSendButton(_:)), for: .touchUpInside)
-        cell.sendButton.setTitle("TagSettings.Share.title".localized(), for: .normal)
+        cell.sendButton.setTitle(RuuviLocalization.TagSettings.Share.title, for: .normal)
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }

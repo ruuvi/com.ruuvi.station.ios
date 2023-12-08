@@ -1,5 +1,6 @@
 import RuuviFirmware
 import SwiftUI
+import RuuviLocalization
 
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
@@ -8,29 +9,29 @@ struct DFUUIView: View {
     @ObservedObject var viewModel: DFUViewModel
 
     private struct Texts {
-        let navigationTitle = "DFUUIView.navigationTitle".localized()
-        let latestTitle = "DFUUIView.latestTitle".localized()
-        let currentTitle = "DFUUIView.currentTitle".localized()
-        let lowBatteryWarningMessage = "DFUUIView.lowBattery.warning.message".localized()
-        let okTitle = "ErrorPresenterAlert.OK".localized()
-        let notReportingDescription = "DFUUIView.notReportingDescription".localized()
-        let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized()
-        let startUpdateProcess = "DFUUIView.startUpdateProcess".localized()
-        let downloadingTitle = "DFUUIView.downloadingTitle".localized()
-        let prepareTitle = "DFUUIView.prepareTitle".localized()
-        let openCoverTitle = "DFUUIView.openCoverTitle".localized()
-        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized()
-        let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized()
-        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized()
-        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized()
-        let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized()
-        let updatingTitle = "DFUUIView.updatingTitle".localized()
-        let searchingTitle = "DFUUIView.searchingTitle".localized()
-        let startTitle = "DFUUIView.startTitle".localized()
-        let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized()
-        let successfulTitle = "DFUUIView.successfulTitle".localized()
-        let errorTitle = "ErrorPresenterAlert.Error".localized()
-        let dbMigrationErrorTitle = "DFUUIView.DBMigration.Error.message".localized()
+        let navigationTitle = RuuviLocalization.DFUUIView.navigationTitle
+        let latestTitle = RuuviLocalization.DFUUIView.latestTitle
+        let currentTitle = RuuviLocalization.DFUUIView.currentTitle
+        let lowBatteryWarningMessage = RuuviLocalization.DFUUIView.LowBattery.Warning.message
+        let okTitle = RuuviLocalization.ErrorPresenterAlert.ok
+        let notReportingDescription = RuuviLocalization.DFUUIView.notReportingDescription
+        let alreadyOnLatest = RuuviLocalization.DFUUIView.alreadyOnLatest
+        let startUpdateProcess = RuuviLocalization.DFUUIView.startUpdateProcess
+        let downloadingTitle = RuuviLocalization.DFUUIView.downloadingTitle
+        let prepareTitle = RuuviLocalization.DFUUIView.prepareTitle
+        let openCoverTitle = RuuviLocalization.DFUUIView.openCoverTitle
+        let localBootButtonTitle = RuuviLocalization.DFUUIView.locateBootButtonTitle
+        let setUpdatingModeTitle = RuuviLocalization.DFUUIView.setUpdatingModeTitle
+        let toBootModeTwoButtonsDescription = RuuviLocalization.DFUUIView.toBootModeTwoButtonsDescription
+        let toBootModeOneButtonDescription = RuuviLocalization.DFUUIView.toBootModeOneButtonDescription
+        let toBootModeSuccessTitle = RuuviLocalization.DFUUIView.toBootModeSuccessTitle
+        let updatingTitle = RuuviLocalization.DFUUIView.updatingTitle
+        let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
+        let startTitle = RuuviLocalization.DFUUIView.startTitle
+        let doNotCloseTitle = RuuviLocalization.DFUUIView.doNotCloseTitle
+        let successfulTitle = RuuviLocalization.DFUUIView.successfulTitle
+        let errorTitle = RuuviLocalization.ErrorPresenterAlert.error
+        let dbMigrationErrorTitle = RuuviLocalization.DFUUIView.DBMigration.Error.message
     }
 
     private let muliBold16 = Font(UIFont.Muli(.bold, size: 16))

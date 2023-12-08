@@ -14,6 +14,7 @@ import RuuviReactor
 import RuuviCloud
 import RuuviUser
 import RuuviDaemon
+import RuuviLocalization
 import RuuviNotifier
 import RuuviNotification
 import RuuviRepository
@@ -750,8 +751,8 @@ private final class CoreAssembly: Assembly {
             let settings = r.resolve(RuuviLocalSettings.self)!
             let service = RuuviServiceMeasurementImpl(
                 settings: settings,
-                emptyValueString: "N/A".localized(),
-                percentString: "%".localized()
+                emptyValueString: RuuviLocalization.na,
+                percentString: RuuviLocalization.humidityRelativeUnit
             )
             return service
         })

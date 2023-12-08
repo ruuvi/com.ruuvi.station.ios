@@ -1,26 +1,27 @@
+import RuuviLocalization
 import Foundation
 import RuuviService
 
 struct ExportHeadersProvider: RuuviServiceExportHeaders {
     func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String] {
-        let tempFormat = "ExportService.Temperature".localized()
-        let pressureFormat = "ExportService.Pressure".localized()
-        let humidityFormat = "ExportService.Humidity".localized()
+        let tempFormat = RuuviLocalization.ExportService.temperature
+        let pressureFormat = RuuviLocalization.ExportService.pressure
+        let humidityFormat = RuuviLocalization.ExportService.humidity
         return [
-            "ExportService.Date".localized(),
-            String(format: tempFormat, units.temperatureUnit.symbol),
+            RuuviLocalization.ExportService.date,
+            tempFormat(units.temperatureUnit.symbol),
             units.humidityUnit == .dew
-                ? String(format: humidityFormat, units.temperatureUnit.symbol)
-                : String(format: humidityFormat, units.humidityUnit.symbol),
-            String(format: pressureFormat, units.pressureUnit.symbol),
-            "RSSI" + " (\("dBm".localized()))",
-            "ExportService.AccelerationX".localized() + " (\("g".localized()))",
-            "ExportService.AccelerationY".localized() + " (\("g".localized()))",
-            "ExportService.AccelerationZ".localized() + " (\("g".localized()))",
-            "ExportService.Voltage".localized(),
-            "ExportService.MovementCounter".localized() + " (\("Cards.Movements.title".localized()))",
-            "ExportService.MeasurementSequenceNumber".localized(),
-            "ExportService.TXPower".localized() + " (\("dBm".localized()))"
+                ? humidityFormat(units.temperatureUnit.symbol)
+                : humidityFormat(units.humidityUnit.symbol),
+                pressureFormat(units.pressureUnit.symbol),
+            "RSSI" + " (\(RuuviLocalization.dBm))",
+                    RuuviLocalization.ExportService.accelerationX + " (\(RuuviLocalization.g))",
+                    RuuviLocalization.ExportService.accelerationY + " (\(RuuviLocalization.g))",
+                    RuuviLocalization.ExportService.accelerationZ + " (\(RuuviLocalization.g))",
+                    RuuviLocalization.ExportService.voltage,
+                    RuuviLocalization.ExportService.movementCounter + " (\(RuuviLocalization.Cards.Movements.title))",
+                    RuuviLocalization.ExportService.measurementSequenceNumber,
+                    RuuviLocalization.ExportService.txPower + " (\(RuuviLocalization.dBm))"
         ]
     }
 }

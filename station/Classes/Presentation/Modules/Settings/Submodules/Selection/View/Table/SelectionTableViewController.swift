@@ -1,6 +1,7 @@
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
 
 class SelectionTableViewController: UITableViewController {
     var output: SelectionViewOutput!
@@ -81,17 +82,17 @@ extension SelectionTableViewController {
             case .pressure:
                 cell.nameLabel.text = title + " " + pressureUnit.symbol
             default:
-                cell.nameLabel.text = "N/A".localized()
+                cell.nameLabel.text = RuuviLocalization.na
             }
             updateCellStyle(with: title, cell: cell)
 
         } else {
             if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
-                cell.nameLabel.text = String(format: item.title, settings.temperatureUnit.symbol)
+                cell.nameLabel.text = item.title(settings.temperatureUnit.symbol)
             } else {
-                cell.nameLabel.text = item.title
+                cell.nameLabel.text = item.title("")
             }
-            updateCellStyle(with: item.title, cell: cell)
+            updateCellStyle(with: item.title(""), cell: cell)
         }
 
         return cell

@@ -280,7 +280,7 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "HumidityUnit.gm3.title" = "Absolut (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relativ (%)";
-"%" = "%";
+"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "MAC Adress";
 "Menu.Label.AboutHelp.text" = "Om / Hjälp";
 "Menu.Label.AddAnNewSensor.text" = "Lägg till en ny Sensor";
@@ -749,6 +749,6 @@ RuuviTag-sensorn är redo att användas!";
 "activity_saving_to_cloud" = "Sparar till molnet... vänligen vänta.";
 "activity_saving_success" = "Sparad.";
 "activity_saving_fail" = "Det gick inte att spara ändringar i molnet.";
-"activity_ongoing_generic" = "Please wait...";
-"activity_success_generic" = "Operation successful.";
-"activity_failed_generic" = "Operation failed.";
+"activity_ongoing_generic" = "Vänta...";
+"activity_success_generic" = "Operationen lyckades.";
+"activity_failed_generic" = "Operationen misslyckades.";

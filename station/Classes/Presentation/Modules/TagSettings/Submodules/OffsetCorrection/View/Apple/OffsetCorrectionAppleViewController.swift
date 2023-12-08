@@ -1,5 +1,6 @@
 import UIKit
 import RuuviOntology
+import RuuviLocalization
 import RuuviService
 #if canImport(RuuviServiceMeasurement)
 import RuuviServiceMeasurement
@@ -93,7 +94,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
         originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
+                label.text = "\((value.bound * 100).round(to: 2))\(RuuviLocalization.humidityRelativeUnit)"
             case .pressure:
                 label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
                                                              allowSettings: false)
@@ -124,7 +125,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
         correctedValueLabel.bind(viewModel.correctedValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
+                label.text = "\((value.bound * 100).round(to: 2))\(RuuviLocalization.humidityRelativeUnit)"
             case .pressure:
                 label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
                                                              allowSettings: false)
@@ -139,15 +140,15 @@ class OffsetCorrectionAppleViewController: UIViewController {
 extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
     func localize() {
         configDescriptionContent()
-        correctedValueTitle.text = "OffsetCorrection.CorrectedValue.title".localized()
-        originalValueTitle.text = "OffsetCorrection.OriginalValue.title".localized()
-        calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
-        clearButton.setTitle("HumidityCalibration.Button.Clear.title".localized(), for: .normal)
+        correctedValueTitle.text = RuuviLocalization.OffsetCorrection.CorrectedValue.title
+        originalValueTitle.text = RuuviLocalization.OffsetCorrection.OriginalValue.title
+        calibrateButton.setTitle(RuuviLocalization.HumidityCalibration.Button.Calibrate.title, for: .normal)
+        clearButton.setTitle(RuuviLocalization.HumidityCalibration.Button.Clear.title, for: .normal)
         self.title = self.viewModel.title
     }
 
     private func configDescriptionContent() {
-        let text = "OffsetCorrection.CalibrationDescription.text".localized()
+            let text = RuuviLocalization.OffsetCorrection.CalibrationDescription.text
 
         let attrString = NSMutableAttributedString(string: text)
         let muliRegular = UIFont.Muli(.regular, size: 16)
@@ -163,46 +164,45 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
     }
 
     func showCalibrateDialog() {
-        let title = "OffsetCorrection.Dialog.Calibration.Title".localized()
+        let title = RuuviLocalization.OffsetCorrection.Dialog.Calibration.title
         var message = ""
         switch self.viewModel.type {
         case .humidity:
-            let format = "OffsetCorrection.Dialog.Calibration.EnterHumidity".localized()
-            message = String(format: format, "%".localized())
+            message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterHumidity(RuuviLocalization.humidityRelativeUnit)
         case .pressure:
-            let format = "OffsetCorrection.Dialog.Calibration.EnterPressure".localized()
+            let format = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterPressure
             let unit = self.viewModel.pressureUnit.value ?? .hectopascals
-            message = String(format: format, unit.symbol)
+            message = format(unit.symbol)
         default:
-            let format = "OffsetCorrection.Dialog.Calibration.EnterTemperature".localized()
+            let format = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterTemperature
             let unit = self.viewModel.temperatureUnit.value ?? .celsius
-            message = String(format: format, unit.symbol)
+            message = format(unit.symbol)
         }
 
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addTextField { textfield in
             textfield.keyboardType = .numbersAndPunctuation
         }
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+             controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
             style: .destructive,
             handler: { [weak self] _ in
                 let text = controller.textFields?.first?.text ?? "0.0"
                 self?.output.viewDidSetCorrectValue(correctValue: text.doubleValue)
             }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
     func showClearConfirmationDialog() {
-        let title = "OffsetCorrection.Dialog.Calibration.Title".localized()
-        let message = "OffsetCorrection.Dialog.Calibration.ClearConfirm".localized()
+        let title = RuuviLocalization.OffsetCorrection.Dialog.Calibration.title
+        let message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.clearConfirm
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
             style: .destructive,
             handler: { [weak self] _ in
                 self?.output.viewDidClearOffsetValue()
             }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 }

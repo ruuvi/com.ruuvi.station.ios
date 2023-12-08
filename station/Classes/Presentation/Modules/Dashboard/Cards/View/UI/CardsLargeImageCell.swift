@@ -2,6 +2,7 @@
 import UIKit
 import RuuviService
 import RuuviLocal
+import RuuviLocalization
 import RuuviOntology
 
 class CardsLargeImageCell: UICollectionViewCell {
@@ -226,13 +227,13 @@ extension CardsLargeImageCell {
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
             temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
         } else {
-            temperatureLabel.text = "N/A".localized()
+            temperatureLabel.text = RuuviLocalization.na
         }
 
         if let temperatureUnit = measurementService?.units.temperatureUnit {
             temperatureUnitLabel.text = temperatureUnit.symbol
         } else {
-            temperatureUnitLabel.text = "N/A".localized()
+            temperatureUnitLabel.text = RuuviLocalization.na
         }
 
         // Humidity
@@ -271,7 +272,7 @@ extension CardsLargeImageCell {
                 hideMovementView(hide: false)
                 movementView.setValue(
                     with: "\(movement)",
-                    unit: "Cards.Movements.title".localized()
+                    unit: RuuviLocalization.Cards.Movements.title
                 )
             } else {
                 hideMovementView(hide: true)
@@ -282,7 +283,7 @@ extension CardsLargeImageCell {
         if let date = viewModel.date.value?.ruuviAgo() {
             updatedAtLabel.text = date
         } else {
-            updatedAtLabel.text = "Cards.UpdatedLabel.NoData.message".localized()
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
         }
         startTimer(with: viewModel.date.value)
 
@@ -332,7 +333,7 @@ extension CardsLargeImageCell {
         timer = Timer.scheduledTimer(withTimeInterval: 1,
                                      repeats: true,
                                      block: { [weak self] (_) in
-            self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+            self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
         })
     }
 
@@ -361,12 +362,12 @@ extension CardsLargeImageCell {
             isSyncing = false
         case .syncing:
             isSyncing = true
-            syncStateLabel.text = "TagCharts.Status.Serving".localized()
+            syncStateLabel.text = RuuviLocalization.TagCharts.Status.serving
         case .complete:
-            syncStateLabel.text = "Synchronized".localized()
+            syncStateLabel.text = RuuviLocalization.synchronized
             hideSyncStatusLabel()
         case .onError:
-            syncStateLabel.text = "ErrorPresenterAlert.Error".localized()
+            syncStateLabel.text = RuuviLocalization.ErrorPresenterAlert.error
             hideSyncStatusLabel()
         }
     }

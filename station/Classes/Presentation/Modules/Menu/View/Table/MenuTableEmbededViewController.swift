@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
@@ -22,12 +23,12 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
 // MARK: - MenuViewInput
 extension MenuTableEmbededViewController {
     func localize() {
-        addANewSensorLabel.text = "Menu.Label.AddAnNewSensor.text".localized()
-        appSettingsLabel.text = "Menu.Label.AppSettings.text".localized()
-        aboutHelpLabel.text = "Menu.Label.AboutHelp.text".localized()
-        whatToMeasureLabel.text = "Menu.Label.WhatToMeasure.text".localized()
-        getMoreSensorsLabel.text = "Menu.Label.GetMoreSensors.text".localized()
-        feedbackLabel.text = "Menu.Label.Feedback.text".localized()
+        addANewSensorLabel.text = RuuviLocalization.Menu.Label.AddAnNewSensor.text
+        appSettingsLabel.text = RuuviLocalization.Menu.Label.AppSettings.text
+        aboutHelpLabel.text = RuuviLocalization.Menu.Label.AboutHelp.text
+        whatToMeasureLabel.text = RuuviLocalization.Menu.Label.WhatToMeasure.text
+        getMoreSensorsLabel.text = RuuviLocalization.Menu.Label.GetMoreSensors.text
+        feedbackLabel.text = RuuviLocalization.Menu.Label.Feedback.text
     }
 }
 
@@ -55,8 +56,8 @@ extension MenuTableEmbededViewController {
                             forRowAt indexPath: IndexPath) {
         if cell == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
-            ? "Menu.Label.MyRuuviAccount.text".localized()
-                : "SignIn.Title.text".localized()
+            ? RuuviLocalization.Menu.Label.MyRuuviAccount.text
+            : RuuviLocalization.SignIn.Title.text
         }
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

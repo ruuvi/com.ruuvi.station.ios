@@ -280,7 +280,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
 "g/m³" = "г/м³";
 "HumidityUnit.Percent.title" = "Относительная влажность (%)";
-"%" = "%";
+"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "MAC адрес";
 "Menu.Label.AboutHelp.text" = "О Приложении";
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
@@ -674,7 +674,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "lets_do_it" = "Let's Sign In";
 "enter_code" = "Enter Code";
 "dashboard_no_sensors_message" = "Seems that you don't have any Ruuvi sensors added yet.";
-"dashboard_no_sensors_message_signed_out" = "You are not signed in.\n\nIf you have an account and have already added Ruuvi sensors to it, they will automatically synchronise with Ruuvi Station mobile app when you sign in.";
+"dashboard_no_sensors_message_signed_out" = "Вы не вошли в аккаунт.\n\nЕсли у вас уже есть аккаунт Ruuvi и добавлены датчики в него, то они будут автоматичеки синхронизированы с мобильным приложением после того как вы войдете в свой аккаунт.";
 "add_a_sensor" = "Add a Sensor";
 "changelog" = "(changelog)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";

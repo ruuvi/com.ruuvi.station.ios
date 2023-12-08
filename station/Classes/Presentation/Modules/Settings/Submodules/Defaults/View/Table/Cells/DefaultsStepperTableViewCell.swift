@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol DefaultsStepperTableViewCellDelegate: AnyObject {
@@ -23,11 +24,11 @@ class DefaultsStepperTableViewCell: UITableViewCell {
         let unitString: String
         switch unit {
         case .hours:
-            unitString = "Defaults.Interval.Hour.string".localized()
+            unitString = RuuviLocalization.Defaults.Interval.Hour.string
         case .minutes:
-            unitString = "Defaults.Interval.Min.string".localized()
+            unitString = RuuviLocalization.Defaults.Interval.Min.string
         case .seconds:
-            unitString = "Defaults.Interval.Sec.string".localized()
+            unitString = RuuviLocalization.Defaults.Interval.Sec.string
         case .decimal:
             unitString = ""
         }

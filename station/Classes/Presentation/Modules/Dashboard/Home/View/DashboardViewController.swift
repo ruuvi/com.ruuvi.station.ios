@@ -3,6 +3,7 @@ import UIKit
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
 import RuuviService
 
 class DashboardViewController: UIViewController {
@@ -109,7 +110,7 @@ class DashboardViewController: UIViewController {
     private lazy var viewButton: RuuviContextMenuButton =
         RuuviContextMenuButton(menu: viewToggleMenuOptions(),
                                titleColor: RuuviColor.dashboardIndicatorTextColor,
-                               title: "view".localized(),
+                               title: RuuviLocalization.view,
                                icon: RuuviAssets.dropDownArrowImage,
                                iconTintColor: RuuviColor.logoTintColor,
                                iconSize: .init(width: 14, height: 14),
@@ -235,14 +236,14 @@ extension DashboardViewController {
 extension DashboardViewController {
     private func viewToggleMenuOptions() -> UIMenu {
         // Card Type
-        let imageViewTypeAction = UIAction(title: "image_cards".localized()) {
+        let imageViewTypeAction = UIAction(title: RuuviLocalization.imageCards) {
             [weak self] _ in
             self?.output.viewDidChangeDashboardType(dashboardType: .image)
             self?.reloadCollectionView(redrawLayout: true)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        let simpleViewTypeAction = UIAction(title: "simple_cards".localized()) {
+        let simpleViewTypeAction = UIAction(title: RuuviLocalization.simpleCards) {
             [weak self] _ in
             self?.output.viewDidChangeDashboardType(dashboardType: .simple)
             self?.reloadCollectionView(redrawLayout: true)
@@ -252,20 +253,20 @@ extension DashboardViewController {
         simpleViewTypeAction.state = dashboardType == .simple ? .on : .off
         imageViewTypeAction.state = dashboardType == .image ? .on : .off
 
-        let cardTypeMenu = UIMenu(title: "card_type".localized(),
+        let cardTypeMenu = UIMenu(title: RuuviLocalization.cardType,
                                   options: .displayInline,
                                   children: [
             imageViewTypeAction, simpleViewTypeAction
         ])
 
         // Card action
-        let openSensorViewAction = UIAction(title: "open_sensor_view".localized()) {
+        let openSensorViewAction = UIAction(title: RuuviLocalization.openSensorView) {
             [weak self] _ in
             self?.output.viewDidChangeDashboardTapAction(type: .card)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
         }
 
-        let openHistoryViewAction = UIAction(title: "open_history_view".localized()) {
+        let openHistoryViewAction = UIAction(title: RuuviLocalization.openHistoryView) {
             [weak self] _ in
             self?.output.viewDidChangeDashboardTapAction(type: .chart)
             self?.viewButton.updateMenu(with: self?.viewToggleMenuOptions())
@@ -274,7 +275,7 @@ extension DashboardViewController {
         openSensorViewAction.state = dashboardTapActionType == .card ? .on : .off
         openHistoryViewAction.state = dashboardTapActionType == .chart ? .on : .off
 
-        let cardActionMenu = UIMenu(title: "card_action".localized(),
+        let cardActionMenu = UIMenu(title: RuuviLocalization.cardAction,
                                     options: .displayInline,
                                     children: [
             openSensorViewAction, openHistoryViewAction
@@ -289,42 +290,42 @@ extension DashboardViewController {
     }
 
     private func cardContextMenuOption(for index: Int) -> UIMenu {
-        let fullImageViewAction = UIAction(title: "full_image_view".localized()) {
+        let fullImageViewAction = UIAction(title: RuuviLocalization.fullImageView) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
                 self?.output.viewDidTriggerOpenCardImageView(for: viewModel)
             }
         }
 
-        let historyViewAction = UIAction(title: "history_view".localized()) {
+        let historyViewAction = UIAction(title: RuuviLocalization.historyView) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
                 self?.output.viewDidTriggerChart(for: viewModel)
             }
         }
 
-        let settingsAction = UIAction(title: "settings_and_alerts".localized()) {
+        let settingsAction = UIAction(title: RuuviLocalization.settingsAndAlerts) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
                 self?.output.viewDidTriggerSettings(for: viewModel)
             }
         }
 
-        let changeBackgroundAction = UIAction(title: "change_background".localized()) {
+        let changeBackgroundAction = UIAction(title: RuuviLocalization.changeBackground) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
                 self?.output.viewDidTriggerChangeBackground(for: viewModel)
             }
         }
 
-        let renameAction = UIAction(title: "rename".localized()) {
+        let renameAction = UIAction(title: RuuviLocalization.rename) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
                 self?.output.viewDidTriggerRename(for: viewModel)
             }
         }
 
-        let shareSensorAction = UIAction(title: "TagSettings.ShareButton".localized()) {
+        let shareSensorAction = UIAction(title: RuuviLocalization.TagSettings.shareButton) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
                 self?.output.viewDidTriggerShare(for: viewModel)
@@ -622,10 +623,10 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
-        let title = "Cards.BluetoothDisabledAlert.title".localized()
-        let message = "Cards.BluetoothDisabledAlert.message".localized()
+        let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
                                         style: .default, handler: { _ in
             guard let url = URL(string: userDeclined ?
                                 UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
@@ -634,7 +635,7 @@ extension DashboardViewController: DashboardViewInput {
             }
             UIApplication.shared.open(url)
         }))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
@@ -645,13 +646,13 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
-        let message = "Cards.KeepConnectionDialog.message".localized()
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialogChart(for: viewModel)
         }))
-        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionChart(to: viewModel)
         }))
@@ -659,13 +660,13 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
-        let message = "Cards.KeepConnectionDialog.message".localized()
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel)
         }))
-        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
@@ -673,17 +674,16 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showReverseGeocodingFailed() {
-        let message = "Cards.Error.ReverseGeocodingFailed.message".localized()
+        let message = RuuviLocalization.Cards.Error.ReverseGeocodingFailed.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 
     func showAlreadyLoggedInAlert(with email: String) {
-        let message = String.localizedStringWithFormat("Cards.Alert.AlreadyLoggedIn.message".localized(),
-                                                                 email)
+        let message = RuuviLocalization.Cards.Alert.AlreadyLoggedIn.message(email)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 
@@ -692,8 +692,8 @@ extension DashboardViewController: DashboardViewInput {
             from: viewModel.mac.value?.mac,
             luid: viewModel.luid.value?.value
         )
-        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
-                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+        let alert = UIAlertController(title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
+                                      message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
@@ -702,7 +702,7 @@ extension DashboardViewController: DashboardViewInput {
             alertTextField.placeholder = defaultName
             self.tagNameTextField = alertTextField
         }
-        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self = self else { return }
             if let name = self.tagNameTextField.text, !name.isEmpty {
                 self.output.viewDidRenameTag(to: name, viewModel: viewModel)
@@ -710,7 +710,7 @@ extension DashboardViewController: DashboardViewInput {
                 self.output.viewDidRenameTag(to: defaultName, viewModel: viewModel)
             }
         }
-        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)

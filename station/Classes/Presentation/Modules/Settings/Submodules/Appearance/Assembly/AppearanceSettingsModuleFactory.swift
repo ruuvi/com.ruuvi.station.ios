@@ -1,5 +1,6 @@
 import UIKit
 import RuuviLocal
+import RuuviLocalization
 
 protocol AppearanceSettingsModuleFactory {
     func create() -> AppearanceSettingsTableViewController
@@ -10,7 +11,7 @@ final class AppearanceSettingsModuleFactoryImpl: AppearanceSettingsModuleFactory
         let r = AppAssembly.shared.assembler.resolver
 
         let view = AppearanceSettingsTableViewController(
-            title: "settings_appearance".localized()
+            title: RuuviLocalization.settingsAppearance
         )
         let router = AppearanceSettingsRouter()
         router.transitionHandler = view

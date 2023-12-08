@@ -2,6 +2,7 @@
 import UIKit
 import RuuviService
 import RuuviLocal
+import RuuviLocalization
 import RuuviOntology
 
 class DashboardImageCell: UICollectionViewCell {
@@ -320,13 +321,13 @@ extension DashboardImageCell {
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
             temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
         } else {
-            temperatureLabel.text = "N/A".localized()
+            temperatureLabel.text = RuuviLocalization.na
         }
 
         if let temperatureUnit = measurementService?.units.temperatureUnit {
             temperatureUnitLabel.text = temperatureUnit.symbol
         } else {
-            temperatureUnitLabel.text = "N/A".localized()
+            temperatureUnitLabel.text = RuuviLocalization.na
         }
 
         // Humidity
@@ -364,7 +365,7 @@ extension DashboardImageCell {
             if let movement = viewModel.movementCounter.value {
                 hideMovementView(hide: false)
                 movementView.setValue(with: "\(movement)",
-                                      unit: "Cards.Movements.title".localized())
+                                      unit: RuuviLocalization.Cards.Movements.title)
             } else {
                 hideMovementView(hide: true)
             }
@@ -374,7 +375,7 @@ extension DashboardImageCell {
         if let date = viewModel.date.value?.ruuviAgo() {
             updatedAtLabel.text = date
         } else {
-            updatedAtLabel.text = "Cards.UpdatedLabel.NoData.message".localized()
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
         }
         startTimer(with: viewModel.date.value)
 
@@ -529,7 +530,7 @@ extension DashboardImageCell {
             if let date = date?.ruuviAgo() {
                 self?.updatedAtLabel.text = date
             } else {
-                self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+                self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
             }
         })
     }

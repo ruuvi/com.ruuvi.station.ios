@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class AboutViewController: UIViewController {
@@ -81,7 +82,7 @@ extension AboutViewController: UITextViewDelegate {
 // MARK: - View configuration
 extension AboutViewController {
     private func configureViews() {
-        headerTitleLabel.text = "About.AboutHelp.header".localized()
+        headerTitleLabel.text = RuuviLocalization.About.AboutHelp.header
         configureTextView()
         bindViewModel()
     }
@@ -104,17 +105,17 @@ extension AboutViewController {
     private func configureTextView() {
 
         let text =
-            "About.AboutHelp.contents".localized() + fourNewlines +
-            "About.OperationsManual.header".localized() + twoNewlines +
-            "About.OperationsManual.contents".localized() + fourNewlines +
-            "About.Troubleshooting.header".localized() + twoNewlines +
-            "About.Troubleshooting.contents".localized() + fourNewlines +
-            "About.OpenSource.header".localized() + twoNewlines +
-            "About.OpenSource.contents".localized() + fourNewlines +
-            "About.More.header".localized() + twoNewlines +
-            "About.More.contents".localized() + fourNewlines +
-            "About.Privacy.header".localized() + twoNewlines +
-            "About.Privacy.contents".localized() + "\n"
+        RuuviLocalization.About.AboutHelp.contents + fourNewlines +
+        RuuviLocalization.About.OperationsManual.header + twoNewlines +
+        RuuviLocalization.About.OperationsManual.contents + fourNewlines +
+        RuuviLocalization.About.Troubleshooting.header + twoNewlines +
+        RuuviLocalization.About.Troubleshooting.contents + fourNewlines +
+        RuuviLocalization.About.OpenSource.header + twoNewlines +
+        RuuviLocalization.About.OpenSource.contents + fourNewlines +
+        RuuviLocalization.About.More.header + twoNewlines +
+        RuuviLocalization.About.More.contents + fourNewlines +
+        RuuviLocalization.About.Privacy.header + twoNewlines +
+        RuuviLocalization.About.Privacy.contents + "\n"
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
@@ -123,11 +124,11 @@ extension AboutViewController {
                                 range: range)
 
         // make headers bold
-        let makeBold = ["About.OperationsManual.header".localized(),
-                        "About.Troubleshooting.header".localized(),
-                        "About.OpenSource.header".localized(),
-                        "About.More.header".localized(),
-                        "About.Privacy.header".localized()]
+        let makeBold = [RuuviLocalization.About.OperationsManual.header,
+                        RuuviLocalization.About.Troubleshooting.header,
+                        RuuviLocalization.About.OpenSource.header,
+                        RuuviLocalization.About.More.header,
+                        RuuviLocalization.About.Privacy.header]
         let boldFont = UIFont.Muli(.bold, size: 16)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)

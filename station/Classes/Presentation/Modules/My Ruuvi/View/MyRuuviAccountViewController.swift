@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import RuuviLocalization
 
 class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
@@ -40,9 +41,9 @@ extension MyRuuviAccountViewController: MyRuuviAccountViewInput {
     func localize() {}
 
     func viewDidShowAccountDeletionConfirmation() {
-        let message = "MyRuuvi.Settings.DeleteAccount.Confirmation.message".localized()
+        let message = RuuviLocalization.MyRuuvi.Settings.DeleteAccount.Confirmation.message
         let alertVC = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 }
@@ -56,15 +57,15 @@ extension MyRuuviAccountViewController {
             label.text = username
         }
         loggedInLabel.bind(viewModel.username) { label, username in
-            label.text = username == nil ? nil : "Menu.LoggedIn.title".localized()
+            label.text = username == nil ? nil : RuuviLocalization.Menu.LoggedIn.title
         }
     }
 
     private func configureViews() {
-        headerTitleLabel.text = "Menu.Label.MyRuuviAccount.text".localized()
-        deleteAccountButton.setTitle("MyRuuvi.Settings.DeleteAccount.title".localized(), for: .normal)
-        deleteAccountButton.setTitle("MyRuuvi.Settings.DeleteAccount.title".localized(), for: .normal)
-        signoutButton.setTitle("Menu.SignOut.text".localized(), for: .normal)
-        signoutButton.setTitle("Menu.SignOut.text".localized(), for: .highlighted)
+        headerTitleLabel.text = RuuviLocalization.Menu.Label.MyRuuviAccount.text
+        deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
+        deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
+        signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .normal)
+        signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .highlighted)
     }
 }

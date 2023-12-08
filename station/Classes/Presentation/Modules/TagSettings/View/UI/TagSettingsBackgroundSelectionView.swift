@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 // swiftlint:disable:next type_name
 protocol TagSettingsBackgroundSelectionViewDelegate: NSObjectProtocol {
@@ -16,7 +17,7 @@ class TagSettingsBackgroundSelectionView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 14)
-        label.text = "change_background_image".localized()
+        label.text = RuuviLocalization.changeBackgroundImage
         return label
     }()
 

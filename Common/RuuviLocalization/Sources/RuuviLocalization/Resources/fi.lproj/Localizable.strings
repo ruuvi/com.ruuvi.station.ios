@@ -280,7 +280,7 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "HumidityUnit.gm3.title" = "Absoluuttinen (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Suhteellinen (%)";
-"%" = "%";
+"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "MAC-osoite";
 "Menu.Label.AboutHelp.text" = "Tietoa / Apua";
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
@@ -749,6 +749,6 @@ RuuviTag on valmis käyttöön!";
 "activity_saving_to_cloud" = "Tallennetaan pilveen...odota hetki.";
 "activity_saving_success" = "Tallennus onnistui.";
 "activity_saving_fail" = "Muutoksia ei voitu tallentaa pilveen.";
-"activity_ongoing_generic" = "Please wait...";
-"activity_success_generic" = "Operation successful.";
-"activity_failed_generic" = "Operation failed.";
+"activity_ongoing_generic" = "Odota...";
+"activity_success_generic" = "Toiminto onnistui.";
+"activity_failed_generic" = "Toiminto epäonnistui.";

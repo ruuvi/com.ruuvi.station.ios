@@ -2,6 +2,7 @@
 import UIKit
 import RuuviService
 import RuuviLocal
+import RuuviLocalization
 import RuuviOntology
 
 class DashboardPlainCell: UICollectionViewCell {
@@ -283,7 +284,7 @@ extension DashboardPlainCell {
            let temperatureUnit = measurementService?.units.temperatureUnit {
             temperatureView.setValue(with: temp, unit: temperatureUnit.symbol)
         } else {
-            temperatureView.setValue(with: "N/A".localized())
+            temperatureView.setValue(with: RuuviLocalization.na)
         }
 
         // Humidity
@@ -321,7 +322,7 @@ extension DashboardPlainCell {
             if let movement = viewModel.movementCounter.value {
                 hideMovementView(hide: false)
                 movementView.setValue(with: "\(movement)",
-                                      unit: "Cards.Movements.title".localized())
+                                      unit: RuuviLocalization.Cards.Movements.title)
             } else {
                 hideMovementView(hide: true)
             }
@@ -331,7 +332,7 @@ extension DashboardPlainCell {
         if let date = viewModel.date.value?.ruuviAgo() {
             updatedAtLabel.text = date
         } else {
-            updatedAtLabel.text = "Cards.UpdatedLabel.NoData.message".localized()
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
         }
 
         startTimer(with: viewModel.date.value)
@@ -489,7 +490,7 @@ extension DashboardPlainCell {
             if let date = date?.ruuviAgo() {
                 self?.updatedAtLabel.text = date
             } else {
-                self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+                self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
             }
         })
     }

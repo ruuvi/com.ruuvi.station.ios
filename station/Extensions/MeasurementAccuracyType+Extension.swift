@@ -2,14 +2,14 @@ import Foundation
 import RuuviOntology
 
 extension MeasurementAccuracyType: SelectionItemProtocol {
-    public var title: String {
+    public var title: (String) -> String {
         switch self {
         case .zero:
-            return "1"
+            return { _ in "1" }
         case .one:
-            return "0.1"
+            return { _ in "0.1" }
         case .two:
-            return "0.01"
+            return { _ in "0.01" }
         }
     }
 }

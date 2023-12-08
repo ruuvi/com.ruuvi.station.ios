@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 import CoreNFC
 import RuuviOntology
@@ -28,7 +29,7 @@ class SensorRemovalViewController: UIViewController {
     private var removeCloudHistoryActionContainer = UIView.init(color: .clear)
     private lazy var removeCloudHistoryTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "remove_cloud_history_title".localized()
+        label.text = RuuviLocalization.removeCloudHistoryTitle
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -38,7 +39,7 @@ class SensorRemovalViewController: UIViewController {
 
     private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "remove_cloud_history_description".localized()
+        label.text = RuuviLocalization.removeCloudHistoryDescription
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -55,7 +56,7 @@ class SensorRemovalViewController: UIViewController {
     private lazy var removeButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
-        button.setTitle("Remove".localized(), for: .normal)
+        button.setTitle(RuuviLocalization.remove, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
         button.addTarget(self,
@@ -90,15 +91,15 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
     func updateView(claimedAndOwned: Bool, locallyOwned: Bool, shared: Bool) {
         var message: String = ""
         if claimedAndOwned {
-            message = "remove_claimed_sensor_description".localized()
+            message = RuuviLocalization.removeClaimedSensorDescription
         }
 
         if locallyOwned {
-            message = "remove_local_sensor_description".localized()
+            message = RuuviLocalization.removeLocalSensorDescription
         }
 
         if shared {
-            message = "remove_shared_sensor_description".localized()
+            message = RuuviLocalization.removeSharedSensorDescription
         }
 
         messageLabel.text = message
@@ -110,16 +111,16 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
     }
 
     func showHistoryDataRemovalConfirmationDialog() {
-        let title = "dialog_are_you_sure".localized()
-        let message = "dialog_operation_undone".localized()
+        let title = RuuviLocalization.dialogAreYouSure
+        let message = RuuviLocalization.dialogOperationUndone
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
                                            style: .destructive,
                                            handler: { [weak self] _ in
             guard let self = self else { return }
             self.output?.viewDidConfirmTagRemoval(with: self.removeCloudHistorySwitch.isOn)
         }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 }
@@ -132,7 +133,7 @@ extension SensorRemovalViewController {
     }
 
     private func setUpBase() {
-        self.title = "TagSettings.confirmTagRemovalDialog.title".localized()
+        self.title = RuuviLocalization.TagSettings.ConfirmTagRemovalDialog.title
 
         view.backgroundColor = RuuviColor.ruuviPrimary
 

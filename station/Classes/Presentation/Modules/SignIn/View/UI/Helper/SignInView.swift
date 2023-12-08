@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol SignInViewDelegate: NSObjectProtocol {
@@ -25,7 +26,7 @@ class SignInView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "sign_in_or_create_free_account".localized()
+        label.text = RuuviLocalization.signInOrCreateFreeAccount
         label.font = UIFont.Montserrat(.extraBold,
                                        size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
@@ -36,7 +37,7 @@ class SignInView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "to_use_all_app_features".localized()
+        label.text = RuuviLocalization.toUseAllAppFeatures
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
@@ -49,7 +50,7 @@ class SignInView: UIView {
         textField.textColor = .white
         textField.textAlignment = .left
         textField.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
-        textField.placeholder = "type_your_email".localized()
+        textField.placeholder = RuuviLocalization.typeYourEmail
         textField.addPadding(padding: .equalSpacing(16))
         textField.setPlaceHolderColor(color: UIColor.darkGray.withAlphaComponent(0.7))
         textField.keyboardType = .emailAddress
@@ -62,7 +63,7 @@ class SignInView: UIView {
     private lazy var requestCodeButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
-        button.setTitle("request_code".localized(),
+        button.setTitle(RuuviLocalization.requestCode,
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
@@ -77,7 +78,7 @@ class SignInView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "no_password_needed".localized()
+        label.text = RuuviLocalization.noPasswordNeeded
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 16)
         return label
     }()

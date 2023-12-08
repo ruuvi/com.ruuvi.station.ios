@@ -8,6 +8,7 @@ import RuuviLocal
 import BTKit
 import RuuviService
 import GestureInstructions
+import RuuviLocalization
 
 // swiftlint:disable type_body_length
 class TagChartsViewController: UIViewController {
@@ -18,7 +19,7 @@ class TagChartsViewController: UIViewController {
 
     var historyLengthInDay: Int = 1 {
         didSet {
-            historySelectionButton.updateTitle(with: "day_\(historyLengthInDay)".localized())
+            historySelectionButton.updateTitle(with: "day_\(historyLengthInDay)") // TODO: @rinat localize
         }
     }
 
@@ -27,7 +28,7 @@ class TagChartsViewController: UIViewController {
             if historyLengthInHours >= 24 {
                 historyLengthInDay = historyLengthInHours / 24
             } else {
-                let unit = historyLengthInHours == 1 ? "hour".localized() : "hours".localized()
+                let unit = historyLengthInHours == 1 ? RuuviLocalization.hour : RuuviLocalization.hours
                 historySelectionButton.updateTitle(
                     with: "\(historyLengthInHours) " + unit.lowercased()
                 )
@@ -47,7 +48,7 @@ class TagChartsViewController: UIViewController {
             historySelectionButton.updateMenu(with: historyLengthOptions())
             if showChartAll {
                 historySelectionButton.updateTitle(
-                    with: "all".localized()
+                    with: RuuviLocalization.all
                 )
             }
         }
@@ -66,7 +67,7 @@ class TagChartsViewController: UIViewController {
     // Body
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
-        label.text = "empty_chart_message".localized()
+        label.text = RuuviLocalization.emptyChartMessage
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -78,7 +79,7 @@ class TagChartsViewController: UIViewController {
     private lazy var historySelectionButton: RuuviContextMenuButton =
         RuuviContextMenuButton(menu: historyLengthOptions(),
                                titleColor: .white,
-                               title: "1 day".localized(),
+                               title: RuuviLocalization.day1,
                                icon: RuuviAssets.dropDownArrowImage,
                                iconTintColor: RuuviColor.logoTintColor,
                                iconSize: .init(width: 14, height: 14),
@@ -121,7 +122,7 @@ class TagChartsViewController: UIViewController {
     lazy var syncProgressView = UIView(color: .clear)
     lazy var syncStatusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Reading history..."
+        label.text = "Reading history..." // TODO: @rinat localize
         label.textColor = .white
         label.textAlignment = .left
         label.font = UIFont.Muli(.regular, size: 16)
@@ -132,7 +133,7 @@ class TagChartsViewController: UIViewController {
         let button = RuuviContextMenuButton(
             menu: nil,
             titleColor: .white,
-            title: "TagCharts.Sync.title".localized(),
+            title: RuuviLocalization.TagCharts.Sync.title,
             icon: UIImage(named: "icon_sync_bt"),
             iconTintColor: .white,
             iconSize: .init(width: 22, height: 22),
@@ -395,7 +396,7 @@ class TagChartsViewController: UIViewController {
         var actions: [UIAction] = []
 
         // Add 'All' at the top
-        let all_action = UIAction(title: "all".localized()) { [weak self] _ in
+        let all_action = UIAction(title: RuuviLocalization.all) { [weak self] _ in
             self?.handleHistorySelectionAll()
         }
         all_action.state = showChartAll ? .on : .off
@@ -403,7 +404,7 @@ class TagChartsViewController: UIViewController {
 
         for hour in historyHoursOptions {
             let action = UIAction(
-                title: "\(hour) \(hour == 1 ? "hour".localized() : "hours".localized())".lowercased()
+                title: "\(hour) \(hour == 1 ? RuuviLocalization.hour : RuuviLocalization.hours)".lowercased()
             ) { [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: hour)
             }
@@ -416,7 +417,7 @@ class TagChartsViewController: UIViewController {
         }
 
         for day in minimumHistoryLimit...maximumHistoryLimit {
-            let action = UIAction(title: "day_\(day)".localized()) {
+            let action = UIAction(title: "day_\(day)") { // TODO: @rinat localize
                 [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: day*24)
             }
@@ -429,7 +430,7 @@ class TagChartsViewController: UIViewController {
         }
 
         // Add more at the bottom
-        let more_action = UIAction(title: "more".localized()) { [weak self] _ in
+        let more_action = UIAction(title: RuuviLocalization.more) { [weak self] _ in
             self?.handleHistoryLengthSelection(hours: nil)
         }
         actions.append(more_action)
@@ -441,10 +442,10 @@ class TagChartsViewController: UIViewController {
     fileprivate func handleHistoryLengthSelection(hours: Int?) {
         if let hours = hours {
             if hours >= 24 {
-                historySelectionButton.updateTitle(with: "day_\(hours/24)".localized())
+                historySelectionButton.updateTitle(with: "day_\(hours/24)") // TODO: @rinat localize
                 historySelectionButton.updateMenu(with: historyLengthOptions())
             } else {
-                let unit = hours == 1 ? "hour".localized() : "hours".localized()
+                let unit = hours == 1 ? RuuviLocalization.hour : RuuviLocalization.hours
                 historySelectionButton.updateTitle(
                         with: "\(hours) " + unit.lowercased()
                 )
@@ -462,19 +463,19 @@ class TagChartsViewController: UIViewController {
     }
 
     fileprivate func moreButtonOptions(showChartStat: Bool = true) -> UIMenu {
-        let exportHistoryAction = UIAction(title: "export_history".localized()) {
+        let exportHistoryAction = UIAction(title: RuuviLocalization.exportHistory) {
             [weak self] _ in
             self?.output.viewDidTapOnExport()
         }
 
-        let clearViewHistory = UIAction(title: "clear_view".localized()) {
+        let clearViewHistory = UIAction(title: RuuviLocalization.clearView) {
             [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.output.viewDidTriggerClear(for: sSelf.viewModel)
         }
 
         let minMaxAvgAction = UIAction(
-            title: !showChartStat ? "chart_stat_show".localized() : "chart_stat_hide".localized()
+            title: !showChartStat ? RuuviLocalization.chartStatShow : RuuviLocalization.chartStatHide
         ) {
             [weak self] _ in
             guard let sSelf = self else { return }
@@ -572,21 +573,21 @@ extension TagChartsViewController: TagChartsViewInput {
             switch data.chartType {
             case .temperature:
                 populateChartView(from: data.chartData,
-                                  title: "TagSettings.OffsetCorrection.Temperature".localized(),
+                                  title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
                                   type: data.chartType,
                                   unit: settings.temperatureUnit.symbol,
                                   settings: settings,
                                   view: temperatureChartView)
             case .humidity:
                 populateChartView(from: data.chartData,
-                                  title: "TagSettings.OffsetCorrection.Humidity".localized(),
+                                  title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
                                   type: data.chartType,
                                   unit: settings.humidityUnit.symbol,
                                   settings: settings,
                                   view: humidityChartView)
             case .pressure:
                 populateChartView(from: data.chartData,
-                                  title: "TagSettings.OffsetCorrection.Pressure".localized(),
+                                  title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
                                   type: data.chartType,
                                   unit: settings.pressureUnit.symbol,
                                   settings: settings,
@@ -661,14 +662,14 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func localize() {
-        syncButton.updateTitle(with: "TagCharts.Sync.title".localized())
+        syncButton.updateTitle(with: RuuviLocalization.TagCharts.Sync.title)
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
-        let title = "TagCharts.BluetoothDisabledAlert.title".localized()
-        let message = "TagCharts.BluetoothDisabledAlert.message".localized()
+        let title = RuuviLocalization.TagCharts.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.TagCharts.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
                                         style: .default, handler: { _ in
             guard let url = URL(string: userDeclined ?
                                 UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
@@ -677,16 +678,16 @@ extension TagChartsViewController: TagChartsViewInput {
             }
             UIApplication.shared.open(url)
         }))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let title = "clear_local_history".localized()
-        let message = "clear_local_history_description".localized()
+        let title = RuuviLocalization.clearLocalHistory
+        let message = RuuviLocalization.clearLocalHistoryDescription
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        let actionTitle = "TagCharts.Clear.title".localized()
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
+        let actionTitle = RuuviLocalization.TagCharts.Clear.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmToClear(for: viewModel)
 
@@ -699,18 +700,18 @@ extension TagChartsViewController: TagChartsViewInput {
             showSyncStatusLabel(show: true)
             switch progress {
             case .connecting:
-                syncStatusLabel.text = "TagCharts.Status.Connecting".localized()
+                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.connecting
             case .serving:
-                syncStatusLabel.text = "TagCharts.Status.Serving".localized()
+                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.serving
             case .reading(let points):
-                let format = "reading_history_x".localized()
+                let format = RuuviLocalization.readingHistoryX
                 syncStatusLabel.text = String(format: format, Float(points))
             case .disconnecting:
-                syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
+                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.disconnecting
             case .success:
-                syncStatusLabel.text = "TagCharts.Status.Success".localized()
+                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.success
             case .failure:
-                syncStatusLabel.text = "TagCharts.Status.Error".localized()
+                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.error
             }
         } else {
             showSyncStatusLabel(show: false)
@@ -722,11 +723,11 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showFailedToSyncIn() {
-        let title = "TagCharts.FailedToSyncDialog.title".localized()
-        let message = "TagCharts.FailedToSyncDialog.message".localized()
+        let title = RuuviLocalization.TagCharts.FailedToSyncDialog.title
+        let message = RuuviLocalization.TagCharts.FailedToSyncDialog.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(title: "TagCharts.TryAgain.title".localized(),
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.TagCharts.TryAgain.title,
                                         style: .default,
                                         handler: { [weak self] _ in
             guard let self = self else { return }
@@ -740,11 +741,11 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let title = "synchronisation".localized()
-        let message = "gatt_sync_description".localized()
+        let title = RuuviLocalization.synchronisation
+        let message = RuuviLocalization.gattSyncDescription
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Close".localized(), style: .cancel, handler: nil))
-        let actionTitle = "do_not_show_again".localized()
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.close, style: .cancel, handler: nil))
+        let actionTitle = RuuviLocalization.doNotShowAgain
         alertVC.addAction(UIAlertAction(title: actionTitle,
                                         style: .default,
                                         handler: { [weak self] _ in
@@ -755,12 +756,12 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showSyncAbortAlert(dismiss: Bool) {
-        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
-        let message = dismiss ? "TagCharts.Dismiss.Alert.message".localized() :
-                                "TagCharts.AbortSync.Alert.message".localized()
+            let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
+            let message = dismiss ? RuuviLocalization.TagCharts.Dismiss.Alert.message :
+            RuuviLocalization.TagCharts.AbortSync.Alert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        let actionTitle = "TagCharts.AbortSync.Button.title".localized()
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+            let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmAbortSync(dismiss: dismiss)
         }))
@@ -768,11 +769,11 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showSyncAbortAlertForSwipe() {
-        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
-        let message = "TagCharts.Dismiss.Alert.message".localized()
+            let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
+            let message = RuuviLocalization.TagCharts.Dismiss.Alert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        let actionTitle = "TagCharts.AbortSync.Button.title".localized()
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+            let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmAbortSync(dismiss: false)
         }))
@@ -798,12 +799,12 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showLongerHistoryDialog() {
-        let title = "longer_history_title".localized()
-        let message = "longer_history_message".localized()
+        let title = RuuviLocalization.longerHistoryTitle
+        let message = RuuviLocalization.longerHistoryMessage
         let controller = UIAlertController(title: title,
                                            message: message,
                                            preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "OK".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
                                            style: .cancel,
                                            handler: nil))
         present(controller, animated: true)
@@ -991,7 +992,7 @@ extension TagChartsViewController {
         timer = Timer.scheduledTimer(withTimeInterval: 1,
                                      repeats: true,
                                      block: { [weak self] (_) in
-            self?.updatedAtLabel.text = date?.ruuviAgo() ?? "Cards.UpdatedLabel.NoData.message".localized()
+            self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
         })
     }
 

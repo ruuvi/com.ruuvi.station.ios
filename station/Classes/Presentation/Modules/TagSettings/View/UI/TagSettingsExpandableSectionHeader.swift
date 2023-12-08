@@ -1,5 +1,6 @@
 import UIKit
 import RuuviOntology
+import RuuviLocalization
 
 // swiftlint:disable:next type_name
 protocol TagSettingsExpandableSectionHeaderDelegate: NSObjectProtocol {
@@ -50,7 +51,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     private lazy var noValueContainer = UIView(color: .clear)
     private lazy var noValueLabel: UILabel = {
         let label = UILabel()
-        label.text = "TagSettings.Label.noValues.text".localized()
+        label.text = RuuviLocalization.TagSettings.Label.NoValues.text
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .right
         label.numberOfLines = 0
