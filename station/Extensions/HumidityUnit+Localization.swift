@@ -20,8 +20,8 @@ extension HumidityUnit: SelectionItemProtocol {
             return "%"
         case .gm3:
             return RuuviLocalization.gm³
-        default:
-            return "°" // TODO: @rinat localize
+        case .dew:
+            return "°"
         }
     }
 
