@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocalization
+import UIKit
 
 // swiftlint:disable:next type_name
 protocol TagSettingsBackgroundSelectionViewDelegate: NSObjectProtocol {
@@ -7,7 +7,6 @@ protocol TagSettingsBackgroundSelectionViewDelegate: NSObjectProtocol {
 }
 
 class TagSettingsBackgroundSelectionView: UIView {
-
     weak var delegate: TagSettingsBackgroundSelectionViewDelegate?
 
     private lazy var backgroundView = CardsBackgroundView()
@@ -39,12 +38,12 @@ class TagSettingsBackgroundSelectionView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private func setUpUI() {
-
         addSubview(backgroundView)
         backgroundView.fillSuperview()
 
@@ -66,16 +65,16 @@ class TagSettingsBackgroundSelectionView: UIView {
 
         addSubview(iconAndLabelContainer)
         iconAndLabelContainer.anchor(top: nil,
-                     leading: safeLeftAnchor,
-                     bottom: nil,
-                     trailing: safeRightAnchor,
-                     padding: .init(top: 0, left: 8, bottom: 0, right: 8))
+                                     leading: safeLeftAnchor,
+                                     bottom: nil,
+                                     trailing: safeRightAnchor,
+                                     padding: .init(top: 0, left: 8, bottom: 0, right: 8))
         iconAndLabelContainer.centerYInSuperview()
 
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleViewTap(_:))))
     }
 
-    @objc private func handleViewTap(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc private func handleViewTap(_: UITapGestureRecognizer) {
         delegate?.didTapChangeBackground()
     }
 }

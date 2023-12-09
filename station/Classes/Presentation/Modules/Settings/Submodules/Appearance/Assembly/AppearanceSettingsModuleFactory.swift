@@ -1,6 +1,6 @@
-import UIKit
 import RuuviLocal
 import RuuviLocalization
+import UIKit
 
 protocol AppearanceSettingsModuleFactory {
     func create() -> AppearanceSettingsTableViewController

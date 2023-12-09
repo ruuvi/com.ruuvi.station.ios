@@ -1,21 +1,21 @@
+import BTKit
+import Charts
 // swiftlint:disable file_length
 import Foundation
-import UIKit
-import Charts
-import RuuviOntology
-import RuuviStorage
-import RuuviLocal
-import BTKit
-import RuuviService
 import GestureInstructions
+import RuuviLocal
 import RuuviLocalization
+import RuuviOntology
+import RuuviService
+import RuuviStorage
+import UIKit
 
 // swiftlint:disable type_body_length
 class TagChartsViewController: UIViewController {
     var output: TagChartsViewOutput!
     private var chartModules: [MeasurementType] = []
 
-    var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi)
+    var viewModel: TagChartsViewModel = .init(type: .ruuvi)
 
     var historyLengthInDay: Int = 1 {
         didSet {
@@ -61,9 +61,11 @@ class TagChartsViewController: UIViewController {
     }
 
     // MARK: - CONSTANTS
+
     private let cellId: String = "CellId"
 
     // MARK: - UI COMPONENTS DECLARATION
+
     // Body
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
@@ -77,17 +79,17 @@ class TagChartsViewController: UIViewController {
 
     // Chart toolbar
     private lazy var historySelectionButton: RuuviContextMenuButton =
-        RuuviContextMenuButton(menu: historyLengthOptions(),
-                               titleColor: .white,
-                               title: RuuviLocalization.day1,
-                               icon: RuuviAssets.dropDownArrowImage,
-                               iconTintColor: RuuviColor.logoTintColor,
-                               iconSize: .init(width: 14, height: 14),
-                               preccedingIcon: false)
+        .init(menu: historyLengthOptions(),
+              titleColor: .white,
+              title: RuuviLocalization.day1,
+              icon: RuuviAssets.dropDownArrowImage,
+              iconTintColor: RuuviColor.logoTintColor,
+              iconSize: .init(width: 14, height: 14),
+              preccedingIcon: false)
 
     // Chart toolbar
     private lazy var moreButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .white
         button.setImage(RuuviAssets.threeDotMoreImage, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
@@ -145,7 +147,7 @@ class TagChartsViewController: UIViewController {
     }()
 
     lazy var syncCancelButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         let closeImage = UIImage(systemName: "xmark")
         button.tintColor = .white
         button.setImage(closeImage, for: .normal)
@@ -170,6 +172,7 @@ class TagChartsViewController: UIViewController {
         iv.tintColor = .white.withAlphaComponent(0.8)
         return iv
     }()
+
     // UI END
 
     private let historyHoursOptions: [Int] = [1, 2, 3, 12]
@@ -182,6 +185,7 @@ class TagChartsViewController: UIViewController {
     }
 
     // MARK: - LIFECYCLE
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -210,7 +214,7 @@ class TagChartsViewController: UIViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animate(alongsideTransition: { _ in
-        }, completion: { [weak self] (_) in
+        }, completion: { [weak self] _ in
             self?.updateScrollviewBehaviour()
             self?.updateChartsCollectionConstaints(from: self?.chartModules ?? [],
                                                    withAnimation: true)
@@ -284,10 +288,10 @@ class TagChartsViewController: UIViewController {
 
         syncProgressView.addSubview(syncStatusLabel)
         syncStatusLabel.anchor(top: nil,
-                                 leading: syncCancelButton.trailingAnchor,
-                                 bottom: nil,
-                                 trailing: syncProgressView.trailingAnchor,
-                                 padding: .init(top: 0, left: 6, bottom: 0, right: 0))
+                               leading: syncCancelButton.trailingAnchor,
+                               bottom: nil,
+                               trailing: syncProgressView.trailingAnchor,
+                               padding: .init(top: 0, left: 6, bottom: 0, right: 0))
         syncStatusLabel.centerYInSuperview()
 
         chartToolbarView.addSubview(syncButton)
@@ -320,9 +324,9 @@ class TagChartsViewController: UIViewController {
 
         scrollView.addSubview(humidityChartView)
         humidityChartView.anchor(top: temperatureChartView.bottomAnchor,
-                                    leading: scrollView.leadingAnchor,
-                                    bottom: nil,
-                                    trailing: scrollView.trailingAnchor)
+                                 leading: scrollView.leadingAnchor,
+                                 bottom: nil,
+                                 trailing: scrollView.trailingAnchor)
         humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
         humidityChartViewHeight.isActive = true
@@ -330,9 +334,9 @@ class TagChartsViewController: UIViewController {
 
         scrollView.addSubview(pressureChartView)
         pressureChartView.anchor(top: humidityChartView.bottomAnchor,
-                                    leading: scrollView.leadingAnchor,
+                                 leading: scrollView.leadingAnchor,
                                  bottom: scrollView.bottomAnchor,
-                                    trailing: scrollView.trailingAnchor)
+                                 trailing: scrollView.trailingAnchor)
         pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
         pressureChartViewHeight.isActive = true
@@ -379,7 +383,6 @@ class TagChartsViewController: UIViewController {
                                                  right: 0),
                                   size: .init(width: 22, height: 22))
         dataSourceIconView.centerYInSuperview()
-
     }
 
     @objc fileprivate func syncButtonDidTap() {
@@ -406,20 +409,20 @@ class TagChartsViewController: UIViewController {
             ) { [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: hour)
             }
-             if hour == historyLengthInHours && !showChartAll {
+            if hour == historyLengthInHours, !showChartAll {
                 action.state = .on
-             } else {
+            } else {
                 action.state = .off
-             }
+            }
             actions.append(action)
         }
 
-        for day in minimumHistoryLimit...maximumHistoryLimit {
+        for day in minimumHistoryLimit ... maximumHistoryLimit {
             let action = UIAction(title: day.days) {
                 [weak self] _ in
-                self?.handleHistoryLengthSelection(hours: day*24)
+                self?.handleHistoryLengthSelection(hours: day * 24)
             }
-            if day == historyLengthInHours / 24 && !showChartAll {
+            if day == historyLengthInHours / 24, !showChartAll {
                 action.state = .on
             } else {
                 action.state = .off
@@ -438,14 +441,14 @@ class TagChartsViewController: UIViewController {
     }
 
     fileprivate func handleHistoryLengthSelection(hours: Int?) {
-        if let hours = hours {
+        if let hours {
             if hours >= 24 {
-                historySelectionButton.updateTitle(with: "\((hours/24).days)")
+                historySelectionButton.updateTitle(with: "\((hours / 24).days)")
                 historySelectionButton.updateMenu(with: historyLengthOptions())
             } else {
                 let unit = hours == 1 ? RuuviLocalization.hour : RuuviLocalization.hours
                 historySelectionButton.updateTitle(
-                        with: "\(hours) " + unit.lowercased()
+                    with: "\(hours) " + unit.lowercased()
                 )
             }
             output.viewDidSelectChartHistoryLength(hours: hours)
@@ -478,9 +481,9 @@ class TagChartsViewController: UIViewController {
             [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.output.viewDidSelectTriggerChartStat(show: !showChartStat)
-            sSelf.chartViews.forEach({ chartView in
+            sSelf.chartViews.forEach { chartView in
                 chartView.setChartStatVisible(show: !showChartStat)
-            })
+            }
         }
 
         return UIMenu(
@@ -488,7 +491,7 @@ class TagChartsViewController: UIViewController {
             children: [
                 exportHistoryAction,
                 clearViewHistory,
-                minMaxAvgAction
+                minMaxAvgAction,
             ]
         )
     }
@@ -501,7 +504,7 @@ extension TagChartsViewController: TagChartsViewDelegate {
             return
         }
         let sourceMatrix = chartView.viewPortHandler.touchMatrix
-        chartViews.filter({ $0 != chartView }).forEach { otherChart in
+        chartViews.filter { $0 != chartView }.forEach { otherChart in
             var targetMatrix = otherChart.viewPortHandler.touchMatrix
             targetMatrix.a = sourceMatrix.a
             targetMatrix.tx = sourceMatrix.tx
@@ -518,18 +521,19 @@ extension TagChartsViewController: TagChartsViewDelegate {
     }
 
     func chartValueDidSelect(_ chartView: TagChartsView,
-                             entry: ChartDataEntry,
-                             highlight: Highlight) {
+                             entry _: ChartDataEntry,
+                             highlight: Highlight)
+    {
         guard chartViews.count > 1 else {
             return
         }
 
-        chartViews.filter({ $0 != chartView }).forEach { otherChart in
+        chartViews.filter { $0 != chartView }.forEach { otherChart in
             otherChart.highlightValue(highlight)
         }
     }
 
-    func chartValueDidDeselect(_ chartView: TagChartsView) {
+    func chartValueDidDeselect(_: TagChartsView) {
         guard chartViews.count > 1 else {
             return
         }
@@ -541,9 +545,10 @@ extension TagChartsViewController: TagChartsViewDelegate {
 }
 
 // MARK: - TagChartsViewInput
+
 extension TagChartsViewController: TagChartsViewInput {
     var viewIsVisible: Bool {
-        return self.isViewLoaded && self.view.window != nil
+        isViewLoaded && view.window != nil
     }
 
     func clearChartHistory() {
@@ -556,7 +561,8 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func setChartViewData(from chartViewData: [TagChartViewData],
-                          settings: RuuviLocalSettings) {
+                          settings: RuuviLocalSettings)
+    {
         if chartViewData.count == 0 {
             clearChartData()
             showNoDataLabel()
@@ -600,7 +606,8 @@ extension TagChartsViewController: TagChartsViewInput {
                              humidityEntries: [ChartDataEntry],
                              pressureEntries: [ChartDataEntry],
                              isFirstEntry: Bool,
-                             settings: RuuviLocalSettings) {
+                             settings: RuuviLocalSettings)
+    {
         hideNoDataLabel()
         showChartViews()
 
@@ -620,7 +627,8 @@ extension TagChartsViewController: TagChartsViewInput {
     func updateLatestMeasurement(temperature: ChartDataEntry?,
                                  humidity: ChartDataEntry?,
                                  pressure: ChartDataEntry?,
-                                 settings: RuuviLocalSettings) {
+                                 settings: RuuviLocalSettings)
+    {
         temperatureChartView.updateLatest(with: temperature,
                                           type: .temperature,
                                           measurementService: measurementService,
@@ -629,8 +637,8 @@ extension TagChartsViewController: TagChartsViewInput {
                                        type: .humidity,
                                        measurementService: measurementService,
                                        unit: settings.humidityUnit == .dew ?
-                                        settings.temperatureUnit.symbol :
-                                        settings.humidityUnit.symbol)
+                                           settings.temperatureUnit.symbol :
+                                           settings.humidityUnit.symbol)
         pressureChartView.updateLatest(with: pressure,
                                        type: .pressure,
                                        measurementService: measurementService,
@@ -669,13 +677,14 @@ extension TagChartsViewController: TagChartsViewInput {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
                                         style: .default, handler: { _ in
-            guard let url = URL(string: userDeclined ?
-                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
-                  UIApplication.shared.canOpenURL(url) else {
-                return
-            }
-            UIApplication.shared.open(url)
-        }))
+                                            guard let url = URL(string: userDeclined ?
+                                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                                                UIApplication.shared.canOpenURL(url)
+                                            else {
+                                                return
+                                            }
+                                            UIApplication.shared.open(url)
+                                        }))
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -693,15 +702,15 @@ extension TagChartsViewController: TagChartsViewInput {
         present(alertVC, animated: true)
     }
 
-    func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
-        if let progress = progress {
+    func setSync(progress: BTServiceProgress?, for _: TagChartsViewModel) {
+        if let progress {
             showSyncStatusLabel(show: true)
             switch progress {
             case .connecting:
                 syncStatusLabel.text = RuuviLocalization.TagCharts.Status.connecting
             case .serving:
                 syncStatusLabel.text = RuuviLocalization.TagCharts.Status.serving
-            case .reading(let points):
+            case let .reading(points):
                 let format = RuuviLocalization.readingHistoryX
                 syncStatusLabel.text = String(format: format, Float(points))
             case .disconnecting:
@@ -728,9 +737,9 @@ extension TagChartsViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.TagCharts.TryAgain.title,
                                         style: .default,
                                         handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.output.viewDidTriggerSync(for: self.viewModel)
-        }))
+                                            guard let self else { return }
+                                            output.viewDidTriggerSync(for: viewModel)
+                                        }))
         present(alertVC, animated: true)
     }
 
@@ -738,7 +747,7 @@ extension TagChartsViewController: TagChartsViewInput {
         gestureInstructor.show(.swipeUp, after: 0.1)
     }
 
-    func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
+    func showSyncConfirmationDialog(for _: TagChartsViewModel) {
         let title = RuuviLocalization.synchronisation
         let message = RuuviLocalization.gattSyncDescription
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -747,19 +756,19 @@ extension TagChartsViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: actionTitle,
                                         style: .default,
                                         handler: { [weak self] _ in
-            self?.output.viewDidTriggerDoNotShowSyncDialog()
+                                            self?.output.viewDidTriggerDoNotShowSyncDialog()
 
-        }))
+                                        }))
         present(alertVC, animated: true)
     }
 
     func showSyncAbortAlert(dismiss: Bool) {
-            let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
-            let message = dismiss ? RuuviLocalization.TagCharts.Dismiss.Alert.message :
+        let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
+        let message = dismiss ? RuuviLocalization.TagCharts.Dismiss.Alert.message :
             RuuviLocalization.TagCharts.AbortSync.Alert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
-            let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
+        let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmAbortSync(dismiss: dismiss)
         }))
@@ -767,11 +776,11 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showSyncAbortAlertForSwipe() {
-            let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
-            let message = RuuviLocalization.TagCharts.Dismiss.Alert.message
+        let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
+        let message = RuuviLocalization.TagCharts.Dismiss.Alert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
-            let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
+        let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmAbortSync(dismiss: false)
         }))
@@ -789,7 +798,7 @@ extension TagChartsViewController: TagChartsViewInput {
             UIActivity.ActivityType.postToTencentWeibo,
             UIActivity.ActivityType.postToTwitter,
             UIActivity.ActivityType.postToFacebook,
-            UIActivity.ActivityType.openInIBooks
+            UIActivity.ActivityType.openInIBooks,
         ]
         vc.popoverPresentationController?.permittedArrowDirections = .up
         vc.popoverPresentationController?.sourceView = moreButton
@@ -810,10 +819,10 @@ extension TagChartsViewController: TagChartsViewInput {
 }
 
 extension TagChartsViewController {
-
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func updateChartsCollectionConstaints(from: [MeasurementType],
-                                                  withAnimation: Bool = false) {
+                                                  withAnimation: Bool = false)
+    {
         if from.count == 0 {
             noDataLabel.alpha = 1
             return
@@ -822,7 +831,7 @@ extension TagChartsViewController {
         noDataLabel.alpha = 0
         chartViews.removeAll()
         let scrollViewHeight = scrollView.frame.height
-        guard viewIsVisible && scrollViewHeight > 0 && from.count > 0 else {
+        guard viewIsVisible, scrollViewHeight > 0, from.count > 0 else {
             return
         }
         updateScrollviewBehaviour()
@@ -877,12 +886,12 @@ extension TagChartsViewController {
 
     private func getItemHeight(from totalHeight: CGFloat, count: CGFloat) -> CGFloat {
         if UIWindow.isLandscape {
-            return totalHeight
+            totalHeight
         } else {
             if count == 1 {
-                return totalHeight/2
+                totalHeight / 2
             } else {
-                return totalHeight/count
+                totalHeight / count
             }
         }
     }
@@ -900,7 +909,8 @@ extension TagChartsViewController {
     private func updateChartViewConstaints(constaint: NSLayoutConstraint,
                                            totalHeight: CGFloat,
                                            itemCount: Int,
-                                           withAnimation: Bool) {
+                                           withAnimation: Bool)
+    {
         if withAnimation {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
                 guard let sSelf = self else { return }
@@ -920,7 +930,8 @@ extension TagChartsViewController {
                                    type: MeasurementType,
                                    unit: String,
                                    settings: RuuviLocalSettings,
-                                   view: TagChartsView) {
+                                   view: TagChartsView)
+    {
         view.setChartLabel(with: title,
                            type: type,
                            measurementService: measurementService,
@@ -954,6 +965,7 @@ extension TagChartsViewController {
     }
 
     // MARK: - UI RELATED METHODS
+
     private func showSyncStatusLabel(show: Bool) {
         syncProgressView.alpha = show ? 1 : 0
         syncButton.alpha = show ? 0 : 1
@@ -989,15 +1001,15 @@ extension TagChartsViewController {
 
         timer = Timer.scheduledTimer(withTimeInterval: 1,
                                      repeats: true,
-                                     block: { [weak self] (_) in
-            self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-        })
+                                     block: { [weak self] _ in
+                                         self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
+                                     })
     }
 
     private func calculateMinMaxForChart(for view: TagChartsView) {
         if let data = view.data,
-           let dataSet = data.dataSets.first as? LineChartDataSet {
-
+           let dataSet = data.dataSets.first as? LineChartDataSet
+        {
             let lowestVisibleX = view.lowestVisibleX
             let highestVisibleX = view.highestVisibleX
 
@@ -1005,7 +1017,7 @@ extension TagChartsViewController {
             var maxVisibleYValue = -Double.greatestFiniteMagnitude
 
             dataSet.entries.forEach { entry in
-                if entry.x >= lowestVisibleX && entry.x <= highestVisibleX {
+                if entry.x >= lowestVisibleX, entry.x <= highestVisibleX {
                     minVisibleYValue = min(minVisibleYValue, entry.y)
                     maxVisibleYValue = max(maxVisibleYValue, entry.y)
                 }
@@ -1027,32 +1039,31 @@ extension TagChartsViewController {
                 avg: averageYValue,
                 type: type
             )
-
         }
     }
 
     /**
-     Calculate the average value of visible data points on a `LineChartView`.
-     This function computes the average by considering the area under the curve
-     formed by the visible data points and then divides it by the width of the visible x-range.
-     The area under the curve is approximated using the trapezoidal rule.
+      Calculate the average value of visible data points on a `LineChartView`.
+      This function computes the average by considering the area under the curve
+      formed by the visible data points and then divides it by the width of the visible x-range.
+      The area under the curve is approximated using the trapezoidal rule.
 
-     - Parameters:
-       - chartView: The `LineChartView` instance whose visible range's average needs to be calculated.
-       - dataSet: The `LineChartDataSet` containing data points to be considered.
+      - Parameters:
+        - chartView: The `LineChartView` instance whose visible range's average needs to be calculated.
+        - dataSet: The `LineChartDataSet` containing data points to be considered.
 
-     - Returns: The average value of visible data points.
+      - Returns: The average value of visible data points.
 
-     - Note:
-       The function uses the trapezoidal rule for approximation. The formula for the trapezoidal rule is:
-       A = (b - a) * (f(a) + f(b)) / 2
-       Where:
-       - A is the area of the trapezium.
-       - a and b are the x-coordinates of the two data points.
-       - f(a) and f(b) are the y-coordinates (or values) of the two data points.
-       
-       The average is then computed as the total area divided by the width of the visible x-range.
-    */
+      - Note:
+        The function uses the trapezoidal rule for approximation. The formula for the trapezoidal rule is:
+        A = (b - a) * (f(a) + f(b)) / 2
+        Where:
+        - A is the area of the trapezium.
+        - a and b are the x-coordinates of the two data points.
+        - f(a) and f(b) are the y-coordinates (or values) of the two data points.
+
+        The average is then computed as the total area divided by the width of the visible x-range.
+     */
     private func calculateVisibleAverage(chartView: LineChartView, dataSet: LineChartDataSet) -> Double {
         // Get the x-values defining the visible range of the chart.
         let lowestVisibleX = chartView.lowestVisibleX
@@ -1066,9 +1077,9 @@ extension TagChartsViewController {
 
         var totalArea = 0.0
         // Compute the area under the curve for each pair of consecutive points.
-        for i in 1..<visibleEntries.count {
-            let x1 = visibleEntries[i-1].x
-            let y1 = visibleEntries[i-1].y
+        for i in 1 ..< visibleEntries.count {
+            let x1 = visibleEntries[i - 1].x
+            let y1 = visibleEntries[i - 1].y
             let x2 = visibleEntries[i].x
             let y2 = visibleEntries[i].y
 
@@ -1082,7 +1093,7 @@ extension TagChartsViewController {
 
         // If all visible data points have the same x-value, simply return the average of their y-values.
         if timeSpan == 0 {
-            return visibleEntries.map { $0.y }.reduce(0, +) / Double(visibleEntries.count)
+            return visibleEntries.map(\.y).reduce(0, +) / Double(visibleEntries.count)
         }
 
         // Compute the average using the trapezoidal rule.
@@ -1098,28 +1109,29 @@ private extension Int {
     var days: String {
         switch self {
         case 1:
-            return RuuviLocalization.day1
+            RuuviLocalization.day1
         case 2:
-            return RuuviLocalization.day2
+            RuuviLocalization.day2
         case 3:
-            return RuuviLocalization.day3
+            RuuviLocalization.day3
         case 4:
-            return RuuviLocalization.day4
+            RuuviLocalization.day4
         case 5:
-            return RuuviLocalization.day5
+            RuuviLocalization.day5
         case 6:
-            return RuuviLocalization.day6
+            RuuviLocalization.day6
         case 7:
-            return RuuviLocalization.day7
+            RuuviLocalization.day7
         case 8:
-            return RuuviLocalization.day8
+            RuuviLocalization.day8
         case 9:
-            return RuuviLocalization.day9
+            RuuviLocalization.day9
         case 10:
-            return RuuviLocalization.day10
+            RuuviLocalization.day10
         default:
-            return String(format: RuuviLocalization.dayX, self)
+            String(format: RuuviLocalization.dayX, self)
         }
     }
 }
+
 // swiftlint:enable type_body_length

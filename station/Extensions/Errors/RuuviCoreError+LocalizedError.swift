@@ -1,16 +1,16 @@
-import RuuviLocalization
 import Foundation
 import RuuviCore
+import RuuviLocalization
 
 extension RuuviCoreError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .locationPermissionDenied:
-            return RuuviLocalization.CoreError.locationPermissionDenied
+            RuuviLocalization.CoreError.locationPermissionDenied
         case .locationPermissionNotDetermined:
-            return RuuviLocalization.CoreError.locationPermissionNotDetermined
+            RuuviLocalization.CoreError.locationPermissionNotDetermined
         case .failedToGetCurrentLocation:
-            return RuuviLocalization.CoreError.failedToGetCurrentLocation
+            RuuviLocalization.CoreError.failedToGetCurrentLocation
         }
     }
 }

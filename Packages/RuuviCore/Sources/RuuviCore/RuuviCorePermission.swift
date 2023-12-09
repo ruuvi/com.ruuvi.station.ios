@@ -1,6 +1,6 @@
-import Foundation
-import CoreLocation
 import AVFoundation
+import CoreLocation
+import Foundation
 import Photos
 
 public protocol RuuviCorePermission {
@@ -10,7 +10,7 @@ public protocol RuuviCorePermission {
     var isCameraPermissionGranted: Bool { get }
     #if targetEnvironment(macCatalyst)
     #else
-    var cameraAuthorizationStatus: AVAuthorizationStatus { get }
+        var cameraAuthorizationStatus: AVAuthorizationStatus { get }
     #endif
     var isLocationPermissionGranted: Bool { get }
     var locationAuthorizationStatus: CLAuthorizationStatus { get }

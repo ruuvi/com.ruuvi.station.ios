@@ -10,8 +10,10 @@ class SelectionPresenter {
             view.viewModel = viewModel
         }
     }
+
     var output: SelectionModuleOutput?
 }
+
 extension SelectionPresenter {
     func viewDidLoad() {
         view.temperatureUnit = settings.temperatureUnit
@@ -19,6 +21,7 @@ extension SelectionPresenter {
         view.pressureUnit = settings.pressureUnit
     }
 }
+
 extension SelectionPresenter: SelectionModuleInput {
     func configure(viewModel: SelectionViewModel, output: SelectionModuleOutput?) {
         self.viewModel = viewModel
@@ -32,8 +35,9 @@ extension SelectionPresenter: SelectionModuleInput {
 
 extension SelectionPresenter: SelectionViewOutput {
     func viewDidSelect(itemAtIndex index: Int) {
-        guard let viewModel = viewModel,
-        viewModel.items.count > 0 else {
+        guard let viewModel,
+              viewModel.items.count > 0
+        else {
             dismiss()
             return
         }

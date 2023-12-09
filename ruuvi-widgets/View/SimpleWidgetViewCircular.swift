@@ -19,13 +19,13 @@ struct SimpleWidgetViewCircular: View {
             Text(viewModel.getValue(from: entry.record,
                                     settings: entry.settings,
                                     config: entry.config))
-            .environment(\.locale, viewModel.locale())
-            .foregroundColor(.white)
-            .font(.custom(Constants.oswaldBold.rawValue,
-                          size: 18,
-                          relativeTo: .subheadline))
-            .minimumScaleFactor(0.6)
-            .padding(.top, -4)
+                .environment(\.locale, viewModel.locale())
+                .foregroundColor(.white)
+                .font(.custom(Constants.oswaldBold.rawValue,
+                              size: 18,
+                              relativeTo: .subheadline))
+                .minimumScaleFactor(0.6)
+                .padding(.top, -4)
 
             Text(viewModel.getUnit(for: WidgetSensorEnum(
                 rawValue: entry.config.sensor.rawValue)))

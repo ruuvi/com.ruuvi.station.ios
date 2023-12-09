@@ -1,20 +1,20 @@
-import UIKit
 import FirebaseCore
 import FirebaseMessaging
+import UIKit
 #if DEBUG && canImport(FLEX)
-import FLEX
+    import FLEX
 #endif
-import UserNotifications
-import RuuviLocal
-import RuuviCore
-import RuuviNotification
-import RuuviMigration
 import RuuviContext
-import RuuviService
-import RuuviOntology
+import RuuviCore
+import RuuviLocal
 import RuuviLocalization
+import RuuviMigration
+import RuuviNotification
+import RuuviOntology
+import RuuviService
+import UserNotifications
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var appStateService: AppStateService!
@@ -28,9 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var appRouter: AppRouter?
 
     func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
+    {
         let r = AppAssembly.shared.assembler.resolver
-        self.settings = r.resolve(RuuviLocalSettings.self)
+        settings = r.resolve(RuuviLocalSettings.self)
         setPreferrerdLanguage()
 
         FirebaseApp.configure()
@@ -48,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .migrateIfNeeded()
         r.resolve(RuuviMigrationFactory.self)?
             .createAllOrdered()
-            .forEach({ $0.migrateIfNeeded() })
+            .forEach { $0.migrateIfNeeded() }
 
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -64,20 +65,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
 
         #if DEBUG && canImport(FLEX)
-        FLEXManager.shared.registerGlobalEntry(
-            withName: "Feature Toggles",
-            viewControllerFutureBlock: { r.resolve(FeatureTogglesViewController.self) ?? UIViewController()
-            }
-        )
+            FLEXManager.shared.registerGlobalEntry(
+                withName: "Feature Toggles",
+                viewControllerFutureBlock: { r.resolve(FeatureTogglesViewController.self) ?? UIViewController()
+                }
+            )
         #endif
 
-        self.window = UIWindow(frame: UIScreen.main.bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         let appRouter = AppRouter()
         appRouter.settings = r.resolve(RuuviLocalSettings.self)
-        self.window?.rootViewController = appRouter.viewController
-        self.window?.makeKeyAndVisible()
+        window?.rootViewController = appRouter.viewController
+        window?.makeKeyAndVisible()
         self.appRouter = appRouter
-        self.window?.overrideUserInterfaceStyle = settings.theme.uiInterfaceStyle
+        window?.overrideUserInterfaceStyle = settings.theme.uiInterfaceStyle
 
         return true
     }
@@ -98,17 +99,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appStateService.applicationDidBecomeActive(application)
     }
 
-    func application(_ application: UIApplication,
-                     supportedInterfaceOrientationsFor window: UIWindow?
-    ) -> UIInterfaceOrientationMask {
-        return orientationLock
-  }
+    func application(_: UIApplication,
+                     supportedInterfaceOrientationsFor _: UIWindow?) -> UIInterfaceOrientationMask
+    {
+        orientationLock
+    }
 }
 
 // MARK: - Push Notifications
-extension AppDelegate {
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 
+extension AppDelegate {
+    func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
         pnManager.pnTokenData = deviceToken
 
@@ -117,14 +118,14 @@ extension AppDelegate {
         }
     }
 
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print(error.localizedDescription)
     }
 }
 
 extension AppDelegate: MessagingDelegate {
     func messaging(
-        _ messaging: Messaging,
+        _: Messaging,
         didReceiveRegistrationToken fcmToken: String?
     ) {
         register(with: fcmToken)
@@ -132,8 +133,9 @@ extension AppDelegate: MessagingDelegate {
 
     private func register(with fcmToken: String?) {
         guard !UIDevice.isSimulator,
-                let fcmToken = fcmToken,
-                cloudNotificationService != nil else {
+              let fcmToken,
+              cloudNotificationService != nil
+        else {
             return
         }
 
@@ -146,7 +148,8 @@ extension AppDelegate: MessagingDelegate {
 
     fileprivate func setPreferrerdLanguage() {
         if let languageCode = Bundle.main.preferredLocalizations.first,
-           let language = Language(rawValue: languageCode) {
+           let language = Language(rawValue: languageCode)
+        {
             if settings.language != language {
                 settings.language = language
             }
@@ -154,17 +157,19 @@ extension AppDelegate: MessagingDelegate {
             settings.language = .english
         }
     }
-
 }
 
 // MARK: - UniversalLins
+
 extension AppDelegate {
     func application(_ application: UIApplication,
                      continue userActivity: NSUserActivity,
-                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+                     restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool
+    {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-              let url = userActivity.webpageURL else {
-           return false
+              let url = userActivity.webpageURL
+        else {
+            return false
         }
         appStateService.applicationDidOpenWithUniversalLink(application, url: url)
         return true
@@ -172,10 +177,12 @@ extension AppDelegate {
 }
 
 // MARK: - Widget Deeplink Handler
+
 extension AppDelegate {
     func application(_ app: UIApplication,
                      open url: URL,
-                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+                     options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool
+    {
         let macId = url.absoluteString
         openSelectedCard(for: macId, application: app)
         return true
@@ -183,6 +190,7 @@ extension AppDelegate {
 }
 
 // MARK: - Notification tap handler
+
 extension AppDelegate: RuuviNotificationLocalOutput {
     func notificationDidTap(for uuid: String) {
         openSelectedCard(for: uuid)
@@ -192,12 +200,14 @@ extension AppDelegate: RuuviNotificationLocalOutput {
 // TODO: - SEE IF WE CAN MOVE THIS TO APP_STATE_SERVICE
 extension AppDelegate {
     private func openSelectedCard(for uuid: String,
-                                  application: UIApplication? = nil) {
+                                  application _: UIApplication? = nil)
+    {
         appRouter?.prepareRootViewControllerWidgets()
         window?.rootViewController = appRouter?.viewController
 
         if let navigationController = appRouter?.viewController as? UINavigationController,
-           let controller = navigationController.viewControllers.last as? DashboardViewController {
+           let controller = navigationController.viewControllers.last as? DashboardViewController
+        {
             if let viewModel = controller.viewModels.first(where: { viewModel in
                 viewModel.mac.value?.value == uuid || viewModel.luid.value == uuid.luid.any
             }) {

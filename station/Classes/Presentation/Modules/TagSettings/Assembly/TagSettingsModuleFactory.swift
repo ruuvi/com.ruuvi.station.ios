@@ -1,16 +1,16 @@
-import Foundation
 import BTKit
-import RuuviStorage
-import RuuviReactor
-import RuuviLocal
-import RuuviService
-import RuuviUser
+import Foundation
 import RuuviCore
-import RuuviPresenters
-import RuuviPool
-import RuuviNotifier
 import RuuviDaemon
+import RuuviLocal
+import RuuviNotifier
 import RuuviOntology
+import RuuviPool
+import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
+import RuuviUser
 import UIKit
 
 protocol TagSettingsModuleFactory {

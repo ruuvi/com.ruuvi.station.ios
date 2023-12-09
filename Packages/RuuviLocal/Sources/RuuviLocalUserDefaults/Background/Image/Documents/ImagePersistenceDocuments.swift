@@ -1,10 +1,9 @@
-import UIKit
 import Future
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
+import UIKit
 
 class ImagePersistenceDocuments: ImagePersistence {
-
     private let ext = ".png"
     private let bgDir = "bg"
     private var isBgDirCreated = false
@@ -51,5 +50,4 @@ class ImagePersistenceDocuments: ImagePersistence {
         }
         return dir
     }
-
 }

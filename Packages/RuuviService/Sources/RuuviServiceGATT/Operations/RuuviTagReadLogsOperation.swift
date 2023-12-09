@@ -1,5 +1,5 @@
-import Foundation
 import BTKit
+import Foundation
 import RuuviOntology
 import RuuviPool
 import RuuviService
@@ -31,7 +31,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         self.uuid = uuid
         self.mac = mac
         self.from = from
-        self.sensorSettings = settings
+        sensorSettings = settings
         self.ruuviPool = ruuviPool
         self.background = background
         self.progress = progress
@@ -47,17 +47,18 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                                           options: [.callbackQueue(.untouch),
                                                     .connectionTimeout(connectionTimeout ?? 0),
                                                     .serviceTimeout(serviceTimeout ?? 0)],
-                                          progress: progress) { (observer, result) in
+                                          progress: progress)
+        { observer, result in
             switch result {
-            case .success(let logResult):
+            case let .success(logResult):
                 switch logResult {
-                case .points(let points):
+                case let .points(points):
                     observer.post(points: points, with: observer.uuid)
-                case .logs(let logs):
-                    let records = logs.compactMap({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
+                case let .logs(logs):
+                    let records = logs.compactMap { $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
                         .with(source: .log)
                         .any
-                    })
+                    }
                     let opLogs = observer.ruuviPool.create(records)
                     opLogs.on(success: { _ in
                         observer.post(logs: logs, with: observer.uuid)
@@ -68,7 +69,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                         observer.state = .finished
                     })
                 }
-            case .failure(let error):
+            case let .failure(error):
                 observer.post(error: error, with: observer.uuid)
                 observer.error = .btkit(error)
                 observer.state = .finished
@@ -81,7 +82,8 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             for: self,
             uuid: uuid,
             options: [],
-            result: { _, _ in })
+            result: { _, _ in }
+        )
     }
 
     private func post(started date: Date, with uuid: String) {
@@ -89,8 +91,8 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart,
                                             object: nil,
                                             userInfo:
-                [RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
-                 RuuviTagReadLogsOperationDidStartKey.fromDate: date])
+                                            [RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
+                                             RuuviTagReadLogsOperationDidStartKey.fromDate: date])
         }
     }
 
@@ -99,8 +101,8 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationProgress,
                                             object: nil,
                                             userInfo:
-                [RuuviTagReadLogsOperationProgressKey.uuid: uuid,
-                 RuuviTagReadLogsOperationProgressKey.progress: points])
+                                            [RuuviTagReadLogsOperationProgressKey.uuid: uuid,
+                                             RuuviTagReadLogsOperationProgressKey.progress: points])
         }
     }
 
@@ -109,8 +111,8 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFinish,
                                             object: nil,
                                             userInfo:
-                [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
-                 RuuviTagReadLogsOperationDidFinishKey.logs: logs])
+                                            [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
+                                             RuuviTagReadLogsOperationDidFinishKey.logs: logs])
         }
     }
 
@@ -119,8 +121,8 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
                                             object: nil,
                                             userInfo:
-                [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
-                 RuuviTagReadLogsOperationDidFailKey.error: error])
+                                            [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
+                                             RuuviTagReadLogsOperationDidFailKey.error: error])
         }
     }
 }

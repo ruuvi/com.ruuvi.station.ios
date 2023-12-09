@@ -4,20 +4,21 @@ import UIKit
 class AboutViewController: UIViewController {
     var output: AboutViewOutput!
 
-    @IBOutlet weak var headerTitleLabel: UILabel!
-    @IBOutlet weak var aboutTextView: UITextView!
-    @IBOutlet weak var versionLabel: UILabel!
-    @IBOutlet weak var addedTagsLabel: UILabel!
-    @IBOutlet weak var storedMeasurementsLabel: UILabel!
-    @IBOutlet weak var databaseSizeLable: UILabel!
+    @IBOutlet var headerTitleLabel: UILabel!
+    @IBOutlet var aboutTextView: UITextView!
+    @IBOutlet var versionLabel: UILabel!
+    @IBOutlet var addedTagsLabel: UILabel!
+    @IBOutlet var storedMeasurementsLabel: UILabel!
+    @IBOutlet var databaseSizeLable: UILabel!
 
     private let twoNewlines = "\n\n"
     private let fourNewlines = "\n\n\n\n"
 
-    var viewModel: AboutViewModel = AboutViewModel()
+    var viewModel: AboutViewModel = .init()
 }
 
 // MARK: - AboutViewInput
+
 extension AboutViewController: AboutViewInput {
     func localize() {
         configureTextView()
@@ -26,15 +27,15 @@ extension AboutViewController: AboutViewInput {
 }
 
 // MARK: - IBActions
-extension AboutViewController {
 
-    @IBAction func backButtonTouchUpInside(_ sender: Any) {
+extension AboutViewController {
+    @IBAction func backButtonTouchUpInside(_: Any) {
         output.viewDidTriggerClose()
     }
-
 }
 
 // MARK: - View lifecycle
+
 extension AboutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +60,7 @@ extension AboutViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { (_) in
+        coordinator.animate(alongsideTransition: { _ in
             UIView.setAnimationsEnabled(false)
             self.aboutTextView.scrollRangeToVisible(NSRange(location: 0, length: 0))
             UIView.setAnimationsEnabled(true)
@@ -68,17 +69,20 @@ extension AboutViewController {
 }
 
 // MARK: - UITextViewDelegate
+
 extension AboutViewController: UITextViewDelegate {
-    func textView(_ textView: UITextView,
+    func textView(_: UITextView,
                   shouldInteractWith URL: URL,
-                  in characterRange: NSRange,
-                  interaction: UITextItemInteraction) -> Bool {
+                  in _: NSRange,
+                  interaction _: UITextItemInteraction) -> Bool
+    {
         UIApplication.shared.open(URL, options: [:])
         return false
     }
 }
 
 // MARK: - View configuration
+
 extension AboutViewController {
     private func configureViews() {
         headerTitleLabel.text = RuuviLocalization.About.AboutHelp.header
@@ -102,19 +106,18 @@ extension AboutViewController {
     }
 
     private func configureTextView() {
-
         let text =
-        RuuviLocalization.About.AboutHelp.contents + fourNewlines +
-        RuuviLocalization.About.OperationsManual.header + twoNewlines +
-        RuuviLocalization.About.OperationsManual.contents + fourNewlines +
-        RuuviLocalization.About.Troubleshooting.header + twoNewlines +
-        RuuviLocalization.About.Troubleshooting.contents + fourNewlines +
-        RuuviLocalization.About.OpenSource.header + twoNewlines +
-        RuuviLocalization.About.OpenSource.contents + fourNewlines +
-        RuuviLocalization.About.More.header + twoNewlines +
-        RuuviLocalization.About.More.contents + fourNewlines +
-        RuuviLocalization.About.Privacy.header + twoNewlines +
-        RuuviLocalization.About.Privacy.contents + "\n"
+            RuuviLocalization.About.AboutHelp.contents + fourNewlines +
+            RuuviLocalization.About.OperationsManual.header + twoNewlines +
+            RuuviLocalization.About.OperationsManual.contents + fourNewlines +
+            RuuviLocalization.About.Troubleshooting.header + twoNewlines +
+            RuuviLocalization.About.Troubleshooting.contents + fourNewlines +
+            RuuviLocalization.About.OpenSource.header + twoNewlines +
+            RuuviLocalization.About.OpenSource.contents + fourNewlines +
+            RuuviLocalization.About.More.header + twoNewlines +
+            RuuviLocalization.About.More.contents + fourNewlines +
+            RuuviLocalization.About.Privacy.header + twoNewlines +
+            RuuviLocalization.About.Privacy.contents + "\n"
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
@@ -152,7 +155,7 @@ extension AboutViewController {
 
     private func setUpChangelogTapGesture() {
         versionLabel.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer.init(
+        let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(handleChangelogTap(_:))
         )
@@ -160,7 +163,7 @@ extension AboutViewController {
         versionLabel.addGestureRecognizer(tapGesture)
     }
 
-    @objc func handleChangelogTap(_ gesture: UITapGestureRecognizer) {
+    @objc func handleChangelogTap(_: UITapGestureRecognizer) {
         output.viewDidTapChangelog()
     }
 }
@@ -169,10 +172,11 @@ private extension String {
     func ranges(of substring: String, options: CompareOptions = [], locale: Locale? = nil) -> [Range<Index>] {
         var ranges: [Range<Index>] = []
         while ranges.last.map({ $0.upperBound < self.endIndex }) ?? true,
-            let range = self.range(of: substring,
-                                   options: options,
-                                   range: (ranges.last?.upperBound ?? self.startIndex)..<self.endIndex,
-                                   locale: locale) {
+              let range = range(of: substring,
+                                options: options,
+                                range: (ranges.last?.upperBound ?? startIndex) ..< endIndex,
+                                locale: locale)
+        {
             ranges.append(range)
         }
         return ranges

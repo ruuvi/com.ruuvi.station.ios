@@ -10,7 +10,7 @@ public struct LargeButtonStyle: ButtonStyle {
         self.foregroundColor = foregroundColor
         self.isDisabled = isDisabled
     }
-    
+
     public func makeBody(configuration: Self.Configuration) -> some View {
         let currentForegroundColor
             = isDisabled || configuration.isPressed

@@ -1,9 +1,9 @@
 import Foundation
-import RuuviOntology
 import Future
+import RuuviOntology
 import RuuviPool
-import RuuviStorage
 import RuuviRepository
+import RuuviStorage
 
 final class RuuviRepositoryCoordinator: RuuviRepository {
     private let pool: RuuviPool
@@ -19,10 +19,10 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
 
     func create(
         record: RuuviTagSensorRecord,
-        for sensor: RuuviTagSensor
+        for _: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensorRecord, RuuviRepositoryError> {
         let promise = Promise<AnyRuuviTagSensorRecord, RuuviRepositoryError>()
-        self.pool.create(record)
+        pool.create(record)
             .on(success: { _ in
                 promise.succeed(value: record.any)
             }, failure: { error in
@@ -33,11 +33,11 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
 
     func create(
         records: [RuuviTagSensorRecord],
-        for sensor: RuuviTagSensor
+        for _: RuuviTagSensor
     ) -> Future<[AnyRuuviTagSensorRecord], RuuviRepositoryError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviRepositoryError>()
-        let mappedRecords = records.map({ $0.any })
-        self.pool.create(mappedRecords)
+        let mappedRecords = records.map(\.any)
+        pool.create(mappedRecords)
             .on(success: { _ in
                 promise.succeed(value: mappedRecords)
             }, failure: { error in

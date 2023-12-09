@@ -1,5 +1,5 @@
-import UIKit
 import RuuviOntology
+import UIKit
 
 struct DiscoverRuuviTagViewModel {
     var luid: AnyLocalIdentifier?

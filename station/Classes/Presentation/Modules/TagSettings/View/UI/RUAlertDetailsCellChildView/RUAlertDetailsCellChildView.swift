@@ -5,7 +5,6 @@ protocol RUAlertDetailsCellChildViewDelegate: NSObjectProtocol {
 }
 
 class RUAlertDetailsCellChildView: UIView {
-
     // Public
     weak var delegate: RUAlertDetailsCellChildViewDelegate?
 
@@ -30,18 +29,18 @@ class RUAlertDetailsCellChildView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setUpUI()
+        setUpUI()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.setUpUI()
+        setUpUI()
     }
 }
 
 extension RUAlertDetailsCellChildView {
     private func setUpUI() {
-        self.backgroundColor = .clear
+        backgroundColor = .clear
 
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor,
@@ -74,7 +73,9 @@ extension RUAlertDetailsCellChildView {
         delegate?.didTapView(sender: self)
     }
 }
+
 // MARK: - Public Setter
+
 extension RUAlertDetailsCellChildView {
     func configure(with message: String?) {
         titleLabel.text = message

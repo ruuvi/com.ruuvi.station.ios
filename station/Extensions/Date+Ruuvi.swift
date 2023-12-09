@@ -11,7 +11,7 @@ extension Date {
         } else {
             let seconds = elapsed % 60
             let minutes = (elapsed / 60) % 60
-            let hours   = (elapsed / (60*60)) % 24
+            let hours = (elapsed / (60 * 60)) % 24
             if hours > 0 {
                 output += String(hours) + " " + RuuviLocalization.h + " "
             }

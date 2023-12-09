@@ -1,7 +1,7 @@
 import Foundation
-import UIKit
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
+import UIKit
 
 class ASSelectionPresenter: NSObject {
     weak var view: ASSelectionViewInput?
@@ -21,7 +21,8 @@ extension ASSelectionPresenter: ASSelectionViewOutput {
     }
 
     func viewDidSelectItem(item: SelectionItemProtocol,
-                           type: AppearanceSettingType) {
+                           type: AppearanceSettingType)
+    {
         update(with: item, type: type)
     }
 }
@@ -34,11 +35,13 @@ extension ASSelectionPresenter: ASSelectionModuleInput {
 
 extension ASSelectionPresenter {
     private func update(with selection: SelectionItemProtocol,
-                        type: AppearanceSettingType) {
+                        type: AppearanceSettingType)
+    {
         switch type {
         case .theme:
             if let theme = selection as? RuuviTheme,
-                let viewModel = viewModel {
+               let viewModel
+            {
                 settings.theme = theme
                 let updatedViewModel = AppearanceSettingsViewModel(
                     title: viewModel.title,

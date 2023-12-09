@@ -6,21 +6,21 @@ extension RuuviCloudApiError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .connection:
-            return RuuviLocalization.internetConnectionProblem
+            RuuviLocalization.internetConnectionProblem
         case .emptyResponse:
-            return RuuviLocalization.RuuviCloudApiError.emptyResponse
+            RuuviLocalization.RuuviCloudApiError.emptyResponse
         case .failedToGetDataFromResponse:
-            return RuuviLocalization.RuuviCloudApiError.failedToGetDataFromResponse
+            RuuviLocalization.RuuviCloudApiError.failedToGetDataFromResponse
         case .unexpectedHTTPStatusCode:
-            return RuuviLocalization.RuuviCloudApiError.unexpectedHTTPStatusCode
-        case .api(let code):
-            return code.localizedDescription
-        case .networking(let error):
-            return error.localizedDescription
-        case .parsing(let error):
-            return error.localizedDescription
+            RuuviLocalization.RuuviCloudApiError.unexpectedHTTPStatusCode
+        case let .api(code):
+            code.localizedDescription
+        case let .networking(error):
+            error.localizedDescription
+        case let .parsing(error):
+            error.localizedDescription
         case .unauthorized:
-            return nil
+            nil
         }
     }
 }
@@ -29,73 +29,73 @@ private extension RuuviCloudApiErrorCode {
     var localizedDescription: String {
         switch self {
         case .erForbidden:
-            return RuuviLocalization.UserApiError.erForbidden
+            RuuviLocalization.UserApiError.erForbidden
         case .erUnauthorized:
-            return RuuviLocalization.UserApiError.erUnauthorized
+            RuuviLocalization.UserApiError.erUnauthorized
         case .erInternal:
-            return RuuviLocalization.UserApiError.erInternal
+            RuuviLocalization.UserApiError.erInternal
         case .erInvalidFormat:
-            return RuuviLocalization.UserApiError.erInvalidFormat
+            RuuviLocalization.UserApiError.erInvalidFormat
         case .erUserNotFound:
-            return RuuviLocalization.UserApiError.erUserNotFound
+            RuuviLocalization.UserApiError.erUserNotFound
         case .erSensorNotFound:
-            return RuuviLocalization.UserApiError.erSensorNotFound
+            RuuviLocalization.UserApiError.erSensorNotFound
         case .erTokenExpired:
-            return RuuviLocalization.UserApiError.erTokenExpired
+            RuuviLocalization.UserApiError.erTokenExpired
         case .erThrottled:
-            return RuuviLocalization.UserApiError.erThrottled
+            RuuviLocalization.UserApiError.erThrottled
         case .erGatewayNotFound:
-            return RuuviLocalization.UserApiError.erGatewayNotFound
+            RuuviLocalization.UserApiError.erGatewayNotFound
         case .erGatewayAlreadyWhitelisted:
-            return RuuviLocalization.UserApiError.erGatewayAlreadyWhitelisted
+            RuuviLocalization.UserApiError.erGatewayAlreadyWhitelisted
         case .erGatewayStatusReportFailed:
-            return RuuviLocalization.UserApiError.erGatewayStatusReportFailed
+            RuuviLocalization.UserApiError.erGatewayStatusReportFailed
         case .erConflict:
-            return RuuviLocalization.UserApiError.erConflict
+            RuuviLocalization.UserApiError.erConflict
         case .erSubscriptionNotFound:
-            return RuuviLocalization.UserApiError.erSubscriptionNotFound
+            RuuviLocalization.UserApiError.erSubscriptionNotFound
         case .erShareCountReached:
-            return RuuviLocalization.UserApiError.erShareCountReached
+            RuuviLocalization.UserApiError.erShareCountReached
         case .erClaimCountReached:
-            return RuuviLocalization.UserApiError.erClaimCountReached
+            RuuviLocalization.UserApiError.erClaimCountReached
         case .erSensorShareCountReached:
-            return RuuviLocalization.UserApiError.erSensorShareCountReached
+            RuuviLocalization.UserApiError.erSensorShareCountReached
         case .erNoDataToShare:
-            return RuuviLocalization.UserApiError.erNoDataToShare
+            RuuviLocalization.UserApiError.erNoDataToShare
         case .erSensorAlreadyShared:
-            return RuuviLocalization.UserApiError.erSensorAlreadyShared
+            RuuviLocalization.UserApiError.erSensorAlreadyShared
         case .erSensorAlreadyClaimed:
-            return RuuviLocalization.UserApiError.erSensorAlreadyClaimed("")
+            RuuviLocalization.UserApiError.erSensorAlreadyClaimed("")
         case .erSensorAlreadyRegistered:
-            return RuuviLocalization.UserApiError.erSensorAlreadyRegistered
+            RuuviLocalization.UserApiError.erSensorAlreadyRegistered
         case .erUnableToSendEmail:
-            return RuuviLocalization.UserApiError.erUnableToSendEmail
+            RuuviLocalization.UserApiError.erUnableToSendEmail
         case .erSubscriptionCodeExists:
-            return RuuviLocalization.UserApiError.erSubscriptionCodeExists
+            RuuviLocalization.UserApiError.erSubscriptionCodeExists
         case .erSubscriptionCodeUsed:
-            return RuuviLocalization.UserApiError.erSubscriptionCodeUsed
+            RuuviLocalization.UserApiError.erSubscriptionCodeUsed
         case .erMissingArgument:
-            return RuuviLocalization.UserApiError.erMissingArgument
+            RuuviLocalization.UserApiError.erMissingArgument
         case .erInvalidDensityMode:
-            return RuuviLocalization.UserApiError.erInvalidDensityMode
+            RuuviLocalization.UserApiError.erInvalidDensityMode
         case .erInvalidSortMode:
-            return RuuviLocalization.UserApiError.erInvalidSortMode
+            RuuviLocalization.UserApiError.erInvalidSortMode
         case .erInvalidTimeRange:
-            return RuuviLocalization.UserApiError.erInvalidTimeRange
+            RuuviLocalization.UserApiError.erInvalidTimeRange
         case .erOldEntry:
-            return RuuviLocalization.UserApiError.erOldEntry
+            RuuviLocalization.UserApiError.erOldEntry
         case .erInvalidEmailAddress:
-            return RuuviLocalization.UserApiError.erInvalidEmailAddress
+            RuuviLocalization.UserApiError.erInvalidEmailAddress
         case .erInvalidMacAddress:
-            return RuuviLocalization.UserApiError.erInvalidMacAddress
+            RuuviLocalization.UserApiError.erInvalidMacAddress
         case .erInvalidEnumValue:
-            return RuuviLocalization.UserApiError.erInvalidEnumValue
+            RuuviLocalization.UserApiError.erInvalidEnumValue
         case .erSubDataStorageError:
-            return RuuviLocalization.UserApiError.erSubDataStorageError
+            RuuviLocalization.UserApiError.erSubDataStorageError
         case .erSubNoUser:
-            return RuuviLocalization.UserApiError.erSubNoUser
+            RuuviLocalization.UserApiError.erSubNoUser
         case .ok:
-            return RuuviLocalization.UserApiError.ok
+            RuuviLocalization.UserApiError.ok
         }
     }
 }

@@ -6,12 +6,12 @@ extension FileManager {
             let urlToDocumentsFolder = FileManager.default.urls(for: .documentDirectory,
                                                                 in: .userDomainMask).last,
             let installDateAny = try? FileManager.default.attributesOfItem(atPath:
-                                                                            urlToDocumentsFolder.path)[.creationDate],
+                urlToDocumentsFolder.path)[.creationDate],
             let installDate = installDateAny as? Date
         {
-            return installDate
+            installDate
         } else {
-            return Date()
+            Date()
         }
     }
 }

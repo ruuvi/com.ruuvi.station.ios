@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 
-extension Notification.Name {
-    public static let LNMDidReceive = Notification.Name("LNMDidReceive")
+public extension Notification.Name {
+    static let LNMDidReceive = Notification.Name("LNMDidReceive")
 }
 
 public enum LNMDidReceiveKey: String {

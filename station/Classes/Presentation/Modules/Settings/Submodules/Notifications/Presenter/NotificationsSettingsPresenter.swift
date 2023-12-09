@@ -1,9 +1,9 @@
 import Foundation
-import UIKit
-import RuuviOntology
 import RuuviLocal
-import RuuviService
 import RuuviLocalization
+import RuuviOntology
+import RuuviService
+import UIKit
 
 class NotificationsSettingsPresenter: NSObject, NotificationsSettingsModuleInput {
     weak var view: NotificationsSettingsViewInput?
@@ -43,7 +43,7 @@ extension NotificationsSettingsPresenter: NotificationsSettingsViewOutput {
             title: RuuviLocalization.settingsAlertSound,
             items: [
                 RuuviAlertSound.systemDefault,
-                RuuviAlertSound.ruuviSpeak
+                RuuviAlertSound.ruuviSpeak,
             ],
             selection: settings.alertSound
         )
@@ -52,7 +52,7 @@ extension NotificationsSettingsPresenter: NotificationsSettingsViewOutput {
 }
 
 extension NotificationsSettingsPresenter {
-    fileprivate func configure() {
+    private func configure() {
         var viewModels: [NotificationsSettingsViewModel] = []
 
         if settings.showEmailAlertSettings {
@@ -135,17 +135,17 @@ extension NotificationsSettingsPresenter {
             .addObserver(forName: .AlertSoundSettingsDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (_) in
-                self?.configure()
-                guard let sSelf = self else { return }
-                DispatchQueue.main.async {
-                    sSelf.cloudNotificationService.set(
-                        sound: sSelf.settings.alertSound,
-                        language: sSelf.settings.language,
-                        deviceName: UIDevice.modelName
-                    )
-                }
-            })
+                         using: { [weak self] _ in
+                             self?.configure()
+                             guard let sSelf = self else { return }
+                             DispatchQueue.main.async {
+                                 sSelf.cloudNotificationService.set(
+                                     sound: sSelf.settings.alertSound,
+                                     language: sSelf.settings.language,
+                                     deviceName: UIDevice.modelName
+                                 )
+                             }
+                         })
     }
 
     private func startObservingEmailAlertSetting() {
@@ -154,9 +154,9 @@ extension NotificationsSettingsPresenter {
             .addObserver(forName: .EmailAlertSettingsDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (_) in
-                self?.updateEmailViewModel()
-            })
+                         using: { [weak self] _ in
+                             self?.updateEmailViewModel()
+                         })
     }
 
     private func startObservingPushAlertSetting() {
@@ -165,9 +165,9 @@ extension NotificationsSettingsPresenter {
             .addObserver(forName: .PushAlertSettingsDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (_) in
-                self?.updatePushViewModel()
-            })
+                         using: { [weak self] _ in
+                             self?.updatePushViewModel()
+                         })
     }
 
     private func updateEmailViewModel() {

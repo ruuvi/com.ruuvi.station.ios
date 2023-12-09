@@ -1,4 +1,3 @@
 import Foundation
 
-public struct RuuviCloudApiUserRequest: Encodable {
-}
+public struct RuuviCloudApiUserRequest: Encodable {}

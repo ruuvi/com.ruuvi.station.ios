@@ -1,7 +1,7 @@
 import UIKit
 
 class ChartSettingsInitializer: NSObject {
-    @IBOutlet weak var viewController: ChartSettingsTableViewController!
+    @IBOutlet var viewController: ChartSettingsTableViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

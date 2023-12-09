@@ -1,10 +1,10 @@
-import RealmSwift
 import Foundation
-import RuuviOntology
+import RealmSwift
 import RuuviLocal
 import RuuviMigration
+import RuuviOntology
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 
 public final class MigrationManagerToVIPER: RuuviMigration {
@@ -32,10 +32,11 @@ public final class MigrationManagerToVIPER: RuuviMigration {
                 } else if oldSchemaVersion < 8 {
                     self?.deleteRuuviTagData(migration)
                 }
-        }, shouldCompactOnLaunch: { totalBytes, usedBytes in
-            let fiveHundredMegabytes = 500 * 1024 * 1024
-            return (totalBytes > fiveHundredMegabytes) && (Double(usedBytes) / Double(totalBytes)) < 0.5
-        })
+            }, shouldCompactOnLaunch: { totalBytes, usedBytes in
+                let fiveHundredMegabytes = 500 * 1024 * 1024
+                return (totalBytes > fiveHundredMegabytes) && (Double(usedBytes) / Double(totalBytes)) < 0.5
+            }
+        )
 
         // Tell Realm to use this new configuration object for the default Realm
         Realm.Configuration.defaultConfiguration = config
@@ -71,13 +72,13 @@ public final class MigrationManagerToVIPER: RuuviMigration {
     }
 
     private func from1to2(_ migration: Migration) {
-        migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, _) in
+        migration.enumerateObjects(ofType: "RuuviTag") { oldObject, _ in
 
             if let uuid = oldObject?["uuid"] as? String,
-                let name = oldObject?["name"] as? String,
-                let version = oldObject?["dataFormat"] as? Int,
-                let mac = oldObject?["mac"] as? String {
-
+               let name = oldObject?["name"] as? String,
+               let version = oldObject?["dataFormat"] as? Int,
+               let mac = oldObject?["mac"] as? String
+            {
                 let realName = real(name, mac, uuid)
                 let ruuviTag = migration.create(RuuviTagRealm.className(),
                                                 value: ["uuid": uuid,
@@ -86,17 +87,18 @@ public final class MigrationManagerToVIPER: RuuviMigration {
                                                         "mac": mac])
 
                 if let temperature = oldObject?["temperature"] as? Double,
-                    let humidity = oldObject?["humidity"] as? Double,
-                    let pressure = oldObject?["pressure"] as? Double,
-                    let accelerationX = oldObject?["accelerationX"] as? Double,
-                    let accelerationY = oldObject?["accelerationY"] as? Double,
-                    let accelerationZ = oldObject?["accelerationZ"] as? Double,
-                    let rssi = oldObject?["rssi"] as? Int,
-                    let voltage = oldObject?["voltage"] as? Double,
-                    let movementCounter = oldObject?["movementCounter"] as? Int,
-                    let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
-                    let txPower = oldObject?["txPower"] as? Int,
-                    let updatedAt = oldObject?["updatedAt"] as? NSDate {
+                   let humidity = oldObject?["humidity"] as? Double,
+                   let pressure = oldObject?["pressure"] as? Double,
+                   let accelerationX = oldObject?["accelerationX"] as? Double,
+                   let accelerationY = oldObject?["accelerationY"] as? Double,
+                   let accelerationZ = oldObject?["accelerationZ"] as? Double,
+                   let rssi = oldObject?["rssi"] as? Int,
+                   let voltage = oldObject?["voltage"] as? Double,
+                   let movementCounter = oldObject?["movementCounter"] as? Int,
+                   let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
+                   let txPower = oldObject?["txPower"] as? Int,
+                   let updatedAt = oldObject?["updatedAt"] as? NSDate
+                {
                     migration.create(RuuviTagDataRealm.className(),
                                      value: ["ruuviTag": ruuviTag,
                                              "date": updatedAt,
@@ -117,7 +119,7 @@ public final class MigrationManagerToVIPER: RuuviMigration {
             if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
                 localImages.setBackground(id, for: uuid.luid)
             }
-        })
+        }
     }
 
     private func from2to3(_ migration: Migration) {
@@ -143,17 +145,15 @@ public final class MigrationManagerToVIPER: RuuviMigration {
     }
 
     private func real(_ name: String, _ mac: String, _ uuid: String) -> String {
-        let realName: String
-        if name.isEmpty {
+        let realName: String = if name.isEmpty {
             if mac.isEmpty {
-                realName = uuid
+                uuid
             } else {
-                realName = mac
+                mac
             }
         } else {
-            realName = name
+            name
         }
         return realName
     }
-
 }

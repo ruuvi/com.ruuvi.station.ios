@@ -1,7 +1,7 @@
 import UIKit
 
 class DefaultsInitializer: NSObject {
-    @IBOutlet weak var viewController: DefaultsViewController!
+    @IBOutlet var viewController: DefaultsViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -1,7 +1,7 @@
 import Foundation
-import UIKit
-import RuuviOntology
 import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 protocol DiscoverViewInput: UIViewController {
     var ruuviTags: [DiscoverRuuviTagViewModel] { get set }

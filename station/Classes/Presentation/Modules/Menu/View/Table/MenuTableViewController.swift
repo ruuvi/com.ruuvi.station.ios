@@ -7,8 +7,7 @@ class MenuTableViewController: UIViewController {
 }
 
 extension MenuTableViewController: MenuViewInput {
-    func localize() {
-    }
+    func localize() {}
 }
 
 extension MenuTableViewController {

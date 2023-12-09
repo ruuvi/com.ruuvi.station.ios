@@ -9,31 +9,34 @@ let package = Package(
     products: [
         .library(
             name: "RuuviLocal",
-            targets: ["RuuviLocal"]),
+            targets: ["RuuviLocal"]
+        ),
         .library(
             name: "RuuviLocalUserDefaults",
-            targets: ["RuuviLocalUserDefaults"])
+            targets: ["RuuviLocalUserDefaults"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
-        .package(path: "../RuuviOntology")
+        .package(path: "../RuuviOntology"),
     ],
     targets: [
         .target(
             name: "RuuviLocal",
             dependencies: [
                 "RuuviOntology",
-                "Future"
+                "Future",
             ]
         ),
         .target(
             name: "RuuviLocalUserDefaults",
             dependencies: [
-                "RuuviLocal"
+                "RuuviLocal",
             ]
         ),
         .testTarget(
             name: "RuuviLocalTests",
-            dependencies: ["RuuviLocal"])
+            dependencies: ["RuuviLocal"]
+        ),
     ]
 )

@@ -9,6 +9,7 @@ struct EmptyWidgetView: View {
         let messageInline = "Widgets.Unconfigured.Inline.message"
         let loading = "Widgets.Loading.message"
     }
+
     private let texts = Texts()
     var entry: WidgetProvider.Entry
 
@@ -42,9 +43,9 @@ struct EmptyWidgetView: View {
             .cornerRadius(8)
             VStack {
                 Text(entry.config.ruuviWidgetTag == nil ?
-                     (isSimple ? texts.messageSimple.localized :
+                    (isSimple ? texts.messageSimple.localized :
                         texts.messageRectangular.localized)
-                     : texts.loading.localized)
+                    : texts.loading.localized)
                     .font(.custom(Constants.muliBold.rawValue,
                                   size: family == .systemSmall ? 16 : 10,
                                   relativeTo: .subheadline))
@@ -74,7 +75,7 @@ struct EmptyWidgetView: View {
                                    bottom: -4,
                                    trailing: 8))
                 Text(entry.config.ruuviWidgetTag == nil ?
-                     texts.messageCircular.localized : texts.loading.localized)
+                    texts.messageCircular.localized : texts.loading.localized)
                     .font(.custom(Constants.muliBold.rawValue,
                                   size: 8,
                                   relativeTo: .headline))
@@ -94,7 +95,7 @@ struct EmptyWidgetView: View {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
             }
             Text(entry.config.ruuviWidgetTag == nil ?
-                 texts.messageInline.localized : texts.loading.localized)
+                texts.messageInline.localized : texts.loading.localized)
         }
     }
 }

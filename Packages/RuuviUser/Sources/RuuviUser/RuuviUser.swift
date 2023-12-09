@@ -1,7 +1,7 @@
 import Foundation
 
-extension Notification.Name {
-    public static let RuuviUserDidAuthorized = Notification.Name("RuuviUser.AuthorizationSuccessful")
+public extension Notification.Name {
+    static let RuuviUserDidAuthorized = Notification.Name("RuuviUser.AuthorizationSuccessful")
 }
 
 public protocol RuuviUser {

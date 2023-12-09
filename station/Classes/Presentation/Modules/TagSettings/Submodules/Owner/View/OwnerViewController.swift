@@ -6,9 +6,9 @@ final class OwnerViewController: UIViewController {
 
     var mode: OwnershipMode = .claim
 
-    @IBOutlet weak var claimOwnershipDescriptionLabel: UILabel!
-    @IBOutlet weak var removeCloudHistoryActionContainer: UIView!
-    @IBOutlet weak var claimOwnershipButton: UIButton!
+    @IBOutlet var claimOwnershipDescriptionLabel: UILabel!
+    @IBOutlet var removeCloudHistoryActionContainer: UIView!
+    @IBOutlet var claimOwnershipButton: UIButton!
 
     private lazy var removeCloudHistoryTitleLabel: UILabel = {
         let label = UILabel()
@@ -37,7 +37,7 @@ final class OwnerViewController: UIViewController {
     }()
 
     private lazy var backButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .label
         let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
@@ -51,7 +51,7 @@ final class OwnerViewController: UIViewController {
     var removeCloudHistoryContainerVisibleConstraint: NSLayoutConstraint!
     var removeCloudHistoryContainerHiddenConstraint: NSLayoutConstraint!
 
-    @IBAction func claimOwnershipButtonTouchUpInside(_ sender: Any) {
+    @IBAction func claimOwnershipButtonTouchUpInside(_: Any) {
         output.viewDidTapOnClaim(mode: mode)
     }
 
@@ -91,7 +91,7 @@ extension OwnerViewController: OwnerViewInput {
             claimOwnershipButton.setTitle(RuuviLocalization.unclaim.capitalized, for: .normal)
         }
         removeCloudHistoryContainerVisibleConstraint.isActive = mode == .unclaim
-        removeCloudHistoryContainerHiddenConstraint.isActive =  mode == .claim
+        removeCloudHistoryContainerHiddenConstraint.isActive = mode == .claim
 
         removeCloudHistoryActionContainer.isHidden = mode == .claim
     }
@@ -129,9 +129,9 @@ extension OwnerViewController: OwnerViewInput {
         controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
                                            style: .destructive,
                                            handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.output?.viewDidConfirmUnclaim(removeCloudHistory: self.removeCloudHistorySwitch.isOn)
-        }))
+                                               guard let self else { return }
+                                               output?.viewDidConfirmUnclaim(removeCloudHistory: removeCloudHistorySwitch.isOn)
+                                           }))
         controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
@@ -151,9 +151,8 @@ extension OwnerViewController {
     }
 
     private func setUpCloudHistoryContentView() {
-
         let horizontalStackView = UIStackView(arrangedSubviews: [
-            removeCloudHistoryTitleLabel, removeCloudHistorySwitch
+            removeCloudHistoryTitleLabel, removeCloudHistorySwitch,
         ])
         horizontalStackView.spacing = 8
         horizontalStackView.distribution = .fill
@@ -161,7 +160,7 @@ extension OwnerViewController {
         removeCloudHistorySwitch.constrainWidth(constant: 51)
 
         let verticalStackView = UIStackView(arrangedSubviews: [
-            horizontalStackView, removeCloudHistoryDescriptionLabel
+            horizontalStackView, removeCloudHistoryDescriptionLabel,
         ])
         verticalStackView.spacing = 10
         verticalStackView.distribution = .fill
@@ -181,22 +180,22 @@ extension OwnerViewController {
         removeCloudHistoryActionContainer.isHidden = true
 
         removeCloudHistoryContainerVisibleConstraint =
-        claimOwnershipButton
-            .topAnchor
-            .constraint(
-                equalTo: removeCloudHistoryActionContainer.bottomAnchor,
-                constant: 40
-            )
+            claimOwnershipButton
+                .topAnchor
+                .constraint(
+                    equalTo: removeCloudHistoryActionContainer.bottomAnchor,
+                    constant: 40
+                )
         removeCloudHistoryContainerHiddenConstraint =
-        claimOwnershipButton
-            .topAnchor
-            .constraint(
-                equalTo: claimOwnershipDescriptionLabel.bottomAnchor,
-                constant: 40
-            )
+            claimOwnershipButton
+                .topAnchor
+                .constraint(
+                    equalTo: claimOwnershipDescriptionLabel.bottomAnchor,
+                    constant: 40
+                )
     }
 
-    @objc fileprivate func backButtonDidTap() {
+    @objc private func backButtonDidTap() {
         output.viewDidDismiss()
     }
 }

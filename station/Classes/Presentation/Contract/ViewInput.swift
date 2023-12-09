@@ -1,4 +1,3 @@
 import Foundation
 
-protocol ViewInput: AnyObject {
-}
+protocol ViewInput: AnyObject {}

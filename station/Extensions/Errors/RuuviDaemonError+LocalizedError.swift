@@ -1,24 +1,24 @@
-import Foundation
-import RuuviStorage
-import RuuviReactor
-import RuuviPool
-import RuuviPersistence
-import RuuviDaemon
 import BTKit
+import Foundation
+import RuuviDaemon
+import RuuviPersistence
+import RuuviPool
+import RuuviReactor
+import RuuviStorage
 
 extension RuuviDaemonError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .btkit(let error):
-            return error.errorDescription
-        case .ruuviPersistence(let error):
-            return error.errorDescription
-        case .ruuviPool(let error):
-            return error.errorDescription
-        case .ruuviReactor(let error):
-            return error.errorDescription
-        case .ruuviStorage(let error):
-            return error.errorDescription
+        case let .btkit(error):
+            error.errorDescription
+        case let .ruuviPersistence(error):
+            error.errorDescription
+        case let .ruuviPool(error):
+            error.errorDescription
+        case let .ruuviReactor(error):
+            error.errorDescription
+        case let .ruuviStorage(error):
+            error.errorDescription
         }
     }
 }

@@ -1,8 +1,8 @@
 import Foundation
 
-extension RuuviTagSensorRecord {
-    public var measurement: RuuviMeasurement {
-        return RuuviMeasurement(
+public extension RuuviTagSensorRecord {
+    var measurement: RuuviMeasurement {
+        RuuviMeasurement(
             luid: luid,
             macId: macId,
             measurementSequenceNumber: measurementSequenceNumber,

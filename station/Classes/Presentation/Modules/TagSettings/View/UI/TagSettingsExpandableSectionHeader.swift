@@ -1,6 +1,6 @@
-import UIKit
-import RuuviOntology
 import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 // swiftlint:disable:next type_name
 protocol TagSettingsExpandableSectionHeaderDelegate: NSObjectProtocol {
@@ -10,7 +10,6 @@ protocol TagSettingsExpandableSectionHeaderDelegate: NSObjectProtocol {
 }
 
 class TagSettingsExpandableSectionHeader: UIView {
-
     weak var delegate: TagSettingsExpandableSectionHeaderDelegate?
     private var section: Int = 0
 
@@ -73,7 +72,8 @@ class TagSettingsExpandableSectionHeader: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -104,14 +104,14 @@ class TagSettingsExpandableSectionHeader: UIView {
 
         addSubview(arrowView)
         arrowView.anchor(top: nil,
-                                leading: mutedTillLabel.trailingAnchor,
-                                bottom: nil,
-                                trailing: safeRightAnchor,
-                                padding: .init(top: 0,
-                                               left: 8,
-                                               bottom: 0,
-                                               right: 12),
-                                size: .init(width: 14, height: 14))
+                         leading: mutedTillLabel.trailingAnchor,
+                         bottom: nil,
+                         trailing: safeRightAnchor,
+                         padding: .init(top: 0,
+                                        left: 8,
+                                        bottom: 0,
+                                        right: 12),
+                         size: .init(width: 14, height: 14))
         arrowView.centerYInSuperview()
 
         addSubview(seprator)
@@ -122,7 +122,7 @@ class TagSettingsExpandableSectionHeader: UIView {
                         size: .init(width: 0, height: 1))
 
         let noValueStack = UIStackView(arrangedSubviews: [
-            noValueLabel, iconView
+            noValueLabel, iconView,
         ])
         iconView.size(width: 16, height: 16)
         noValueStack.axis = .horizontal
@@ -156,7 +156,7 @@ class TagSettingsExpandableSectionHeader: UIView {
         delegate?.toggleSection(self, section: cell.section)
     }
 
-    @objc private func tapNoValuesView(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc private func tapNoValuesView(_: UITapGestureRecognizer) {
         delegate?.didTapSectionMoreInfo(headerView: self)
     }
 }
@@ -170,7 +170,8 @@ extension TagSettingsExpandableSectionHeader {
                   section: Int,
                   collapsed: Bool,
                   backgroundColor: UIColor? = nil,
-                  font: UIFont?) {
+                  font: UIFont?)
+    {
         titleLabel.text = string
         self.section = section
         setCollapsed(collapsed)
@@ -179,7 +180,7 @@ extension TagSettingsExpandableSectionHeader {
         } else {
             self.backgroundColor = RuuviColor.tagSettingsItemHeaderColor
         }
-        if let font = font {
+        if let font {
             titleLabel.font = font
         } else {
             titleLabel.font = UIFont.Muli(.bold, size: 16)
@@ -213,13 +214,14 @@ extension TagSettingsExpandableSectionHeader {
 
     func setAlertState(with date: Date?,
                        isOn: Bool,
-                       alertState: AlertState?) {
+                       alertState: AlertState?)
+    {
         // Show alert icon only when alert is on
         alertIcon.alpha = isOn ? 1 : 0
 
         // Show muted label if muted till is not nil
         // If muted till is not nil, we don't have to execute the rest of the code
-        if let date = date, date > Date() {
+        if let date, date > Date() {
             mutedTillLabel.isHidden = !isOn
             mutedTillLabel.text = AppDateFormatter
                 .shared
@@ -247,15 +249,15 @@ extension TagSettingsExpandableSectionHeader {
             alertIcon.alpha = 1.0
             alertIcon.tintColor = RuuviColor.ruuviOrangeColor
             alertIcon.image = RuuviAssets.alertActiveImage
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 UIView.animate(withDuration: 0.5,
                                delay: 0,
                                options: [.repeat,
                                          .autoreverse],
                                animations: { [weak self] in
-                    self?.alertIcon.alpha = 0.0
-                })
-            })
+                                   self?.alertIcon.alpha = 0.0
+                               })
+            }
         default:
             alertIcon.image = nil
             removeAlertAnimations()
@@ -263,10 +265,9 @@ extension TagSettingsExpandableSectionHeader {
     }
 
     func removeAlertAnimations() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
-                                      execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.alertIcon.layer.removeAllAnimations()
             self?.alertIcon.alpha = 1
-        })
+        }
     }
 }

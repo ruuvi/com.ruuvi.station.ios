@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocalization
+import UIKit
 
 protocol NoSensorViewDelegate: NSObjectProtocol {
     func didTapSignInButton(sender: NoSensorView)
@@ -8,13 +8,13 @@ protocol NoSensorViewDelegate: NSObjectProtocol {
 }
 
 class NoSensorView: UIView {
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -101,11 +101,11 @@ extension NoSensorView {
 }
 
 // MARK: - Public
+
 extension NoSensorView {
     func updateView(userSignInOnce: Bool) {
-
         if centerButtonStackView.subviews.count > 0 {
-            centerButtonStackView.subviews.forEach({ $0.removeFromSuperview() })
+            centerButtonStackView.subviews.forEach { $0.removeFromSuperview() }
         }
 
         let buttons = userSignInOnce ? [signInButton, addSensorButton] : [addSensorButton]
@@ -113,8 +113,8 @@ extension NoSensorView {
             centerButtonStackView.addArrangedSubview(button)
         }
         messageLabel.text = userSignInOnce ?
-        RuuviLocalization.dashboardNoSensorsMessageSignedOut :
-        RuuviLocalization.dashboardNoSensorsMessage
+            RuuviLocalization.dashboardNoSensorsMessageSignedOut :
+            RuuviLocalization.dashboardNoSensorsMessage
         centerButtonCenterYAnchor.isActive =
             userSignInOnce ? activateCenterButtonStackConstraint() : true
     }
@@ -145,8 +145,8 @@ extension NoSensorView {
         container
             .widthAnchor
             .constraint(
-            equalTo: self.widthAnchor
-        ).isActive = true
+                equalTo: widthAnchor
+            ).isActive = true
 
         container.addSubview(messageLabel)
         messageLabel.anchor(top: nil,
@@ -168,10 +168,10 @@ extension NoSensorView {
         addSensorButton.constrainHeight(constant: UIDevice.isiPhoneSE() ? 40 : 50)
         if UIDevice.isiPhoneSE() {
             centerButtonStackView.anchor(top: nil,
-                                   leading: container.leadingAnchor,
-                                   bottom: nil,
-                                   trailing: container.trailingAnchor,
-                                   padding: .init(top: 0, left: 8, bottom: 0, right: 8))
+                                         leading: container.leadingAnchor,
+                                         bottom: nil,
+                                         trailing: container.trailingAnchor,
+                                         padding: .init(top: 0, left: 8, bottom: 0, right: 8))
         } else {
             centerButtonStackView.widthAnchor.constraint(
                 greaterThanOrEqualToConstant: 300
@@ -187,7 +187,7 @@ extension NoSensorView {
         centerButtonCenterYAnchor = centerButtonStackView
             .centerYAnchor
             .constraint(
-                equalTo: self.centerYAnchor
+                equalTo: centerYAnchor
             )
         centerButtonCenterYAnchor.priority = .defaultLow
         centerButtonCenterYAnchor.isActive = activateCenterButtonStackConstraint()

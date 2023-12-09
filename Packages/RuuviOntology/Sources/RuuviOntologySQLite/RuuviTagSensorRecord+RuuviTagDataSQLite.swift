@@ -1,9 +1,9 @@
 import Foundation
 import RuuviOntology
 
-extension RuuviTagSensorRecord {
-    public var sqlite: RuuviTagDataSQLite {
-        return RuuviTagDataSQLite(
+public extension RuuviTagSensorRecord {
+    var sqlite: RuuviTagDataSQLite {
+        RuuviTagDataSQLite(
             luid: luid,
             date: date,
             source: source,
@@ -23,8 +23,8 @@ extension RuuviTagSensorRecord {
         )
     }
 
-    public var latest: RuuviTagLatestDataSQLite {
-        return RuuviTagLatestDataSQLite(
+    var latest: RuuviTagLatestDataSQLite {
+        RuuviTagLatestDataSQLite(
             id: uuid,
             luid: luid,
             date: date,

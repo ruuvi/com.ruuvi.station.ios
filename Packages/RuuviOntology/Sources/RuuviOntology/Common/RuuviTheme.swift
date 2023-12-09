@@ -6,11 +6,11 @@ public enum RuuviTheme: String {
     public var uiInterfaceStyle: UIUserInterfaceStyle {
         switch self {
         case .light:
-            return .light
+            .light
         case .dark:
-            return .dark
+            .dark
         case .system:
-            return .unspecified
+            .unspecified
         }
     }
 }

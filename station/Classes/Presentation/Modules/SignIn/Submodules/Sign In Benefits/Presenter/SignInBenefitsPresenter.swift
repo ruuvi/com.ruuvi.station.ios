@@ -5,7 +5,9 @@ class SignInBenefitsPresenter: NSObject {
     var output: SignInBenefitsModuleOutput?
     var router: SignInBenefitsRouterInput!
 }
+
 // MARK: - SignInViewOutput
+
 extension SignInBenefitsPresenter: SignInBenefitsViewOutput {
     func viewDidLoad() {
         // No op.
@@ -21,6 +23,7 @@ extension SignInBenefitsPresenter: SignInBenefitsViewOutput {
 }
 
 // MARK: - SignInPromoModuleInput
+
 extension SignInBenefitsPresenter: SignInBenefitsModuleInput {
     func configure(output: SignInBenefitsModuleOutput?) {
         self.output = output
@@ -34,22 +37,22 @@ extension SignInBenefitsPresenter: SignInBenefitsModuleInput {
 extension SignInBenefitsPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         module.dismiss(completion: { [weak self] in
-            guard let self = self else { return }
-            self.output?.signIn(module: self, didSuccessfulyLogin: sender)
+            guard let self else { return }
+            output?.signIn(module: self, didSuccessfulyLogin: sender)
         })
     }
 
     func signIn(module: SignInModuleInput, didCloseSignInWithoutAttempt sender: Any?) {
         module.dismiss(completion: { [weak self] in
-            guard let self = self else { return }
-            self.output?.signIn(module: self, didCloseSignInWithoutAttempt: sender)
+            guard let self else { return }
+            output?.signIn(module: self, didCloseSignInWithoutAttempt: sender)
         })
     }
 
     func signIn(module: SignInModuleInput, didSelectUseWithoutAccount sender: Any?) {
         module.dismiss(completion: { [weak self] in
-            guard let self = self else { return }
-            self.output?.signIn(module: self, didSelectUseWithoutAccount: sender)
+            guard let self else { return }
+            output?.signIn(module: self, didSelectUseWithoutAccount: sender)
         })
     }
 }

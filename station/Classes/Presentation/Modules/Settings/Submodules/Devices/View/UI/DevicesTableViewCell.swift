@@ -7,7 +7,8 @@ class DevicesTableViewCell: UITableViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -49,8 +50,8 @@ extension DevicesTableViewCell {
     }
 }
 
-extension DevicesTableViewCell {
-    fileprivate func setUpUI() {
+private extension DevicesTableViewCell {
+    func setUpUI() {
         backgroundColor = .clear
         selectionStyle = .none
 
@@ -60,7 +61,7 @@ extension DevicesTableViewCell {
         container.fillSuperview(padding: .init(top: 4, left: 8, bottom: 4, right: 8))
 
         let textStack = UIStackView(arrangedSubviews: [
-            deviceNameLabel, tokenIdLabel, lastAccessedLabel
+            deviceNameLabel, tokenIdLabel, lastAccessedLabel,
         ])
         textStack.spacing = 4
         textStack.distribution = .fill

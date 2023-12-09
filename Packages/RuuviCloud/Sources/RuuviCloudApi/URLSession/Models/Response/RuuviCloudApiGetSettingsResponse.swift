@@ -1,6 +1,6 @@
 import Foundation
-import RuuviOntology
 import Humidity
+import RuuviOntology
 
 public struct RuuviCloudApiGetSettingsResponse: Decodable {
     public let settings: RuuviCloudApiSettings?
@@ -8,55 +8,71 @@ public struct RuuviCloudApiGetSettingsResponse: Decodable {
 
 public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     public var unitTemperature: TemperatureUnit? {
-        return unitTemperatureString?.ruuviCloudApiSettingUnitTemperature
+        unitTemperatureString?.ruuviCloudApiSettingUnitTemperature
     }
+
     public var accuracyTemperature: MeasurementAccuracyType? {
-        return accuracyTemperatureString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
+        accuracyTemperatureString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
     }
+
     public var unitHumidity: HumidityUnit? {
-        return unitHumidityString?.ruuviCloudApiSettingUnitHumidity
+        unitHumidityString?.ruuviCloudApiSettingUnitHumidity
     }
+
     public var accuracyHumidity: MeasurementAccuracyType? {
-        return accuracyHumidityString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
+        accuracyHumidityString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
     }
+
     public var unitPressure: UnitPressure? {
-        return unitPressureString?.ruuviCloudApiSettingUnitPressure
+        unitPressureString?.ruuviCloudApiSettingUnitPressure
     }
+
     public var accuracyPressure: MeasurementAccuracyType? {
-        return accuracyPressureString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
+        accuracyPressureString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
     }
+
     public var chartShowAllPoints: Bool? {
-        return chartShowAllPointsString?.ruuviCloudApiSettingBoolean
+        chartShowAllPointsString?.ruuviCloudApiSettingBoolean
     }
+
     public var chartDrawDots: Bool? {
-        return chartDrawDotsString?.ruuviCloudApiSettingBoolean
+        chartDrawDotsString?.ruuviCloudApiSettingBoolean
     }
+
     public var chartViewPeriod: Int? {
-        return chartViewPeriodString?.ruuviCloudApiSettingChartViewPeriod
+        chartViewPeriodString?.ruuviCloudApiSettingChartViewPeriod
     }
+
     public var chartShowMinMaxAvg: Bool? {
-        return chartShowMinMaxAverageString?.ruuviCloudApiSettingBoolean
+        chartShowMinMaxAverageString?.ruuviCloudApiSettingBoolean
     }
+
     public var cloudModeEnabled: Bool? {
-        return cloudModeEnabledString?.ruuviCloudApiSettingBoolean
+        cloudModeEnabledString?.ruuviCloudApiSettingBoolean
     }
+
     public var dashboardEnabled: Bool? {
-        return dashboardEnabledString?.ruuviCloudApiSettingBoolean
+        dashboardEnabledString?.ruuviCloudApiSettingBoolean
     }
+
     public var dashboardType: DashboardType? {
-        return dashboardTypeString?.ruuviCloudApiSettingsDashboardType
+        dashboardTypeString?.ruuviCloudApiSettingsDashboardType
     }
+
     public var dashboardTapActionType: DashboardTapActionType? {
-        return dashboardTapActionTypeString?.ruuviCloudApiSettingsDashboardTapActionType
+        dashboardTapActionTypeString?.ruuviCloudApiSettingsDashboardTapActionType
     }
+
     public var pushAlertEnabled: Bool? {
-        return pushAlertEnabledString?.ruuviCloudApiSettingBoolean
+        pushAlertEnabledString?.ruuviCloudApiSettingBoolean
     }
+
     public var emailAlertEnabled: Bool? {
-        return emailAlertEnabledString?.ruuviCloudApiSettingBoolean
+        emailAlertEnabledString?.ruuviCloudApiSettingBoolean
     }
+
     public var profileLanguageCode: String? {
-        return profileLanguageCodeString
+        profileLanguageCodeString
     }
 
     var unitTemperatureString: String?

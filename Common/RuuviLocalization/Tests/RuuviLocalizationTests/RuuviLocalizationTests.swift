@@ -1,7 +1,6 @@
-import XCTest
 @testable import RuuviLocalization
+import XCTest
 
 final class RuuviLocalizationTests: XCTestCase {
-    func testExample() {
-    }
+    func testExample() {}
 }

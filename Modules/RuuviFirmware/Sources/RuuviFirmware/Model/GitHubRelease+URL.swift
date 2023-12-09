@@ -2,42 +2,42 @@ import Foundation
 
 extension GitHubRelease {
     var defaultFullZipName: String? {
-        return defaultFullZipAsset?.name
+        defaultFullZipAsset?.name
     }
 
     var defaultFullZipUrl: URL? {
         if let downloadUrlString = defaultFullZipAsset?.downloadUrlString {
-            return URL(string: downloadUrlString)
+            URL(string: downloadUrlString)
         } else {
-            return nil
+            nil
         }
     }
 
     var defaultAppZipName: String? {
-        return defaultAppZipAsset?.name
+        defaultAppZipAsset?.name
     }
 
     var defaultAppZipUrl: URL? {
         if let downloadUrlString = defaultAppZipAsset?.downloadUrlString {
-            return URL(string: downloadUrlString)
+            URL(string: downloadUrlString)
         } else {
-            return nil
+            nil
         }
     }
-    
+
     private var defaultFullZipAsset: GitHubRelease.Asset? {
-         return assets.first(where: {
-             $0.name.hasSuffix("zip")
-                 && $0.name.contains("default")
-                 && !$0.name.contains("app")
-         })
-     }
+        assets.first(where: {
+            $0.name.hasSuffix("zip")
+                && $0.name.contains("default")
+                && !$0.name.contains("app")
+        })
+    }
 
     private var defaultAppZipAsset: GitHubRelease.Asset? {
-         return assets.first(where: {
-             $0.name.hasSuffix("zip")
-                 && $0.name.contains("default")
-                 && $0.name.contains("app")
-         })
-     }
+        assets.first(where: {
+            $0.name.hasSuffix("zip")
+                && $0.name.contains("default")
+                && $0.name.contains("app")
+        })
+    }
 }

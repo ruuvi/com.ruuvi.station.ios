@@ -10,7 +10,7 @@ public struct RuuviCloudApiGetAlertSensor: Decodable, RuuviCloudSensorAlerts {
     public let apiAlerts: [RuuviCloudApiGetAlert]?
 
     public var alerts: [RuuviCloudAlert]? {
-        return apiAlerts
+        apiAlerts
     }
 
     enum CodingKeys: String, CodingKey {
@@ -38,10 +38,11 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let typeString = try? container.decode(String.self, forKey: .type),
-           let type = RuuviCloudAlertType(rawValue: typeString) {
+           let type = RuuviCloudAlertType(rawValue: typeString)
+        {
             self.type = type
         } else {
-            self.type = nil
+            type = nil
         }
 
         enabled = try container.decode(Bool.self, forKey: .enabled)
@@ -53,7 +54,7 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
         if let delay = try? container.decode(Int.self, forKey: .delay) {
             self.delay = delay
         } else {
-            self.delay = nil
+            delay = nil
         }
 
         triggered = try container.decode(Bool.self, forKey: .triggered)

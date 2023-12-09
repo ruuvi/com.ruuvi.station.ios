@@ -1,20 +1,19 @@
 import UIKit
 
 class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
-
     var manager: MenuTableTransitionManager
 
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
 
-    @objc internal func handlePresentMenuLeftScreenEdge(_ edge: UIScreenEdgePanGestureRecognizer) {
+    @objc func handlePresentMenuLeftScreenEdge(_ edge: UIScreenEdgePanGestureRecognizer) {
         manager.presentDirection = .left
         handlePresentMenuPan(edge)
     }
 
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
+    func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
+        0.35
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -39,10 +38,10 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        initialSpringVelocity: 1,
                        options: .curveEaseInOut,
                        animations: {
-                        toView.frame = finalFrame
-        }, completion: { _ -> Void in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+                           toView.frame = finalFrame
+                       }, completion: { _ in
+                           transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                       })
     }
 
     func handlePresentMenuPan(_ pan: UIPanGestureRecognizer) {

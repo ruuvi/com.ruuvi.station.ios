@@ -34,10 +34,11 @@ class RuuviCodeView: UIStackView {
 }
 
 // MARK: - Public methods
+
 extension RuuviCodeView {
     // Fill the view with pasted code
     func autofill(with code: String?) {
-        guard let code = code else {
+        guard let code else {
             return
         }
         populateRuuviCodeFields(with: code)
@@ -45,7 +46,7 @@ extension RuuviCodeView {
 
     // Returns entered code
     func ruuviCode() -> String {
-        return codeEntries.map({ $0.text ?? "" }).joined(separator: "")
+        codeEntries.map { $0.text ?? "" }.joined(separator: "")
     }
 
     // Activate last field if invalid code is entered
@@ -57,6 +58,7 @@ extension RuuviCodeView {
 }
 
 // MARK: - Private methods
+
 extension RuuviCodeView {
     private func setupSuper() {
         setupStackView()
@@ -73,15 +75,15 @@ extension RuuviCodeView {
     }
 
     private func setupRuuviCodeFields() {
-        for index in 0..<entriesCount {
+        for index in 0 ..< entriesCount {
             let field = RuuviCodeTextField()
             field.autocorrectionType = .no
             field.spellCheckingType = .no
             field.tag = index
             setupRuuviCodeField(field)
             codeEntries.append(field)
-            index != 0 ? (field.previousEntry = codeEntries[index-1]) : (field.previousEntry = nil)
-            index != 0 ? (codeEntries[index-1].nextEntry = field) : ()
+            index != 0 ? (field.previousEntry = codeEntries[index - 1]) : (field.previousEntry = nil)
+            index != 0 ? (codeEntries[index - 1].nextEntry = field) : ()
         }
         if codeEntries.count > 0 {
             codeEntries[0].layer.borderColor = activeBorderColor.cgColor
@@ -109,7 +111,7 @@ extension RuuviCodeView {
     }
 
     private func populateRuuviCodeFields(with string: String) {
-        remainingStrStack = string.reversed().filter({ $0 != " " }).compactMap { String($0) }
+        remainingStrStack = string.reversed().filter { $0 != " " }.compactMap { String($0) }
         for textField in codeEntries {
             if let charToAdd = remainingStrStack.popLast() {
                 textField.text = String(charToAdd).uppercased()
@@ -128,6 +130,7 @@ extension RuuviCodeView {
 }
 
 // MARK: - Textfield Delegate
+
 extension RuuviCodeView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.layer.borderColor = activeBorderColor.cgColor
@@ -167,7 +170,7 @@ extension RuuviCodeView: UITextFieldDelegate {
                 guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
                     return false
                 }
-                if range.length == 0 && code.isEmpty {
+                if range.length == 0, code.isEmpty {
                     return false
                 } else if range.length == 0 {
                     textField.text = code.uppercased()

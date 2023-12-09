@@ -1,13 +1,13 @@
 import Foundation
 #if canImport(FirebaseAnalytics)
-import FirebaseAnalytics
+    import FirebaseAnalytics
 #endif
 import RuuviAnalytics
-import RuuviOntology
-import RuuviStorage
 import RuuviLocal
-import RuuviUser
+import RuuviOntology
 import RuuviService
+import RuuviStorage
+import RuuviUser
 
 public final class RuuviAnalyticsImpl: RuuviAnalytics {
     private enum Properties {
@@ -67,57 +67,57 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         var name: String {
             switch self {
             case .loggedIn:
-                return "logged_in"
+                "logged_in"
             case .addedTags:
-                return "added_tags"
+                "added_tags"
             case .claimedTags:
-                return "claimed_tags"
+                "claimed_tags"
             case .offlineTags:
-                return "offline_tags"
+                "offline_tags"
             case .df2_tags:
-                return "use_df2"
+                "use_df2"
             case .df3_tags:
-                return "use_df3"
+                "use_df3"
             case .df4_tags:
-                return "use_df4"
+                "use_df4"
             case .df5_tags:
-                return "use_df5"
+                "use_df5"
             case .backgroundScanEnabled:
-                return "background_scan_enabled"
+                "background_scan_enabled"
             case .backgroundScanInterval:
-                return "background_scan_interval"
+                "background_scan_interval"
             case .dashboardEnabled:
-                return "dashboard_enabled"
+                "dashboard_enabled"
             case .gatewayEnabled:
-                return "gateway_enabled"
+                "gateway_enabled"
             case .graphDrawDots:
-                return "graph_draw_dots"
+                "graph_draw_dots"
             case .graphPointInterval:
-                return "graph_point_interval"
+                "graph_point_interval"
             case .graphShowAllPoints:
-                return "graph_show_all_points"
+                "graph_show_all_points"
             case .graphViewPeriod:
-                return "graph_view_period"
+                "graph_view_period"
             case .humidityUnit:
-                return "humidity_unit"
+                "humidity_unit"
             case .pressureUnit:
-                return "pressure_unit"
+                "pressure_unit"
             case .temperatureUnit:
-                return "temperature_unit"
+                "temperature_unit"
             case .language:
-                return "language"
+                "language"
             case .useSimpleWidget:
-                return "use_simple_widget"
+                "use_simple_widget"
             case .alertTemperature:
-                return "alert_temperature"
+                "alert_temperature"
             case .alertHumidity:
-                return "alert_humidity"
+                "alert_humidity"
             case .alertPressure:
-                return "alert_pressure"
+                "alert_pressure"
             case .alertMovement:
-                return "alert_movement"
+                "alert_movement"
             case .alertRSSI:
-                return "alert_rssi"
+                "alert_rssi"
             }
         }
     }
@@ -141,17 +141,18 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
 
     public func update() {
         guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,
-              bundleName != "station_dev" else {
+              bundleName != "station_dev"
+        else {
             return
         }
         set(.loggedIn(ruuviUser.isAuthorized))
         ruuviStorage.readAll().on(success: { tags in
             // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
             // So we log them first before filtering
-            let df2_tags_count = tags.filter({ $0.version == 2 }).count
-            let df3_tags_count = tags.filter({ $0.version == 3 }).count
-            let df4_tags_count = tags.filter({ $0.version == 4 }).count
-            let df5_tags_count = tags.filter({ $0.version == 5 }).count
+            let df2_tags_count = tags.filter { $0.version == 2 }.count
+            let df3_tags_count = tags.filter { $0.version == 3 }.count
+            let df4_tags_count = tags.filter { $0.version == 4 }.count
+            let df5_tags_count = tags.filter { $0.version == 5 }.count
             self.set(.df2_tags(df2_tags_count))
             self.set(.df3_tags(df3_tags_count))
             self.set(.df4_tags(df4_tags_count))
@@ -178,7 +179,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.graphDrawDots(settings.chartDrawDotsOn))
         set(.graphPointInterval(settings.chartIntervalSeconds / 60))
         set(.graphShowAllPoints(!settings.chartDownsamplingOn))
-        set(.graphViewPeriod(settings.dataPruningOffsetHours/24))
+        set(.graphViewPeriod(settings.dataPruningOffsetHours / 24))
         set(.humidityUnit(settings.humidityUnit))
         set(.pressureUnit(settings.pressureUnit))
         set(.temperatureUnit(settings.temperatureUnit))
@@ -188,121 +189,128 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
     }
 
     private func set(_ property: Properties) {
-        let value: String
-        switch property {
-        case .loggedIn(let isLoggedIn):
-            value = isLoggedIn.description
-        case .addedTags(let count),
-            .claimedTags(let count),
-            .offlineTags(let count),
-            .df2_tags(let count),
-            .df3_tags(let count),
-            .df4_tags(let count),
-            .df5_tags(let count),
-            .alertTemperature(let count),
-            .alertHumidity(let count),
-            .alertPressure(let count),
-            .alertMovement(let count),
-            .alertRSSI(let count):
-            value = count > 10 ? "10+" : String(count)
-        case .backgroundScanEnabled(let isEnabled),
-             .dashboardEnabled(let isEnabled),
-             .gatewayEnabled(let isEnabled),
-             .graphDrawDots(let isEnabled),
-             .graphShowAllPoints(let isEnabled):
-            value = isEnabled.description
-        case .backgroundScanInterval(let intValue),
-             .graphPointInterval(let intValue),
-             .graphViewPeriod(let intValue):
-            value = String(intValue)
-        case .humidityUnit(let unit):
-            value = unit.analyticsValue
-        case .pressureUnit(let unit):
-            value = unit.analyticsValue
-        case .temperatureUnit(let unit):
-            value = unit.analyticsValue
-        case .language(let language):
-            value = language.rawValue
-        case .useSimpleWidget(let isUsing):
-            value = isUsing.description
+        let value: String = switch property {
+        case let .loggedIn(isLoggedIn):
+            isLoggedIn.description
+        case let .addedTags(count),
+             let .claimedTags(count),
+             let .offlineTags(count),
+             let .df2_tags(count),
+             let .df3_tags(count),
+             let .df4_tags(count),
+             let .df5_tags(count),
+             let .alertTemperature(count),
+             let .alertHumidity(count),
+             let .alertPressure(count),
+             let .alertMovement(count),
+             let .alertRSSI(count):
+            count > 10 ? "10+" : String(count)
+        case let .backgroundScanEnabled(isEnabled),
+             let .dashboardEnabled(isEnabled),
+             let .gatewayEnabled(isEnabled),
+             let .graphDrawDots(isEnabled),
+             let .graphShowAllPoints(isEnabled):
+            isEnabled.description
+        case let .backgroundScanInterval(intValue),
+             let .graphPointInterval(intValue),
+             let .graphViewPeriod(intValue):
+            String(intValue)
+        case let .humidityUnit(unit):
+            unit.analyticsValue
+        case let .pressureUnit(unit):
+            unit.analyticsValue
+        case let .temperatureUnit(unit):
+            unit.analyticsValue
+        case let .language(language):
+            language.rawValue
+        case let .useSimpleWidget(isUsing):
+            isUsing.description
         }
         #if canImport(FirebaseAnalytics)
-        Analytics.setUserProperty(value, forName: property.name)
+            Analytics.setUserProperty(value, forName: property.name)
         #endif
     }
 
     // swiftlint:disable:next large_tuple
     private func calculateAlerts(from tags: [RuuviTagSensor]) -> (temperature: Int,
-                                       humidity: Int,
-                                       pressure: Int,
-                                       movementCounter: Int) {
-        var temperatureAlertCount: Int = 0
-        var humidityAlertCount: Int = 0
-        var pressureAlertCount: Int = 0
-        var movementAlertCount: Int = 0
+                                                                  humidity: Int,
+                                                                  pressure: Int,
+                                                                  movementCounter: Int)
+    {
+        var temperatureAlertCount = 0
+        var humidityAlertCount = 0
+        var pressureAlertCount = 0
+        var movementAlertCount = 0
 
         for tag in tags {
             if alertService.isOn(type: .temperature(lower: 0, upper: 0),
-                                 for: tag) {
+                                 for: tag)
+            {
                 temperatureAlertCount += 1
             }
 
             if alertService.isOn(type: .relativeHumidity(lower: 0, upper: 0),
-                                        for: tag) {
+                                 for: tag)
+            {
                 humidityAlertCount += 1
             }
 
             if alertService.isOn(type: .pressure(lower: 0, upper: 0),
-                                        for: tag) {
+                                 for: tag)
+            {
                 pressureAlertCount += 1
             }
 
             if alertService.isOn(type: .movement(last: 0),
-                                        for: tag) {
+                                 for: tag)
+            {
                 movementAlertCount += 1
             }
         }
         return (temperatureAlertCount, humidityAlertCount, pressureAlertCount, movementAlertCount)
     }
 }
-fileprivate extension HumidityUnit {
+
+private extension HumidityUnit {
     // Humidity unit (0-relative, 1-absolute, 2-dew point)
     var analyticsValue: String {
         switch self {
         case .percent:
-            return "0"
+            "0"
         case .gm3:
-            return "1"
+            "1"
         case .dew:
-            return "2"
+            "2"
         }
     }
 }
-fileprivate extension UnitPressure {
+
+private extension UnitPressure {
     // Pressure unit (0-pascal, 1-hectopascal, 2-mmHg, 3-inHg)
     var analyticsValue: String {
         switch self {
         case .hectopascals:
-            return "1"
+            "1"
         case .millimetersOfMercury:
-            return "2"
+            "2"
         case .inchesOfMercury:
-            return "3"
+            "3"
         default:
-            return "-1"
+            "-1"
         }
     }
 }
-fileprivate extension TemperatureUnit {
+
+private extension TemperatureUnit {
     // Temperature unit (C-Celsius, F-Fahrenheit, K-Kelvin)
     var analyticsValue: String {
         switch self {
         case .celsius:
-            return "C"
+            "C"
         case .fahrenheit:
-            return "F"
+            "F"
         case .kelvin:
-            return "K"
+            "K"
         }
     }
 }

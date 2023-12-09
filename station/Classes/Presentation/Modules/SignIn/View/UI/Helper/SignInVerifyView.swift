@@ -6,7 +6,6 @@ protocol SignInVerifyViewDelegate: NSObjectProtocol {
 }
 
 class SignInVerifyView: UIView {
-
     weak var delegate: SignInVerifyViewDelegate?
 
     override init(frame: CGRect) {
@@ -14,7 +13,8 @@ class SignInVerifyView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -51,6 +51,7 @@ class SignInVerifyView: UIView {
         iv.backgroundColor = .clear
         return iv
     }()
+
     private var beaverImageViewTopAnchor: NSLayoutConstraint!
 }
 
@@ -66,7 +67,7 @@ extension SignInVerifyView {
         container.fillSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel
+            titleLabel, subtitleLabel,
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
@@ -74,11 +75,11 @@ extension SignInVerifyView {
 
         container.addSubview(titleStack)
         titleStack.anchor(top: nil,
-                         leading: container.safeLeftAnchor,
-                         bottom: nil,
-                         trailing: container.safeRightAnchor,
-                         padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                        bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+                          leading: container.safeLeftAnchor,
+                          bottom: nil,
+                          trailing: container.safeRightAnchor,
+                          padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
+                                         bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
         titleStack.topAnchor.constraint(
             equalTo: container.safeTopAnchor
         ).isActive = true
@@ -96,7 +97,6 @@ extension SignInVerifyView {
     }
 
     private func setUpBeaverView() {
-
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
 
@@ -117,7 +117,7 @@ extension SignInVerifyView {
 }
 
 extension SignInVerifyView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
         endEditing(true)
     }
 }
@@ -134,7 +134,7 @@ extension SignInVerifyView: RuuviCodeViewDelegate {
 
 extension SignInVerifyView {
     func updateMessage(with email: String?) {
-        guard let email = email else { return }
+        guard let email else { return }
         subtitleLabel.text = RuuviLocalization.SignIn.checkMailbox(email)
     }
 

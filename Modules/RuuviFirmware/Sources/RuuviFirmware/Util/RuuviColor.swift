@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct RuuviColor {
+enum RuuviColor {
     static let green = Color("RuuviGreen")
     static let ruuviTintColorSUI = Color("RuuviTintColor")
     static let ruuviTextColorSUI = Color("RuuviTextColor")

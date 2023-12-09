@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocal
+import UIKit
 
 protocol ASSelectionModuleFactory {
     func create(with title: String) -> ASSelectionTableViewController

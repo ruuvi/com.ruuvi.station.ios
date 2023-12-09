@@ -4,23 +4,24 @@ import UIKit
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     var output: MenuViewOutput!
 
-    @IBOutlet weak var feedbackCell: UITableViewCell!
-    @IBOutlet weak var addRuuviTagCell: UITableViewCell!
-    @IBOutlet weak var aboutCell: UITableViewCell!
-    @IBOutlet weak var whatToMeasureCell: UITableViewCell!
-    @IBOutlet weak var getMoreSensorsCell: UITableViewCell!
-    @IBOutlet weak var settingsCell: UITableViewCell!
-    @IBOutlet weak var accountCell: UITableViewCell!
-    @IBOutlet weak var feedbackLabel: UILabel!
-    @IBOutlet weak var addANewSensorLabel: UILabel!
-    @IBOutlet weak var appSettingsLabel: UILabel!
-    @IBOutlet weak var aboutHelpLabel: UILabel!
-    @IBOutlet weak var whatToMeasureLabel: UILabel!
-    @IBOutlet weak var getMoreSensorsLabel: UILabel!
-    @IBOutlet weak var accountAuthLabel: UILabel!
+    @IBOutlet var feedbackCell: UITableViewCell!
+    @IBOutlet var addRuuviTagCell: UITableViewCell!
+    @IBOutlet var aboutCell: UITableViewCell!
+    @IBOutlet var whatToMeasureCell: UITableViewCell!
+    @IBOutlet var getMoreSensorsCell: UITableViewCell!
+    @IBOutlet var settingsCell: UITableViewCell!
+    @IBOutlet var accountCell: UITableViewCell!
+    @IBOutlet var feedbackLabel: UILabel!
+    @IBOutlet var addANewSensorLabel: UILabel!
+    @IBOutlet var appSettingsLabel: UILabel!
+    @IBOutlet var aboutHelpLabel: UILabel!
+    @IBOutlet var whatToMeasureLabel: UILabel!
+    @IBOutlet var getMoreSensorsLabel: UILabel!
+    @IBOutlet var accountAuthLabel: UILabel!
 }
 
 // MARK: - MenuViewInput
+
 extension MenuTableEmbededViewController {
     func localize() {
         addANewSensorLabel.text = RuuviLocalization.Menu.Label.AddAnNewSensor.text
@@ -33,6 +34,7 @@ extension MenuTableEmbededViewController {
 }
 
 // MARK: - View lifecycle
+
 extension MenuTableEmbededViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -41,20 +43,23 @@ extension MenuTableEmbededViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension MenuTableEmbededViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return super.tableView(tableView, numberOfRowsInSection: section)
+        super.tableView(tableView, numberOfRowsInSection: section)
     }
 
-    override func tableView(_ tableView: UITableView,
+    override func tableView(_: UITableView,
                             willDisplay cell: UITableViewCell,
-                            forRowAt indexPath: IndexPath) {
+                            forRowAt _: IndexPath)
+    {
         if cell == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
-            ? RuuviLocalization.Menu.Label.MyRuuviAccount.text
-            : RuuviLocalization.SignIn.Title.text
+                ? RuuviLocalization.Menu.Label.MyRuuviAccount.text
+                : RuuviLocalization.SignIn.Title.text
         }
     }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         if let cell = tableView.cellForRow(at: indexPath) {

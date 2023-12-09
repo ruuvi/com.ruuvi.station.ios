@@ -1,13 +1,12 @@
 import UIKit
 
 extension CALayer {
-
     @IBInspectable var borderColorIB: UIColor? {
         get {
             if let borderColorCG = borderColor {
-                return UIColor(cgColor: borderColorCG)
+                UIColor(cgColor: borderColorCG)
             } else {
-                return nil
+                nil
             }
         }
         set {
@@ -18,9 +17,9 @@ extension CALayer {
     @IBInspectable var shadowColorIB: UIColor? {
         get {
             if let shadowColorCG = shadowColor {
-                return UIColor(cgColor: shadowColorCG)
+                UIColor(cgColor: shadowColorCG)
             } else {
-                return nil
+                nil
             }
         }
         set {

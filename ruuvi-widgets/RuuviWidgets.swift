@@ -1,6 +1,6 @@
-import WidgetKit
-import SwiftUI
 import Intents
+import SwiftUI
+import WidgetKit
 
 struct RuuviWidgetEntryView: View {
     @Environment(\.widgetFamily) private var family
@@ -37,15 +37,15 @@ struct RuuviWidgets: Widget {
     let viewModel = WidgetViewModel()
     private var supportedFamilies: [WidgetFamily] {
         if #available(iOSApplicationExtension 16.0, *) {
-            return [
+            [
                 .systemSmall,
                 .accessoryRectangular,
                 .accessoryInline,
-                .accessoryCircular
+                .accessoryCircular,
             ]
         } else {
-            return [
-                .systemSmall
+            [
+                .systemSmall,
             ]
         }
     }
@@ -68,9 +68,11 @@ struct RuuviWidgets: Widget {
 extension WidgetConfiguration {
     func contentMarginsDisabledIfAvailable() -> some WidgetConfiguration {
         if #available(iOSApplicationExtension 17.0, *) {
+            // swiftformat:disable all
             return self.contentMarginsDisabled()
         } else {
             return self
+            // swiftformat:enable all
         }
     }
 }

@@ -1,5 +1,5 @@
-import XCTest
 @testable import RuuviFirmware
+import XCTest
 
 final class RuuviFirmwareTests: XCTestCase {
     func testExample() throws {

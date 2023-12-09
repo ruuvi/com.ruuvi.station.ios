@@ -31,56 +31,61 @@ public struct RuuviCloudApiSensor: Decodable {
 
 extension RuuviCloudApiSensor: CloudSensor {
     public var offsetTemperature: Double? {
-        return temperatureOffset
+        temperatureOffset
     }
+
     // on cloud in percent, locally in fraction of one
     public var offsetHumidity: Double? {
-        if let humidityOffset = humidityOffset {
-            return humidityOffset / 100.0
+        if let humidityOffset {
+            humidityOffset / 100.0
         } else {
-            return nil
+            nil
         }
     }
+
     // on cloud in Pa, locally in hPa
     public var offsetPressure: Double? {
-        if let pressureOffset = pressureOffset {
-            return pressureOffset / 100.0
+        if let pressureOffset {
+            pressureOffset / 100.0
         } else {
-            return nil
+            nil
         }
     }
+
     /// Returns the background image of the sensor
     public var picture: URL? {
-        return URL(string: pictureUrl)
+        URL(string: pictureUrl)
     }
+
     /// Returns the email address of the owner of a sensor
     public var owner: String? {
-        return sensorOwner
+        sensorOwner
     }
 
     public var ownersPlan: String? {
-        return nil
+        nil
     }
 
     /// Returns status of sensor whether it is already claimed
     public var isClaimed: Bool {
-        return isOwner
+        isOwner
     }
+
     /// Returns always true since this is a property of sensors returns from the cloud
     public var isCloudSensor: Bool? {
-        return true
+        true
     }
 
     public var canShare: Bool {
-        return false
+        false
     }
 
     public var sharedTo: [String] {
-        return []
+        []
     }
 
     /// Returns the 'id' of the sensor
     public var id: String {
-        return sensorId
+        sensorId
     }
 }

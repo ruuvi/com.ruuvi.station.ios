@@ -5,7 +5,6 @@ protocol RuuviCloudTableViewCellDelegate: NSObjectProtocol {
 }
 
 class RuuviCloudTableViewCell: UITableViewCell {
-
     weak var delegate: RuuviCloudTableViewCellDelegate?
 
     private lazy var titleLabel: UILabel = {
@@ -27,13 +26,15 @@ class RuuviCloudTableViewCell: UITableViewCell {
     }()
 
     override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+                  reuseIdentifier: String?)
+    {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -70,10 +71,9 @@ class RuuviCloudTableViewCell: UITableViewCell {
 // MARK: - SETTERS
 
 extension RuuviCloudTableViewCell {
-
     func configure(title: String?, value: Bool?) {
         titleLabel.text = title
-        if let value = value {
+        if let value {
             statusSwitch.setOn(value, animated: false)
         } else {
             statusSwitch.setOn(false, animated: false)

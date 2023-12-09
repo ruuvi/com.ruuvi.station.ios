@@ -4,9 +4,9 @@ public final class FeatureToggleService {
     public var source: FeatureSource {
         get {
             if let rawValue = UserDefaults.standard.string(forKey: sourceUDKey) {
-                return FeatureSource(rawValue: rawValue) ?? .remote
+                FeatureSource(rawValue: rawValue) ?? .remote
             } else {
-                return .remote
+                .remote
             }
         }
         set {
@@ -21,10 +21,11 @@ public final class FeatureToggleService {
     private var remoteToggles: [FeatureToggle] {
         get {
             if let storedRemoteToggles = UserDefaults.standard.object(forKey: remoteTogglesUDKey) as? Data,
-               let toggles = try? JSONDecoder().decode([FeatureToggle].self, from: storedRemoteToggles) {
-                return toggles
+               let toggles = try? JSONDecoder().decode([FeatureToggle].self, from: storedRemoteToggles)
+            {
+                toggles
             } else {
-                return []
+                []
             }
         }
         set {
@@ -34,6 +35,7 @@ public final class FeatureToggleService {
             }
         }
     }
+
     private var localToggles: [FeatureToggle] = []
     private let sourceUDKey = "FeatureToggleService.sourceUDKey"
     private let remoteTogglesUDKey = "FeatureToggleService.remoteTogglesUDKey"

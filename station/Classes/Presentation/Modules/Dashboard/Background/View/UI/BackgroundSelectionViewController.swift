@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocalization
+import UIKit
 
 class BackgroundSelectionViewController: UIViewController {
     // View configure
@@ -12,7 +12,7 @@ class BackgroundSelectionViewController: UIViewController {
 
     // UI Componenets starts
     private lazy var backButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .label
         let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
@@ -47,6 +47,7 @@ class BackgroundSelectionViewController: UIViewController {
 }
 
 // MARK: - View lifecycle
+
 extension BackgroundSelectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,32 +57,31 @@ extension BackgroundSelectionViewController {
     }
 }
 
-extension BackgroundSelectionViewController {
-    fileprivate func updateUI() {
+private extension BackgroundSelectionViewController {
+    func updateUI() {
         DispatchQueue.main.async { [weak self] in
             self?.collectionView.reloadData()
         }
     }
 
-    @objc fileprivate func backButtonDidTap() {
+    @objc func backButtonDidTap() {
         _ = navigationController?.popViewController(animated: true)
     }
 }
 
-extension BackgroundSelectionViewController {
-    fileprivate func setUpUI() {
+private extension BackgroundSelectionViewController {
+    func setUpUI() {
         setUpBaseView()
         setUpHeaderView()
         setUpContentView()
         setUpUploadProgressView()
     }
 
-    fileprivate func setUpBaseView() {
+    func setUpBaseView() {
         view.backgroundColor = RuuviColor.dashboardBGColor
     }
 
-    fileprivate func setUpHeaderView() {
-
+    func setUpHeaderView() {
         let leftBarButtonView = UIView(color: .clear)
 
         leftBarButtonView.addSubview(backButton)
@@ -95,8 +95,7 @@ extension BackgroundSelectionViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
     }
 
-    fileprivate func setUpContentView() {
-
+    func setUpContentView() {
         view.addSubview(collectionView)
         collectionView.anchor(top: view.safeTopAnchor,
                               leading: view.safeLeftAnchor,
@@ -115,7 +114,7 @@ extension BackgroundSelectionViewController {
                                 withReuseIdentifier: sectionHeaderIdentifier)
     }
 
-    fileprivate func setUpUploadProgressView() {
+    func setUpUploadProgressView() {
         view.addSubview(uploadProgressView)
         uploadProgressView.anchor(top: nil,
                                   leading: nil,
@@ -128,10 +127,10 @@ extension BackgroundSelectionViewController {
         uploadProgressView.isHidden = true
     }
 
-    fileprivate func createLayout() -> UICollectionViewLayout {
+    func createLayout() -> UICollectionViewLayout {
         let sectionProvider = { [weak self] (_: Int,
                                              _: NSCollectionLayoutEnvironment)
-            -> NSCollectionLayoutSection? in
+                -> NSCollectionLayoutSection? in
             guard let sSelf = self else { return nil }
 
             let widthMultiplier = sSelf.itemWidthMultiplier()
@@ -174,33 +173,33 @@ extension BackgroundSelectionViewController {
         return layout
     }
 
-    fileprivate func itemWidthMultiplier() -> CGFloat {
+    func itemWidthMultiplier() -> CGFloat {
         if GlobalHelpers.isDeviceTablet() {
-            return GlobalHelpers.isDeviceLandscape() ? 0.125 : 0.20
+            GlobalHelpers.isDeviceLandscape() ? 0.125 : 0.20
         } else {
-            return GlobalHelpers.isDeviceLandscape() ? 0.20 : 0.33333333
+            GlobalHelpers.isDeviceLandscape() ? 0.20 : 0.33333333
         }
     }
 
-    fileprivate func itemEstimatedHeight() -> CGFloat {
+    func itemEstimatedHeight() -> CGFloat {
         if GlobalHelpers.isDeviceTablet() {
-            return GlobalHelpers.isDeviceLandscape() ? 200 : 190
+            GlobalHelpers.isDeviceLandscape() ? 200 : 190
         } else {
-            return GlobalHelpers.isDeviceLandscape() ? 190 : 170
+            GlobalHelpers.isDeviceLandscape() ? 190 : 170
         }
     }
 }
 
 extension BackgroundSelectionViewController {
     private func bindViewModel() {
-        guard isViewLoaded, let viewModel = viewModel else { return }
+        guard isViewLoaded, let viewModel else { return }
 
         collectionView.bind(viewModel.defaultImages) { [weak self] _, _ in
             self?.updateUI()
         }
 
         uploadProgressView.bind(viewModel.isUploadingBackground) { v, isUploading in
-            if let isUploading = isUploading {
+            if let isUploading {
                 v.isHidden = !isUploading
             } else {
                 v.isHidden = true
@@ -208,7 +207,7 @@ extension BackgroundSelectionViewController {
         }
 
         uploadProgressView.progressLabel.bind(viewModel.uploadingBackgroundPercentage) { lb, percentage in
-            if let percentage = percentage {
+            if let percentage {
                 lb.text = RuuviLocalization.uploadingProgress(Float(percentage) * 100)
             }
         }
@@ -217,7 +216,7 @@ extension BackgroundSelectionViewController {
 
 extension BackgroundSelectionViewController: BackgroundSelectionViewInput {
     func localize() {
-        self.title = RuuviLocalization.changeBackground
+        title = RuuviLocalization.changeBackground
     }
 
     func viewShouldDismiss() {
@@ -226,12 +225,13 @@ extension BackgroundSelectionViewController: BackgroundSelectionViewInput {
 }
 
 extension BackgroundSelectionViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel?.defaultImages.value?.count ?? 0
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+        viewModel?.defaultImages.value?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: cvCellIdentifier,
             for: indexPath
@@ -246,20 +246,22 @@ extension BackgroundSelectionViewController: UICollectionViewDataSource {
 }
 
 extension BackgroundSelectionViewController: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath)
+    {
         if let model = viewModel?.defaultImages.value?[indexPath.item] {
             output.viewDidSelectDefaultPhoto(model: model)
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
-                        at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind _: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView
+    {
         guard let headerView = collectionView
             .dequeueReusableSupplementaryView(ofKind: sectionHeaderKind,
                                               withReuseIdentifier: sectionHeaderIdentifier,
-                                              for: indexPath) as? BackgroundSelectionViewHeader else {
+                                              for: indexPath) as? BackgroundSelectionViewHeader
+        else {
             fatalError()
         }
         headerView.delegate = self

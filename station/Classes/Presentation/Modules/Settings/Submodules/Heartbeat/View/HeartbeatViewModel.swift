@@ -6,10 +6,10 @@ class HeartbeatViewModel {
     var bgScanningInterval = Observable<Int?>(1)
 
     var bgScanningTitle: String {
-        return RuuviLocalization.Settings.BackgroundScanning.title
+        RuuviLocalization.Settings.BackgroundScanning.title
     }
 
     var bgScanningIntervalTitle: String {
-        return RuuviLocalization.Settings.BackgroundScanning.interval
+        RuuviLocalization.Settings.BackgroundScanning.interval
     }
 }

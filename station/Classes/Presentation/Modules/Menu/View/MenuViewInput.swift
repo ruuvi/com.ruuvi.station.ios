@@ -1,5 +1,3 @@
 import Foundation
 
-protocol MenuViewInput: ViewInput {
-
-}
+protocol MenuViewInput: ViewInput {}

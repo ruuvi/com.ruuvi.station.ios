@@ -1,8 +1,8 @@
 import Foundation
 import Future
-import RuuviOntology
 import RuuviCloud
 import RuuviLocal
+import RuuviOntology
 import RuuviService
 
 public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
@@ -187,15 +187,16 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
 
     @discardableResult
     public func set(dashboardTapActionType: DashboardTapActionType) ->
-        Future<DashboardTapActionType, RuuviServiceError> {
-            let promise = Promise<DashboardTapActionType, RuuviServiceError>()
-            cloud.set(dashboardTapActionType: dashboardTapActionType)
-                .on(success: { type in
-                    promise.succeed(value: type)
-                }, failure: { error in
-                    promise.fail(error: .ruuviCloud(error))
-                })
-            return promise.future
+        Future<DashboardTapActionType, RuuviServiceError>
+    {
+        let promise = Promise<DashboardTapActionType, RuuviServiceError>()
+        cloud.set(dashboardTapActionType: dashboardTapActionType)
+            .on(success: { type in
+                promise.succeed(value: type)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
     }
 
     @discardableResult

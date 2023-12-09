@@ -3,17 +3,17 @@ import BTKit
 import Foundation
 import Future
 import GRDB
-import RuuviOntology
 import RuuviContext
+import RuuviOntology
 import RuuviPersistence
 #if canImport(FirebaseCrashlytics)
-import FirebaseCrashlytics
+    import FirebaseCrashlytics
 #endif
 #if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
+    import RuuviOntologySQLite
 #endif
 #if canImport(RuuviContextSQLite)
-import RuuviContextSQLite
+    import RuuviContextSQLite
 #endif
 
 // swiftlint:disable type_body_length
@@ -25,12 +25,13 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     typealias QueuedRequest = RuuviCloudQueuedRequestSQLite
 
     public var database: GRDBDatabase {
-        return context.database
+        context.database
     }
+
     private let context: SQLiteContext
     private let readQueue: DispatchQueue =
-        DispatchQueue(label: "RuuviTagPersistenceSQLite.readQueue",
-                      qos: .default)
+        .init(label: "RuuviTagPersistenceSQLite.readQueue",
+              qos: .default)
     public init(context: SQLiteContext) {
         self.context = context
     }
@@ -137,7 +138,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let request = Entity.order(Entity.versionColumn)
                     sqliteEntities = try request.fetchAll(db)
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -155,7 +156,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let request = Entity.filter(Entity.luidColumn == ruuviTagId || Entity.macColumn == ruuviTagId)
                     entity = try request.fetchOne(db)
                 }
-                if let entity = entity {
+                if let entity {
                     promise.succeed(value: entity.any)
                 } else {
                     promise.fail(error: .failedToFindRuuviTag)
@@ -178,7 +179,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                         .filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                     sqliteEntities = try request.fetchAll(db)
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -209,7 +210,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                         arguments: [date]
                     )
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -242,7 +243,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                         arguments: [date]
                     )
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -287,7 +288,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                         arguments: [date, highDensityDate, highDensityDate]
                     )
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -315,7 +316,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     """
                     sqliteEntities = try Record.fetchAll(db, sql: request)
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -335,10 +336,10 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 try self?.database.dbPool.read { db in
                     let request = Record.order(Record.dateColumn)
                         .filter((Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
-                                    && Record.dateColumn > Date(timeIntervalSince1970: from))
+                            && Record.dateColumn > Date(timeIntervalSince1970: from))
                     sqliteEntities = try request.fetchAll(db)
                 }
-                promise.succeed(value: sqliteEntities.map({ $0.any }))
+                promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -491,8 +492,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         do {
             var deletedCount = 0
             let request = Record.filter(
-                    Record.luidColumn == ruuviTagId
-                        || Record.macColumn == ruuviTagId)
+                Record.luidColumn == ruuviTagId
+                    || Record.macColumn == ruuviTagId)
                 .filter(Record.dateColumn < date)
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
@@ -504,6 +505,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         }
         return promise.future
     }
+
     public func getStoredTagsCount() -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
         readQueue.async { [weak self] in
@@ -520,6 +522,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         }
         return promise.future
     }
+
     public func getStoredMeasurementsCount() -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
         readQueue.async { [weak self] in
@@ -541,7 +544,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         let promise = Promise<SensorSettings?, RuuviPersistenceError>()
         do {
             var sqliteSensorSettings: Settings?
-            try self.database.dbPool.read { db in
+            try database.dbPool.read { db in
                 let request = Settings.filter(
                     (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
                         || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
@@ -550,7 +553,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: sqliteSensorSettings)
         } catch {
-            self.reportToCrashlytics(error: error)
+            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -623,7 +626,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             if let sqliteSensorRecord = record {
                 try database.dbPool.write { db in
                     try sqliteSensorRecord
-                    .sqlite.insert(db)
+                        .sqlite.insert(db)
                 }
             }
             promise.succeed(value: sqliteSensorSettings)
@@ -671,9 +674,11 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     }
 
     // MARK: - Queued cloud requests
+
     @discardableResult
     public func readQueuedRequests()
-    -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
+        -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+    {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviCloudQueuedRequest]()
@@ -682,7 +687,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let request = QueuedRequest.order(QueuedRequest.requestDateColumn)
                     sqliteEntities = try request.fetchAll(db)
                 }
-                promise.succeed(value: sqliteEntities.map({ $0 }))
+                promise.succeed(value: sqliteEntities.map { $0 })
             } catch {
                 self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
@@ -697,9 +702,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
         readQueuedRequests().on(success: { reqs in
-            let requests = reqs.filter({ req in
+            let requests = reqs.filter { req in
                 req.uniqueKey != nil && req.uniqueKey == key
-            })
+            }
             promise.succeed(value: requests)
         }, failure: { error in
             promise.fail(error: .grdb(error))
@@ -713,9 +718,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
         readQueuedRequests().on(success: { reqs in
-            let requests = reqs.filter({ req in
+            let requests = reqs.filter { req in
                 req.type != nil && req.type == type
-            })
+            }
             promise.succeed(value: requests)
         }, failure: { error in
             promise.fail(error: .grdb(error))
@@ -733,8 +738,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         readQueuedRequests().on(success: { [weak self] requests in
 
             let existingRequest = requests.first(
-                where: { ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey )
-                    && ($0.type != nil && $0.type == request.type) }
+                where: { ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey)
+                    && ($0.type != nil && $0.type == request.type)
+                }
             )
             let isCreate = (requests.count == 0) || existingRequest == nil
 
@@ -799,11 +805,12 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
 }
 
 // MARK: - Private
+
 extension RuuviPersistenceSQLite {
     func reportToCrashlytics(error: Error, method: String = #function, line: Int = #line) {
         #if canImport(FirebaseCrashlytics)
-        Crashlytics.crashlytics().log("\(method)(line: \(line)")
-        Crashlytics.crashlytics().record(error: error)
+            Crashlytics.crashlytics().log("\(method)(line: \(line)")
+            Crashlytics.crashlytics().record(error: error)
         #endif
     }
 
@@ -813,7 +820,8 @@ extension RuuviPersistenceSQLite {
         newRequest: RuuviCloudQueuedRequest,
         existingRequest: RuuviCloudQueuedRequest?
     )
-    -> Future<Bool, RuuviPersistenceError> {
+        -> Future<Bool, RuuviPersistenceError>
+    {
         let promise = Promise<Bool, RuuviPersistenceError>()
         if isCreate {
             do {
@@ -827,7 +835,7 @@ extension RuuviPersistenceSQLite {
                 promise.fail(error: .grdb(error))
             }
         } else {
-            guard let existingRequest = existingRequest else {
+            guard let existingRequest else {
                 return promise.future
             }
 
@@ -855,4 +863,5 @@ extension RuuviPersistenceSQLite {
         return promise.future
     }
 }
+
 // swiftlint:enable file_length type_body_length

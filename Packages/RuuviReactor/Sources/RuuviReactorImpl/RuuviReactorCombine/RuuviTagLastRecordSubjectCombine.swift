@@ -1,14 +1,14 @@
+import Combine
 import Foundation
 import GRDB
-import Combine
 import RealmSwift
-import RuuviOntology
 import RuuviContext
+import RuuviOntology
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 #if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
+    import RuuviOntologySQLite
 #endif
 
 final class RuuviTagLastRecordSubjectCombine {
@@ -40,31 +40,30 @@ final class RuuviTagLastRecordSubjectCombine {
     }
 
     func start() {
-        self.isServing = true
+        isServing = true
         let request = RuuviTagDataSQLite
             .order(RuuviTagDataSQLite.dateColumn.desc)
             .filter(
                 (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
-                || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
+                    || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
             )
         let observation = request.observationForFirst()
 
-        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
+        ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
             [weak self] record in
             if let lastRecord = record?.any {
                 self?.subject.send(lastRecord)
             }
         }
-        let results = self.realm.main.objects(RuuviTagDataRealm.self)
+        let results = realm.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
                     luid?.value ?? "invalid",
-                    macId?.value ?? "invalid"
-            )
+                    macId?.value ?? "invalid")
             .sorted(byKeyPath: "date")
-        self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
+        ruuviTagDataRealmToken = results.observe { [weak self] change in
             guard let sSelf = self else { return }
             switch change {
-            case .update(let records, _, _, _):
+            case let .update(records, _, _, _):
                 if let lastRecord = records.last?.any {
                     sSelf.subject.send(lastRecord)
                 }

@@ -3,7 +3,6 @@ import Future
 import RuuviOntology
 
 public protocol RuuviServiceCloudNotification {
-
     @discardableResult
     func set(token: String?,
              name: String?,

@@ -1,10 +1,10 @@
 import Foundation
-import RuuviOntology
-import RuuviService
-import RuuviPool
-import RuuviStorage
-import RuuviPresenters
 import RuuviLocal
+import RuuviOntology
+import RuuviPool
+import RuuviPresenters
+import RuuviService
+import RuuviStorage
 
 enum OwnershipMode {
     case claim
@@ -32,7 +32,7 @@ final class OwnerPresenter: OwnerModuleInput {
 
     func configure(ruuviTag: RuuviTagSensor, mode: OwnershipMode) {
         self.ruuviTag = ruuviTag
-        self.ownershipMode = mode
+        ownershipMode = mode
     }
 }
 
@@ -55,13 +55,14 @@ extension OwnerPresenter: OwnerViewOutput {
     func updateOwnerInfo(with email: String) {
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
-            if let sensor = localSensors.first(where: {$0.id == sSelf.ruuviTag.id }) {
+            if let sensor = localSensors.first(where: { $0.id == sSelf.ruuviTag.id }) {
                 sSelf.ruuviPool.update(sensor
-                                        .with(owner: email)
-                                        .with(isOwner: false))
+                    .with(owner: email)
+                    .with(isOwner: false))
             }
         })
     }
+
     func viewDidTriggerFirmwareUpdateDialog() {
         guard ruuviTag.luid?.value != nil,
               ruuviTag.version < 5,

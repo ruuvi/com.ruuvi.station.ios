@@ -1,19 +1,20 @@
 // swiftlint:disable file_length
 import Foundation
 import Future
-import RuuviOntology
 import RuuviCloud
 import RuuviLocal
+import RuuviOntology
 import RuuviService
 
 // MARK: - RuuviTag
-extension RuuviServiceAlertImpl {
+
+public extension RuuviServiceAlertImpl {
     // swiftlint:disable:next function_body_length
-    public func register(type: AlertType, ruuviTag: RuuviTagSensor) {
+    func register(type: AlertType, ruuviTag: RuuviTagSensor) {
         register(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
-            case .temperature(let lower, let upper):
+            case let .temperature(lower, upper):
                 cloud.setAlert(
                     type: .temperature,
                     settingType: .state,
@@ -25,7 +26,7 @@ extension RuuviServiceAlertImpl {
                     description: temperatureDescription(for: ruuviTag),
                     for: macId
                 )
-            case .relativeHumidity(let lower, let upper):
+            case let .relativeHumidity(lower, upper):
                 cloud.setAlert(
                     type: .humidity,
                     settingType: .state,
@@ -39,7 +40,7 @@ extension RuuviServiceAlertImpl {
                 )
             case .humidity:
                 break // absolute is not on cloud yet (11.06.2021)
-            case .pressure(let lower, let upper):
+            case let .pressure(lower, upper):
                 cloud.setAlert(
                     type: .pressure,
                     settingType: .state,
@@ -51,7 +52,7 @@ extension RuuviServiceAlertImpl {
                     description: pressureDescription(for: ruuviTag),
                     for: macId
                 )
-            case .signal(let lower, let upper):
+            case let .signal(lower, upper):
                 cloud.setAlert(
                     type: .signal,
                     settingType: .state,
@@ -65,7 +66,7 @@ extension RuuviServiceAlertImpl {
                 )
             case .connection:
                 break
-            case .cloudConnection(let unseenDuration):
+            case let .cloudConnection(unseenDuration):
                 cloud.setAlert(
                     type: .offline,
                     settingType: .state,
@@ -77,7 +78,7 @@ extension RuuviServiceAlertImpl {
                     description: cloudConnectionDescription(for: ruuviTag),
                     for: macId
                 )
-            case .movement(let last):
+            case let .movement(last):
                 cloud.setAlert(
                     type: .movement,
                     settingType: .state,
@@ -94,11 +95,11 @@ extension RuuviServiceAlertImpl {
     }
 
     // swiftlint:disable:next function_body_length
-    public func unregister(type: AlertType, ruuviTag: RuuviTagSensor) {
+    func unregister(type: AlertType, ruuviTag: RuuviTagSensor) {
         unregister(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
-            case .temperature(let lower, let upper):
+            case let .temperature(lower, upper):
                 cloud.setAlert(
                     type: .temperature,
                     settingType: .state,
@@ -110,7 +111,7 @@ extension RuuviServiceAlertImpl {
                     description: temperatureDescription(for: ruuviTag),
                     for: macId
                 )
-            case .relativeHumidity(let lower, let upper):
+            case let .relativeHumidity(lower, upper):
                 cloud.setAlert(
                     type: .humidity,
                     settingType: .state,
@@ -124,7 +125,7 @@ extension RuuviServiceAlertImpl {
                 )
             case .humidity:
                 break // absolute is not on cloud yet (11.06.2021)
-            case .pressure(let lower, let upper):
+            case let .pressure(lower, upper):
                 cloud.setAlert(
                     type: .pressure,
                     settingType: .state,
@@ -136,7 +137,7 @@ extension RuuviServiceAlertImpl {
                     description: pressureDescription(for: ruuviTag),
                     for: macId
                 )
-            case .signal(let lower, let upper):
+            case let .signal(lower, upper):
                 cloud.setAlert(
                     type: .signal,
                     settingType: .state,
@@ -150,7 +151,7 @@ extension RuuviServiceAlertImpl {
                 )
             case .connection:
                 break
-            case .cloudConnection(let unseenDuration):
+            case let .cloudConnection(unseenDuration):
                 cloud.setAlert(
                     type: .offline,
                     settingType: .state,
@@ -162,7 +163,7 @@ extension RuuviServiceAlertImpl {
                     description: cloudConnectionDescription(for: ruuviTag),
                     for: macId
                 )
-            case .movement(let last):
+            case let .movement(last):
                 cloud.setAlert(
                     type: .movement,
                     settingType: .state,
@@ -178,7 +179,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(celsius: Double?, ruuviTag: RuuviTagSensor) {
+    func setLower(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setLower(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -195,7 +196,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(celsius: Double?, ruuviTag: RuuviTagSensor) {
+    func setUpper(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -212,7 +213,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setTemperature(description: String?, ruuviTag: RuuviTagSensor) {
+    func setTemperature(description: String?, ruuviTag: RuuviTagSensor) {
         setTemperature(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -229,7 +230,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
+    func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -246,7 +247,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
+    func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -263,7 +264,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor) {
+    func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor) {
         setRelativeHumidity(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -280,7 +281,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
+    func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -297,7 +298,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor) {
+    func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -314,7 +315,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setPressure(description: String?, ruuviTag: RuuviTagSensor) {
+    func setPressure(description: String?, ruuviTag: RuuviTagSensor) {
         setPressure(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -331,7 +332,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(signal: Double?, ruuviTag: RuuviTagSensor) {
+    func setLower(signal: Double?, ruuviTag: RuuviTagSensor) {
         setLower(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -339,8 +340,8 @@ extension RuuviServiceAlertImpl {
                 settingType: .lowerBound,
                 isEnabled: isOn(type: .signal(lower: 0, upper: 0),
                                 for: ruuviTag),
-                min: (signal ?? 0),
-                max: (upperSignal(for: ruuviTag) ?? 0),
+                min: signal ?? 0,
+                max: upperSignal(for: ruuviTag) ?? 0,
                 counter: nil,
                 delay: nil,
                 description: signalDescription(for: ruuviTag),
@@ -349,7 +350,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(signal: Double?, ruuviTag: RuuviTagSensor) {
+    func setUpper(signal: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -357,8 +358,8 @@ extension RuuviServiceAlertImpl {
                 settingType: .upperBound,
                 isEnabled: isOn(type: .signal(lower: 0, upper: 0),
                                 for: ruuviTag),
-                min: (lowerSignal(for: ruuviTag) ?? 0),
-                max: (signal ?? 0),
+                min: lowerSignal(for: ruuviTag) ?? 0,
+                max: signal ?? 0,
                 counter: nil,
                 delay: nil,
                 description: signalDescription(for: ruuviTag),
@@ -367,7 +368,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setSignal(description: String?, ruuviTag: RuuviTagSensor) {
+    func setSignal(description: String?, ruuviTag: RuuviTagSensor) {
         setSignal(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -375,8 +376,8 @@ extension RuuviServiceAlertImpl {
                 settingType: .description,
                 isEnabled: isOn(type: .signal(lower: 0, upper: 0),
                                 for: ruuviTag),
-                min: (lowerSignal(for: ruuviTag) ?? 0),
-                max: (upperSignal(for: ruuviTag) ?? 0),
+                min: lowerSignal(for: ruuviTag) ?? 0,
+                max: upperSignal(for: ruuviTag) ?? 0,
                 counter: nil,
                 delay: nil,
                 description: description,
@@ -385,7 +386,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
+    func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
         setMovement(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -402,7 +403,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor) {
+    func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor) {
         setCloudConnection(unseenDuration: unseenDuration, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -419,7 +420,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor) {
+    func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor) {
         setCloudConnection(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
@@ -449,7 +450,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     ) {
         self.cloud = cloud
         self.localIDs = localIDs
-        self.alertPersistence = AlertPersistenceUserDefaults()
+        alertPersistence = AlertPersistenceUserDefaults()
     }
 
     // RuuviCloudAlert
@@ -498,7 +499,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 default:
                     break
                 }
-                if let type = type {
+                if let type {
                     if let enabled = cloudAlert.enabled, enabled {
                         register(type: type, for: physicalSensor)
                         trigger(
@@ -517,11 +518,11 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
 
     // Physical Sensor
     public func hasRegistrations(for sensor: PhysicalSensor) -> Bool {
-        return AlertType.allCases.contains(where: { isOn(type: $0, for: sensor) })
+        AlertType.allCases.contains(where: { isOn(type: $0, for: sensor) })
     }
 
     public func isOn(type: AlertType, for sensor: PhysicalSensor) -> Bool {
-        return alert(for: sensor, of: type) != nil
+        alert(for: sensor, of: type) != nil
     }
 
     public func alert(for sensor: PhysicalSensor, of type: AlertType) -> AlertType? {
@@ -696,15 +697,15 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
 
     // UUID
     func hasRegistrations(for uuid: String) -> Bool {
-        return AlertType.allCases.contains(where: { isOn(type: $0, for: uuid) })
+        AlertType.allCases.contains(where: { isOn(type: $0, for: uuid) })
     }
 
     public func isOn(type: AlertType, for uuid: String) -> Bool {
-        return alert(for: uuid, of: type) != nil
+        alert(for: uuid, of: type) != nil
     }
 
     public func alert(for uuid: String, of type: AlertType) -> AlertType? {
-        return alertPersistence.alert(for: uuid, of: type)
+        alertPersistence.alert(for: uuid, of: type)
     }
 
     public func mutedTill(type: AlertType, for uuid: String) -> Date? {
@@ -719,7 +720,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 object: nil,
                 userInfo: [
                     RuuviServiceAlertDidChangeKey.physicalSensor: sensor,
-                    RuuviServiceAlertDidChangeKey.type: type
+                    RuuviServiceAlertDidChangeKey.type: type,
                 ]
             )
     }
@@ -732,15 +733,16 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 object: nil,
                 userInfo: [
                     RuuviServiceAlertDidChangeKey.physicalSensor: sensor,
-                    RuuviServiceAlertDidChangeKey.type: type
+                    RuuviServiceAlertDidChangeKey.type: type,
                 ]
             )
     }
 }
 
 // MARK: - Temperature
-extension RuuviServiceAlertImpl {
-    public func lowerCelsius(for sensor: PhysicalSensor) -> Double? {
+
+public extension RuuviServiceAlertImpl {
+    func lowerCelsius(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.lowerCelsius(for: luid.value)
                 ?? alertPersistence.lowerCelsius(for: macId.value)
@@ -754,7 +756,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(celsius: Double?, for sensor: PhysicalSensor) {
+    func setLower(celsius: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setLower(celsius: celsius, for: luid.value)
             alertPersistence.setLower(celsius: celsius, for: macId.value)
@@ -771,7 +773,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func upperCelsius(for sensor: PhysicalSensor) -> Double? {
+    func upperCelsius(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperCelsius(for: luid.value)
                 ?? alertPersistence.upperCelsius(for: macId.value)
@@ -785,7 +787,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(celsius: Double?, for sensor: PhysicalSensor) {
+    func setUpper(celsius: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setUpper(celsius: celsius, for: luid.value)
             alertPersistence.setUpper(celsius: celsius, for: macId.value)
@@ -802,7 +804,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func temperatureDescription(for sensor: PhysicalSensor) -> String? {
+    func temperatureDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.temperatureDescription(for: luid.value)
                 ?? alertPersistence.temperatureDescription(for: macId.value)
@@ -816,7 +818,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setTemperature(description: String?, for sensor: PhysicalSensor) {
+    func setTemperature(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setTemperature(description: description, for: luid.value)
             alertPersistence.setTemperature(description: description, for: macId.value)
@@ -833,22 +835,23 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func lowerCelsius(for uuid: String) -> Double? {
-        return alertPersistence.lowerCelsius(for: uuid)
+    func lowerCelsius(for uuid: String) -> Double? {
+        alertPersistence.lowerCelsius(for: uuid)
     }
 
-    public func upperCelsius(for uuid: String) -> Double? {
-        return alertPersistence.upperCelsius(for: uuid)
+    func upperCelsius(for uuid: String) -> Double? {
+        alertPersistence.upperCelsius(for: uuid)
     }
 
-    public func temperatureDescription(for uuid: String) -> String? {
-        return alertPersistence.temperatureDescription(for: uuid)
+    func temperatureDescription(for uuid: String) -> String? {
+        alertPersistence.temperatureDescription(for: uuid)
     }
 }
 
 // MARK: - Relative Humidity
-extension RuuviServiceAlertImpl {
-    public func lowerRelativeHumidity(for sensor: PhysicalSensor) -> Double? {
+
+public extension RuuviServiceAlertImpl {
+    func lowerRelativeHumidity(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.lowerRelativeHumidity(for: luid.value)
                 ?? alertPersistence.lowerRelativeHumidity(for: macId.value)
@@ -862,7 +865,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(relativeHumidity: Double?, for sensor: PhysicalSensor) {
+    func setLower(relativeHumidity: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setLower(relativeHumidity: relativeHumidity, for: luid.value)
             alertPersistence.setLower(relativeHumidity: relativeHumidity, for: macId.value)
@@ -878,7 +881,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func upperRelativeHumidity(for sensor: PhysicalSensor) -> Double? {
+    func upperRelativeHumidity(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperRelativeHumidity(for: luid.value)
                 ?? alertPersistence.upperRelativeHumidity(for: macId.value)
@@ -892,7 +895,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(relativeHumidity: Double?, for sensor: PhysicalSensor) {
+    func setUpper(relativeHumidity: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: luid.value)
             alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: macId.value)
@@ -908,7 +911,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func relativeHumidityDescription(for sensor: PhysicalSensor) -> String? {
+    func relativeHumidityDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.relativeHumidityDescription(for: luid.value)
                 ?? alertPersistence.relativeHumidityDescription(for: macId.value)
@@ -922,7 +925,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setRelativeHumidity(description: String?, for sensor: PhysicalSensor) {
+    func setRelativeHumidity(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setRelativeHumidity(description: description, for: luid.value)
             alertPersistence.setRelativeHumidity(description: description, for: macId.value)
@@ -939,22 +942,23 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func lowerRelativeHumidity(for uuid: String) -> Double? {
-        return alertPersistence.lowerRelativeHumidity(for: uuid)
+    func lowerRelativeHumidity(for uuid: String) -> Double? {
+        alertPersistence.lowerRelativeHumidity(for: uuid)
     }
 
-    public func upperRelativeHumidity(for uuid: String) -> Double? {
-        return alertPersistence.upperRelativeHumidity(for: uuid)
+    func upperRelativeHumidity(for uuid: String) -> Double? {
+        alertPersistence.upperRelativeHumidity(for: uuid)
     }
 
-    public func relativeHumidityDescription(for uuid: String) -> String? {
-        return alertPersistence.relativeHumidityDescription(for: uuid)
+    func relativeHumidityDescription(for uuid: String) -> String? {
+        alertPersistence.relativeHumidityDescription(for: uuid)
     }
 }
 
 // MARK: - Humidity
-extension RuuviServiceAlertImpl {
-    public func lowerHumidity(for sensor: PhysicalSensor) -> Humidity? {
+
+public extension RuuviServiceAlertImpl {
+    func lowerHumidity(for sensor: PhysicalSensor) -> Humidity? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.lowerHumidity(for: luid.value)
                 ?? alertPersistence.lowerHumidity(for: macId.value)
@@ -968,7 +972,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(humidity: Humidity?, for sensor: PhysicalSensor) {
+    func setLower(humidity: Humidity?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setLower(humidity: humidity, for: luid.value)
             alertPersistence.setLower(humidity: humidity, for: macId.value)
@@ -984,7 +988,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func upperHumidity(for sensor: PhysicalSensor) -> Humidity? {
+    func upperHumidity(for sensor: PhysicalSensor) -> Humidity? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperHumidity(for: luid.value)
                 ?? alertPersistence.upperHumidity(for: macId.value)
@@ -998,7 +1002,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(humidity: Humidity?, for sensor: PhysicalSensor) {
+    func setUpper(humidity: Humidity?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setUpper(humidity: humidity, for: luid.value)
             alertPersistence.setUpper(humidity: humidity, for: macId.value)
@@ -1014,7 +1018,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func humidityDescription(for sensor: PhysicalSensor) -> String? {
+    func humidityDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.humidityDescription(for: luid.value)
                 ?? alertPersistence.humidityDescription(for: macId.value)
@@ -1028,7 +1032,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setHumidity(description: String?, for sensor: PhysicalSensor) {
+    func setHumidity(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setHumidity(description: description, for: luid.value)
             alertPersistence.setHumidity(description: description, for: macId.value)
@@ -1041,27 +1045,29 @@ extension RuuviServiceAlertImpl {
         }
 
         if let l = lowerHumidity(for: sensor),
-           let u = upperHumidity(for: sensor) {
+           let u = upperHumidity(for: sensor)
+        {
             postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
         }
     }
 
-    public func lowerHumidity(for uuid: String) -> Humidity? {
-        return alertPersistence.lowerHumidity(for: uuid)
+    func lowerHumidity(for uuid: String) -> Humidity? {
+        alertPersistence.lowerHumidity(for: uuid)
     }
 
-    public func upperHumidity(for uuid: String) -> Humidity? {
-        return alertPersistence.upperHumidity(for: uuid)
+    func upperHumidity(for uuid: String) -> Humidity? {
+        alertPersistence.upperHumidity(for: uuid)
     }
 
-    public func humidityDescription(for uuid: String) -> String? {
-        return alertPersistence.humidityDescription(for: uuid)
+    func humidityDescription(for uuid: String) -> String? {
+        alertPersistence.humidityDescription(for: uuid)
     }
 }
 
 // MARK: - Pressure
-extension RuuviServiceAlertImpl {
-    public func lowerPressure(for sensor: PhysicalSensor) -> Double? {
+
+public extension RuuviServiceAlertImpl {
+    func lowerPressure(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.lowerPressure(for: luid.value)
                 ?? alertPersistence.lowerPressure(for: macId.value)
@@ -1075,7 +1081,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(pressure: Double?, for sensor: PhysicalSensor) {
+    func setLower(pressure: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setLower(pressure: pressure, for: luid.value)
             alertPersistence.setLower(pressure: pressure, for: macId.value)
@@ -1092,7 +1098,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func upperPressure(for sensor: PhysicalSensor) -> Double? {
+    func upperPressure(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperPressure(for: luid.value)
                 ?? alertPersistence.upperPressure(for: macId.value)
@@ -1106,7 +1112,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(pressure: Double?, for sensor: PhysicalSensor) {
+    func setUpper(pressure: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setUpper(pressure: pressure, for: luid.value)
             alertPersistence.setUpper(pressure: pressure, for: macId.value)
@@ -1123,7 +1129,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func pressureDescription(for sensor: PhysicalSensor) -> String? {
+    func pressureDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.pressureDescription(for: luid.value)
                 ?? alertPersistence.pressureDescription(for: macId.value)
@@ -1137,7 +1143,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setPressure(description: String?, for sensor: PhysicalSensor) {
+    func setPressure(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPressure(description: description, for: luid.value)
             alertPersistence.setPressure(description: description, for: macId.value)
@@ -1154,22 +1160,23 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func lowerPressure(for uuid: String) -> Double? {
-        return alertPersistence.lowerPressure(for: uuid)
+    func lowerPressure(for uuid: String) -> Double? {
+        alertPersistence.lowerPressure(for: uuid)
     }
 
-    public func upperPressure(for uuid: String) -> Double? {
-        return alertPersistence.upperPressure(for: uuid)
+    func upperPressure(for uuid: String) -> Double? {
+        alertPersistence.upperPressure(for: uuid)
     }
 
-    public func pressureDescription(for uuid: String) -> String? {
-        return alertPersistence.pressureDescription(for: uuid)
+    func pressureDescription(for uuid: String) -> String? {
+        alertPersistence.pressureDescription(for: uuid)
     }
 }
 
 // MARK: - Signal
-extension RuuviServiceAlertImpl {
-    public func lowerSignal(for sensor: PhysicalSensor) -> Double? {
+
+public extension RuuviServiceAlertImpl {
+    func lowerSignal(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.lowerSignal(for: luid.value)
                 ?? alertPersistence.lowerSignal(for: macId.value)
@@ -1183,7 +1190,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setLower(signal: Double?, for sensor: PhysicalSensor) {
+    func setLower(signal: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setLower(signal: signal, for: luid.value)
             alertPersistence.setLower(signal: signal, for: macId.value)
@@ -1200,7 +1207,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func upperSignal(for sensor: PhysicalSensor) -> Double? {
+    func upperSignal(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperSignal(for: luid.value)
                 ?? alertPersistence.upperSignal(for: macId.value)
@@ -1214,7 +1221,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setUpper(signal: Double?, for sensor: PhysicalSensor) {
+    func setUpper(signal: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setUpper(signal: signal, for: luid.value)
             alertPersistence.setUpper(signal: signal, for: macId.value)
@@ -1231,7 +1238,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func signalDescription(for sensor: PhysicalSensor) -> String? {
+    func signalDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.signalDescription(for: luid.value)
                 ?? alertPersistence.signalDescription(for: macId.value)
@@ -1245,7 +1252,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setSignal(description: String?, for sensor: PhysicalSensor) {
+    func setSignal(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setSignal(description: description, for: luid.value)
             alertPersistence.setSignal(description: description, for: macId.value)
@@ -1262,22 +1269,23 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func lowerSignal(for uuid: String) -> Double? {
-        return alertPersistence.lowerSignal(for: uuid)
+    func lowerSignal(for uuid: String) -> Double? {
+        alertPersistence.lowerSignal(for: uuid)
     }
 
-    public func upperSignal(for uuid: String) -> Double? {
-        return alertPersistence.upperSignal(for: uuid)
+    func upperSignal(for uuid: String) -> Double? {
+        alertPersistence.upperSignal(for: uuid)
     }
 
-    public func signalDescription(for uuid: String) -> String? {
-        return signalDescription(for: uuid)
+    func signalDescription(for uuid: String) -> String? {
+        signalDescription(for: uuid)
     }
 }
 
 // MARK: - Connection
-extension RuuviServiceAlertImpl {
-    public func connectionDescription(for sensor: PhysicalSensor) -> String? {
+
+public extension RuuviServiceAlertImpl {
+    func connectionDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.connectionDescription(for: luid.value)
                 ?? alertPersistence.connectionDescription(for: macId.value)
@@ -1291,7 +1299,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setConnection(description: String?, for sensor: PhysicalSensor) {
+    func setConnection(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setConnection(description: description, for: luid.value)
             alertPersistence.setConnection(description: description, for: macId.value)
@@ -1305,14 +1313,15 @@ extension RuuviServiceAlertImpl {
         postAlertDidChange(with: sensor, of: .connection)
     }
 
-    public func connectionDescription(for uuid: String) -> String? {
-        return alertPersistence.connectionDescription(for: uuid)
+    func connectionDescription(for uuid: String) -> String? {
+        alertPersistence.connectionDescription(for: uuid)
     }
 }
 
 // MARK: - Cloud Connection
-extension RuuviServiceAlertImpl {
-    public func cloudConnectionDescription(for sensor: PhysicalSensor) -> String? {
+
+public extension RuuviServiceAlertImpl {
+    func cloudConnectionDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.cloudConnectionDescription(for: luid.value)
                 ?? alertPersistence.cloudConnectionDescription(for: macId.value)
@@ -1326,7 +1335,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setCloudConnection(description: String?, for sensor: PhysicalSensor) {
+    func setCloudConnection(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setCloudConnection(description: description, for: luid.value)
             alertPersistence.setCloudConnection(description: description, for: macId.value)
@@ -1339,7 +1348,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor) {
+    func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: luid.value)
             alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: macId.value)
@@ -1350,12 +1359,12 @@ extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
-        if let unseenDuration = unseenDuration {
+        if let unseenDuration {
             postAlertDidChange(with: sensor, of: .cloudConnection(unseenDuration: unseenDuration))
         }
     }
 
-    public func cloudConnectionUnseenDuration(for sensor: PhysicalSensor) -> Double? {
+    func cloudConnectionUnseenDuration(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.cloudConnectionUnseenDuration(for: luid.value)
                 ?? alertPersistence.cloudConnectionUnseenDuration(for: macId.value)
@@ -1371,8 +1380,9 @@ extension RuuviServiceAlertImpl {
 }
 
 // MARK: - Movement
-extension RuuviServiceAlertImpl {
-    public func movementCounter(for sensor: PhysicalSensor) -> Int? {
+
+public extension RuuviServiceAlertImpl {
+    func movementCounter(for sensor: PhysicalSensor) -> Int? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.movementCounter(for: luid.value)
                 ?? alertPersistence.movementCounter(for: macId.value)
@@ -1386,7 +1396,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setMovement(counter: Int?, for sensor: PhysicalSensor) {
+    func setMovement(counter: Int?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setMovement(counter: counter, for: luid.value)
             alertPersistence.setMovement(counter: counter, for: macId.value)
@@ -1400,7 +1410,7 @@ extension RuuviServiceAlertImpl {
         // no need to post an update, this is not user initiated action
     }
 
-    public func movementDescription(for sensor: PhysicalSensor) -> String? {
+    func movementDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.movementDescription(for: luid.value)
                 ?? alertPersistence.movementDescription(for: macId.value)
@@ -1414,7 +1424,7 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func setMovement(description: String?, for sensor: PhysicalSensor) {
+    func setMovement(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setMovement(description: description, for: luid.value)
             alertPersistence.setMovement(description: description, for: macId.value)
@@ -1431,17 +1441,18 @@ extension RuuviServiceAlertImpl {
         }
     }
 
-    public func movementCounter(for uuid: String) -> Int? {
-        return alertPersistence.movementCounter(for: uuid)
+    func movementCounter(for uuid: String) -> Int? {
+        alertPersistence.movementCounter(for: uuid)
     }
 
-    public func setMovement(counter: Int?, for uuid: String) {
+    func setMovement(counter: Int?, for uuid: String) {
         alertPersistence.setMovement(counter: counter, for: uuid)
         // no need to post an update, this is not user initiated action
     }
 
-    public func movementDescription(for uuid: String) -> String? {
-        return alertPersistence.movementDescription(for: uuid)
+    func movementDescription(for uuid: String) -> String? {
+        alertPersistence.movementDescription(for: uuid)
     }
 }
+
 // swiftlint:enable file_length

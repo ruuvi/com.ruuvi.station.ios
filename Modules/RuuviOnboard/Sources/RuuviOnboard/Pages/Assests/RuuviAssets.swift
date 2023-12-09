@@ -1,6 +1,6 @@
 import UIKit
 
-struct RuuviAssets {
+enum RuuviAssets {
     static let bg_layer = "onboarding_bg_layer"
     static let beaver_start = "onboarding_beaver_start"
     static let dashboard = "onboarding_dashboard"

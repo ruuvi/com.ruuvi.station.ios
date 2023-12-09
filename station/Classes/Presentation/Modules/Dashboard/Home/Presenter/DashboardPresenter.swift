@@ -1,23 +1,23 @@
+import BTKit
+import CoreBluetooth
 // swiftlint:disable file_length trailing_whitespace
 import Foundation
-import BTKit
+import Future
 import Humidity
-import RuuviOntology
 import RuuviContext
-import RuuviStorage
-import RuuviReactor
-import RuuviLocal
-import RuuviService
 import RuuviCore
+import RuuviDaemon
+import RuuviLocal
 import RuuviNotification
 import RuuviNotifier
-import RuuviDaemon
+import RuuviOntology
 import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
 import RuuviUser
-import WidgetKit
-import CoreBluetooth
-import Future
 import UIKit
+import WidgetKit
 
 class DashboardPresenter: DashboardModuleInput {
     weak var view: DashboardViewInput?
@@ -91,20 +91,21 @@ class DashboardPresenter: DashboardModuleInput {
             view?.viewModels = viewModels
         }
     }
+
     private var didLoadInitialRuuviTags = false
     private let appGroupDefaults = UserDefaults(
         suiteName: AppGroupConstants.appGroupSuiteIdentifier
     )
     private var isBluetoothPermissionGranted: Bool {
-        return CBCentralManager.authorization == .allowedAlways
+        CBCentralManager.authorization == .allowedAlways
     }
-    
+
     deinit {
         ruuviTagToken?.invalidate()
-        ruuviTagObserveLastRecordTokens.forEach({ $0.invalidate() })
-        advertisementTokens.forEach({ $0.invalidate() })
-        heartbeatTokens.forEach({ $0.invalidate() })
-        sensorSettingsTokens.forEach({ $0.invalidate() })
+        ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
+        advertisementTokens.forEach { $0.invalidate() }
+        heartbeatTokens.forEach { $0.invalidate() }
+        sensorSettingsTokens.forEach { $0.invalidate() }
         stateToken?.invalidate()
         backgroundToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
@@ -142,6 +143,7 @@ class DashboardPresenter: DashboardModuleInput {
 }
 
 // MARK: - DashboardViewOutput
+
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
@@ -157,13 +159,13 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingCloudSyncFailTokenState()
         pushNotificationsManager.registerForRemoteNotifications()
     }
-    
+
     func viewWillAppear() {
         startObservingUniversalLinks()
         startObservingBluetoothState()
         syncAppSettingsToAppGroupContainer()
     }
-    
+
     func viewWillDisappear() {
         stopObservingBluetoothState()
     }
@@ -191,7 +193,8 @@ extension DashboardPresenter: DashboardViewOutput {
                     || background.isConnected(uuid: luid.value)
                     || !viewModel.isConnectable.value.bound
                     || !viewModel.isOwner.value.bound
-                    || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
+                    || (settings.cloudModeEnabled && viewModel.isCloud.value.bound)
+                {
                     openTagSettingsScreens(viewModel: viewModel)
                 } else {
                     view?.showKeepConnectionDialogSettings(for: viewModel)
@@ -208,7 +211,8 @@ extension DashboardPresenter: DashboardViewOutput {
                 || background.isConnected(uuid: luid.value)
                 || !viewModel.isConnectable.value.bound
                 || !viewModel.isOwner.value.bound
-                || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
+                || (settings.cloudModeEnabled && viewModel.isCloud.value.bound)
+            {
                 openCardView(viewModel: viewModel, showCharts: true)
             } else {
                 view?.showKeepConnectionDialogChart(for: viewModel)
@@ -221,19 +225,20 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerOpenCardImageView(for viewModel: CardsViewModel?) {
-        guard let viewModel = viewModel else { return }
+        guard let viewModel else { return }
         openCardView(viewModel: viewModel, showCharts: false)
     }
 
     // swiftlint:disable switch_case_alignment
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
         switch settings.dashboardTapActionType {
-            case .card:
-                viewDidTriggerOpenCardImageView(for: viewModel)
-            case .chart:
-                viewDidTriggerChart(for: viewModel)
+        case .card:
+            viewDidTriggerOpenCardImageView(for: viewModel)
+        case .chart:
+            viewDidTriggerChart(for: viewModel)
         }
     }
+
     // swiftlint:enable switch_case_alignment
 
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel) {
@@ -242,7 +247,6 @@ extension DashboardPresenter: DashboardViewOutput {
                 router.openBackgroundSelectionView(ruuviTag: ruuviTagSensor)
             }
         }
-        
     }
 
     func viewDidTriggerRename(for viewModel: CardsViewModel) {
@@ -263,7 +267,7 @@ extension DashboardPresenter: DashboardViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
@@ -282,7 +286,7 @@ extension DashboardPresenter: DashboardViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
@@ -328,33 +332,34 @@ extension DashboardPresenter: DashboardViewOutput {
 }
 
 // MARK: - MenuModuleOutput
+
 extension DashboardPresenter: MenuModuleOutput {
-    func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
+    func menu(module: MenuModuleInput, didSelectAddRuuviTag _: Any?) {
         module.dismiss()
         router.openDiscover(delegate: self)
     }
-    
-    func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
+
+    func menu(module: MenuModuleInput, didSelectSettings _: Any?) {
         module.dismiss()
         router.openSettings()
     }
-    
-    func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
+
+    func menu(module: MenuModuleInput, didSelectAbout _: Any?) {
         module.dismiss()
         router.openAbout()
     }
 
-    func menu(module: MenuModuleInput, didSelectWhatToMeasure sender: Any?) {
+    func menu(module: MenuModuleInput, didSelectWhatToMeasure _: Any?) {
         module.dismiss()
         router.openWhatToMeasurePage()
     }
-    
-    func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
+
+    func menu(module: MenuModuleInput, didSelectGetMoreSensors _: Any?) {
         module.dismiss()
         router.openRuuviProductsPageFromMenu()
     }
 
-    func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
+    func menu(module: MenuModuleInput, didSelectFeedback _: Any?) {
         module.dismiss()
         infoProvider.summary { [weak self] summary in
             guard let sSelf = self else { return }
@@ -364,25 +369,27 @@ extension DashboardPresenter: MenuModuleOutput {
         }
     }
 
-    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+    func menu(module: MenuModuleInput, didSelectSignIn _: Any?) {
         module.dismiss()
         router.openSignIn(output: self)
     }
 
-    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+    func menu(module: MenuModuleInput, didSelectOpenConfig _: Any?) {
         module.dismiss()
     }
-    
-    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount sender: Any?) {
+
+    func menu(module: MenuModuleInput, didSelectOpenMyRuuviAccount _: Any?) {
         module.dismiss()
         router.openMyRuuviAccount()
     }
 }
 
 // MARK: - SignInBenefitsModuleOutput
+
 extension DashboardPresenter: SignInBenefitsModuleOutput {
     func signIn(module: SignInBenefitsModuleInput,
-                didSuccessfulyLogin sender: Any?) {
+                didSuccessfulyLogin _: Any?)
+    {
         startObservingRuuviTags()
         startObservingCloudModeNotification()
         module.dismiss(completion: {
@@ -391,14 +398,16 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
     }
 
     func signIn(module: SignInBenefitsModuleInput,
-                didCloseSignInWithoutAttempt sender: Any?) {
+                didCloseSignInWithoutAttempt _: Any?)
+    {
         module.dismiss(completion: {
             AppUtility.lockOrientation(.all)
         })
     }
 
     func signIn(module: SignInBenefitsModuleInput,
-                didSelectUseWithoutAccount sender: Any?) {
+                didSelectUseWithoutAccount _: Any?)
+    {
         module.dismiss(completion: {
             AppUtility.lockOrientation(.all)
         })
@@ -419,39 +428,41 @@ extension DashboardPresenter: DiscoverRouterDelegate {
             $0.id.value == ruuviTag.id
         }) {
             self.router.openCardImageView(with: viewModels,
-                                     ruuviTagSensors: ruuviTags,
-                                     sensorSettings: sensorSettingsList,
-                                     scrollTo: viewModel,
-                                     showCharts: false,
-                                     output: self)
+                                          ruuviTagSensors: ruuviTags,
+                                          sensorSettings: sensorSettingsList,
+                                          scrollTo: viewModel,
+                                          showCharts: false,
+                                          output: self)
         }
     }
 }
 
 // MARK: - DashboardRouterDelegate
+
 extension DashboardPresenter: DashboardRouterDelegate {
     func shouldDismissDiscover() -> Bool {
-        return viewModels.count > 0
+        viewModels.count > 0
     }
 }
 
 // MARK: - RuuviNotifierObserver
+
 extension DashboardPresenter: RuuviNotifierObserver {
-    func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+    func ruuvi(notifier _: RuuviNotifier, isTriggered _: Bool, for _: String) {
         // No op here.
     }
 
     // swiftlint:disable:next function_body_length
-    func ruuvi(notifier: RuuviNotifier,
+    func ruuvi(notifier _: RuuviNotifier,
                alertType: AlertType,
                isTriggered: Bool,
-               for uuid: String) {
-
+               for uuid: String)
+    {
         viewModels
-            .filter({ $0.luid.value?.value == uuid ||  $0.mac.value?.value == uuid})
-            .forEach({ viewModel in
+            .filter { $0.luid.value?.value == uuid || $0.mac.value?.value == uuid }
+            .forEach { viewModel in
                 let isFireable = viewModel.isCloud.value ?? false ||
-                        viewModel.isConnected.value ?? false
+                    viewModel.isConnected.value ?? false
                 switch alertType {
                 case .temperature:
                     let isTriggered = isTriggered && isFireable
@@ -491,7 +502,7 @@ extension DashboardPresenter: RuuviNotifierObserver {
                     viewModel.signalAlertState.value,
                     viewModel.connectionAlertState.value,
                     viewModel.movementAlertState.value,
-                    viewModel.cloudConnectionAlertState.value
+                    viewModel.cloudConnectionAlertState.value,
                 ]
                 if alertStates.first(where: { alert in
                     alert == .firing
@@ -502,25 +513,28 @@ extension DashboardPresenter: RuuviNotifierObserver {
                 }
 
                 notifyViewModelUpdate(for: viewModel)
-            })
+            }
     }
 }
 
 // MARK: - CardsModuleOutput
+
 extension DashboardPresenter: CardsModuleOutput {
     func cardsViewDidDismiss(module: CardsModuleInput) {
         module.dismiss(completion: nil)
     }
 
-    func cardsViewDidRefresh(module: CardsModuleInput) {
+    func cardsViewDidRefresh(module _: CardsModuleInput) {
         // No op.
     }
 }
 
 // MARK: - TagSettingsModuleOutput
+
 extension DashboardPresenter: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
-                                 ruuviTag: RuuviTagSensor) {
+                                 ruuviTag _: RuuviTagSensor)
+    {
         module.dismiss(completion: { [weak self] in
             self?.startObservingRuuviTags()
         })
@@ -532,19 +546,18 @@ extension DashboardPresenter: TagSettingsModuleOutput {
 }
 
 // MARK: - Private
-extension DashboardPresenter {
 
+extension DashboardPresenter {
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
-
         view?.userSignedInOnce = settings.signedInAtleastOnce
         view?.dashboardType = settings.dashboardType
         view?.dashboardTapActionType = settings.dashboardTapActionType
 
-        let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
+        let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: {[weak self] image in
+                .on(success: { [weak self] image in
                     viewModel.background.value = image
                     self?.notifyViewModelUpdate(for: viewModel)
                 }, failure: { [weak self] error in
@@ -565,7 +578,7 @@ extension DashboardPresenter {
             syncAlerts(ruuviTag: ruuviTag, viewModel: viewModel)
             let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
-                if let record = record {
+                if let record {
                     viewModel.update(record)
                     self?.notifyViewModelUpdate(for: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
@@ -573,22 +586,22 @@ extension DashboardPresenter {
             }
 
             return viewModel
-        })
+        }
 
         let vms = reorder(ruuviViewModels)
-        if didLoadInitialRuuviTags{
+        if didLoadInitialRuuviTags {
             view?.showNoSensorsAddedMessage(show: vms.isEmpty)
             askAppStoreReview(with: vms.count)
         }
 
-        self.viewModels = vms
+        viewModels = vms
     }
 
     private func syncViewModel(ruuviTagSensor: RuuviTagSensor?) {
         if let ruuviTag = ruuviTagSensor {
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: {[weak self] image in
+                .on(success: { [weak self] image in
                     viewModel.background.value = image
                     self?.notifyViewModelUpdate(for: viewModel)
                 }, failure: { [weak self] error in
@@ -609,7 +622,7 @@ extension DashboardPresenter {
             syncAlerts(ruuviTag: ruuviTag, viewModel: viewModel)
             let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
-                if let record = record {
+                if let record {
                     viewModel.update(record)
                     self?.notifyViewModelUpdate(for: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
@@ -622,9 +635,11 @@ extension DashboardPresenter {
     }
 
     private func processAlert(record: RuuviTagSensorRecord,
-                              viewModel: CardsViewModel) {
+                              viewModel: CardsViewModel)
+    {
         if let isCloud = viewModel.isCloud.value, isCloud,
-            let macId = viewModel.mac.value {
+           let macId = viewModel.mac.value
+        {
             alertHandler.processNetwork(record: record,
                                         trigger: false,
                                         for: macId)
@@ -643,13 +658,14 @@ extension DashboardPresenter {
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
         let sortedAndUniqueArray = viewModels.reduce(
             into: [CardsViewModel]()
-        ) { (result, element) in
+        ) { result, element in
             if !result.contains(element) {
                 // Insert the element into the result array while maintaining the sorted order
                 if let index = result.firstIndex(
                     where: {
                         $0.name.value?.lowercased() ?? "" >
-                        element.name.value?.lowercased() ?? "" }
+                            element.name.value?.lowercased() ?? ""
+                    }
                 ) {
                     result.insert(element, at: index)
                 } else {
@@ -668,7 +684,7 @@ extension DashboardPresenter {
         )
 
         // Temperature
-        var temperatureUnitInt: Int = 2
+        var temperatureUnitInt = 2
         switch settings.temperatureUnit {
         case .kelvin:
             temperatureUnitInt = 1
@@ -688,7 +704,7 @@ extension DashboardPresenter {
         )
 
         // Humidity
-        var humidityUnitInt: Int = 0
+        var humidityUnitInt = 0
         switch settings.humidityUnit {
         case .percent:
             humidityUnitInt = 0
@@ -704,7 +720,8 @@ extension DashboardPresenter {
 
         appGroupDefaults?.set(
             settings.humidityAccuracy.value,
-            forKey: AppGroupConstants.humidityAccuracyKey)
+            forKey: AppGroupConstants.humidityAccuracyKey
+        )
 
         // Pressure
         appGroupDefaults?.set(
@@ -724,7 +741,7 @@ extension DashboardPresenter {
     }
 
     private func syncHasCloudSensorToAppGroupContainer(with sensors: [AnyRuuviTagSensor]) {
-        let cloudSensors = sensors.filter({ $0.isCloudSensor ?? false })
+        let cloudSensors = sensors.filter { $0.isCloudSensor ?? false }
         appGroupDefaults?.set(
             cloudSensors.count > 0,
             forKey: AppGroupConstants.hasCloudSensorsKey
@@ -733,7 +750,7 @@ extension DashboardPresenter {
     }
 
     private func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { (observer, state) in
+        stateToken = foreground.state(self, closure: { observer, state in
             if state != .poweredOn || !self.isBluetoothPermissionGranted {
                 observer.view?.showBluetoothDisabled(
                     userDeclined: !self.isBluetoothPermissionGranted
@@ -753,19 +770,20 @@ extension DashboardPresenter {
     }
 
     private func observeRuuviTagHeartbeats() {
-        heartbeatTokens.forEach({ $0.invalidate() })
+        heartbeatTokens.forEach { $0.invalidate() }
         heartbeatTokens.removeAll()
-        connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
-            ruuviTags.filter({ !(settings.cloudModeEnabled && $0.isCloud) && $0.isOwner })
+        connectionPersistence.keepConnectionUUIDs.filter { luid -> Bool in
+            ruuviTags.filter { !(settings.cloudModeEnabled && $0.isCloud) && $0.isOwner }
                 .contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
-        }.forEach { (luid) in
-            heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
+        }.forEach { luid in
+            heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] _, device in
                 if let ruuviTag = device.ruuvi?.tag,
-                   let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
+                   let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any })
+                {
                     let sensorSettings = self?.sensorSettingsList
                         .first(where: {
-                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                         })
                     let record = ruuviTag
                         .with(source: .heartbeat)
@@ -781,7 +799,7 @@ extension DashboardPresenter {
     }
 
     private func restartObserveRuuviTagAdvertisements() {
-        advertisementTokens.forEach({ $0.invalidate() })
+        advertisementTokens.forEach { $0.invalidate() }
         advertisementTokens.removeAll()
         for viewModel in viewModels {
             let shouldAvoidObserving =
@@ -792,14 +810,16 @@ extension DashboardPresenter {
                 continue
             }
             if viewModel.type == .ruuvi,
-               let luid = viewModel.luid.value {
-                advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
+               let luid = viewModel.luid.value
+            {
+                advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] _, device in
                     if let ruuviTag = device.ruuvi?.tag,
-                       let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
+                       let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any })
+                    {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
                                 ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                             })
                         let record = ruuviTag
                             .with(source: .advertisement)
@@ -815,16 +835,17 @@ extension DashboardPresenter {
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func observeSensorSettings() {
-        sensorSettingsTokens.forEach({ $0.invalidate() })
+        sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi,
-               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value })
+            {
                 sensorSettingsTokens.append(
-                    ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
+                    ruuviReactor.observe(ruuviTagSensor) { [weak self] change in
                         guard let sSelf = self else { return }
                         switch change {
-                        case .insert(let sensorSettings):
+                        case let .insert(sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
                             if let viewModel = sSelf.viewModels.first(where: {
                                 $0.id.value == ruuviTagSensor.id
@@ -834,7 +855,7 @@ extension DashboardPresenter {
                                     viewModel: viewModel
                                 )
                             }
-                        case .update(let updateSensorSettings):
+                        case let .update(updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == updateSensorSettings.id }
                             ) {
@@ -850,7 +871,7 @@ extension DashboardPresenter {
                             } else {
                                 self?.sensorSettingsList.append(updateSensorSettings)
                             }
-                        case .delete(let deleteSensorSettings):
+                        case let .delete(deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettingsList.firstIndex(
                                 where: { $0.id == deleteSensorSettings.id }
                             ) {
@@ -866,7 +887,7 @@ extension DashboardPresenter {
                             }
                         default: break
                         }
-                    })
+                    }
                 )
             }
         }
@@ -877,7 +898,7 @@ extension DashboardPresenter {
     ) {
         let currentRecord = viewModel.latestMeasurement.value
         let updatedRecord = currentRecord?.with(sensorSettings: sensorSettings)
-        guard let updatedRecord = updatedRecord else {
+        guard let updatedRecord else {
             return
         }
         viewModel.update(updatedRecord)
@@ -885,23 +906,25 @@ extension DashboardPresenter {
     }
 
     private func restartObservingRuuviTagLastRecords() {
-        ruuviTagObserveLastRecordTokens.forEach({ $0.invalidate() })
+        ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
         ruuviTagObserveLastRecordTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi,
-               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-                let token = ruuviReactor.observeLatest(ruuviTagSensor) { [weak self] (changes) in
-                    if case .update(let anyRecord) = changes,
+               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value })
+            {
+                let token = ruuviReactor.observeLatest(ruuviTagSensor) { [weak self] changes in
+                    if case let .update(anyRecord) = changes,
                        let viewModel = self?.viewModels
-                        .first(where: {
-                            ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
-                            || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
-                        }),
-                       let record = anyRecord {
+                       .first(where: {
+                           ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
+                               || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
+                       }),
+                       let record = anyRecord
+                    {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
-                                    ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                        || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
                             })
                         let sensorRecord = record.with(sensorSettings: sensorSettings)
                         viewModel.update(sensorRecord)
@@ -918,10 +941,10 @@ extension DashboardPresenter {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
+        ruuviTagToken = ruuviReactor.observe { [weak self] change in
             guard let sSelf = self else { return }
             switch change {
-            case .initial(let ruuviTags):
+            case let .initial(ruuviTags):
                 let ruuviTags = ruuviTags.reordered()
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
@@ -930,7 +953,7 @@ extension DashboardPresenter {
                 sSelf.observeRuuviTags()
                 sSelf.restartObservingRuuviTagLastRecords()
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: ruuviTags)
-            case .insert(let sensor):
+            case let .insert(sensor):
                 sSelf.notifyRestartAdvertisementDaemon()
                 sSelf.notifyRestartHeartBeatDaemon()
                 sSelf.checkFirmwareVersion(for: sensor)
@@ -946,18 +969,19 @@ extension DashboardPresenter {
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 if !sSelf.settings.isSyncing,
-                    let viewModel = sSelf.viewModels.first(where: {
-                    return ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
-                        || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
-                }) {
+                   let viewModel = sSelf.viewModels.first(where: {
+                       ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
+                           || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
+                   })
+                {
                     let op = sSelf.ruuviStorage.readLatest(sensor.any)
                     op.on { [weak self] record in
-                        if let record = record {
+                        if let record {
                             viewModel.update(record)
                             sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
                         } else {
                             self?.ruuviStorage.readLast(sensor).on(success: { record in
-                                if let record = record {
+                                if let record {
                                     viewModel.update(record)
                                 }
                                 sSelf.openTagSettingsForNewSensor(viewModel: viewModel)
@@ -966,23 +990,24 @@ extension DashboardPresenter {
                     }
                     sSelf.restartObservingRuuviTagLastRecords()
                 }
-            case .delete(let sensor):
+            case let .delete(sensor):
                 sSelf.ruuviTags.removeAll(where: { $0.id == sensor.id })
                 sSelf.syncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.restartObservingRuuviTagLastRecords()
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
-            case .error(let error):
+            case let .error(error):
                 sSelf.errorPresenter.present(error: error)
-            case .update(let sensor):
+            case let .update(sensor):
                 guard let sSelf = self else { return }
                 if let index = sSelf.ruuviTags
                     .firstIndex(
                         where: {
                             ($0.macId != nil && $0.macId?.any == sensor.macId?.any)
-                            || ($0.luid != nil && $0.luid?.any == sensor.luid?.any)
-                        }) {
+                                || ($0.luid != nil && $0.luid?.any == sensor.luid?.any)
+                        })
+                {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
                     sSelf.restartObserveRuuviTagAdvertisements()
@@ -991,39 +1016,41 @@ extension DashboardPresenter {
             }
         }
     }
+
     private func startObservingBackgroundChanges() {
         backgroundToken?.invalidate()
         backgroundToken = NotificationCenter
             .default
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
                          object: nil,
-                         queue: .main) { [weak self] notification in
+                         queue: .main)
+        { [weak self] notification in
 
-                guard let sSelf = self else { return }
-                if let userInfo = notification.userInfo {
-                    let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
-                    let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    let viewModel = sSelf.view?.viewModels
-                        .first(where: { $0.luid.value != nil && $0.luid.value == luid?.any })
-                        ?? sSelf.view?.viewModels
-                        .first(where: { $0.mac.value != nil && $0.mac.value == macId?.any })
-                    if let viewModel = viewModel {
-                        let ruuviTag = sSelf.ruuviTags
-                            .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
-                            ?? sSelf.ruuviTags
-                            .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
-                        if let ruuviTag = ruuviTag {
-                            sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                                .on(success: { image in
-                                    viewModel.background.value = image
-                                    self?.notifyViewModelUpdate(for: viewModel)
-                                }, failure: { [weak self] error in
-                                    self?.errorPresenter.present(error: error)
-                                })
-                        }
+            guard let sSelf = self else { return }
+            if let userInfo = notification.userInfo {
+                let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
+                let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
+                let viewModel = sSelf.view?.viewModels
+                    .first(where: { $0.luid.value != nil && $0.luid.value == luid?.any })
+                    ?? sSelf.view?.viewModels
+                    .first(where: { $0.mac.value != nil && $0.mac.value == macId?.any })
+                if let viewModel {
+                    let ruuviTag = sSelf.ruuviTags
+                        .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
+                        ?? sSelf.ruuviTags
+                        .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
+                    if let ruuviTag {
+                        sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                            .on(success: { image in
+                                viewModel.background.value = image
+                                self?.notifyViewModelUpdate(for: viewModel)
+                            }, failure: { [weak self] error in
+                                self?.errorPresenter.present(error: error)
+                            })
                     }
                 }
             }
+        }
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -1034,11 +1061,12 @@ extension DashboardPresenter {
             .addObserver(forName: .RuuviTagAdvertisementDaemonDidFail,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let error = userInfo[RuuviTagAdvertisementDaemonDidFailKey.error] as? RUError {
-                                self?.errorPresenter.present(error: error)
-                            }
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let error = userInfo[RuuviTagAdvertisementDaemonDidFailKey.error] as? RUError
+                             {
+                                 self?.errorPresenter.present(error: error)
+                             }
                          })
         ruuviTagPropertiesDaemonFailureToken?.invalidate()
         ruuviTagPropertiesDaemonFailureToken = NotificationCenter
@@ -1046,11 +1074,12 @@ extension DashboardPresenter {
             .addObserver(forName: .RuuviTagPropertiesDaemonDidFail,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let error = userInfo[RuuviTagPropertiesDaemonDidFailKey.error] as? RUError {
-                                self?.errorPresenter.present(error: error)
-                            }
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let error = userInfo[RuuviTagPropertiesDaemonDidFailKey.error] as? RUError
+                             {
+                                 self?.errorPresenter.present(error: error)
+                             }
                          })
         ruuviTagHeartbeatDaemonFailureToken?.invalidate()
         ruuviTagHeartbeatDaemonFailureToken = NotificationCenter
@@ -1058,11 +1087,12 @@ extension DashboardPresenter {
             .addObserver(forName: .RuuviTagHeartbeatDaemonDidFail,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let error = userInfo[RuuviTagHeartbeatDaemonDidFailKey.error] as? RUError {
-                                self?.errorPresenter.present(error: error)
-                            }
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let error = userInfo[RuuviTagHeartbeatDaemonDidFailKey.error] as? RUError
+                             {
+                                 self?.errorPresenter.present(error: error)
+                             }
                          })
         ruuviTagReadLogsOperationFailureToken?.invalidate()
         ruuviTagReadLogsOperationFailureToken = NotificationCenter
@@ -1070,11 +1100,12 @@ extension DashboardPresenter {
             .addObserver(forName: .RuuviTagReadLogsOperationDidFail,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let error = userInfo[RuuviTagReadLogsOperationDidFailKey.error] as? RUError {
-                                self?.errorPresenter.present(error: error)
-                            }
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let error = userInfo[RuuviTagReadLogsOperationDidFailKey.error] as? RUError
+                             {
+                                 self?.errorPresenter.present(error: error)
+                             }
                          })
     }
 
@@ -1086,7 +1117,7 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                            self?.observeRuuviTagHeartbeats()
+                             self?.observeRuuviTagHeartbeats()
                          })
         stopKeepingConnectionToken?.invalidate()
         stopKeepingConnectionToken = NotificationCenter
@@ -1095,7 +1126,7 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                            self?.observeRuuviTagHeartbeats()
+                             self?.observeRuuviTagHeartbeats()
                          })
     }
 
@@ -1106,17 +1137,18 @@ extension DashboardPresenter {
             .addObserver(forName: .BTBackgroundDidConnect,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
-                               let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
-                                viewModel.isConnected.value = true
-                                self?.notifyViewModelUpdate(for: viewModel)
-                                if let latestRecord = viewModel.latestMeasurement.value {
-                                    self?.processAlert(record: latestRecord,
-                                                       viewModel: viewModel)
-                                }
-                            }
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
+                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any })
+                             {
+                                 viewModel.isConnected.value = true
+                                 self?.notifyViewModelUpdate(for: viewModel)
+                                 if let latestRecord = viewModel.latestMeasurement.value {
+                                     self?.processAlert(record: latestRecord,
+                                                        viewModel: viewModel)
+                                 }
+                             }
                          })
         didDisconnectToken?.invalidate()
         didDisconnectToken = NotificationCenter
@@ -1124,17 +1156,18 @@ extension DashboardPresenter {
             .addObserver(forName: .BTBackgroundDidDisconnect,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                               let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
-                                viewModel.isConnected.value = false
-                                self?.notifyViewModelUpdate(for: viewModel)
-                                if let latestRecord = viewModel.latestMeasurement.value {
-                                    self?.processAlert(record: latestRecord,
-                                                       viewModel: viewModel)
-                                }
-                            }
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
+                                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any })
+                             {
+                                 viewModel.isConnected.value = false
+                                 self?.notifyViewModelUpdate(for: viewModel)
+                                 if let latestRecord = viewModel.latestMeasurement.value {
+                                     self?.processAlert(record: latestRecord,
+                                                        viewModel: viewModel)
+                                 }
+                             }
                          })
     }
 
@@ -1146,43 +1179,44 @@ extension DashboardPresenter {
             .addObserver(forName: .RuuviServiceAlertDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                guard let sSelf = self else { return }
-                if let userInfo = notification.userInfo {
-                    if let physicalSensor
-                        = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
-                       let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
-                        sSelf.viewModels.filter({
-                            ($0.luid.value != nil && ($0.luid.value == physicalSensor.luid?.any))
-                            || ($0.mac.value != nil && ($0.mac.value == physicalSensor.macId?.any))
-                        }).forEach({ (viewModel) in
-                            if sSelf.alertService.hasRegistrations(for: physicalSensor) {
-                                viewModel.rhAlertLowerBound.value = sSelf.alertService
-                                    .lowerRelativeHumidity(for: physicalSensor)
-                                viewModel.rhAlertUpperBound.value = sSelf.alertService
-                                    .upperRelativeHumidity(for: physicalSensor)
-                                
-                            } else {
-                                viewModel.rhAlertLowerBound.value = 0
-                                viewModel.rhAlertUpperBound.value = 100
-                            }
-                            sSelf.syncAlerts(ruuviTag: physicalSensor,
-                                             viewModel: viewModel)
-                            sSelf.updateIsOnState(of: type,
-                                                  for: physicalSensor.id,
-                                                  viewModel: viewModel)
-                            sSelf.updateMutedTill(of: type,
-                                                  for: physicalSensor.id,
-                                                  viewModel: viewModel)
-                            sSelf.triggerAlertsIfNeeded()
-                        })
-                    }
-                }
-            })
+                         using: { [weak self] notification in
+                             guard let sSelf = self else { return }
+                             if let userInfo = notification.userInfo {
+                                 if let physicalSensor
+                                     = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                                     let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType
+                                 {
+                                     sSelf.viewModels.filter {
+                                         ($0.luid.value != nil && ($0.luid.value == physicalSensor.luid?.any))
+                                             || ($0.mac.value != nil && ($0.mac.value == physicalSensor.macId?.any))
+                                     }.forEach { viewModel in
+                                         if sSelf.alertService.hasRegistrations(for: physicalSensor) {
+                                             viewModel.rhAlertLowerBound.value = sSelf.alertService
+                                                 .lowerRelativeHumidity(for: physicalSensor)
+                                             viewModel.rhAlertUpperBound.value = sSelf.alertService
+                                                 .upperRelativeHumidity(for: physicalSensor)
+
+                                         } else {
+                                             viewModel.rhAlertLowerBound.value = 0
+                                             viewModel.rhAlertUpperBound.value = 100
+                                         }
+                                         sSelf.syncAlerts(ruuviTag: physicalSensor,
+                                                          viewModel: viewModel)
+                                         sSelf.updateIsOnState(of: type,
+                                                               for: physicalSensor.id,
+                                                               viewModel: viewModel)
+                                         sSelf.updateMutedTill(of: type,
+                                                               for: physicalSensor.id,
+                                                               viewModel: viewModel)
+                                         sSelf.triggerAlertsIfNeeded()
+                                     }
+                                 }
+                             }
+                         })
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
-        ruuviTags.forEach({ (ruuviTag) in
+        ruuviTags.forEach { ruuviTag in
             if ruuviTag.isCloud {
                 if let macId = ruuviTag.macId {
                     alertHandler.subscribe(self, to: macId.value)
@@ -1194,26 +1228,27 @@ extension DashboardPresenter {
                     alertHandler.subscribe(self, to: macId.value)
                 }
             }
-        })
+        }
     }
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            self.router.openTagSettings(
+            router.openTagSettings(
                 ruuviTag: ruuviTag,
                 latestMeasurement: viewModel.latestMeasurement.value,
                 sensorSettings: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
-                        || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
+                            || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
                     }),
-                output: self)
+                output: self
+            )
         }
     }
 
     private func openTagSettingsForNewSensor(viewModel: CardsViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            self.router.openTagSettings(
+            router.openTagSettings(
                 with: viewModels,
                 ruuviTagSensors: ruuviTags,
                 sensorSettings: sensorSettingsList,
@@ -1223,7 +1258,7 @@ extension DashboardPresenter {
                 sensorSetting: sensorSettingsList
                     .first(where: {
                         ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
-                        || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
+                            || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
                     }),
                 output: self
             )
@@ -1245,15 +1280,16 @@ extension DashboardPresenter {
             .addObserver(forName: .DidOpenWithUniversalLink,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                guard let self = self,
-                    let userInfo = notification.userInfo else {
-                    guard let email = self?.ruuviUser.email else { return }
-                    self?.view?.showAlreadyLoggedInAlert(with: email)
-                    return
-                }
-                self.processLink(userInfo)
-        })
+                         using: { [weak self] notification in
+                             guard let self,
+                                   let userInfo = notification.userInfo
+                             else {
+                                 guard let email = self?.ruuviUser.email else { return }
+                                 self?.view?.showAlreadyLoggedInAlert(with: email)
+                                 return
+                             }
+                             processLink(userInfo)
+                         })
     }
 
     private func processLink(_ userInfo: [AnyHashable: Any]) {
@@ -1271,8 +1307,8 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.handleCloudModeState()
-            })
+                             self?.handleCloudModeState()
+                         })
     }
 
     /// The method handles all the operations when cloud mode toggle is turned on/off
@@ -1286,11 +1322,11 @@ extension DashboardPresenter {
     }
 
     private func removeConnectionsForCloudTags() {
-        connectionPersistence.keepConnectionUUIDs.filter { (luid) -> Bool in
-            ruuviTags.filter({ $0.isCloud }).contains(where: {
+        connectionPersistence.keepConnectionUUIDs.filter { luid -> Bool in
+            ruuviTags.filter(\.isCloud).contains(where: {
                 $0.luid?.any != nil && $0.luid?.any == luid
             })
-        }.forEach { (luid) in
+        }.forEach { luid in
             connectionPersistence.setKeepConnection(false, for: luid)
         }
     }
@@ -1301,15 +1337,17 @@ extension DashboardPresenter {
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
-                         queue: .main) { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
+                         queue: .main)
+        { [weak self] _ in
+            self?.syncAppSettingsToAppGroupContainer()
         }
         temperatureAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureAccuracyDidChange,
                          object: nil,
-                         queue: .main) { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
+                         queue: .main)
+        { [weak self] _ in
+            self?.syncAppSettingsToAppGroupContainer()
         }
         humidityUnitToken = NotificationCenter
             .default
@@ -1317,72 +1355,74 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
-        })
+                             self?.syncAppSettingsToAppGroupContainer()
+                         })
         humidityAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .HumidityAccuracyDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
-        })
+                             self?.syncAppSettingsToAppGroupContainer()
+                         })
         pressureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
-        })
+                             self?.syncAppSettingsToAppGroupContainer()
+                         })
         pressureAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitAccuracyChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
-        })
+                             self?.syncAppSettingsToAppGroupContainer()
+                         })
         languageToken = NotificationCenter
             .default
             .addObserver(forName: .LanguageDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.syncAppSettingsToAppGroupContainer()
-        })
+                             self?.syncAppSettingsToAppGroupContainer()
+                         })
         systemLanguageChangeToken = NotificationCenter
             .default
             .addObserver(forName: NSLocale.currentLocaleDidChangeNotification,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.systemLocaleDidChange()
-        })
+                             self?.systemLocaleDidChange()
+                         })
         dashboardTypeToken = NotificationCenter
             .default
             .addObserver(forName: .DashboardTypeDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                if let userInfo = notification.userInfo,
-                   let type = userInfo[DashboardTypeKey.type] as? DashboardType {
-                   self?.view?.dashboardType = type
-                }
-        })
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let type = userInfo[DashboardTypeKey.type] as? DashboardType
+                             {
+                                 self?.view?.dashboardType = type
+                             }
+                         })
 
         dashboardTapActionTypeToken = NotificationCenter
             .default
             .addObserver(forName: .DashboardTapActionTypeDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-                if let userInfo = notification.userInfo,
-                   let type = userInfo[DashboardTapActionTypeKey.type] as?
-                    DashboardTapActionType {
-                    self?.view?.dashboardTapActionType = type
-                }
-            })
+                         using: { [weak self] notification in
+                             if let userInfo = notification.userInfo,
+                                let type = userInfo[DashboardTapActionTypeKey.type] as?
+                                DashboardTapActionType
+                             {
+                                 self?.view?.dashboardTapActionType = type
+                             }
+                         })
     }
 
     private func startObservingCloudSyncSuccessTokenState() {
@@ -1394,8 +1434,8 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.triggerAlertsIfNeeded()
-        })
+                             self?.triggerAlertsIfNeeded()
+                         })
     }
 
     private func startObservingCloudSyncFailTokenState() {
@@ -1407,21 +1447,22 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.forceLogoutUser()
-        })
+                             self?.forceLogoutUser()
+                         })
     }
-    
+
     @objc private func systemLocaleDidChange() {
         syncAppSettingsToAppGroupContainer()
     }
 
-    fileprivate func askAppStoreReview(with sensorsCount: Int) {
+    private func askAppStoreReview(with sensorsCount: Int) {
         guard let dayDifference = Calendar.current.dateComponents(
             [.day],
             from: FileManager().appInstalledDate,
             to: Date()
         ).day, dayDifference > 7,
-              sensorsCount > 0 else {
+            sensorsCount > 0
+        else {
             return
         }
         AppStoreReviewHelper.askForReview(settings: settings)
@@ -1434,9 +1475,9 @@ extension DashboardPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.restartObservingRuuviTagLastRecords()
-            })
+                             guard let sSelf = self else { return }
+                             sSelf.restartObservingRuuviTagLastRecords()
+                         })
     }
 
     private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
@@ -1447,7 +1488,7 @@ extension DashboardPresenter {
     }
 
     private func syncAlerts(ruuviTag: PhysicalSensor, viewModel: CardsViewModel) {
-        AlertType.allCases.forEach { (type) in
+        AlertType.allCases.forEach { type in
             switch type {
             case .temperature:
                 sync(temperature: type, ruuviTag: ruuviTag, viewModel: viewModel)
@@ -1474,7 +1515,7 @@ extension DashboardPresenter {
                 viewModel.signalAlertState.value,
                 viewModel.connectionAlertState.value,
                 viewModel.movementAlertState.value,
-                viewModel.cloudConnectionAlertState.value
+                viewModel.cloudConnectionAlertState.value,
             ]
 
             if alertService.hasRegistrations(for: ruuviTag) {
@@ -1495,9 +1536,11 @@ extension DashboardPresenter {
 
     private func sync(temperature: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .temperature = alertService
-            .alert(for: ruuviTag, of: temperature) {
+            .alert(for: ruuviTag, of: temperature)
+        {
             viewModel.isTemperatureAlertOn.value = true
         } else {
             viewModel.isTemperatureAlertOn.value = false
@@ -1509,9 +1552,11 @@ extension DashboardPresenter {
 
     private func sync(relativeHumidity: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .relativeHumidity = alertService.alert(for: ruuviTag,
-                                                       of: relativeHumidity) {
+                                                       of: relativeHumidity)
+        {
             viewModel.isRelativeHumidityAlertOn.value = true
         } else {
             viewModel.isRelativeHumidityAlertOn.value = false
@@ -1523,7 +1568,8 @@ extension DashboardPresenter {
 
     private func sync(pressure: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .pressure = alertService.alert(for: ruuviTag, of: pressure) {
             viewModel.isPressureAlertOn.value = true
         } else {
@@ -1536,7 +1582,8 @@ extension DashboardPresenter {
 
     private func sync(signal: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .signal = alertService.alert(for: ruuviTag, of: signal) {
             viewModel.isSignalAlertOn.value = true
         } else {
@@ -1549,7 +1596,8 @@ extension DashboardPresenter {
 
     private func sync(connection: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .connection = alertService.alert(for: ruuviTag, of: connection) {
             viewModel.isConnectionAlertOn.value = true
         } else {
@@ -1562,7 +1610,8 @@ extension DashboardPresenter {
 
     private func sync(movement: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .movement = alertService.alert(for: ruuviTag, of: movement) {
             viewModel.isMovementAlertOn.value = true
         } else {
@@ -1575,7 +1624,8 @@ extension DashboardPresenter {
 
     private func sync(cloudConnection: AlertType,
                       ruuviTag: PhysicalSensor,
-                      viewModel: CardsViewModel) {
+                      viewModel: CardsViewModel)
+    {
         if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
             viewModel.isCloudConnectionAlertOn.value = true
         } else {
@@ -1586,32 +1636,38 @@ extension DashboardPresenter {
     private func reloadMutedTill() {
         for viewModel in viewModels {
             if let mutedTill = viewModel.temperatureAlertMutedTill.value,
-               mutedTill < Date() {
+               mutedTill < Date()
+            {
                 viewModel.temperatureAlertMutedTill.value = nil
             }
 
             if let mutedTill = viewModel.relativeHumidityAlertMutedTill.value,
-               mutedTill < Date() {
+               mutedTill < Date()
+            {
                 viewModel.relativeHumidityAlertMutedTill.value = nil
             }
 
             if let mutedTill = viewModel.pressureAlertMutedTill.value,
-               mutedTill < Date() {
+               mutedTill < Date()
+            {
                 viewModel.pressureAlertMutedTill.value = nil
             }
 
             if let mutedTill = viewModel.signalAlertMutedTill.value,
-               mutedTill < Date() {
+               mutedTill < Date()
+            {
                 viewModel.signalAlertMutedTill.value = nil
             }
 
             if let mutedTill = viewModel.connectionAlertMutedTill.value,
-               mutedTill < Date() {
+               mutedTill < Date()
+            {
                 viewModel.connectionAlertMutedTill.value = nil
             }
 
             if let mutedTill = viewModel.movementAlertMutedTill.value,
-               mutedTill < Date() {
+               mutedTill < Date()
+            {
                 viewModel.movementAlertMutedTill.value = nil
             }
 
@@ -1621,24 +1677,24 @@ extension DashboardPresenter {
 
     private func updateMutedTill(of type: AlertType,
                                  for uuid: String,
-                                 viewModel: CardsViewModel) {
-        var observable: Observable<Date?>
-        switch type {
+                                 viewModel: CardsViewModel)
+    {
+        var observable: Observable<Date?> = switch type {
         case .temperature:
-            observable = viewModel.temperatureAlertMutedTill
+            viewModel.temperatureAlertMutedTill
         case .relativeHumidity:
-            observable = viewModel.relativeHumidityAlertMutedTill
+            viewModel.relativeHumidityAlertMutedTill
         case .pressure:
-            observable = viewModel.pressureAlertMutedTill
+            viewModel.pressureAlertMutedTill
         case .signal:
-            observable = viewModel.signalAlertMutedTill
+            viewModel.signalAlertMutedTill
         case .connection:
-            observable = viewModel.connectionAlertMutedTill
+            viewModel.connectionAlertMutedTill
         case .movement:
-            observable = viewModel.movementAlertMutedTill
+            viewModel.movementAlertMutedTill
         default:
             // Should never be here
-            observable = viewModel.temperatureAlertMutedTill
+            viewModel.temperatureAlertMutedTill
         }
 
         let date = alertService.mutedTill(type: type, for: uuid)
@@ -1650,26 +1706,26 @@ extension DashboardPresenter {
 
     private func updateIsOnState(of type: AlertType,
                                  for uuid: String,
-                                 viewModel: CardsViewModel) {
-        var observable: Observable<Bool?>
-        switch type {
+                                 viewModel: CardsViewModel)
+    {
+        var observable: Observable<Bool?> = switch type {
         case .temperature:
-            observable = viewModel.isTemperatureAlertOn
+            viewModel.isTemperatureAlertOn
         case .relativeHumidity:
-            observable = viewModel.isRelativeHumidityAlertOn
+            viewModel.isRelativeHumidityAlertOn
         case .pressure:
-            observable = viewModel.isPressureAlertOn
+            viewModel.isPressureAlertOn
         case .signal:
-            observable = viewModel.isSignalAlertOn
+            viewModel.isSignalAlertOn
         case .connection:
-            observable = viewModel.isConnectionAlertOn
+            viewModel.isConnectionAlertOn
         case .movement:
-            observable = viewModel.isMovementAlertOn
+            viewModel.isMovementAlertOn
         case .cloudConnection:
-            observable = viewModel.isCloudConnectionAlertOn
+            viewModel.isCloudConnectionAlertOn
         default:
             // Should never be here
-            observable = viewModel.isTemperatureAlertOn
+            viewModel.isTemperatureAlertOn
         }
 
         let isOn = alertService.isOn(type: type, for: uuid)
@@ -1718,7 +1774,7 @@ extension DashboardPresenter {
     }
 
     private func notifyRestartAdvertisementDaemon() {
-            // Notify daemon to restart
+        // Notify daemon to restart
         NotificationCenter
             .default
             .post(name: .RuuviTagAdvertisementDaemonShouldRestart,
@@ -1727,7 +1783,7 @@ extension DashboardPresenter {
     }
 
     private func notifyRestartHeartBeatDaemon() {
-            // Notify daemon to restart
+        // Notify daemon to restart
         NotificationCenter
             .default
             .post(name: .RuuviTagHeartBeatDaemonShouldRestart,
@@ -1749,4 +1805,5 @@ extension DashboardPresenter {
         }
     }
 }
+
 // swiftlint:enable file_length trailing_whitespace

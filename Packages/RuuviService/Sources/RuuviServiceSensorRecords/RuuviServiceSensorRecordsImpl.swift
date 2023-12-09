@@ -1,8 +1,8 @@
 import Foundation
 import Future
+import RuuviLocal
 import RuuviOntology
 import RuuviPool
-import RuuviLocal
 import RuuviService
 
 public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {

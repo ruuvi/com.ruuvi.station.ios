@@ -9,7 +9,8 @@ public struct RuuviCloudSensorDense {
     public init(sensor: CloudSensor,
                 record: RuuviTagSensorRecord?,
                 alerts: RuuviCloudSensorAlerts,
-                subscription: CloudSensorSubscription?) {
+                subscription: CloudSensorSubscription?)
+    {
         self.sensor = sensor
         self.record = record
         self.alerts = alerts
@@ -24,66 +25,67 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
 
     public init(sensor: CloudSensor,
                 record: RuuviTagSensorRecord,
-                subscription: CloudSensorSubscription?) {
+                subscription: CloudSensorSubscription?)
+    {
         self.sensor = sensor
         self.record = record
         self.subscription = subscription
     }
 
     public var id: String {
-        return sensor.id
+        sensor.id
     }
 
     public var name: String {
-        return sensor.name
+        sensor.name
     }
 
     public var isClaimed: Bool {
-        return sensor.isClaimed
+        sensor.isClaimed
     }
 
     public var isOwner: Bool {
-        return sensor.isOwner
+        sensor.isOwner
     }
 
     public var owner: String? {
-        return sensor.owner
+        sensor.owner
     }
 
     public var ownersPlan: String? {
-        return subscription?.subscriptionName
+        subscription?.subscriptionName
     }
 
     public var picture: URL? {
-        return sensor.picture
+        sensor.picture
     }
 
     public var offsetTemperature: Double? {
-        return sensor.offsetTemperature
+        sensor.offsetTemperature
     }
 
     public var offsetHumidity: Double? {
-        return sensor.offsetHumidity
+        sensor.offsetHumidity
     }
 
     public var offsetPressure: Double? {
-        return sensor.offsetPressure
+        sensor.offsetPressure
     }
 
     public var isCloudSensor: Bool? {
-        return sensor.isCloudSensor
+        sensor.isCloudSensor
     }
 
     public var canShare: Bool {
-        return sensor.canShare
+        sensor.canShare
     }
 
     public var sharedTo: [String] {
-        return sensor.sharedTo
+        sensor.sharedTo
     }
 
     public static func == (lhs: AnyCloudSensorDense, rhs: AnyCloudSensorDense) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -91,72 +93,72 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
     }
 
     public var orderElement: String {
-        return id
+        id
     }
 }
 
 extension AnyCloudSensorDense: RuuviTagSensorRecord {
     public var luid: LocalIdentifier? {
-        return record.luid
+        record.luid
     }
 
     public var date: Date {
-        return record.date
+        record.date
     }
 
     public var source: RuuviTagSensorRecordSource {
-        return record.source
+        record.source
     }
 
     public var macId: MACIdentifier? {
-        return record.macId
+        record.macId
     }
 
     public var rssi: Int? {
-        return record.rssi
+        record.rssi
     }
 
     public var temperature: Temperature? {
-        return record.temperature
+        record.temperature
     }
 
     public var humidity: Humidity? {
-        return record.humidity
+        record.humidity
     }
 
     public var pressure: Pressure? {
-        return record.pressure
+        record.pressure
     }
 
     public var acceleration: Acceleration? {
-        return record.acceleration
+        record.acceleration
     }
 
     public var voltage: Voltage? {
-        return record.voltage
+        record.voltage
     }
 
     public var movementCounter: Int? {
-        return record.movementCounter
+        record.movementCounter
     }
 
     public var measurementSequenceNumber: Int? {
-        return record.measurementSequenceNumber
+        record.measurementSequenceNumber
     }
 
     public var txPower: Int? {
-        return record.txPower
+        record.txPower
     }
 
     public var temperatureOffset: Double {
-        return record.temperatureOffset
+        record.temperatureOffset
     }
 
     public var humidityOffset: Double {
-        return record.humidityOffset
+        record.humidityOffset
     }
 
     public var pressureOffset: Double {
-        return record.pressureOffset
+        record.pressureOffset
     }
 }

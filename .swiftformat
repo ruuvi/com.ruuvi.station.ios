@@ -1,0 +1,2 @@
+--swiftversion 5.9
+--exclude ./Common/RuuviLocalization/Sources/RuuviLocalization/RuuviLocalization.swift

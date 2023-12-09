@@ -1,7 +1,7 @@
 import Foundation
-import RuuviPool
 import Future
 import RuuviOntology
+import RuuviPool
 import RuuviUser
 
 public struct ValidateCodeResponse {
@@ -56,8 +56,7 @@ public protocol RuuviCloud {
                           measurements: Bool?,
                           sharedToOthers: Bool?,
                           sharedToMe: Bool?,
-                          alerts: Bool?
-    ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
+                          alerts: Bool?) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
 
     @discardableResult
     func loadRecords(
@@ -203,9 +202,10 @@ public protocol RuuviCloud {
     func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError>
 
     // MARK: Queued requests
+
     @discardableResult
     func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
-    -> Future<Bool, RuuviCloudError>
+        -> Future<Bool, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

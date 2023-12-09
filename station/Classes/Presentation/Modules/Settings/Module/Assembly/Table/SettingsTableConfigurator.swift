@@ -1,11 +1,11 @@
 import Foundation
 import RuuviContext
-import RuuviReactor
 import RuuviLocal
-import RuuviService
 import RuuviPresenters
-import RuuviUser
+import RuuviReactor
+import RuuviService
 import RuuviStorage
+import RuuviUser
 
 class SettingsTableConfigurator {
     func configure(view: SettingsTableViewController) {

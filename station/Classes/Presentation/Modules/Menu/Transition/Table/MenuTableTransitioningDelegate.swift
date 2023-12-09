@@ -1,15 +1,11 @@
 import UIKit
 
 class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
-
     var manager: MenuTableTransitionManager
 
-    lazy var present: MenuTablePresentTransitionAnimation = {
-        return MenuTablePresentTransitionAnimation(manager: manager)
-    }()
-    lazy var dismiss: MenuTableDismissTransitionAnimation = {
-        return MenuTableDismissTransitionAnimation(manager: manager)
-    }()
+    lazy var present: MenuTablePresentTransitionAnimation = .init(manager: manager)
+
+    lazy var dismiss: MenuTableDismissTransitionAnimation = .init(manager: manager)
 
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
@@ -17,31 +13,34 @@ class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDel
 
     func presentationController(forPresented presented: UIViewController,
                                 presenting: UIViewController?,
-                                source: UIViewController) -> UIPresentationController? {
+                                source _: UIViewController) -> UIPresentationController?
+    {
         let controller = MenuTablePresentationController(presentedViewController: presented, presenting: presenting)
         controller.menuWidth = manager.menuWidth
         controller.dismissTransition = dismiss
         return controller
     }
 
-    func animationController(forPresented presented: UIViewController,
-                             presenting: UIViewController,
-                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return present
+    func animationController(forPresented _: UIViewController,
+                             presenting _: UIViewController,
+                             source _: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    {
+        present
     }
 
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return dismiss
+    func animationController(forDismissed _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        dismiss
     }
 
-    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning)
-        -> UIViewControllerInteractiveTransitioning? {
-        return manager.isInteractive ? present : nil
+    func interactionControllerForPresentation(using _: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning?
+    {
+        manager.isInteractive ? present : nil
     }
 
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
-        -> UIViewControllerInteractiveTransitioning? {
-        return manager.isInteractive ? dismiss : nil
+    func interactionControllerForDismissal(using _: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning?
+    {
+        manager.isInteractive ? dismiss : nil
     }
-
 }

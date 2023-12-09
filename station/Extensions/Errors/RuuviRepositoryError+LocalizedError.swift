@@ -1,13 +1,13 @@
-import RuuviRepository
 import Foundation
+import RuuviRepository
 
 extension RuuviRepositoryError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .ruuviStorage(let error):
-            return error.errorDescription
-        case .ruuviPool(let error):
-            return error.errorDescription
+        case let .ruuviStorage(error):
+            error.errorDescription
+        case let .ruuviPool(error):
+            error.errorDescription
         }
     }
 }

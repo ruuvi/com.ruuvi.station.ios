@@ -1,12 +1,11 @@
-// swiftlint:disable file_length
-import UIKit
-import RuuviService
 import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
+import RuuviService
+// swiftlint:disable file_length
+import UIKit
 
 class CardsLargeImageCell: UICollectionViewCell {
-
     private lazy var temperatureLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -72,7 +71,8 @@ class CardsLargeImageCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -218,11 +218,10 @@ extension CardsLargeImageCell {
 }
 
 extension CardsLargeImageCell {
-
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func configure(with viewModel: CardsViewModel,
-                   measurementService: RuuviServiceMeasurement?) {
-
+                   measurementService: RuuviServiceMeasurement?)
+    {
         // Temp
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
             temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
@@ -238,7 +237,8 @@ extension CardsLargeImageCell {
 
         // Humidity
         if let humidity = viewModel.humidity.value,
-            let measurementService = measurementService {
+           let measurementService
+        {
             hideHumidityView(hide: false)
             let humidityValue = measurementService.stringWithoutSign(
                 for: humidity,
@@ -247,7 +247,7 @@ extension CardsLargeImageCell {
             let humidityUnit = measurementService.units.humidityUnit
             let humidityUnitSymbol = humidityUnit.symbol
             let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
-            let unit =  humidityUnit == .dew ? temperatureUnitSymbol
+            let unit = humidityUnit == .dew ? temperatureUnitSymbol
                 : humidityUnitSymbol
             humidityView.setValue(with: humidityValue,
                                   unit: unit)
@@ -309,7 +309,8 @@ extension CardsLargeImageCell {
 
         // Battery stat
         if let batteryLow = viewModel.batteryNeedsReplacement.value,
-           batteryLow {
+           batteryLow
+        {
             batteryLevelView.isHidden = false
             batteryLevelViewHeight.constant = 24
         } else {
@@ -332,9 +333,9 @@ extension CardsLargeImageCell {
 
         timer = Timer.scheduledTimer(withTimeInterval: 1,
                                      repeats: true,
-                                     block: { [weak self] (_) in
-            self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-        })
+                                     block: { [weak self] _ in
+                                         self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
+                                     })
     }
 
     private func startObservingNetworkSyncNotification(for macId: AnyMACIdentifier) {
@@ -347,13 +348,14 @@ extension CardsLargeImageCell {
                          object: nil,
                          queue: .main,
                          using: { [weak self] notification in
-                guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                      let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                      mac.any == macId else {
-                    return
-                }
-                self?.updateSyncLabel(with: status)
-            })
+                             guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                                   let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                                   mac.any == macId
+                             else {
+                                 return
+                             }
+                             self?.updateSyncLabel(with: status)
+                         })
     }
 
     private func updateSyncLabel(with status: NetworkSyncStatus) {

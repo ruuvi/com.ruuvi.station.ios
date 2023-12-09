@@ -1,23 +1,22 @@
-import UIKit
 import BTKit
 import RuuviContext
-import RuuviStorage
-import RuuviReactor
-import RuuviLocal
-import RuuviService
 import RuuviCore
-import RuuviNotifier
-import RuuviPresenters
-import RuuviUser
 import RuuviDaemon
+import RuuviLocal
+import RuuviNotifier
 import RuuviPool
+import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
+import RuuviUser
+import UIKit
 
 protocol DashboardModuleFactory {
     func create() -> UIViewController
 }
 
 final class DashboardModuleFactoryImpl: DashboardModuleFactory {
-
     // swiftlint:disable:next function_body_length
     func create() -> UIViewController {
         let r = AppAssembly.shared.assembler.resolver
@@ -70,10 +69,11 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         presenter.interactor = interactor
 
         // MARK: - MENU
+
         // swiftlint:disable force_cast
         let menu = UIStoryboard(name: "Menu",
                                 bundle: .main)
-                                .instantiateInitialViewController() as! UINavigationController
+            .instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom
         let menuTable = menu.topViewController as! MenuTableViewController
         let menuPresenter = menuTable.output as! MenuPresenter
@@ -89,6 +89,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // MARK: VIEW
+
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter

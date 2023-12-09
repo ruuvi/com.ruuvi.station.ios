@@ -3,52 +3,58 @@ import Humidity
 import RealmSwift
 import RuuviOntology
 
-extension RuuviTagLatestDataRealm {
-    public var unitTemperature: Temperature? {
-        guard let celsius = self.celsius.value else {
+public extension RuuviTagLatestDataRealm {
+    var unitTemperature: Temperature? {
+        guard let celsius = celsius.value else {
             return nil
         }
         return Temperature(value: celsius,
                            unit: .celsius)
     }
-    public var unitHumidity: Humidity? {
-        guard let celsius = self.celsius.value,
-            let relativeHumidity = self.humidity.value else {
+
+    var unitHumidity: Humidity? {
+        guard let celsius = celsius.value,
+              let relativeHumidity = humidity.value
+        else {
             return nil
         }
         return Humidity(relative: relativeHumidity,
                         temperature: Temperature(value: celsius, unit: .celsius))
     }
-    public var unitPressure: Pressure? {
-        guard let pressure = self.pressure.value else {
+
+    var unitPressure: Pressure? {
+        guard let pressure = pressure.value else {
             return nil
         }
         return Pressure(value: pressure,
                         unit: .hectopascals)
     }
-    public var acceleration: Acceleration? {
-        guard let accelerationX = self.accelerationX.value,
-            let accelerationY = self.accelerationY.value,
-            let accelerationZ = self.accelerationZ.value else {
+
+    var acceleration: Acceleration? {
+        guard let accelerationX = accelerationX.value,
+              let accelerationY = accelerationY.value,
+              let accelerationZ = accelerationZ.value
+        else {
             return nil
         }
         return Acceleration(x:
             AccelerationMeasurement(value: accelerationX,
                                     unit: .metersPerSecondSquared),
-                            y:
+            y:
             AccelerationMeasurement(value: accelerationY,
                                     unit: .metersPerSecondSquared),
-                            z:
+            z:
             AccelerationMeasurement(value: accelerationZ,
-                                    unit: .metersPerSecondSquared)
-        )
+                                    unit: .metersPerSecondSquared))
     }
-    public var unitVoltage: Voltage? {
-        guard let voltage = self.voltage.value else { return nil }
+
+    var unitVoltage: Voltage? {
+        guard let voltage = voltage.value else { return nil }
         return Voltage(value: voltage, unit: .volts)
     }
-    public var measurement: RuuviMeasurement {
-        return RuuviMeasurement(
+
+    var measurement: RuuviMeasurement {
+        RuuviMeasurement(
             luid: ruuviTag?.luid,
             macId: ruuviTag?.macId,
             measurementSequenceNumber: measurementSequenceNumber.value,

@@ -1,7 +1,7 @@
 import UIKit
 
 class MenuTableInitializer: NSObject {
-    @IBOutlet weak var viewController: MenuTableViewController!
+    @IBOutlet var viewController: MenuTableViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

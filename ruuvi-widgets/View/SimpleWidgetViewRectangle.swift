@@ -19,11 +19,11 @@ struct SimpleWidgetViewRectangle: View {
                     Text(viewModel.getValue(from: entry.record,
                                             settings: entry.settings,
                                             config: entry.config))
-                    .environment(\.locale, viewModel.locale())
-                    .foregroundColor(.bodyTextColor)
-                    .font(.custom(Constants.oswaldBold.rawValue,
-                                  size: 36,
-                                  relativeTo: .title))
+                        .environment(\.locale, viewModel.locale())
+                        .foregroundColor(.bodyTextColor)
+                        .font(.custom(Constants.oswaldBold.rawValue,
+                                      size: 36,
+                                      relativeTo: .title))
                     Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                         .foregroundColor(Color.unitTextColor)
                         .font(.custom(Constants.oswaldExtraLight.rawValue,
@@ -33,11 +33,11 @@ struct SimpleWidgetViewRectangle: View {
                     Spacer()
                 }
                 .padding(EdgeInsets(top: -20,
-                                     leading: 4,
-                                     bottom: 8,
-                                     trailing: 4))
+                                    leading: 4,
+                                    bottom: 8,
+                                    trailing: 4))
             }
         }.edgesIgnoringSafeArea(.all)
-        .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
+            .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
     }
 }

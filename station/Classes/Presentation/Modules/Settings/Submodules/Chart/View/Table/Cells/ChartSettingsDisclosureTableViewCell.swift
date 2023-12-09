@@ -1,4 +1,3 @@
 import UIKit
 
-class ChartSettingsDisclosureTableViewCell: UITableViewCell {
-}
+class ChartSettingsDisclosureTableViewCell: UITableViewCell {}

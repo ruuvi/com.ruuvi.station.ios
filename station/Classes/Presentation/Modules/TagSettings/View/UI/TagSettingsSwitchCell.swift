@@ -5,7 +5,6 @@ protocol TagSettingsSwitchCellDelegate: NSObjectProtocol {
 }
 
 class TagSettingsSwitchCell: UITableViewCell {
-
     weak var delegate: TagSettingsSwitchCellDelegate?
 
     private lazy var titleLabel: UILabel = {
@@ -33,13 +32,15 @@ class TagSettingsSwitchCell: UITableViewCell {
     lazy var seprator = UIView(color: RuuviColor.ruuviLineColor)
 
     override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+                  reuseIdentifier: String?)
+    {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -92,13 +93,12 @@ class TagSettingsSwitchCell: UITableViewCell {
 // MARK: - SETTERS
 
 extension TagSettingsSwitchCell {
-
     func configure(title: String?) {
         titleLabel.text = title
     }
 
     func configureSwitch(value: Bool?) {
-        if let value = value {
+        if let value {
             statusSwitch.setOn(value, animated: false)
         } else {
             statusSwitch.setOn(false, animated: false)

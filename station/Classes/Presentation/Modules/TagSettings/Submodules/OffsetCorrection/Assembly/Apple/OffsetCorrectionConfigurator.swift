@@ -1,10 +1,10 @@
-import UIKit
 import BTKit
-import RuuviService
-import RuuviReactor
 import RuuviLocal
-import RuuviStorage
 import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
+import UIKit
 
 class OffsetCorrectionConfigurator {
     func configure(view: OffsetCorrectionAppleViewController) {

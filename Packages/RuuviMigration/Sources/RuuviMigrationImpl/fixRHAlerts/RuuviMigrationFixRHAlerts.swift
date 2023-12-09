@@ -1,11 +1,11 @@
 import Foundation
-import UIKit
-import RuuviLocal
-import RuuviPool
 import RuuviContext
-import RuuviStorage
-import RuuviService
+import RuuviLocal
 import RuuviMigration
+import RuuviPool
+import RuuviService
+import RuuviStorage
+import UIKit
 
 final class RuuviMigrationFixRHAlerts: RuuviMigration {
     private let ruuviStorage: RuuviStorage
@@ -28,7 +28,8 @@ final class RuuviMigrationFixRHAlerts: RuuviMigration {
                 .on(success: { sensors in
                     sensors.forEach { sensor in
                         if let lower = self.ruuviAlertService.lowerRelativeHumidity(for: sensor),
-                           lower > 1.0 {
+                           lower > 1.0
+                        {
                             self.ruuviAlertService.setLower(
                                 relativeHumidity: lower / 100.0,
                                 ruuviTag: sensor

@@ -1,5 +1,5 @@
-import Foundation
 import BTKit
+import Foundation
 import RuuviOntology
 
 protocol DashboardViewInput: ViewInput {

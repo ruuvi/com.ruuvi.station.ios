@@ -1,5 +1,5 @@
-import UIKit
 import RuuviOntology
+import UIKit
 
 protocol BackgroundSelectionViewOutput {
     func viewDidLoad()

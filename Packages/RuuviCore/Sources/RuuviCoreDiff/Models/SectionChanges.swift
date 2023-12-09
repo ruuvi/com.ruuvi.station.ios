@@ -6,15 +6,16 @@ public class SectionChanges {
     public var updates = CellChanges()
 
     public var inserts: IndexSet {
-        return IndexSet(insertsInts)
+        IndexSet(insertsInts)
     }
+
     public var deletes: IndexSet {
-        return IndexSet(deletesInts)
+        IndexSet(deletesInts)
     }
 
     public init(inserts: [Int] = [], deletes: [Int] = [], updates: CellChanges = CellChanges()) {
-        self.insertsInts = inserts
-        self.deletesInts = deletes
+        insertsInts = inserts
+        deletesInts = deletes
         self.updates = updates
     }
 }

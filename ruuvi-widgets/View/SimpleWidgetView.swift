@@ -34,7 +34,8 @@ struct SimpleWidgetView: View {
                             .font(.custom(
                                 Constants.muliBold.rawValue,
                                 size: canShowBackground ? 16 : 22,
-                                relativeTo: .headline)
+                                relativeTo: .headline
+                            )
                             )
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
@@ -43,8 +44,8 @@ struct SimpleWidgetView: View {
 
                     HStack(spacing: 2) {
                         Text(viewModel.getValue(from: entry.record,
-                                      settings: entry.settings,
-                                      config: entry.config))
+                                                settings: entry.settings,
+                                                config: entry.config))
                             .environment(\.locale, viewModel.locale())
                             .foregroundColor(.bodyTextColor)
                             .font(.custom(Constants.oswaldBold.rawValue,
@@ -69,9 +70,9 @@ struct SimpleWidgetView: View {
 extension EnvironmentValues {
     var canShowWidgetContainerBackground: Bool {
         if #available(iOSApplicationExtension 15.0, *) {
-            return self.showsWidgetContainerBackground
+            self.showsWidgetContainerBackground
         } else {
-            return false
+            false
         }
     }
 }

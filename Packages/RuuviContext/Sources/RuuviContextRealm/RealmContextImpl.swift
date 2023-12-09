@@ -1,10 +1,10 @@
-import RuuviContext
 import RealmSwift
+import RuuviContext
 
 class RealmContextImpl: RealmContext {
     var main: Realm = try! Realm()
     var bg: Realm!
-    var bgWorker: Worker = Worker()
+    var bgWorker: Worker = .init()
 
     init() {
         bgWorker.enqueue {

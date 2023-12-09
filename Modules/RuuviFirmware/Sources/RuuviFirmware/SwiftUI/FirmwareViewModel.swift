@@ -15,7 +15,7 @@ final class FirmwareViewModel: ObservableObject {
     private var currentFirmware: String?
     private let interactor: FirmwareInteractor
     private var bag = Set<AnyCancellable>()
-    
+
     init(
         uuid: String,
         currentFirmware: String?,
@@ -29,14 +29,14 @@ final class FirmwareViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                self.whenLoading(),
-                self.whenServing(),
-                self.whenReading(),
-                self.whenDownloading(),
-                self.whenListening(),
-                self.whenReadyToUpdate(),
-                self.whenFlashing(),
-                self.userInput(input: input.eraseToAnyPublisher())
+                whenLoading(),
+                whenServing(),
+                whenReading(),
+                whenDownloading(),
+                whenListening(),
+                whenReadyToUpdate(),
+                whenFlashing(),
+                userInput(input: input.eraseToAnyPublisher()),
             ]
         )
         .assign(to: \.state, on: self)
@@ -46,17 +46,18 @@ final class FirmwareViewModel: ObservableObject {
     func send(event: Event) {
         input.send(event)
     }
-    
+
     func finish() {
         output?.firmwareUpgradeDidFinishSuccessfully()
     }
 }
 
 // MARK: - Feedbacks
+
 extension FirmwareViewModel {
     func userInput(input: AnyPublisher<Event, Never>) -> Feedback<State, Event> {
         Feedback { _ in
-            return input
+            input
         }
     }
 
@@ -65,25 +66,25 @@ extension FirmwareViewModel {
             guard case .loading = state, let self else {
                 return Empty().eraseToAnyPublisher()
             }
-            return self.interactor.loadLatestGitHubRelease()
+            return interactor.loadLatestGitHubRelease()
                 .receive(on: RunLoop.main)
                 .map(Event.onLoaded)
                 .catch { Just(Event.onDidFailLoading($0)) }
                 .eraseToAnyPublisher()
         }
     }
-    
+
     func whenServing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case .serving = state, let self else {
                 return Empty().eraseToAnyPublisher()
             }
-            if let currentFirmware = self.currentFirmware {
+            if let currentFirmware {
                 return Just(CurrentRelease(version: currentFirmware))
                     .map(Event.onServed)
                     .eraseToAnyPublisher()
             } else {
-                return self.interactor.serveCurrentRelease(uuid: self.uuid)
+                return interactor.serveCurrentRelease(uuid: uuid)
                     .receive(on: RunLoop.main)
                     .map(Event.onServed)
                     .catch { _ in Just(Event.onServed(nil)) }
@@ -91,17 +92,18 @@ extension FirmwareViewModel {
             }
         }
     }
-    
+
     func whenReading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .reading(latestRelease, currentRelease) = state,
-                  let sSelf = self else {
+                  let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.read(release: latestRelease)
                 .receive(on: RunLoop.main)
                 .map { tuple in
-                    return Event.onRead(
+                    Event.onRead(
                         latestRelease,
                         currentRelease,
                         appUrl: tuple.appUrl,
@@ -112,38 +114,39 @@ extension FirmwareViewModel {
                 .eraseToAnyPublisher()
         }
     }
-    
+
     func whenDownloading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .downloading(latestRelease, currentRelease) = state, let self else {
                 return Empty().eraseToAnyPublisher()
             }
-            return self.interactor.download(release: latestRelease)
+            return interactor.download(release: latestRelease)
                 .receive(on: RunLoop.main)
-                .compactMap({ [weak self] response in
+                .compactMap { [weak self] response in
                     switch response {
                     case let .response(appUrl, fullUrl):
                         return Event.onDownloaded(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
-                    case .progress(let progress):
+                    case let .progress(progress):
                         self?.downloadProgress = progress.fractionCompleted
                         return nil
                     }
-                })
+                }
                 .catch { Just(Event.onDidFailDownloading($0)) }
                 .eraseToAnyPublisher()
         }
     }
-    
+
     func whenListening() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .listening(latestRelease, currentRelease, appUrl, fullUrl) = state,
-                  let sSelf = self else {
+                  let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.listen()
                 .receive(on: RunLoop.main)
                 .map { uuid in
-                    return Event.onHeardRuuviBootDevice(
+                    Event.onHeardRuuviBootDevice(
                         latestRelease,
                         currentRelease,
                         uuid: uuid,
@@ -154,17 +157,18 @@ extension FirmwareViewModel {
                 .eraseToAnyPublisher()
         }
     }
-    
+
     func whenReadyToUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl) = state,
-                  let sSelf = self else {
+                  let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.observeLost(uuid: uuid)
                 .receive(on: RunLoop.main)
                 .map { uuid in
-                    return Event.onLostRuuviBootDevice(
+                    Event.onLostRuuviBootDevice(
                         latestRelease,
                         currentRelease,
                         uuid: uuid,
@@ -175,15 +179,15 @@ extension FirmwareViewModel {
                 .eraseToAnyPublisher()
         }
     }
-    
+
     func whenFlashing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .flashing(
-                    latestRelease,
-                    currentRelease,
-                    uuid,
-                    appUrl,
-                    fullUrl
+                latestRelease,
+                currentRelease,
+                uuid,
+                appUrl,
+                fullUrl
             ) = state, let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
@@ -195,17 +199,17 @@ extension FirmwareViewModel {
                 fullUrl: fullUrl
             )
             .receive(on: RunLoop.main)
-            .compactMap({ [weak sSelf] response in
+            .compactMap { [weak sSelf] response in
                 switch response {
                 case .done:
                     return Event.onSuccessfullyFlashedFirmware(latestRelease)
-                case .progress(let percentage):
+                case let .progress(percentage):
                     sSelf?.flashProgress = percentage
                     return nil
                 case .log:
                     return nil
                 }
-            })
+            }
             .catch { Just(Event.onDidFailFlashingFirmware($0)) }
             .eraseToAnyPublisher()
         }
@@ -302,54 +306,54 @@ extension FirmwareViewModel {
         case .idle:
             switch event {
             case .onAppear:
-                return .loading
+                .loading
             default:
-                return state
+                state
             }
         case .loading:
             switch event {
             case let .onDidFailLoading(error):
-                return .error(error)
+                .error(error)
             case let .onLoaded(latestRelease):
-                return .loaded(latestRelease)
+                .loaded(latestRelease)
             default:
-                return state
+                state
             }
         case let .loaded(latestRelease):
-            return .serving(latestRelease)
+            .serving(latestRelease)
         case let .serving(latestRelease):
             switch event {
             case let .onServed(currentRelease):
-                return .checking(latestRelease, currentRelease)
+                .checking(latestRelease, currentRelease)
             default:
-                return state
+                state
             }
         case let .checking(latestRelease, currentRelease):
             if isRecommendedToUpdate(
                 latestRelease: latestRelease,
                 currentRelease: currentRelease
             ) {
-                return .isAbleToUpgrade(latestRelease, currentRelease)
+                .isAbleToUpgrade(latestRelease, currentRelease)
             } else {
-                return .noNeedToUpgrade(latestRelease, currentRelease)
+                .noNeedToUpgrade(latestRelease, currentRelease)
             }
         case .noNeedToUpgrade:
-            return state
+            state
         case let .isAbleToUpgrade(latestRelease, currentRelease):
-            return .reading(latestRelease, currentRelease)
+            .reading(latestRelease, currentRelease)
         case .reading:
             switch event {
             case let .onRead(latestRelease, currentRelease, appUrl, fullUrl):
-                return .listening(
+                .listening(
                     latestRelease,
                     currentRelease,
                     appUrl: appUrl,
                     fullUrl: fullUrl
                 )
             case let .onDidFailReading(latestRelease, currentRelease, _):
-                return .downloading(latestRelease, currentRelease)
+                .downloading(latestRelease, currentRelease)
             default:
-                return state
+                state
             }
         case .downloading:
             switch event {
@@ -359,52 +363,52 @@ extension FirmwareViewModel {
                 appUrl,
                 fullUrl
             ):
-                return .listening(
+                .listening(
                     latestRelease,
                     currentRelease,
                     appUrl: appUrl,
                     fullUrl: fullUrl
                 )
             default:
-                return state
+                state
             }
         case .listening:
             switch event {
             case let .onHeardRuuviBootDevice(latestRelease, currentRelease, uuid, appUrl, fullUrl):
-                return .readyToUpdate(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
+                .readyToUpdate(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
             default:
-                return state
+                state
             }
         case .readyToUpdate:
             switch event {
             case let .onLostRuuviBootDevice(latestRelease, currentRelease, _, appUrl, fullUrl):
-                return .listening(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
+                .listening(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
             case let .onUserDidConfirmToFlash(latestRelease, currentRelease, uuid, appUrl, fullUrl):
-                return .flashing(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
+                .flashing(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
             default:
-                return state
+                state
             }
         case .flashing:
             switch event {
-            case .onSuccessfullyFlashedFirmware(let latestRelease):
-                return .successfulyFlashed(latestRelease)
-            case .onDidFailFlashingFirmware(let error):
-                return .error(error)
+            case let .onSuccessfullyFlashedFirmware(latestRelease):
+                .successfulyFlashed(latestRelease)
+            case let .onDidFailFlashingFirmware(error):
+                .error(error)
             default:
-                return state
+                state
             }
         case .successfulyFlashed:
-            return state
+            state
         case .error:
-            return state
+            state
         }
     }
-    
+
     static func isRecommendedToUpdate(
         latestRelease: GitHubRelease,
         currentRelease: CurrentRelease?
     ) -> Bool {
-        guard let currentRelease = currentRelease else { return true }
+        guard let currentRelease else { return true }
         return !currentRelease.version.contains(latestRelease.version)
     }
 }

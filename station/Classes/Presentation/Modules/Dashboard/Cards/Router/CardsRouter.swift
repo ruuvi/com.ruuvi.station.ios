@@ -1,8 +1,8 @@
-import LightRoute
 import Foundation
-import UIKit
-import RuuviOntology
+import LightRoute
 import RuuviLocal
+import RuuviOntology
+import UIKit
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController?
@@ -17,7 +17,8 @@ class CardsRouter: NSObject, CardsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          latestMeasurement: RuuviTagSensorRecord?,
                          sensorSettings: SensorSettings?,
-                         output: TagSettingsModuleOutput) {
+                         output: TagSettingsModuleOutput)
+    {
         let factory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
         let module = factory.create()
         transitionHandler?
@@ -29,15 +30,15 @@ class CardsRouter: NSObject, CardsRouterInput {
         if let presenter = module.output as? TagSettingsModuleInput {
             presenter.configure(output: output)
             presenter.configure(ruuviTag: ruuviTag,
-                             latestMeasurement: latestMeasurement,
-                             sensorSettings: sensorSettings)
+                                latestMeasurement: latestMeasurement,
+                                sensorSettings: sensorSettings)
         }
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
-        self.dfuModule = module
+        dfuModule = module
         transitionHandler?
             .navigationController?
             .pushViewController(
@@ -45,7 +46,6 @@ class CardsRouter: NSObject, CardsRouterInput {
                 animated: true
             )
     }
-
 }
 
 extension CardsRouter: DiscoverRouterDelegate {
@@ -55,7 +55,7 @@ extension CardsRouter: DiscoverRouterDelegate {
 
     func discoverRouterWantsCloseWithRuuviTagNavigation(
         _ router: DiscoverRouter,
-        ruuviTag: RuuviTagSensor
+        ruuviTag _: RuuviTagSensor
     ) {
         router.viewController.dismiss(animated: true)
     }

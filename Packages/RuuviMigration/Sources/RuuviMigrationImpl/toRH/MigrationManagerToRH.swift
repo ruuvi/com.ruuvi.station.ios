@@ -1,8 +1,8 @@
 import Foundation
-import RuuviStorage
+import RuuviMigration
 import RuuviOntology
 import RuuviService
-import RuuviMigration
+import RuuviStorage
 
 final class MigrationManagerToRH: RuuviMigration {
     private let ruuviStorage: RuuviStorage
@@ -16,7 +16,7 @@ final class MigrationManagerToRH: RuuviMigration {
         self.ruuviAlertService = ruuviAlertService
     }
 
-    private let queue: DispatchQueue = DispatchQueue(label: "MigrationManagerToRH", qos: .utility)
+    private let queue: DispatchQueue = .init(label: "MigrationManagerToRH", qos: .utility)
     private let migratedUdKey = "MigrationManagerToRH.migrated"
 
     func migrateIfNeeded() {
@@ -24,25 +24,28 @@ final class MigrationManagerToRH: RuuviMigration {
 
         fetchRuuviSensors { tuples in
             self.queue.async {
-                tuples.forEach({ tuple in
+                tuples.forEach { tuple in
                     let sensor = tuple.0
                     let temperature = tuple.1
                     if let lower = self.ruuviAlertService.lowerHumidity(for: sensor),
                        let upper = self.ruuviAlertService.upperHumidity(for: sensor),
-                       let temperature = temperature {
+                       let temperature
+                    {
                         let humidityType: AlertType = .humidity(lower: lower, upper: upper)
                         if self.ruuviAlertService.isOn(type: humidityType, for: sensor) {
                             self.ruuviAlertService.register(
                                 type: .relativeHumidity(
                                     lower: lower.converted(to: .relative(temperature: temperature)).value,
-                                    upper: upper.converted(to: .relative(temperature: temperature)).value),
-                                ruuviTag: sensor)
+                                    upper: upper.converted(to: .relative(temperature: temperature)).value
+                                ),
+                                ruuviTag: sensor
+                            )
                         }
                     }
                     if let description = self.ruuviAlertService.humidityDescription(for: sensor) {
                         self.ruuviAlertService.setRelativeHumidity(description: description, ruuviTag: sensor)
                     }
-                })
+                }
             }
         }
 
@@ -54,14 +57,14 @@ final class MigrationManagerToRH: RuuviMigration {
             let group = DispatchGroup()
             group.enter()
             var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: {sensors in
-                sensors.forEach({ sensor in
+            self.ruuviStorage.readAll().on(success: { sensors in
+                sensors.forEach { sensor in
                     group.enter()
                     self.fetchRecord(for: sensor) {
                         result.append($0)
                         group.leave()
                     }
-                })
+                }
                 group.leave()
             }, failure: { _ in
                 group.leave()

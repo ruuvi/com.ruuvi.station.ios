@@ -12,23 +12,22 @@ public enum WidgetSensorEnum: Int {
 }
 
 extension WidgetSensorEnum {
-
     func unit(from settings: MeasurementServiceSettings) -> String {
         switch self {
         case .temperature:
-            return settings.temperatureUnit.symbol
+            settings.temperatureUnit.symbol
         case .humidity:
-            return settings.humidityUnit.symbol
+            settings.humidityUnit.symbol
         case .pressure:
-            return settings.pressureUnit.symbol
+            settings.pressureUnit.symbol
         case .movement_counter:
-            return "Cards.Movements.title".localized
+            "Cards.Movements.title".localized
         case .battery_voltage:
-            return "v"
+            "v"
         case .acceleration_x,
-                .acceleration_y,
-                .acceleration_z:
-            return "g"
+             .acceleration_y,
+             .acceleration_z:
+            "g"
         }
     }
 }

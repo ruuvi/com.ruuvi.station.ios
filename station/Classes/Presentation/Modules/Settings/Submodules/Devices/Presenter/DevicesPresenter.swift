@@ -1,24 +1,24 @@
 import Foundation
-import RuuviOntology
-import RuuviService
-import RuuviPresenters
 import RuuviLocal
+import RuuviOntology
+import RuuviPresenters
+import RuuviService
 import UIKit
 
 final class DevicesPresenter: DevicesModuleInput {
     var interactor: DevicesInteractorInput!
 
     var viewController: UIViewController {
-        if let view = self.weakView {
+        if let view = weakView {
             return view
         } else {
             let view = DevicesTableViewController()
             view.output = self
-            self.weakView = view
+            weakView = view
             return view
         }
-
     }
+
     private weak var weakView: UIViewController?
 
     private var viewModels: [DevicesViewModel] = [] {
@@ -48,13 +48,13 @@ extension DevicesPresenter: DevicesViewOutput {
 
 extension DevicesPresenter: DevicesInteractorOutput {
     func interactorDidUpdate(tokens: [RuuviCloudPNToken]) {
-        let viewModels = tokens.compactMap({ (token) -> DevicesViewModel in
+        let viewModels = tokens.compactMap { token -> DevicesViewModel in
             let viewModel = DevicesViewModel()
             viewModel.id.value = token.id
             viewModel.lastAccessed.value = token.lastAccessed
             viewModel.name.value = token.name
             return viewModel
-        })
+        }
         self.viewModels = viewModels
     }
 

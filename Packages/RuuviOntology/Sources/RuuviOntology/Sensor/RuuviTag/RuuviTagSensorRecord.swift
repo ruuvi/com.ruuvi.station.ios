@@ -33,35 +33,37 @@ public protocol RuuviTagSensorRecord: PhysicalSensor {
     var pressureOffset: Double { get }
 }
 
-extension RuuviTagSensorRecord {
-    public var id: String {
-        if let macId = macId,
-            !macId.value.isEmpty {
-            return macId.value + "\(date.timeIntervalSince1970)"
-        } else if let luid = luid {
-            return luid.value + "\(date.timeIntervalSince1970)"
+public extension RuuviTagSensorRecord {
+    var id: String {
+        if let macId,
+           !macId.value.isEmpty
+        {
+            macId.value + "\(date.timeIntervalSince1970)"
+        } else if let luid {
+            luid.value + "\(date.timeIntervalSince1970)"
         } else {
             fatalError()
         }
     }
 
-    public var uuid: String {
-        if let macId = macId,
-            !macId.value.isEmpty {
-            return macId.value
-        } else if let luid = luid {
-            return luid.value
+    var uuid: String {
+        if let macId,
+           !macId.value.isEmpty
+        {
+            macId.value
+        } else if let luid {
+            luid.value
         } else {
             fatalError()
         }
     }
 
-    public var any: AnyRuuviTagSensorRecord {
-        return AnyRuuviTagSensorRecord(object: self)
+    var any: AnyRuuviTagSensorRecord {
+        AnyRuuviTagSensorRecord(object: self)
     }
 
-    public func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(
+    func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
+        RuuviTagSensorRecordStruct(
             luid: luid,
             date: date,
             source: source,
@@ -81,8 +83,8 @@ extension RuuviTagSensorRecord {
         )
     }
 
-    public func with(luid: LocalIdentifier) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(
+    func with(luid: LocalIdentifier) -> RuuviTagSensorRecord {
+        RuuviTagSensorRecordStruct(
             luid: luid,
             date: date,
             source: source,
@@ -103,9 +105,9 @@ extension RuuviTagSensorRecord {
     }
 }
 
-extension RuuviTagSensorRecord {
-    public func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(
+public extension RuuviTagSensorRecord {
+    func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
+        RuuviTagSensorRecordStruct(
             luid: luid,
             date: date,
             source: source,
@@ -125,8 +127,8 @@ extension RuuviTagSensorRecord {
         )
     }
 
-    public func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(
+    func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
+        RuuviTagSensorRecordStruct(
             luid: luid,
             date: date,
             source: source,
@@ -220,71 +222,71 @@ public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable
     }
 
     public var luid: LocalIdentifier? {
-        return object.luid
+        object.luid
     }
 
     public var date: Date {
-        return object.date
+        object.date
     }
 
     public var source: RuuviTagSensorRecordSource {
-        return object.source
+        object.source
     }
 
     public var macId: MACIdentifier? {
-        return object.macId
+        object.macId
     }
 
     public var rssi: Int? {
-        return object.rssi
+        object.rssi
     }
 
     public var temperature: Temperature? {
-        return object.temperature
+        object.temperature
     }
 
     public var humidity: Humidity? {
-        return object.humidity
+        object.humidity
     }
 
     public var pressure: Pressure? {
-        return object.pressure
+        object.pressure
     }
 
     public var acceleration: Acceleration? {
-        return object.acceleration
+        object.acceleration
     }
 
     public var voltage: Voltage? {
-        return object.voltage
+        object.voltage
     }
 
     public var movementCounter: Int? {
-        return object.movementCounter
+        object.movementCounter
     }
 
     public var measurementSequenceNumber: Int? {
-        return object.measurementSequenceNumber
+        object.measurementSequenceNumber
     }
 
     public var txPower: Int? {
-        return object.txPower
+        object.txPower
     }
 
     public var temperatureOffset: Double {
-        return object.temperatureOffset
+        object.temperatureOffset
     }
 
     public var humidityOffset: Double {
-        return object.humidityOffset
+        object.humidityOffset
     }
 
     public var pressureOffset: Double {
-        return object.pressureOffset
+        object.pressureOffset
     }
 
     public static func == (lhs: AnyRuuviTagSensorRecord, rhs: AnyRuuviTagSensorRecord) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {

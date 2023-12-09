@@ -1,13 +1,13 @@
-import UIKit
-import RuuviOntology
 import RuuviLocal
 import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 class UnitSettingsTableViewController: UITableViewController {
     var output: UnitSettingsViewOutput!
     var settings: RuuviLocalSettings!
 
-    @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet var descriptionTextView: UITextView!
 
     var viewModel: UnitSettingsViewModel? {
         didSet {
@@ -55,6 +55,7 @@ class UnitSettingsTableViewController: UITableViewController {
 }
 
 // MARK: - SelectionViewInput
+
 extension UnitSettingsTableViewController: UnitSettingsViewInput {
     func localize() {
         tableView.reloadData()
@@ -62,6 +63,7 @@ extension UnitSettingsTableViewController: UnitSettingsViewInput {
 }
 
 // MARK: - View lifecycle
+
 extension UnitSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,9 +73,10 @@ extension UnitSettingsTableViewController {
 }
 
 // MARK: - UITableViewDataSource
+
 extension UnitSettingsTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        2
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -129,14 +132,16 @@ extension UnitSettingsTableViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension UnitSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        output.viewDidSelect(type: indexPath.row == 0 ? .unit :.accuracy)
+        output.viewDidSelect(type: indexPath.row == 0 ? .unit : .accuracy)
     }
 }
 
 // MARK: - Update UI
+
 extension UnitSettingsTableViewController {
     private func updateUI() {
         title = viewModel?.title

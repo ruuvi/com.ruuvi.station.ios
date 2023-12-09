@@ -1,9 +1,8 @@
-import RuuviLocalization
 import Foundation
+import RuuviLocalization
 import UIKit
 
 class SignInViewController: UIViewController {
-
     // Configuration
     var output: SignInViewOutput!
 
@@ -61,10 +60,10 @@ class SignInViewController: UIViewController {
 
     // ---------------------
     private var shouldAvoidVerifying: Bool = false
-
 }
 
 // MARK: - VIEW LIFE CYCLE
+
 extension SignInViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,12 +82,12 @@ extension SignInViewController {
     }
 }
 
-extension SignInViewController {
-    @objc fileprivate func handleBackButtonTap() {
+private extension SignInViewController {
+    @objc func handleBackButtonTap() {
         output.viewDidTapBack()
     }
 
-    @objc fileprivate func handleUseWithoutAccountTap() {
+    @objc func handleUseWithoutAccountTap() {
         output.viewDidTapUseWithoutAccount()
     }
 
@@ -97,20 +96,20 @@ extension SignInViewController {
             return
         }
 
-        view.bind(viewModel.showVerficationScreen) { [weak self] (_, verificationPage) in
+        view.bind(viewModel.showVerficationScreen) { [weak self] _, verificationPage in
             let showVerificationPage = GlobalHelpers.getBool(from: verificationPage)
             self?.signInVerifyView.alpha = showVerificationPage ? 1 : 0
             self?.signInView.alpha = showVerificationPage ? 0 : 1
             self?.useWithoutAccountButton.alpha = showVerificationPage ? 0 : 1
         }
 
-        signInView.bind(viewModel.inputText) { (view, text) in
+        signInView.bind(viewModel.inputText) { view, text in
             if view.enteredEmail() != text {
                 view.populateEmail(from: text)
             }
         }
 
-        signInVerifyView.bind(viewModel.inputText) { (view, text) in
+        signInVerifyView.bind(viewModel.inputText) { view, text in
             view.populate(from: text)
         }
     }
@@ -144,7 +143,6 @@ extension SignInViewController: SignInViewInput {
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
-
     }
 }
 
@@ -157,7 +155,7 @@ extension SignInViewController: SignInViewDelegate {
 }
 
 extension SignInViewController: SignInVerifyViewDelegate {
-    func didFinishTypingCode(code: String, sender: SignInVerifyView) {
+    func didFinishTypingCode(code: String, sender _: SignInVerifyView) {
         if !shouldAvoidVerifying {
             output.viewDidTapEnterCodeManually(code: code)
         }
@@ -165,6 +163,7 @@ extension SignInViewController: SignInVerifyViewDelegate {
 }
 
 // MARK: - PRIVATE UI SETUP
+
 extension SignInViewController {
     private func setUpUI() {
         setUpNavBarView()
@@ -189,16 +188,16 @@ extension SignInViewController {
         scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
     }
 
-    fileprivate func setUpNavBarView() {
+    private func setUpNavBarView() {
         navigationItem.leftBarButtonItem = backButton
     }
 
     private func setUpSignInView() {
         scrollView.addSubview(signInView)
         signInView.anchor(top: scrollView.topAnchor,
-                         leading: nil,
-                         bottom: nil,
-                         trailing: nil)
+                          leading: nil,
+                          bottom: nil,
+                          trailing: nil)
         signInView.centerXInSuperview()
         signInView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         signInView.alpha = 1
@@ -213,7 +212,8 @@ extension SignInViewController {
                                 trailing: scrollView.trailingAnchor,
                                 size: .init(
                                     width: 0,
-                                            height: view.bounds.height))
+                                    height: view.bounds.height
+                                ))
         signInVerifyView.centerXInSuperview()
         signInVerifyView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         signInVerifyView.alpha = 0

@@ -15,9 +15,9 @@ public struct UserApiSensorRecord: Decodable {
     public let data: String?
 }
 
-extension UserApiSensorRecord {
-    public var date: Date {
-        guard let timestamp = timestamp else {
+public extension UserApiSensorRecord {
+    var date: Date {
+        guard let timestamp else {
             return Date()
         }
         return Date(timeIntervalSince1970: timestamp)

@@ -1,11 +1,11 @@
 import Foundation
 import Future
-import RuuviUser
-import RuuviStorage
-import RuuviPool
 import RuuviLocal
 import RuuviOntology
+import RuuviPool
 import RuuviService
+import RuuviStorage
+import RuuviUser
 
 public final class RuuviServiceAuthImpl: RuuviServiceAuth {
     private let ruuviUser: RuuviUser
@@ -44,7 +44,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     promise.succeed(value: true)
                     return
                 }
-                localSensors.filter({ $0.isClaimed || $0.isCloud }).forEach { sensor in
+                localSensors.filter { $0.isClaimed || $0.isCloud }.forEach { sensor in
                     let deleteSensorOperation = sSelf.pool.delete(sensor)
                     let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
                     let deleteLatestRecordOperation = sSelf.pool.deleteLast(sensor.id)
@@ -55,7 +55,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
                     sSelf.localSyncState.setSyncDate(nil)
                     sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
-                    AlertType.allCases.forEach { (type) in
+                    AlertType.allCases.forEach { type in
                         sSelf.alertService.remove(type: type, ruuviTag: sensor)
                     }
 

@@ -7,9 +7,9 @@ public enum RuuviAlertSound: String {
     public var fileName: String {
         switch self {
         case .systemDefault:
-            return "default"
+            "default"
         case .ruuviSpeak:
-            return "ruuvi_speak"
+            "ruuvi_speak"
         }
     }
 }

@@ -1,16 +1,16 @@
-import RuuviLocalization
 import Foundation
+import RuuviLocalization
 import RuuviPersistence
 
 extension RuuviPersistenceError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .grdb(let error):
-            return error.localizedDescription
-        case .realm(let error):
-            return error.localizedDescription
+        case let .grdb(error):
+            error.localizedDescription
+        case let .realm(error):
+            error.localizedDescription
         case .failedToFindRuuviTag:
-            return RuuviLocalization.RuuviPersistenceError.failedToFindRuuviTag
+            RuuviLocalization.RuuviPersistenceError.failedToFindRuuviTag
         }
     }
 }

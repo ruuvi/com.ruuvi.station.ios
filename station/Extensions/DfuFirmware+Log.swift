@@ -1,11 +1,11 @@
 import Foundation
-import RuuviLocalization
 import RuuviDFU
+import RuuviLocalization
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 extension DFUFirmware {

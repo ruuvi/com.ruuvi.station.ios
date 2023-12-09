@@ -15,15 +15,15 @@ class SettingsRouter: SettingsRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: DefaultsModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ module in
+            .then { module in
                 module.configure(output: output)
-            })
+            }
     }
 
     func openDevices() {
         let factory: DevicesModuleFactory = DevicesModuleFactoryImpl()
         let module = factory.create()
-        self.devicesModule = module
+        devicesModule = module
         transitionHandler
             .navigationController?
             .pushViewController(
@@ -37,9 +37,9 @@ class SettingsRouter: SettingsRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: HeartbeatModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ module in
+            .then { module in
                 module.configure()
-            })
+            }
     }
 
     func openChart() {
@@ -47,9 +47,9 @@ class SettingsRouter: SettingsRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: ChartSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ module in
+            .then { module in
                 module.configure()
-            })
+            }
     }
 
     func openFeatureToggles() {
@@ -69,15 +69,15 @@ class SettingsRouter: SettingsRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: UnitSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ module in
+            .then { module in
                 module.configure(viewModel: viewModel, output: output)
-            })
+            }
     }
 
     func openRuuviCloud() {
         let factory: RuuviCloudModuleFactory = RuuviCloudModuleFactoryImpl()
         let module = factory.create()
-        self.ruuviCloudModule = module
+        ruuviCloudModule = module
         transitionHandler
             .navigationController?
             .pushViewController(

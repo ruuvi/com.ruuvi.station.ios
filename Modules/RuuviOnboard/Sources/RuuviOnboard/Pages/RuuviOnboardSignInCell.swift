@@ -5,14 +5,14 @@ protocol RuuviOnboardSignInCellDelegate: NSObjectProtocol {
 }
 
 class RuuviOnboardSignInCell: UICollectionViewCell {
-
     weak var delegate: RuuviOnboardSignInCellDelegate?
 
     private lazy var beaverImageView: UIImageView = {
         let iv = UIImageView(
             image: UIImage.named(
-            RuuviAssets.beaver_sign_in,
-            for: Self.self),
+                RuuviAssets.beaver_sign_in,
+                for: Self.self
+            ),
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
@@ -54,21 +54,20 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension RuuviOnboardSignInCell {
-
-    fileprivate func setUpUI() {
-
+private extension RuuviOnboardSignInCell {
+    func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
         container.fillSuperview()
 
         let textStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel
+            titleLabel, subtitleLabel,
         ])
         textStack.axis = .vertical
         textStack.distribution = .fillProportionally
@@ -79,7 +78,7 @@ extension RuuviOnboardSignInCell {
                          leading: container.safeLeadingAnchor,
                          bottom: nil,
                          trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44+12, left: 16,
+                         padding: .init(top: 44 + 12, left: 16,
                                         bottom: 0, right: 16))
 
         container.addSubview(continueButton)
@@ -104,13 +103,13 @@ extension RuuviOnboardSignInCell {
                                leading: beaverContainerView.safeLeadingAnchor,
                                bottom: nil,
                                trailing: beaverContainerView.safeTrailingAnchor,
-                               size: .init(width: 0, height: self.bounds.height/2))
+                               size: .init(width: 0, height: bounds.height / 2))
         beaverImageView.centerYInSuperview()
     }
 }
 
-extension RuuviOnboardSignInCell {
-    @objc fileprivate func handleContinueTap() {
+private extension RuuviOnboardSignInCell {
+    @objc func handleContinueTap() {
         delegate?.didTapContinueButton(sender: self)
     }
 }

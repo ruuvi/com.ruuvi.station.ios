@@ -5,7 +5,6 @@ protocol RUAlertExpandButtonDelegate: NSObjectProtocol {
 }
 
 class RUAlertExpandButton: UIView {
-
     // Public
     weak var delegate: RUAlertExpandButtonDelegate?
 
@@ -23,12 +22,12 @@ class RUAlertExpandButton: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setUpUI()
+        setUpUI()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.setUpUI()
+        setUpUI()
     }
 }
 
@@ -61,7 +60,9 @@ extension RUAlertExpandButton {
         delegate?.didTapButton(sender: self, expanded: isExpanded)
     }
 }
+
 // MARK: - Public Setter
+
 extension RUAlertExpandButton {
     func toggle() {
         handleButtonTap()

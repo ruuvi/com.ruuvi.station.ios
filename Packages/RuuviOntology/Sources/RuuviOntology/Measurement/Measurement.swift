@@ -23,8 +23,8 @@ public struct Acceleration {
     }
 }
 
-extension Temperature {
-    public init?(_ value: Double?, unit: UnitTemperature = .celsius) {
+public extension Temperature {
+    init?(_ value: Double?, unit: UnitTemperature = .celsius) {
         if let temperature = value {
             self = Temperature(value: temperature, unit: unit)
         } else {
@@ -32,21 +32,21 @@ extension Temperature {
         }
     }
 
-    public func plus(sensorSettings: SensorSettings?) -> Temperature? {
-        return Temperature(
-            self.value + (sensorSettings?.temperatureOffset ?? 0), unit: self.unit
+    func plus(sensorSettings: SensorSettings?) -> Temperature? {
+        Temperature(
+            value + (sensorSettings?.temperatureOffset ?? 0), unit: unit
         )
     }
 
-    public func minus(value: Double?) -> Temperature? {
-        return Temperature(
-            self.value - (value ?? 0), unit: self.unit
+    func minus(value: Double?) -> Temperature? {
+        Temperature(
+            self.value - (value ?? 0), unit: unit
         )
     }
 }
 
-extension Pressure {
-    public init?(_ value: Double?, unit: UnitPressure = .hectopascals) {
+public extension Pressure {
+    init?(_ value: Double?, unit: UnitPressure = .hectopascals) {
         if let pressure = value {
             self = Pressure(value: pressure, unit: unit)
         } else {
@@ -54,38 +54,39 @@ extension Pressure {
         }
     }
 
-    public func plus(sensorSettings: SensorSettings?) -> Pressure? {
-        return Pressure(
-            self.value + (sensorSettings?.pressureOffset ?? 0), unit: self.unit
+    func plus(sensorSettings: SensorSettings?) -> Pressure? {
+        Pressure(
+            value + (sensorSettings?.pressureOffset ?? 0), unit: unit
         )
     }
 
-    public func minus(value: Double?) -> Pressure? {
-        return Pressure(
-            self.value - (value ?? 0), unit: self.unit
+    func minus(value: Double?) -> Pressure? {
+        Pressure(
+            self.value - (value ?? 0), unit: unit
         )
     }
 }
 
-extension Humidity {
-    public init?(relative value: Double?, temperature: Temperature?) {
+public extension Humidity {
+    init?(relative value: Double?, temperature: Temperature?) {
         if let relativeHumidity = value,
-            let temperature = temperature {
+           let temperature
+        {
             self = Humidity(value: relativeHumidity, unit: .relative(temperature: temperature))
         } else {
             return nil
         }
     }
 
-    public func plus(sensorSettings: SensorSettings?) -> Humidity? {
-        return Humidity(value: self.value + (sensorSettings?.humidityOffset ?? 0), unit: self.unit)
+    func plus(sensorSettings: SensorSettings?) -> Humidity? {
+        Humidity(value: value + (sensorSettings?.humidityOffset ?? 0), unit: unit)
     }
 
-    public func minus(value: Double?) -> Humidity? {
-        return Humidity(value: self.value - (value ?? 0), unit: self.unit)
+    func minus(value: Double?) -> Humidity? {
+        Humidity(value: self.value - (value ?? 0), unit: unit)
     }
 
-    public static var zeroAbsolute: Humidity {
-        return Humidity(value: 0, unit: .absolute)
+    static var zeroAbsolute: Humidity {
+        Humidity(value: 0, unit: .absolute)
     }
 }

@@ -1,20 +1,19 @@
-import Foundation
-import RuuviOntology
 import BTKit
-import RuuviStorage
-import RuuviReactor
+import Foundation
 import RuuviLocal
-import RuuviPool
-import RuuviService
 import RuuviNotifier
+import RuuviOntology
+import RuuviPool
 import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
 
 protocol TagChartsModuleFactory {
     func create() -> TagChartsViewController
 }
 
 final class TagChartsModuleFactoryImpl: TagChartsModuleFactory {
-
     func create() -> TagChartsViewController {
         let r = AppAssembly.shared.assembler.resolver
 

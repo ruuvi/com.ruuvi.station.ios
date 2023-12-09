@@ -1,15 +1,15 @@
 import Foundation
 import Future
-import RuuviOntology
-import RuuviStorage
 import RuuviCloud
-import RuuviPool
 import RuuviLocal
+import RuuviOntology
+import RuuviPool
 import RuuviService
+import RuuviStorage
 import RuuviUser
 
-extension Notification.Name {
-    public static let RuuviTagOwnershipCheckDidEnd = Notification.Name("RuuviTagOwnershipCheckDidEnd")
+public extension Notification.Name {
+    static let RuuviTagOwnershipCheckDidEnd = Notification.Name("RuuviTagOwnershipCheckDidEnd")
 }
 
 public enum RuuviTagOwnershipCheckResultKey: String {
@@ -132,7 +132,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                     sensor: sensor,
                     owner: owner,
                     macId: macId,
-                    promise: promise)
+                    promise: promise
+                )
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
@@ -204,7 +205,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
         if let macId = sensor.macId,
-           sensor.isCloud {
+           sensor.isCloud
+        {
             if sensor.isOwner {
                 unclaimOperation = unclaim(
                     sensor: sensor,
@@ -220,10 +222,10 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                     deleteRecordsOperation,
                     deleteLastRecordOperation])
             .on(success: { _ in
-                if let unclaimOperation = unclaimOperation {
+                if let unclaimOperation {
                     unclaimOperation.on()
                     promise.succeed(value: sensor.any)
-                } else if let unshareOperation = unshareOperation {
+                } else if let unshareOperation {
                     unshareOperation.on()
                     promise.succeed(value: sensor.any)
                 } else {

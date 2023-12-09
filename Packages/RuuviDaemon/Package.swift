@@ -9,19 +9,24 @@ let package = Package(
     products: [
         .library(
             name: "RuuviDaemon",
-            targets: ["RuuviDaemon"]),
+            targets: ["RuuviDaemon"]
+        ),
         .library(
             name: "RuuviDaemonCloudSync",
-            targets: ["RuuviDaemonCloudSync"]),
+            targets: ["RuuviDaemonCloudSync"]
+        ),
         .library(
             name: "RuuviDaemonOperation",
-            targets: ["RuuviDaemonOperation"]),
+            targets: ["RuuviDaemonOperation"]
+        ),
         .library(
             name: "RuuviDaemonBackground",
-            targets: ["RuuviDaemonBackground"]),
+            targets: ["RuuviDaemonBackground"]
+        ),
         .library(
             name: "RuuviDaemonRuuviTag",
-            targets: ["RuuviDaemonRuuviTag"]),
+            targets: ["RuuviDaemonRuuviTag"]
+        ),
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
@@ -33,7 +38,7 @@ let package = Package(
         .package(path: "../RuuviPersistence"),
         .package(path: "../RuuviNotifier"),
         .package(path: "../RuuviNotification"),
-        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3"))
+        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
     ],
     targets: [
         .target(
@@ -46,7 +51,7 @@ let package = Package(
                 "RuuviPool",
                 "RuuviPersistence",
                 "RuuviNotifier",
-                "BTKit"
+                "BTKit",
             ]
         ),
         .target(
@@ -54,7 +59,7 @@ let package = Package(
             dependencies: [
                 "RuuviDaemon",
                 "RuuviLocal",
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
@@ -69,7 +74,7 @@ let package = Package(
             name: "RuuviDaemonBackground",
             dependencies: [
                 "RuuviDaemon",
-                "RuuviDaemonOperation"
+                "RuuviDaemonOperation",
             ]
         ),
         .target(
@@ -77,11 +82,12 @@ let package = Package(
             dependencies: [
                 "RuuviDaemon",
                 "RuuviDaemonOperation",
-                "RuuviNotification"
+                "RuuviNotification",
             ]
         ),
         .testTarget(
             name: "RuuviDaemonTests",
-            dependencies: ["RuuviDaemon"])
+            dependencies: ["RuuviDaemon"]
+        ),
     ]
 )

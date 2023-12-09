@@ -1,5 +1,5 @@
-import UIKit
 import RuuviOntology
+import UIKit
 
 public protocol RuuviDiscover: AnyObject {
     var viewController: UIViewController { get }

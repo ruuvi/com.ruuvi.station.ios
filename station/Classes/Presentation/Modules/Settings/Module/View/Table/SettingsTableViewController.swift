@@ -1,55 +1,55 @@
 import RuuviLocalization
-import UIKit
 import RuuviOntology
+import UIKit
 
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
-    @IBOutlet weak var alertNotificationsCell: UITableViewCell!
-    @IBOutlet weak var alertNotificationsTitleLabel: UILabel!
+    @IBOutlet var alertNotificationsCell: UITableViewCell!
+    @IBOutlet var alertNotificationsTitleLabel: UILabel!
 
-    @IBOutlet weak var appearanceCell: UITableViewCell!
-    @IBOutlet weak var appearanceTitleLabel: UILabel!
+    @IBOutlet var appearanceCell: UITableViewCell!
+    @IBOutlet var appearanceTitleLabel: UILabel!
 
-    @IBOutlet weak var temperatureTitleLabel: UILabel!
-    @IBOutlet weak var temperatureCell: UITableViewCell!
+    @IBOutlet var temperatureTitleLabel: UILabel!
+    @IBOutlet var temperatureCell: UITableViewCell!
 
-    @IBOutlet weak var humidityTitleLabel: UILabel!
-    @IBOutlet weak var humidityCell: UITableViewCell!
+    @IBOutlet var humidityTitleLabel: UILabel!
+    @IBOutlet var humidityCell: UITableViewCell!
 
-    @IBOutlet weak var pressureTitleLabel: UILabel!
-    @IBOutlet weak var pressureCell: UITableViewCell!
+    @IBOutlet var pressureTitleLabel: UILabel!
+    @IBOutlet var pressureCell: UITableViewCell!
 
-    @IBOutlet weak var heartbeatTitleLabel: UILabel!
-    @IBOutlet weak var heartbeatCell: UITableViewCell!
+    @IBOutlet var heartbeatTitleLabel: UILabel!
+    @IBOutlet var heartbeatCell: UITableViewCell!
 
-    @IBOutlet weak var defaultsTitleLabel: UILabel!
-    @IBOutlet weak var defaultsCell: UITableViewCell!
+    @IBOutlet var defaultsTitleLabel: UILabel!
+    @IBOutlet var defaultsCell: UITableViewCell!
 
-    @IBOutlet weak var devicesTitleLabel: UILabel!
-    @IBOutlet weak var devicesCell: UITableViewCell!
+    @IBOutlet var devicesTitleLabel: UILabel!
+    @IBOutlet var devicesCell: UITableViewCell!
 
-    @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
+    @IBOutlet var closeBarButtonItem: UIBarButtonItem!
 
-    @IBOutlet weak var languageValueLabel: UILabel!
-    @IBOutlet weak var languageTitleLabel: UILabel!
-    @IBOutlet weak var languageCell: UITableViewCell!
+    @IBOutlet var languageValueLabel: UILabel!
+    @IBOutlet var languageTitleLabel: UILabel!
+    @IBOutlet var languageCell: UITableViewCell!
 
-    @IBOutlet weak var chartCell: UITableViewCell!
-    @IBOutlet weak var chartTitleLabel: UILabel!
+    @IBOutlet var chartCell: UITableViewCell!
+    @IBOutlet var chartTitleLabel: UILabel!
 
-    @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
-    @IBOutlet weak var experimentalFunctionsLabel: UILabel!
+    @IBOutlet var experimentalFunctionsCell: UITableViewCell!
+    @IBOutlet var experimentalFunctionsLabel: UILabel!
 
-    @IBOutlet weak var ruuviCloudTitleLabel: UILabel!
-    @IBOutlet weak var ruuviCloudCell: UITableViewCell!
+    @IBOutlet var ruuviCloudTitleLabel: UILabel!
+    @IBOutlet var ruuviCloudCell: UITableViewCell!
 
     #if DEVELOPMENT
-    private let showDefaults = true
-    private let showDevices = true
+        private let showDefaults = true
+        private let showDevices = true
     #else
-    private let showDefaults = false
-    private let showDevices = false
+        private let showDefaults = false
+        private let showDevices = false
     #endif
 
     var language: Language = .english {
@@ -63,6 +63,7 @@ class SettingsTableViewController: UITableViewController {
             updateTableIfLoaded()
         }
     }
+
     var cloudModeVisible: Bool = false {
         didSet {
             updateTableIfLoaded()
@@ -71,6 +72,7 @@ class SettingsTableViewController: UITableViewController {
 }
 
 // MARK: - SettingsViewInput
+
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = RuuviLocalization.Settings.NavigationItem.title
@@ -104,17 +106,18 @@ extension SettingsTableViewController: SettingsViewInput {
 }
 
 // MARK: - IBActions
-extension SettingsTableViewController {
 
-    @IBAction func closeBarButtonItemAction(_ sender: Any) {
+extension SettingsTableViewController {
+    @IBAction func closeBarButtonItemAction(_: Any) {
         output.viewDidTriggerClose()
     }
 }
 
 // MARK: - View lifecycle
+
 extension SettingsTableViewController {
     override var canBecomeFirstResponder: Bool {
-        return true
+        true
     }
 
     override func viewDidLoad() {
@@ -125,14 +128,15 @@ extension SettingsTableViewController {
         becomeFirstResponder()
     }
 
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake && !experimentalFunctionsEnabled {
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with _: UIEvent?) {
+        if motion == .motionShake, !experimentalFunctionsEnabled {
             output.viewDidTriggerShake()
         }
     }
 }
 
 // MARK: - UITableViewDelegate
+
 extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
@@ -143,8 +147,9 @@ extension SettingsTableViewController {
         }
         // Add the logic for the cloud mode cell here
         if !showDefaults && cell == defaultsCell ||
-           (!showDevices || !cloudModeVisible) && cell == devicesCell ||
-            !cloudModeVisible && cell == ruuviCloudCell {
+            (!showDevices || !cloudModeVisible) && cell == devicesCell ||
+            !cloudModeVisible && cell == ruuviCloudCell
+        {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -153,7 +158,8 @@ extension SettingsTableViewController {
 
     // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath) {
+                            didSelectRowAt indexPath: IndexPath)
+    {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         switch cell {
         case temperatureCell:
@@ -187,6 +193,7 @@ extension SettingsTableViewController {
 }
 
 // MARK: - Update UI
+
 extension SettingsTableViewController {
     private func updateUI() {
         updateUILanguage()

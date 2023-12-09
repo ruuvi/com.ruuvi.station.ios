@@ -1,21 +1,21 @@
-import RuuviLocalization
 import Foundation
-import UIKit
-import RuuviService
 import RuuviLocal
+import RuuviLocalization
+import RuuviService
+import UIKit
 
 class RuuviCloudPresenter: NSObject, RuuviCloudModuleInput {
     var viewController: UIViewController {
-        if let view = self.weakView {
+        if let view = weakView {
             return view
         } else {
             let view = RuuviCloudTableViewController()
             view.output = self
-            self.weakView = view
+            weakView = view
             return view
         }
-
     }
+
     private weak var weakView: UIViewController?
 
     var settings: RuuviLocalSettings!
@@ -32,14 +32,14 @@ extension RuuviCloudPresenter: RuuviCloudViewOutput {
     }
 }
 
-extension RuuviCloudPresenter {
-    fileprivate func configure() {
+private extension RuuviCloudPresenter {
+    func configure() {
         if let view = weakView as? RuuviCloudTableViewController {
             view.viewModels = [ruuviCloudIsOn()]
         }
     }
 
-    fileprivate func ruuviCloudIsOn() -> RuuviCloudViewModel {
+    func ruuviCloudIsOn() -> RuuviCloudViewModel {
         let cloudMode = RuuviCloudViewModel()
         cloudMode.title = RuuviLocalization.Settings.Label.cloudMode
         cloudMode.boolean.value = settings.cloudModeEnabled

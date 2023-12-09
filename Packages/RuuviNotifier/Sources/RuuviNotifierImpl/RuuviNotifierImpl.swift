@@ -1,9 +1,9 @@
 import Foundation
-import RuuviOntology
-import RuuviService
+import RuuviLocal
 import RuuviNotification
 import RuuviNotifier
-import RuuviLocal
+import RuuviOntology
+import RuuviService
 
 public final class RuuviNotifierImpl: RuuviNotifier {
     var observations = [String: NSPointerArray]()
@@ -19,12 +19,12 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         titles: RuuviNotifierTitles
     ) {
         self.ruuviAlertService = ruuviAlertService
-        self.localNotificationsManager = ruuviNotificationLocal
+        localNotificationsManager = ruuviNotificationLocal
         self.localSyncState = localSyncState
         self.titles = titles
     }
 
-    public func subscribe<T: RuuviNotifierObserver>(_ observer: T, to uuid: String) {
+    public func subscribe(_ observer: some RuuviNotifierObserver, to uuid: String) {
         guard !isSubscribed(observer, to: uuid) else { return }
         let pointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
@@ -38,10 +38,10 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         }
     }
 
-    public func isSubscribed<T: RuuviNotifierObserver>(_ observer: T, to uuid: String) -> Bool {
+    public func isSubscribed(_ observer: some RuuviNotifierObserver, to uuid: String) -> Bool {
         let observerPointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
-            for i in 0..<array.count {
+            for i in 0 ..< array.count {
                 let pointer = array.pointer(at: i)
                 if pointer == observerPointer {
                     return true

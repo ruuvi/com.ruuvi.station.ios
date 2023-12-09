@@ -5,7 +5,7 @@ import WidgetKit
 final class RuuviUserCoordinator: RuuviUser {
     var apiKey: String? {
         get {
-            return keychainService.ruuviUserApiKey
+            keychainService.ruuviUserApiKey
         }
         set {
             keychainService.ruuviUserApiKey = newValue
@@ -14,7 +14,7 @@ final class RuuviUserCoordinator: RuuviUser {
 
     var email: String? {
         get {
-            return keychainService.userApiEmail
+            keychainService.userApiEmail
         }
         set {
             keychainService.userApiEmail = newValue
@@ -23,7 +23,7 @@ final class RuuviUserCoordinator: RuuviUser {
 
     var isAuthorized: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: isAuthorizedUDKey)
+            UserDefaults.standard.bool(forKey: isAuthorizedUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: isAuthorizedUDKey)
@@ -41,7 +41,7 @@ final class RuuviUserCoordinator: RuuviUser {
 
     func login(apiKey: String) {
         self.apiKey = apiKey
-        self.isAuthorized = true
+        isAuthorized = true
         NotificationCenter
             .default
             .post(name: .RuuviUserDidAuthorized,

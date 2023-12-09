@@ -1,7 +1,6 @@
 import UIKit
 
 class SwipeDownToDismissTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
-
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
@@ -9,16 +8,16 @@ class SwipeDownToDismissTransitionAnimation: NSObject, UIViewControllerAnimatedT
         return view
     }()
 
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3
+    func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
+        0.3
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard
             let fromVC = transitionContext.viewController(forKey: .from),
             let toVC = transitionContext.viewController(forKey: .to)
-            else {
-                return
+        else {
+            return
         }
         let containerView = transitionContext.containerView
 
@@ -38,8 +37,9 @@ class SwipeDownToDismissTransitionAnimation: NSObject, UIViewControllerAnimatedT
             animations: {
                 self.dimmingView.alpha = 0.0
                 fromVC.view.frame = finalFrame
-        }, completion: { _ in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+            }, completion: { _ in
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            }
+        )
     }
 }

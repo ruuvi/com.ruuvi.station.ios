@@ -1,8 +1,8 @@
 import Foundation
-import RuuviRepository
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
+import RuuviRepository
 import RuuviService
 
 final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
@@ -20,9 +20,9 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
          until: Date? = nil,
          ruuviCloud: RuuviCloud,
          ruuviRepository: RuuviRepository,
-         syncState: RuuviLocalSyncState,
-         ruuviLocalIDs: RuuviLocalIDs
-    ) {
+         syncState _: RuuviLocalSyncState,
+         ruuviLocalIDs: RuuviLocalIDs)
+    {
         self.sensor = sensor
         self.since = since
         self.until = until
@@ -44,15 +44,16 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
                 sSelf.state = .finished
                 return
             }
-            let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map({ record in
+            let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
                 if record.luid == nil,
                    let macId = record.macId,
-                   let luid = sSelf.ruuviLocalIDs.luid(for: macId) {
-                    return record.with(luid: luid).any
+                   let luid = sSelf.ruuviLocalIDs.luid(for: macId)
+                {
+                    record.with(luid: luid).any
                 } else {
-                    return record
+                    record
                 }
-            })
+            }
             let persist = sSelf.ruuviRepository.create(
                 records: recordsWithLuid,
                 for: sSelf.sensor
