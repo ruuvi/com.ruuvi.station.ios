@@ -67,6 +67,7 @@ extension UnitSettingsTableViewController: UnitSettingsViewInput {
 extension UnitSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        localize()
         output.viewDidLoad()
         updateUI()
     }

@@ -169,6 +169,7 @@ extension DashboardViewController {
         super.viewDidLoad()
         setUpUI()
         configureRestartAnimationsOnAppDidBecomeActive()
+        localize()
         output.viewDidLoad()
     }
 

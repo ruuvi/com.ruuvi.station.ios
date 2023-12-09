@@ -1,6 +1,5 @@
 import Foundation
 import Future
-import RuuviDaemon
 import RuuviLocal
 import RuuviPool
 import RuuviStorage

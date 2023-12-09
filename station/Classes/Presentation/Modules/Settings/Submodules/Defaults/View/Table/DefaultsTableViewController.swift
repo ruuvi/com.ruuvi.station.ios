@@ -29,7 +29,12 @@ extension DefaultsTableViewController: DefaultsViewInput {
 
 // MARK: - View lifecycle
 
-extension DefaultsTableViewController {}
+extension DefaultsTableViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        localize()
+    }
+}
 
 // MARK: - UITableViewDataSource
 

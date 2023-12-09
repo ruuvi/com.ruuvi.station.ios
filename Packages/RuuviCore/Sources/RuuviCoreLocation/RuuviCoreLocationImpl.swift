@@ -1,34 +1,32 @@
 import CoreLocation
 import Foundation
 import Future
-import RuuviCore
 
 public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
     public var isLocationPermissionGranted: Bool {
         CLLocationManager.locationServicesEnabled()
-            && (CLLocationManager.authorizationStatus() == .authorizedWhenInUse
-                || CLLocationManager.authorizationStatus() == .authorizedAlways)
+            && (locationManager.authorizationStatus == .authorizedWhenInUse
+                || locationManager.authorizationStatus == .authorizedAlways)
     }
 
     public var locationAuthorizationStatus: CLAuthorizationStatus {
-        CLLocationManager.authorizationStatus()
+        locationManager.authorizationStatus
     }
 
     var isLocationPermissionDenied: Bool {
         !CLLocationManager.locationServicesEnabled()
-            || CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .denied
+            || locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .denied
     }
 
     var isLocationPermissionNotDetermined: Bool {
-        CLLocationManager.authorizationStatus() == .notDetermined
+        locationManager.authorizationStatus == .notDetermined
     }
 
-    private var locationManager: CLLocationManager
+    private let locationManager = CLLocationManager()
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
     private var getCurrentLocationPromise: Promise<CLLocation, RuuviCoreError>?
 
     override public init() {
-        locationManager = CLLocationManager()
         super.init()
         locationManager.delegate = self
         locationManager.distanceFilter = 100

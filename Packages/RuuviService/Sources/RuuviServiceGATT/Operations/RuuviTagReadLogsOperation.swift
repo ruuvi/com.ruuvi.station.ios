@@ -2,7 +2,6 @@ import BTKit
 import Foundation
 import RuuviOntology
 import RuuviPool
-import RuuviService
 
 final class RuuviTagReadLogsOperation: AsyncOperation {
     var uuid: String

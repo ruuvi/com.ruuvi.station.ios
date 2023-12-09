@@ -55,6 +55,7 @@ extension BackgroundSelectionViewController {
         super.viewDidLoad()
         setUpUI()
         bindViewModel()
+        localize()
         output.viewDidLoad()
     }
 }

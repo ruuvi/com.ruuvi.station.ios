@@ -1,4 +1,3 @@
-import RuuviCore
 import UIKit
 import UserNotifications
 

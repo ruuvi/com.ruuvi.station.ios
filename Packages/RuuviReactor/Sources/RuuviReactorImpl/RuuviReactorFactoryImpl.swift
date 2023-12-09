@@ -1,7 +1,6 @@
 import Foundation
 import RuuviContext
 import RuuviPersistence
-import RuuviReactor
 
 public final class RuuviReactorFactoryImpl: RuuviReactorFactory {
     public init() {}

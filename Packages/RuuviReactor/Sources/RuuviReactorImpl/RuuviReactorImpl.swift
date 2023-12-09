@@ -4,7 +4,6 @@ import GRDB
 import RuuviContext
 import RuuviOntology
 import RuuviPersistence
-import RuuviReactor
 #if canImport(RuuviOntologyRealm)
     import RuuviOntologyRealm
 #endif

@@ -55,6 +55,9 @@ targetTemplates:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         MERGEABLE_LIBRARY: true
+      configs:
+        Debug:
+          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
   Module:
     name: "${target_name}"
     type: framework
@@ -88,6 +91,9 @@ targetTemplates:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         MERGEABLE_LIBRARY: true
+      configs:
+        Debug:
+          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
   CommonFramework:
     name: "${target_name}"
     type: framework
@@ -121,6 +127,9 @@ targetTemplates:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         MERGEABLE_LIBRARY: true
+      configs:
+        Debug:
+          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
 
 packages:
   BTKit:
@@ -296,6 +305,7 @@ targets:
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
         Debug:
           CODE_SIGN_STYLE: Automatic
+          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
         Release:
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
           CODE_SIGN_IDENTITY: "iPhone Distribution"

@@ -4,7 +4,6 @@ import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
-import RuuviService
 
 // MARK: - RuuviTag
 
@@ -1285,7 +1284,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     func signalDescription(for uuid: String) -> String? {
-        signalDescription(for: uuid)
+        alertPersistence.signalDescription(for: uuid)
     }
 }
 

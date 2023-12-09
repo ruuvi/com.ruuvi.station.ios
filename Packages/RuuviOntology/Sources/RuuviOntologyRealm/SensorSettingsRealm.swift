@@ -1,6 +1,5 @@
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 public class SensorSettingsRealm: Object {
     @objc public dynamic var luid: String?

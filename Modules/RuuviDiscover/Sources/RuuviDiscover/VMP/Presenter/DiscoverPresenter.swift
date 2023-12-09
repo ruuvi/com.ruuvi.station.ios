@@ -84,13 +84,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var persistedReactorToken: RuuviReactorToken?
     private lazy var ruuviLogoImage = UIImage.named("ruuvi_logo", for: Self.self)
     private var isBluetoothPermissionGranted: Bool {
-        if #available(iOS 13.1, *) {
-            return CBCentralManager.authorization == .allowedAlways
-        } else if #available(iOS 13.0, *) {
-            return CBCentralManager().authorization == .allowedAlways
-        }
-        // Before iOS 13, Bluetooth permissions are not required
-        return true
+        CBCentralManager.authorization == .allowedAlways
     }
 
     deinit {
@@ -201,9 +195,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
 
         // If tag is not added get the name from the mac and show other info.
-        if let addableTag = ruuviTags.first(where: { ruuviTag in
+        if ruuviTags.first(where: { ruuviTag in
             ruuviTag.mac == nfcSensor?.macId
-        }) {
+        }) != nil {
             guard let message = self.message(
                 for: nfcSensor,
                 displayName: displayName(for: nfcSensor)
@@ -289,14 +283,14 @@ extension DiscoverPresenter: RuuviFirmwareOutput {
 extension DiscoverPresenter {
     private func startObservingPersistedRuuviSensors() {
         persistedReactorToken = ruuviReactor.observe { [weak self] change in
+            guard let self else { return }
             switch change {
             case let .initial(sensors):
-                guard let sSelf = self else { return }
-                self?.persistedSensors = sensors
+                persistedSensors = sensors
             case let .insert(sensor):
-                self?.persistedSensors.append(sensor)
+                persistedSensors.append(sensor)
             case let .delete(sensor):
-                self?.persistedSensors.removeAll(where: { $0.any == sensor })
+                persistedSensors.removeAll(where: { $0.any == sensor })
             default:
                 return
             }

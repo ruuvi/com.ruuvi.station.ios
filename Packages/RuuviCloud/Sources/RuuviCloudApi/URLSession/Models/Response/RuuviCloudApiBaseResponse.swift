@@ -1,5 +1,4 @@
 import Foundation
-import RuuviCloud
 
 public struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
     enum Status: String, Decodable {

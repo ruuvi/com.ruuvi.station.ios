@@ -41,6 +41,7 @@ extension HeartbeatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        localize()
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {

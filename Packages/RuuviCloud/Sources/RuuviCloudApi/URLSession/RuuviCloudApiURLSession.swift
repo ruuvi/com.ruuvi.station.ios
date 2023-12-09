@@ -1,6 +1,5 @@
 import Foundation
 import Future
-import RuuviCloud
 
 // swiftlint:disable file_length
 

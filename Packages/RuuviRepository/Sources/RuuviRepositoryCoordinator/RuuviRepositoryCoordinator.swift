@@ -2,7 +2,6 @@ import Foundation
 import Future
 import RuuviOntology
 import RuuviPool
-import RuuviRepository
 import RuuviStorage
 
 final class RuuviRepositoryCoordinator: RuuviRepository {

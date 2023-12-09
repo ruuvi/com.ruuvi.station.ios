@@ -3,7 +3,6 @@ import Foundation
 import Humidity
 import RuuviLocal
 import RuuviOntology
-import RuuviService
 // TODO: - @priyonto - Improve the number formatter instances.
 public final class RuuviServiceMeasurementImpl: NSObject {
     var settings: RuuviLocalSettings {

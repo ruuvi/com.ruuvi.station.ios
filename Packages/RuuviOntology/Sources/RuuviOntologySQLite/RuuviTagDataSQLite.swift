@@ -1,7 +1,6 @@
 import Foundation
 import GRDB
 import Humidity
-import RuuviOntology
 
 public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     public var luid: LocalIdentifier?

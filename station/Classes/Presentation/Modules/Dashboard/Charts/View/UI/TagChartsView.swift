@@ -44,6 +44,7 @@ class TagChartsView: LineChartView {
         delegate = self
         addSubviews()
         configure()
+        localize()
     }
 
     @available(*, unavailable)

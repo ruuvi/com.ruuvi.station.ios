@@ -5,7 +5,6 @@ import RuuviCore
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
-import RuuviService
 import UIKit
 
 public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {

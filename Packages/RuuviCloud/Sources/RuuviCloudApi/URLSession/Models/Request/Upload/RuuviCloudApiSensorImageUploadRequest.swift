@@ -1,5 +1,4 @@
 import Foundation
-import RuuviCloud
 
 public struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
     public let sensor: String

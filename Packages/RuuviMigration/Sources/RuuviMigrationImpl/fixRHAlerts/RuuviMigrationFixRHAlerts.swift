@@ -1,7 +1,6 @@
 import Foundation
 import RuuviContext
 import RuuviLocal
-import RuuviMigration
 import RuuviPool
 import RuuviService
 import RuuviStorage

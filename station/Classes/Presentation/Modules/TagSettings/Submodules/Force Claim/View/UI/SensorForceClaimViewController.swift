@@ -120,6 +120,7 @@ extension SensorForceClaimViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output?.viewDidLoad()
     }
 }

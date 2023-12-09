@@ -1,5 +1,4 @@
 import Foundation
-import RuuviMigration
 import RuuviOntology
 import RuuviService
 import RuuviStorage

@@ -4,7 +4,6 @@ import RuuviCore
 import RuuviLocal
 import RuuviPool
 import RuuviRepository
-import RuuviService
 import RuuviStorage
 import RuuviUser
 #if canImport(RuuviServiceCloudSync)

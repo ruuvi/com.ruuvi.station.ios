@@ -22,6 +22,7 @@ targets:
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.pnservice"
         Debug:
           CODE_SIGN_STYLE: Automatic
+          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
         Release:
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
           CODE_SIGN_IDENTITY: "iPhone Distribution"

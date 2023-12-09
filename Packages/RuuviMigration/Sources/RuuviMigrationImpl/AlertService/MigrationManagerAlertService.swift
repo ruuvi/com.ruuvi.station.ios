@@ -1,7 +1,6 @@
 import AVKit
 import Foundation
 import RuuviContext
-import RuuviMigration
 import RuuviOntology
 import RuuviService
 import RuuviStorage

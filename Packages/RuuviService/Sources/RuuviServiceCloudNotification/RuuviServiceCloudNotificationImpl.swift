@@ -5,7 +5,6 @@ import RuuviCore
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
-import RuuviService
 import RuuviStorage
 import RuuviUser
 #if canImport(RuuviCloudApi)

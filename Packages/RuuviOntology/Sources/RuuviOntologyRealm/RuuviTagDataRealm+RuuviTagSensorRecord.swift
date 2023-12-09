@@ -1,6 +1,5 @@
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 public extension RuuviTagDataRealm {
     var any: AnyRuuviTagSensorRecord? {

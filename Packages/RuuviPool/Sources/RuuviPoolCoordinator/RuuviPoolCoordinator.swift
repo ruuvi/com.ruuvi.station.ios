@@ -3,7 +3,6 @@ import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPersistence
-import RuuviPool
 
 // swiftlint:disable:next type_body_length
 final class RuuviPoolCoordinator: RuuviPool {

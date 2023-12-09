@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RuuviOntology
 
 public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
     public var id: Int64?

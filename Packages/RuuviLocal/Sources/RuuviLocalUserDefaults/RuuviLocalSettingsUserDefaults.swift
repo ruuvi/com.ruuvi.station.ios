@@ -1,5 +1,4 @@
 import Foundation
-import RuuviLocal
 import RuuviOntology
 
 // swiftlint:disable type_body_length file_length

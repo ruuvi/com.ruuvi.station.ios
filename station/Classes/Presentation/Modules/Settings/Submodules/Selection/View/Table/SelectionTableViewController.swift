@@ -48,6 +48,7 @@ extension SelectionTableViewController: SelectionViewInput {
 extension SelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        localize()
         output.viewDidLoad()
         updateUI()
     }

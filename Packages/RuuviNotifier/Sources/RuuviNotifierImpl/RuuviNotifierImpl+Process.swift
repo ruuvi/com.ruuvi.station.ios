@@ -1,13 +1,12 @@
 // swiftlint:disable file_length
 import Foundation
-import RuuviNotifier
 import RuuviOntology
 
 // MARK: - Process Physical Sensors
 
 public extension RuuviNotifierImpl {
     // swiftlint:disable:next function_body_length
-    func process(record record: RuuviTagSensorRecord, trigger: Bool) {
+    func process(record: RuuviTagSensorRecord, trigger: Bool) {
         guard let luid = record.luid,
               ruuviAlertService.hasRegistrations(for: record)
         else {

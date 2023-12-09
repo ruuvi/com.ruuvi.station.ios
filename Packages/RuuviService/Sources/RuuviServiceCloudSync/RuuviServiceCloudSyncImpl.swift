@@ -5,7 +5,6 @@ import RuuviLocal
 import RuuviOntology
 import RuuviPool
 import RuuviRepository
-import RuuviService
 import RuuviStorage
 import UIKit
 // swiftlint:disable file_length
@@ -216,7 +215,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             switch error {
             case let .ruuviCloud(cloudError):
                 switch cloudError {
-                case let .api(.unauthorized):
+                case .api(.unauthorized):
                     self?.postNotification()
                 default: break
                 }

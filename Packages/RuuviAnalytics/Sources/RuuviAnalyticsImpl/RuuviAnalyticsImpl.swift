@@ -2,7 +2,6 @@ import Foundation
 #if canImport(FirebaseAnalytics)
     import FirebaseAnalytics
 #endif
-import RuuviAnalytics
 import RuuviLocal
 import RuuviOntology
 import RuuviService

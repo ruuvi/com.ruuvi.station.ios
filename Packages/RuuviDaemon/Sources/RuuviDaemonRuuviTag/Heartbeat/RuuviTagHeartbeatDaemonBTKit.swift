@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import RuuviDaemon
 import RuuviLocal
 import RuuviNotification
 import RuuviNotifier

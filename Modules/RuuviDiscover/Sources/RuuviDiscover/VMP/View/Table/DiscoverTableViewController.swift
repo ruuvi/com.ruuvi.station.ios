@@ -196,6 +196,7 @@ extension DiscoverTableViewController: DiscoverTableHeaderViewDelegate {
 extension DiscoverTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        localize()
         configureViews()
         updateUI()
         output.viewDidLoad()

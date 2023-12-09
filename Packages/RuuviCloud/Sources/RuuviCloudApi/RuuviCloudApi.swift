@@ -1,7 +1,6 @@
 import BTKit
 import Foundation
 import Future
-import RuuviCloud
 import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api

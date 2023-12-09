@@ -124,6 +124,7 @@ extension SettingsTableViewController {
         super.viewDidLoad()
         updateNavBarTitleFont()
         updateUI()
+        localize()
         output.viewDidLoad()
         becomeFirstResponder()
     }

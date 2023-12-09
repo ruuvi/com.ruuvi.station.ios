@@ -1,7 +1,6 @@
 import Foundation
 import RealmSwift
 import RuuviLocal
-import RuuviMigration
 import RuuviOntology
 #if canImport(RuuviOntologyRealm)
     import RuuviOntologyRealm

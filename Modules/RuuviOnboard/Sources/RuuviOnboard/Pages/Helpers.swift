@@ -5,8 +5,10 @@ import UIKit
 
 public extension UIAlertController {
     func setMessageAlignment(_ alignment: NSTextAlignment) {
-        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as? NSMutableParagraphStyle
-        paragraphStyle?.alignment = alignment
+        guard let paragraphStyle = NSParagraphStyle.default.mutableCopy() as? NSMutableParagraphStyle else {
+            return
+        }
+        paragraphStyle.alignment = alignment
 
         let messageText = NSMutableAttributedString(
             string: message ?? "",
