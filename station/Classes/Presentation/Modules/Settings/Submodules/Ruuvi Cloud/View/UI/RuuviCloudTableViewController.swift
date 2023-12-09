@@ -51,8 +51,10 @@ private extension RuuviCloudTableViewController {
 
     func setUpTableView() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.register(RuuviCloudTableViewCell.self,
-                           forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(
+            RuuviCloudTableViewCell.self,
+            forCellReuseIdentifier: reuseIdentifier
+        )
     }
 
     func updateUI() {
@@ -71,13 +73,15 @@ extension RuuviCloudTableViewController {
         viewModels.count
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: reuseIdentifier,
             for: indexPath
-        ) as? RuuviCloudTableViewCell else {
+        ) as? RuuviCloudTableViewCell
+        else {
             fatalError()
         }
         let viewModel = viewModels[indexPath.row]

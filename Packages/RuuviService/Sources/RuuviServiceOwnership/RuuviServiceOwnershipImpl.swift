@@ -88,11 +88,13 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     @discardableResult
     public func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        guard let macId = sensor.macId else {
+        guard let macId = sensor.macId
+        else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
-        guard let owner = ruuviUser.email else {
+        guard let owner = ruuviUser.email
+        else {
             promise.fail(error: .ruuviCloud(.notAuthorized))
             return promise.future
         }
@@ -116,12 +118,14 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         secret: String
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        guard let macId = sensor.macId else {
+        guard let macId = sensor.macId
+        else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
 
-        guard let owner = ruuviUser.email else {
+        guard let owner = ruuviUser.email
+        else {
             promise.fail(error: .ruuviCloud(.notAuthorized))
             return promise.future
         }
@@ -146,7 +150,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         removeCloudHistory: Bool
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        guard let macId = sensor.macId else {
+        guard let macId = sensor.macId
+        else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
@@ -205,8 +210,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
         if let macId = sensor.macId,
-           sensor.isCloud
-        {
+           sensor.isCloud {
             if sensor.isOwner {
                 unclaimOperation = unclaim(
                     sensor: sensor,
@@ -218,24 +222,26 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         }
         propertiesService.removeImage(for: sensor)
         localIDs.clear(sensor: sensor)
-        Future.zip([deleteTagOperation,
-                    deleteRecordsOperation,
-                    deleteLastRecordOperation])
-            .on(success: { _ in
-                if let unclaimOperation {
-                    unclaimOperation.on()
-                    promise.succeed(value: sensor.any)
-                } else if let unshareOperation {
-                    unshareOperation.on()
-                    promise.succeed(value: sensor.any)
-                } else {
-                    promise.succeed(value: sensor.any)
-                }
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            }, completion: {
-                cleanUpOperation.on()
-            })
+        Future.zip([
+            deleteTagOperation,
+            deleteRecordsOperation,
+            deleteLastRecordOperation,
+        ])
+        .on(success: { _ in
+            if let unclaimOperation {
+                unclaimOperation.on()
+                promise.succeed(value: sensor.any)
+            } else if let unshareOperation {
+                unshareOperation.on()
+                promise.succeed(value: sensor.any)
+            } else {
+                promise.succeed(value: sensor.any)
+            }
+        }, failure: { error in
+            promise.fail(error: .ruuviPool(error))
+        }, completion: {
+            cleanUpOperation.on()
+        })
         return promise.future
     }
 

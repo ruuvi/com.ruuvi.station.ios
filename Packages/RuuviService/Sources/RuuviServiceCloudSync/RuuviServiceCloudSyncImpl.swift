@@ -54,86 +54,70 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .on(success: { [weak self] cloudSettings in
                 guard let cloudSettings, let sSelf = self else { return }
                 if let unitTemperature = cloudSettings.unitTemperature,
-                   unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit
-                {
+                   unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
                 }
                 if let accuracyTemperature = cloudSettings.accuracyTemperature,
-                   accuracyTemperature != sSelf.ruuviLocalSettings.temperatureAccuracy
-                {
+                   accuracyTemperature != sSelf.ruuviLocalSettings.temperatureAccuracy {
                     sSelf.ruuviLocalSettings.temperatureAccuracy = accuracyTemperature
                 }
                 if let unitHumidity = cloudSettings.unitHumidity,
-                   unitHumidity != sSelf.ruuviLocalSettings.humidityUnit
-                {
+                   unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
                     sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
                 }
                 if let accuracyHumidity = cloudSettings.accuracyHumidity,
-                   accuracyHumidity != sSelf.ruuviLocalSettings.humidityAccuracy
-                {
+                   accuracyHumidity != sSelf.ruuviLocalSettings.humidityAccuracy {
                     sSelf.ruuviLocalSettings.humidityAccuracy = accuracyHumidity
                 }
                 if let unitPressure = cloudSettings.unitPressure,
-                   unitPressure != sSelf.ruuviLocalSettings.pressureUnit
-                {
+                   unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
                     sSelf.ruuviLocalSettings.pressureUnit = unitPressure
                 }
                 if let accuracyPressure = cloudSettings.accuracyPressure,
-                   accuracyPressure != sSelf.ruuviLocalSettings.pressureAccuracy
-                {
+                   accuracyPressure != sSelf.ruuviLocalSettings.pressureAccuracy {
                     sSelf.ruuviLocalSettings.pressureAccuracy = accuracyPressure
                 }
                 if let chartShowAllData = cloudSettings.chartShowAllPoints,
-                   chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn
-                {
+                   chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
                     sSelf.ruuviLocalSettings.chartDownsamplingOn = !chartShowAllData
                 }
                 if let chartDrawDots = cloudSettings.chartDrawDots,
-                   chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn
-                {
+                   chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
                     // Draw dots feature is disabled from v1.3.0 onwards to
                     // maintain better performance until we find a better approach to do it.
                     sSelf.ruuviLocalSettings.chartDrawDotsOn = false
                 }
                 if let chartShowMinMaxAvg = cloudSettings.chartShowMinMaxAvg,
-                   chartShowMinMaxAvg != sSelf.ruuviLocalSettings.chartStatsOn
-                {
+                   chartShowMinMaxAvg != sSelf.ruuviLocalSettings.chartStatsOn {
                     sSelf.ruuviLocalSettings.chartStatsOn = chartShowMinMaxAvg
                 }
                 if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
-                   cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled
-                {
+                   cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
                     sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
                 }
                 if let dashboardEnabled = cloudSettings.dashboardEnabled,
-                   dashboardEnabled != sSelf.ruuviLocalSettings.dashboardEnabled
-                {
+                   dashboardEnabled != sSelf.ruuviLocalSettings.dashboardEnabled {
                     sSelf.ruuviLocalSettings.dashboardEnabled = dashboardEnabled
                 }
                 if let dashboardType = cloudSettings.dashboardType,
-                   dashboardType != sSelf.ruuviLocalSettings.dashboardType
-                {
+                   dashboardType != sSelf.ruuviLocalSettings.dashboardType {
                     sSelf.ruuviLocalSettings.dashboardType = dashboardType
                 }
                 if let dashboardTapActionType = cloudSettings.dashboardTapActionType,
-                   dashboardTapActionType != sSelf.ruuviLocalSettings.dashboardTapActionType
-                {
+                   dashboardTapActionType != sSelf.ruuviLocalSettings.dashboardTapActionType {
                     sSelf.ruuviLocalSettings.dashboardTapActionType = dashboardTapActionType
                 }
                 if let pushAlertEnabled = cloudSettings.pushAlertEnabled,
-                   pushAlertEnabled != sSelf.ruuviLocalSettings.pushAlertEnabled
-                {
+                   pushAlertEnabled != sSelf.ruuviLocalSettings.pushAlertEnabled {
                     sSelf.ruuviLocalSettings.pushAlertEnabled = pushAlertEnabled
                 }
                 if let emailAlertEnabled = cloudSettings.emailAlertEnabled,
-                   emailAlertEnabled != sSelf.ruuviLocalSettings.emailAlertEnabled
-                {
+                   emailAlertEnabled != sSelf.ruuviLocalSettings.emailAlertEnabled {
                     sSelf.ruuviLocalSettings.emailAlertEnabled = emailAlertEnabled
                 }
                 if let cloudProfileLanguageCode = cloudSettings.profileLanguageCode {
                     if cloudProfileLanguageCode !=
-                        sSelf.ruuviLocalSettings.cloudProfileLanguageCode
-                    {
+                        sSelf.ruuviLocalSettings.cloudProfileLanguageCode {
                         sSelf.ruuviLocalSettings.cloudProfileLanguageCode = cloudProfileLanguageCode
                     }
                 } else {
@@ -154,7 +138,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func syncImage(sensor: CloudSensor) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
-        guard let pictureUrl = sensor.picture else {
+        guard let pictureUrl = sensor.picture
+        else {
             promise.fail(error: .pictureUrlIsNil)
             return promise.future
         }
@@ -246,7 +231,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     public func executePendingRequests() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviStorage.readQueuedRequests().on(success: { [weak self] requests in
-            guard requests.count > 0 else {
+            guard requests.count > 0
+            else {
                 return promise.succeed(value: true)
             }
 
@@ -268,8 +254,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let temperatureSyncs: [Future<SensorSettings, RuuviPoolError>]
             = cloudSensors.compactMap { cloudSensor in
                 if let updatedSensor = updatedSensors
-                    .first(where: { $0.id == cloudSensor.id })
-                {
+                    .first(where: { $0.id == cloudSensor.id }) {
                     self.ruuviPool.updateOffsetCorrection(
                         type: .temperature,
                         with: cloudSensor.offsetTemperature,
@@ -284,8 +269,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             = cloudSensors.compactMap { cloudSensor in
                 if let updatedSensor = updatedSensors
                     .first(where: { $0.id == cloudSensor.id }),
-                    let offsetHumidity = cloudSensor.offsetHumidity
-                {
+                    let offsetHumidity = cloudSensor.offsetHumidity {
                     self.ruuviPool.updateOffsetCorrection(
                         type: .humidity,
                         with: offsetHumidity / 100,
@@ -300,8 +284,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             = cloudSensors.compactMap { cloudSensor in
                 if let updatedSensor = updatedSensors
                     .first(where: { $0.id == cloudSensor.id }),
-                    let offsetPressure = cloudSensor.offsetPressure
-                {
+                    let offsetPressure = cloudSensor.offsetPressure {
                     self.ruuviPool.updateOffsetCorrection(
                         type: .pressure,
                         with: offsetPressure / 100,
@@ -324,8 +307,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
         var syncFullHistory = false
         if let syncFull = ruuviLocalSyncState.downloadFullHistory(for: sensor.macId),
-           syncFull
-        {
+           syncFull {
             syncFullHistory = true
         }
 
@@ -403,7 +385,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ).on(success: { [weak self] denseSensors in
             guard let sSelf = self else { return }
 
-            guard denseSensors.count > 0 else {
+            guard denseSensors.count > 0
+            else {
                 promise.succeed(value: [])
                 return
             }
@@ -420,14 +403,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             sensors.on(success: { updatedSensors in
 
                 let filteredDenseSensorsWithHistory = denseSensors.filter { sensor in
-                    guard let maxHistoryDays = sensor.subscription?.maxHistoryDays else {
+                    guard let maxHistoryDays = sensor.subscription?.maxHistoryDays
+                    else {
                         return false
                     }
                     return maxHistoryDays > 0
                 }
 
                 let filteredDenseSensorsWithoutHistory = denseSensors.filter { sensor in
-                    guard let maxHistoryDays = sensor.subscription?.maxHistoryDays else {
+                    guard let maxHistoryDays = sensor.subscription?.maxHistoryDays
+                    else {
                         return false
                     }
                     return maxHistoryDays <= 0
@@ -495,8 +480,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         // TODO: @priyonto - Need to improve this once backend flattens and improves the plans
                         // If user goes from free to pro or above plan, download full history
                         if localSensor.ownersPlan?.lowercased() == "free",
-                           localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased()
-                        {
+                           localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased() {
                             self.ruuviLocalSyncState.setDownloadFullHistory(for: localSensor.macId, downloadFull: true)
                         }
 
@@ -563,12 +547,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     /// This method updates the latest data table if a record already exists for the mac address.
     /// Otherwise it creates a new record.
-    private func updateLatestRecord(ruuviTag: RuuviTagSensor,
-                                    cloudRecord: RuuviTagSensorRecord?)
-        -> Future<Bool, RuuviServiceError>
-    {
+    private func updateLatestRecord(
+        ruuviTag: RuuviTagSensor,
+        cloudRecord: RuuviTagSensorRecord?
+    )
+    -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        guard let cloudRecord else {
+        guard let cloudRecord
+        else {
             // If there's no cloud record return
             // It is possible that a sensor doesn't have a record if it's a few years old
             ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
@@ -580,8 +566,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             guard let sSelf = self else { return }
             // If the latest table already have a data point for the mac update that record
             if let record,
-               record.macId?.value == cloudRecord.macId?.value
-            {
+               record.macId?.value == cloudRecord.macId?.value {
                 // Store cloud point only if the cloud data is newer than the local data
                 let isMeasurementNew = cloudRecord.date > record.date
                 if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
@@ -615,12 +600,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     /// This method writes the latest data point to the history/records table
-    private func addLatestRecordToHistory(ruuviTag: RuuviTagSensor,
-                                          cloudRecord: RuuviTagSensorRecord?)
-        -> Future<Bool, RuuviServiceError>
-    {
+    private func addLatestRecordToHistory(
+        ruuviTag: RuuviTagSensor,
+        cloudRecord: RuuviTagSensorRecord?
+    )
+    -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        guard let cloudRecord else {
+        guard let cloudRecord
+        else {
             // If there's no cloud record return
             // It is possible that a sensor doesn't have a record if it's a few years old
             promise.succeed(value: false)
@@ -674,9 +661,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     private func postNotification() {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .NetworkSyncDidFailForAuthorization,
-                                            object: nil,
-                                            userInfo: nil)
+            NotificationCenter.default.post(
+                name: .NetworkSyncDidFailForAuthorization,
+                object: nil,
+                userInfo: nil
+            )
         }
     }
 }

@@ -44,10 +44,12 @@ class CardsIndicatorView: UIView {
 
     fileprivate func setUpUI() {
         addSubview(indicatorIconView)
-        indicatorIconView.anchor(top: nil,
-                                 leading: leadingAnchor,
-                                 bottom: nil,
-                                 trailing: nil)
+        indicatorIconView.anchor(
+            top: nil,
+            leading: leadingAnchor,
+            bottom: nil,
+            trailing: nil
+        )
         indicatorIconView.heightAnchor.constraint(
             lessThanOrEqualToConstant: 50
         ).isActive = true

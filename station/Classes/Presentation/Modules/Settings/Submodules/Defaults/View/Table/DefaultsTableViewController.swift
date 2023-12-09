@@ -45,8 +45,10 @@ extension DefaultsTableViewController {
         case .plain:
             // swiftlint:disable force_cast
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: plainCellReuseIdentifier,
-                                     for: indexPath) as! DefaultsPlainTableViewCell
+                .dequeueReusableCell(
+                    withIdentifier: plainCellReuseIdentifier,
+                    for: indexPath
+                ) as! DefaultsPlainTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
             cell.valueLabel.text = viewModel.value.value ?? RuuviLocalization.na
@@ -54,8 +56,10 @@ extension DefaultsTableViewController {
         case .switcher:
             // swiftlint:disable force_cast
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: switchCellReuseIdentifier,
-                                     for: indexPath) as! DefaultsSwitchTableViewCell
+                .dequeueReusableCell(
+                    withIdentifier: switchCellReuseIdentifier,
+                    for: indexPath
+                ) as! DefaultsSwitchTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
             cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
@@ -64,8 +68,10 @@ extension DefaultsTableViewController {
         case .stepper:
             // swiftlint:disable force_cast
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier,
-                                     for: indexPath) as! DefaultsStepperTableViewCell
+                .dequeueReusableCell(
+                    withIdentifier: stepperCellReuseIdentifier,
+                    for: indexPath
+                ) as! DefaultsStepperTableViewCell
             // swiftlint:enable force_cast
             let title = viewModel.title ?? ""
             let unitString: String

@@ -16,7 +16,7 @@ final class WidgetAssembly {
     init() {
         assembler = Assembler(
             [
-                NetworkingAssembly(),
+                NetworkingAssembly()
             ])
     }
 }

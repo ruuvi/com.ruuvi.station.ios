@@ -14,7 +14,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../../Packages/RuuviUser"),
+        .package(path: "../../Packages/RuuviUser")
     ],
     targets: [
         .target(

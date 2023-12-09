@@ -38,7 +38,8 @@ class RuuviCodeView: UIStackView {
 extension RuuviCodeView {
     // Fill the view with pasted code
     func autofill(with code: String?) {
-        guard let code else {
+        guard let code
+        else {
             return
         }
         populateRuuviCodeFields(with: code)
@@ -148,7 +149,8 @@ extension RuuviCodeView: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        guard let textField = textField as? RuuviCodeTextField else {
+        guard let textField = textField as? RuuviCodeTextField
+        else {
             return true
         }
 
@@ -167,7 +169,8 @@ extension RuuviCodeView: UITextFieldDelegate {
                 populateRuuviCodeFields(with: code)
                 return false
             } else {
-                guard textField.previousEntry == nil || textField.previousEntry?.text != "" else {
+                guard textField.previousEntry == nil || textField.previousEntry?.text != ""
+                else {
                     return false
                 }
                 if range.length == 0, code.isEmpty {

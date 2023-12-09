@@ -37,14 +37,15 @@ enum TagSettingsItemCellIdentifier: Int {
 }
 
 class TagSettingsSection {
-    init(identifier: TagSettingsSectionIdentifier,
-         title: String,
-         cells: [TagSettingsItem],
-         collapsed: Bool,
-         headerType: TagSettingsSectionHeaderType,
-         backgroundColor: UIColor? = nil,
-         font: UIFont? = nil)
-    {
+    init(
+        identifier: TagSettingsSectionIdentifier,
+        title: String,
+        cells: [TagSettingsItem],
+        collapsed: Bool,
+        headerType: TagSettingsSectionHeaderType,
+        backgroundColor: UIColor? = nil,
+        font: UIFont? = nil
+    ) {
         self.identifier = identifier
         self.title = title
         self.cells = cells
@@ -143,21 +144,31 @@ class TagSettingsViewController: UIViewController {
 
     // Weak reference to the cells
     // General section
-    private lazy var tagNameCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                               reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var tagNameCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var tagOwnerCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var tagOwnerCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var tagOwnersPlanCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                     reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var tagOwnersPlanCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var tagShareCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var tagShareCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Bluetooth section
-    private lazy var btPairCell: TagSettingsSwitchCell? = TagSettingsSwitchCell(style: .value1,
-                                                                                reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var btPairCell: TagSettingsSwitchCell? = TagSettingsSwitchCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Alerts
     // Temperature
@@ -172,7 +183,7 @@ class TagSettingsViewController: UIViewController {
             identifier: .alertTemperature,
             title: sectionTitle,
             cells: [
-                termperatureAlertItem(),
+                termperatureAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -180,8 +191,10 @@ class TagSettingsViewController: UIViewController {
         return section
     }()
 
-    private lazy var temperatureAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1,
-                                                                                                    reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var temperatureAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Humidity
     private lazy var humidityAlertSectionHeaderView:
@@ -194,7 +207,7 @@ class TagSettingsViewController: UIViewController {
             identifier: .alertHumidity,
             title: sectionTitle,
             cells: [
-                humidityAlertItem(),
+                humidityAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -216,7 +229,7 @@ class TagSettingsViewController: UIViewController {
             identifier: .alertPressure,
             title: sectionTitle,
             cells: [
-                pressureAlertItem(),
+                pressureAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -224,84 +237,122 @@ class TagSettingsViewController: UIViewController {
         return section
     }()
 
-    private lazy var pressureAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1,
-                                                                                                 reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var pressureAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // RSSI
     private lazy var rssiAlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var rssiAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1,
-                                                                                             reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var rssiAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Movement
     private lazy var movementAlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var movementAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1,
-                                                                                                 reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var movementAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Connection
     private lazy var connectionAlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var connectionAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1,
-                                                                                                   reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var connectionAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Cloud Connection
     private lazy var cloudConnectionAlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var cloudConnectionAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1,
-                                                                                                        reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var cloudConnectionAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Offset correction
-    private lazy var tempOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                            reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var tempOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var humidityOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                                reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var humidityOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var pressureOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                                reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var pressureOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // More Info section
     private lazy var moreInfoSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var moreInfoMacAddressCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                          reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoMacAddressCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoDataFormatCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                          reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoDataFormatCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoDataSourceCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                          reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoDataSourceCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoBatteryVoltageCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                              reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoBatteryVoltageCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoAccXCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                    reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoAccXCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoAccYCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                    reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoAccYCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoAccZCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                    reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoAccZCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoTxPowerCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                       reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoTxPowerCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoRSSICell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                    reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoRSSICell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
-    private lazy var moreInfoMSNCell: TagSettingsPlainCell? = TagSettingsPlainCell(style: .value1,
-                                                                                   reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var moreInfoMSNCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Firmware section
-    private lazy var firmwareVersionCell: TagSettingsBasicCell? = TagSettingsBasicCell(style: .value1,
-                                                                                       reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var firmwareVersionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     deinit {
         tagNameCell = nil
@@ -557,7 +608,8 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController {
     private func bindBackgroundView() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -571,7 +623,8 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController {
     private func bindGeneralSection() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -615,14 +668,13 @@ extension TagSettingsViewController {
 
     private func itemsForGeneralSection(showPlan: Bool = false) -> [TagSettingsItem] {
         var availableItems: [TagSettingsItem] = [
-            tagNameSettingItem(),
+            tagNameSettingItem()
         ]
         if showOwner() {
             availableItems.append(tagOwnerSettingItem())
             if let isOwner = viewModel?.isOwner.value, !isOwner,
                let isCloudTag = viewModel?.isNetworkConnected.value,
-               isCloudTag, showPlan
-            {
+               isCloudTag, showPlan {
                 availableItems.append(tagOwnersPlanSettingItem())
             }
         }
@@ -648,8 +700,10 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .generalName,
             createdCell: { [weak self] in
-                self?.tagNameCell?.configure(title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
-                                             value: self?.viewModel?.name.value)
+                self?.tagNameCell?.configure(
+                    title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
+                    value: self?.viewModel?.name.value
+                )
                 self?.tagNameCell?.setAccessory(type: .pencil)
                 return self?.tagNameCell ?? UITableViewCell()
             },
@@ -664,8 +718,10 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
-                self?.tagOwnerCell?.configure(title: RuuviLocalization.TagSettings.NetworkInfo.owner,
-                                              value: self?.viewModel?.owner.value)
+                self?.tagOwnerCell?.configure(
+                    title: RuuviLocalization.TagSettings.NetworkInfo.owner,
+                    value: self?.viewModel?.owner.value
+                )
                 self?.tagOwnerCell?.setAccessory(type: .chevron)
                 self?.tagOwnerCell?.hideSeparator(hide: false)
                 return self?.tagOwnerCell ?? UITableViewCell()
@@ -741,7 +797,8 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
     private func bindBluetoothSection() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -866,7 +923,8 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
 extension TagSettingsViewController {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func bindAlertsSection() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -891,15 +949,19 @@ extension TagSettingsViewController {
             temperatureAlertCell.bind(viewModel.temperatureUpperBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.temperatureAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.temperatureLowerBound(),
-                                   selectedMaxValue: self?.temperatureUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.temperatureLowerBound(),
+                    selectedMaxValue: self?.temperatureUpperBound()
+                )
             }
 
             temperatureAlertCell.bind(viewModel.temperatureLowerBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.temperatureAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.temperatureLowerBound(),
-                                   selectedMaxValue: self?.temperatureUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.temperatureLowerBound(),
+                    selectedMaxValue: self?.temperatureUpperBound()
+                )
             }
 
             temperatureAlertCell.bind(viewModel.temperatureUnit) {
@@ -907,15 +969,19 @@ extension TagSettingsViewController {
                 guard let sSelf = self else { return }
                 let (minRange, maxRange) = sSelf.temperatureMinMaxForSliders()
                 cell.setAlertLimitDescription(description: sSelf.temperatureAlertRangeDescription())
-                cell.setAlertRange(minValue: minRange,
-                                   selectedMinValue: sSelf.temperatureLowerBound(),
-                                   maxValue: maxRange,
-                                   selectedMaxValue: sSelf.temperatureUpperBound())
+                cell.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: sSelf.temperatureLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: sSelf.temperatureUpperBound()
+                )
             }
 
             temperatureAlertCell.bind(viewModel.latestMeasurement) { cell, measurement in
-                cell.disableEditing(disable: measurement == nil,
-                                    identifier: .alertTemperature)
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertTemperature
+                )
             }
         }
 
@@ -930,13 +996,12 @@ extension TagSettingsViewController {
             }
 
             temperatureAlertSectionHeaderView.bind(
-                viewModel.temperatureAlertMutedTill)
-            { header, mutedTill in
-                let isOn = self.alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isTemperatureAlertOn.value)
-                let alertState = viewModel.temperatureAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.temperatureAlertMutedTill) { header, mutedTill in
+                    let isOn = self.alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isTemperatureAlertOn.value)
+                    let alertState = viewModel.temperatureAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             temperatureAlertSectionHeaderView
                 .bind(viewModel.isTemperatureAlertOn) { [weak self] header, isOn in
@@ -973,15 +1038,19 @@ extension TagSettingsViewController {
             humidityAlertCell.bind(viewModel.relativeHumidityUpperBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.humidityAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.humidityLowerBound(),
-                                   selectedMaxValue: self?.humidityUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.humidityLowerBound(),
+                    selectedMaxValue: self?.humidityUpperBound()
+                )
             }
 
             humidityAlertCell.bind(viewModel.relativeHumidityLowerBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.humidityAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.humidityLowerBound(),
-                                   selectedMaxValue: self?.humidityUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.humidityLowerBound(),
+                    selectedMaxValue: self?.humidityUpperBound()
+                )
             }
 
             humidityAlertCell.bind(viewModel.humidityUnit) {
@@ -989,10 +1058,12 @@ extension TagSettingsViewController {
                 guard let sSelf = self else { return }
                 let (minRange, maxRange) = sSelf.humidityMinMaxForSliders()
                 cell.setAlertLimitDescription(description: sSelf.humidityAlertRangeDescription())
-                cell.setAlertRange(minValue: minRange,
-                                   selectedMinValue: sSelf.humidityLowerBound(),
-                                   maxValue: maxRange,
-                                   selectedMaxValue: sSelf.humidityUpperBound())
+                cell.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: sSelf.humidityLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: sSelf.humidityUpperBound()
+                )
             }
 
             humidityAlertCell.bind(viewModel.latestMeasurement) {
@@ -1007,14 +1078,13 @@ extension TagSettingsViewController {
 
         if let humidityAlertSectionHeaderView {
             humidityAlertSectionHeaderView.bind(
-                viewModel.relativeHumidityAlertMutedTill)
-            { [weak self] header, mutedTill in
-                guard let self else { return }
-                let isOn = alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isRelativeHumidityAlertOn.value)
-                let alertState = viewModel.relativeHumidityAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.relativeHumidityAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isRelativeHumidityAlertOn.value)
+                    let alertState = viewModel.relativeHumidityAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             humidityAlertSectionHeaderView
                 .bind(viewModel.isRelativeHumidityAlertOn) { [weak self] header, isOn in
@@ -1057,15 +1127,19 @@ extension TagSettingsViewController {
             pressureAlertCell.bind(viewModel.pressureUpperBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.pressureAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.pressureLowerBound(),
-                                   selectedMaxValue: self?.pressureUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.pressureLowerBound(),
+                    selectedMaxValue: self?.pressureUpperBound()
+                )
             }
 
             pressureAlertCell.bind(viewModel.pressureLowerBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.pressureAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.pressureLowerBound(),
-                                   selectedMaxValue: self?.pressureUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.pressureLowerBound(),
+                    selectedMaxValue: self?.pressureUpperBound()
+                )
             }
 
             pressureAlertCell.bind(viewModel.pressureUnit) {
@@ -1073,10 +1147,12 @@ extension TagSettingsViewController {
                 guard let sSelf = self else { return }
                 let (minRange, maxRange) = sSelf.pressureMinMaxForSliders()
                 cell.setAlertLimitDescription(description: sSelf.humidityAlertRangeDescription())
-                cell.setAlertRange(minValue: minRange,
-                                   selectedMinValue: sSelf.pressureLowerBound(),
-                                   maxValue: maxRange,
-                                   selectedMaxValue: sSelf.pressureUpperBound())
+                cell.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: sSelf.pressureLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: sSelf.pressureUpperBound()
+                )
             }
 
             pressureAlertCell.bind(viewModel.latestMeasurement) {
@@ -1100,13 +1176,12 @@ extension TagSettingsViewController {
             }
 
             pressureAlertSectionHeaderView.bind(
-                viewModel.pressureAlertMutedTill)
-            { header, mutedTill in
-                let isOn = self.alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isPressureAlertOn.value)
-                let alertState = viewModel.pressureAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.pressureAlertMutedTill) { header, mutedTill in
+                    let isOn = self.alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isPressureAlertOn.value)
+                    let alertState = viewModel.pressureAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             pressureAlertSectionHeaderView
                 .bind(viewModel.isPressureAlertOn) { [weak self] header, isOn in
@@ -1143,15 +1218,19 @@ extension TagSettingsViewController {
             rssiAlertCell.bind(viewModel.signalUpperBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.rssiAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.rssiLowerBound(),
-                                   selectedMaxValue: self?.rssiUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.rssiLowerBound(),
+                    selectedMaxValue: self?.rssiUpperBound()
+                )
             }
 
             rssiAlertCell.bind(viewModel.signalLowerBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.rssiAlertRangeDescription())
-                cell.setAlertRange(selectedMinValue: self?.rssiLowerBound(),
-                                   selectedMaxValue: self?.rssiUpperBound())
+                cell.setAlertRange(
+                    selectedMinValue: self?.rssiLowerBound(),
+                    selectedMaxValue: self?.rssiUpperBound()
+                )
             }
 
             rssiAlertCell.bind(viewModel.latestMeasurement) { cell, measurement in
@@ -1164,14 +1243,13 @@ extension TagSettingsViewController {
 
         if let rssiAlertSectionHeaderView {
             rssiAlertSectionHeaderView.bind(
-                viewModel.signalAlertMutedTill)
-            { [weak self] header, mutedTill in
-                guard let self else { return }
-                let isOn = alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isSignalAlertOn.value)
-                let alertState = viewModel.signalAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.signalAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isSignalAlertOn.value)
+                    let alertState = viewModel.signalAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             rssiAlertSectionHeaderView
                 .bind(viewModel.isSignalAlertOn) { [weak self] header, isOn in
@@ -1216,14 +1294,13 @@ extension TagSettingsViewController {
 
         if let movementAlertSectionHeaderView {
             movementAlertSectionHeaderView.bind(
-                viewModel.movementAlertMutedTill)
-            { [weak self] header, mutedTill in
-                guard let self else { return }
-                let isOn = alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isMovementAlertOn.value)
-                let alertState = viewModel.movementAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.movementAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isMovementAlertOn.value)
+                    let alertState = viewModel.movementAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             movementAlertSectionHeaderView
                 .bind(viewModel.isMovementAlertOn) { [weak self] header, isOn in
@@ -1266,14 +1343,13 @@ extension TagSettingsViewController {
 
         if let connectionAlertSectionHeaderView {
             connectionAlertSectionHeaderView.bind(
-                viewModel.connectionAlertMutedTill)
-            { [weak self] header, mutedTill in
-                guard let self else { return }
-                let isOn = alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isConnectionAlertOn.value)
-                let alertState = viewModel.connectionAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.connectionAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isConnectionAlertOn.value)
+                    let alertState = viewModel.connectionAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             connectionAlertSectionHeaderView
                 .bind(viewModel.isConnectionAlertOn) { [weak self] header, isOn in
@@ -1308,7 +1384,8 @@ extension TagSettingsViewController {
 
             cloudConnectionAlertCell.bind(viewModel.cloudConnectionAlertUnseenDuration) {
                 [weak self] cell, duration in
-                guard let durationInt = duration?.intValue, durationInt >= 60 else {
+                guard let durationInt = duration?.intValue, durationInt >= 60
+                else {
                     return
                 }
 
@@ -1325,14 +1402,13 @@ extension TagSettingsViewController {
 
         if let cloudConnectionAlertSectionHeaderView {
             cloudConnectionAlertSectionHeaderView.bind(
-                viewModel.cloudConnectionAlertMutedTill)
-            { [weak self] header, mutedTill in
-                guard let self else { return }
-                let isOn = alertsAvailable() &&
-                    GlobalHelpers.getBool(from: viewModel.isCloudConnectionAlertOn.value)
-                let alertState = viewModel.cloudConnectionAlertState.value
-                header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
-            }
+                viewModel.cloudConnectionAlertMutedTill) { [weak self] header, mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: viewModel.isCloudConnectionAlertOn.value)
+                    let alertState = viewModel.cloudConnectionAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
 
             cloudConnectionAlertSectionHeaderView
                 .bind(viewModel.isCloudConnectionAlertOn) { [weak self] header, isOn in
@@ -1371,7 +1447,7 @@ extension TagSettingsViewController {
 
         if cloudConnectionAlertVisible() {
             sections += [
-                configureCloudConnectionAlertSection(),
+                configureCloudConnectionAlertSection()
             ]
         }
 
@@ -1407,10 +1483,12 @@ extension TagSettingsViewController {
                             .temperatureAlertDescription.value))
                 self?.temperatureAlertCell?
                     .setAlertLimitDescription(description: self?.temperatureAlertRangeDescription())
-                self?.temperatureAlertCell?.setAlertRange(minValue: minRange,
-                                                          selectedMinValue: self?.temperatureLowerBound(),
-                                                          maxValue: maxRange,
-                                                          selectedMaxValue: self?.temperatureUpperBound())
+                self?.temperatureAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.temperatureLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.temperatureUpperBound()
+                )
                 self?.temperatureAlertCell?.disableEditing(
                     disable: disableTemperature,
                     identifier: .alertTemperature
@@ -1444,10 +1522,12 @@ extension TagSettingsViewController {
                     .setAlertLimitDescription(
                         description: self?.humidityAlertRangeDescription())
                 self?.humidityAlertCell?
-                    .setAlertRange(minValue: minRange,
-                                   selectedMinValue: self?.humidityLowerBound(),
-                                   maxValue: maxRange,
-                                   selectedMaxValue: self?.humidityUpperBound())
+                    .setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: self?.humidityLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: self?.humidityUpperBound()
+                    )
                 self?.humidityAlertCell?.disableEditing(
                     disable: disableHumidity,
                     identifier: .alertHumidity
@@ -1479,10 +1559,12 @@ extension TagSettingsViewController {
                             .pressureAlertDescription.value))
                 self?.pressureAlertCell?
                     .setAlertLimitDescription(description: self?.pressureAlertRangeDescription())
-                self?.pressureAlertCell?.setAlertRange(minValue: minRange,
-                                                       selectedMinValue: self?.pressureLowerBound(),
-                                                       maxValue: maxRange,
-                                                       selectedMaxValue: self?.pressureUpperBound())
+                self?.pressureAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.pressureLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.pressureUpperBound()
+                )
                 self?.pressureAlertCell?.disableEditing(
                     disable: disablePressure,
                     identifier: .alertPressure
@@ -1502,7 +1584,7 @@ extension TagSettingsViewController {
             identifier: .alertRSSI,
             title: RuuviLocalization.signalStrengthDbm,
             cells: [
-                rssiAlertItem(),
+                rssiAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -1527,10 +1609,12 @@ extension TagSettingsViewController {
                             .signalAlertDescription.value))
                 self?.rssiAlertCell?
                     .setAlertLimitDescription(description: self?.rssiAlertRangeDescription())
-                self?.rssiAlertCell?.setAlertRange(minValue: minRange,
-                                                   selectedMinValue: self?.rssiLowerBound(),
-                                                   maxValue: maxRange,
-                                                   selectedMaxValue: self?.rssiUpperBound())
+                self?.rssiAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.rssiLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.rssiUpperBound()
+                )
                 self?.rssiAlertCell?.disableEditing(
                     disable: disableRssi,
                     identifier: .alertRSSI
@@ -1550,7 +1634,7 @@ extension TagSettingsViewController {
             identifier: .alertMovement,
             title: RuuviLocalization.TagSettings.MovementAlert.title,
             cells: [
-                movementAlertItem(),
+                movementAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -1587,7 +1671,7 @@ extension TagSettingsViewController {
             identifier: .alertConnection,
             title: RuuviLocalization.TagSettings.ConnectionAlert.title,
             cells: [
-                connectionAlertItem(),
+                connectionAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -1623,7 +1707,7 @@ extension TagSettingsViewController {
             identifier: .alertCloudConnection,
             title: RuuviLocalization.alertCloudConnectionTitle,
             cells: [
-                cloudConnectionAlertItem(),
+                cloudConnectionAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -1680,9 +1764,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.temperatureAlertMutedTill.value
         let alertState = viewModel?.temperatureAlertState.value
         temperatureAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func reloadRHAlertSectionHeader() {
@@ -1692,9 +1778,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.relativeHumidityAlertMutedTill.value
         let alertState = viewModel?.relativeHumidityAlertState.value
         humidityAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func reloadPressureAlertSectionHeader() {
@@ -1704,9 +1792,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.pressureAlertMutedTill.value
         let alertState = viewModel?.pressureAlertState.value
         pressureAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func reloadSignalAlertSectionHeader() {
@@ -1716,9 +1806,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.signalAlertMutedTill.value
         let alertState = viewModel?.signalAlertState.value
         rssiAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func reloadMovementAlertSectionHeader() {
@@ -1728,9 +1820,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.movementAlertMutedTill.value
         let alertState = viewModel?.movementAlertState.value
         movementAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func reloadConnectionAlertSectionHeader() {
@@ -1740,9 +1834,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.connectionAlertMutedTill.value
         let alertState = viewModel?.connectionAlertState.value
         connectionAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func reloadCloudConnectionAlertSectionHeader() {
@@ -1752,9 +1848,11 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.cloudConnectionAlertMutedTill.value
         let alertState = viewModel?.cloudConnectionAlertState.value
         cloudConnectionAlertSectionHeaderView?
-            .setAlertState(with: mutedTill,
-                           isOn: isOn,
-                           alertState: alertState)
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
     }
 
     private func alertCustomDescription(from string: String?) -> String? {
@@ -1762,39 +1860,47 @@ extension TagSettingsViewController {
         return string.hasText() ? string : alertPlaceholder
     }
 
-    private func temperatureAlertRangeDescription(from min: CGFloat? = nil,
-                                                  max: CGFloat? = nil) -> NSMutableAttributedString?
-    {
+    private func temperatureAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min, let max {
-            return attributedString(from: String(format: format,
-                                                 locale: Locale.autoupdatingCurrent,
-                                                 min, max))
+            return attributedString(from: String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                min,
+                max
+            ))
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
            let l = viewModel?.temperatureLowerBound.value?.converted(to: tu),
-           let u = viewModel?.temperatureUpperBound.value?.converted(to: tu)
-        {
+           let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
             if l.value.decimalPoint > 0 {
                 let decimalPointToConsider = l.value.decimalPoint > 2 ? 2 : l.value.decimalPoint
-                format = format.replacingFirstOccurrence(of: "%0.f",
-                                                         with: "%0.\(decimalPointToConsider)f")
+                format = format.replacingFirstOccurrence(
+                    of: "%0.f",
+                    with: "%0.\(decimalPointToConsider)f"
+                )
             }
 
             if u.value.decimalPoint > 0 {
                 let decimalPointToConsider = u.value.decimalPoint > 2 ? 2 : u.value.decimalPoint
-                format = format.replacingLastOccurrence(of: "%0.f",
-                                                        with: "%0.\(decimalPointToConsider)f")
+                format = format.replacingLastOccurrence(
+                    of: "%0.f",
+                    with: "%0.\(decimalPointToConsider)f"
+                )
             }
 
-            let message = String(format: format,
-                                 locale: Locale.autoupdatingCurrent,
-                                 l.value.round(to: 2),
-                                 u.value.round(to: 2))
+            let message = String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                l.value.round(to: 2),
+                u.value.round(to: 2)
+            )
             return attributedString(from: message)
-
         } else {
             return nil
         }
@@ -1802,7 +1908,8 @@ extension TagSettingsViewController {
 
     private func temperatureLowerBound() -> CGFloat {
         guard isViewLoaded else { return 0 }
-        guard let temperatureUnit = viewModel?.temperatureUnit.value else {
+        guard let temperatureUnit = viewModel?.temperatureUnit.value
+        else {
             let range = TemperatureUnit.celsius.alertRange
             return CGFloat(range.lowerBound)
         }
@@ -1815,7 +1922,8 @@ extension TagSettingsViewController {
 
     private func temperatureUpperBound() -> CGFloat {
         guard isViewLoaded else { return 0 }
-        guard let temperatureUnit = viewModel?.temperatureUnit.value else {
+        guard let temperatureUnit = viewModel?.temperatureUnit.value
+        else {
             let range = TemperatureUnit.celsius.alertRange
             return CGFloat(range.upperBound)
         }
@@ -1828,24 +1936,29 @@ extension TagSettingsViewController {
 
     private func temperatureMinMaxForSliders() -> (minimum: CGFloat, maximum: CGFloat) {
         let tu = viewModel?.temperatureUnit.value ?? .celsius
-        return (minimum: CGFloat(tu.alertRange.lowerBound),
-                maximum: CGFloat(tu.alertRange.upperBound))
+        return (
+            minimum: CGFloat(tu.alertRange.lowerBound),
+            maximum: CGFloat(tu.alertRange.upperBound)
+        )
     }
 
     // Humidity
-    private func humidityAlertRangeDescription(from min: CGFloat? = nil,
-                                               max: CGFloat? = nil) -> NSMutableAttributedString?
-    {
+    private func humidityAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min, let max {
-            return attributedString(from: String(format: format,
-                                                 locale: Locale.autoupdatingCurrent,
-                                                 min, max))
+            return attributedString(from: String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                min,
+                max
+            ))
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
-           let u = viewModel?.relativeHumidityUpperBound.value
-        {
+           let u = viewModel?.relativeHumidityUpperBound.value {
             if l.decimalPoint > 0 {
                 let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
                 format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
@@ -1855,9 +1968,12 @@ extension TagSettingsViewController {
                 let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format,
-                                 locale: Locale.autoupdatingCurrent,
-                                 l.round(to: 2), u.round(to: 2))
+            let message = String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                l.round(to: 2),
+                u.round(to: 2)
+            )
             return attributedString(from: message)
         } else {
             return nil
@@ -1886,27 +2002,32 @@ extension TagSettingsViewController {
 
     private func humidityMinMaxForSliders() -> (minimum: CGFloat, maximum: CGFloat) {
         let rhRange = HumidityUnit.percent.alertRange
-        return (minimum: CGFloat(rhRange.lowerBound),
-                maximum: CGFloat(rhRange.upperBound))
+        return (
+            minimum: CGFloat(rhRange.lowerBound),
+            maximum: CGFloat(rhRange.upperBound)
+        )
     }
 
     // Pressure
-    private func pressureAlertRangeDescription(from minValue: CGFloat? = nil,
-                                               maxValue: CGFloat? = nil) -> NSMutableAttributedString?
-    {
+    private func pressureAlertRangeDescription(
+        from minValue: CGFloat? = nil,
+        maxValue: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
 
         if let minValue, let maxValue {
-            return attributedString(from: String(format: format,
-                                                 locale: Locale.autoupdatingCurrent,
-                                                 minValue, maxValue))
+            return attributedString(from: String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                minValue,
+                maxValue
+            ))
         }
 
         if let pu = viewModel?.pressureUnit.value,
            let lower = viewModel?.pressureLowerBound.value?.converted(to: pu).value,
-           let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value
-        {
+           let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
             let l = min(
                 max(lower, pu.alertRange.lowerBound),
                 pu.alertRange.upperBound
@@ -1924,9 +2045,12 @@ extension TagSettingsViewController {
                 let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
                 format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
             }
-            let message = String(format: format,
-                                 locale: Locale.autoupdatingCurrent,
-                                 l.round(to: 2), u.round(to: 2))
+            let message = String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                l.round(to: 2),
+                u.round(to: 2)
+            )
             return attributedString(from: message)
         } else {
             return nil
@@ -1935,7 +2059,8 @@ extension TagSettingsViewController {
 
     private func pressureLowerBound() -> CGFloat {
         guard isViewLoaded else { return 0 }
-        guard let pu = viewModel?.pressureUnit.value else {
+        guard let pu = viewModel?.pressureUnit.value
+        else {
             let range = UnitPressure.hectopascals.alertRange
             return CGFloat(range.lowerBound)
         }
@@ -1952,7 +2077,8 @@ extension TagSettingsViewController {
 
     private func pressureUpperBound() -> CGFloat {
         guard isViewLoaded else { return 0 }
-        guard let pu = viewModel?.pressureUnit.value else {
+        guard let pu = viewModel?.pressureUnit.value
+        else {
             let range = UnitPressure.hectopascals.alertRange
             return CGFloat(range.upperBound)
         }
@@ -1969,29 +2095,37 @@ extension TagSettingsViewController {
 
     private func pressureMinMaxForSliders() -> (minimum: CGFloat, maximum: CGFloat) {
         let p = viewModel?.pressureUnit.value ?? .hectopascals
-        return (minimum: CGFloat(p.alertRange.lowerBound),
-                maximum: CGFloat(p.alertRange.upperBound))
+        return (
+            minimum: CGFloat(p.alertRange.lowerBound),
+            maximum: CGFloat(p.alertRange.upperBound)
+        )
     }
 
     // RSSI
-    private func rssiAlertRangeDescription(from min: CGFloat? = nil,
-                                           max: CGFloat? = nil) -> NSMutableAttributedString?
-    {
+    private func rssiAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
         let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
 
         if let min, let max {
-            return attributedString(from: String(format: format,
-                                                 locale: Locale.autoupdatingCurrent,
-                                                 min, max))
+            return attributedString(from: String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                min,
+                max
+            ))
         }
 
         if let lower = viewModel?.signalLowerBound.value,
-           let upper = viewModel?.signalUpperBound.value
-        {
-            let message = String(format: format,
-                                 locale: Locale.autoupdatingCurrent,
-                                 lower, upper)
+           let upper = viewModel?.signalUpperBound.value {
+            let message = String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                lower,
+                upper
+            )
             return attributedString(from: message)
         } else {
             return nil
@@ -2018,11 +2152,14 @@ extension TagSettingsViewController {
         }
     }
 
-    private func rssiMinMaxForSliders() -> (minimum: CGFloat,
-                                            maximum: CGFloat)
-    {
-        (minimum: CGFloat(-105),
-         maximum: CGFloat(0))
+    private func rssiMinMaxForSliders() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: CGFloat(-105),
+            maximum: CGFloat(0)
+        )
     }
 
     private func attributedString(from message: String?) -> NSMutableAttributedString? {
@@ -2162,10 +2299,11 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func didSetAlertRange(sender: TagSettingsAlertConfigCell,
-                          minValue: CGFloat,
-                          maxValue: CGFloat)
-    {
+    func didSetAlertRange(
+        sender: TagSettingsAlertConfigCell,
+        minValue: CGFloat,
+        maxValue: CGFloat
+    ) {
         guard minValue < maxValue else { return }
         switch sender {
         case temperatureAlertCell:
@@ -2233,27 +2371,36 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         }
     }
 
-    func didChangeAlertRange(sender: TagSettingsAlertConfigCell,
-                             didSlideTo minValue: CGFloat,
-                             maxValue: CGFloat)
-    {
+    func didChangeAlertRange(
+        sender: TagSettingsAlertConfigCell,
+        didSlideTo minValue: CGFloat,
+        maxValue: CGFloat
+    ) {
         switch sender {
         case temperatureAlertCell:
             temperatureAlertCell?.setAlertLimitDescription(
-                description: temperatureAlertRangeDescription(from: minValue,
-                                                              max: maxValue))
+                description: temperatureAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
         case humidityAlertCell:
             humidityAlertCell?.setAlertLimitDescription(
-                description: humidityAlertRangeDescription(from: minValue,
-                                                           max: maxValue))
+                description: humidityAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
         case pressureAlertCell:
             pressureAlertCell?.setAlertLimitDescription(
-                description: pressureAlertRangeDescription(from: minValue,
-                                                           maxValue: maxValue))
+                description: pressureAlertRangeDescription(
+                    from: minValue,
+                    maxValue: maxValue
+                ))
         case rssiAlertCell:
             rssiAlertCell?.setAlertLimitDescription(
-                description: rssiAlertRangeDescription(from: minValue,
-                                                       max: maxValue))
+                description: rssiAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
         default:
             break
         }
@@ -2270,12 +2417,14 @@ extension TagSettingsViewController {
 
         let (minimumRange, maximumRange) = temperatureAlertRange()
         let (minimumValue, maximumValue) = temperatureValue()
-        showSensorCustomAlertRangeDialog(title: title,
-                                         minimumBound: minimumRange,
-                                         maximumBound: maximumRange,
-                                         currentLowerBound: minimumValue,
-                                         currentUpperBound: maximumValue,
-                                         sender: sender)
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
     }
 
     private func showHumidityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
@@ -2285,12 +2434,14 @@ extension TagSettingsViewController {
 
         let (minimumRange, maximumRange) = humidityAlertRange()
         let (minimumValue, maximumValue) = humidityValue()
-        showSensorCustomAlertRangeDialog(title: title,
-                                         minimumBound: minimumRange,
-                                         maximumBound: maximumRange,
-                                         currentLowerBound: minimumValue,
-                                         currentUpperBound: maximumValue,
-                                         sender: sender)
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
     }
 
     private func showPressureAlertSetDialog(sender: TagSettingsAlertConfigCell) {
@@ -2300,12 +2451,14 @@ extension TagSettingsViewController {
 
         let (minimumRange, maximumRange) = pressureAlertRange()
         let (minimumValue, maximumValue) = pressureValue()
-        showSensorCustomAlertRangeDialog(title: title,
-                                         minimumBound: minimumRange,
-                                         maximumBound: maximumRange,
-                                         currentLowerBound: minimumValue,
-                                         currentUpperBound: maximumValue,
-                                         sender: sender)
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
     }
 
     private func showRSSIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
@@ -2315,12 +2468,14 @@ extension TagSettingsViewController {
 
         let (minimumRange, maximumRange) = rssiAlertRange()
         let (minimumValue, maximumValue) = rssiValue()
-        showSensorCustomAlertRangeDialog(title: title,
-                                         minimumBound: minimumRange,
-                                         maximumBound: maximumRange,
-                                         currentLowerBound: minimumValue,
-                                         currentUpperBound: maximumValue,
-                                         sender: sender)
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
     }
 
     private func showCloudConnectionAlertSetDialog(sender: TagSettingsAlertConfigCell) {
@@ -2343,20 +2498,25 @@ extension TagSettingsViewController {
 
     private func temperatureAlertRange() -> (minimum: Double, maximum: Double) {
         let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
-        return (minimum: temperatureUnit.alertRange.lowerBound,
-                maximum: temperatureUnit.alertRange.upperBound)
+        return (
+            minimum: temperatureUnit.alertRange.lowerBound,
+            maximum: temperatureUnit.alertRange.upperBound
+        )
     }
 
     private func temperatureValue() -> (minimum: Double?, maximum: Double?) {
         if let unit = viewModel?.temperatureUnit.value?.unitTemperature,
            let l = viewModel?.temperatureLowerBound.value?.converted(to: unit),
-           let u = viewModel?.temperatureUpperBound.value?.converted(to: unit)
-        {
-            (minimum: l.value,
-             maximum: u.value)
+           let u = viewModel?.temperatureUpperBound.value?.converted(to: unit) {
+            (
+                minimum: l.value,
+                maximum: u.value
+            )
         } else {
-            (minimum: nil,
-             maximum: nil)
+            (
+                minimum: nil,
+                maximum: nil
+            )
         }
     }
 
@@ -2367,8 +2527,7 @@ extension TagSettingsViewController {
 
     private func humidityValue() -> (minimum: Double?, maximum: Double?) {
         if let l = viewModel?.relativeHumidityLowerBound.value,
-           let u = viewModel?.relativeHumidityUpperBound.value
-        {
+           let u = viewModel?.relativeHumidityUpperBound.value {
             (minimum: l, maximum: u)
         } else {
             (minimum: nil, maximum: nil)
@@ -2377,16 +2536,17 @@ extension TagSettingsViewController {
 
     private func pressureAlertRange() -> (minimum: Double, maximum: Double) {
         let pressureUnit = viewModel?.pressureUnit.value ?? .hectopascals
-        return (minimum: pressureUnit.alertRange.lowerBound,
-                maximum: pressureUnit.alertRange.upperBound)
+        return (
+            minimum: pressureUnit.alertRange.lowerBound,
+            maximum: pressureUnit.alertRange.upperBound
+        )
     }
 
     private func pressureValue() -> (minimum: Double?, maximum: Double?) {
         let (minimumRange, maximumRange) = pressureAlertRange()
         if let pressureUnit = viewModel?.pressureUnit.value,
            let lower = viewModel?.pressureLowerBound.value?.converted(to: pressureUnit).value,
-           let upper = viewModel?.pressureUpperBound.value?.converted(to: pressureUnit).value
-        {
+           let upper = viewModel?.pressureUpperBound.value?.converted(to: pressureUnit).value {
             let l = min(
                 max(lower, minimumRange),
                 maximumRange
@@ -2403,14 +2563,15 @@ extension TagSettingsViewController {
 
     // TODO: - Move the values to a separate constant file
     private func rssiAlertRange() -> (minimum: Double, maximum: Double) {
-        (minimum: -105,
-         maximum: 0)
+        (
+            minimum: -105,
+            maximum: 0
+        )
     }
 
     private func rssiValue() -> (minimum: Double?, maximum: Double?) {
         if let lower = viewModel?.signalLowerBound.value,
-           let upper = viewModel?.signalUpperBound.value
-        {
+           let upper = viewModel?.signalUpperBound.value {
             (minimum: lower, maximum: upper)
         } else {
             (minimum: nil, maximum: nil)
@@ -2423,7 +2584,8 @@ extension TagSettingsViewController {
 extension TagSettingsViewController {
     // swiftlint:disable:next function_body_length
     private func bindOffsetCorrectionSection() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -2437,12 +2599,11 @@ extension TagSettingsViewController {
 
         if let tempOffsetCorrectionCell {
             tempOffsetCorrectionCell.bind(viewModel
-                .temperatureOffsetCorrection)
-            { [weak self] cell, value in
-                cell.configure(value: self?
-                    .measurementService
-                    .temperatureOffsetCorrectionString(for: value ?? 0))
-            }
+                .temperatureOffsetCorrection) { [weak self] cell, value in
+                    cell.configure(value: self?
+                        .measurementService
+                        .temperatureOffsetCorrectionString(for: value ?? 0))
+                }
 
             tempOffsetCorrectionCell.bind(viewModel.latestMeasurement) { cell, measurement in
                 cell.disableEditing(measurement == nil)
@@ -2465,26 +2626,23 @@ extension TagSettingsViewController {
             }
 
             humidityOffsetCorrectionCell.bind(viewModel
-                .humidityOffsetCorrectionVisible)
-            { cell, visible in
-                cell.disableEditing(!GlobalHelpers.getBool(from: visible))
-            }
+                .humidityOffsetCorrectionVisible) { cell, visible in
+                    cell.disableEditing(!GlobalHelpers.getBool(from: visible))
+                }
         }
 
         if let pressureOffsetCorrectionCell {
             pressureOffsetCorrectionCell.bind(viewModel
-                .pressureOffsetCorrection)
-            { [weak self] cell, value in
-                cell.configure(value: self?
-                    .measurementService
-                    .pressureOffsetCorrectionString(for: value ?? 0))
-            }
+                .pressureOffsetCorrection) { [weak self] cell, value in
+                    cell.configure(value: self?
+                        .measurementService
+                        .pressureOffsetCorrectionString(for: value ?? 0))
+                }
 
             pressureOffsetCorrectionCell.bind(viewModel
-                .pressureOffsetCorrectionVisible)
-            { cell, visible in
-                cell.disableEditing(!GlobalHelpers.getBool(from: visible))
-            }
+                .pressureOffsetCorrectionVisible) { cell, visible in
+                    cell.disableEditing(!GlobalHelpers.getBool(from: visible))
+                }
 
             pressureOffsetCorrectionCell.bind(viewModel.latestMeasurement) {
                 [weak self] cell, measurement in
@@ -2520,9 +2678,11 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .offsetTemperature,
             createdCell: { [weak self] in
-                self?.tempOffsetCorrectionCell?.configure(title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
-                                                          value: self?.measurementService
-                                                              .temperatureOffsetCorrectionString(for: tempOffset))
+                self?.tempOffsetCorrectionCell?.configure(
+                    title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
+                    value: self?.measurementService
+                        .temperatureOffsetCorrectionString(for: tempOffset)
+                )
                 self?.tempOffsetCorrectionCell?.setAccessory(type: .chevron)
                 self?.tempOffsetCorrectionCell?.disableEditing(!hasMeasurement)
                 return self?.tempOffsetCorrectionCell ?? UITableViewCell()
@@ -2543,15 +2703,18 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?
                     .humidityOffsetCorrectionCell?
-                    .configure(title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
-                               value: self?.measurementService
-                                   .humidityOffsetCorrectionString(for: humOffset))
+                    .configure(
+                        title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+                        value: self?.measurementService
+                            .humidityOffsetCorrectionString(for: humOffset)
+                    )
                 self?.humidityOffsetCorrectionCell?.setAccessory(type: .chevron)
                 self?.humidityOffsetCorrectionCell?.disableEditing(disableHumidity)
                 return self?.humidityOffsetCorrectionCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
-                guard !disableHumidity else {
+                guard !disableHumidity
+                else {
                     return
                 }
                 self?.output.viewDidTapHumidityOffsetCorrection()
@@ -2568,15 +2731,18 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?
                     .pressureOffsetCorrectionCell?
-                    .configure(title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
-                               value: self?.measurementService.pressureOffsetCorrectionString(for: pressureOffset))
+                    .configure(
+                        title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+                        value: self?.measurementService.pressureOffsetCorrectionString(for: pressureOffset)
+                    )
                 self?.pressureOffsetCorrectionCell?.setAccessory(type: .chevron)
                 self?.pressureOffsetCorrectionCell?.hideSeparator(hide: true)
                 self?.pressureOffsetCorrectionCell?.disableEditing(disablePressure)
                 return self?.pressureOffsetCorrectionCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
-                guard !disablePressure else {
+                guard !disablePressure
+                else {
                     return
                 }
                 self?.output.viewDidTapOnPressureOffsetCorrection()
@@ -2620,7 +2786,8 @@ extension TagSettingsViewController {
 extension TagSettingsViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindMoreInfoSection() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -2748,8 +2915,10 @@ extension TagSettingsViewController {
     private func moreInfoMacAddressItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoMacAddressCell?.configure(title: RuuviLocalization.TagSettings.MacAddressTitleLabel.text,
-                                                        value: self?.viewModel?.mac.value ?? RuuviLocalization.na)
+                self?.moreInfoMacAddressCell?.configure(
+                    title: RuuviLocalization.TagSettings.MacAddressTitleLabel.text,
+                    value: self?.viewModel?.mac.value ?? RuuviLocalization.na
+                )
                 return self?.moreInfoMacAddressCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
@@ -2762,8 +2931,10 @@ extension TagSettingsViewController {
     private func moreInfoDataFormatItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoDataFormatCell?.configure(title: RuuviLocalization.TagSettings.DataFormatTitleLabel.text,
-                                                        value: self?.viewModel?.version.value?.stringValue)
+                self?.moreInfoDataFormatCell?.configure(
+                    title: RuuviLocalization.TagSettings.DataFormatTitleLabel.text,
+                    value: self?.viewModel?.version.value?.stringValue
+                )
                 self?.moreInfoDataFormatCell?.selectionStyle = .none
                 return self?.moreInfoDataFormatCell ?? UITableViewCell()
             },
@@ -2775,8 +2946,10 @@ extension TagSettingsViewController {
     private func moreInfoDataSourceItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoDataSourceCell?.configure(title: RuuviLocalization.TagSettings.DataSourceTitleLabel.text,
-                                                        value: self?.formattedDataSource(from: self?.viewModel?.source.value))
+                self?.moreInfoDataSourceCell?.configure(
+                    title: RuuviLocalization.TagSettings.DataSourceTitleLabel.text,
+                    value: self?.formattedDataSource(from: self?.viewModel?.source.value)
+                )
                 self?.moreInfoDataSourceCell?.selectionStyle = .none
                 return self?.moreInfoDataSourceCell ?? UITableViewCell()
             },
@@ -2806,8 +2979,10 @@ extension TagSettingsViewController {
     private func moreInfoAccXItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoAccXCell?.configure(title: RuuviLocalization.TagSettings.AccelerationXTitleLabel.text,
-                                                  value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationX.value))
+                self?.moreInfoAccXCell?.configure(
+                    title: RuuviLocalization.TagSettings.AccelerationXTitleLabel.text,
+                    value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationX.value)
+                )
                 self?.moreInfoAccXCell?.selectionStyle = .none
                 return self?.moreInfoAccXCell ?? UITableViewCell()
             },
@@ -2819,8 +2994,10 @@ extension TagSettingsViewController {
     private func moreInfoAccYItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoAccYCell?.configure(title: RuuviLocalization.TagSettings.AccelerationYTitleLabel.text,
-                                                  value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationY.value))
+                self?.moreInfoAccYCell?.configure(
+                    title: RuuviLocalization.TagSettings.AccelerationYTitleLabel.text,
+                    value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationY.value)
+                )
                 self?.moreInfoAccYCell?.selectionStyle = .none
                 return self?.moreInfoAccYCell ?? UITableViewCell()
             },
@@ -2832,8 +3009,10 @@ extension TagSettingsViewController {
     private func moreInfoAccZItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoAccZCell?.configure(title: RuuviLocalization.TagSettings.AccelerationZTitleLabel.text,
-                                                  value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationZ.value))
+                self?.moreInfoAccZCell?.configure(
+                    title: RuuviLocalization.TagSettings.AccelerationZTitleLabel.text,
+                    value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationZ.value)
+                )
                 self?.moreInfoAccZCell?.selectionStyle = .none
                 return self?.moreInfoAccZCell ?? UITableViewCell()
             },
@@ -2845,8 +3024,10 @@ extension TagSettingsViewController {
     private func moreInfoTxPowerItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoTxPowerCell?.configure(title: RuuviLocalization.TagSettings.TxPowerTitleLabel.text,
-                                                     value: self?.formattedTXPower(from: self?.viewModel?.txPower.value))
+                self?.moreInfoTxPowerCell?.configure(
+                    title: RuuviLocalization.TagSettings.TxPowerTitleLabel.text,
+                    value: self?.formattedTXPower(from: self?.viewModel?.txPower.value)
+                )
                 self?.moreInfoTxPowerCell?.selectionStyle = .none
                 return self?.moreInfoTxPowerCell ?? UITableViewCell()
             },
@@ -2858,8 +3039,10 @@ extension TagSettingsViewController {
     private func moreInfoRSSIItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoRSSICell?.configure(title: RuuviLocalization.TagSettings.RssiTitleLabel.text,
-                                                  value: self?.viewModel?.rssi.value.stringValue)
+                self?.moreInfoRSSICell?.configure(
+                    title: RuuviLocalization.TagSettings.RssiTitleLabel.text,
+                    value: self?.viewModel?.rssi.value.stringValue
+                )
                 return self?.moreInfoRSSICell ?? UITableViewCell()
             },
             action: { [weak self] _ in
@@ -2872,8 +3055,10 @@ extension TagSettingsViewController {
     private func moreInfoMeasurementSequenceItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoMSNCell?.configure(title: RuuviLocalization.TagSettings.MsnTitleLabel.text,
-                                                 value: self?.viewModel?.measurementSequenceNumber.value.stringValue)
+                self?.moreInfoMSNCell?.configure(
+                    title: RuuviLocalization.TagSettings.MsnTitleLabel.text,
+                    value: self?.viewModel?.measurementSequenceNumber.value.stringValue
+                )
                 return self?.moreInfoMSNCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
@@ -2947,7 +3132,8 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController {
     private func bindFirmwareSection() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
 
@@ -2977,8 +3163,10 @@ extension TagSettingsViewController {
     private func tagFirmwareVersionItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.firmwareVersionCell?.configure(title: RuuviLocalization.TagSettings.Firmware.currentVersion,
-                                                     value: self?.viewModel?.firmwareVersion.value ?? RuuviLocalization.na)
+                self?.firmwareVersionCell?.configure(
+                    title: RuuviLocalization.TagSettings.Firmware.currentVersion,
+                    value: self?.viewModel?.firmwareVersion.value ?? RuuviLocalization.na
+                )
                 self?.firmwareVersionCell?.setAccessory(type: .none)
                 self?.firmwareVersionCell?.selectionStyle = .none
                 return self?.firmwareVersionCell ?? UITableViewCell()
@@ -2992,8 +3180,10 @@ extension TagSettingsViewController {
         let cell = TagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
         let settingItem = TagSettingsItem(
             createdCell: {
-                cell.configure(title: RuuviLocalization.TagSettings.Firmware.updateFirmware,
-                               value: nil)
+                cell.configure(
+                    title: RuuviLocalization.TagSettings.Firmware.updateFirmware,
+                    value: nil
+                )
                 cell.setAccessory(type: .chevron)
                 cell.hideSeparator(hide: true)
                 return cell
@@ -3014,7 +3204,7 @@ extension TagSettingsViewController {
             identifier: .remove,
             title: RuuviLocalization.remove.capitalized,
             cells: [
-                tagRemoveItem(),
+                tagRemoveItem()
             ],
             collapsed: true,
             headerType: .expandable,
@@ -3044,15 +3234,17 @@ extension TagSettingsViewController {
 // MARK: - TableView delegate and datasource
 
 extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_: UITableView,
-                   numberOfRowsInSection section: Int) -> Int
-    {
+    func tableView(
+        _: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
         tableViewSections[section].collapsed ? 0 : tableViewSections[section].cells.count
     }
 
-    func tableView(_: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(
+        _: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         let cell = tableViewSections[indexPath.section].cells[indexPath.row]
         return cell.createdCell()
     }
@@ -3072,15 +3264,18 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
-    func tableView(_: UITableView,
-                   viewForHeaderInSection section: Int) -> UIView?
-    {
+    func tableView(
+        _: UITableView,
+        viewForHeaderInSection section: Int
+    ) -> UIView? {
         let sectionItem = tableViewSections[section]
         switch sectionItem.headerType {
         case .simple:
             let view = TagSettingsSimpleSectionHeader()
-            view.setTitle(with: sectionItem.title,
-                          section: section)
+            view.setTitle(
+                with: sectionItem.title,
+                section: section
+            )
             return view
         case .expandable:
 
@@ -3164,11 +3359,13 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                 )
             case .moreInfo:
                 moreInfoSectionHeaderView?.delegate = self
-                moreInfoSectionHeaderView?.setTitle(with: sectionItem.title,
-                                                    section: section,
-                                                    collapsed: sectionItem.collapsed,
-                                                    backgroundColor: sectionItem.backgroundColor,
-                                                    font: sectionItem.font)
+                moreInfoSectionHeaderView?.setTitle(
+                    with: sectionItem.title,
+                    section: section,
+                    collapsed: sectionItem.collapsed,
+                    backgroundColor: sectionItem.backgroundColor,
+                    font: sectionItem.font
+                )
                 moreInfoSectionHeaderView?
                     .hideSeparator(hide: tableViewSections.count == section)
                 moreInfoSectionHeaderView?.hideAlertComponents()
@@ -3185,11 +3382,13 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
             default:
                 let view = TagSettingsExpandableSectionHeader()
                 view.delegate = self
-                view.setTitle(with: sectionItem.title,
-                              section: section,
-                              collapsed: sectionItem.collapsed,
-                              backgroundColor: sectionItem.backgroundColor,
-                              font: sectionItem.font)
+                view.setTitle(
+                    with: sectionItem.title,
+                    section: section,
+                    collapsed: sectionItem.collapsed,
+                    backgroundColor: sectionItem.backgroundColor,
+                    font: sectionItem.font
+                )
                 view.hideSeparator(hide: tableViewSections.count == section)
                 view.hideAlertComponents()
                 view.showNoValueView(show: false)
@@ -3209,14 +3408,18 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
     ) -> TagSettingsExpandableSectionHeader {
         if let header {
             header.delegate = self
-            header.setTitle(with: sectionItem.title,
-                            section: section,
-                            collapsed: sectionItem.collapsed,
-                            backgroundColor: sectionItem.backgroundColor,
-                            font: sectionItem.font)
-            header.setAlertState(with: mutedTill,
-                                 isOn: isAlertOn,
-                                 alertState: alertState)
+            header.setTitle(
+                with: sectionItem.title,
+                section: section,
+                collapsed: sectionItem.collapsed,
+                backgroundColor: sectionItem.backgroundColor,
+                font: sectionItem.font
+            )
+            header.setAlertState(
+                with: mutedTill,
+                isOn: isAlertOn,
+                alertState: alertState
+            )
             header.hideSeparator(hide: tableViewSections.count == section)
             header.showNoValueView(show: false)
             return header
@@ -3266,10 +3469,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                 if let temperatureAlertCell {
                     let (minRange, maxRange) = temperatureMinMaxForSliders()
                     temperatureAlertCell.setAlertLimitDescription(description: temperatureAlertRangeDescription())
-                    temperatureAlertCell.setAlertRange(minValue: minRange,
-                                                       selectedMinValue: temperatureLowerBound(),
-                                                       maxValue: maxRange,
-                                                       selectedMaxValue: temperatureUpperBound())
+                    temperatureAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: temperatureLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: temperatureUpperBound()
+                    )
                     temperatureAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(from: !hasMeasurement()),
                         identifier: currentSection.identifier
@@ -3279,10 +3484,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                 if let humidityAlertCell {
                     let (minRange, maxRange) = humidityMinMaxForSliders()
                     humidityAlertCell.setAlertLimitDescription(description: humidityAlertRangeDescription())
-                    humidityAlertCell.setAlertRange(minValue: minRange,
-                                                    selectedMinValue: humidityLowerBound(),
-                                                    maxValue: maxRange,
-                                                    selectedMaxValue: humidityUpperBound())
+                    humidityAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: humidityLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: humidityUpperBound()
+                    )
                     humidityAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(
                             from: !showHumidityOffsetCorrection() || !hasMeasurement()
@@ -3294,10 +3501,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                 if let pressureAlertCell {
                     let (minRange, maxRange) = pressureMinMaxForSliders()
                     pressureAlertCell.setAlertLimitDescription(description: pressureAlertRangeDescription())
-                    pressureAlertCell.setAlertRange(minValue: minRange,
-                                                    selectedMinValue: pressureLowerBound(),
-                                                    maxValue: maxRange,
-                                                    selectedMaxValue: pressureUpperBound())
+                    pressureAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: pressureLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: pressureUpperBound()
+                    )
                     pressureAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(
                             from: !showPressureOffsetCorrection() || !hasMeasurement()
@@ -3309,10 +3518,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                 if let rssiAlertCell {
                     let (minRange, maxRange) = rssiMinMaxForSliders()
                     rssiAlertCell.setAlertLimitDescription(description: rssiAlertRangeDescription())
-                    rssiAlertCell.setAlertRange(minValue: minRange,
-                                                selectedMinValue: rssiLowerBound(),
-                                                maxValue: maxRange,
-                                                selectedMaxValue: rssiUpperBound())
+                    rssiAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: rssiLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: rssiUpperBound()
+                    )
                     rssiAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(from: !hasMeasurement()),
                         identifier: currentSection.identifier
@@ -3375,39 +3586,47 @@ private extension TagSettingsViewController {
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(top: backBarButtonItemView.topAnchor,
-                          leading: backBarButtonItemView.leadingAnchor,
-                          bottom: backBarButtonItemView.bottomAnchor,
-                          trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: backBarButtonItemView.topAnchor,
+            leading: backBarButtonItemView.leadingAnchor,
+            bottom: backBarButtonItemView.bottomAnchor,
+            trailing: backBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
 
         let rightBarButtonItemView = UIView()
         rightBarButtonItemView.addSubview(exportButton)
-        exportButton.anchor(top: rightBarButtonItemView.topAnchor,
-                            leading: rightBarButtonItemView.leadingAnchor,
-                            bottom: rightBarButtonItemView.bottomAnchor,
-                            trailing: rightBarButtonItemView.trailingAnchor,
-                            padding: .init(top: 0, left: 0, bottom: 0, right: -8),
-                            size: .init(width: 40, height: 40))
+        exportButton.anchor(
+            top: rightBarButtonItemView.topAnchor,
+            leading: rightBarButtonItemView.leadingAnchor,
+            bottom: rightBarButtonItemView.bottomAnchor,
+            trailing: rightBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: -8),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonItemView)
 
         let container = UIView(color: .clear)
         view.addSubview(container)
-        container.anchor(top: view.safeTopAnchor,
-                         leading: view.leadingAnchor,
-                         bottom: view.bottomAnchor,
-                         trailing: view.trailingAnchor)
+        container.anchor(
+            top: view.safeTopAnchor,
+            leading: view.leadingAnchor,
+            bottom: view.bottomAnchor,
+            trailing: view.trailingAnchor
+        )
 
         container.addSubview(tableView)
         tableView.fillSuperview()
 
         let tableHeaderView = UIView(color: .clear)
-        tableHeaderView.frame = CGRect(x: 0,
-                                       y: 0,
-                                       width: view.bounds.width,
-                                       height: GlobalHelpers.isDeviceTablet() ? 350 : 200)
+        tableHeaderView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: view.bounds.width,
+            height: GlobalHelpers.isDeviceTablet() ? 350 : 200
+        )
         tableHeaderView.addSubview(headerContentView)
         headerContentView.fillSuperview()
         headerContentView.delegate = self
@@ -3447,9 +3666,11 @@ extension TagSettingsViewController {
             from: viewModel?.mac.value,
             luid: viewModel?.uuid.value
         )
-        let alert = UIAlertController(title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
-                                      message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
-                                      preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
+            message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
+            preferredStyle: .alert
+        )
         alert.addTextField { [weak self] alertTextField in
             guard let self else { return }
             alertTextField.delegate = self
@@ -3476,12 +3697,15 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController {
     // swiftlint:disable:next function_body_length
-    private func showSensorCustomAlertDescriptionDialog(description: String?,
-                                                        sender: TagSettingsAlertConfigCell)
-    {
-        let alert = UIAlertController(title: RuuviLocalization.TagSettings.Alert.CustomDescription.title,
-                                      message: nil,
-                                      preferredStyle: .alert)
+    private func showSensorCustomAlertDescriptionDialog(
+        description: String?,
+        sender: TagSettingsAlertConfigCell
+    ) {
+        let alert = UIAlertController(
+            title: RuuviLocalization.TagSettings.Alert.CustomDescription.title,
+            message: nil,
+            preferredStyle: .alert
+        )
         alert.addTextField { [weak self] alertTextField in
             guard let self else { return }
             alertTextField.delegate = self
@@ -3547,23 +3771,28 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController {
     // swiftlint:disable:next function_parameter_count function_body_length cyclomatic_complexity
-    private func showSensorCustomAlertRangeDialog(title: String?,
-                                                  minimumBound: Double,
-                                                  maximumBound: Double,
-                                                  currentLowerBound: Double?,
-                                                  currentUpperBound: Double?,
-                                                  sender: TagSettingsAlertConfigCell)
-    {
-        let alert = UIAlertController(title: title,
-                                      message: nil,
-                                      preferredStyle: .alert)
+    private func showSensorCustomAlertRangeDialog(
+        title: String?,
+        minimumBound: Double,
+        maximumBound: Double,
+        currentLowerBound: Double?,
+        currentUpperBound: Double?,
+        sender: TagSettingsAlertConfigCell
+    ) {
+        let alert = UIAlertController(
+            title: title,
+            message: nil,
+            preferredStyle: .alert
+        )
         alert.addTextField { [weak self] alertTextField in
             guard let self else { return }
             alertTextField.delegate = self
             let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.min
-            alertTextField.placeholder = String(format: format,
-                                                locale: Locale.autoupdatingCurrent,
-                                                minimumBound)
+            alertTextField.placeholder = String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                minimumBound
+            )
             alertTextField.keyboardType = .decimalPad
             alertMinRangeTextField = alertTextField
             if minimumBound < 0 {
@@ -3578,9 +3807,11 @@ extension TagSettingsViewController {
             guard let self else { return }
             alertTextField.delegate = self
             let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.max
-            alertTextField.placeholder = String(format: format,
-                                                locale: Locale.autoupdatingCurrent,
-                                                maximumBound)
+            alertTextField.placeholder = String(
+                format: format,
+                locale: Locale.autoupdatingCurrent,
+                maximumBound
+            )
             alertTextField.keyboardType = .decimalPad
             alertMaxRangeTextField = alertTextField
             if maximumBound < 0 {
@@ -3605,9 +3836,11 @@ extension TagSettingsViewController {
                 return
             }
 
-            didSetAlertRange(sender: sender,
-                             minValue: minimumInputText.doubleValue,
-                             maxValue: maximumInputText.doubleValue)
+            didSetAlertRange(
+                sender: sender,
+                minValue: minimumInputText.doubleValue,
+                maxValue: maximumInputText.doubleValue
+            )
         }
         let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
@@ -3620,16 +3853,19 @@ extension TagSettingsViewController {
 
 extension TagSettingsViewController {
     // swiftlint:disable:next function_parameter_count
-    private func showSensorCustomAlertRangeDialog(title: String?,
-                                                  message: String?,
-                                                  minimum: Int,
-                                                  default _: Int,
-                                                  current: Int?,
-                                                  sender _: TagSettingsAlertConfigCell)
-    {
-        let alert = UIAlertController(title: title,
-                                      message: message,
-                                      preferredStyle: .alert)
+    private func showSensorCustomAlertRangeDialog(
+        title: String?,
+        message: String?,
+        minimum: Int,
+        default _: Int,
+        current: Int?,
+        sender _: TagSettingsAlertConfigCell
+    ) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
         alert.addTextField { [weak self] alertTextField in
             guard let self else { return }
             alertTextField.delegate = self
@@ -3669,11 +3905,13 @@ extension TagSettingsViewController: TagSettingsViewInput {
         let title = RuuviLocalization.claimSensorOwnership
         let message = RuuviLocalization.doYouOwnSensor
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.yes,
-                                           style: .default,
-                                           handler: { [weak self] _ in
-                                               self?.output.viewDidConfirmClaimTag()
-                                           }))
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.yes,
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output.viewDidConfirmClaimTag()
+            }
+        ))
         controller.addAction(UIAlertAction(title: RuuviLocalization.no, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
@@ -3733,11 +3971,13 @@ extension TagSettingsViewController: TagSettingsViewInput {
     func showKeepConnectionCloudModeDialog() {
         let message = RuuviLocalization.TagSettings.PairError.CloudMode.description
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
-                                           style: .cancel,
-                                           handler: { [weak self] _ in
-                                               self?.resetKeepConnectionSwitch()
-                                           }))
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.ok,
+            style: .cancel,
+            handler: { [weak self] _ in
+                self?.resetKeepConnectionSwitch()
+            }
+        ))
         present(controller, animated: true)
     }
 
@@ -3756,12 +3996,16 @@ extension TagSettingsViewController: TagSettingsViewInput {
     func showCSVExportLocationDialog() {
         let title = RuuviLocalization.exportHistory
         let message = RuuviLocalization.exportCsvFeatureLocation
-        let controller = UIAlertController(title: title,
-                                           message: message,
-                                           preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
-                                           style: .cancel,
-                                           handler: nil))
+        let controller = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.ok,
+            style: .cancel,
+            handler: nil
+        ))
         present(controller, animated: true)
     }
 }
@@ -3770,11 +4014,14 @@ extension TagSettingsViewController: TagSettingsViewInput {
 
 extension TagSettingsViewController: UITextFieldDelegate {
     // swiftlint:disable:next cyclomatic_complexity
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
 
-                   replacementString string: String) -> Bool
-    {
-        guard let text = textField.text else {
+        replacementString string: String
+    ) -> Bool {
+        guard let text = textField.text
+        else {
             return true
         }
         let limit = text.utf16.count + string.utf16.count - range.length
@@ -3791,7 +4038,8 @@ extension TagSettingsViewController: UITextFieldDelegate {
                 return false
             }
         } else if textField == alertMinRangeTextField || textField == alertMaxRangeTextField {
-            guard let text = textField.text, let decimalSeparator = NSLocale.current.decimalSeparator else {
+            guard let text = textField.text, let decimalSeparator = NSLocale.current.decimalSeparator
+            else {
                 return true
             }
 
@@ -3804,8 +4052,7 @@ extension TagSettingsViewController: UITextFieldDelegate {
             // Check if we will exceed 2 dp
             if
                 splitText.last?.count ?? 0 > 1, string.count != 0,
-                isEditingEnd
-            {
+                isEditingEnd {
                 return false
             }
 
@@ -3821,7 +4068,6 @@ extension TagSettingsViewController: UITextFieldDelegate {
             default:
                 return false
             }
-
         } else if textField == cloudConnectionAlertDelayTextField {
             if limit <= cloudConnectionAlertDelayCharaterLimit {
                 return true

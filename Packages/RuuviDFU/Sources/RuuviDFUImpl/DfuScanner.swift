@@ -37,12 +37,18 @@ class DfuScanner: NSObject {
 
     override required init() {
         super.init()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(willResignActiveNotification(_:)),
-                                               name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didBecomeActiveNotification(_:)),
-                                               name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(willResignActiveNotification(_:)),
+            name: UIApplication.willResignActiveNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didBecomeActiveNotification(_:)),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
         queue.async { [weak self] in
             self?.startIfNeeded()
         }
@@ -92,8 +98,10 @@ class DfuScanner: NSObject {
 
     private func startIfNeeded() {
         if manager.state == .poweredOn, !manager.isScanning {
-            manager.scanForPeripherals(withServices: scanServices,
-                                       options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true)])
+            manager.scanForPeripherals(
+                withServices: scanServices,
+                options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true)]
+            )
         }
         let shouldObserveLostDevices = observations.lost.count > 0
         if shouldObserveLostDevices, lostTimer == nil {
@@ -116,7 +124,8 @@ class DfuScanner: NSObject {
         let id = UUID()
         queue.async { [weak self] in
             self?.observations.device[id] = { [weak self, weak observer] device in
-                guard let observer else {
+                guard let observer
+                else {
                     self?.observations.device.removeValue(forKey: id)
                     self?.stopIfNeeded()
                     return
@@ -141,7 +150,8 @@ class DfuScanner: NSObject {
         let id = UUID()
         queue.async { [weak self] in
             self?.observations.lost[id] = LostObservation(block: { [weak self, weak observer] device in
-                guard let observer else {
+                guard let observer
+                else {
                     self?.observations.lost.removeValue(forKey: id)
                     self?.stopIfNeeded()
                     return
@@ -169,11 +179,12 @@ extension DfuScanner: CBCentralManagerDelegate {
         }
     }
 
-    func centralManager(_: CBCentralManager,
-                        didDiscover peripheral: CBPeripheral,
-                        advertisementData: [String: Any],
-                        rssi RSSI: NSNumber)
-    {
+    func centralManager(
+        _: CBCentralManager,
+        didDiscover peripheral: CBPeripheral,
+        advertisementData: [String: Any],
+        rssi RSSI: NSNumber
+    ) {
         guard RSSI.intValue != 127 else { return }
         let uuid = peripheral.identifier.uuidString
         let isConnectable = (advertisementData[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue ?? false

@@ -36,8 +36,7 @@ public protocol RuuviTagSensorRecord: PhysicalSensor {
 public extension RuuviTagSensorRecord {
     var id: String {
         if let macId,
-           !macId.value.isEmpty
-        {
+           !macId.value.isEmpty {
             macId.value + "\(date.timeIntervalSince1970)"
         } else if let luid {
             luid.value + "\(date.timeIntervalSince1970)"
@@ -48,8 +47,7 @@ public extension RuuviTagSensorRecord {
 
     var uuid: String {
         if let macId,
-           !macId.value.isEmpty
-        {
+           !macId.value.isEmpty {
             macId.value
         } else if let luid {
             luid.value

@@ -46,8 +46,10 @@ private extension AppearanceSettingsTableViewController {
 
     func setUpTableView() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.register(AppearanceSettingsTableViewBasicCell.self,
-                           forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(
+            AppearanceSettingsTableViewBasicCell.self,
+            forCellReuseIdentifier: reuseIdentifier
+        )
     }
 
     func updateUI() {
@@ -66,13 +68,15 @@ extension AppearanceSettingsTableViewController {
         viewModels.count
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: reuseIdentifier,
             for: indexPath
-        ) as? AppearanceSettingsTableViewBasicCell else {
+        ) as? AppearanceSettingsTableViewBasicCell
+        else {
             fatalError()
         }
         let viewModel = viewModels[indexPath.row]
@@ -84,9 +88,10 @@ extension AppearanceSettingsTableViewController {
 // MARK: - UITableViewDelegate
 
 extension AppearanceSettingsTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         tableView.deselectRow(at: indexPath, animated: true)
         let viewModel = viewModels[indexPath.row]
         output.viewDidTriggerViewModel(viewModel: viewModel)

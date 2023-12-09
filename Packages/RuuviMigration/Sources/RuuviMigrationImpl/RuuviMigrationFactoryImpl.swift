@@ -59,14 +59,16 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             ruuviAlertService: ruuviAlertService
         )
         let toNetworkPull60 = MigrationManagerToNetworkPull60(settings: settings)
-        return [toSQLite,
-                toAlertService,
-                toPrune240,
-                toChartDuration240,
-                toSensorSettings,
-                toRH,
-                toTimeouts,
-                fixRHAlerts,
-                toNetworkPull60]
+        return [
+            toSQLite,
+            toAlertService,
+            toPrune240,
+            toChartDuration240,
+            toSensorSettings,
+            toRH,
+            toTimeouts,
+            fixRHAlerts,
+            toNetworkPull60,
+        ]
     }
 }

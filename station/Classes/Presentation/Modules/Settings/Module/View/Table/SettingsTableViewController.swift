@@ -148,8 +148,7 @@ extension SettingsTableViewController {
         // Add the logic for the cloud mode cell here
         if !showDefaults && cell == defaultsCell ||
             (!showDevices || !cloudModeVisible) && cell == devicesCell ||
-            !cloudModeVisible && cell == ruuviCloudCell
-        {
+            !cloudModeVisible && cell == ruuviCloudCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -157,9 +156,10 @@ extension SettingsTableViewController {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         switch cell {
         case temperatureCell:

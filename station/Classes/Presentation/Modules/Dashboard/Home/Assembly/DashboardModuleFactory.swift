@@ -71,9 +71,11 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         // MARK: - MENU
 
         // swiftlint:disable force_cast
-        let menu = UIStoryboard(name: "Menu",
-                                bundle: .main)
-            .instantiateInitialViewController() as! UINavigationController
+        let menu = UIStoryboard(
+            name: "Menu",
+            bundle: .main
+        )
+        .instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom
         let menuTable = menu.topViewController as! MenuTableViewController
         let menuPresenter = menuTable.output as! MenuPresenter

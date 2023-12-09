@@ -76,9 +76,10 @@ extension MyRuuviAccountPresenter {
         let message = RuuviLocalization.TagsManagerPresenter.SignOutConfirmAlert.message
         let confirmActionTitle = RuuviLocalization.ok
         let cancelActionTitle = RuuviLocalization.cancel
-        let confirmAction = UIAlertAction(title: confirmActionTitle,
-                                          style: .default)
-        { [weak self] _ in
+        let confirmAction = UIAlertAction(
+            title: confirmActionTitle,
+            style: .default
+        ) { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.activityPresenter.show(with: .loading(message: nil))
             sSelf.cloudNotificationService.unregister(
@@ -100,14 +101,18 @@ extension MyRuuviAccountPresenter {
                     self?.activityPresenter.dismiss()
                 })
         }
-        let cancleAction = UIAlertAction(title: cancelActionTitle,
-                                         style: .cancel,
-                                         handler: nil)
+        let cancleAction = UIAlertAction(
+            title: cancelActionTitle,
+            style: .cancel,
+            handler: nil
+        )
         let actions = [confirmAction, cancleAction]
-        let alertViewModel = AlertViewModel(title: title,
-                                            message: message,
-                                            style: .alert,
-                                            actions: actions)
+        let alertViewModel = AlertViewModel(
+            title: title,
+            message: message,
+            style: .alert,
+            actions: actions
+        )
         alertPresenter.showAlert(alertViewModel)
     }
 

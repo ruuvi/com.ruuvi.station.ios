@@ -56,23 +56,27 @@ extension AppearanceSettingsPresenter {
     private func startObservingThemeSetting() {
         themeToken = NotificationCenter
             .default
-            .addObserver(forName: .AppearanceSettingsDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.configure()
-                             self?.updateTheme()
-                         })
+            .addObserver(
+                forName: .AppearanceSettingsDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.configure()
+                    self?.updateTheme()
+                }
+            )
     }
 
     private func updateTheme() {
-        UIView.animate(withDuration: 0.3,
-                       delay: 0.0,
-                       options: .curveLinear,
-                       animations: { [weak self] in
-                           guard let sSelf = self else { return }
-                           UIWindow.key?.overrideUserInterfaceStyle =
-                               sSelf.settings.theme.uiInterfaceStyle
-                       })
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.0,
+            options: .curveLinear,
+            animations: { [weak self] in
+                guard let sSelf = self else { return }
+                UIWindow.key?.overrideUserInterfaceStyle =
+                    sSelf.settings.theme.uiInterfaceStyle
+            }
+        )
     }
 }

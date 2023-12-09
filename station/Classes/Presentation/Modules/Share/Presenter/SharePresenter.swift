@@ -95,20 +95,25 @@ extension SharePresenter: ShareViewOutput {
         let message = RuuviLocalization.SharePresenter.UnshareSensor.message(email)
         let confirmActionTitle = RuuviLocalization.yes
         let cancelActionTitle = RuuviLocalization.no
-        let confirmAction = UIAlertAction(title: confirmActionTitle,
-                                          style: .default)
-        { [weak self] _ in
+        let confirmAction = UIAlertAction(
+            title: confirmActionTitle,
+            style: .default
+        ) { [weak self] _ in
             self?.unshareTag(email)
         }
 
-        let cancleAction = UIAlertAction(title: cancelActionTitle,
-                                         style: .cancel,
-                                         handler: nil)
+        let cancleAction = UIAlertAction(
+            title: cancelActionTitle,
+            style: .cancel,
+            handler: nil
+        )
         let actions = [confirmAction, cancleAction]
-        let alertViewModel = AlertViewModel(title: title,
-                                            message: message,
-                                            style: .alert,
-                                            actions: actions)
+        let alertViewModel = AlertViewModel(
+            title: title,
+            message: message,
+            style: .alert,
+            actions: actions
+        )
         alertPresenter.showAlert(alertViewModel)
     }
 }
@@ -139,8 +144,7 @@ extension SharePresenter {
                     sensor.luid?.any == self?.sensor.luid?.any)
                     ||
                     (sensor.macId?.any != nil &&
-                        sensor.macId?.any == self?.sensor.macId?.any)
-                {
+                        sensor.macId?.any == self?.sensor.macId?.any) {
                     self?.sensor = sensor
                 }
             default: return
@@ -149,7 +153,8 @@ extension SharePresenter {
     }
 
     private func fetchShared() {
-        guard !sensor.canShare else {
+        guard !sensor.canShare
+        else {
             updateViewModel()
             return
         }
@@ -161,9 +166,9 @@ extension SharePresenter {
                 if let shareable = shareableSensors
                     .first(where: {
                         $0.id == sSelf.sensor.id
-                    })
-                {
-                    guard shareable.canShare else {
+                    }) {
+                    guard shareable.canShare
+                    else {
                         return
                     }
 

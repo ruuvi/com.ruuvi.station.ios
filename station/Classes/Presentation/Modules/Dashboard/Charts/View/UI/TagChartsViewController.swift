@@ -79,13 +79,15 @@ class TagChartsViewController: UIViewController {
 
     // Chart toolbar
     private lazy var historySelectionButton: RuuviContextMenuButton =
-        .init(menu: historyLengthOptions(),
-              titleColor: .white,
-              title: RuuviLocalization.day1,
-              icon: RuuviAssets.dropDownArrowImage,
-              iconTintColor: RuuviColor.logoTintColor,
-              iconSize: .init(width: 14, height: 14),
-              preccedingIcon: false)
+        .init(
+            menu: historyLengthOptions(),
+            titleColor: .white,
+            title: RuuviLocalization.day1,
+            icon: RuuviAssets.dropDownArrowImage,
+            iconTintColor: RuuviColor.logoTintColor,
+            iconSize: .init(width: 14, height: 14),
+            preccedingIcon: false
+        )
 
     // Chart toolbar
     private lazy var moreButton: UIButton = {
@@ -141,8 +143,11 @@ class TagChartsViewController: UIViewController {
             preccedingIcon: true
         )
         button.button.showsMenuAsPrimaryAction = false
-        button.button.addTarget(self, action: #selector(syncButtonDidTap),
-                                for: .touchUpInside)
+        button.button.addTarget(
+            self,
+            action: #selector(syncButtonDidTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -216,8 +221,10 @@ class TagChartsViewController: UIViewController {
         coordinator.animate(alongsideTransition: { _ in
         }, completion: { [weak self] _ in
             self?.updateScrollviewBehaviour()
-            self?.updateChartsCollectionConstaints(from: self?.chartModules ?? [],
-                                                   withAnimation: true)
+            self?.updateChartsCollectionConstaints(
+                from: self?.chartModules ?? [],
+                withAnimation: true
+            )
             self?.output.viewDidTransition()
         })
         super.viewWillTransition(to: size, with: coordinator)
@@ -232,156 +239,204 @@ class TagChartsViewController: UIViewController {
     fileprivate func setUpContentView() {
         let chartToolbarView = UIView(color: .clear)
         view.addSubview(chartToolbarView)
-        chartToolbarView.anchor(top: view.safeTopAnchor,
-                                leading: view.safeLeftAnchor,
-                                bottom: nil,
-                                trailing: view.safeRightAnchor,
-                                padding: .init(top: 8,
-                                               left: 12,
-                                               bottom: 0,
-                                               right: 8),
-                                size: .init(width: 0, height: 36))
+        chartToolbarView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: nil,
+            trailing: view.safeRightAnchor,
+            padding: .init(
+                top: 8,
+                left: 12,
+                bottom: 0,
+                right: 8
+            ),
+            size: .init(width: 0, height: 36)
+        )
 
         chartToolbarView.addSubview(moreButton)
-        moreButton.anchor(top: nil,
-                          leading: nil,
-                          bottom: nil,
-                          trailing: chartToolbarView.trailingAnchor,
-                          padding: .init(top: 0,
-                                         left: 0,
-                                         bottom: 0,
-                                         right: 8),
-                          size: .init(width: 18, height: 18))
+        moreButton.anchor(
+            top: nil,
+            leading: nil,
+            bottom: nil,
+            trailing: chartToolbarView.trailingAnchor,
+            padding: .init(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 8
+            ),
+            size: .init(width: 18, height: 18)
+        )
         moreButton.centerYInSuperview()
 
         chartToolbarView.addSubview(historySelectionButton)
-        historySelectionButton.anchor(top: nil,
-                                      leading: nil,
-                                      bottom: nil,
-                                      trailing: moreButton.leadingAnchor,
-                                      padding: .init(top: 0,
-                                                     left: 0,
-                                                     bottom: 0,
-                                                     right: 8),
-                                      size: .init(width: 0,
-                                                  height: 24))
+        historySelectionButton.anchor(
+            top: nil,
+            leading: nil,
+            bottom: nil,
+            trailing: moreButton.leadingAnchor,
+            padding: .init(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 8
+            ),
+            size: .init(
+                width: 0,
+                height: 24
+            )
+        )
         historySelectionButton.centerYInSuperview()
 
         chartToolbarView.addSubview(syncProgressView)
-        syncProgressView.anchor(top: chartToolbarView.topAnchor,
-                                leading: chartToolbarView.leadingAnchor,
-                                bottom: chartToolbarView.bottomAnchor,
-                                trailing: historySelectionButton.leadingAnchor,
-                                padding: .init(top: 0,
-                                               left: 0,
-                                               bottom: 0,
-                                               right: 8))
+        syncProgressView.anchor(
+            top: chartToolbarView.topAnchor,
+            leading: chartToolbarView.leadingAnchor,
+            bottom: chartToolbarView.bottomAnchor,
+            trailing: historySelectionButton.leadingAnchor,
+            padding: .init(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 8
+            )
+        )
 
         syncProgressView.addSubview(syncCancelButton)
-        syncCancelButton.anchor(top: nil,
-                                leading: syncProgressView.leadingAnchor,
-                                bottom: nil,
-                                trailing: nil,
-                                size: .init(width: 32, height: 32))
+        syncCancelButton.anchor(
+            top: nil,
+            leading: syncProgressView.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            size: .init(width: 32, height: 32)
+        )
         syncCancelButton.centerYInSuperview()
         syncProgressView.alpha = 0
 
         syncProgressView.addSubview(syncStatusLabel)
-        syncStatusLabel.anchor(top: nil,
-                               leading: syncCancelButton.trailingAnchor,
-                               bottom: nil,
-                               trailing: syncProgressView.trailingAnchor,
-                               padding: .init(top: 0, left: 6, bottom: 0, right: 0))
+        syncStatusLabel.anchor(
+            top: nil,
+            leading: syncCancelButton.trailingAnchor,
+            bottom: nil,
+            trailing: syncProgressView.trailingAnchor,
+            padding: .init(top: 0, left: 6, bottom: 0, right: 0)
+        )
         syncStatusLabel.centerYInSuperview()
 
         chartToolbarView.addSubview(syncButton)
-        syncButton.anchor(top: nil,
-                          leading: chartToolbarView.leadingAnchor,
-                          bottom: nil,
-                          trailing: nil,
-                          padding: .init(top: 0, left: 8, bottom: 0, right: 0),
-                          size: .init(width: 0,
-                                      height: 28))
+        syncButton.anchor(
+            top: nil,
+            leading: chartToolbarView.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 0, left: 8, bottom: 0, right: 0),
+            size: .init(
+                width: 0,
+                height: 28
+            )
+        )
         syncButton.centerYInSuperview()
         syncButton.alpha = 1
 
         view.addSubview(scrollView)
-        scrollView.anchor(top: chartToolbarView.bottomAnchor,
-                          leading: view.safeLeftAnchor,
-                          bottom: view.safeBottomAnchor,
-                          trailing: view.safeRightAnchor,
-                          padding: .init(top: 6, left: 0, bottom: 28, right: 0))
+        scrollView.anchor(
+            top: chartToolbarView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(top: 6, left: 0, bottom: 28, right: 0)
+        )
 
         scrollView.addSubview(temperatureChartView)
-        temperatureChartView.anchor(top: scrollView.topAnchor,
-                                    leading: scrollView.leadingAnchor,
-                                    bottom: nil,
-                                    trailing: scrollView.trailingAnchor)
+        temperatureChartView.anchor(
+            top: scrollView.topAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
         temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
         temperatureChartViewHeight.isActive = true
         temperatureChartView.chartDelegate = self
 
         scrollView.addSubview(humidityChartView)
-        humidityChartView.anchor(top: temperatureChartView.bottomAnchor,
-                                 leading: scrollView.leadingAnchor,
-                                 bottom: nil,
-                                 trailing: scrollView.trailingAnchor)
+        humidityChartView.anchor(
+            top: temperatureChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
         humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
         humidityChartViewHeight.isActive = true
         humidityChartView.chartDelegate = self
 
         scrollView.addSubview(pressureChartView)
-        pressureChartView.anchor(top: humidityChartView.bottomAnchor,
-                                 leading: scrollView.leadingAnchor,
-                                 bottom: scrollView.bottomAnchor,
-                                 trailing: scrollView.trailingAnchor)
+        pressureChartView.anchor(
+            top: humidityChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: scrollView.bottomAnchor,
+            trailing: scrollView.trailingAnchor
+        )
         pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
         pressureChartViewHeight.isActive = true
         pressureChartView.chartDelegate = self
 
         view.addSubview(noDataLabel)
-        noDataLabel.anchor(top: nil,
-                           leading: view.safeLeftAnchor,
-                           bottom: nil,
-                           trailing: view.safeRightAnchor)
+        noDataLabel.anchor(
+            top: nil,
+            leading: view.safeLeftAnchor,
+            bottom: nil,
+            trailing: view.safeRightAnchor
+        )
         noDataLabel.centerYInSuperview()
         noDataLabel.alpha = 0
 
         let footerView = UIView(color: .clear)
         view.addSubview(footerView)
-        footerView.anchor(top: scrollView.bottomAnchor,
-                          leading: view.safeLeftAnchor,
-                          bottom: view.safeBottomAnchor,
-                          trailing: view.safeRightAnchor,
-                          padding: .init(top: 4,
-                                         left: 16,
-                                         bottom: 8,
-                                         right: 16),
-                          size: .init(width: 0, height: 26))
+        footerView.anchor(
+            top: scrollView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(
+                top: 4,
+                left: 16,
+                bottom: 8,
+                right: 16
+            ),
+            size: .init(width: 0, height: 26)
+        )
 
         footerView.addSubview(updatedAtLabel)
-        updatedAtLabel.anchor(top: footerView.topAnchor,
-                              leading: nil,
-                              bottom: footerView.bottomAnchor,
-                              trailing: nil,
-                              padding: .init(top: 0,
-                                             left: 12,
-                                             bottom: 0,
-                                             right: 0))
+        updatedAtLabel.anchor(
+            top: footerView.topAnchor,
+            leading: nil,
+            bottom: footerView.bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 0,
+                left: 12,
+                bottom: 0,
+                right: 0
+            )
+        )
 
         footerView.addSubview(dataSourceIconView)
-        dataSourceIconView.anchor(top: nil,
-                                  leading: updatedAtLabel.trailingAnchor,
-                                  bottom: nil,
-                                  trailing: footerView.trailingAnchor,
-                                  padding: .init(top: 0,
-                                                 left: 6,
-                                                 bottom: 0,
-                                                 right: 0),
-                                  size: .init(width: 22, height: 22))
+        dataSourceIconView.anchor(
+            top: nil,
+            leading: updatedAtLabel.trailingAnchor,
+            bottom: nil,
+            trailing: footerView.trailingAnchor,
+            padding: .init(
+                top: 0,
+                left: 6,
+                bottom: 0,
+                right: 0
+            ),
+            size: .init(width: 22, height: 22)
+        )
         dataSourceIconView.centerYInSuperview()
     }
 
@@ -436,8 +491,10 @@ class TagChartsViewController: UIViewController {
         }
         actions.append(more_action)
 
-        return UIMenu(title: "",
-                      children: actions)
+        return UIMenu(
+            title: "",
+            children: actions
+        )
     }
 
     fileprivate func handleHistoryLengthSelection(hours: Int?) {
@@ -499,7 +556,8 @@ class TagChartsViewController: UIViewController {
 
 extension TagChartsViewController: TagChartsViewDelegate {
     func chartDidTranslate(_ chartView: TagChartsView) {
-        guard chartViews.count > 1 else {
+        guard chartViews.count > 1
+        else {
             calculateMinMaxForChart(for: chartView)
             return
         }
@@ -520,11 +578,13 @@ extension TagChartsViewController: TagChartsViewDelegate {
         }
     }
 
-    func chartValueDidSelect(_ chartView: TagChartsView,
-                             entry _: ChartDataEntry,
-                             highlight: Highlight)
-    {
-        guard chartViews.count > 1 else {
+    func chartValueDidSelect(
+        _ chartView: TagChartsView,
+        entry _: ChartDataEntry,
+        highlight: Highlight
+    ) {
+        guard chartViews.count > 1
+        else {
             return
         }
 
@@ -534,7 +594,8 @@ extension TagChartsViewController: TagChartsViewDelegate {
     }
 
     func chartValueDidDeselect(_: TagChartsView) {
-        guard chartViews.count > 1 else {
+        guard chartViews.count > 1
+        else {
             return
         }
 
@@ -560,9 +621,10 @@ extension TagChartsViewController: TagChartsViewInput {
         updateChartsCollectionConstaints(from: from)
     }
 
-    func setChartViewData(from chartViewData: [TagChartViewData],
-                          settings: RuuviLocalSettings)
-    {
+    func setChartViewData(
+        from chartViewData: [TagChartViewData],
+        settings: RuuviLocalSettings
+    ) {
         if chartViewData.count == 0 {
             clearChartData()
             showNoDataLabel()
@@ -576,73 +638,93 @@ extension TagChartsViewController: TagChartsViewInput {
         for data in chartViewData {
             switch data.chartType {
             case .temperature:
-                populateChartView(from: data.chartData,
-                                  title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
-                                  type: data.chartType,
-                                  unit: settings.temperatureUnit.symbol,
-                                  settings: settings,
-                                  view: temperatureChartView)
+                populateChartView(
+                    from: data.chartData,
+                    title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
+                    type: data.chartType,
+                    unit: settings.temperatureUnit.symbol,
+                    settings: settings,
+                    view: temperatureChartView
+                )
             case .humidity:
-                populateChartView(from: data.chartData,
-                                  title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
-                                  type: data.chartType,
-                                  unit: settings.humidityUnit.symbol,
-                                  settings: settings,
-                                  view: humidityChartView)
+                populateChartView(
+                    from: data.chartData,
+                    title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+                    type: data.chartType,
+                    unit: settings.humidityUnit.symbol,
+                    settings: settings,
+                    view: humidityChartView
+                )
             case .pressure:
-                populateChartView(from: data.chartData,
-                                  title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
-                                  type: data.chartType,
-                                  unit: settings.pressureUnit.symbol,
-                                  settings: settings,
-                                  view: pressureChartView)
+                populateChartView(
+                    from: data.chartData,
+                    title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+                    type: data.chartType,
+                    unit: settings.pressureUnit.symbol,
+                    settings: settings,
+                    view: pressureChartView
+                )
             default:
                 break
             }
         }
     }
 
-    func updateChartViewData(temperatureEntries: [ChartDataEntry],
-                             humidityEntries: [ChartDataEntry],
-                             pressureEntries: [ChartDataEntry],
-                             isFirstEntry: Bool,
-                             settings: RuuviLocalSettings)
-    {
+    func updateChartViewData(
+        temperatureEntries: [ChartDataEntry],
+        humidityEntries: [ChartDataEntry],
+        pressureEntries: [ChartDataEntry],
+        isFirstEntry: Bool,
+        settings: RuuviLocalSettings
+    ) {
         hideNoDataLabel()
         showChartViews()
 
         temperatureChartView.setSettings(settings: settings)
-        temperatureChartView.updateDataSet(with: temperatureEntries,
-                                           isFirstEntry: isFirstEntry)
+        temperatureChartView.updateDataSet(
+            with: temperatureEntries,
+            isFirstEntry: isFirstEntry
+        )
 
         humidityChartView.setSettings(settings: settings)
-        humidityChartView.updateDataSet(with: humidityEntries,
-                                        isFirstEntry: isFirstEntry)
+        humidityChartView.updateDataSet(
+            with: humidityEntries,
+            isFirstEntry: isFirstEntry
+        )
 
         pressureChartView.setSettings(settings: settings)
-        pressureChartView.updateDataSet(with: pressureEntries,
-                                        isFirstEntry: isFirstEntry)
+        pressureChartView.updateDataSet(
+            with: pressureEntries,
+            isFirstEntry: isFirstEntry
+        )
     }
 
-    func updateLatestMeasurement(temperature: ChartDataEntry?,
-                                 humidity: ChartDataEntry?,
-                                 pressure: ChartDataEntry?,
-                                 settings: RuuviLocalSettings)
-    {
-        temperatureChartView.updateLatest(with: temperature,
-                                          type: .temperature,
-                                          measurementService: measurementService,
-                                          unit: settings.temperatureUnit.symbol)
-        humidityChartView.updateLatest(with: humidity,
-                                       type: .humidity,
-                                       measurementService: measurementService,
-                                       unit: settings.humidityUnit == .dew ?
-                                           settings.temperatureUnit.symbol :
-                                           settings.humidityUnit.symbol)
-        pressureChartView.updateLatest(with: pressure,
-                                       type: .pressure,
-                                       measurementService: measurementService,
-                                       unit: settings.pressureUnit.symbol)
+    func updateLatestMeasurement(
+        temperature: ChartDataEntry?,
+        humidity: ChartDataEntry?,
+        pressure: ChartDataEntry?,
+        settings: RuuviLocalSettings
+    ) {
+        temperatureChartView.updateLatest(
+            with: temperature,
+            type: .temperature,
+            measurementService: measurementService,
+            unit: settings.temperatureUnit.symbol
+        )
+        humidityChartView.updateLatest(
+            with: humidity,
+            type: .humidity,
+            measurementService: measurementService,
+            unit: settings.humidityUnit == .dew ?
+                settings.temperatureUnit.symbol :
+                settings.humidityUnit.symbol
+        )
+        pressureChartView.updateLatest(
+            with: pressure,
+            type: .pressure,
+            measurementService: measurementService,
+            unit: settings.pressureUnit.symbol
+        )
     }
 
     func updateLatestRecordStatus(with record: RuuviTagSensorRecord) {
@@ -675,16 +757,19 @@ extension TagChartsViewController: TagChartsViewInput {
         let title = RuuviLocalization.TagCharts.BluetoothDisabledAlert.title
         let message = RuuviLocalization.TagCharts.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
-                                        style: .default, handler: { _ in
-                                            guard let url = URL(string: userDeclined ?
-                                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
-                                                UIApplication.shared.canOpenURL(url)
-                                            else {
-                                                return
-                                            }
-                                            UIApplication.shared.open(url)
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.PermissionPresenter.settings,
+            style: .default,
+            handler: { _ in
+                guard let url = URL(string: userDeclined ?
+                    UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                    UIApplication.shared.canOpenURL(url)
+                else {
+                    return
+                }
+                UIApplication.shared.open(url)
+            }
+        ))
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -734,12 +819,14 @@ extension TagChartsViewController: TagChartsViewInput {
         let message = RuuviLocalization.TagCharts.FailedToSyncDialog.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.TagCharts.TryAgain.title,
-                                        style: .default,
-                                        handler: { [weak self] _ in
-                                            guard let self else { return }
-                                            output.viewDidTriggerSync(for: viewModel)
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.TagCharts.TryAgain.title,
+            style: .default,
+            handler: { [weak self] _ in
+                guard let self else { return }
+                output.viewDidTriggerSync(for: viewModel)
+            }
+        ))
         present(alertVC, animated: true)
     }
 
@@ -753,12 +840,13 @@ extension TagChartsViewController: TagChartsViewInput {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.close, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.doNotShowAgain
-        alertVC.addAction(UIAlertAction(title: actionTitle,
-                                        style: .default,
-                                        handler: { [weak self] _ in
-                                            self?.output.viewDidTriggerDoNotShowSyncDialog()
-
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: actionTitle,
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output.viewDidTriggerDoNotShowSyncDialog()
+            }
+        ))
         present(alertVC, animated: true)
     }
 
@@ -788,8 +876,10 @@ extension TagChartsViewController: TagChartsViewInput {
     }
 
     func showExportSheet(with path: URL) {
-        let vc = UIActivityViewController(activityItems: [path],
-                                          applicationActivities: [])
+        let vc = UIActivityViewController(
+            activityItems: [path],
+            applicationActivities: []
+        )
         vc.excludedActivityTypes = [
             UIActivity.ActivityType.assignToContact,
             UIActivity.ActivityType.saveToCameraRoll,
@@ -808,21 +898,26 @@ extension TagChartsViewController: TagChartsViewInput {
     func showLongerHistoryDialog() {
         let title = RuuviLocalization.longerHistoryTitle
         let message = RuuviLocalization.longerHistoryMessage
-        let controller = UIAlertController(title: title,
-                                           message: message,
-                                           preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
-                                           style: .cancel,
-                                           handler: nil))
+        let controller = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.ok,
+            style: .cancel,
+            handler: nil
+        ))
         present(controller, animated: true)
     }
 }
 
 extension TagChartsViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func updateChartsCollectionConstaints(from: [MeasurementType],
-                                                  withAnimation: Bool = false)
-    {
+    private func updateChartsCollectionConstaints(
+        from: [MeasurementType],
+        withAnimation: Bool = false
+    ) {
         if from.count == 0 {
             noDataLabel.alpha = 1
             return
@@ -831,7 +926,8 @@ extension TagChartsViewController {
         noDataLabel.alpha = 0
         chartViews.removeAll()
         let scrollViewHeight = scrollView.frame.height
-        guard viewIsVisible, scrollViewHeight > 0, from.count > 0 else {
+        guard viewIsVisible, scrollViewHeight > 0, from.count > 0
+        else {
             return
         }
         updateScrollviewBehaviour()
@@ -862,22 +958,28 @@ extension TagChartsViewController {
             switch item {
             case .temperature:
                 chartViews.append(temperatureChartView)
-                updateChartViewConstaints(constaint: temperatureChartViewHeight,
-                                          totalHeight: scrollViewHeight,
-                                          itemCount: from.count,
-                                          withAnimation: withAnimation)
+                updateChartViewConstaints(
+                    constaint: temperatureChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
             case .humidity:
                 chartViews.append(humidityChartView)
-                updateChartViewConstaints(constaint: humidityChartViewHeight,
-                                          totalHeight: scrollViewHeight,
-                                          itemCount: from.count,
-                                          withAnimation: withAnimation)
+                updateChartViewConstaints(
+                    constaint: humidityChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
             case .pressure:
                 chartViews.append(pressureChartView)
-                updateChartViewConstaints(constaint: pressureChartViewHeight,
-                                          totalHeight: scrollViewHeight,
-                                          itemCount: from.count,
-                                          withAnimation: withAnimation)
+                updateChartViewConstaints(
+                    constaint: pressureChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
             default:
                 break
             }
@@ -906,36 +1008,44 @@ extension TagChartsViewController {
         }
     }
 
-    private func updateChartViewConstaints(constaint: NSLayoutConstraint,
-                                           totalHeight: CGFloat,
-                                           itemCount: Int,
-                                           withAnimation: Bool)
-    {
+    private func updateChartViewConstaints(
+        constaint: NSLayoutConstraint,
+        totalHeight: CGFloat,
+        itemCount: Int,
+        withAnimation: Bool
+    ) {
         if withAnimation {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
                 guard let sSelf = self else { return }
-                constaint.constant = sSelf.getItemHeight(from: totalHeight,
-                                                         count: CGFloat(itemCount))
+                constaint.constant = sSelf.getItemHeight(
+                    from: totalHeight,
+                    count: CGFloat(itemCount)
+                )
                 sSelf.view.layoutIfNeeded()
             })
         } else {
-            constaint.constant = getItemHeight(from: totalHeight,
-                                               count: CGFloat(itemCount))
+            constaint.constant = getItemHeight(
+                from: totalHeight,
+                count: CGFloat(itemCount)
+            )
         }
     }
 
     // swiftlint:disable:next function_parameter_count
-    private func populateChartView(from data: LineChartData?,
-                                   title: String,
-                                   type: MeasurementType,
-                                   unit: String,
-                                   settings: RuuviLocalSettings,
-                                   view: TagChartsView)
-    {
-        view.setChartLabel(with: title,
-                           type: type,
-                           measurementService: measurementService,
-                           unit: unit)
+    private func populateChartView(
+        from data: LineChartData?,
+        title: String,
+        type: MeasurementType,
+        unit: String,
+        settings: RuuviLocalSettings,
+        view: TagChartsView
+    ) {
+        view.setChartLabel(
+            with: title,
+            type: type,
+            measurementService: measurementService,
+            unit: unit
+        )
         view.data = data
         view.setSettings(settings: settings)
         view.localize()
@@ -999,17 +1109,18 @@ extension TagChartsViewController {
         timer?.invalidate()
         timer = nil
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1,
-                                     repeats: true,
-                                     block: { [weak self] _ in
-                                         self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-                                     })
+        timer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: true,
+            block: { [weak self] _ in
+                self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
+            }
+        )
     }
 
     private func calculateMinMaxForChart(for view: TagChartsView) {
         if let data = view.data,
-           let dataSet = data.dataSets.first as? LineChartDataSet
-        {
+           let dataSet = data.dataSets.first as? LineChartDataSet {
             let lowestVisibleX = view.lowestVisibleX
             let highestVisibleX = view.highestVisibleX
 
@@ -1043,26 +1154,26 @@ extension TagChartsViewController {
     }
 
     /**
-      Calculate the average value of visible data points on a `LineChartView`.
-      This function computes the average by considering the area under the curve
-      formed by the visible data points and then divides it by the width of the visible x-range.
-      The area under the curve is approximated using the trapezoidal rule.
+     Calculate the average value of visible data points on a `LineChartView`.
+     This function computes the average by considering the area under the curve
+     formed by the visible data points and then divides it by the width of the visible x-range.
+     The area under the curve is approximated using the trapezoidal rule.
 
-      - Parameters:
-        - chartView: The `LineChartView` instance whose visible range's average needs to be calculated.
-        - dataSet: The `LineChartDataSet` containing data points to be considered.
+     - Parameters:
+     - chartView: The `LineChartView` instance whose visible range's average needs to be calculated.
+     - dataSet: The `LineChartDataSet` containing data points to be considered.
 
-      - Returns: The average value of visible data points.
+     - Returns: The average value of visible data points.
 
-      - Note:
-        The function uses the trapezoidal rule for approximation. The formula for the trapezoidal rule is:
-        A = (b - a) * (f(a) + f(b)) / 2
-        Where:
-        - A is the area of the trapezium.
-        - a and b are the x-coordinates of the two data points.
-        - f(a) and f(b) are the y-coordinates (or values) of the two data points.
+     - Note:
+     The function uses the trapezoidal rule for approximation. The formula for the trapezoidal rule is:
+     A = (b - a) * (f(a) + f(b)) / 2
+     Where:
+     - A is the area of the trapezium.
+     - a and b are the x-coordinates of the two data points.
+     - f(a) and f(b) are the y-coordinates (or values) of the two data points.
 
-        The average is then computed as the total area divided by the width of the visible x-range.
+     The average is then computed as the total area divided by the width of the visible x-range.
      */
     private func calculateVisibleAverage(chartView: LineChartView, dataSet: LineChartDataSet) -> Double {
         // Get the x-values defining the visible range of the chart.

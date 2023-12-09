@@ -27,14 +27,18 @@ class SensorForceClaimViewController: UIViewController {
     }()
 
     private lazy var claimSensorButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
         button.setTitle(RuuviLocalization.forceClaim, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleClaimSensorTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleClaimSensorTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -55,32 +59,40 @@ class SensorForceClaimViewController: UIViewController {
     }()
 
     private lazy var useNFCButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
         button.setTitle(
             RuuviLocalization.useNfc,
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleUseNFCButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleUseNFCButtonTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
     private lazy var useBluetoothButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
         button.setTitle(
             RuuviLocalization.useBluetooth,
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleUseBluetoothButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleUseBluetoothButtonTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -164,12 +176,14 @@ extension SensorForceClaimViewController {
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(top: backBarButtonItemView.topAnchor,
-                          leading: backBarButtonItemView.leadingAnchor,
-                          bottom: backBarButtonItemView.bottomAnchor,
-                          trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: backBarButtonItemView.topAnchor,
+            leading: backBarButtonItemView.leadingAnchor,
+            bottom: backBarButtonItemView.bottomAnchor,
+            trailing: backBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 

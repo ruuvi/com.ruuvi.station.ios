@@ -40,7 +40,6 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
-
         } else {
             let namedSensor = sensor.with(name: name)
             pool.update(namedSensor)
@@ -89,7 +88,8 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let croppedImage = coreImage.cropped(image: image, to: maxSize)
-        guard let jpegData = croppedImage.jpegData(compressionQuality: 0.6) else {
+        guard let jpegData = croppedImage.jpegData(compressionQuality: 0.6)
+        else {
             promise.fail(error: .failedToGetJpegRepresentation)
             return promise.future
         }
@@ -179,7 +179,8 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     @discardableResult
     private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
-        guard let macId = sensor.macId else {
+        guard let macId = sensor.macId
+        else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }

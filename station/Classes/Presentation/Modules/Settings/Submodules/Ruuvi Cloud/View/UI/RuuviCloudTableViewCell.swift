@@ -19,17 +19,22 @@ class RuuviCloudTableViewCell: UITableViewCell {
     lazy var statusSwitch: RuuviUISwitch = {
         let toggle = RuuviUISwitch()
         toggle.isOn = false
-        toggle.addTarget(self,
-                         action: #selector(handleStatusToggle),
-                         for: .valueChanged)
+        toggle.addTarget(
+            self,
+            action: #selector(handleStatusToggle),
+            for: .valueChanged
+        )
         return toggle
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -45,21 +50,27 @@ class RuuviCloudTableViewCell: UITableViewCell {
         backgroundColor = .clear
 
         addSubview(titleLabel)
-        titleLabel.anchor(top: safeTopAnchor,
-                          leading: safeLeftAnchor,
-                          bottom: safeBottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 12,
-                                         left: 20,
-                                         bottom: 12,
-                                         right: 0))
+        titleLabel.anchor(
+            top: safeTopAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 12,
+                left: 20,
+                bottom: 12,
+                right: 0
+            )
+        )
 
         addSubview(statusSwitch)
-        statusSwitch.anchor(top: nil,
-                            leading: titleLabel.trailingAnchor,
-                            bottom: nil,
-                            trailing: safeRightAnchor,
-                            padding: .init(top: 0, left: 8, bottom: 0, right: 12))
+        statusSwitch.anchor(
+            top: nil,
+            leading: titleLabel.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 8, bottom: 0, right: 12)
+        )
         statusSwitch.centerYInSuperview()
     }
 

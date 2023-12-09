@@ -3,9 +3,11 @@ import UIKit
 
 class AlertPresenterImpl: AlertPresenter {
     func showAlert(_ viewModel: AlertViewModel) {
-        let alert = UIAlertController(title: viewModel.title,
-                                      message: viewModel.message,
-                                      preferredStyle: viewModel.style)
+        let alert = UIAlertController(
+            title: viewModel.title,
+            message: viewModel.message,
+            preferredStyle: viewModel.style
+        )
         viewModel.actions.forEach { alert.addAction($0) }
         let group = DispatchGroup()
         DispatchQueue.main.async {

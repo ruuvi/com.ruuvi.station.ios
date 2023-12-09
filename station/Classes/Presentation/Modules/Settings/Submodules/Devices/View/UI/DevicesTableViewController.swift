@@ -42,32 +42,41 @@ extension DevicesTableViewController: DevicesViewInput {
     }
 
     func showTokenIdDialog(for viewModel: DevicesViewModel) {
-        guard let tokenId = viewModel.id.value else {
+        guard let tokenId = viewModel.id.value
+        else {
             return
         }
 
         let title = RuuviLocalization.Devices.tokenId
-        let controller = UIAlertController(title: title,
-                                           message: tokenId.stringValue,
-                                           preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.copy,
-                                           style: .default,
-                                           handler: { _ in
-                                               UIPasteboard.general.string = tokenId.stringValue
-                                           }))
+        let controller = UIAlertController(
+            title: title,
+            message: tokenId.stringValue,
+            preferredStyle: .alert
+        )
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.copy,
+            style: .default,
+            handler: { _ in
+                UIPasteboard.general.string = tokenId.stringValue
+            }
+        ))
         controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
     func showTokenFetchError(with error: RUError) {
-        let controller = UIAlertController(title: nil,
-                                           message: error.localizedDescription,
-                                           preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
-                                           style: .default,
-                                           handler: { [weak self] _ in
-                                               self?.navigationController?.popViewController(animated: true)
-                                           }))
+        let controller = UIAlertController(
+            title: nil,
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.ok,
+            style: .default,
+            handler: { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }
+        ))
         present(controller, animated: true)
     }
 }
@@ -87,8 +96,10 @@ private extension DevicesTableViewController {
         tableView.estimatedRowHeight = 50
         tableView.separatorStyle = .none
 
-        tableView.register(DevicesTableViewCell.self,
-                           forCellReuseIdentifier: reuseIndentifier)
+        tableView.register(
+            DevicesTableViewCell.self,
+            forCellReuseIdentifier: reuseIndentifier
+        )
     }
 }
 
@@ -99,11 +110,14 @@ extension DevicesTableViewController {
         viewModels.count
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIndentifier,
-                                                       for: indexPath) as? DevicesTableViewCell
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: reuseIndentifier,
+            for: indexPath
+        ) as? DevicesTableViewCell
         else {
             fatalError()
         }
@@ -115,9 +129,10 @@ extension DevicesTableViewController {
 // MARK: - TABLEVIEW DELEGATE
 
 extension DevicesTableViewController {
-    override func tableView(_: UITableView,
-                            didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(
+        _: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         output.viewDidTapDevice(viewModel: viewModels[indexPath.row])
     }
 }

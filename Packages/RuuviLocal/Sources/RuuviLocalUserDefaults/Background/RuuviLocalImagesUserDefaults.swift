@@ -22,8 +22,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     private var usedBackgrounds: [Int] {
         if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int],
-           ub.count == bgMaxIndex
-        {
+           ub.count == bgMaxIndex {
             return ub
         } else {
             let ub = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
@@ -95,9 +94,11 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             }
             NotificationCenter
                 .default
-                .post(name: .BackgroundPersistenceDidChangeBackground,
-                      object: nil,
-                      userInfo: [userInfoKey: identifier])
+                .post(
+                    name: .BackgroundPersistenceDidChangeBackground,
+                    object: nil,
+                    userInfo: [userInfoKey: identifier]
+                )
             promise.succeed(value: url)
         }, failure: { error in
             promise.fail(error: error)
@@ -121,9 +122,11 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
         NotificationCenter
             .default
-            .post(name: .BackgroundPersistenceDidChangeBackground,
-                  object: nil,
-                  userInfo: [userInfoKey: identifier])
+            .post(
+                name: .BackgroundPersistenceDidChangeBackground,
+                object: nil,
+                userInfo: [userInfoKey: identifier]
+            )
         if id >= bgMinIndex, id <= bgMaxIndex {
             var array = usedBackgrounds
             array[id - bgMinIndex] += 1
@@ -182,12 +185,14 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
         NotificationCenter
             .default
-            .post(name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
-                  object: nil,
-                  userInfo: [
-                      userInfoKey: identifier,
-                      BPDidUpdateBackgroundUploadProgressKey.progress: percentage,
-                  ])
+            .post(
+                name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
+                object: nil,
+                userInfo: [
+                    userInfoKey: identifier,
+                    BPDidUpdateBackgroundUploadProgressKey.progress: percentage,
+                ]
+            )
         UserDefaults.standard.setValue(percentage, forKey: key)
     }
 

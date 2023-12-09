@@ -71,11 +71,12 @@ extension AboutViewController {
 // MARK: - UITextViewDelegate
 
 extension AboutViewController: UITextViewDelegate {
-    func textView(_: UITextView,
-                  shouldInteractWith URL: URL,
-                  in _: NSRange,
-                  interaction _: UITextItemInteraction) -> Bool
-    {
+    func textView(
+        _: UITextView,
+        shouldInteractWith URL: URL,
+        in _: NSRange,
+        interaction _: UITextItemInteraction
+    ) -> Bool {
         UIApplication.shared.open(URL, options: [:])
         return false
     }
@@ -121,16 +122,20 @@ extension AboutViewController {
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: 16),
-                                range: range)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: UIFont.Muli(.regular, size: 16),
+            range: range
+        )
 
         // make headers bold
-        let makeBold = [RuuviLocalization.About.OperationsManual.header,
-                        RuuviLocalization.About.Troubleshooting.header,
-                        RuuviLocalization.About.OpenSource.header,
-                        RuuviLocalization.About.More.header,
-                        RuuviLocalization.About.Privacy.header]
+        let makeBold = [
+            RuuviLocalization.About.OperationsManual.header,
+            RuuviLocalization.About.Troubleshooting.header,
+            RuuviLocalization.About.OpenSource.header,
+            RuuviLocalization.About.More.header,
+            RuuviLocalization.About.Privacy.header,
+        ]
         let boldFont = UIFont.Muli(.bold, size: 16)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
@@ -139,15 +144,19 @@ extension AboutViewController {
         // reduce the linespacing below the titles
         let smallFont = UIFont.Muli(.regular, size: 8)
         for range in attrString.string.ranges(of: "\n") {
-            attrString.addAttribute(NSAttributedString.Key.font,
-                                    value: smallFont,
-                                    range: NSRange(range, in: attrString.string))
+            attrString.addAttribute(
+                NSAttributedString.Key.font,
+                value: smallFont,
+                range: NSRange(range, in: attrString.string)
+            )
         }
 
         // make text color white
-        attrString.addAttribute(.foregroundColor,
-                                value: RuuviColor.ruuviTextColor ?? UIColor.label,
-                                range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttribute(
+            .foregroundColor,
+            value: RuuviColor.ruuviTextColor ?? UIColor.label,
+            range: NSRange(location: 0, length: attrString.length)
+        )
 
         aboutTextView.attributedText = attrString
         aboutTextView.textColor = RuuviColor.ruuviTextColor
@@ -172,11 +181,12 @@ private extension String {
     func ranges(of substring: String, options: CompareOptions = [], locale: Locale? = nil) -> [Range<Index>] {
         var ranges: [Range<Index>] = []
         while ranges.last.map({ $0.upperBound < self.endIndex }) ?? true,
-              let range = range(of: substring,
-                                options: options,
-                                range: (ranges.last?.upperBound ?? startIndex) ..< endIndex,
-                                locale: locale)
-        {
+              let range = range(
+                  of: substring,
+                  options: options,
+                  range: (ranges.last?.upperBound ?? startIndex) ..< endIndex,
+                  locale: locale
+              ) {
             ranges.append(range)
         }
         return ranges

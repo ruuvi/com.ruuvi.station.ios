@@ -79,14 +79,16 @@ public extension String {
 
 public extension String? {
     var luid: LocalIdentifier? {
-        guard let self else {
+        guard let self
+        else {
             return nil
         }
         return LocalIdentifierStruct(value: self).any
     }
 
     var mac: MACIdentifier? {
-        guard let self else {
+        guard let self
+        else {
             return nil
         }
         return MACIdentifierStruct(value: self).any

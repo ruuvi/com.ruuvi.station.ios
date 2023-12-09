@@ -187,8 +187,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
 
     @discardableResult
     public func set(dashboardTapActionType: DashboardTapActionType) ->
-        Future<DashboardTapActionType, RuuviServiceError>
-    {
+    Future<DashboardTapActionType, RuuviServiceError> {
         let promise = Promise<DashboardTapActionType, RuuviServiceError>()
         cloud.set(dashboardTapActionType: dashboardTapActionType)
             .on(success: { type in

@@ -43,27 +43,35 @@ extension RUAlertDetailsCellChildView {
         backgroundColor = .clear
 
         addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor,
-                          leading: leadingAnchor,
-                          bottom: bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 8,
-                                         left: 14,
-                                         bottom: 8,
-                                         right: 0))
+        titleLabel.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            bottom: bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 8,
+                left: 14,
+                bottom: 8,
+                right: 0
+            )
+        )
 
         addSubview(imageView)
-        imageView.anchor(top: nil,
-                         leading: titleLabel.trailingAnchor,
-                         bottom: nil,
-                         trailing: trailingAnchor,
-                         padding: .init(top: 0, left: 16, bottom: 0, right: 16),
-                         size: .init(width: 16, height: 16))
+        imageView.anchor(
+            top: nil,
+            leading: titleLabel.trailingAnchor,
+            bottom: nil,
+            trailing: trailingAnchor,
+            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
+            size: .init(width: 16, height: 16)
+        )
         imageView.centerYInSuperview()
 
         isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self,
-                                                action: #selector(handleViewTap))
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(handleViewTap)
+        )
         addGestureRecognizer(tapGesture)
     }
 }

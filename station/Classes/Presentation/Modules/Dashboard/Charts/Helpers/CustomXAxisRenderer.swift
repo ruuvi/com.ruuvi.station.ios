@@ -10,9 +10,10 @@ public class CustomXAxisRenderer: XAxisRenderer {
         from = time
     }
 
-    override public func computeAxisValues(min: Double,
-                                           max: Double)
-    {
+    override public func computeAxisValues(
+        min: Double,
+        max: Double
+    ) {
         let labelCount = axis.labelCount
         let range = abs(max - min)
 

@@ -6,8 +6,4 @@ class StationUITests: XCTestCase {
         continueAfterFailure = false
         XCUIApplication().launch()
     }
-
-    override func tearDown() {
-        super.tearDown()
-    }
 }

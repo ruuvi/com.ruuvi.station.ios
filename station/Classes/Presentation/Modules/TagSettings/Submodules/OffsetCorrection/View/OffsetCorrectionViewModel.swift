@@ -36,9 +36,10 @@ class OffsetCorrectionViewModel {
         hasOffsetValue.value = false
     }
 
-    convenience init(type: OffsetCorrectionType,
-                     sensorSettings: SensorSettings)
-    {
+    convenience init(
+        type: OffsetCorrectionType,
+        sensorSettings: SensorSettings
+    ) {
         self.init()
         self.type = type
         update(sensorSettings: sensorSettings)

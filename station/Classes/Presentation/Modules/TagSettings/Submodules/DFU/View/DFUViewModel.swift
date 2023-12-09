@@ -114,7 +114,8 @@ final class DFUViewModel: ObservableObject {
         // Usually tags without macId are stored in the realm database
         // For tags with macId don't need migration
         if ruuviTag.macId != nil {
-            guard let currentRelease else {
+            guard let currentRelease
+            else {
                 return
             }
             isLoading = true
@@ -146,19 +147,22 @@ final class DFUViewModel: ObservableObject {
     }
 
     private func startObserving() {
-        guard let luid = ruuviTag.luid else {
+        guard let luid = ruuviTag.luid
+        else {
             isLoading = false
             return
         }
         ruuviTagObserveToken?.invalidate()
-        ruuviTagObserveToken = foreground.observe(self,
-                                                  uuid: luid.value,
-                                                  options: [.callbackQueue(.untouch)])
-        {
+        ruuviTagObserveToken = foreground.observe(
+            self,
+            uuid: luid.value,
+            options: [.callbackQueue(.untouch)]
+        ) {
             [weak self] _, device in
             guard let sSelf = self else { return }
             if let tag = device.ruuvi?.tag {
-                guard !sSelf.isMigrating else {
+                guard !sSelf.isMigrating
+                else {
                     return
                 }
                 sSelf.ruuviTagObserveToken?.invalidate()
@@ -178,9 +182,10 @@ final class DFUViewModel: ObservableObject {
     }
 
     /// This method creates the updated instance of the Ruuvi Tag after firmware update.
-    private func moveTagToSqlite(mac: MACIdentifier,
-                                 pair: RuuviTagPropertiesDaemonPair)
-    {
+    private func moveTagToSqlite(
+        mac: MACIdentifier,
+        pair: RuuviTagPropertiesDaemonPair
+    ) {
         sqiltePersistence.create(
             pair.ruuviTag
                 .with(macId: mac)
@@ -196,12 +201,14 @@ final class DFUViewModel: ObservableObject {
 
     /// This method fetches the latest record from the Realm and creates the same record to SQLite.
     /// If there's no record move to the next step.
-    private func moveLatestRecordToSqlite(mac: MACIdentifier,
-                                          pair: RuuviTagPropertiesDaemonPair)
-    {
+    private func moveLatestRecordToSqlite(
+        mac: MACIdentifier,
+        pair: RuuviTagPropertiesDaemonPair
+    ) {
         realmPersistence.readLatest(pair.ruuviTag).on(success: { [weak self] record in
             // If there's no record move to next action
-            guard let record else {
+            guard let record
+            else {
                 self?.moveRecordsHistoryToSqlite(mac: mac, pair: pair)
                 return
             }
@@ -217,11 +224,13 @@ final class DFUViewModel: ObservableObject {
 
     /// This method fetches the all the records from the Realm and creates the same records to SQLite.
     /// If there are no records move to the next step.
-    private func moveRecordsHistoryToSqlite(mac: MACIdentifier,
-                                            pair: RuuviTagPropertiesDaemonPair)
-    {
+    private func moveRecordsHistoryToSqlite(
+        mac: MACIdentifier,
+        pair: RuuviTagPropertiesDaemonPair
+    ) {
         realmPersistence.readAll(pair.device.uuid).on(success: { [weak self] realmRecords in
-            guard realmRecords.count > 0 else {
+            guard realmRecords.count > 0
+            else {
                 self?.moveSettingsToSqlite(mac: mac, pair: pair)
                 return
             }
@@ -239,9 +248,10 @@ final class DFUViewModel: ObservableObject {
 
     /// This method fetches the sensor settings from the Realm and creates the same sensor settings record to SQLite.
     /// If there's no record move to the next step.
-    private func moveSettingsToSqlite(mac: MACIdentifier,
-                                      pair: RuuviTagPropertiesDaemonPair)
-    {
+    private func moveSettingsToSqlite(
+        mac: MACIdentifier,
+        pair: RuuviTagPropertiesDaemonPair
+    ) {
         realmPersistence.readSensorSettings(pair.ruuviTag.withoutMac())
             .on(success: { [weak self] sensorSettings in
                 if let withMacSettings = sensorSettings?.with(macId: mac) {
@@ -296,8 +306,10 @@ final class DFUViewModel: ObservableObject {
             .readLatest(ruuviTag)
             .on(success: { record in
                 let batteryNeedsReplacement = batteryStatusProvider
-                    .batteryNeedsReplacement(temperature: record?.temperature,
-                                             voltage: record?.voltage)
+                    .batteryNeedsReplacement(
+                        temperature: record?.temperature,
+                        voltage: record?.voltage
+                    )
                 completion(batteryNeedsReplacement)
             }, failure: { _ in
                 completion(false)
@@ -522,7 +534,8 @@ extension DFUViewModel {
                 uuid,
                 appUrl,
                 fullUrl
-            ) = state, let sSelf = self else {
+            ) = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(
@@ -617,7 +630,8 @@ extension DFUViewModel {
 
     func whenServing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .serving = state, let sSelf = self else {
+            guard case .serving = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
@@ -630,7 +644,8 @@ extension DFUViewModel {
 
     func whenLoading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .loading = state, let sSelf = self else {
+            guard case .loading = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.loadLatestRelease()
@@ -643,7 +658,8 @@ extension DFUViewModel {
 
     func whenDownloading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .downloading(latestRelease, currentRelease) = state, let sSelf = self else {
+            guard case let .downloading(latestRelease, currentRelease) = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.download(release: latestRelease)
@@ -664,7 +680,8 @@ extension DFUViewModel {
 
     func whenFlashed() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .successfulyFlashed = state, let sSelf = self else {
+            guard case .successfulyFlashed = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
@@ -677,7 +694,8 @@ extension DFUViewModel {
 
     func whenServingAfterUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .servingAfterUpdate = state, let sSelf = self else {
+            guard case .servingAfterUpdate = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)

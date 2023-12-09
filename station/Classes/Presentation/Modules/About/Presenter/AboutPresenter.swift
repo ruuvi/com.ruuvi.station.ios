@@ -55,26 +55,34 @@ extension AboutPresenter {
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: 14),
-                                range: range)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: UIFont.Muli(.regular, size: 14),
+            range: range
+        )
 
         // Change changelog color
         let changelogFont = UIFont.Muli(.regular, size: 13)
         let changelogRange = NSString(string: attrString.string).range(of: changelogString)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: changelogFont,
-                                range: changelogRange)
-        attrString.addAttribute(.foregroundColor,
-                                value: RuuviColor.ruuviTintColor ?? UIColor.blue,
-                                range: changelogRange)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: changelogFont,
+            range: changelogRange
+        )
+        attrString.addAttribute(
+            .foregroundColor,
+            value: RuuviColor.ruuviTintColor ?? UIColor.blue,
+            range: changelogRange
+        )
 
         // Change rest of the text color
         let regularRange = NSString(string: attrString.string)
             .range(of: versionText)
-        attrString.addAttribute(.foregroundColor,
-                                value: RuuviColor.dashboardIndicatorTextColor ?? UIColor.label,
-                                range: regularRange)
+        attrString.addAttribute(
+            .foregroundColor,
+            value: RuuviColor.dashboardIndicatorTextColor ?? UIColor.label,
+            range: regularRange
+        )
 
         return attrString
     }
@@ -102,7 +110,8 @@ extension AboutPresenter {
     }
 
     func getRealmFileSize() -> Int64 {
-        guard let realmPath = realmContext.main.configuration.fileURL?.relativePath else {
+        guard let realmPath = realmContext.main.configuration.fileURL?.relativePath
+        else {
             return 0
         }
         return fileSize(at: realmPath)

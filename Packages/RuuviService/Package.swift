@@ -93,13 +93,13 @@ let package = Package(
         .target(
             name: "RuuviServiceAlert",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceAuth",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
@@ -115,43 +115,43 @@ let package = Package(
         .target(
             name: "RuuviServiceAppSettings",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceCloudSync",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceOffsetCalibration",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceOwnership",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceSensorProperties",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceSensorRecords",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(
             name: "RuuviServiceExport",
             dependencies: [
-                "RuuviService",
+                "RuuviService"
             ]
         ),
         .target(

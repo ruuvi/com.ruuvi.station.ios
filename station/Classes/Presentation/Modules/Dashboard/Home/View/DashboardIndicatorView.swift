@@ -33,20 +33,26 @@ class DashboardIndicatorView: UIView {
 
     fileprivate func setUpUI() {
         addSubview(indicatorValueLabel)
-        indicatorValueLabel.anchor(top: topAnchor,
-                                   leading: leadingAnchor,
-                                   bottom: bottomAnchor,
-                                   trailing: nil)
+        indicatorValueLabel.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            bottom: bottomAnchor,
+            trailing: nil
+        )
 
         addSubview(indicatorUnitLabel)
-        indicatorUnitLabel.anchor(top: nil,
-                                  leading: indicatorValueLabel.trailingAnchor,
-                                  bottom: indicatorValueLabel.bottomAnchor,
-                                  trailing: nil,
-                                  padding: .init(top: 0,
-                                                 left: 4,
-                                                 bottom: 0,
-                                                 right: 0))
+        indicatorUnitLabel.anchor(
+            top: nil,
+            leading: indicatorValueLabel.trailingAnchor,
+            bottom: indicatorValueLabel.bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 0,
+                left: 4,
+                bottom: 0,
+                right: 0
+            )
+        )
         indicatorUnitLabel
             .topAnchor
             .constraint(

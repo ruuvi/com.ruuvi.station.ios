@@ -14,9 +14,11 @@ public protocol RuuviNotificationLocalOutput: AnyObject {
 }
 
 public protocol RuuviNotificationLocal: AnyObject {
-    func setup(disableTitle: String,
-               muteTitle: String,
-               output: RuuviNotificationLocalOutput?)
+    func setup(
+        disableTitle: String,
+        muteTitle: String,
+        output: RuuviNotificationLocalOutput?
+    )
 
     func showDidConnect(uuid: String, title: String)
     func showDidDisconnect(uuid: String, title: String)

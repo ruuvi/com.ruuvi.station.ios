@@ -75,7 +75,8 @@ final class MeasurementService: NSObject {
 
 extension MeasurementService {
     public func temperature(for temperature: Temperature?) -> String {
-        guard let temperature else {
+        guard let temperature
+        else {
             return emptyValueString
         }
         let value = temperature
@@ -88,7 +89,8 @@ extension MeasurementService {
     }
 
     public func pressure(for pressure: Pressure?) -> String {
-        guard let pressure else {
+        guard let pressure
+        else {
             return emptyValueString
         }
         let value = pressure
@@ -101,7 +103,8 @@ extension MeasurementService {
     }
 
     public func voltage(for voltage: Voltage?) -> String {
-        guard let voltage else {
+        guard let voltage
+        else {
             return emptyValueString
         }
         let value = voltage
@@ -111,10 +114,11 @@ extension MeasurementService {
         return formattedValue(from: value, formatter: commonFormatter)
     }
 
-    public func humidity(for humidity: Humidity?,
-                         temperature: Temperature?,
-                         isDecimal: Bool) -> String
-    {
+    public func humidity(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        isDecimal: Bool
+    ) -> String {
         guard let humidity,
               let temperature
         else {
@@ -151,7 +155,8 @@ extension MeasurementService {
     }
 
     public func acceleration(for acceleration: Double?) -> String {
-        guard let acceleration else {
+        guard let acceleration
+        else {
             return emptyValueString
         }
         let value = acceleration.round(to: commonFormatter.maximumFractionDigits)
@@ -159,7 +164,8 @@ extension MeasurementService {
     }
 
     public func movements(for movements: Int?) -> String {
-        guard let movements else {
+        guard let movements
+        else {
             return emptyValueString
         }
         return movements.value
@@ -169,9 +175,10 @@ extension MeasurementService {
 // MARK: - MeasurementService Helper methods
 
 extension MeasurementService {
-    private func formattedValue(from value: Double?,
-                                formatter: NumberFormatter) -> String
-    {
+    private func formattedValue(
+        from value: Double?,
+        formatter: NumberFormatter
+    ) -> String {
         guard let value,
               let formattedValue = formatter.string(from: value.nsNumber)
         else {

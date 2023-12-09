@@ -2,7 +2,8 @@ import UIKit
 
 extension UIImage? {
     func resize(targetWidth: CGFloat = 100) -> UIImage? {
-        guard let self else {
+        guard let self
+        else {
             return nil
         }
 
@@ -18,7 +19,8 @@ extension UIImage? {
     }
 
     func resize(targetHeight: CGFloat) -> UIImage? {
-        guard let self else {
+        guard let self
+        else {
             return nil
         }
 

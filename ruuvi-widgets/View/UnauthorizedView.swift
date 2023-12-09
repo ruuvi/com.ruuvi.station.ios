@@ -38,9 +38,11 @@ struct UnauthorizedView: View {
             .cornerRadius(8)
             VStack {
                 Text(texts.unauthorizedRegular.localized)
-                    .font(.custom(Constants.muliBold.rawValue,
-                                  size: family == .systemSmall ? 16 : 10,
-                                  relativeTo: .subheadline))
+                    .font(.custom(
+                        Constants.muliBold.rawValue,
+                        size: family == .systemSmall ? 16 : 10,
+                        relativeTo: .subheadline
+                    ))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)
@@ -64,9 +66,11 @@ struct UnauthorizedView: View {
                     .padding([.leading, .trailing], 8)
                     .padding(.bottom, -4)
                 Text(texts.unauthorizedSmall.localized)
-                    .font(.custom(Constants.muliBold.rawValue,
-                                  size: 8,
-                                  relativeTo: .headline))
+                    .font(.custom(
+                        Constants.muliBold.rawValue,
+                        size: 8,
+                        relativeTo: .headline
+                    ))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)

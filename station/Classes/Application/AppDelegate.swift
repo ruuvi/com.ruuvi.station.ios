@@ -27,9 +27,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private var appRouter: AppRouter?
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
-    {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
         settings = r.resolve(RuuviLocalSettings.self)
         setPreferrerdLanguage()
@@ -99,9 +100,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appStateService.applicationDidBecomeActive(application)
     }
 
-    func application(_: UIApplication,
-                     supportedInterfaceOrientationsFor _: UIWindow?) -> UIInterfaceOrientationMask
-    {
+    func application(
+        _: UIApplication,
+        supportedInterfaceOrientationsFor _: UIWindow?
+    ) -> UIInterfaceOrientationMask {
         orientationLock
     }
 }
@@ -139,17 +141,18 @@ extension AppDelegate: MessagingDelegate {
             return
         }
 
-        cloudNotificationService.set(token: fcmToken,
-                                     name: UIDevice.modelName,
-                                     data: nil,
-                                     language: settings.language,
-                                     sound: settings.alertSound)
+        cloudNotificationService.set(
+            token: fcmToken,
+            name: UIDevice.modelName,
+            data: nil,
+            language: settings.language,
+            sound: settings.alertSound
+        )
     }
 
     fileprivate func setPreferrerdLanguage() {
         if let languageCode = Bundle.main.preferredLocalizations.first,
-           let language = Language(rawValue: languageCode)
-        {
+           let language = Language(rawValue: languageCode) {
             if settings.language != language {
                 settings.language = language
             }
@@ -162,10 +165,11 @@ extension AppDelegate: MessagingDelegate {
 // MARK: - UniversalLins
 
 extension AppDelegate {
-    func application(_ application: UIApplication,
-                     continue userActivity: NSUserActivity,
-                     restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool
-    {
+    func application(
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
+        restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
               let url = userActivity.webpageURL
         else {
@@ -179,10 +183,11 @@ extension AppDelegate {
 // MARK: - Widget Deeplink Handler
 
 extension AppDelegate {
-    func application(_ app: UIApplication,
-                     open url: URL,
-                     options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool
-    {
+    func application(
+        _ app: UIApplication,
+        open url: URL,
+        options _: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
         let macId = url.absoluteString
         openSelectedCard(for: macId, application: app)
         return true
@@ -199,15 +204,15 @@ extension AppDelegate: RuuviNotificationLocalOutput {
 
 // TODO: - SEE IF WE CAN MOVE THIS TO APP_STATE_SERVICE
 extension AppDelegate {
-    private func openSelectedCard(for uuid: String,
-                                  application _: UIApplication? = nil)
-    {
+    private func openSelectedCard(
+        for uuid: String,
+        application _: UIApplication? = nil
+    ) {
         appRouter?.prepareRootViewControllerWidgets()
         window?.rootViewController = appRouter?.viewController
 
         if let navigationController = appRouter?.viewController as? UINavigationController,
-           let controller = navigationController.viewControllers.last as? DashboardViewController
-        {
+           let controller = navigationController.viewControllers.last as? DashboardViewController {
             if let viewModel = controller.viewModels.first(where: { viewModel in
                 viewModel.mac.value?.value == uuid || viewModel.luid.value == uuid.luid.any
             }) {

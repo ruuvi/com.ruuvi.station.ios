@@ -21,30 +21,41 @@ public extension UIFont {
 
     // MARK: - FUNCTIONS
 
-    static func Montserrat(_ type: MontserratStyles = .regular,
-                           size: CGFloat = UIFont.systemFontSize) -> UIFont
-    {
-        UIFont(name: "Montserrat-\(type.rawValue)",
-               size: size.adjustedSize()) ??
+    static func Montserrat(
+        _ type: MontserratStyles = .regular,
+        size: CGFloat = UIFont.systemFontSize
+    ) -> UIFont {
+        UIFont(
+            name: "Montserrat-\(type.rawValue)",
+            size: size.adjustedSize()
+        ) ??
             UIFont.systemFont(ofSize: size.adjustedSize())
     }
 
-    static func Muli(_ type: MuliStyles = .regular,
-                     size: CGFloat = UIFont.systemFontSize) -> UIFont
-    {
+    static func Muli(
+        _ type: MuliStyles = .regular,
+        size: CGFloat = UIFont.systemFontSize
+    ) -> UIFont {
         let prefix = (type == .semiBoldItalic || type == .extraBold) ? "Mulish" : "Muli"
-        return UIFont(name: "\(prefix)-\(type.rawValue)",
-                      size: size.adjustedSize()) ??
+        return UIFont(
+            name: "\(prefix)-\(type.rawValue)",
+            size: size.adjustedSize()
+        ) ??
             UIFont.systemFont(ofSize: size.adjustedSize())
     }
 
-    static func Oswald(_ type: OswaldStyles = .extraLight,
-                       size: CGFloat = UIFont.systemFontSize) -> UIFont
-    {
-        UIFont(name: "Oswald-\(type.rawValue)",
-               size: size.adjustedSize()) ??
-            UIFont.systemFont(ofSize: size.adjustedSize(),
-                              weight: .ultraLight)
+    static func Oswald(
+        _ type: OswaldStyles = .extraLight,
+        size: CGFloat = UIFont.systemFontSize
+    ) -> UIFont {
+        UIFont(
+            name: "Oswald-\(type.rawValue)",
+            size: size.adjustedSize()
+        ) ??
+            UIFont.systemFont(
+                ofSize: size.adjustedSize(),
+                weight: .ultraLight
+            )
     }
 }
 

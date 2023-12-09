@@ -5,33 +5,43 @@ import UIKit
 
 extension UIView {
     @discardableResult
-    func anchor(top: NSLayoutYAxisAnchor?,
-                leading: NSLayoutXAxisAnchor?,
-                bottom: NSLayoutYAxisAnchor?,
-                trailing: NSLayoutXAxisAnchor?,
-                padding: UIEdgeInsets = .zero, size: CGSize = .zero) -> AnchoredConstraints
-    {
+    func anchor(
+        top: NSLayoutYAxisAnchor?,
+        leading: NSLayoutXAxisAnchor?,
+        bottom: NSLayoutYAxisAnchor?,
+        trailing: NSLayoutXAxisAnchor?,
+        padding: UIEdgeInsets = .zero,
+        size: CGSize = .zero
+    ) -> AnchoredConstraints {
         translatesAutoresizingMaskIntoConstraints = false
         var anchoredConstraints = AnchoredConstraints()
 
         if let top {
-            anchoredConstraints.top = topAnchor.constraint(equalTo: top,
-                                                           constant: padding.top)
+            anchoredConstraints.top = topAnchor.constraint(
+                equalTo: top,
+                constant: padding.top
+            )
         }
 
         if let leading {
-            anchoredConstraints.leading = leadingAnchor.constraint(equalTo: leading,
-                                                                   constant: padding.left)
+            anchoredConstraints.leading = leadingAnchor.constraint(
+                equalTo: leading,
+                constant: padding.left
+            )
         }
 
         if let bottom {
-            anchoredConstraints.bottom = bottomAnchor.constraint(equalTo: bottom,
-                                                                 constant: -padding.bottom)
+            anchoredConstraints.bottom = bottomAnchor.constraint(
+                equalTo: bottom,
+                constant: -padding.bottom
+            )
         }
 
         if let trailing {
-            anchoredConstraints.trailing = trailingAnchor.constraint(equalTo: trailing,
-                                                                     constant: -padding.right)
+            anchoredConstraints.trailing = trailingAnchor.constraint(
+                equalTo: trailing,
+                constant: -padding.right
+            )
         }
 
         if size.width != 0 {
@@ -42,24 +52,27 @@ extension UIView {
             anchoredConstraints.height = heightAnchor.constraint(equalToConstant: size.height)
         }
 
-        [anchoredConstraints.top,
-         anchoredConstraints.leading,
-         anchoredConstraints.bottom,
-         anchoredConstraints.trailing,
-         anchoredConstraints.width,
-         anchoredConstraints.height].forEach { $0?.isActive = true }
+        [
+            anchoredConstraints.top,
+            anchoredConstraints.leading,
+            anchoredConstraints.bottom,
+            anchoredConstraints.trailing,
+            anchoredConstraints.width,
+            anchoredConstraints.height,
+        ].forEach { $0?.isActive = true }
 
         return anchoredConstraints
     }
 
     @discardableResult
-    func anchorLeading(top: NSLayoutYAxisAnchor?,
-                       leading: NSLayoutXAxisAnchor?,
-                       bottom: NSLayoutYAxisAnchor?,
-                       trailing: NSLayoutXAxisAnchor?,
-                       padding: UIEdgeInsets = .zero,
-                       size: CGSize = .zero) -> AnchoredConstraints
-    {
+    func anchorLeading(
+        top: NSLayoutYAxisAnchor?,
+        leading: NSLayoutXAxisAnchor?,
+        bottom: NSLayoutYAxisAnchor?,
+        trailing: NSLayoutXAxisAnchor?,
+        padding: UIEdgeInsets = .zero,
+        size: CGSize = .zero
+    ) -> AnchoredConstraints {
         translatesAutoresizingMaskIntoConstraints = false
         var anchoredConstraints = AnchoredConstraints()
 
@@ -69,20 +82,26 @@ extension UIView {
 
         if let leading {
             anchoredConstraints.leading =
-                leadingAnchor.constraint(greaterThanOrEqualTo: leading,
-                                         constant: padding.left)
+                leadingAnchor.constraint(
+                    greaterThanOrEqualTo: leading,
+                    constant: padding.left
+                )
         }
 
         if let bottom {
             anchoredConstraints.bottom =
-                bottomAnchor.constraint(equalTo: bottom,
-                                        constant: -padding.bottom)
+                bottomAnchor.constraint(
+                    equalTo: bottom,
+                    constant: -padding.bottom
+                )
         }
 
         if let trailing {
             anchoredConstraints.trailing =
-                trailingAnchor.constraint(lessThanOrEqualTo: trailing,
-                                          constant: -padding.right)
+                trailingAnchor.constraint(
+                    lessThanOrEqualTo: trailing,
+                    constant: -padding.right
+                )
         }
 
         if size.width != 0 {
@@ -93,12 +112,14 @@ extension UIView {
             anchoredConstraints.height = heightAnchor.constraint(equalToConstant: size.height)
         }
 
-        [anchoredConstraints.top,
-         anchoredConstraints.leading,
-         anchoredConstraints.bottom,
-         anchoredConstraints.trailing,
-         anchoredConstraints.width,
-         anchoredConstraints.height].forEach { $0?.isActive = true }
+        [
+            anchoredConstraints.top,
+            anchoredConstraints.leading,
+            anchoredConstraints.bottom,
+            anchoredConstraints.trailing,
+            anchoredConstraints.width,
+            anchoredConstraints.height,
+        ].forEach { $0?.isActive = true }
 
         return anchoredConstraints
     }

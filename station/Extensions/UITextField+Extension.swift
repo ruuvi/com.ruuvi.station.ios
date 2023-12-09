@@ -7,10 +7,12 @@ extension UITextField {
         var accessories: [UIBarButtonItem] = []
         accessories.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil))
         accessories.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil))
-        let minusButton = UIBarButtonItem(title: "－",
-                                          style: UIBarButtonItem.Style.plain,
-                                          target: self,
-                                          action: #selector(handleMinusTap))
+        let minusButton = UIBarButtonItem(
+            title: "－",
+            style: UIBarButtonItem.Style.plain,
+            target: self,
+            action: #selector(handleMinusTap)
+        )
         minusButton.tintColor = .label
         accessories.append(minusButton)
         numberToolbar.items = accessories
@@ -19,7 +21,8 @@ extension UITextField {
     }
 
     @objc func handleMinusTap() {
-        guard let currentText = text else {
+        guard let currentText = text
+        else {
             return
         }
         if currentText.hasPrefix("－") {

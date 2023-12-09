@@ -55,13 +55,15 @@ extension UnitSettingsPresenter: UnitSettingsViewOutput {
     func viewDidSelect(type: UnitSettingsType) {
         switch type {
         case .unit:
-            guard let viewModel = unitViewModel() else {
+            guard let viewModel = unitViewModel()
+            else {
                 return
             }
             router.openSelection(with: viewModel, output: self)
 
         case .accuracy:
-            guard let viewModel = accuracyViewModel() else {
+            guard let viewModel = accuracyViewModel()
+            else {
                 return
             }
             router.openSelection(with: viewModel, output: self)
@@ -113,34 +115,41 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
 
 extension UnitSettingsPresenter {
     private func unitViewModel() -> SelectionViewModel? {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return nil
         }
 
         switch viewModel.measurementType {
         case .temperature:
-            return SelectionViewModel(title: RuuviLocalization.Settings.Label.TemperatureUnit.text,
-                                      items: viewModel.items,
-                                      description: RuuviLocalization.Settings.ChooseTemperatureUnit.text,
-                                      selection: settings.temperatureUnit.title(""),
-                                      measurementType: viewModel.measurementType,
-                                      unitSettingsType: .unit)
+            return SelectionViewModel(
+                title: RuuviLocalization.Settings.Label.TemperatureUnit.text,
+                items: viewModel.items,
+                description: RuuviLocalization.Settings.ChooseTemperatureUnit.text,
+                selection: settings.temperatureUnit.title(""),
+                measurementType: viewModel.measurementType,
+                unitSettingsType: .unit
+            )
 
         case .humidity:
-            return SelectionViewModel(title: RuuviLocalization.Settings.Label.HumidityUnit.text,
-                                      items: viewModel.items,
-                                      description: RuuviLocalization.Settings.ChooseHumidityUnit.text,
-                                      selection: settings.humidityUnit.title(""),
-                                      measurementType: viewModel.measurementType,
-                                      unitSettingsType: .unit)
+            return SelectionViewModel(
+                title: RuuviLocalization.Settings.Label.HumidityUnit.text,
+                items: viewModel.items,
+                description: RuuviLocalization.Settings.ChooseHumidityUnit.text,
+                selection: settings.humidityUnit.title(""),
+                measurementType: viewModel.measurementType,
+                unitSettingsType: .unit
+            )
 
         case .pressure:
-            return SelectionViewModel(title: RuuviLocalization.Settings.Label.PressureUnit.text,
-                                      items: viewModel.items,
-                                      description: RuuviLocalization.Settings.ChoosePressureUnit.text,
-                                      selection: settings.pressureUnit.title(""),
-                                      measurementType: viewModel.measurementType,
-                                      unitSettingsType: .unit)
+            return SelectionViewModel(
+                title: RuuviLocalization.Settings.Label.PressureUnit.text,
+                items: viewModel.items,
+                description: RuuviLocalization.Settings.ChoosePressureUnit.text,
+                selection: settings.pressureUnit.title(""),
+                measurementType: viewModel.measurementType,
+                unitSettingsType: .unit
+            )
 
         default:
             return nil
@@ -150,7 +159,8 @@ extension UnitSettingsPresenter {
     private func accuracyViewModel() -> SelectionViewModel? {
         var accuracyTitle: String
         var selection: String
-        guard let measurementType = viewModel?.measurementType else {
+        guard let measurementType = viewModel?.measurementType
+        else {
             return nil
         }
         let titleProvider = MeasurementAccuracyTitles()
@@ -174,70 +184,82 @@ extension UnitSettingsPresenter {
             .two,
         ]
 
-        return SelectionViewModel(title: accuracyTitle,
-                                  items: selectionItems,
-                                  description: RuuviLocalization.Settings.Measurement.Resolution.description,
-                                  selection: selection,
-                                  measurementType: measurementType,
-                                  unitSettingsType: .accuracy)
+        return SelectionViewModel(
+            title: accuracyTitle,
+            items: selectionItems,
+            description: RuuviLocalization.Settings.Measurement.Resolution.description,
+            selection: selection,
+            measurementType: measurementType,
+            unitSettingsType: .accuracy
+        )
     }
 
     // swiftlint:disable:next function_body_length
     private func observeUnitChanges() {
         temperatureUnitToken = NotificationCenter
             .default
-            .addObserver(forName: .TemperatureUnitDidChange,
-                         object: nil,
-                         queue: .main)
-        { [weak self] _ in
-            guard let sSelf = self else { return }
-            sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
-        }
+            .addObserver(
+                forName: .TemperatureUnitDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
+            }
         temperatureAccuracyToken = NotificationCenter
             .default
-            .addObserver(forName: .TemperatureAccuracyDidChange,
-                         object: nil,
-                         queue: .main)
-        { [weak self] _ in
-            guard let sSelf = self else { return }
-            sSelf.view.temperatureAccuracy = sSelf.settings.temperatureAccuracy
-        }
+            .addObserver(
+                forName: .TemperatureAccuracyDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.view.temperatureAccuracy = sSelf.settings.temperatureAccuracy
+            }
         humidityUnitToken = NotificationCenter
             .default
-            .addObserver(forName: .HumidityUnitDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             guard let sSelf = self else { return }
-                             sSelf.view.humidityUnit = sSelf.settings.humidityUnit
-                         })
+            .addObserver(
+                forName: .HumidityUnitDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.view.humidityUnit = sSelf.settings.humidityUnit
+                }
+            )
         humidityAccuracyToken = NotificationCenter
             .default
-            .addObserver(forName: .HumidityAccuracyDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             guard let sSelf = self else { return }
-                             sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
-                         })
+            .addObserver(
+                forName: .HumidityAccuracyDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
+                }
+            )
         pressureUnitToken = NotificationCenter
             .default
-            .addObserver(forName: .PressureUnitDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             guard let sSelf = self else { return }
-                             sSelf.view.pressureUnit = sSelf.settings.pressureUnit
-                         })
+            .addObserver(
+                forName: .PressureUnitDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.view.pressureUnit = sSelf.settings.pressureUnit
+                }
+            )
         pressureAccuracyToken = NotificationCenter
             .default
-            .addObserver(forName: .PressureUnitAccuracyChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             guard let sSelf = self else { return }
-                             sSelf.view.pressureAccuracy = sSelf.settings.pressureAccuracy
-                         })
+            .addObserver(
+                forName: .PressureUnitAccuracyChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.view.pressureAccuracy = sSelf.settings.pressureAccuracy
+                }
+            )
     }
 
     private func updateUnits() {

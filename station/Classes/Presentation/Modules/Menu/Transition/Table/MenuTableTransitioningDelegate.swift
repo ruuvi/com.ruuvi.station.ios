@@ -11,20 +11,22 @@ class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDel
         self.manager = manager
     }
 
-    func presentationController(forPresented presented: UIViewController,
-                                presenting: UIViewController?,
-                                source _: UIViewController) -> UIPresentationController?
-    {
+    func presentationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController?,
+        source _: UIViewController
+    ) -> UIPresentationController? {
         let controller = MenuTablePresentationController(presentedViewController: presented, presenting: presenting)
         controller.menuWidth = manager.menuWidth
         controller.dismissTransition = dismiss
         return controller
     }
 
-    func animationController(forPresented _: UIViewController,
-                             presenting _: UIViewController,
-                             source _: UIViewController) -> UIViewControllerAnimatedTransitioning?
-    {
+    func animationController(
+        forPresented _: UIViewController,
+        presenting _: UIViewController,
+        source _: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
         present
     }
 
@@ -33,14 +35,12 @@ class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDel
     }
 
     func interactionControllerForPresentation(using _: UIViewControllerAnimatedTransitioning)
-        -> UIViewControllerInteractiveTransitioning?
-    {
+    -> UIViewControllerInteractiveTransitioning? {
         manager.isInteractive ? present : nil
     }
 
     func interactionControllerForDismissal(using _: UIViewControllerAnimatedTransitioning)
-        -> UIViewControllerInteractiveTransitioning?
-    {
+    -> UIViewControllerInteractiveTransitioning? {
         manager.isInteractive ? dismiss : nil
     }
 }

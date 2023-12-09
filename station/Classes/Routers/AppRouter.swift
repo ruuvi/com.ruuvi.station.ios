@@ -89,9 +89,10 @@ final class AppRouter {
 }
 
 extension AppRouter: OnboardRouterDelegate {
-    func onboardRouterDidShowSignIn(_: OnboardRouter,
-                                    output: SignInBenefitsModuleOutput)
-    {
+    func onboardRouterDidShowSignIn(
+        _: OnboardRouter,
+        output: SignInBenefitsModuleOutput
+    ) {
         let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
 
@@ -108,10 +109,11 @@ extension AppRouter: OnboardRouterDelegate {
         presentDashboard()
     }
 
-    func onboardRouterDidFinish(_: OnboardRouter,
-                                module: SignInBenefitsModuleInput,
-                                showDashboard: Bool)
-    {
+    func onboardRouterDidFinish(
+        _: OnboardRouter,
+        module: SignInBenefitsModuleInput,
+        showDashboard: Bool
+    ) {
         module.dismiss(completion: { [weak self] in
             if showDashboard {
                 self?.presentDashboard()
@@ -131,8 +133,10 @@ extension AppRouter: OnboardRouterDelegate {
 extension AppRouter: DiscoverRouterDelegate {
     func discoverRouterWantsClose(_: DiscoverRouter) {
         if let weakDashboardController {
-            navigationController.pushViewController(weakDashboardController,
-                                                    animated: true)
+            navigationController.pushViewController(
+                weakDashboardController,
+                animated: true
+            )
         } else {
             let controller = dashboardViewController()
             navigationController.setViewControllers([controller], animated: true)

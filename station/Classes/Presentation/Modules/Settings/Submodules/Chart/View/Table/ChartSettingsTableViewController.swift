@@ -58,8 +58,10 @@ extension ChartSettingsTableViewController {
             return cell
         case let .stepper(title, value, unitSingular, unitPlural):
             let cell = tableView
-                .dequeueReusableCell(with: ChartSettingsStepperTableViewCell.self,
-                                     for: indexPath)
+                .dequeueReusableCell(
+                    with: ChartSettingsStepperTableViewCell.self,
+                    for: indexPath
+                )
             let title = title
             let unit = value > 1 ? unitPlural : unitSingular
             cell.titleLabel.text = title + " "

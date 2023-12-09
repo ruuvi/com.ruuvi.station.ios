@@ -56,9 +56,11 @@ class DiscoverTableHeaderView: UIView {
             headerView.addSubview(nfcButton)
         }
 
-        setupLayout(headerView: headerView,
-                    descriptionLabel: descriptionLabel,
-                    button: nfcButton)
+        setupLayout(
+            headerView: headerView,
+            descriptionLabel: descriptionLabel,
+            button: nfcButton
+        )
     }
 
     private func createHeaderView() -> UIView {
@@ -98,9 +100,11 @@ class DiscoverTableHeaderView: UIView {
             button.titleLabel?.font = font
         }
         button.tintColor = UIColor(named: "RuuviTintColor")
-        button.addTarget(self,
-                         action: #selector(handleButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleButtonTap),
+            for: .touchUpInside
+        )
         return button
     }
 
@@ -140,7 +144,7 @@ class DiscoverTableHeaderView: UIView {
             ])
         } else {
             NSLayoutConstraint.activate([
-                descriptionLabelBottomConstraint,
+                descriptionLabelBottomConstraint
             ])
         }
     }

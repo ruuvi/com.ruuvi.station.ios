@@ -8,8 +8,7 @@ class SwipeDownToDismissTransitioningDelegate: NSObject, UIViewControllerTransit
     }
 
     func interactionControllerForDismissal(using _: UIViewControllerAnimatedTransitioning)
-        -> UIViewControllerInteractiveTransitioning?
-    {
+    -> UIViewControllerInteractiveTransitioning? {
         interactionControllerForDismissal.hasStarted ? interactionControllerForDismissal : nil
     }
 }

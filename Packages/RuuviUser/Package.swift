@@ -17,7 +17,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.1"),
+        .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.1")
     ],
     targets: [
         .target(
@@ -26,7 +26,7 @@ let package = Package(
         .target(
             name: "RuuviUserCoordinator",
             dependencies: [
-                "KeychainAccess",
+                "KeychainAccess"
             ]
         ),
         .testTarget(

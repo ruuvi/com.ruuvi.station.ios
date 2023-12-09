@@ -112,10 +112,11 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
             temperature = Temperature(value: celsius, unit: .celsius)
             if let relativeHumidity
                 = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn]),
-                let temperature
-            {
-                humidity = Humidity(value: relativeHumidity,
-                                    unit: .relative(temperature: temperature))
+                let temperature {
+                humidity = Humidity(
+                    value: relativeHumidity,
+                    unit: .relative(temperature: temperature)
+                )
             }
         }
         if let hectopascals = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.hectopascalsColumn]) {
@@ -123,11 +124,12 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
         }
         if let accelerationX = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationXColumn]),
            let accelerationY = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationYColumn]),
-           let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn])
-        {
-            acceleration = Acceleration(x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
-                                        y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
-                                        z: AccelerationMeasurement(value: accelerationZ, unit: .metersPerSecondSquared))
+           let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn]) {
+            acceleration = Acceleration(
+                x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
+                y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
+                z: AccelerationMeasurement(value: accelerationZ, unit: .metersPerSecondSquared)
+            )
         }
         if let volts = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.voltsColumn]) {
             voltage = Voltage(value: volts, unit: .volts)

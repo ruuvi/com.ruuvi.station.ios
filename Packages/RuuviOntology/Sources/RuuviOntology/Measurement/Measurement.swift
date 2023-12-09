@@ -70,8 +70,7 @@ public extension Pressure {
 public extension Humidity {
     init?(relative value: Double?, temperature: Temperature?) {
         if let relativeHumidity = value,
-           let temperature
-        {
+           let temperature {
             self = Humidity(value: relativeHumidity, unit: .relative(temperature: temperature))
         } else {
             return nil

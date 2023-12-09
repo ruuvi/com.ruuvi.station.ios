@@ -40,7 +40,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         storage.readAll()
             .on(success: { [weak self] localSensors in
                 guard let sSelf = self else { return }
-                guard localSensors.count != 0 else {
+                guard localSensors.count != 0
+                else {
                     promise.succeed(value: true)
                     return
                 }
@@ -59,16 +60,18 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                         sSelf.alertService.remove(type: type, ruuviTag: sensor)
                     }
 
-                    Future.zip([deleteSensorOperation,
-                                deleteRecordsOperation,
-                                deleteLatestRecordOperation,
-                                deleteQueuedRequestsOperation,
-                                cleanUpOperation])
-                        .on(success: { _ in
-                            promise.succeed(value: true)
-                        }, failure: { error in
-                            promise.fail(error: .ruuviPool(error))
-                        })
+                    Future.zip([
+                        deleteSensorOperation,
+                        deleteRecordsOperation,
+                        deleteLatestRecordOperation,
+                        deleteQueuedRequestsOperation,
+                        cleanUpOperation,
+                    ])
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .ruuviPool(error))
+                    })
                 }
             }, failure: { error in
                 promise.fail(error: .ruuviStorage(error))

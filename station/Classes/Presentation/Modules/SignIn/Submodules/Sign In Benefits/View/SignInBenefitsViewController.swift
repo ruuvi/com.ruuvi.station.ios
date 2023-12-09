@@ -8,10 +8,12 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 
     // UI Componenets starts
     private lazy var closeButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: RuuviAssets.closeButtonImage,
-                                     style: .plain,
-                                     target: self,
-                                     action: #selector(handleCloseButtonTap))
+        let button = UIBarButtonItem(
+            image: RuuviAssets.closeButtonImage,
+            style: .plain,
+            target: self,
+            action: #selector(handleCloseButtonTap)
+        )
         button.tintColor = .white
         return button
     }()
@@ -72,15 +74,21 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
     }()
 
     private lazy var continueButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
-        button.setTitle(RuuviLocalization.signInContinue,
-                        for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
+        button.setTitle(
+            RuuviLocalization.signInContinue,
+            for: .normal
+        )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleContinueTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleContinueTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -156,19 +164,25 @@ extension SignInBenefitsViewController {
         container.centerInSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel,
+            titleLabel, subtitleLabel
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
         titleStack.spacing = UIDevice.isiPhoneSE() ? 16 : 24
 
         container.addSubview(titleStack)
-        titleStack.anchor(top: container.safeTopAnchor,
-                          leading: container.safeLeftAnchor,
-                          bottom: nil,
-                          trailing: container.safeRightAnchor,
-                          padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                         bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+        titleStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: !UIDevice.isTablet() ? 20 : 80,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 20 : 80
+            )
+        )
 
         container.addSubview(featuresLabel)
         featuresLabel.anchor(
@@ -187,33 +201,47 @@ extension SignInBenefitsViewController {
         featuresLabel.centerXInSuperview()
 
         container.addSubview(noteLabel)
-        noteLabel.anchor(top: featuresLabel.bottomAnchor,
-                         leading: titleStack.leadingAnchor,
-                         bottom: nil,
-                         trailing: titleStack.trailingAnchor,
-                         padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30, left: 0,
-                                        bottom: 0, right: 0))
+        noteLabel.anchor(
+            top: featuresLabel.bottomAnchor,
+            leading: titleStack.leadingAnchor,
+            bottom: nil,
+            trailing: titleStack.trailingAnchor,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 20 : 30,
+                left: 0,
+                bottom: 0,
+                right: 0
+            )
+        )
 
         container.addSubview(continueButton)
-        continueButton.anchor(top: noteLabel.bottomAnchor,
-                              leading: container.safeLeftAnchor,
-                              bottom: nil,
-                              trailing: container.safeRightAnchor,
-                              padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30,
-                                             left: !UIDevice.isTablet() ? 50 : 150,
-                                             bottom: 0,
-                                             right: !UIDevice.isTablet() ? 50 : 150),
-                              size: .init(width: 0, height: 50))
+        continueButton.anchor(
+            top: noteLabel.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 20 : 30,
+                left: !UIDevice.isTablet() ? 50 : 150,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 50 : 150
+            ),
+            size: .init(width: 0, height: 50)
+        )
 
         container.addSubview(signInOptionalLabel)
-        signInOptionalLabel.anchor(top: continueButton.bottomAnchor,
-                                   leading: container.safeLeftAnchor,
-                                   bottom: nil,
-                                   trailing: container.safeRightAnchor,
-                                   padding: .init(top: UIDevice.isiPhoneSE() ? 6 : 10,
-                                                  left: 30,
-                                                  bottom: 0,
-                                                  right: 30))
+        signInOptionalLabel.anchor(
+            top: continueButton.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 6 : 10,
+                left: 30,
+                bottom: 0,
+                right: 30
+            )
+        )
 
         signInOptionalLabel.bottomAnchor.constraint(
             lessThanOrEqualTo: container.bottomAnchor, constant: -30
@@ -238,27 +266,35 @@ extension SignInBenefitsViewController {
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
-                                range: range)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
+            range: range
+        )
 
         // Make note bold and orange color
         let makeBoldOrange = RuuviLocalization.note
         let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 18)
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: boldFont,
-                                range: boldRange)
-        attrString.addAttribute(.foregroundColor,
-                                value: RuuviColor.ruuviOrangeColor ?? UIColor.systemOrange,
-                                range: boldRange)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: boldFont,
+            range: boldRange
+        )
+        attrString.addAttribute(
+            .foregroundColor,
+            value: RuuviColor.ruuviOrangeColor ?? UIColor.systemOrange,
+            range: boldRange
+        )
 
         // Make rest of the text white
         let regularRange = NSString(string: attrString.string)
             .range(of: RuuviLocalization.claimWarning)
-        attrString.addAttribute(.foregroundColor,
-                                value: UIColor.white,
-                                range: regularRange)
+        attrString.addAttribute(
+            .foregroundColor,
+            value: UIColor.white,
+            range: regularRange
+        )
 
         return attrString
     }

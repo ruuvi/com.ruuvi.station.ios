@@ -39,14 +39,17 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     }
 
     func stop() {
-        guard let thread else {
+        guard let thread
+        else {
             return
         }
-        perform(#selector(RuuviDaemonCloudSyncWorker.stopDaemon),
-                on: thread,
-                with: nil,
-                waitUntilDone: false,
-                modes: [RunLoop.Mode.default.rawValue])
+        perform(
+            #selector(RuuviDaemonCloudSyncWorker.stopDaemon),
+            on: thread,
+            with: nil,
+            waitUntilDone: false,
+            modes: [RunLoop.Mode.default.rawValue]
+        )
     }
 
     @objc private func stopDaemon() {

@@ -147,7 +147,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func string(for temperature: Temperature?, allowSettings: Bool) -> String {
-        guard let temperature else {
+        guard let temperature
+        else {
             return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
@@ -164,18 +165,20 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         if temperatureFormatter.unitStyle == .medium,
            settings.language == .english,
-           let valueString = numberFormatter.string(from: number)
-        {
-            return String(format: "%@\(String.nbsp)%@",
-                          valueString,
-                          units.temperatureUnit.symbol)
+           let valueString = numberFormatter.string(from: number) {
+            return String(
+                format: "%@\(String.nbsp)%@",
+                valueString,
+                units.temperatureUnit.symbol
+            )
         } else {
             return measurementFormatter.string(from: temperature.converted(to: units.temperatureUnit))
         }
     }
 
     public func stringWithoutSign(for temperature: Temperature?) -> String {
-        guard let temperature else {
+        guard let temperature
+        else {
             return emptyValueString
         }
         let value = temperature.converted(to: units.temperatureUnit).value
@@ -185,7 +188,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func stringWithoutSign(temperature: Double?) -> String {
-        guard let temperature else {
+        guard let temperature
+        else {
             return emptyValueString
         }
         let number = NSNumber(value: temperature)
@@ -203,10 +207,12 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
     }
 
-    public func string(for pressure: Pressure?,
-                       allowSettings: Bool) -> String
-    {
-        guard let pressure else {
+    public func string(
+        for pressure: Pressure?,
+        allowSettings: Bool
+    ) -> String {
+        guard let pressure
+        else {
             return emptyValueString
         }
         if allowSettings {
@@ -217,7 +223,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func stringWithoutSign(for pressure: Pressure?) -> String {
-        guard let pressure else {
+        guard let pressure
+        else {
             return emptyValueString
         }
         let pressureValue = pressure.converted(to: units.pressureUnit).value
@@ -225,7 +232,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func stringWithoutSign(pressure: Double?) -> String {
-        guard let pressure else {
+        guard let pressure
+        else {
             return emptyValueString
         }
         let number = NSNumber(value: pressure)
@@ -240,16 +248,18 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func string(for voltage: Voltage?) -> String {
-        guard let voltage else {
+        guard let voltage
+        else {
             return emptyValueString
         }
         return commonFormatter.string(from: voltage.converted(to: .volts))
     }
 
-    public func double(for humidity: Humidity,
-                       temperature: Temperature,
-                       isDecimal: Bool) -> Double?
-    {
+    public func double(
+        for humidity: Humidity,
+        temperature: Temperature,
+        isDecimal: Bool
+    ) -> Double? {
         let humidityWithTemperature = Humidity(
             value: humidity.value,
             unit: .relative(temperature: temperature)
@@ -274,10 +284,11 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
     }
 
-    public func string(for humidity: Humidity?,
-                       temperature: Temperature?,
-                       allowSettings: Bool) -> String
-    {
+    public func string(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        allowSettings: Bool
+    ) -> String {
         guard let humidity,
               let temperature
         else {
@@ -299,20 +310,23 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         case .gm3:
             return humidityFormatter.string(from: humidityWithTemperature.converted(to: .absolute))
         case .dew:
-            guard let dp = try? humidityWithTemperature.dewPoint(temperature: temperature) else {
+            guard let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
+            else {
                 return emptyValueString
             }
             let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
-            guard let value = humidityNumberFormatter.string(from: NSNumber(value: value)) else {
+            guard let value = humidityNumberFormatter.string(from: NSNumber(value: value))
+            else {
                 return emptyValueString
             }
             return value + " " + settings.temperatureUnit.symbol
         }
     }
 
-    public func stringWithoutSign(for humidity: Humidity?,
-                                  temperature: Temperature?) -> String
-    {
+    public func stringWithoutSign(
+        for humidity: Humidity?,
+        temperature: Temperature?
+    ) -> String {
         guard let humidity,
               let temperature
         else {
@@ -343,7 +357,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func stringWithoutSign(humidity: Double?) -> String {
-        guard let humidity else {
+        guard let humidity
+        else {
             return emptyValueString
         }
         let number = NSNumber(value: humidity)
@@ -351,7 +366,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func string(for measurement: Double?) -> String {
-        guard let measurement else {
+        guard let measurement
+        else {
             return ""
         }
         let number = NSNumber(value: measurement)
@@ -378,21 +394,24 @@ extension RuuviServiceMeasurementImpl {
     }
 
     public func updateUnits() {
-        units = RuuviServiceMeasurementSettingsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
-                                                    humidityUnit: settings.humidityUnit,
-                                                    pressureUnit: settings.pressureUnit)
+        units = RuuviServiceMeasurementSettingsUnit(
+            temperatureUnit: settings.temperatureUnit.unitTemperature,
+            humidityUnit: settings.humidityUnit,
+            pressureUnit: settings.pressureUnit
+        )
     }
 
     private func startSettingsObserving() {
         notificationsNamesToObserve.forEach {
             let observer = NotificationCenter
                 .default
-                .addObserver(forName: $0,
-                             object: nil,
-                             queue: .main)
-            { [weak self] _ in
-                self?.updateCache()
-            }
+                .addObserver(
+                    forName: $0,
+                    object: nil,
+                    queue: .main
+                ) { [weak self] _ in
+                    self?.updateCache()
+                }
             self.observers.append(observer)
         }
     }
@@ -424,8 +443,10 @@ public extension RuuviServiceMeasurementImpl {
             from: Humidity(
                 value: humidityOffsetCorrection(for: humidity) * 100,
                 unit: UnitHumidity.relative(
-                    temperature: Temperature(value: 0.0,
-                                             unit: UnitTemperature.celsius)
+                    temperature: Temperature(
+                        value: 0.0,
+                        unit: UnitTemperature.celsius
+                    )
                 )
             )
         )

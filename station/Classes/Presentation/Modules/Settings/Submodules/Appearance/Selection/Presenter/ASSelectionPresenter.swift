@@ -20,9 +20,10 @@ extension ASSelectionPresenter: ASSelectionViewOutput {
         // No op.
     }
 
-    func viewDidSelectItem(item: SelectionItemProtocol,
-                           type: AppearanceSettingType)
-    {
+    func viewDidSelectItem(
+        item: SelectionItemProtocol,
+        type: AppearanceSettingType
+    ) {
         update(with: item, type: type)
     }
 }
@@ -34,14 +35,14 @@ extension ASSelectionPresenter: ASSelectionModuleInput {
 }
 
 extension ASSelectionPresenter {
-    private func update(with selection: SelectionItemProtocol,
-                        type: AppearanceSettingType)
-    {
+    private func update(
+        with selection: SelectionItemProtocol,
+        type: AppearanceSettingType
+    ) {
         switch type {
         case .theme:
             if let theme = selection as? RuuviTheme,
-               let viewModel
-            {
+               let viewModel {
                 settings.theme = theme
                 let updatedViewModel = AppearanceSettingsViewModel(
                     title: viewModel.title,

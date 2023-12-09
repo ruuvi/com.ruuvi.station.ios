@@ -35,18 +35,21 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
         let restorationId = "ShareViewController"
         let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
         try? transitionHandler
-            .forStoryboard(factory: factory,
-                           to: ShareModuleInput.self)
+            .forStoryboard(
+                factory: factory,
+                to: ShareModuleInput.self
+            )
             .to(preferred: .navigation(style: .push))
             .then { module -> Any? in
                 module.configure(sensor: sensor)
             }
     }
 
-    func openOffsetCorrection(type: OffsetCorrectionType,
-                              ruuviTag: RuuviTagSensor,
-                              sensorSettings: SensorSettings?)
-    {
+    func openOffsetCorrection(
+        type: OffsetCorrectionType,
+        ruuviTag: RuuviTagSensor,
+        sensorSettings: SensorSettings?
+    ) {
         let factory = StoryboardFactory(storyboardName: "OffsetCorrection")
         try? transitionHandler
             .forStoryboard(factory: factory, to: OffsetCorrectionModuleInput.self)

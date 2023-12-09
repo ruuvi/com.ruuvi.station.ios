@@ -10,11 +10,14 @@ class ASSelectionTableViewCell: UITableViewCell {
         return label
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -28,11 +31,13 @@ class ASSelectionTableViewCell: UITableViewCell {
         tintColor = RuuviColor.ruuviTintColor
 
         addSubview(titleLabel)
-        titleLabel.anchor(top: safeTopAnchor,
-                          leading: safeLeftAnchor,
-                          bottom: safeBottomAnchor,
-                          trailing: contentView.safeRightAnchor,
-                          padding: .init(top: 12, left: 20, bottom: 12, right: 8))
+        titleLabel.anchor(
+            top: safeTopAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: contentView.safeRightAnchor,
+            padding: .init(top: 12, left: 20, bottom: 12, right: 8)
+        )
     }
 }
 

@@ -41,14 +41,17 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
 
     override func main() {
         post(started: from, with: uuid)
-        background.services.ruuvi.nus.log(for: self,
-                                          uuid: uuid,
-                                          from: from,
-                                          options: [.callbackQueue(.untouch),
-                                                    .connectionTimeout(connectionTimeout ?? 0),
-                                                    .serviceTimeout(serviceTimeout ?? 0)],
-                                          progress: progress)
-        { observer, result in
+        background.services.ruuvi.nus.log(
+            for: self,
+            uuid: uuid,
+            from: from,
+            options: [
+                .callbackQueue(.untouch),
+                .connectionTimeout(connectionTimeout ?? 0),
+                .serviceTimeout(serviceTimeout ?? 0),
+            ],
+            progress: progress
+        ) { observer, result in
             switch result {
             case let .success(logResult):
                 switch logResult {
@@ -88,41 +91,57 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
 
     private func post(started date: Date, with uuid: String) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart,
-                                            object: nil,
-                                            userInfo:
-                                            [RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
-                                             RuuviTagReadLogsOperationDidStartKey.fromDate: date])
+            NotificationCenter.default.post(
+                name: .RuuviTagReadLogsOperationDidStart,
+                object: nil,
+                userInfo:
+                [
+                    RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
+                    RuuviTagReadLogsOperationDidStartKey.fromDate: date,
+                ]
+            )
         }
     }
 
     private func post(points: Int, with uuid: String) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationProgress,
-                                            object: nil,
-                                            userInfo:
-                                            [RuuviTagReadLogsOperationProgressKey.uuid: uuid,
-                                             RuuviTagReadLogsOperationProgressKey.progress: points])
+            NotificationCenter.default.post(
+                name: .RuuviTagReadLogsOperationProgress,
+                object: nil,
+                userInfo:
+                [
+                    RuuviTagReadLogsOperationProgressKey.uuid: uuid,
+                    RuuviTagReadLogsOperationProgressKey.progress: points,
+                ]
+            )
         }
     }
 
     private func post(logs: [RuuviTagEnvLogFull], with uuid: String) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFinish,
-                                            object: nil,
-                                            userInfo:
-                                            [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
-                                             RuuviTagReadLogsOperationDidFinishKey.logs: logs])
+            NotificationCenter.default.post(
+                name: .RuuviTagReadLogsOperationDidFinish,
+                object: nil,
+                userInfo:
+                [
+                    RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
+                    RuuviTagReadLogsOperationDidFinishKey.logs: logs,
+                ]
+            )
         }
     }
 
     private func post(error: Error, with uuid: String) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
-                                            object: nil,
-                                            userInfo:
-                                            [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
-                                             RuuviTagReadLogsOperationDidFailKey.error: error])
+            NotificationCenter.default.post(
+                name: .RuuviTagReadLogsOperationDidFail,
+                object: nil,
+                userInfo:
+                [
+                    RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
+                    RuuviTagReadLogsOperationDidFailKey.error: error,
+                ]
+            )
         }
     }
 }

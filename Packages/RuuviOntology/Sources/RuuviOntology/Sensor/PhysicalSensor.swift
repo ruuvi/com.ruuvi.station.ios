@@ -8,8 +8,7 @@ public protocol PhysicalSensor: Sensor {
 public struct PhysicalSensorStruct: PhysicalSensor {
     public var id: String {
         if let macId,
-           !macId.value.isEmpty
-        {
+           !macId.value.isEmpty {
             macId.value
         } else if let luid {
             luid.value

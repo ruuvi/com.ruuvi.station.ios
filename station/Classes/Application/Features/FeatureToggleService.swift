@@ -21,8 +21,7 @@ public final class FeatureToggleService {
     private var remoteToggles: [FeatureToggle] {
         get {
             if let storedRemoteToggles = UserDefaults.standard.object(forKey: remoteTogglesUDKey) as? Data,
-               let toggles = try? JSONDecoder().decode([FeatureToggle].self, from: storedRemoteToggles)
-            {
+               let toggles = try? JSONDecoder().decode([FeatureToggle].self, from: storedRemoteToggles) {
                 toggles
             } else {
                 []

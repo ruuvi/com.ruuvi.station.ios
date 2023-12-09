@@ -56,9 +56,11 @@ final class RuuviTagLastRecordSubjectCombine {
             }
         }
         let results = realm.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
-                    luid?.value ?? "invalid",
-                    macId?.value ?? "invalid")
+            .filter(
+                "ruuviTag.uuid == %@ || ruuviTag.mac == %@",
+                luid?.value ?? "invalid",
+                macId?.value ?? "invalid"
+            )
             .sorted(byKeyPath: "date")
         ruuviTagDataRealmToken = results.observe { [weak self] change in
             guard let sSelf = self else { return }

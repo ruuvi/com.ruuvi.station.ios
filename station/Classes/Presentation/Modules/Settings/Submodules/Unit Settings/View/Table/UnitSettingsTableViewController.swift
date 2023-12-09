@@ -81,8 +81,10 @@ extension UnitSettingsTableViewController {
 
     // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: unitSettingsCellReuseIdentifier,
-                                                       for: indexPath) as? UnitSettingsTableViewCell
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: unitSettingsCellReuseIdentifier,
+            for: indexPath
+        ) as? UnitSettingsTableViewCell
         else {
             return .init()
         }
@@ -103,25 +105,32 @@ extension UnitSettingsTableViewController {
             default:
                 cell.valueLbl.text = RuuviLocalization.na
             }
-
         } else {
             cell.titleLbl.text = RuuviLocalization.Settings.Measurement.Resolution.title
             let titleProvider = MeasurementAccuracyTitles()
             switch viewModel?.measurementType {
             case .temperature:
-                cell.valueLbl.text = titleProvider.formattedTitle(type: temperatureAccuracy,
-                                                                  settings: settings) + " \(temperatureUnit.symbol)"
+                cell.valueLbl.text = titleProvider.formattedTitle(
+                    type: temperatureAccuracy,
+                    settings: settings
+                ) + " \(temperatureUnit.symbol)"
             case .humidity:
                 if humidityUnit == .dew {
-                    cell.valueLbl.text = titleProvider.formattedTitle(type: humidityAccuracy,
-                                                                      settings: settings) + " \(temperatureUnit.symbol)"
+                    cell.valueLbl.text = titleProvider.formattedTitle(
+                        type: humidityAccuracy,
+                        settings: settings
+                    ) + " \(temperatureUnit.symbol)"
                 } else {
-                    cell.valueLbl.text = titleProvider.formattedTitle(type: humidityAccuracy,
-                                                                      settings: settings) + " \(humidityUnit.symbol)"
+                    cell.valueLbl.text = titleProvider.formattedTitle(
+                        type: humidityAccuracy,
+                        settings: settings
+                    ) + " \(humidityUnit.symbol)"
                 }
             case .pressure:
-                cell.valueLbl.text = titleProvider.formattedTitle(type: pressureAccuracy,
-                                                                  settings: settings) + " \(pressureUnit.symbol)"
+                cell.valueLbl.text = titleProvider.formattedTitle(
+                    type: pressureAccuracy,
+                    settings: settings
+                ) + " \(pressureUnit.symbol)"
             default:
                 cell.valueLbl.text = RuuviLocalization.na
             }

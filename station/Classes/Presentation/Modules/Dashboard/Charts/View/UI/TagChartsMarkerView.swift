@@ -20,10 +20,11 @@ class TagChartsMarkerView: MarkerImage {
     private let cornerRadius: CGFloat = 4.0
     private let yBottomPadding: CGFloat = 32.0
 
-    init(color: UIColor? = RuuviColor.ruuviGraphMarkerColor,
-         font: UIFont = UIFont.Muli(.regular, size: 8),
-         textColor: UIColor = .white)
-    {
+    init(
+        color: UIColor? = RuuviColor.ruuviGraphMarkerColor,
+        font: UIFont = UIFont.Muli(.regular, size: 8),
+        textColor: UIColor = .white
+    ) {
         if let color {
             self.color = color
         } else {
@@ -35,15 +36,18 @@ class TagChartsMarkerView: MarkerImage {
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
-        attrs = [.font: font,
-                 .paragraphStyle: paragraphStyle,
-                 .foregroundColor: textColor,
-                 .baselineOffset: NSNumber(value: baselineOffset)]
+        attrs = [
+            .font: font,
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: textColor,
+            .baselineOffset: NSNumber(value: baselineOffset),
+        ]
         super.init()
     }
 
     override func draw(context: CGContext, point: CGPoint) {
-        guard let attrs else {
+        guard let attrs
+        else {
             return
         }
         // Padding for the label.
@@ -51,10 +55,12 @@ class TagChartsMarkerView: MarkerImage {
         let labelHeight = labelText.size(withAttributes: attrs).height + vPadding
 
         // Set position of the marker view container
-        var rectangle = CGRect(x: point.x,
-                               y: point.y,
-                               width: labelWidth,
-                               height: labelHeight)
+        var rectangle = CGRect(
+            x: point.x,
+            y: point.y,
+            width: labelWidth,
+            height: labelHeight
+        )
         let screenSize: CGRect = UIScreen.main.bounds
         if (point.x + rectangle.width) >= screenSize.width {
             rectangle.origin.x -= rectangle.width
@@ -77,8 +83,10 @@ class TagChartsMarkerView: MarkerImage {
         }
 
         // Rounded corner
-        let clipPath = UIBezierPath(roundedRect: rectangle,
-                                    cornerRadius: cornerRadius).cgPath
+        let clipPath = UIBezierPath(
+            roundedRect: rectangle,
+            cornerRadius: cornerRadius
+        ).cgPath
         context.addPath(clipPath)
         context.setFillColor(color.cgColor)
         context.setStrokeColor(UIColor.clear.cgColor)
@@ -86,10 +94,12 @@ class TagChartsMarkerView: MarkerImage {
         context.drawPath(using: .fillStroke)
 
         // Draw
-        labelText.draw(with: rectangle,
-                       options: .usesLineFragmentOrigin,
-                       attributes: attrs,
-                       context: nil)
+        labelText.draw(
+            with: rectangle,
+            options: .usesLineFragmentOrigin,
+            attributes: attrs,
+            context: nil
+        )
     }
 
     override func refreshContent(entry: ChartDataEntry, highlight _: Highlight) {
@@ -111,11 +121,12 @@ class TagChartsMarkerView: MarkerImage {
 }
 
 extension TagChartsMarkerView {
-    func initialise(with unit: String,
-                    type: MeasurementType,
-                    measurementService: RuuviServiceMeasurement,
-                    parentFrame: CGRect)
-    {
+    func initialise(
+        with unit: String,
+        type: MeasurementType,
+        measurementService: RuuviServiceMeasurement,
+        parentFrame: CGRect
+    ) {
         self.unit = unit
         self.type = type
         self.measurementService = measurementService

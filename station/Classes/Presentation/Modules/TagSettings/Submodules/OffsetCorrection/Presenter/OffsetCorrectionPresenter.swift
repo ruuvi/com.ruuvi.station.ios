@@ -149,13 +149,16 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     }
 
     private func notifyCalibrationSettingsUpdate() {
-        NotificationCenter.default.post(name: .SensorCalibrationDidChange,
-                                        object: self,
-                                        userInfo: nil)
+        NotificationCenter.default.post(
+            name: .SensorCalibrationDidChange,
+            object: self,
+            userInfo: nil
+        )
     }
 
     private func observeRuuviTagUpdate() {
-        guard let luid = ruuviTag.luid?.value else {
+        guard let luid = ruuviTag.luid?.value
+        else {
             return
         }
         if !(settings.cloudModeEnabled && ruuviTag.isCloud) {
@@ -173,8 +176,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             ruuviTagObserveLastRecordToken?.invalidate()
             ruuviTagObserveLastRecordToken = ruuviReactor.observeLatest(ruuviTag) { [weak self] changes in
                 if case let .update(anyRecord) = changes,
-                   let record = anyRecord
-                {
+                   let record = anyRecord {
                     self?.lastSensorRecord = record
                     self?.view.viewModel.update(
                         ruuviTagRecord: record.with(sensorSettings: self?.sensorSettings)
@@ -186,25 +188,30 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
 
     private func startObservingSettingsChanges() {
         temperatureUnitSettingToken = NotificationCenter.default
-            .addObserver(forName: .TemperatureUnitDidChange,
-                         object: nil,
-                         queue: .main)
-        { [weak self] _ in
-            self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
-        }
+            .addObserver(
+                forName: .TemperatureUnitDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
+            }
         humidityUnitSettingToken = NotificationCenter.default
-            .addObserver(forName: .HumidityUnitDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
-                         })
+            .addObserver(
+                forName: .HumidityUnitDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
+                }
+            )
         pressureUnitSettingToken = NotificationCenter.default
-            .addObserver(forName: .PressureUnitDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
-                         })
+            .addObserver(
+                forName: .PressureUnitDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
+                }
+            )
     }
 }

@@ -35,14 +35,20 @@ public protocol RuuviServiceMeasurement {
     func stringWithoutSign(temperature: Double?) -> String
 
     // Humidity
-    func double(for humidity: Humidity,
-                temperature: Temperature,
-                isDecimal: Bool) -> Double?
-    func string(for humidity: Humidity?,
-                temperature: Temperature?,
-                allowSettings: Bool) -> String
-    func stringWithoutSign(for humidity: Humidity?,
-                           temperature: Temperature?) -> String
+    func double(
+        for humidity: Humidity,
+        temperature: Temperature,
+        isDecimal: Bool
+    ) -> Double?
+    func string(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        allowSettings: Bool
+    ) -> String
+    func stringWithoutSign(
+        for humidity: Humidity?,
+        temperature: Temperature?
+    ) -> String
     func stringWithoutSign(humidity: Double?) -> String
 
     // Pressure
@@ -70,35 +76,41 @@ public protocol RuuviServiceMeasurement {
 
 public extension RuuviServiceMeasurement {
     func double(for temperature: Temperature?) -> Double? {
-        guard let temperature else {
+        guard let temperature
+        else {
             return nil
         }
         return double(for: temperature)
     }
 
-    func double(for humidity: Humidity?,
-                temperature: Temperature?,
-                isDecimal: Bool) -> Double?
-    {
+    func double(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        isDecimal: Bool
+    ) -> Double? {
         guard let temperature,
               let humidity
         else {
             return nil
         }
-        return double(for: humidity,
-                      temperature: temperature,
-                      isDecimal: isDecimal)
+        return double(
+            for: humidity,
+            temperature: temperature,
+            isDecimal: isDecimal
+        )
     }
 
     func double(for pressure: Pressure?) -> Double? {
-        guard let pressure else {
+        guard let pressure
+        else {
             return nil
         }
         return double(for: pressure)
     }
 
     func double(for voltage: Voltage?) -> Double? {
-        guard let voltage else {
+        guard let voltage
+        else {
             return nil
         }
         return double(for: voltage)

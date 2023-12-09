@@ -11,7 +11,8 @@ public struct RuuviCloudPNTokenListResponse: Decodable {
     }
 
     public var anyTokens: [RuuviCloudPNToken] {
-        guard let tokens else {
+        guard let tokens
+        else {
             return []
         }
         return tokens.map {

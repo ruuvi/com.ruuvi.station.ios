@@ -58,33 +58,43 @@ private extension RuuviOnboardStartCell {
         container.fillSuperview()
 
         let textStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel, sub_subtitleLabel,
+            titleLabel, subtitleLabel, sub_subtitleLabel
         ])
         textStack.axis = .vertical
         textStack.distribution = .fill
         textStack.spacing = 12
 
         container.addSubview(textStack)
-        textStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeadingAnchor,
-                         bottom: nil,
-                         trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44 + 12, left: 16,
-                                        bottom: 0, right: 16))
+        textStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 44 + 12,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
 
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
-        beaverContainerView.anchor(top: textStack.bottomAnchor,
-                                   leading: container.leadingAnchor,
-                                   bottom: container.bottomAnchor,
-                                   trailing: container.trailingAnchor)
+        beaverContainerView.anchor(
+            top: textStack.bottomAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor
+        )
         beaverContainerView.addSubview(beaverImageView)
 
-        beaverImageView.anchor(top: nil,
-                               leading: beaverContainerView.safeLeadingAnchor,
-                               bottom: nil,
-                               trailing: beaverContainerView.safeTrailingAnchor,
-                               size: .init(width: 0, height: bounds.height / 2))
+        beaverImageView.anchor(
+            top: nil,
+            leading: beaverContainerView.safeLeadingAnchor,
+            bottom: nil,
+            trailing: beaverContainerView.safeTrailingAnchor,
+            size: .init(width: 0, height: bounds.height / 2)
+        )
         beaverImageView.centerYInSuperview()
     }
 }

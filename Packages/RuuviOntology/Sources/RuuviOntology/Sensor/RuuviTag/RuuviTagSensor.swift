@@ -6,8 +6,7 @@ public protocol RuuviTagSensor: PhysicalSensor, Versionable, Claimable, Connecta
 public extension RuuviTagSensor {
     var id: String {
         if let macId,
-           !macId.value.isEmpty
-        {
+           !macId.value.isEmpty {
             macId.value
         } else if let luid {
             luid.value

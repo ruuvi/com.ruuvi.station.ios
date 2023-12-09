@@ -11,7 +11,8 @@ class AboutRouter: AboutRouterInput {
     }
 
     func openChangelogPage() {
-        guard let url = URL(string: RuuviLocalization.changelogIosUrl) else {
+        guard let url = URL(string: RuuviLocalization.changelogIosUrl)
+        else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)

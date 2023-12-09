@@ -39,12 +39,10 @@ extension String {
         #endif
         if let module = NSStringFromClass(clazz).components(separatedBy: ".").first {
             if let path = bundle.path(forResource: currentLanguage(), ofType: "lproj"),
-               let bundle = Bundle(path: path)
-            {
+               let bundle = Bundle(path: path) {
                 return bundle.localizedString(forKey: self, value: nil, table: module)
             } else if let path = bundle.path(forResource: "Base", ofType: "lproj"),
-                      let bundle = Bundle(path: path)
-            {
+                      let bundle = Bundle(path: path) {
                 return bundle.localizedString(forKey: self, value: nil, table: module)
             } else {
                 assertionFailure()

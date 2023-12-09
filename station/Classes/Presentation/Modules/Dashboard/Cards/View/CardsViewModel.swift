@@ -106,8 +106,10 @@ struct CardsViewModel {
         source.value = record.source
         batteryNeedsReplacement.value =
             batteryStatusProvider
-                .batteryNeedsReplacement(temperature: record.temperature,
-                                         voltage: record.voltage)
+                .batteryNeedsReplacement(
+                    temperature: record.temperature,
+                    voltage: record.voltage
+                )
         isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false
     }
 
@@ -116,8 +118,7 @@ struct CardsViewModel {
             isConnectable.value = ruuviTag.isConnectable
             if let isChart = isChartAvailable.value,
                !isChart,
-               ruuviTag.isConnectable
-            {
+               ruuviTag.isConnectable {
                 isChartAvailable.value = true
             }
         }

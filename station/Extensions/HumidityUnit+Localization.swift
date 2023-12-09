@@ -5,10 +5,8 @@ import RuuviOntology
 extension HumidityUnit: SelectionItemProtocol {
     var title: (String) -> String {
         switch self {
-        case .percent:
-            { _ in RuuviLocalization.HumidityUnit.Percent.title }
-        case .gm3:
-            { _ in RuuviLocalization.HumidityUnit.Gm3.title }
+        case .percent: { _ in RuuviLocalization.HumidityUnit.Percent.title }
+        case .gm3: { _ in RuuviLocalization.HumidityUnit.Gm3.title }
         case .dew:
             RuuviLocalization.HumidityUnit.Dew.title
         }

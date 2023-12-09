@@ -30,11 +30,14 @@ class NotificationsSettingsTextCell: UITableViewCell {
         return label
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -48,14 +51,14 @@ class NotificationsSettingsTextCell: UITableViewCell {
         accessoryType = .disclosureIndicator
 
         let leftStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel,
+            titleLabel, subtitleLabel
         ])
         leftStack.spacing = 4
         leftStack.distribution = .fillProportionally
         leftStack.axis = .vertical
 
         let fullStack = UIStackView(arrangedSubviews: [
-            leftStack, valueLabel,
+            leftStack, valueLabel
         ])
         fullStack.spacing = 4
         fullStack.distribution = .fillProportionally

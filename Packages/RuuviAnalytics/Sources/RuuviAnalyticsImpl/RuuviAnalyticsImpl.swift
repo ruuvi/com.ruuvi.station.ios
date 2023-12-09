@@ -232,38 +232,43 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
     }
 
     // swiftlint:disable:next large_tuple
-    private func calculateAlerts(from tags: [RuuviTagSensor]) -> (temperature: Int,
-                                                                  humidity: Int,
-                                                                  pressure: Int,
-                                                                  movementCounter: Int)
-    {
+    private func calculateAlerts(from tags: [RuuviTagSensor]) -> (
+        temperature: Int,
+        humidity: Int,
+        pressure: Int,
+        movementCounter: Int
+    ) {
         var temperatureAlertCount = 0
         var humidityAlertCount = 0
         var pressureAlertCount = 0
         var movementAlertCount = 0
 
         for tag in tags {
-            if alertService.isOn(type: .temperature(lower: 0, upper: 0),
-                                 for: tag)
-            {
+            if alertService.isOn(
+                type: .temperature(lower: 0, upper: 0),
+                for: tag
+            ) {
                 temperatureAlertCount += 1
             }
 
-            if alertService.isOn(type: .relativeHumidity(lower: 0, upper: 0),
-                                 for: tag)
-            {
+            if alertService.isOn(
+                type: .relativeHumidity(lower: 0, upper: 0),
+                for: tag
+            ) {
                 humidityAlertCount += 1
             }
 
-            if alertService.isOn(type: .pressure(lower: 0, upper: 0),
-                                 for: tag)
-            {
+            if alertService.isOn(
+                type: .pressure(lower: 0, upper: 0),
+                for: tag
+            ) {
                 pressureAlertCount += 1
             }
 
-            if alertService.isOn(type: .movement(last: 0),
-                                 for: tag)
-            {
+            if alertService.isOn(
+                type: .movement(last: 0),
+                for: tag
+            ) {
                 movementAlertCount += 1
             }
         }

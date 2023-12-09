@@ -5,11 +5,14 @@ import RuuviOntology
 
 public extension RuuviTagDataRealm {
     var unitTemperature: Temperature? {
-        guard let celsius = celsius.value else {
+        guard let celsius = celsius.value
+        else {
             return nil
         }
-        return Temperature(value: celsius,
-                           unit: .celsius)
+        return Temperature(
+            value: celsius,
+            unit: .celsius
+        )
     }
 
     var unitHumidity: Humidity? {
@@ -18,16 +21,21 @@ public extension RuuviTagDataRealm {
         else {
             return nil
         }
-        return Humidity(relative: relativeHumidity,
-                        temperature: Temperature(value: celsius, unit: .celsius))
+        return Humidity(
+            relative: relativeHumidity,
+            temperature: Temperature(value: celsius, unit: .celsius)
+        )
     }
 
     var unitPressure: Pressure? {
-        guard let pressure = pressure.value else {
+        guard let pressure = pressure.value
+        else {
             return nil
         }
-        return Pressure(value: pressure,
-                        unit: .hectopascals)
+        return Pressure(
+            value: pressure,
+            unit: .hectopascals
+        )
     }
 
     var acceleration: Acceleration? {
@@ -37,15 +45,23 @@ public extension RuuviTagDataRealm {
         else {
             return nil
         }
-        return Acceleration(x:
-            AccelerationMeasurement(value: accelerationX,
-                                    unit: .metersPerSecondSquared),
+        return Acceleration(
+            x:
+            AccelerationMeasurement(
+                value: accelerationX,
+                unit: .metersPerSecondSquared
+            ),
             y:
-            AccelerationMeasurement(value: accelerationY,
-                                    unit: .metersPerSecondSquared),
+            AccelerationMeasurement(
+                value: accelerationY,
+                unit: .metersPerSecondSquared
+            ),
             z:
-            AccelerationMeasurement(value: accelerationZ,
-                                    unit: .metersPerSecondSquared))
+            AccelerationMeasurement(
+                value: accelerationZ,
+                unit: .metersPerSecondSquared
+            )
+        )
     }
 
     var unitVoltage: Voltage? {

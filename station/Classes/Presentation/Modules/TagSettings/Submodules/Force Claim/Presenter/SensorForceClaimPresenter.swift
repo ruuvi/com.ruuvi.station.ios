@@ -96,7 +96,8 @@ extension SensorForceClaimPresenter {
     }
 
     private func getTagSecretFromGatt() {
-        guard let luid = ruuviTag?.luid else {
+        guard let luid = ruuviTag?.luid
+        else {
             return
         }
         activityPresenter.show(with: .loading(message: nil))

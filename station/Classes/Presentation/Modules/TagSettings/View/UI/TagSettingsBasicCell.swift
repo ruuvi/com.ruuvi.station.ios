@@ -37,11 +37,14 @@ class TagSettingsBasicCell: UITableViewCell {
 
     private lazy var separator = UIView(color: RuuviColor.ruuviLineColor)
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -54,25 +57,29 @@ class TagSettingsBasicCell: UITableViewCell {
         backgroundColor = .clear
 
         let stack = UIStackView(arrangedSubviews: [
-            titleLabel, valueLabel,
+            titleLabel, valueLabel
         ])
         stack.spacing = 4
         stack.distribution = .fill
         stack.axis = .horizontal
         addSubview(stack)
-        stack.anchor(top: safeTopAnchor,
-                     leading: safeLeftAnchor,
-                     bottom: safeBottomAnchor,
-                     trailing: nil,
-                     padding: .init(top: 12, left: 8, bottom: 12, right: 0))
+        stack.anchor(
+            top: safeTopAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: nil,
+            padding: .init(top: 12, left: 8, bottom: 12, right: 0)
+        )
 
         addSubview(iconView)
-        iconView.anchor(top: nil,
-                        leading: stack.trailingAnchor,
-                        bottom: nil,
-                        trailing: safeRightAnchor,
-                        padding: .init(top: 0, left: 8, bottom: 0, right: 12),
-                        size: .init(width: 16, height: 16))
+        iconView.anchor(
+            top: nil,
+            leading: stack.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 8, bottom: 0, right: 12),
+            size: .init(width: 16, height: 16)
+        )
         iconView.centerYInSuperview()
         iconHiddenWidthConstraints = [
             iconView.widthAnchor.constraint(equalToConstant: 0),
@@ -80,11 +87,13 @@ class TagSettingsBasicCell: UITableViewCell {
         ]
 
         addSubview(separator)
-        separator.anchor(top: nil,
-                         leading: safeLeftAnchor,
-                         bottom: bottomAnchor,
-                         trailing: safeRightAnchor,
-                         size: .init(width: 0, height: 1))
+        separator.anchor(
+            top: nil,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: safeRightAnchor,
+            size: .init(width: 0, height: 1)
+        )
     }
 
     func configure(title: String?, value: String?) {

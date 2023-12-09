@@ -43,7 +43,7 @@ class BatteryLevelView: UIView {
         clipsToBounds = true
 
         let stack = UIStackView(arrangedSubviews: [
-            batteryLevelLabel, batteryLevelIcon,
+            batteryLevelLabel, batteryLevelIcon
         ])
         stack.spacing = 4
         stack.axis = .horizontal

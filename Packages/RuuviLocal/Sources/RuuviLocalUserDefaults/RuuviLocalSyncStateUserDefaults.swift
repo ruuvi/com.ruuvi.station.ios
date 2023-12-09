@@ -47,11 +47,11 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
         DispatchQueue.main.async {
             NotificationCenter
                 .default
-                .post(name: .NetworkHistorySyncDidCompleteForSensor,
-                      object: nil,
-                      userInfo: [
-                          NetworkSyncStatusKey.mac: macId,
-                      ])
+                .post(
+                    name: .NetworkHistorySyncDidCompleteForSensor,
+                    object: nil,
+                    userInfo: [NetworkSyncStatusKey.mac: macId]
+                )
         }
     }
 
@@ -108,7 +108,7 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
             NotificationCenter
                 .default
                 .post(name: .NetworkSyncDidChangeCommonStatus, object: self, userInfo: [
-                    NetworkSyncStatusKey.status: newValue,
+                    NetworkSyncStatusKey.status: newValue
                 ])
         }
     }

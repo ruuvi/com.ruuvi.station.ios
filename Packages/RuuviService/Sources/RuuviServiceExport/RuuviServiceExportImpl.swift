@@ -83,7 +83,8 @@ extension RuuviServiceExportImpl {
                 var csvText = headersString + "\n"
 
                 func toString(_ value: Double?, format: String) -> String {
-                    guard let v = value else {
+                    guard let v = value
+                    else {
                         return self.emptyValueString
                     }
                     return String(format: format, v)
@@ -96,9 +97,11 @@ extension RuuviServiceExportImpl {
                         let t = self.measurementService.double(for: log.temperature)
                         let temperature: String = toString(t, format: "%.2f")
 
-                        let h = self.measurementService.double(for: log.humidity,
-                                                               temperature: log.temperature,
-                                                               isDecimal: false)
+                        let h = self.measurementService.double(
+                            for: log.humidity,
+                            temperature: log.temperature,
+                            isDecimal: false
+                        )
                         let humidity: String = toString(h, format: "%.2f")
 
                         var pressure: String

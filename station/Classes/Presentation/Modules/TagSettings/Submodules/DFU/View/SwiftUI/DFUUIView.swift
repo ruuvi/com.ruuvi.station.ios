@@ -43,9 +43,11 @@ struct DFUUIView: View {
         VStack {
             content
                 .alert(isPresented: $viewModel.isMigrationFailed) {
-                    Alert(title: Text(texts.errorTitle),
-                          message: Text(texts.dbMigrationErrorTitle),
-                          dismissButton: .cancel(Text(texts.okTitle)))
+                    Alert(
+                        title: Text(texts.errorTitle),
+                        message: Text(texts.dbMigrationErrorTitle),
+                        dismissButton: .cancel(Text(texts.okTitle))
+                    )
                 }
         }
         .background(Color(RuuviColor.ruuviPrimarySUI!).edgesIgnoringSafeArea(.all))
@@ -228,9 +230,11 @@ struct DFUUIView: View {
                 })
             })
             .alert(isPresented: $isBatteryLow) {
-                Alert(title: Text(""),
-                      message: Text(texts.lowBatteryWarningMessage),
-                      dismissButton: .cancel(Text(texts.okTitle)))
+                Alert(
+                    title: Text(""),
+                    message: Text(texts.lowBatteryWarningMessage),
+                    dismissButton: .cancel(Text(texts.okTitle))
+                )
             }
             .padding()
             .eraseToAnyView()

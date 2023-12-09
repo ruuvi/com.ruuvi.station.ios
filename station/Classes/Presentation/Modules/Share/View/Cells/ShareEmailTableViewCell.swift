@@ -10,7 +10,8 @@ class ShareEmailTableViewCell: UITableViewCell {
     weak var delegate: ShareEmailTableViewCellDelegate?
 
     @IBAction func didTapUnshareButton(_: UIButton) {
-        guard let email = emailLabel.text else {
+        guard let email = emailLabel.text
+        else {
             return
         }
         delegate?.didTapUnshare(for: email)

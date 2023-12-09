@@ -5,12 +5,9 @@ import RuuviOntology
 extension TemperatureUnit: SelectionItemProtocol {
     var title: (String) -> String {
         switch self {
-        case .celsius:
-            { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
-        case .fahrenheit:
-            { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
-        case .kelvin:
-            { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
+        case .celsius: { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
+        case .fahrenheit: { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
+        case .kelvin: { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
         }
     }
 }
@@ -18,14 +15,10 @@ extension TemperatureUnit: SelectionItemProtocol {
 extension UnitTemperature: SelectionItemProtocol {
     var title: (String) -> String {
         switch self {
-        case .celsius:
-            { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
-        case .fahrenheit:
-            { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
-        case .kelvin:
-            { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
-        default:
-            { _ in RuuviLocalization.na }
+        case .celsius: { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
+        case .fahrenheit: { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
+        case .kelvin: { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
+        default: { _ in RuuviLocalization.na }
         }
     }
 }

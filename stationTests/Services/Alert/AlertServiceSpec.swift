@@ -689,14 +689,16 @@ class AlertServiceSpec: QuickSpec {
 
     func equalName(_ expectedName: Notification.Name, for uuid: String) -> Predicate<[Notification]> {
         Predicate.define("equal <\(stringify(expectedName))>") { actualExpression, msg in
-            guard let actualValue = try actualExpression.evaluate() else {
+            guard let actualValue = try actualExpression.evaluate()
+            else {
                 return PredicateResult(status: .fail, message: msg)
             }
 
             let actualNames = actualValue
                 .filter { $0.name == expectedName }
                 .filter { notification in
-                    guard let userInfo = notification.userInfo else {
+                    guard let userInfo = notification.userInfo
+                    else {
                         return false
                     }
                     return userInfo[RuuviServiceAlertDidChangeKey.uuid] as? String == uuid

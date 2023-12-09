@@ -34,19 +34,22 @@ extension DFUInteractor: DFUInteractorInput {
             firmwareUrl = fullUrl
         }
 
-        guard let firmware = ruuviDFU.firmwareFromUrl(url: firmwareUrl) else {
+        guard let firmware = ruuviDFU.firmwareFromUrl(url: firmwareUrl)
+        else {
             return Fail<FlashResponse, Error>(error: DFUError.failedToConstructFirmwareFromFile).eraseToAnyPublisher()
         }
         return ruuviDFU.flashFirmware(uuid: uuid, with: firmware).eraseToAnyPublisher()
     }
 
     func read(release: LatestRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error> {
-        guard let fullName = release.defaultFullZipName else {
+        guard let fullName = release.defaultFullZipName
+        else {
             return Fail<(appUrl: URL, fullUrl: URL), Error>(
                 error: DFUError.failedToGetFirmwareName
             ).eraseToAnyPublisher()
         }
-        guard let appName = release.defaultAppZipName else {
+        guard let appName = release.defaultAppZipName
+        else {
             return Fail<(appUrl: URL, fullUrl: URL), Error>(
                 error: DFUError.failedToGetFirmwareName
             ).eraseToAnyPublisher()
@@ -116,22 +119,24 @@ extension DFUInteractor: DFUInteractorInput {
 
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error> {
         let urlString = "https://api.github.com/repos/ruuvi/ruuvi.firmware.c/releases/latest"
-        guard let url = URL(string: urlString) else {
+        guard let url = URL(string: urlString)
+        else {
             return Fail<LatestRelease, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         return
             URLSession.shared.dataTaskPublisher(for: url)
-                .map(\.data)
-                .decode(type: LatestRelease.self, decoder: JSONDecoder())
-                .catch { error in Fail<LatestRelease, Error>(error: error) }
-                .receive(on: RunLoop.main)
-                .eraseToAnyPublisher()
+            .map(\.data)
+            .decode(type: LatestRelease.self, decoder: JSONDecoder())
+            .catch { error in Fail<LatestRelease, Error>(error: error) }
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
     }
 
     func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
         Future { [weak self] promise in
             guard let sSelf = self else { return }
-            guard let uuid = ruuviTag.luid?.value else {
+            guard let uuid = ruuviTag.luid?.value
+            else {
                 promise(.failure(DFUError.failedToGetLuid))
                 return
             }

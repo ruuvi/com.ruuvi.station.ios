@@ -12,18 +12,22 @@ public protocol RuuviNotifier {
 public protocol RuuviNotifierObserver: AnyObject {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String)
     // Optional method
-    func ruuvi(notifier: RuuviNotifier,
-               alertType: AlertType,
-               isTriggered: Bool,
-               for uuid: String)
+    func ruuvi(
+        notifier: RuuviNotifier,
+        alertType: AlertType,
+        isTriggered: Bool,
+        for uuid: String
+    )
 }
 
 public extension RuuviNotifierObserver {
     // Optional method implementation
-    func ruuvi(notifier _: RuuviNotifier,
-               alertType _: AlertType,
-               isTriggered _: Bool,
-               for _: String) {}
+    func ruuvi(
+        notifier _: RuuviNotifier,
+        alertType _: AlertType,
+        isTriggered _: Bool,
+        for _: String
+    ) {}
 }
 
 public protocol RuuviNotifierTitles {

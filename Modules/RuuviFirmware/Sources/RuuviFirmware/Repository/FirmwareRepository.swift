@@ -22,8 +22,7 @@ public final class FirmwareRepositoryImpl: FirmwareRepository {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 do {
                     if let dstUrl = try self?.getFirmwareDirectory().appendingPathComponent(name),
-                       FileManager.default.fileExists(atPath: dstUrl.path)
-                    {
+                       FileManager.default.fileExists(atPath: dstUrl.path) {
                         promise(.success(dstUrl))
                     } else {
                         promise(.failure(FirmwareRepositoryError.fileNotFound))
@@ -46,7 +45,8 @@ public final class FirmwareRepositoryImpl: FirmwareRepository {
     }
 
     private func getFirmwareDirectory() throws -> URL {
-        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        else {
             throw FirmwareRepositoryError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(fwDir, isDirectory: true)

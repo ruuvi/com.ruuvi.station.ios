@@ -33,7 +33,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(url: "https://github.com/kean/Future", .exact("1.3.0"))
     ],
     targets: [
         .target(

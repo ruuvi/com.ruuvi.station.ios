@@ -4,11 +4,15 @@ import UIKit
 
 protocol OnboardRouterDelegate: AnyObject {
     func onboardRouterDidFinish(_ router: OnboardRouter)
-    func onboardRouterDidFinish(_ router: OnboardRouter,
-                                module: SignInBenefitsModuleInput,
-                                showDashboard: Bool)
-    func onboardRouterDidShowSignIn(_ router: OnboardRouter,
-                                    output: SignInBenefitsModuleOutput)
+    func onboardRouterDidFinish(
+        _ router: OnboardRouter,
+        module: SignInBenefitsModuleInput,
+        showDashboard: Bool
+    )
+    func onboardRouterDidShowSignIn(
+        _ router: OnboardRouter,
+        output: SignInBenefitsModuleOutput
+    )
 }
 
 final class OnboardRouter {

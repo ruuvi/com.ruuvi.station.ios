@@ -67,7 +67,8 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapRequestCodeButton(for email: String?) {
-        guard let email, isValidEmail(email) else {
+        guard let email, isValidEmail(email)
+        else {
             view.showInvalidEmailEntered()
             return
         }
@@ -84,8 +85,10 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapUseWithoutAccount() {
-        output?.signIn(module: self,
-                       didSelectUseWithoutAccount: nil)
+        output?.signIn(
+            module: self,
+            didSelectUseWithoutAccount: nil
+        )
     }
 }
 
@@ -121,7 +124,8 @@ extension SignInPresenter {
     }
 
     private func isValidEmail(_ email: String?) -> Bool {
-        guard let email else {
+        guard let email
+        else {
             return false
         }
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -189,32 +193,38 @@ extension SignInPresenter {
     private func startObservingUniversalLinks() {
         universalLinkObservationToken = NotificationCenter
             .default
-            .addObserver(forName: .DidOpenWithUniversalLink,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] notification in
-                             guard let self,
-                                   let userInfo = notification.userInfo
-                             else {
-                                 return
-                             }
-                             processLink(userInfo)
-                         })
+            .addObserver(
+                forName: .DidOpenWithUniversalLink,
+                object: nil,
+                queue: .main,
+                using: { [weak self] notification in
+                    guard let self,
+                          let userInfo = notification.userInfo
+                    else {
+                        return
+                    }
+                    processLink(userInfo)
+                }
+            )
     }
 
     private func startObservingAppState() {
         NotificationCenter
             .default
-            .addObserver(self,
-                         selector: #selector(handleAppEnterForgroundState),
-                         name: UIApplication.willEnterForegroundNotification,
-                         object: nil)
+            .addObserver(
+                self,
+                selector: #selector(handleAppEnterForgroundState),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
         NotificationCenter
             .default
-            .addObserver(self,
-                         selector: #selector(handleAppEnterBackgroundState),
-                         name: UIApplication.didEnterBackgroundNotification,
-                         object: nil)
+            .addObserver(
+                self,
+                selector: #selector(handleAppEnterBackgroundState),
+                name: UIApplication.didEnterBackgroundNotification,
+                object: nil
+            )
     }
 
     @objc private func handleAppEnterForgroundState() {
@@ -269,11 +279,13 @@ extension SignInPresenter {
         let sound = settings.alertSound
         let language = settings.language
         Messaging.messaging().token { [weak self] fcmToken, _ in
-            self?.cloudNotificationService.set(token: fcmToken,
-                                               name: UIDevice.modelName,
-                                               data: nil,
-                                               language: language,
-                                               sound: sound)
+            self?.cloudNotificationService.set(
+                token: fcmToken,
+                name: UIDevice.modelName,
+                data: nil,
+                language: language,
+                sound: sound
+            )
         }
     }
 }

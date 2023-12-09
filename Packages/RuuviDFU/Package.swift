@@ -27,7 +27,7 @@ let package = Package(
         .target(
             name: "RuuviDFU",
             dependencies: [
-                "NordicDFU",
+                "NordicDFU"
             ]
         ),
         .target(

@@ -132,42 +132,48 @@ extension NotificationsSettingsPresenter {
     private func startObservingAlertSoundSetting() {
         soundSettingsToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertSoundSettingsDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.configure()
-                             guard let sSelf = self else { return }
-                             DispatchQueue.main.async {
-                                 sSelf.cloudNotificationService.set(
-                                     sound: sSelf.settings.alertSound,
-                                     language: sSelf.settings.language,
-                                     deviceName: UIDevice.modelName
-                                 )
-                             }
-                         })
+            .addObserver(
+                forName: .AlertSoundSettingsDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.configure()
+                    guard let sSelf = self else { return }
+                    DispatchQueue.main.async {
+                        sSelf.cloudNotificationService.set(
+                            sound: sSelf.settings.alertSound,
+                            language: sSelf.settings.language,
+                            deviceName: UIDevice.modelName
+                        )
+                    }
+                }
+            )
     }
 
     private func startObservingEmailAlertSetting() {
         emailAlertsSettingsToken = NotificationCenter
             .default
-            .addObserver(forName: .EmailAlertSettingsDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.updateEmailViewModel()
-                         })
+            .addObserver(
+                forName: .EmailAlertSettingsDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.updateEmailViewModel()
+                }
+            )
     }
 
     private func startObservingPushAlertSetting() {
         pushAlertsSettingsToken = NotificationCenter
             .default
-            .addObserver(forName: .PushAlertSettingsDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.updatePushViewModel()
-                         })
+            .addObserver(
+                forName: .PushAlertSettingsDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.updatePushViewModel()
+                }
+            )
     }
 
     private func updateEmailViewModel() {

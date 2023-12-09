@@ -57,9 +57,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             UserDefaults.standard.set(newValue.rawValue, forKey: languageUDKey)
             NotificationCenter
                 .default
-                .post(name: .LanguageDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .LanguageDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -90,9 +92,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .HumidityUnitDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .HumidityUnitDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -116,9 +120,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             humidityAccuracyInt = newValue.value
             NotificationCenter
                 .default
-                .post(name: .HumidityAccuracyDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .HumidityAccuracyDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -149,9 +155,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .TemperatureUnitDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .TemperatureUnitDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -175,9 +183,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             temperatureAccuracyInt = newValue.value
             NotificationCenter
                 .default
-                .post(name: .TemperatureAccuracyDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .TemperatureAccuracyDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -196,9 +206,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             pressureUnitInt = newValue.hashValue
             NotificationCenter
                 .default
-                .post(name: .PressureUnitDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .PressureUnitDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -222,9 +234,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             pressureAccuracyInt = newValue.value
             NotificationCenter
                 .default
-                .post(name: .PressureUnitAccuracyChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .PressureUnitAccuracyChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -245,9 +259,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .isAdvertisementDaemonOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .isAdvertisementDaemonOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -283,9 +299,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .ChartDurationHourDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .ChartDurationHourDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -338,9 +356,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .DownsampleOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .DownsampleOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -349,9 +369,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .ChartDrawDotsOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .ChartDrawDotsOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -360,9 +382,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .ChartStatsOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .ChartStatsOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -377,9 +401,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .CloudModeDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .CloudModeDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -466,9 +492,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .DashboardTypeDidChange,
-                      object: self,
-                      userInfo: [DashboardTypeKey.type: newValue])
+                .post(
+                    name: .DashboardTypeDidChange,
+                    object: self,
+                    userInfo: [DashboardTypeKey.type: newValue]
+                )
         }
     }
 
@@ -504,9 +532,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .DashboardTapActionTypeDidChange,
-                      object: self,
-                      userInfo: [DashboardTapActionTypeKey.type: newValue])
+                .post(
+                    name: .DashboardTapActionTypeDidChange,
+                    object: self,
+                    userInfo: [DashboardTapActionTypeKey.type: newValue]
+                )
         }
     }
 
@@ -546,9 +576,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .AppearanceSettingsDidChange,
-                      object: self,
-                      userInfo: [AppearanceTypeKey.style: newValue])
+                .post(
+                    name: .AppearanceSettingsDidChange,
+                    object: self,
+                    userInfo: [AppearanceTypeKey.style: newValue]
+                )
         }
     }
 
@@ -575,9 +607,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             UserDefaults.standard.set(newValue.rawValue, forKey: ruuviAlertSoundKey)
             NotificationCenter
                 .default
-                .post(name: .AlertSoundSettingsDidChange,
-                      object: self,
-                      userInfo: [AppearanceTypeKey.style: newValue])
+                .post(
+                    name: .AlertSoundSettingsDidChange,
+                    object: self,
+                    userInfo: [AppearanceTypeKey.style: newValue]
+                )
         }
     }
 
@@ -590,9 +624,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
                     .default
-                    .post(name: .EmailAlertSettingsDidChange,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .EmailAlertSettingsDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
             }
         }
     }
@@ -606,9 +642,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
                     .default
-                    .post(name: .PushAlertSettingsDidChange,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .PushAlertSettingsDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
             }
         }
     }
@@ -619,9 +657,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
                     .default
-                    .post(name: .LimitAlertNotificationsSettingsDidChange,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .LimitAlertNotificationsSettingsDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
             }
         }
     }

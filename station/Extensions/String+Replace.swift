@@ -41,11 +41,12 @@ extension String {
 
     func replacingLastOccurrence(of target: String, with replacement: String) -> String {
         let options: String.CompareOptions = [.backwards]
-        if let range = range(of: target,
-                             options: options,
-                             range: nil,
-                             locale: nil)
-        {
+        if let range = range(
+            of: target,
+            options: options,
+            range: nil,
+            locale: nil
+        ) {
             return replacingCharacters(in: range, with: replacement)
         }
         return self

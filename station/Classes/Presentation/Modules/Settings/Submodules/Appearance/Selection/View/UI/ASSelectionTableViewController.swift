@@ -46,8 +46,10 @@ private extension ASSelectionTableViewController {
 
     func setUpTableView() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.register(ASSelectionTableViewCell.self,
-                           forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(
+            ASSelectionTableViewCell.self,
+            forCellReuseIdentifier: reuseIdentifier
+        )
     }
 
     func updateUI() {
@@ -66,13 +68,15 @@ extension ASSelectionTableViewController {
         viewModel?.items.count ?? 0
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: reuseIdentifier,
             for: indexPath
-        ) as? ASSelectionTableViewCell else {
+        ) as? ASSelectionTableViewCell
+        else {
             fatalError()
         }
         if let viewModel {
@@ -89,13 +93,16 @@ extension ASSelectionTableViewController {
 // MARK: - UITableViewDelegate
 
 extension ASSelectionTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let viewModel {
-            output.viewDidSelectItem(item: viewModel.items[indexPath.row],
-                                     type: viewModel.type)
+            output.viewDidSelectItem(
+                item: viewModel.items[indexPath.row],
+                type: viewModel.type
+            )
         }
     }
 }

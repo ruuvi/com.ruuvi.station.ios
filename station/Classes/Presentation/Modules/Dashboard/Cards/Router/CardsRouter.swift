@@ -14,11 +14,12 @@ class CardsRouter: NSObject, CardsRouterInput {
             .popToRootViewController(animated: true)
     }
 
-    func openTagSettings(ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord?,
-                         sensorSettings: SensorSettings?,
-                         output: TagSettingsModuleOutput)
-    {
+    func openTagSettings(
+        ruuviTag: RuuviTagSensor,
+        latestMeasurement: RuuviTagSensorRecord?,
+        sensorSettings: SensorSettings?,
+        output: TagSettingsModuleOutput
+    ) {
         let factory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
         let module = factory.create()
         transitionHandler?
@@ -29,9 +30,11 @@ class CardsRouter: NSObject, CardsRouterInput {
             )
         if let presenter = module.output as? TagSettingsModuleInput {
             presenter.configure(output: output)
-            presenter.configure(ruuviTag: ruuviTag,
-                                latestMeasurement: latestMeasurement,
-                                sensorSettings: sensorSettings)
+            presenter.configure(
+                ruuviTag: ruuviTag,
+                latestMeasurement: latestMeasurement,
+                sensorSettings: sensorSettings
+            )
         }
     }
 

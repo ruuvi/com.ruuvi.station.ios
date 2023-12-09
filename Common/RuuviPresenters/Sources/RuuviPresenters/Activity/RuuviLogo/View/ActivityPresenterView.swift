@@ -19,10 +19,14 @@ public struct ActivityPresenterView: View {
             }
 
             ActivityPresenterContentView(state: stateHolder.state)
-                .padding([.leading, .trailing],
-                         stateHolder.state == .dismiss ? 0 : 12)
-                .padding([.top, .bottom],
-                         stateHolder.state == .dismiss ? 0 : 12)
+                .padding(
+                    [.leading, .trailing],
+                    stateHolder.state == .dismiss ? 0 : 12
+                )
+                .padding(
+                    [.top, .bottom],
+                    stateHolder.state == .dismiss ? 0 : 12
+                )
                 .background(Color.black.opacity(0.8))
                 .cornerRadius(8)
                 .foregroundColor(.white)

@@ -37,12 +37,14 @@ extension SettingsPresenter: SettingsViewOutput {
 
         languageToken = NotificationCenter
             .default
-            .addObserver(forName: .LanguageDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-                             self?.view.language = self?.settings.language ?? .english
-                         })
+            .addObserver(
+                forName: .LanguageDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.view.language = self?.settings.language ?? .english
+                }
+            )
 
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
         ruuviStorage.readAll().on(success: { [weak self] tags in
@@ -59,9 +61,11 @@ extension SettingsPresenter: SettingsViewOutput {
             .fahrenheit,
             .kelvin,
         ]
-        let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
-                                              items: selectionItems,
-                                              measurementType: .temperature)
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
+            items: selectionItems,
+            measurementType: .temperature
+        )
         router.openUnitSettings(with: viewModel, output: nil)
     }
 
@@ -71,9 +75,11 @@ extension SettingsPresenter: SettingsViewOutput {
             .gm3,
             .dew,
         ]
-        let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
-                                              items: selectionItems,
-                                              measurementType: .humidity)
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+            items: selectionItems,
+            measurementType: .humidity
+        )
         router.openUnitSettings(with: viewModel, output: nil)
     }
 
@@ -83,9 +89,11 @@ extension SettingsPresenter: SettingsViewOutput {
             .inchesOfMercury,
             .millimetersOfMercury,
         ]
-        let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
-                                              items: selectionItems,
-                                              measurementType: .pressure)
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+            items: selectionItems,
+            measurementType: .pressure
+        )
         router.openUnitSettings(with: viewModel, output: nil)
     }
 
@@ -98,7 +106,8 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidSelectChangeLanguage() {
-        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString)
+        else {
             return
         }
         UIApplication.shared.open(settingsURL)
@@ -125,7 +134,8 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTriggerShake() {
-        guard !settings.experimentalFeaturesEnabled else {
+        guard !settings.experimentalFeaturesEnabled
+        else {
             return
         }
         settings.experimentalFeaturesEnabled = true

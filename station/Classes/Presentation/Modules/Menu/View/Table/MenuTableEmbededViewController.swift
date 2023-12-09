@@ -45,14 +45,11 @@ extension MenuTableEmbededViewController {
 // MARK: - UITableViewDelegate
 
 extension MenuTableEmbededViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        super.tableView(tableView, numberOfRowsInSection: section)
-    }
-
-    override func tableView(_: UITableView,
-                            willDisplay cell: UITableViewCell,
-                            forRowAt _: IndexPath)
-    {
+    override func tableView(
+        _: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt _: IndexPath
+    ) {
         if cell == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
                 ? RuuviLocalization.Menu.Label.MyRuuviAccount.text

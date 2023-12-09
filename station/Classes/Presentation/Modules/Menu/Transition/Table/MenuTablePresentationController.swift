@@ -29,16 +29,20 @@ class MenuTablePresentationController: UIPresentationController {
     }()
 
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: self,
-                                         action: #selector(MenuTablePresentationController.dimmingViewTapped(_:)))
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(MenuTablePresentationController.dimmingViewTapped(_:))
+        )
         return tap
     }()
 
     private lazy var panGestureRecognizer: UIPanGestureRecognizer = {
         let exitPanGesture = UIPanGestureRecognizer()
         exitPanGesture.cancelsTouchesInView = false
-        exitPanGesture.addTarget(dismissTransition as Any,
-                                 action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
+        exitPanGesture.addTarget(
+            dismissTransition as Any,
+            action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:))
+        )
         return exitPanGesture
     }()
 
@@ -50,17 +54,20 @@ class MenuTablePresentationController: UIPresentationController {
         .overFullScreen
     }
 
-    override func size(forChildContentContainer _: UIContentContainer,
-                       withParentContainerSize parentSize: CGSize) -> CGSize
-    {
+    override func size(
+        forChildContentContainer _: UIContentContainer,
+        withParentContainerSize parentSize: CGSize
+    ) -> CGSize {
         CGSize(width: menuWidth, height: parentSize.height)
     }
 
     override var frameOfPresentedViewInContainerView: CGRect {
         var presentedViewFrame = CGRect.zero
         if let containerBounds = containerView?.bounds {
-            let size = self.size(forChildContentContainer: presentedViewController,
-                                 withParentContainerSize: containerBounds.size)
+            let size = self.size(
+                forChildContentContainer: presentedViewController,
+                withParentContainerSize: containerBounds.size
+            )
             presentedViewFrame.size = size
             presentedViewFrame.origin.x = containerBounds.origin.x
             presentedViewFrame.origin.y = containerBounds.origin.y
@@ -110,8 +117,7 @@ class MenuTablePresentationController: UIPresentationController {
 
     @objc func dimmingViewTapped(_: UITapGestureRecognizer) {
         if let navigationController = presentedViewController as? UINavigationController,
-           let menuTable = navigationController.topViewController as? MenuTableViewController
-        {
+           let menuTable = navigationController.topViewController as? MenuTableViewController {
             menuTable.output.viewDidTapOnDimmingView()
         }
     }

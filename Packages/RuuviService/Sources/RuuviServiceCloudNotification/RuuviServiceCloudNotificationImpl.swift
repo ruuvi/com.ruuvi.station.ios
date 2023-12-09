@@ -34,29 +34,31 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     }
 
     @discardableResult
-    public func set(token: String?,
-                    name: String?,
-                    data: String?,
-                    language: Language,
-                    sound: RuuviAlertSound) -> Future<Int, RuuviServiceError>
-    {
+    public func set(
+        token: String?,
+        name: String?,
+        data: String?,
+        language: Language,
+        sound: RuuviAlertSound
+    ) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
-        guard ruuviUser.isAuthorized, let token else {
+        guard ruuviUser.isAuthorized, let token
+        else {
             return promise.future
         }
 
         var refreshable = false
         if let lastRefreshed = pnManager.fcmTokenLastRefreshed {
             if let daysFromNow = lastRefreshed.numberOfDaysFromNow(),
-               daysFromNow > 7
-            {
+               daysFromNow > 7 {
                 refreshable = true
             }
         } else {
             refreshable = true
         }
 
-        guard refreshable else {
+        guard refreshable
+        else {
             return promise.future
         }
 
@@ -82,12 +84,14 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     }
 
     @discardableResult
-    public func set(sound: RuuviAlertSound,
-                    language: Language,
-                    deviceName: String?) -> Future<Int, RuuviServiceError>
-    {
+    public func set(
+        sound: RuuviAlertSound,
+        language: Language,
+        deviceName: String?
+    ) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
-        guard ruuviUser.isAuthorized, let token = pnManager.fcmToken else {
+        guard ruuviUser.isAuthorized, let token = pnManager.fcmToken
+        else {
             return promise.future
         }
 
@@ -113,38 +117,44 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     }
 
     @discardableResult
-    public func register(token: String,
-                         type: String,
-                         name: String?,
-                         data: String?,
-                         params: [String: String]?) -> Future<Int, RuuviServiceError>
-    {
+    public func register(
+        token: String,
+        type: String,
+        name: String?,
+        data: String?,
+        params: [String: String]?
+    ) -> Future<Int, RuuviServiceError> {
         let promise = Promise<Int, RuuviServiceError>()
-        cloud.registerPNToken(token: token,
-                              type: type,
-                              name: name,
-                              data: data,
-                              params: params)
-            .on(success: { tokenId in
-                promise.succeed(value: tokenId)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
+        cloud.registerPNToken(
+            token: token,
+            type: type,
+            name: name,
+            data: data,
+            params: params
+        )
+        .on(success: { tokenId in
+            promise.succeed(value: tokenId)
+        }, failure: { error in
+            promise.fail(error: .ruuviCloud(error))
+        })
         return promise.future
     }
 
     @discardableResult
-    public func unregister(token: String?,
-                           tokenId: Int?) -> Future<Bool, RuuviServiceError>
-    {
+    public func unregister(
+        token: String?,
+        tokenId: Int?
+    ) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        cloud.unregisterPNToken(token: token,
-                                tokenId: tokenId)
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
+        cloud.unregisterPNToken(
+            token: token,
+            tokenId: tokenId
+        )
+        .on(success: { success in
+            promise.succeed(value: success)
+        }, failure: { error in
+            promise.fail(error: .ruuviCloud(error))
+        })
         return promise.future
     }
 

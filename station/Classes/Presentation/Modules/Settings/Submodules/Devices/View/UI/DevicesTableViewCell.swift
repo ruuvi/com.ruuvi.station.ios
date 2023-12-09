@@ -55,13 +55,15 @@ private extension DevicesTableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
 
-        let container = UIView(color: RuuviColor.dashboardCardBGColor,
-                               cornerRadius: 8)
+        let container = UIView(
+            color: RuuviColor.dashboardCardBGColor,
+            cornerRadius: 8
+        )
         contentView.addSubview(container)
         container.fillSuperview(padding: .init(top: 4, left: 8, bottom: 4, right: 8))
 
         let textStack = UIStackView(arrangedSubviews: [
-            deviceNameLabel, tokenIdLabel, lastAccessedLabel,
+            deviceNameLabel, tokenIdLabel, lastAccessedLabel
         ])
         textStack.spacing = 4
         textStack.distribution = .fill
