@@ -210,8 +210,7 @@ extension BackgroundSelectionViewController {
 
         uploadProgressView.progressLabel.bind(viewModel.uploadingBackgroundPercentage) { lb, percentage in
             if let percentage = percentage {
-                // TODO: @rinat check
-                lb.text = RuuviLocalization.uploadingProgress(Float(percentage) * 100) + " %"
+                lb.text = RuuviLocalization.uploadingProgress(Float(percentage) * 100)
             }
         }
     }
