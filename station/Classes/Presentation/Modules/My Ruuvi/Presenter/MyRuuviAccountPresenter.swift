@@ -6,6 +6,7 @@ import RuuviCloud
 import RuuviCore
 import Future
 import RuuviLocal
+import RuuviLocalization
 import UIKit
 
 #if canImport(WidgetKit)
@@ -70,10 +71,10 @@ extension MyRuuviAccountPresenter {
 extension MyRuuviAccountPresenter {
 
     private func createSignOutAlert() {
-        let title = "Menu.SignOut.text".localized()
-        let message = "TagsManagerPresenter.SignOutConfirmAlert.Message".localized()
-        let confirmActionTitle = "OK".localized()
-        let cancelActionTitle = "Cancel".localized()
+        let title = RuuviLocalization.Menu.SignOut.text
+        let message = RuuviLocalization.TagsManagerPresenter.SignOutConfirmAlert.message
+        let confirmActionTitle = RuuviLocalization.ok
+        let cancelActionTitle = RuuviLocalization.cancel
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             guard let sSelf = self else { return }

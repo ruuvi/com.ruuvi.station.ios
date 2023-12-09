@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 
 extension Int {
     var stringValue: String {
@@ -11,7 +12,7 @@ extension Optional where Wrapped == Int {
         if let self = self {
             return "\(self)"
         } else {
-            return "N/A".localized()
+            return RuuviLocalization.na
         }
     }
 }

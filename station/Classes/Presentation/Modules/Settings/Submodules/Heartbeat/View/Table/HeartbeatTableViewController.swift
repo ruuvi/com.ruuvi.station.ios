@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class HeartbeatTableViewController: UITableViewController {
@@ -15,8 +16,6 @@ class HeartbeatTableViewController: UITableViewController {
     @IBOutlet weak var bgScanningIntervalTitleLabel: UILabel!
     @IBOutlet weak var bgScanningIntervalValueLabel: UILabel!
     @IBOutlet weak var bgScanningIntervalStepper: UIStepper!
-
-    private let everyString = "Heartbeat.Interval.Every.string"
 }
 
 // MARK: - HeartbeatViewInput
@@ -25,11 +24,11 @@ extension HeartbeatTableViewController: HeartbeatViewInput {
         bgScanningTitleLabel.text = viewModel.bgScanningTitle
         bgScanningIntervalTitleLabel.text = viewModel.bgScanningIntervalTitle
         if viewModel.bgScanningInterval.value.bound > 0 {
-            bgScanningIntervalValueLabel.text = everyString.localized()
+            bgScanningIntervalValueLabel.text = RuuviLocalization.Heartbeat.Interval.Every.string
                 + " " + "\(viewModel.bgScanningInterval.value.bound)"
-                + " " + "Heartbeat.Interval.Min.string".localized()
+            + " " + RuuviLocalization.Heartbeat.Interval.Min.string
         } else {
-            bgScanningIntervalValueLabel.text = "Heartbeat.Interval.All.string".localized()
+            bgScanningIntervalValueLabel.text = RuuviLocalization.Heartbeat.Interval.All.string
         }
     }
 }
@@ -49,7 +48,6 @@ extension HeartbeatTableViewController {
 extension HeartbeatTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         bindViewModel()
         updateUIComponent()
     }
@@ -67,7 +65,7 @@ extension HeartbeatTableViewController {
         footerLabel.textColor = RuuviColor.ruuviTextColor
         footerLabel.font = UIFont.Muli(.regular, size: 13)
         footerLabel.numberOfLines = 0
-        footerLabel.text = "Settings.BackgroundScanning.Footer.message".localized()
+        footerLabel.text = RuuviLocalization.Settings.BackgroundScanning.Footer.message
         footerView.addSubview(footerLabel)
         footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
         return footerView
@@ -86,14 +84,13 @@ extension HeartbeatTableViewController {
             bgScanningSwitch.bind(viewModel.bgScanningState) { (view, isOn) in
                 view.isOn = isOn.bound
             }
-            let every = everyString
             bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { (label, interval) in
                 if interval.bound > 0 {
-                    label.text = every.localized()
+                    label.text =  RuuviLocalization.Heartbeat.Interval.Every.string
                                 + " " + "\(interval.bound)"
-                                + " " + "Heartbeat.Interval.Min.string".localized()
+                    + " " + RuuviLocalization.Heartbeat.Interval.Min.string
                 } else {
-                    label.text = "Heartbeat.Interval.All.string".localized()
+                    label.text = RuuviLocalization.Heartbeat.Interval.All.string
                 }
             }
             bgScanningIntervalStepper.bind(viewModel.bgScanningInterval) { (stepper, interval) in

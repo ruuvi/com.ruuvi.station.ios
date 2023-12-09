@@ -1,5 +1,6 @@
 import RuuviCloud
 import Foundation
+import RuuviLocalization
 
 extension RuuviCloudError: LocalizedError {
     public var errorDescription: String? {
@@ -7,7 +8,7 @@ extension RuuviCloudError: LocalizedError {
         case .api(let error):
             return error.errorDescription
         case .notAuthorized:
-            return "RuuviCloudError.NotAuthorized".localized()
+            return RuuviLocalization.RuuviCloudError.notAuthorized
         }
     }
 }

@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 enum SelectionMode {
     case camera
@@ -19,17 +20,17 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 16)
-        label.text = "change_background_message".localized()
+        label.text = RuuviLocalization.changeBackgroundMessage
         return label
     }()
 
     lazy var seprator = UIView(color: RuuviColor.ruuviLineColor)
     lazy var takePhotoButton = BackgroundSelectionButtonView(
-        title: "take_photo".localized(),
+        title: RuuviLocalization.takePhoto,
         icon: "camera.fill",
         delegate: self)
     lazy var selectFromGalleryButton = BackgroundSelectionButtonView(
-        title: "select_from_gallery".localized(),
+        title: RuuviLocalization.selectFromGallery,
         icon: "photo",
         delegate: self)
 
@@ -39,7 +40,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
-        label.text = "select_default_image".localized()
+        label.text = RuuviLocalization.selectDefaultImage
         return label
     }()
 

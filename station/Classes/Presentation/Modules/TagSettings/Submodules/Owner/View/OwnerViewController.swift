@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 final class OwnerViewController: UIViewController {
@@ -11,7 +12,7 @@ final class OwnerViewController: UIViewController {
 
     private lazy var removeCloudHistoryTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "remove_cloud_history_title".localized()
+        label.text = RuuviLocalization.removeCloudHistoryTitle
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -21,7 +22,7 @@ final class OwnerViewController: UIViewController {
 
     private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "remove_cloud_history_description".localized()
+        label.text = RuuviLocalization.removeCloudHistoryDescription
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -58,7 +59,6 @@ final class OwnerViewController: UIViewController {
         super.viewDidLoad()
         setUpCustomBackButton()
         setUpCloudHistoryContentView()
-        setupLocalization()
         output.viewDidTriggerFirmwareUpdateDialog()
     }
 }
@@ -66,11 +66,11 @@ final class OwnerViewController: UIViewController {
 extension OwnerViewController: OwnerViewInput {
     func showSensorAlreadyClaimedDialog() {
         let alertVC = UIAlertController(
-            title: "ErrorPresenterAlert.Error".localized(),
-            message: "UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL".localized(),
+            title: RuuviLocalization.ErrorPresenterAlert.error,
+            message: RuuviLocalization.UserApiError.erSensorAlreadyClaimedNoEmail,
             preferredStyle: .alert
         )
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: {
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .default, handler: {
             [weak self] _ in
             // TODO: - Update with masked email once backend is adjusted.
             self?.output.updateOwnerInfo(with: "*****")
@@ -82,13 +82,13 @@ extension OwnerViewController: OwnerViewInput {
         // No op.
         switch mode {
         case .claim:
-            title = "Owner.title".localized()
-            claimOwnershipDescriptionLabel.text = "Owner.Claim.description".localized()
-            claimOwnershipButton.setTitle("Owner.ClaimOwnership.button".localized().capitalized, for: .normal)
+            title = RuuviLocalization.Owner.title
+            claimOwnershipDescriptionLabel.text = RuuviLocalization.Owner.Claim.description
+            claimOwnershipButton.setTitle(RuuviLocalization.Owner.ClaimOwnership.button.capitalized, for: .normal)
         case .unclaim:
-            title = "unclaim_sensor".localized()
-            claimOwnershipDescriptionLabel.text = "unclaim_sensor_description".localized()
-            claimOwnershipButton.setTitle("unclaim".localized().capitalized, for: .normal)
+            title = RuuviLocalization.unclaimSensor
+            claimOwnershipDescriptionLabel.text = RuuviLocalization.unclaimSensorDescription
+            claimOwnershipButton.setTitle(RuuviLocalization.unclaim.capitalized, for: .normal)
         }
         removeCloudHistoryContainerVisibleConstraint.isActive = mode == .unclaim
         removeCloudHistoryContainerHiddenConstraint.isActive =  mode == .claim
@@ -97,13 +97,13 @@ extension OwnerViewController: OwnerViewInput {
     }
 
     func showFirmwareUpdateDialog() {
-        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidIgnoreFirmwareUpdateDialog()
         }))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate()
         }))
@@ -111,11 +111,11 @@ extension OwnerViewController: OwnerViewInput {
     }
 
     func showFirmwareDismissConfirmationUpdateDialog() {
-        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: nil))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate()
         }))
@@ -123,16 +123,16 @@ extension OwnerViewController: OwnerViewInput {
     }
 
     func showUnclaimHistoryDataRemovalConfirmationDialog() {
-        let title = "dialog_are_you_sure".localized()
-        let message = "dialog_operation_undone".localized()
+        let title = RuuviLocalization.dialogAreYouSure
+        let message = RuuviLocalization.dialogOperationUndone
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
                                            style: .destructive,
                                            handler: { [weak self] _ in
             guard let self = self else { return }
             self.output?.viewDidConfirmUnclaim(removeCloudHistory: self.removeCloudHistorySwitch.isOn)
         }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 }

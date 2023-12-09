@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 struct GlobalHelpers {
@@ -21,10 +22,10 @@ struct GlobalHelpers {
     static func ruuviTagDefaultName(from macId: String?, luid: String?) -> String {
         // identifier
         if let mac = macId {
-            return "DiscoverTable.RuuviDevice.prefix".localized()
+            return RuuviLocalization.DiscoverTable.RuuviDevice.prefix
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            return "DiscoverTable.RuuviDevice.prefix".localized()
+            return RuuviLocalization.DiscoverTable.RuuviDevice.prefix
                 + " " + (luid?.prefix(4) ?? "")
         }
     }

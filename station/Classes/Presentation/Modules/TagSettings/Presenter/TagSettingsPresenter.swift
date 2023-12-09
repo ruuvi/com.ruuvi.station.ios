@@ -1,4 +1,5 @@
 // swiftlint:disable file_length
+import RuuviLocalization
 import Foundation
 import BTKit
 import UIKit
@@ -539,7 +540,7 @@ extension TagSettingsPresenter {
         if let owner = ruuviTag.owner {
             viewModel.owner.value = owner
         } else {
-            viewModel.owner.value = "TagSettings.General.Owner.none".localized()
+            viewModel.owner.value = RuuviLocalization.TagSettings.General.Owner.none
         }
         // Set isOwner value
         viewModel.isOwner.value = ruuviTag.isOwner

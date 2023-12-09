@@ -1,4 +1,5 @@
 import LightRoute
+import RuuviLocalization
 import UIKit
 
 class AppearanceSettingsRouter: AppearanceSettingsRouterInput {
@@ -10,7 +11,7 @@ class AppearanceSettingsRouter: AppearanceSettingsRouterInput {
 
     func openSelection(with viewModel: AppearanceSettingsViewModel) {
         let factory: ASSelectionModuleFactory = ASSelectionModuleFactoryImpl()
-        let module = factory.create(with: "app_theme".localized())
+        let module = factory.create(with: RuuviLocalization.appTheme)
 
         transitionHandler?
             .navigationController?

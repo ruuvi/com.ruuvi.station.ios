@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 import CoreNFC
 import RuuviOntology
@@ -21,7 +22,7 @@ class SensorForceClaimViewController: UIViewController {
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.text = "force_claim_sensor_description1".localized()
+        label.text = RuuviLocalization.forceClaimSensorDescription1
         label.font = UIFont.Muli(.regular, size: 16)
         return label
     }()
@@ -29,7 +30,7 @@ class SensorForceClaimViewController: UIViewController {
     private lazy var claimSensorButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
-        button.setTitle("force_claim".localized(), for: .normal)
+        button.setTitle(RuuviLocalization.forceClaim, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
         button.addTarget(self,
@@ -46,7 +47,7 @@ class SensorForceClaimViewController: UIViewController {
         tv.isSelectable = false
         tv.isEditable = false
         tv.textAlignment = .left
-        tv.text = "force_claim_sensor_description2".localized()
+        tv.text = RuuviLocalization.forceClaimSensorDescription2
         tv.textColor = RuuviColor.ruuviTextColor
         tv.backgroundColor = .clear
         tv.font = UIFont.Muli(.regular, size: 16)
@@ -58,7 +59,7 @@ class SensorForceClaimViewController: UIViewController {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
         button.setTitle(
-            "use_nfc".localized(),
+            RuuviLocalization.useNfc,
                         for: .normal
         )
         button.setTitleColor(.white, for: .normal)
@@ -73,7 +74,7 @@ class SensorForceClaimViewController: UIViewController {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
         button.setTitle(
-            "use_bluetooth".localized(),
+            RuuviLocalization.useBluetooth,
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
@@ -135,12 +136,12 @@ extension SensorForceClaimViewController: SensorForceClaimViewInput {
     }
 
     func showGATTConnectionTimeoutDialog() {
-        let message = "sensor_not_found_error".localized()
+        let message = RuuviLocalization.sensorNotFoundError
         let controller = UIAlertController(
             title: nil, message: message, preferredStyle: .alert
         )
         controller.addAction(
-            UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil)
+            UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil)
         )
         present(controller, animated: true)
     }
@@ -155,7 +156,7 @@ extension SensorForceClaimViewController {
     }
 
     private func setUpBase() {
-        self.title = "force_claim_sensor".localized()
+        self.title = RuuviLocalization.forceClaimSensor
 
         view.backgroundColor = RuuviColor.ruuviPrimary
 

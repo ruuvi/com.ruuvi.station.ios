@@ -1,6 +1,7 @@
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
 
 class UnitSettingsTableViewController: UITableViewController {
     var output: UnitSettingsViewOutput!
@@ -66,7 +67,6 @@ extension UnitSettingsTableViewController {
         super.viewDidLoad()
         output.viewDidLoad()
         updateUI()
-        setupLocalization()
     }
 }
 
@@ -85,24 +85,24 @@ extension UnitSettingsTableViewController {
         }
 
         if indexPath.row == 0 {
-            cell.titleLbl.text = "Settings.Measurement.Unit.title".localized()
+            cell.titleLbl.text = RuuviLocalization.Settings.Measurement.Unit.title
             switch viewModel?.measurementType {
             case .temperature:
-                cell.valueLbl.text = temperatureUnit.title
+                cell.valueLbl.text = temperatureUnit.title("")
             case .humidity:
                 if humidityUnit == .dew {
-                    cell.valueLbl.text = String(format: humidityUnit.title, temperatureUnit.symbol)
+                    cell.valueLbl.text = humidityUnit.title(temperatureUnit.symbol)
                 } else {
-                    cell.valueLbl.text = humidityUnit.title
+                    cell.valueLbl.text = humidityUnit.title("")
                 }
             case .pressure:
-                cell.valueLbl.text = pressureUnit.title
+                cell.valueLbl.text = pressureUnit.title("")
             default:
-                cell.valueLbl.text = "N/A".localized()
+                cell.valueLbl.text = RuuviLocalization.na
             }
 
         } else {
-            cell.titleLbl.text = "Settings.Measurement.Resolution.title".localized()
+            cell.titleLbl.text = RuuviLocalization.Settings.Measurement.Resolution.title
             let titleProvider = MeasurementAccuracyTitles()
             switch viewModel?.measurementType {
             case .temperature:
@@ -120,7 +120,7 @@ extension UnitSettingsTableViewController {
                 cell.valueLbl.text = titleProvider.formattedTitle(type: pressureAccuracy,
                                                                   settings: settings) + " \(pressureUnit.symbol)"
             default:
-                cell.valueLbl.text = "N/A".localized()
+                cell.valueLbl.text = RuuviLocalization.na
             }
         }
 

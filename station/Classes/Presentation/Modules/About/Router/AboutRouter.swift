@@ -1,5 +1,6 @@
 import Foundation
 import LightRoute
+import RuuviLocalization
 import UIKit
 
 class AboutRouter: AboutRouterInput {
@@ -10,7 +11,7 @@ class AboutRouter: AboutRouterInput {
     }
 
     func openChangelogPage() {
-        guard let url = URL(string: "changelog_ios_url".localized()) else {
+        guard let url = URL(string: RuuviLocalization.changelogIosUrl) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)

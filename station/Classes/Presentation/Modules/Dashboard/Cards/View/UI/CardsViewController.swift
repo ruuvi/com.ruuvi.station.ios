@@ -4,6 +4,7 @@ import Humidity
 import RuuviOntology
 import RuuviLocal
 import RuuviService
+import RuuviLocalization
 
 class CardsViewController: UIViewController {
 
@@ -199,7 +200,6 @@ extension CardsViewController {
         super.viewDidLoad()
         setUpUI()
         configureGestureViews()
-        setupLocalization()
         output.viewDidLoad()
     }
 
@@ -542,10 +542,10 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
-        let title = "Cards.BluetoothDisabledAlert.title".localized()
-        let message = "Cards.BluetoothDisabledAlert.message".localized()
+        let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
                                         style: .default, handler: { _ in
             guard let url = URL(string: userDeclined ?
                                 UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
@@ -554,7 +554,7 @@ extension CardsViewController: CardsViewInput {
             }
             UIApplication.shared.open(url)
         }))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
@@ -576,13 +576,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
-        let message = "Cards.KeepConnectionDialog.message".localized()
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialogChart(for: viewModel)
         }))
-        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionChart(to: viewModel)
         }))
@@ -590,13 +590,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
-        let message = "Cards.KeepConnectionDialog.message".localized()
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel)
         }))
-        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
@@ -604,13 +604,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showFirmwareUpdateDialog(for viewModel: CardsViewModel) {
-        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidIgnoreFirmwareUpdateDialog(for: viewModel)
         }))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
@@ -618,13 +618,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel) {
-        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissFirmwareUpdateDialog(for: viewModel)
         }))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
@@ -632,17 +632,16 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showReverseGeocodingFailed() {
-        let message = "Cards.Error.ReverseGeocodingFailed.message".localized()
+        let message = RuuviLocalization.Cards.Error.ReverseGeocodingFailed.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 
     func showAlreadyLoggedInAlert(with email: String) {
-        let message = String.localizedStringWithFormat("Cards.Alert.AlreadyLoggedIn.message".localized(),
-                                                                 email)
+        let message = RuuviLocalization.Cards.Alert.AlreadyLoggedIn.message(email)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 }

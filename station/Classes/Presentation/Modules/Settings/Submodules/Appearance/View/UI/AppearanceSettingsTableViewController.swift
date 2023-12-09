@@ -25,7 +25,6 @@ class AppearanceSettingsTableViewController: UITableViewController {
 extension AppearanceSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }
@@ -74,7 +73,7 @@ extension AppearanceSettingsTableViewController {
             fatalError()
         }
         let viewModel = viewModels[indexPath.row]
-        cell.configure(title: viewModel.title, value: viewModel.selection.title)
+        cell.configure(title: viewModel.title, value: viewModel.selection.title(""))
         return cell
     }
 }

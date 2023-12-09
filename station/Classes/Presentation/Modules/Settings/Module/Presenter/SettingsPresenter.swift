@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import RuuviOntology
 import RuuviContext
@@ -58,7 +59,7 @@ extension SettingsPresenter: SettingsViewOutput {
             .fahrenheit,
             .kelvin
         ]
-        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Temperature".localized(),
+        let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
                                               items: selectionItems,
                                               measurementType: .temperature)
         router.openUnitSettings(with: viewModel, output: nil)
@@ -70,7 +71,7 @@ extension SettingsPresenter: SettingsViewOutput {
             .gm3,
             .dew
         ]
-        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Humidity".localized(),
+        let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
                                               items: selectionItems,
                                               measurementType: .humidity)
         router.openUnitSettings(with: viewModel, output: nil)
@@ -82,7 +83,7 @@ extension SettingsPresenter: SettingsViewOutput {
             .inchesOfMercury,
             .millimetersOfMercury
         ]
-        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Pressure".localized(),
+        let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
                                               items: selectionItems,
                                               measurementType: .pressure)
         router.openUnitSettings(with: viewModel, output: nil)

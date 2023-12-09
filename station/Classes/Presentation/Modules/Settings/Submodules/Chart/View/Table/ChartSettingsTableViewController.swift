@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 class ChartSettingsTableViewController: UITableViewController {
     var output: ChartSettingsViewOutput!
@@ -25,7 +26,7 @@ class ChartSettingsTableViewController: UITableViewController {
 
 extension ChartSettingsTableViewController: ChartSettingsViewInput {
     func localize() {
-        title = "Settings.Label.Chart".localized()
+        title = RuuviLocalization.Settings.Label.chart
     }
 }
 

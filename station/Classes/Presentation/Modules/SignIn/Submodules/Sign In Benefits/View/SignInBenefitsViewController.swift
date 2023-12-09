@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import UIKit
 
@@ -36,7 +37,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "why_should_sign_in".localized()
+        label.text = RuuviLocalization.whyShouldSignIn
         label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
@@ -46,7 +47,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "sensors_ownership_and_settings_stored_in_cloud".localized()
+        label.text = RuuviLocalization.sensorsOwnershipAndSettingsStoredInCloud
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
@@ -74,7 +75,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
     private lazy var continueButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: 25)
-        button.setTitle("sign_in_continue".localized(),
+        button.setTitle(RuuviLocalization.signInContinue,
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
@@ -86,7 +87,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 
     private lazy var signInOptionalLabel: UILabel = {
         let label = UILabel()
-        label.text = "signing_in_is_optional".localized()
+        label.text = RuuviLocalization.signingInIsOptional
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -223,19 +224,17 @@ extension SignInBenefitsViewController {
 extension SignInBenefitsViewController {
     private func prepareFeatures() -> String {
         return [
-            "cloud_stored_ownerships".localized(),
-            "cloud_stored_names".localized(),
-            "cloud_stored_alerts".localized(),
-            "cloud_stored_backgrounds".localized(),
-            "cloud_stored_calibration".localized(),
-            "cloud_stored_sharing".localized()
+            RuuviLocalization.cloudStoredOwnerships,
+            RuuviLocalization.cloudStoredNames,
+            RuuviLocalization.cloudStoredAlerts,
+            RuuviLocalization.cloudStoredBackgrounds,
+            RuuviLocalization.cloudStoredCalibration,
+            RuuviLocalization.cloudStoredSharing
         ].joined(separator: "\n")
     }
 
     private func prepareNote() -> NSMutableAttributedString {
-        let text =
-            "note".localized() + " " +
-            "claim_warning".localized()
+        let text = RuuviLocalization.note + " " + RuuviLocalization.claimWarning
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
@@ -244,7 +243,7 @@ extension SignInBenefitsViewController {
                                 range: range)
 
         // Make note bold and orange color
-        let makeBoldOrange = "note".localized()
+        let makeBoldOrange = RuuviLocalization.note
         let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 18)
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
         attrString.addAttribute(NSAttributedString.Key.font,
@@ -256,7 +255,7 @@ extension SignInBenefitsViewController {
 
         // Make rest of the text white
         let regularRange = NSString(string: attrString.string)
-            .range(of: "claim_warning".localized())
+            .range(of: RuuviLocalization.claimWarning)
         attrString.addAttribute(.foregroundColor,
                                 value: UIColor.white,
                                 range: regularRange)

@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 
 extension Date {
     func ruuviAgo(prefix: String = "") -> String {
@@ -12,12 +13,12 @@ extension Date {
             let minutes = (elapsed / 60) % 60
             let hours   = (elapsed / (60*60)) % 24
             if hours > 0 {
-                output += String(hours) + " " + "h".localized() + " "
+                output += String(hours) + " " + RuuviLocalization.h + " "
             }
             if minutes > 0 {
-                output += String(minutes) + " " + "min".localized() + " "
+                output += String(minutes) + " " + RuuviLocalization.min + " "
             }
-            output += String(seconds) + " " + "s".localized() + " " + "ago".localized()
+            output += String(seconds) + " " + RuuviLocalization.s + " " + RuuviLocalization.ago
         }
         return output
     }

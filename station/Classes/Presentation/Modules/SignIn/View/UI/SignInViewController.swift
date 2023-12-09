@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import UIKit
 
@@ -46,7 +47,7 @@ class SignInViewController: UIViewController {
     private lazy var useWithoutAccountButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.setTitle("use_without_account".localized(),
+        button.setTitle(RuuviLocalization.useWithoutAccount,
                         for: .normal)
         button.titleLabel?.font = UIFont.Muli(.semiBoldItalic, size: 14)
         button.titleLabel?.numberOfLines = 0
@@ -121,17 +122,16 @@ extension SignInViewController: SignInViewInput {
     }
 
     func showEmailsAreDifferent(requestedEmail: String, validatedEmail: String) {
-        let format = "SignIn.EmailMismatch.Alert.message".localized()
-        let message = String(format: format, requestedEmail, validatedEmail, requestedEmail)
+        let message = RuuviLocalization.SignIn.EmailMismatch.Alert.message(requestedEmail, validatedEmail, requestedEmail)
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
     func showFailedToGetRequestedEmail() {
-        let message = "SignIn.EmailMissing.Alert.message".localized()
+        let message = RuuviLocalization.SignIn.EmailMissing.Alert.message
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
@@ -140,9 +140,9 @@ extension SignInViewController: SignInViewInput {
     }
 
     func showInvalidEmailEntered() {
-        let message = "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
+        let message = RuuviLocalization.UserApiError.erInvalidEmailAddress
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
 
     }

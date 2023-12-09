@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
 
 class AppearanceSettingsPresenter: NSObject, AppearanceSettingsModuleInput {
     weak var view: AppearanceSettingsViewInput?
@@ -35,7 +36,7 @@ extension AppearanceSettingsPresenter {
     }
 
     fileprivate func appThemeSetting() -> AppearanceSettingsViewModel {
-        let title = "app_theme".localized()
+        let title = RuuviLocalization.appTheme
         let selectionItems: [RuuviTheme] = [
             .system,
             .dark,

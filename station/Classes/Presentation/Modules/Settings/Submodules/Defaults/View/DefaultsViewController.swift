@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 #if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 #endif
@@ -30,11 +31,11 @@ class DefaultsViewController: UIViewController {
 
 extension DefaultsViewController: DefaultsViewInput {
     func showEndpointChangeConfirmationDialog(useDevServer: Bool?) {
-        let message = "Defaults.DevServer.message".localized()
+        let message = RuuviLocalization.Defaults.DevServer.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let cancelActionTitle = "Cancel".localized()
+        let cancelActionTitle = RuuviLocalization.cancel
         alert.addAction(UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil))
-        let signOutTitle = "Menu.SignOut.text".localized()
+        let signOutTitle = RuuviLocalization.Menu.SignOut.text
         alert.addAction(UIAlertAction(title: signOutTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidTriggerUseDevServer(useDevServer: useDevServer)
         }))
@@ -42,7 +43,7 @@ extension DefaultsViewController: DefaultsViewInput {
     }
 
     func localize() {
-        navigationItem.title = "Defaults.navigationItem.title".localized()
+        navigationItem.title = RuuviLocalization.Defaults.NavigationItem.title
     }
 }
 
@@ -50,7 +51,6 @@ extension DefaultsViewController: DefaultsViewInput {
 extension DefaultsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
     }
 

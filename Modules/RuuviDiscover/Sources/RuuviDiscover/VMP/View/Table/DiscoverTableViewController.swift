@@ -177,7 +177,6 @@ extension DiscoverTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
         updateUI()
         output.viewDidLoad()

@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 import Foundation
 
@@ -24,7 +25,6 @@ class RuuviCloudTableViewController: UITableViewController {
 extension RuuviCloudTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }
@@ -37,7 +37,7 @@ extension RuuviCloudTableViewController {
 
 extension RuuviCloudTableViewController: RuuviCloudViewInput {
     func localize() {
-        self.title = "ruuvi_cloud".localized()
+        self.title = RuuviLocalization.ruuviCloud
     }
 }
 
@@ -93,7 +93,7 @@ extension RuuviCloudTableViewController {
         footerLabel.textColor = RuuviColor.ruuviTextColor
         footerLabel.font = UIFont.Muli(.regular, size: 13)
         footerLabel.numberOfLines = 0
-        footerLabel.text = "Settings.Label.CloudMode.description".localized()
+        footerLabel.text = RuuviLocalization.Settings.Label.CloudMode.description
         footerView.addSubview(footerLabel)
         footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
         return footerView

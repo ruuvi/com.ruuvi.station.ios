@@ -1,3 +1,4 @@
+import RuuviLocalization
 #if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 
@@ -13,9 +14,9 @@ struct HeartbeatList: View {
             }
 
             if self.env.viewModel.bgScanningState.value.bound {
-                Stepper("Heartbeat.Interval.Every.string".localized()
+                Stepper(RuuviLocalization.Heartbeat.Interval.Every.string
                     + " " + "\(self.env.viewModel.bgScanningInterval.value.bound)"
-                    + " " + "Heartbeat.Interval.Min.string".localized(),
+                        + " " + RuuviLocalization.Heartbeat.Interval.Min.string,
                         value: self.$env.viewModel.bgScanningInterval.value.bound,
                         in: 0...3600)
             }

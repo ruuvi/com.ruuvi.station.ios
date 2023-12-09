@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 
 enum UnitSettingsType {
     case unit
@@ -6,12 +7,12 @@ enum UnitSettingsType {
 }
 
 extension UnitSettingsType: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
         case .unit:
-            return "Settings.Measurement.Unit.title".localized()
+            return { _ in RuuviLocalization.Settings.Measurement.Unit.title }
         case .accuracy:
-            return "Settings.Measurement.Resolution.title".localized()
+            return { _ in RuuviLocalization.Settings.Measurement.Resolution.title }
         }
     }
 }

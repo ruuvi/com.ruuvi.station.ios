@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import RuuviLocal
 
@@ -7,9 +8,9 @@ extension RuuviLocalError: LocalizedError {
         case .disk(let error):
             return error.localizedDescription
         case .failedToGetJpegRepresentation:
-            return "RuuviLocalError.failedToGetJpegRepresentation".localized()
+            return RuuviLocalization.RuuviLocalError.failedToGetJpegRepresentation
         case .failedToGetDocumentsDirectory:
-            return "RuuviLocalError.failedToGetDocumentsDirectory".localized()
+            return RuuviLocalization.RuuviLocalError.failedToGetDocumentsDirectory
         }
     }
 }

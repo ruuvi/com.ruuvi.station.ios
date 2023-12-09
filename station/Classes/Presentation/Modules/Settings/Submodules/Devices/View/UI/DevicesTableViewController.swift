@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 class DevicesTableViewController: UITableViewController {
     var output: DevicesViewOutput!
@@ -23,7 +24,6 @@ class DevicesTableViewController: UITableViewController {
 extension DevicesTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpTableView()
         output.viewDidLoad()
     }
@@ -36,7 +36,7 @@ extension DevicesTableViewController {
 
 extension DevicesTableViewController: DevicesViewInput {
     func localize() {
-        self.title = "DfuDevicesScanner.Title.text".localized()
+        self.title = RuuviLocalization.DfuDevicesScanner.Title.text
     }
 
     func showTokenIdDialog(for viewModel: DevicesViewModel) {
@@ -44,16 +44,16 @@ extension DevicesTableViewController: DevicesViewInput {
             return
         }
 
-        let title = "Token Id".localized()
+        let title = RuuviLocalization.Devices.tokenId
         let controller = UIAlertController(title: title,
                                            message: tokenId.stringValue,
                                            preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Copy".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.copy,
                                            style: .default,
                                            handler: { _ in
             UIPasteboard.general.string = tokenId.stringValue
         }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
@@ -61,7 +61,7 @@ extension DevicesTableViewController: DevicesViewInput {
         let controller = UIAlertController(title: nil,
                                            message: error.localizedDescription,
                                            preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Ok".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
                                            style: .default,
                                            handler: { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)

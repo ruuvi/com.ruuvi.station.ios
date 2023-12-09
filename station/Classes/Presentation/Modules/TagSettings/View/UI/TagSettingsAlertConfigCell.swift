@@ -1,5 +1,6 @@
 import UIKit
 import RangeSeekSlider
+import RuuviLocalization
 
 protocol TagSettingsAlertConfigCellDelegate: AnyObject {
     func didSelectSetCustomDescription(sender: TagSettingsAlertConfigCell)
@@ -39,7 +40,7 @@ class TagSettingsAlertConfigCell: UITableViewCell {
 
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Off".localized()
+        label.text = RuuviLocalization.off
         label.textAlignment = .right
         label.numberOfLines = 0
         label.textColor = .label
@@ -246,7 +247,7 @@ extension TagSettingsAlertConfigCell {
 extension TagSettingsAlertConfigCell {
     func setStatus(with value: Bool?) {
         if let value = value {
-            statusLabel.text = value ? "On".localized() : "Off".localized()
+            statusLabel.text = value ? RuuviLocalization.on : RuuviLocalization.off
             statusSwitch.setOn(value, animated: false)
         }
     }

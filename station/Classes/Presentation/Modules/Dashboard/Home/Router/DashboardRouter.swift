@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
 
 class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: UIViewController!
@@ -56,21 +57,21 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     }
 
     func openWhatToMeasurePage() {
-        guard let url = URL(string: "Menu.Measure.URL.IOS".localized()) else {
+        guard let url = URL(string: RuuviLocalization.Menu.Measure.Url.ios) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviProductsPage() {
-        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized()) else {
+        guard let url = URL(string: RuuviLocalization.Ruuvi.BuySensors.Url.ios) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviProductsPageFromMenu() {
-        guard let url = URL(string: "Ruuvi.BuySensors.Menu.URL.IOS".localized()) else {
+        guard let url = URL(string: RuuviLocalization.Ruuvi.BuySensors.Menu.Url.ios) else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)

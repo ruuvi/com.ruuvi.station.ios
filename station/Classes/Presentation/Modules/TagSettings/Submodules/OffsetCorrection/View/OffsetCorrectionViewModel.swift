@@ -3,6 +3,7 @@ import BTKit
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
 
 class OffsetCorrectionViewModel {
     var type: OffsetCorrectionType = .temperature
@@ -20,11 +21,11 @@ class OffsetCorrectionViewModel {
     var title: String {
         switch type {
         case .humidity:
-            return "OffsetCorrection.Humidity.Title".localized()
+            return RuuviLocalization.OffsetCorrection.Humidity.title
         case .pressure:
-            return "OffsetCorrection.Pressure.Title".localized()
+            return RuuviLocalization.OffsetCorrection.Pressure.title
         default:
-            return "OffsetCorrection.Temperature.Title".localized()
+            return RuuviLocalization.OffsetCorrection.Temperature.title
         }
     }
 

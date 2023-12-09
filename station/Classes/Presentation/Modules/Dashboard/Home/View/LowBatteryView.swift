@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class BatteryLevelView: UIView {
@@ -10,7 +11,7 @@ class BatteryLevelView: UIView {
         label.textAlignment = .right
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 10)
-        label.text = "low_battery".localized()
+        label.text = RuuviLocalization.lowBattery
         return label
     }()
 

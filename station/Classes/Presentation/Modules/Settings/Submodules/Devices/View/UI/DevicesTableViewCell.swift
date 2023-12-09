@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class DevicesTableViewCell: UITableViewCell {
@@ -77,7 +78,7 @@ extension DevicesTableViewCell {
         if let tokenId = viewModel.id.value {
             tokenIdLabel.text = "Token Id: " + tokenId.stringValue
         } else {
-            tokenIdLabel.text = "Token Id: " + "N/A".localized()
+            tokenIdLabel.text = "Token Id: " + RuuviLocalization.na
         }
 
         if let lastAccessed = viewModel.lastAccessed.value {
@@ -85,7 +86,7 @@ extension DevicesTableViewCell {
             lastAccessedLabel.text = "Last accessed: " +
                 AppDateFormatter.shared.ruuviAgoString(from: date)
         } else {
-            lastAccessedLabel.text = "Last accessed: " + "N/A".localized()
+            lastAccessedLabel.text = "Last accessed: " + RuuviLocalization.na
         }
     }
 }

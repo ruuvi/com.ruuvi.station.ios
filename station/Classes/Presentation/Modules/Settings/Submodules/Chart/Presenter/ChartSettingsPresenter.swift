@@ -1,6 +1,7 @@
 import Foundation
 import RuuviLocal
 import RuuviService
+import RuuviLocalization
 
 class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     weak var view: ChartSettingsViewInput!
@@ -24,7 +25,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
 
     private func buildDisplayAllDataSection() -> ChartSettingsSection {
         return ChartSettingsSection(
-            note: "ChartSettings.AllPoints.description".localized(),
+            note: RuuviLocalization.ChartSettings.AllPoints.description,
             cells: [
                 buildChartDownsampling()
             ]
@@ -35,7 +36,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     // maintain better performance until we find a better approach to do it.
     private func buildDrawDotsSection() -> ChartSettingsSection {
         return ChartSettingsSection(
-            note: "ChartSettings.DrawDots.description".localized(),
+            note: RuuviLocalization.ChartSettings.DrawDots.description,
             cells: [
                 buildChartDotsDrawing()
             ]
@@ -54,7 +55,7 @@ extension ChartSettingsPresenter: ChartSettingsViewOutput {
 extension ChartSettingsPresenter {
 
     private func buildChartDownsampling() -> ChartSettingsCell {
-        let title = "ChartSettings.AllPoints.title".localized()
+        let title = RuuviLocalization.ChartSettings.AllPoints.title
         let value = !settings.chartDownsamplingOn
         let type: ChartSettingsCellType = .switcher(title: title,
                          value: value)
@@ -69,7 +70,7 @@ extension ChartSettingsPresenter {
     }
 
     private func buildChartDotsDrawing() -> ChartSettingsCell {
-        let title = "ChartSettings.DrawDots.title".localized()
+        let title = RuuviLocalization.ChartSettings.DrawDots.title
         let value = settings.chartDrawDotsOn
         let type: ChartSettingsCellType = .switcher(title: title,
                          value: value)

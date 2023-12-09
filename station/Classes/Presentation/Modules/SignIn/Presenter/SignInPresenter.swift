@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import Future
 import RuuviCloud
@@ -141,7 +142,7 @@ extension SignInPresenter {
     }
 
     private func verify(_ code: String) {
-        activityPresenter.show(with: .loading(message: "SignIn.Sync.message".localized()))
+        activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
         ruuviCloud.validateCode(code: code)
             .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
@@ -214,7 +215,7 @@ extension SignInPresenter {
     @objc private func handleAppEnterForgroundState() {
         switch state {
         case .isSyncing:
-            activityPresenter.show(with: .loading(message: "SignIn.Sync.message".localized()))
+            activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
         default:
             return
         }

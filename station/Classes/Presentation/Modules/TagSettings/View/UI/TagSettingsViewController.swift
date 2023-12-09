@@ -1,5 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
+import RuuviLocalization
 import RuuviOntology
 import RuuviService
 
@@ -128,13 +129,13 @@ class TagSettingsViewController: UIViewController {
     private var cloudConnectionAlertDelayTextField = UITextField()
     private let cloudConnectionAlertDelayCharaterLimit: Int = 2
 
-    private let pairedString = "TagSettings.PairAndBackgroundScan.Paired.title".localized()
-    private let pairingString = "TagSettings.PairAndBackgroundScan.Pairing.title".localized()
-    private let unpairedString =  "TagSettings.PairAndBackgroundScan.Unpaired.title".localized()
+    private let pairedString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Paired.title
+    private let pairingString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Pairing.title
+    private let unpairedString =  RuuviLocalization.TagSettings.PairAndBackgroundScan.Unpaired.title
 
-    private let temperatureAlertFormat = "TagSettings.temperatureAlertTitleLabel.text".localized()
-    private let airHumidityAlertFormat = "TagSettings.AirHumidityAlert.title".localized()
-    private let pressureAlertFormat = "TagSettings.PressureAlert.title".localized()
+    private let temperatureAlertFormat = RuuviLocalization.TagSettings.TemperatureAlertTitleLabel.text
+    private let airHumidityAlertFormat = RuuviLocalization.TagSettings.AirHumidityAlert.title
+    private let pressureAlertFormat = RuuviLocalization.TagSettings.PressureAlert.title
 
     // Cell
     static let ReuseIdentifier = "SettingsCell"
@@ -172,9 +173,8 @@ class TagSettingsViewController: UIViewController {
     }()
 
     private lazy var temperatureAlertSection: TagSettingsSection? = {
-        let sectionTitle = String(
-            format: temperatureAlertFormat,
-            viewModel?.temperatureUnit.value?.symbol ?? "N/A".localized()
+        let sectionTitle = temperatureAlertFormat(
+            viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
         )
         let section = TagSettingsSection(
             identifier: .alertTemperature,
@@ -199,7 +199,7 @@ class TagSettingsViewController: UIViewController {
     }()
     private lazy var humidityAlertSection: TagSettingsSection? = {
         let symbol = HumidityUnit.percent.symbol
-        let sectionTitle = String(format: airHumidityAlertFormat, symbol)
+        let sectionTitle = airHumidityAlertFormat(symbol)
         let section = TagSettingsSection(
             identifier: .alertHumidity,
             title: sectionTitle,
@@ -221,9 +221,8 @@ class TagSettingsViewController: UIViewController {
         return TagSettingsExpandableSectionHeader()
     }()
     private lazy var pressureAlertSection: TagSettingsSection? = {
-        let sectionTitle = String(
-            format: pressureAlertFormat,
-            viewModel?.pressureUnit.value?.symbol ?? "N/A".localized()
+        let sectionTitle = pressureAlertFormat(
+            viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
         )
         let section = TagSettingsSection(
             identifier: .alertPressure,
@@ -675,7 +674,7 @@ extension TagSettingsViewController {
         let availableItems = itemsForGeneralSection()
         let section = TagSettingsSection(
             identifier: .general,
-            title: "TagSettings.SectionHeader.General.title".localized().capitalized,
+            title: RuuviLocalization.TagSettings.SectionHeader.General.title.capitalized,
             cells: availableItems,
             collapsed: false,
             headerType: .simple
@@ -687,7 +686,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .generalName,
             createdCell: { [weak self] in
-                self?.tagNameCell?.configure(title: "TagSettings.tagNameTitleLabel.text".localized(),
+                self?.tagNameCell?.configure(title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
                                value: self?.viewModel?.name.value)
                 self?.tagNameCell?.setAccessory(type: .pencil)
                 return self?.tagNameCell ?? UITableViewCell()
@@ -703,7 +702,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
-                self?.tagOwnerCell?.configure(title: "TagSettings.NetworkInfo.Owner".localized(),
+                self?.tagOwnerCell?.configure(title: RuuviLocalization.TagSettings.NetworkInfo.owner,
                                value: self?.viewModel?.owner.value)
                 self?.tagOwnerCell?.setAccessory(type: .chevron)
                 self?.tagOwnerCell?.hideSeparator(hide: false)
@@ -720,8 +719,10 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .generalOwnersPlan,
             createdCell: { [weak self] in
-                self?.tagOwnersPlanCell?.configure(title: "owners_plan".localized(),
-                                              value: self?.viewModel?.ownersPlan.value)
+                self?.tagOwnersPlanCell?.configure(
+                    title: RuuviLocalization.ownersPlan,
+                    value: self?.viewModel?.ownersPlan.value
+                )
                 self?.tagOwnersPlanCell?.setAccessory(type: .none)
                 self?.tagOwnersPlanCell?.hideSeparator(hide: !GlobalHelpers.getBool(from: self?.showShare()))
                 return self?.tagOwnersPlanCell ?? UITableViewCell()
@@ -736,7 +737,7 @@ extension TagSettingsViewController {
             identifier: .generalShare,
             createdCell: { [weak self] in
                 self?.tagShareCell?.configure(
-                    title: "TagSettings.Share.title".localized(),
+                    title: RuuviLocalization.TagSettings.Share.title,
                     value: self?.sensorSharedTo(
                         from: self?.viewModel?.sharedTo.value
                     )
@@ -767,14 +768,9 @@ extension TagSettingsViewController {
     private func sensorSharedTo(from: [String]?) -> String {
         let maxShareCount = 10
         if let sharedTo = from, sharedTo.count > 0 {
-            let format = "shared_to_x".localized()
-            return String(
-                format: format,
-                sharedTo.count,
-                maxShareCount
-            )
+            return RuuviLocalization.sharedToX(sharedTo.count, maxShareCount)
         } else {
-            return "TagSettings.NotShared.title".localized()
+            return RuuviLocalization.TagSettings.NotShared.title
         }
     }
 }
@@ -845,7 +841,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
 
         let section = TagSettingsSection(
             identifier: .btPair,
-            title: "TagSettings.SectionHeader.BTConnection.title".localized().capitalized,
+            title: RuuviLocalization.TagSettings.SectionHeader.BTConnection.title.capitalized,
             cells: [
                 tagPairSettingItem(),
                 tagPairFooterItem()
@@ -886,7 +882,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
         let settingItem = TagSettingsItem(
             createdCell: {
                 let cell = TagSettingsFooterCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
-                cell.configure(value: "TagSettings.PairAndBackgroundScan.description".localized())
+                cell.configure(value: RuuviLocalization.TagSettings.PairAndBackgroundScan.description)
                 return cell
             },
             action: nil
@@ -914,9 +910,8 @@ extension TagSettingsViewController {
         // Temperature
         tableView.bind(viewModel.temperatureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
-            sSelf.temperatureAlertSection?.title = String(
-                format: sSelf.temperatureAlertFormat,
-                value?.symbol ?? "N/A".localized()
+            sSelf.temperatureAlertSection?.title = sSelf.temperatureAlertFormat(
+                value?.symbol ?? RuuviLocalization.na
             )
         }
 
@@ -965,8 +960,9 @@ extension TagSettingsViewController {
             temperatureAlertSectionHeaderView.bind(viewModel.temperatureUnit) { [weak self]
                 header, unit in
                 guard let sSelf = self else { return }
-                let sectionTitle = String(format: sSelf.temperatureAlertFormat,
-                                          unit?.symbol ?? "N/A".localized())
+                let sectionTitle = sSelf.temperatureAlertFormat(
+                    unit?.symbol ?? RuuviLocalization.na
+                )
                 header.setTitle(with: sectionTitle)
             }
 
@@ -1078,9 +1074,8 @@ extension TagSettingsViewController {
         // Pressure
         tableView.bind(viewModel.pressureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
-            sSelf.pressureAlertSection?.title = String(
-                format: sSelf.pressureAlertFormat,
-                value?.symbol ?? "N/A".localized()
+            sSelf.pressureAlertSection?.title = sSelf.pressureAlertFormat(
+                value?.symbol ?? RuuviLocalization.na
             )
         }
 
@@ -1133,9 +1128,8 @@ extension TagSettingsViewController {
             pressureAlertSectionHeaderView.bind(viewModel.pressureUnit) {
                 [weak self ] header, unit in
                 guard let sSelf = self else { return }
-                let sectionTitle = String(
-                    format: sSelf.pressureAlertFormat,
-                    unit?.symbol ?? "N/A".localized()
+                let sectionTitle = sSelf.pressureAlertFormat(
+                    unit?.symbol ?? RuuviLocalization.na
                 )
                 header.setTitle(with: sectionTitle)
             }
@@ -1417,7 +1411,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .alertHeader,
-            title: "TagSettings.Label.alerts.text".localized().capitalized,
+            title: RuuviLocalization.TagSettings.Label.Alerts.text.capitalized,
             cells: [],
             collapsed: false,
             headerType: .simple
@@ -1532,7 +1526,7 @@ extension TagSettingsViewController {
     private func configureRSSIAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertRSSI,
-            title: "signal_strength_dbm".localized(),
+            title: RuuviLocalization.signalStrengthDbm,
             cells: [
                 rssiAlertItem()
             ],
@@ -1549,7 +1543,7 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?.rssiAlertCell?.showNoticeView()
                 self?.rssiAlertCell?
-                    .setNoticeText(with: "rssi_alert_description".localized())
+                    .setNoticeText(with: RuuviLocalization.rssiAlertDescription)
                 self?.rssiAlertCell?.showAlertRangeSetter()
                 self?.rssiAlertCell?
                     .setStatus(with: self?.viewModel?.isSignalAlertOn.value)
@@ -1579,7 +1573,7 @@ extension TagSettingsViewController {
     private func configureMovementAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertMovement,
-            title: "TagSettings.MovementAlert.title".localized(),
+            title: RuuviLocalization.TagSettings.MovementAlert.title,
             cells: [
                 movementAlertItem()
             ],
@@ -1595,7 +1589,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.movementAlertCell?
-                    .setAlertAddtionalText(with: "TagSettings.Alerts.Movement.description".localized())
+                    .setAlertAddtionalText(with: RuuviLocalization.TagSettings.Alerts.Movement.description)
                 self?.movementAlertCell?.hideAlertRangeSetter()
                 self?.movementAlertCell?.hideNoticeView()
                 self?.movementAlertCell?.showAdditionalTextview()
@@ -1615,7 +1609,7 @@ extension TagSettingsViewController {
     private func configureConnectionAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertConnection,
-            title: "TagSettings.ConnectionAlert.title".localized(),
+            title: RuuviLocalization.TagSettings.ConnectionAlert.title,
             cells: [
                 connectionAlertItem()
             ],
@@ -1630,7 +1624,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.connectionAlertCell?
-                    .setAlertAddtionalText(with: "TagSettings.Alerts.Connection.description".localized())
+                    .setAlertAddtionalText(with: RuuviLocalization.TagSettings.Alerts.Connection.description)
                 self?.connectionAlertCell?.hideAlertRangeSetter()
                 self?.connectionAlertCell?.hideNoticeView()
                 self?.connectionAlertCell?.showAdditionalTextview()
@@ -1650,7 +1644,7 @@ extension TagSettingsViewController {
     private func configureCloudConnectionAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertCloudConnection,
-            title: "alert_cloud_connection_title".localized(),
+            title: RuuviLocalization.alertCloudConnectionTitle,
             cells: [
                 cloudConnectionAlertItem()
             ],
@@ -1786,14 +1780,14 @@ extension TagSettingsViewController {
     }
 
     private func alertCustomDescription(from string: String?) -> String? {
-        let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        let alertPlaceholder = RuuviLocalization.TagSettings.Alert.CustomDescription.placeholder
         return string.hasText() ? string : alertPlaceholder
     }
 
     private func temperatureAlertRangeDescription(from min: CGFloat? = nil,
                                                   max: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        var format = "TagSettings.Alerts.Temperature.description".localized()
+                                                      var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min = min, let max = max {
             return attributedString(from: String(format: format,
                                                  locale: Locale.autoupdatingCurrent,
@@ -1863,7 +1857,7 @@ extension TagSettingsViewController {
     private func humidityAlertRangeDescription(from min: CGFloat? = nil,
                                                max: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        var format = "TagSettings.Alerts.Temperature.description".localized()
+                                                   var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min = min, let max = max {
             return attributedString(from: String(format: format,
                                                  locale: Locale.autoupdatingCurrent,
@@ -1919,7 +1913,7 @@ extension TagSettingsViewController {
     private func pressureAlertRangeDescription(from minValue: CGFloat? = nil,
                                                maxValue: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        var format = "TagSettings.Alerts.Temperature.description".localized()
+                                                   var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
 
         if let minValue = minValue, let maxValue = maxValue {
             return attributedString(from: String(format: format,
@@ -2000,7 +1994,7 @@ extension TagSettingsViewController {
     private func rssiAlertRangeDescription(from min: CGFloat? = nil,
                                            max: CGFloat? = nil) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        let format = "TagSettings.Alerts.Temperature.description".localized()
+                                               let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
 
         if let min = min, let max = max {
             return attributedString(from: String(format: format,
@@ -2071,12 +2065,8 @@ extension TagSettingsViewController {
         from delay: Int? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        let format = "alert_cloud_connection_description".localized()
-
         if let delay = delay {
-            return attributedString(from: String(format: format,
-                                                 locale: Locale.autoupdatingCurrent,
-                                                 delay))
+            return attributedString(from: RuuviLocalization.alertCloudConnectionDescription(delay))
         } else {
             return nil
         }
@@ -2287,7 +2277,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 extension TagSettingsViewController {
     private func showTemperatureAlertSetPopup(sender: TagSettingsAlertConfigCell) {
         let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
-        let titleFormat = "TagSettings.Alert.SetTemperature.title".localized()
+        let titleFormat = RuuviLocalization.TagSettings.Alert.SetTemperature.title
         let title = titleFormat + " (\(temperatureUnit.symbol))"
 
         let (minimumRange, maximumRange) = temperatureAlertRange()
@@ -2302,7 +2292,7 @@ extension TagSettingsViewController {
 
     private func showHumidityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
         let symbol = HumidityUnit.percent.symbol
-        let titleFormat = "TagSettings.Alert.SetHumidity.title".localized()
+        let titleFormat = RuuviLocalization.TagSettings.Alert.SetHumidity.title
         let title = titleFormat + " (\(symbol))"
 
         let (minimumRange, maximumRange) = humidityAlertRange()
@@ -2317,7 +2307,7 @@ extension TagSettingsViewController {
 
     private func showPressureAlertSetDialog(sender: TagSettingsAlertConfigCell) {
         let pressureUnit = viewModel?.pressureUnit.value ?? .hectopascals
-        let titleFormat = "TagSettings.Alert.SetPressure.title".localized()
+        let titleFormat = RuuviLocalization.TagSettings.Alert.SetPressure.title
         let title = titleFormat + " (\(pressureUnit.symbol))"
 
         let (minimumRange, maximumRange) = pressureAlertRange()
@@ -2331,8 +2321,8 @@ extension TagSettingsViewController {
     }
 
     private func showRSSIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let symbol = "dBm".localized()
-        let titleFormat = "TagSettings.Alert.SetRSSI.title".localized()
+        let symbol = RuuviLocalization.dBm
+        let titleFormat = RuuviLocalization.TagSettings.Alert.SetRSSI.title
         let title = titleFormat + " (\(symbol))"
 
         let (minimumRange, maximumRange) = rssiAlertRange()
@@ -2346,8 +2336,8 @@ extension TagSettingsViewController {
     }
 
     private func showCloudConnectionAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = "alert_cloud_connection_dialog_title".localized()
-        let message = "alert_cloud_connection_dialog_description".localized()
+        let title = RuuviLocalization.alertCloudConnectionDialogTitle
+        let message = RuuviLocalization.alertCloudConnectionDialogDescription
 
         let minimumDuration = cloudConnectionMinUnseenDuration()
         let defaultDuration = cloudConnectionDefaultUnseenDuration()
@@ -2520,7 +2510,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .offsetCorrection,
-            title: "TagSettings.SectionHeader.OffsetCorrection.Title".localized().capitalized,
+            title: RuuviLocalization.TagSettings.SectionHeader.OffsetCorrection.title.capitalized,
             cells: offsetCorrectionItems,
             collapsed: true,
             headerType: .expandable,
@@ -2536,7 +2526,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             identifier: .offsetTemperature,
             createdCell: { [weak self] in
-                self?.tempOffsetCorrectionCell?.configure(title: "TagSettings.OffsetCorrection.Temperature".localized(),
+                self?.tempOffsetCorrectionCell?.configure(title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
                                value: self?.measurementService
                     .temperatureOffsetCorrectionString(for: tempOffset))
                 self?.tempOffsetCorrectionCell?.setAccessory(type: .chevron)
@@ -2559,7 +2549,7 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?
                     .humidityOffsetCorrectionCell?
-                    .configure(title: "TagSettings.OffsetCorrection.Humidity".localized(),
+                    .configure(title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
                                value: self?.measurementService
                         .humidityOffsetCorrectionString(for: humOffset))
                 self?.humidityOffsetCorrectionCell?.setAccessory(type: .chevron)
@@ -2584,7 +2574,7 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?
                     .pressureOffsetCorrectionCell?
-                    .configure(title: "TagSettings.OffsetCorrection.Pressure".localized(),
+                    .configure(title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
                                value: self?.measurementService.pressureOffsetCorrectionString(for: pressureOffset))
                 self?.pressureOffsetCorrectionCell?.setAccessory(type: .chevron)
                 self?.pressureOffsetCorrectionCell?.hideSeparator(hide: true)
@@ -2640,7 +2630,7 @@ extension TagSettingsViewController {
             return
         }
 
-        let emptyString = "N/A".localized()
+        let emptyString = RuuviLocalization.na
 
         // Mac address
         if let moreInfoMacAddressCell = moreInfoMacAddressCell {
@@ -2741,7 +2731,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .moreInfo,
-            title: "TagSettings.Label.moreInfo.text".localized().capitalized,
+            title: RuuviLocalization.TagSettings.Label.MoreInfo.text.capitalized,
             cells: [
                 moreInfoMacAddressItem(),
                 moreInfoDataFormatItem(),
@@ -2765,8 +2755,8 @@ extension TagSettingsViewController {
     private func moreInfoMacAddressItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoMacAddressCell?.configure(title: "TagSettings.macAddressTitleLabel.text".localized(),
-                               value: self?.viewModel?.mac.value ?? "N/A".localized())
+                self?.moreInfoMacAddressCell?.configure(title: RuuviLocalization.TagSettings.MacAddressTitleLabel.text,
+                               value: self?.viewModel?.mac.value ?? RuuviLocalization.na)
                 return self?.moreInfoMacAddressCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
@@ -2779,7 +2769,7 @@ extension TagSettingsViewController {
     private func moreInfoDataFormatItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoDataFormatCell?.configure(title: "TagSettings.dataFormatTitleLabel.text".localized(),
+                self?.moreInfoDataFormatCell?.configure(title: RuuviLocalization.TagSettings.DataFormatTitleLabel.text,
                                value: self?.viewModel?.version.value?.stringValue)
                 self?.moreInfoDataFormatCell?.selectionStyle = .none
                 return self?.moreInfoDataFormatCell ?? UITableViewCell()
@@ -2792,7 +2782,7 @@ extension TagSettingsViewController {
     private func moreInfoDataSourceItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoDataSourceCell?.configure(title: "TagSettings.dataSourceTitleLabel.text".localized(),
+                self?.moreInfoDataSourceCell?.configure(title: RuuviLocalization.TagSettings.DataSourceTitleLabel.text,
                                value: self?.formattedDataSource(from: self?.viewModel?.source.value))
                 self?.moreInfoDataSourceCell?.selectionStyle = .none
                 return self?.moreInfoDataSourceCell ?? UITableViewCell()
@@ -2807,7 +2797,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoBatteryVoltageCell?.configure(
-                    title: "TagSettings.batteryVoltageTitleLabel.text".localized(),
+                    title: RuuviLocalization.TagSettings.BatteryVoltageTitleLabel.text,
                     value: self?.formattedBatteryVoltage(from: self?.viewModel?.voltage.value),
                     note: status,
                     noteColor: color
@@ -2823,7 +2813,7 @@ extension TagSettingsViewController {
     private func moreInfoAccXItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoAccXCell?.configure(title: "TagSettings.accelerationXTitleLabel.text".localized(),
+                self?.moreInfoAccXCell?.configure(title: RuuviLocalization.TagSettings.AccelerationXTitleLabel.text,
                                value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationX.value))
                 self?.moreInfoAccXCell?.selectionStyle = .none
                 return self?.moreInfoAccXCell ?? UITableViewCell()
@@ -2836,7 +2826,7 @@ extension TagSettingsViewController {
     private func moreInfoAccYItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoAccYCell?.configure(title: "TagSettings.accelerationYTitleLabel.text".localized(),
+                self?.moreInfoAccYCell?.configure(title: RuuviLocalization.TagSettings.AccelerationYTitleLabel.text,
                                value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationY.value))
                 self?.moreInfoAccYCell?.selectionStyle = .none
                 return self?.moreInfoAccYCell ?? UITableViewCell()
@@ -2849,7 +2839,7 @@ extension TagSettingsViewController {
     private func moreInfoAccZItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoAccZCell?.configure(title: "TagSettings.accelerationZTitleLabel.text".localized(),
+                self?.moreInfoAccZCell?.configure(title: RuuviLocalization.TagSettings.AccelerationZTitleLabel.text,
                                value: self?.formattedAccelerationValue(from: self?.viewModel?.accelerationZ.value))
                 self?.moreInfoAccZCell?.selectionStyle = .none
                 return self?.moreInfoAccZCell ?? UITableViewCell()
@@ -2862,7 +2852,7 @@ extension TagSettingsViewController {
     private func moreInfoTxPowerItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoTxPowerCell?.configure(title: "TagSettings.txPowerTitleLabel.text".localized(),
+                self?.moreInfoTxPowerCell?.configure(title: RuuviLocalization.TagSettings.TxPowerTitleLabel.text,
                                value: self?.formattedTXPower(from: self?.viewModel?.txPower.value))
                 self?.moreInfoTxPowerCell?.selectionStyle = .none
                 return self?.moreInfoTxPowerCell ?? UITableViewCell()
@@ -2875,7 +2865,7 @@ extension TagSettingsViewController {
     private func moreInfoRSSIItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoRSSICell?.configure(title: "TagSettings.rssiTitleLabel.text".localized(),
+                self?.moreInfoRSSICell?.configure(title: RuuviLocalization.TagSettings.RssiTitleLabel.text,
                                value: self?.viewModel?.rssi.value.stringValue)
                 return self?.moreInfoRSSICell ?? UITableViewCell()
             },
@@ -2889,7 +2879,7 @@ extension TagSettingsViewController {
     private func moreInfoMeasurementSequenceItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.moreInfoMSNCell?.configure(title: "TagSettings.msnTitleLabel.text".localized(),
+                self?.moreInfoMSNCell?.configure(title: RuuviLocalization.TagSettings.MsnTitleLabel.text,
                                value: self?.viewModel?.measurementSequenceNumber.value.stringValue)
                 return self?.moreInfoMSNCell ?? UITableViewCell()
             },
@@ -2902,19 +2892,19 @@ extension TagSettingsViewController {
 
     // More Info Helpers
     private func formattedDataSource(from source: RuuviTagSensorRecordSource?) -> String {
-        let emptyString = "N/A".localized()
+        let emptyString = RuuviLocalization.na
 
         if let source = source {
             var sourceString = emptyString
             switch source {
             case .advertisement:
-                sourceString = "TagSettings.DataSource.Advertisement.title".localized()
+                sourceString = RuuviLocalization.TagSettings.DataSource.Advertisement.title
             case .heartbeat:
-                sourceString = "TagSettings.DataSource.Heartbeat.title".localized()
+                sourceString = RuuviLocalization.TagSettings.DataSource.Heartbeat.title
             case .log:
-                sourceString = "TagSettings.DataSource.Heartbeat.title".localized()
+                sourceString = RuuviLocalization.TagSettings.DataSource.Heartbeat.title
             case .ruuviNetwork:
-                sourceString = "TagSettings.DataSource.Network.title".localized()
+                sourceString = RuuviLocalization.TagSettings.DataSource.Network.title
             default:
                 sourceString = emptyString
             }
@@ -2925,16 +2915,16 @@ extension TagSettingsViewController {
     }
     private func formattedBatteryVoltage(from value: Double?) -> String {
         if let value = value {
-            return String.localizedStringWithFormat("%.3f", value) + " " + "V".localized()
+            return String.localizedStringWithFormat("%.3f", value) + " " + RuuviLocalization.v
         } else {
-            return "N/A".localized()
+            return RuuviLocalization.na
         }
     }
 
     private func formattedBatteryStatus(from batteryLow: Bool?) -> (status: String?, color: UIColor?) {
         if let batteryLow = batteryLow {
             // swiftlint:disable:next line_length
-            let batteryStatus = batteryLow ? "(\("TagSettings.BatteryStatusLabel.Replace.message".localized()))" : "(\("TagSettings.BatteryStatusLabel.Ok.message".localized()))"
+            let batteryStatus = batteryLow ? "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Replace.message))" : "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Ok.message))"
             let indicatorColor = batteryLow ? .red : RuuviColor.ruuviTintColor
             return (status: batteryStatus, color: indicatorColor)
         } else {
@@ -2944,17 +2934,17 @@ extension TagSettingsViewController {
 
     private func formattedAccelerationValue(from value: Double?) -> String {
         if let value = value {
-            return String.localizedStringWithFormat("%.3f", value) + " " + "g".localized()
+            return String.localizedStringWithFormat("%.3f", value) + " " + RuuviLocalization.g
         } else {
-            return "N/A".localized()
+            return RuuviLocalization.na
         }
     }
 
     private func formattedTXPower(from value: Int?) -> String {
         if let value = value {
-            return value.stringValue + " " + "dBm".localized()
+            return value.stringValue + " " + RuuviLocalization.dBm
         } else {
-            return "N/A".localized()
+            return RuuviLocalization.na
         }
     }
 }
@@ -2968,7 +2958,7 @@ extension TagSettingsViewController {
 
         if let firmwareVersionCell = firmwareVersionCell {
             firmwareVersionCell.bind(viewModel.firmwareVersion) { cell, value in
-                cell.configure(value: value ?? "N/A".localized())
+                cell.configure(value: value ?? RuuviLocalization.na)
             }
         }
     }
@@ -2977,7 +2967,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .firmware,
-            title: "TagSettings.SectionHeader.Firmware.title".localized().capitalized,
+            title: RuuviLocalization.TagSettings.SectionHeader.Firmware.title.capitalized,
             cells: [
                 tagFirmwareVersionItem(),
                 tagFirmwareUpdateItem()
@@ -2993,8 +2983,8 @@ extension TagSettingsViewController {
     private func tagFirmwareVersionItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
-                self?.firmwareVersionCell?.configure(title: "TagSettings.Firmware.CurrentVersion".localized(),
-                               value: self?.viewModel?.firmwareVersion.value ?? "N/A".localized())
+                self?.firmwareVersionCell?.configure(title: RuuviLocalization.TagSettings.Firmware.currentVersion,
+                               value: self?.viewModel?.firmwareVersion.value ?? RuuviLocalization.na)
                 self?.firmwareVersionCell?.setAccessory(type: .none)
                 self?.firmwareVersionCell?.selectionStyle = .none
                 return self?.firmwareVersionCell ?? UITableViewCell()
@@ -3008,7 +2998,7 @@ extension TagSettingsViewController {
         let cell = TagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
         let settingItem = TagSettingsItem(
             createdCell: {
-                cell.configure(title: "TagSettings.Firmware.UpdateFirmware".localized(),
+                cell.configure(title: RuuviLocalization.TagSettings.Firmware.updateFirmware,
                                value: nil)
                 cell.setAccessory(type: .chevron)
                 cell.hideSeparator(hide: true)
@@ -3029,7 +3019,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .remove,
-            title: "Remove".localized().capitalized,
+            title: RuuviLocalization.remove.capitalized,
             cells: [
                 tagRemoveItem()
             ],
@@ -3045,7 +3035,7 @@ extension TagSettingsViewController {
         let cell = TagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
         let settingItem = TagSettingsItem(
             createdCell: {
-                cell.configure(title: "TagSettings.RemoveThisSensor.title".localized(), value: nil)
+                cell.configure(title: RuuviLocalization.TagSettings.RemoveThisSensor.title, value: nil)
                 cell.setAccessory(type: .chevron)
                 cell.hideSeparator(hide: true)
                 return cell
@@ -3387,7 +3377,7 @@ extension TagSettingsViewController {
 
     fileprivate func setUpUI() {
 
-        self.title = "TagSettings.navigationItem.title".localized()
+        self.title = RuuviLocalization.TagSettings.NavigationItem.title
 
         view.backgroundColor = RuuviColor.ruuviPrimary
 
@@ -3463,8 +3453,8 @@ extension TagSettingsViewController {
             from: self.viewModel?.mac.value,
             luid: self.viewModel?.uuid.value
         )
-        let alert = UIAlertController(title: "TagSettings.tagNameTitleLabel.text".localized(),
-                                      message: "TagSettings.tagNameTitleLabel.rename.text".localized(),
+        let alert = UIAlertController(title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
+                                      message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
@@ -3473,7 +3463,7 @@ extension TagSettingsViewController {
             alertTextField.placeholder = defaultName
             self.tagNameTextField = alertTextField
         }
-        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self = self else { return }
             if let name = self.tagNameTextField.text, !name.isEmpty {
                 self.output.viewDidChangeTag(name: name)
@@ -3481,7 +3471,7 @@ extension TagSettingsViewController {
                 self.output.viewDidChangeTag(name: defaultName)
             }
         }
-        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
@@ -3493,7 +3483,7 @@ extension TagSettingsViewController {
     // swiftlint:disable:next function_body_length
     private func showSensorCustomAlertDescriptionDialog(description: String?,
                                                         sender: TagSettingsAlertConfigCell) {
-        let alert = UIAlertController(title: "TagSettings.Alert.CustomDescription.title".localized(),
+        let alert = UIAlertController(title: RuuviLocalization.TagSettings.Alert.CustomDescription.title,
                                       message: nil,
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
@@ -3503,7 +3493,7 @@ extension TagSettingsViewController {
             self.customAlertDescriptionTextField = alertTextField
         }
 
-        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self = self else { return }
             let inputText = self.customAlertDescriptionTextField.text
 
@@ -3547,7 +3537,7 @@ extension TagSettingsViewController {
                 break
             }
         }
-        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
@@ -3569,7 +3559,7 @@ extension TagSettingsViewController {
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
             alertTextField.delegate = self
-            let format = "TagSettings.AlertSettings.Dialog.Min".localized()
+            let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.min
             alertTextField.placeholder = String(format: format,
                                                 locale: Locale.autoupdatingCurrent,
                                                 minimumBound)
@@ -3593,7 +3583,7 @@ extension TagSettingsViewController {
         alert.addTextField { [weak self] alertTextField in
             guard let self = self else { return }
             alertTextField.delegate = self
-            let format = "TagSettings.AlertSettings.Dialog.Max".localized()
+            let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.max
             alertTextField.placeholder = String(format: format,
                                                 locale: Locale.autoupdatingCurrent,
                                                 maximumBound)
@@ -3614,7 +3604,7 @@ extension TagSettingsViewController {
             }
         }
 
-        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self = self else { return }
             guard let minimumInputText = self.alertMinRangeTextField.text,
                   minimumInputText.doubleValue >= minimumBound else {
@@ -3630,7 +3620,7 @@ extension TagSettingsViewController {
                                   minValue: minimumInputText.doubleValue,
                                   maxValue: maximumInputText.doubleValue )
         }
-        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
@@ -3657,7 +3647,7 @@ extension TagSettingsViewController {
             alertTextField.text = current?.stringValue
         }
 
-        let action = UIAlertAction(title: "OK".localized(), style: .default) { [weak self] _ in
+        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self = self else { return }
             guard let durationInput = self.cloudConnectionAlertDelayTextField.text?.intValue,
                   durationInput >= minimum else {
@@ -3671,7 +3661,7 @@ extension TagSettingsViewController {
 
             self.output.viewDidChangeCloudConnectionAlertUnseenDuration(duration: durationInput*60)
         }
-        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel)
+        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
@@ -3684,38 +3674,38 @@ extension TagSettingsViewController: TagSettingsViewInput {
     }
 
     func showTagClaimDialog() {
-        let title = "claim_sensor_ownership".localized()
-        let message = "do_you_own_sensor".localized()
+        let title = RuuviLocalization.claimSensorOwnership
+        let message = RuuviLocalization.doYouOwnSensor
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Yes".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.yes,
                                            style: .default,
                                            handler: { [weak self] _ in
             self?.output.viewDidConfirmClaimTag()
         }))
-        controller.addAction(UIAlertAction(title: "No".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.no, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
     func showMacAddressDetail() {
-        let title = "TagSettings.Mac.Alert.title".localized()
+        let title = RuuviLocalization.TagSettings.Mac.Alert.title
         let controller = UIAlertController(title: title, message: viewModel?.mac.value, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
+        controller.addAction(UIAlertAction(title: RuuviLocalization.copy, style: .default, handler: { [weak self] _ in
             if let mac = self?.viewModel?.mac.value {
                 UIPasteboard.general.string = mac
             }
         }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
     func showFirmwareUpdateDialog() {
-        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidIgnoreFirmwareUpdateDialog()
         }))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate()
         }))
@@ -3723,11 +3713,11 @@ extension TagSettingsViewController: TagSettingsViewInput {
     }
 
     func showFirmwareDismissConfirmationUpdateDialog() {
-        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: nil))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate()
         }))
@@ -3735,9 +3725,9 @@ extension TagSettingsViewController: TagSettingsViewInput {
     }
 
     func showKeepConnectionTimeoutDialog() {
-        let message = "TagSettings.PairError.Timeout.description".localized()
+        let message = RuuviLocalization.TagSettings.PairError.Timeout.description
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
@@ -3749,9 +3739,9 @@ extension TagSettingsViewController: TagSettingsViewInput {
     }
 
     func showKeepConnectionCloudModeDialog() {
-        let message = "TagSettings.PairError.CloudMode.description".localized()
+        let message = RuuviLocalization.TagSettings.PairError.CloudMode.description
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "OK".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
                                            style: .cancel,
                                            handler: { [weak self] _ in
             self?.resetKeepConnectionSwitch()
@@ -3772,12 +3762,12 @@ extension TagSettingsViewController: TagSettingsViewInput {
     }
 
     func showCSVExportLocationDialog() {
-        let title = "export_history".localized()
-        let message = "export_csv_feature_location".localized()
+        let title = RuuviLocalization.exportHistory
+        let message = RuuviLocalization.exportCsvFeatureLocation
         let controller = UIAlertController(title: title,
                                            message: message,
                                            preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "OK".localized(),
+        controller.addAction(UIAlertAction(title: RuuviLocalization.ok,
                                            style: .cancel,
                                            handler: nil))
         present(controller, animated: true)

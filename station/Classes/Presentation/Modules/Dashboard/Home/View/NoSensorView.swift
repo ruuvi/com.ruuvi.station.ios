@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 protocol NoSensorViewDelegate: NSObjectProtocol {
     func didTapSignInButton(sender: NoSensorView)
@@ -48,7 +49,7 @@ class NoSensorView: UIView {
     private lazy var signInButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25)
-        button.setTitle("SignIn.Title.text".localized(),
+        button.setTitle(RuuviLocalization.SignIn.Title.text,
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold,
@@ -62,7 +63,7 @@ class NoSensorView: UIView {
     private lazy var addSensorButton: UIButton = {
         let button = UIButton(color: RuuviColor.ruuviTintColor,
                               cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25)
-        button.setTitle("add_a_sensor".localized(),
+        button.setTitle(RuuviLocalization.addASensor,
                         for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold,
@@ -76,7 +77,7 @@ class NoSensorView: UIView {
     private lazy var buySensorButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(RuuviColor.ruuviTextColor, for: .normal)
-        button.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(),
+        button.setTitle(RuuviLocalization.DiscoverTable.GetMoreSensors.Button.title,
                         for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold,
                                               size: 14)
@@ -112,8 +113,8 @@ extension NoSensorView {
             centerButtonStackView.addArrangedSubview(button)
         }
         messageLabel.text = userSignInOnce ?
-            "dashboard_no_sensors_message_signed_out".localized() :
-            "dashboard_no_sensors_message".localized()
+        RuuviLocalization.dashboardNoSensorsMessageSignedOut :
+        RuuviLocalization.dashboardNoSensorsMessage
         centerButtonCenterYAnchor.isActive =
             userSignInOnce ? activateCenterButtonStackConstraint() : true
     }

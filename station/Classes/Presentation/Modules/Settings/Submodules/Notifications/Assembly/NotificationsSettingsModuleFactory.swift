@@ -1,6 +1,7 @@
 import UIKit
 import RuuviLocal
 import RuuviService
+import RuuviLocalization
 
 protocol NotificationsSettingsModuleFactory {
     func create() -> NotificationsSettingsTableViewController
@@ -11,7 +12,7 @@ final class NotificationsSettingsModuleFactoryImpl: NotificationsSettingsModuleF
         let r = AppAssembly.shared.assembler.resolver
 
         let view = NotificationsSettingsTableViewController(
-            title: "settings_alert_notifications".localized()
+            title: RuuviLocalization.settingsAlertNotifications
         )
         let router = NotificationsSettingsRouter()
         router.transitionHandler = view

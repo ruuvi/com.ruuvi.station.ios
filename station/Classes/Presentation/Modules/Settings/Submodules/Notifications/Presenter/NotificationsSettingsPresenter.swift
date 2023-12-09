@@ -3,6 +3,7 @@ import UIKit
 import RuuviOntology
 import RuuviLocal
 import RuuviService
+import RuuviLocalization
 
 class NotificationsSettingsPresenter: NSObject, NotificationsSettingsModuleInput {
     weak var view: NotificationsSettingsViewInput?
@@ -39,7 +40,7 @@ extension NotificationsSettingsPresenter: NotificationsSettingsViewOutput {
 
     func viewDidTapSoundSelection() {
         let pushAlertSoundViewModel = PushAlertSoundSelectionViewModel(
-            title: "settings_alert_sound".localized(),
+            title: RuuviLocalization.settingsAlertSound,
             items: [
                 RuuviAlertSound.systemDefault,
                 RuuviAlertSound.ruuviSpeak
@@ -70,8 +71,8 @@ extension NotificationsSettingsPresenter {
 
     private func buildEmailAlertSettings() -> NotificationsSettingsViewModel {
         let viewModel = NotificationsSettingsViewModel()
-        viewModel.title = "settings_email_alerts".localized()
-        viewModel.subtitle = "settings_email_alerts_description".localized()
+        viewModel.title = RuuviLocalization.settingsEmailAlerts
+        viewModel.subtitle = RuuviLocalization.settingsEmailAlertsDescription
         viewModel.boolean.value = settings.emailAlertEnabled
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .email
@@ -87,8 +88,8 @@ extension NotificationsSettingsPresenter {
 
     private func buildPushSettings() -> NotificationsSettingsViewModel {
         let viewModel = NotificationsSettingsViewModel()
-        viewModel.title = "settings_push_alerts".localized()
-        viewModel.subtitle = "settings_push_alerts_description".localized()
+        viewModel.title = RuuviLocalization.settingsPushAlerts
+        viewModel.subtitle = RuuviLocalization.settingsPushAlertsDescription
         viewModel.boolean.value = settings.pushAlertEnabled
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .push
@@ -104,8 +105,8 @@ extension NotificationsSettingsPresenter {
 
     private func buildLimitAlertNotificationsSettings() -> NotificationsSettingsViewModel {
         let viewModel = NotificationsSettingsViewModel()
-        viewModel.title = "settings_alert_limit_notification".localized()
-        viewModel.subtitle = "settings_alert_limit_notification_description".localized()
+        viewModel.title = RuuviLocalization.settingsAlertLimitNotification
+        viewModel.subtitle = RuuviLocalization.settingsAlertLimitNotificationDescription
         viewModel.boolean.value = settings.limitAlertNotificationsEnabled
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .limitAlert
@@ -120,9 +121,9 @@ extension NotificationsSettingsPresenter {
 
     private func buildSoundSettings() -> NotificationsSettingsViewModel {
         let viewModel = NotificationsSettingsViewModel()
-        viewModel.title = "settings_alert_sound".localized()
-        viewModel.subtitle = "settings_alert_sound_description".localized()
-        viewModel.value.value = settings.alertSound.title
+        viewModel.title = RuuviLocalization.settingsAlertSound
+        viewModel.subtitle = RuuviLocalization.settingsAlertSoundDescription
+        viewModel.value.value = settings.alertSound.title("")
         viewModel.configType.value = .plain
         viewModel.settingsType.value = .alertSound
         return viewModel

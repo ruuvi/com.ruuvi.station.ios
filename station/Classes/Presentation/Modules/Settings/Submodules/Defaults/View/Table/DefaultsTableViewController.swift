@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class DefaultsTableViewController: UITableViewController {
@@ -49,7 +50,7 @@ extension DefaultsTableViewController {
                                      for: indexPath) as! DefaultsPlainTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
-            cell.valueLabel.text = viewModel.value.value ?? "N/A".localized()
+            cell.valueLabel.text = viewModel.value.value ?? RuuviLocalization.na
             return cell
         case .switcher:
             // swiftlint:disable force_cast
@@ -71,13 +72,13 @@ extension DefaultsTableViewController {
             let unitString: String
             switch viewModel.unit {
             case .hours:
-                unitString = "Defaults.Interval.Hour.string".localized()
+                unitString = RuuviLocalization.Defaults.Interval.Hour.string
                 cell.stepper.stepValue = 1
             case .minutes:
-                unitString = "Defaults.Interval.Min.string".localized()
+                unitString = RuuviLocalization.Defaults.Interval.Min.string
                 cell.stepper.stepValue = 5
             case .seconds:
-                unitString = "Defaults.Interval.Sec.string".localized()
+                unitString = RuuviLocalization.Defaults.Interval.Sec.string
                 cell.stepper.stepValue = 30
             case .decimal:
                 unitString = ""

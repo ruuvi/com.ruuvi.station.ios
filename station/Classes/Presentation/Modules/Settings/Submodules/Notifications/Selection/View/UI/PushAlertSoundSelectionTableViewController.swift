@@ -35,7 +35,6 @@ class PushAlertSoundSelectionTableViewController: UITableViewController {
 extension PushAlertSoundSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }
@@ -95,8 +94,8 @@ extension PushAlertSoundSelectionTableViewController {
         if let viewModel = viewModel {
             let item = viewModel.items[indexPath.row]
             cell.configure(
-                title: item.title,
-                selection: viewModel.selection.title
+                title: item.title(""),
+                selection: viewModel.selection.title("")
             )
         }
         return cell

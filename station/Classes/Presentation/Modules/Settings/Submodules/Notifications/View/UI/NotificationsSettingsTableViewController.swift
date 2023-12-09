@@ -1,5 +1,6 @@
 import UIKit
 import Foundation
+import RuuviLocalization
 
 class NotificationsSettingsTableViewController: UITableViewController {
     var output: NotificationsSettingsViewOutput?
@@ -26,7 +27,6 @@ class NotificationsSettingsTableViewController: UITableViewController {
 extension NotificationsSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output?.viewDidLoad()
     }
@@ -121,8 +121,8 @@ extension NotificationsSettingsTableViewController {
                             viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView()
         let footerTextView = RuuviLinkTextView(
-            fullTextString: "settings_alerts_footer_description".localized(),
-            linkString: "settings_alerts_footer_description_link_mask".localized(),
+            fullTextString: RuuviLocalization.settingsAlertsFooterDescription,
+            linkString: RuuviLocalization.settingsAlertsFooterDescriptionLinkMask,
             link: UIApplication.openSettingsURLString
         )
         footerTextView.linkDelegate = self

@@ -1,5 +1,6 @@
 import Foundation
 import RuuviContext
+import RuuviLocalization
 import RuuviStorage
 import UIKit
 
@@ -45,8 +46,8 @@ extension AboutPresenter {
             let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String  else {
             return nil
         }
-        let changelogString = "changelog".localized()
-        let versionText = "About.Version.text".localized() + " " + appVersion + "(" + buildVersion + ")"
+        let changelogString = RuuviLocalization.changelog
+        let versionText = RuuviLocalization.About.Version.text + " " + appVersion + "(" + buildVersion + ")"
 
         let text = versionText + " " + changelogString
 
@@ -78,14 +79,14 @@ extension AboutPresenter {
 
     private func obtainTagsCount() {
         ruuviStorage.getStoredTagsCount().on(success: { [weak self] count in
-            let tagsCount = String(format: "About.TagsCount.text".localized(), count)
+            let tagsCount = RuuviLocalization.About.TagsCount.text(count)
             self?.viewModel.addedTags.value = tagsCount
         })
     }
 
     private func obtainMeasurementsCount() {
         ruuviStorage.getStoredMeasurementsCount().on(success: { [weak self] count in
-            let measurementsCount = String(format: "About.MeasurementsCount.text".localized(), count)
+            let measurementsCount = RuuviLocalization.About.MeasurementsCount.text(count)
             self?.viewModel.storedMeasurements.value = measurementsCount
         })
     }
@@ -94,7 +95,7 @@ extension AboutPresenter {
         let realmSize = getRealmFileSize()
         let sqliteSize = getSQLiteFileSize()
         let dbSize = ByteCountFormatter().string(fromByteCount: realmSize + sqliteSize)
-        let dbSizeString = String(format: "About.DatabaseSize.text".localized(), dbSize)
+        let dbSizeString = RuuviLocalization.About.DatabaseSize.text(dbSize)
         viewModel.databaseSize.value = dbSizeString
     }
 

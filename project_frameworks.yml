@@ -33,6 +33,7 @@ targetTemplates:
     sources:
     - path: Packages/${target_name}
       excludes:
+      - "*.stencil"
       - target.yml
       - Info.plist
       - .swiftpm
@@ -42,6 +43,7 @@ targetTemplates:
       - README.md
       - "*.podspec"
       - Tests
+      - Templates
     settings:
       base:
         DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
@@ -64,6 +66,7 @@ targetTemplates:
     sources:
     - path: Modules/${target_name}
       excludes:
+      - "*.stencil"
       - target.yml
       - Info.plist
       - .swiftpm
@@ -73,6 +76,7 @@ targetTemplates:
       - README.md
       - "*.podspec"
       - Tests
+      - Templates
     settings:
       base:
         DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
@@ -95,6 +99,7 @@ targetTemplates:
     sources:
     - path: Common/${target_name}
       excludes:
+      - "*.stencil"
       - target.yml
       - Info.plist
       - .swiftpm
@@ -104,6 +109,7 @@ targetTemplates:
       - README.md
       - "*.podspec"
       - Tests
+      - Templates
     settings:
       base:
         DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM

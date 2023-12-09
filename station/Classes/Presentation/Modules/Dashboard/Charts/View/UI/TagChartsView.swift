@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 import Charts
 import RuuviLocal
@@ -274,11 +275,11 @@ extension TagChartsView {
         type: MeasurementType
     ) {
         let roundedTo: Int = 2
-        let minText = "chart_stat_min".localized() + ": " +
+        let minText = RuuviLocalization.chartStatMin + ": " +
                 GlobalHelpers().formattedString(from: min.round(to: roundedTo))
-        let maxText = "chart_stat_max".localized() + ": " +
+        let maxText = RuuviLocalization.chartStatMax + ": " +
                 GlobalHelpers().formattedString(from: max.round(to: roundedTo))
-        let avgText = "chart_stat_avg".localized() + ": " +
+        let avgText = RuuviLocalization.chartStatAvg + ": " +
                 GlobalHelpers().formattedString(from: avg.round(to: roundedTo))
 
         chartMinMaxAvgLabel.text = minText + " " + maxText + " " + avgText

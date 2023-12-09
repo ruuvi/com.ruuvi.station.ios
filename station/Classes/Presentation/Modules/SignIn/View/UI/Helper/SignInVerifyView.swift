@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol SignInVerifyViewDelegate: NSObjectProtocol {
@@ -25,7 +26,7 @@ class SignInVerifyView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "enter_code".localized()
+        label.text = RuuviLocalization.enterCode
         label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
@@ -35,7 +36,7 @@ class SignInVerifyView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "SignIn.CheckMailbox".localized()
+        label.text = RuuviLocalization.SignIn.checkMailbox("")
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
@@ -134,7 +135,7 @@ extension SignInVerifyView: RuuviCodeViewDelegate {
 extension SignInVerifyView {
     func updateMessage(with email: String?) {
         guard let email = email else { return }
-        subtitleLabel.text = String(format: "SignIn.CheckMailbox".localized(), email)
+        subtitleLabel.text = RuuviLocalization.SignIn.checkMailbox(email)
     }
 
     func populate(from code: String?) {

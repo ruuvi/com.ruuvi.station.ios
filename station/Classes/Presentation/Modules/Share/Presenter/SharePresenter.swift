@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import Future
 import UIKit
@@ -86,9 +87,9 @@ extension SharePresenter: ShareViewOutput {
             return
         }
         let title: String? = nil
-        let message = String(format: "SharePresenter.UnshareSensor.Message".localized(), email)
-        let confirmActionTitle = "Yes".localized()
-        let cancelActionTitle = "No".localized()
+        let message = RuuviLocalization.SharePresenter.UnshareSensor.message(email)
+        let confirmActionTitle = RuuviLocalization.yes
+        let cancelActionTitle = RuuviLocalization.no
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             self?.unshareTag(email)

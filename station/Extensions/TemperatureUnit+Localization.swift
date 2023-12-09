@@ -1,30 +1,31 @@
 import Foundation
 import RuuviOntology
+import RuuviLocalization
 
 extension TemperatureUnit: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
         case .celsius:
-            return "TemperatureUnit.Celsius.title".localized()
+            return { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
         case .fahrenheit:
-            return "TemperatureUnit.Fahrenheit.title".localized()
+            return { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
         case .kelvin:
-            return "TemperatureUnit.Kelvin.title".localized()
+            return { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
         }
     }
 }
 
 extension UnitTemperature: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
         case .celsius:
-            return "TemperatureUnit.Celsius.title".localized()
+            return { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
         case .fahrenheit:
-            return "TemperatureUnit.Fahrenheit.title".localized()
+            return { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
         case .kelvin:
-            return "TemperatureUnit.Kelvin.title".localized()
+            return { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
         default:
-            return "N/A".localized()
+            return { _ in RuuviLocalization.na }
         }
     }
 }

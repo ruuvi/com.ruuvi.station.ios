@@ -280,7 +280,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
 "g/m³" = "г/м³";
 "HumidityUnit.Percent.title" = "Относительная влажность (%)";
-"%" = "%";
 "TagSettings.Mac.Alert.title" = "MAC адрес";
 "Menu.Label.AboutHelp.text" = "О Приложении";
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
@@ -674,7 +673,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "lets_do_it" = "Let's Sign In";
 "enter_code" = "Enter Code";
 "dashboard_no_sensors_message" = "Seems that you don't have any Ruuvi sensors added yet.";
-"dashboard_no_sensors_message_signed_out" = "You are not signed in.\n\nIf you have an account and have already added Ruuvi sensors to it, they will automatically synchronise with Ruuvi Station mobile app when you sign in.";
+"dashboard_no_sensors_message_signed_out" = "Вы не вошли в аккаунт.\n\nЕсли у вас уже есть аккаунт Ruuvi и добавлены датчики в него, то они будут автоматичеки синхронизированы с мобильным приложением после того как вы войдете в свой аккаунт.";
 "add_a_sensor" = "Add a Sensor";
 "changelog" = "(changelog)";
 "changelog_ios_url" = "https://f.ruuvi.com/t/3192";
@@ -752,3 +751,17 @@ If you cannot see the Language option in the settings, make sure that you have a
 "activity_ongoing_generic" = "Please wait...";
 "activity_success_generic" = "Operation successful.";
 "activity_failed_generic" = "Operation failed.";
+"Devices.tokenId" = "Token Id";
+"UserApiError.ER_GATEWAY_NOT_FOUND" = "Gateway not found";
+"UserApiError.ER_GATEWAY_ALREADY_WHITELISTED" = "Gateway already whitelisted";
+"UserApiError.ER_GATEWAY_STATUS_REPORT_FAILED" = "Gateway status report failed";
+"UserApiError.ER_CONFLICT" = "Data already exists, cannot update";
+"UserApiError.ER_CLAIM_COUNT_REACHED" = "Maximum claim count for the user reached";
+"UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Maximum share count for the sensor reached";
+"UserApiError.ER_NO_DATA_TO_SHARE" = "In order to share a sensor, it must have data";
+"UserApiError.ER_SENSOR_ALREADY_REGISTERED" = "The sensor has already been registered";
+"UserApiError.ER_SUBSCRIPTION_CODE_EXISTS" = "Tried to add duplicate subscription to a code";
+"UserApiError.ER_SUBSCRIPTION_CODE_USED" = "Tried to claim already used code";
+"UserApiError.ER_OLD_ENTRY" = "Newer data already exists, cannot update";
+"UserApiError.ER_INVALID_ENUM_VALUE" = "Invalid ENUM value given";
+"UserApiError.OK" = "Operation was successful";

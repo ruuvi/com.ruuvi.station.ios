@@ -25,7 +25,6 @@ class ASSelectionTableViewController: UITableViewController {
 extension ASSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }
@@ -76,8 +75,8 @@ extension ASSelectionTableViewController {
         if let viewModel = viewModel {
             let item = viewModel.items[indexPath.row]
             cell.configure(
-                title: item.title,
-                selection: viewModel.selection.title
+                title: item.title(""),
+                selection: viewModel.selection.title("")
             )
         }
         return cell

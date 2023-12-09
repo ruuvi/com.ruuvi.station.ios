@@ -2,6 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviLocal
 import RuuviService
+import RuuviLocalization
 
 class UnitSettingsPresenter {
     weak var view: UnitSettingsViewInput!
@@ -115,26 +116,26 @@ extension UnitSettingsPresenter {
 
         switch viewModel.measurementType {
         case .temperature:
-            return SelectionViewModel(title: "Settings.Label.TemperatureUnit.text".localized(),
+            return SelectionViewModel(title: RuuviLocalization.Settings.Label.TemperatureUnit.text,
                                       items: viewModel.items,
-                                      description: "Settings.ChooseTemperatureUnit.text".localized(),
-                                      selection: settings.temperatureUnit.title,
+                                      description: RuuviLocalization.Settings.ChooseTemperatureUnit.text,
+                                      selection: settings.temperatureUnit.title(""),
                                       measurementType: viewModel.measurementType,
                                       unitSettingsType: .unit)
 
         case .humidity:
-            return SelectionViewModel(title: "Settings.Label.HumidityUnit.text".localized(),
+            return SelectionViewModel(title: RuuviLocalization.Settings.Label.HumidityUnit.text,
                                       items: viewModel.items,
-                                      description: "Settings.ChooseHumidityUnit.text".localized(),
-                                      selection: settings.humidityUnit.title,
+                                      description: RuuviLocalization.Settings.ChooseHumidityUnit.text,
+                                      selection: settings.humidityUnit.title(""),
                                       measurementType: viewModel.measurementType,
                                       unitSettingsType: .unit)
 
         case .pressure:
-            return SelectionViewModel(title: "Settings.Label.PressureUnit.text".localized(),
+            return SelectionViewModel(title: RuuviLocalization.Settings.Label.PressureUnit.text,
                                       items: viewModel.items,
-                                      description: "Settings.ChoosePressureUnit.text".localized(),
-                                      selection: settings.pressureUnit.title,
+                                      description: RuuviLocalization.Settings.ChoosePressureUnit.text,
+                                      selection: settings.pressureUnit.title(""),
                                       measurementType: viewModel.measurementType,
                                       unitSettingsType: .unit)
 
@@ -152,13 +153,13 @@ extension UnitSettingsPresenter {
         let titleProvider = MeasurementAccuracyTitles()
         switch measurementType {
         case .temperature:
-            accuracyTitle = "Settings.Temperature.Resolution.title".localized()
+            accuracyTitle = RuuviLocalization.Settings.Temperature.Resolution.title
             selection = titleProvider.formattedTitle(type: settings.temperatureAccuracy, settings: settings)
         case .humidity:
-            accuracyTitle = "Settings.Humidity.Resolution.title".localized()
+            accuracyTitle = RuuviLocalization.Settings.Humidity.Resolution.title
             selection = titleProvider.formattedTitle(type: settings.humidityAccuracy, settings: settings)
         case .pressure:
-            accuracyTitle = "Settings.Pressure.Resolution.title".localized()
+            accuracyTitle = RuuviLocalization.Settings.Pressure.Resolution.title
             selection = titleProvider.formattedTitle(type: settings.pressureAccuracy, settings: settings)
         default:
             return nil
@@ -172,7 +173,7 @@ extension UnitSettingsPresenter {
 
         return SelectionViewModel(title: accuracyTitle,
                                   items: selectionItems,
-                                  description: "Settings.Measurement.Resolution.description".localized(),
+                                  description: RuuviLocalization.Settings.Measurement.Resolution.description,
                                   selection: selection,
                                   measurementType: measurementType,
                                   unitSettingsType: .accuracy)
