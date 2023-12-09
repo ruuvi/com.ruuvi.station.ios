@@ -20,12 +20,12 @@ public final class ActivityPresenterRuuviLogo: ActivityPresenter {
     }
 }
 
-extension ActivityPresenterRuuviLogo {
-    public func setPosition(_ position: ActivityPresenterPosition) {
+public extension ActivityPresenterRuuviLogo {
+    func setPosition(_ position: ActivityPresenterPosition) {
         activityPresenterViewProvider.updatePosition(position)
     }
 
-    public func show(with state: ActivityPresenterState) {
+    func show(with state: ActivityPresenterState) {
         startTime = CFAbsoluteTimeGetCurrent()
         appWindow = UIWindow.key
         window.makeKeyAndVisible()
@@ -33,11 +33,11 @@ extension ActivityPresenterRuuviLogo {
         activityPresenterViewProvider.updateState(state)
     }
 
-    public func update(with state: ActivityPresenterState) {
+    func update(with state: ActivityPresenterState) {
         activityPresenterViewProvider.updateState(state)
     }
 
-    public func dismiss(immediately: Bool) {
+    func dismiss(immediately: Bool) {
         let executionTime = CFAbsoluteTimeGetCurrent() - (startTime ?? 0)
         let additionalWaitTime = immediately ? 0 :
             executionTime < minAnimationTime ? (minAnimationTime - executionTime) : 0

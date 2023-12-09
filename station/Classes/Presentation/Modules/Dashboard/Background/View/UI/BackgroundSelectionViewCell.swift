@@ -1,7 +1,6 @@
 import UIKit
 
 class BackgroundSelectionViewCell: UICollectionViewCell {
-
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -15,7 +14,8 @@ class BackgroundSelectionViewCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

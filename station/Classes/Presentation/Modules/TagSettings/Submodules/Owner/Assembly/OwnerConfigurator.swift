@@ -1,9 +1,9 @@
 import Foundation
-import RuuviService
-import RuuviPool
-import RuuviStorage
-import RuuviPresenters
 import RuuviLocal
+import RuuviPool
+import RuuviPresenters
+import RuuviService
+import RuuviStorage
 
 final class OwnerConfigurator {
     func configure(view: OwnerViewController) {

@@ -12,7 +12,7 @@ public final class RuuviReactorFactoryImpl: RuuviReactorFactory {
         sqlitePersistence: RuuviPersistence,
         realmPersistence: RuuviPersistence
     ) -> RuuviReactor {
-        return RuuviReactorImpl(
+        RuuviReactorImpl(
             sqliteContext: sqliteContext,
             realmContext: realmContext,
             sqlitePersistence: sqlitePersistence,

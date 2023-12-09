@@ -1,5 +1,5 @@
-import Foundation
 import BTKit
+import Foundation
 import Future
 import RuuviOntology
 import RuuviPool
@@ -60,10 +60,11 @@ public final class GATTServiceQueue: GATTService {
         }
         return promise.future
     }
+
     // swiftlint:enable function_parameter_count
 
     public func isSyncingLogs(with uuid: String) -> Bool {
-        return queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
+        queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
     }
 
     @discardableResult

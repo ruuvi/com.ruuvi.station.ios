@@ -32,17 +32,17 @@ struct FirmwareView: View {
     private static let fontSize: CGFloat = 16
     private let muliBold16 = Font(
         UIFont(name: "Muli-Bold", size: fontSize.adjustedFontSize()) ??
-        UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .bold))
+            UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .bold))
     private let muliRegular16 = Font(
         UIFont(name: "Muli-Regular", size: fontSize.adjustedFontSize()) ??
-        UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .regular))
-    
+            UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .regular))
+
     private var content: some View {
         switch viewModel.state {
         case .idle:
-            return Color.clear.eraseToAnyView()
+            Color.clear.eraseToAnyView()
         case .loading:
-            return VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -55,12 +55,12 @@ struct FirmwareView: View {
             )
             .padding()
             .eraseToAnyView()
-        case .error(let error):
-            return Text(error.localizedDescription)
+        case let .error(error):
+            Text(error.localizedDescription)
                 .font(muliRegular16)
                 .eraseToAnyView()
         case let .loaded(latestRelease):
-            return VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
                     .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
@@ -78,10 +78,10 @@ struct FirmwareView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { self.viewModel.send(event: .onLoaded(latestRelease)) }
+            .onAppear { viewModel.send(event: .onLoaded(latestRelease)) }
             .eraseToAnyView()
         case let .serving(latestRelease):
-            return VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
                     .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
@@ -101,7 +101,7 @@ struct FirmwareView: View {
             .padding()
             .eraseToAnyView()
         case let .checking(latestRelease, currentRelease):
-            return VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
                     .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
@@ -127,10 +127,10 @@ struct FirmwareView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
+            .onAppear { viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
         case .noNeedToUpgrade:
-            return VStack {
+            VStack {
                 Text(texts.alreadyOnLatest)
                     .font(muliRegular16)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -142,7 +142,7 @@ struct FirmwareView: View {
                     .padding()
                 Button(
                     action: {
-                        self.viewModel.finish()
+                        viewModel.finish()
                     },
                     label: {
                         Text(texts.finish)
@@ -162,7 +162,7 @@ struct FirmwareView: View {
             }
             .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
-            return VStack {
+            VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
                         .font(muliBold16)
@@ -184,7 +184,7 @@ struct FirmwareView: View {
                     }
                     Button(
                         action: {
-                            self.viewModel.send(
+                            viewModel.send(
                                 event: .onStartUpgrade(latestRelease, currentRelease)
                             )
                         },
@@ -214,11 +214,11 @@ struct FirmwareView: View {
             .padding()
             .eraseToAnyView()
         case .reading:
-            return VStack {
+            VStack {
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }.eraseToAnyView()
         case .downloading:
-            return VStack(alignment: .center, spacing: 16) {
+            VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)
                     .font(muliRegular16)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -237,7 +237,7 @@ struct FirmwareView: View {
             .padding()
             .eraseToAnyView()
         case .listening:
-            return VStack {
+            VStack {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
@@ -296,7 +296,7 @@ struct FirmwareView: View {
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl):
-            return VStack {
+            VStack {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
@@ -325,7 +325,7 @@ struct FirmwareView: View {
                         }
                         Button(
                             action: {
-                                self.viewModel.send(
+                                viewModel.send(
                                     event: .onUserDidConfirmToFlash(
                                         latestRelease,
                                         currentRelease,
@@ -361,7 +361,7 @@ struct FirmwareView: View {
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case .flashing:
-            return VStack(alignment: .center, spacing: 24) {
+            VStack(alignment: .center, spacing: 24) {
                 Text(texts.updatingTitle)
                     .font(muliRegular16)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -375,7 +375,6 @@ struct FirmwareView: View {
                     .bold()
                     .multilineTextAlignment(.center)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
-
             }
             .frame(
                 maxWidth: .infinity,
@@ -385,7 +384,7 @@ struct FirmwareView: View {
             .padding()
             .eraseToAnyView()
         case .successfulyFlashed:
-            return VStack {
+            VStack {
                 Text(texts.successfulTitle)
                     .font(muliRegular16)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -397,7 +396,7 @@ struct FirmwareView: View {
                     .padding()
                 Button(
                     action: {
-                        self.viewModel.finish()
+                        viewModel.finish()
                     },
                     label: {
                         Text(texts.finish)
@@ -418,7 +417,7 @@ struct FirmwareView: View {
             .eraseToAnyView()
         }
     }
-    
+
     var body: some View {
         VStack {
             content
@@ -426,13 +425,13 @@ struct FirmwareView: View {
         .accentColor(.red)
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            self.viewModel.send(event: .onAppear)
+            viewModel.send(event: .onAppear)
         }
     }
 }
 
 private extension CGFloat {
     func adjustedFontSize() -> CGFloat {
-        return UIDevice.current.userInterfaceIdiom == .pad ? self + 4 : self
+        UIDevice.current.userInterfaceIdiom == .pad ? self + 4 : self
     }
 }

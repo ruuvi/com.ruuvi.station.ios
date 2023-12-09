@@ -1,7 +1,7 @@
-import UIKit
 import RuuviLocal
-import RuuviService
 import RuuviLocalization
+import RuuviService
+import UIKit
 
 protocol NotificationsSettingsModuleFactory {
     func create() -> NotificationsSettingsTableViewController

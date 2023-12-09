@@ -12,19 +12,19 @@ public protocol SensorSettings {
     var pressureOffsetDate: Date? { get }
 }
 
-extension SensorSettings {
-    public var id: String {
-        if let macId = macId {
-            return "\(macId.value)-settings"
-        } else if let luid = luid {
-            return "\(luid.value)-settings"
+public extension SensorSettings {
+    var id: String {
+        if let macId {
+            "\(macId.value)-settings"
+        } else if let luid {
+            "\(luid.value)-settings"
         } else {
             fatalError()
         }
     }
 
-    public func with(macId: MACIdentifier) -> SensorSettings {
-        return SensorSettingsStruct(
+    func with(macId: MACIdentifier) -> SensorSettings {
+        SensorSettingsStruct(
             luid: luid,
             macId: macId,
             temperatureOffset: temperatureOffset,

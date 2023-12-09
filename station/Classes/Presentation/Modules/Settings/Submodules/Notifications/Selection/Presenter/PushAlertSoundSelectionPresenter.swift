@@ -1,7 +1,7 @@
 import Foundation
-import UIKit
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
+import UIKit
 
 class PushAlertSoundSelectionPresenter: NSObject {
     weak var view: PushAlertSoundSelectionViewInput?
@@ -22,7 +22,8 @@ extension PushAlertSoundSelectionPresenter: PushAlertSoundSelectionViewOutput {
 
     func viewDidSelectItem(item: SelectionItemProtocol) {
         if let selectedSound = item as? RuuviAlertSound,
-            let viewModel = viewModel {
+           let viewModel
+        {
             settings.alertSound = selectedSound
             let updatedViewModel = PushAlertSoundSelectionViewModel(
                 title: viewModel.title,

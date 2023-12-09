@@ -1,10 +1,10 @@
-import Foundation
 import Combine
+import Foundation
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 public enum FlashResponse {

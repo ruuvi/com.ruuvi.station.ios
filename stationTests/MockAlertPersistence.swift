@@ -1,99 +1,118 @@
 import Foundation
 @testable import station
 class MockAlertPersistense: AlertPersistence {
-    func lowerHumidity(for uuid: String) -> Humidity? {
-        return nil
+    func lowerHumidity(for _: String) -> Humidity? {
+        nil
     }
 
-    func setLower(humidity: Humidity?, for uuid: String) {}
+    func setLower(humidity _: Humidity?, for _: String) {}
 
-    func upperHumidity(for uuid: String) -> Humidity? {
-        return nil
-    }
-
-    func setUpper(humidity: Humidity?, for uuid: String) {}
-
-    func humidityDescription(for uuid: String) -> String? {
-        return nil
+    func upperHumidity(for _: String) -> Humidity? {
+        nil
     }
 
-    func setHumidity(description: String?, for uuid: String) {}
+    func setUpper(humidity _: Humidity?, for _: String) {}
 
-    func alert(for uuid: String, of type: AlertType) -> AlertType? {
-        return .none
+    func humidityDescription(for _: String) -> String? {
+        nil
     }
-    func register(type: AlertType, for uuid: String) {}
-    func unregister(type: AlertType, for uuid: String) {}
-    func lowerCelsius(for uuid: String) -> Double? {
-        return nil
+
+    func setHumidity(description _: String?, for _: String) {}
+
+    func alert(for _: String, of _: AlertType) -> AlertType? {
+        .none
     }
-    func setLower(celsius: Double?, for uuid: String) {}
-    func upperCelsius(for uuid: String) -> Double? {
-        return nil
+
+    func register(type _: AlertType, for _: String) {}
+    func unregister(type _: AlertType, for _: String) {}
+    func lowerCelsius(for _: String) -> Double? {
+        nil
     }
-    func setUpper(celsius: Double?, for uuid: String) {}
-    func temperatureDescription(for uuid: String) -> String? {
-        return nil
+
+    func setLower(celsius _: Double?, for _: String) {}
+    func upperCelsius(for _: String) -> Double? {
+        nil
     }
-    func setTemperature(description: String?, for uuid: String) {}
-    func lowerRelativeHumidity(for uuid: String) -> Double? {
-        return nil
+
+    func setUpper(celsius _: Double?, for _: String) {}
+    func temperatureDescription(for _: String) -> String? {
+        nil
     }
-    func setLower(relativeHumidity: Double?, for uuid: String) {}
-    func upperRelativeHumidity(for uuid: String) -> Double? {
-        return nil
+
+    func setTemperature(description _: String?, for _: String) {}
+    func lowerRelativeHumidity(for _: String) -> Double? {
+        nil
     }
-    func setUpper(relativeHumidity: Double?, for uuid: String) {}
-    func relativeHumidityDescription(for uuid: String) -> String? {
-        return nil
+
+    func setLower(relativeHumidity _: Double?, for _: String) {}
+    func upperRelativeHumidity(for _: String) -> Double? {
+        nil
     }
-    func setRelativeHumidity(description: String?, for uuid: String) {}
-    func lowerAbsoluteHumidity(for uuid: String) -> Double? {
-        return nil
+
+    func setUpper(relativeHumidity _: Double?, for _: String) {}
+    func relativeHumidityDescription(for _: String) -> String? {
+        nil
     }
-    func setLower(absoluteHumidity: Double?, for uuid: String) {}
-    func upperAbsoluteHumidity(for uuid: String) -> Double? {
-        return nil
+
+    func setRelativeHumidity(description _: String?, for _: String) {}
+    func lowerAbsoluteHumidity(for _: String) -> Double? {
+        nil
     }
-    func setUpper(absoluteHumidity: Double?, for uuid: String) {}
-    func absoluteHumidityDescription(for uuid: String) -> String? {
-        return nil
+
+    func setLower(absoluteHumidity _: Double?, for _: String) {}
+    func upperAbsoluteHumidity(for _: String) -> Double? {
+        nil
     }
-    func setAbsoluteHumidity(description: String?, for uuid: String) {}
-    func lowerDewPointCelsius(for uuid: String) -> Double? {
-        return nil
+
+    func setUpper(absoluteHumidity _: Double?, for _: String) {}
+    func absoluteHumidityDescription(for _: String) -> String? {
+        nil
     }
-    func setLowerDewPoint(celsius: Double?, for uuid: String) {}
-    func upperDewPointCelsius(for uuid: String) -> Double? {
-        return nil
+
+    func setAbsoluteHumidity(description _: String?, for _: String) {}
+    func lowerDewPointCelsius(for _: String) -> Double? {
+        nil
     }
-    func setUpperDewPoint(celsius: Double?, for uuid: String) {}
-    func dewPointDescription(for uuid: String) -> String? {
-        return nil
+
+    func setLowerDewPoint(celsius _: Double?, for _: String) {}
+    func upperDewPointCelsius(for _: String) -> Double? {
+        nil
     }
-    func setDewPoint(description: String?, for uuid: String) {}
-    func lowerPressure(for uuid: String) -> Double? {
-        return nil
+
+    func setUpperDewPoint(celsius _: Double?, for _: String) {}
+    func dewPointDescription(for _: String) -> String? {
+        nil
     }
-    func setLower(pressure: Double?, for uuid: String) {}
-    func upperPressure(for uuid: String) -> Double? {
-        return nil
+
+    func setDewPoint(description _: String?, for _: String) {}
+    func lowerPressure(for _: String) -> Double? {
+        nil
     }
-    func setUpper(pressure: Double?, for uuid: String) {}
-    func pressureDescription(for uuid: String) -> String? {
-        return nil
+
+    func setLower(pressure _: Double?, for _: String) {}
+    func upperPressure(for _: String) -> Double? {
+        nil
     }
-    func setPressure(description: String?, for uuid: String) {}
-    func connectionDescription(for uuid: String) -> String? {
-        return nil
+
+    func setUpper(pressure _: Double?, for _: String) {}
+    func pressureDescription(for _: String) -> String? {
+        nil
     }
-    func setConnection(description: String?, for uuid: String) {}
-    func movementCounter(for uuid: String) -> Int? {
-        return nil
+
+    func setPressure(description _: String?, for _: String) {}
+    func connectionDescription(for _: String) -> String? {
+        nil
     }
-    func setMovement(counter: Int?, for uuid: String) {}
-    func movementDescription(for uuid: String) -> String? {
-        return nil
+
+    func setConnection(description _: String?, for _: String) {}
+    func movementCounter(for _: String) -> Int? {
+        nil
     }
-    func setMovement(description: String?, for uuid: String) {}
+
+    func setMovement(counter _: Int?, for _: String) {}
+    func movementDescription(for _: String) -> String? {
+        nil
+    }
+
+    func setMovement(description _: String?, for _: String) {}
 }

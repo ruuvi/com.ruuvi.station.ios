@@ -12,11 +12,12 @@ final class AboutPresenter: AboutModuleInput {
     var sqliteContext: SQLiteContext!
 
     private var viewModel: AboutViewModel {
-        return view.viewModel
+        view.viewModel
     }
 }
 
 // MARK: - AboutViewOutput
+
 extension AboutPresenter: AboutViewOutput {
     func viewDidLoad() {
         syncViewModel()
@@ -32,8 +33,8 @@ extension AboutPresenter: AboutViewOutput {
 }
 
 // MARK: - Private
-extension AboutPresenter {
 
+extension AboutPresenter {
     private func syncViewModel() {
         viewModel.version.value = appVersion
         obtainTagsCount()
@@ -43,7 +44,8 @@ extension AboutPresenter {
 
     private var appVersion: NSMutableAttributedString? {
         guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-            let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String  else {
+              let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        else {
             return nil
         }
         let changelogString = RuuviLocalization.changelog
@@ -107,12 +109,13 @@ extension AboutPresenter {
     }
 
     func getSQLiteFileSize() -> Int64 {
-        return fileSize(at: sqliteContext.database.dbPath)
+        fileSize(at: sqliteContext.database.dbPath)
     }
 
     func fileSize(at path: String) -> Int64 {
         guard let attributes = try? FileManager.default.attributesOfItem(atPath: path),
-           let fileSize = attributes[FileAttributeKey.size] as? Int64 else {
+              let fileSize = attributes[FileAttributeKey.size] as? Int64
+        else {
             return 0
         }
         return fileSize

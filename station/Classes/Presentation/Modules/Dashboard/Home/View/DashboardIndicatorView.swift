@@ -1,7 +1,6 @@
 import UIKit
 
 class DashboardIndicatorView: UIView {
-
     private lazy var indicatorValueLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorTextColor
@@ -27,12 +26,12 @@ class DashboardIndicatorView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     fileprivate func setUpUI() {
-
         addSubview(indicatorValueLabel)
         indicatorValueLabel.anchor(top: topAnchor,
                                    leading: leadingAnchor,
@@ -52,7 +51,7 @@ class DashboardIndicatorView: UIView {
             .topAnchor
             .constraint(
                 lessThanOrEqualTo: indicatorValueLabel.topAnchor,
-                        constant: 2
+                constant: 2
             ).isActive = true
 
         indicatorUnitLabel.trailingAnchor

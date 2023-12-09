@@ -6,7 +6,7 @@ open class RuuviDaemonWorker: NSObject {
 
     override public init() {}
 
-    @objc internal func runBlock() {
+    @objc func runBlock() {
         autoreleasepool {
             block?()
         }
@@ -23,7 +23,8 @@ open class RuuviDaemonWorker: NSObject {
             while !(self?.thread.isCancelled ?? true) {
                 RunLoop.current.run(
                     mode: RunLoop.Mode.default,
-                    before: Date.distantFuture)
+                    before: Date.distantFuture
+                )
             }
         }
         thread.name = "\(threadName)-\(UUID().uuidString)"

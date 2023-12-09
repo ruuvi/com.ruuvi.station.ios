@@ -1,7 +1,7 @@
-import XCTest
-import Quick
-import Nimble
 import Humidity
+import Nimble
+import Quick
+import XCTest
 
 @testable import station
 class AlertServiceSpec: QuickSpec {
@@ -15,15 +15,17 @@ class AlertServiceSpec: QuickSpec {
 
         alertService.calibrationService = MockCalibrationService()
         var uuid: String = UUID().uuidString
-        var randomDouble: Double = Double.random(in: -100...100)
-        var randomPercentDouble: Double = Double.random(in: 10...90)
+        var randomDouble = Double.random(in: -100 ... 100)
+        var randomPercentDouble = Double.random(in: 10 ... 90)
         let type: AlertType = .connection
         beforeEach {
-            randomPercentDouble = Double.random(in: 10...90)
-            randomDouble = Double.random(in: -100...100)
+            randomPercentDouble = Double.random(in: 10 ... 90)
+            randomDouble = Double.random(in: -100 ... 100)
             uuid = UUID().uuidString
         }
+
         // MARK: - Registration
+
         describe("Registration") {
             context("when register") {
                 it("must has registration") {
@@ -43,7 +45,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.register(type: type, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when unregister") {
@@ -64,11 +67,14 @@ class AlertServiceSpec: QuickSpec {
                         alertService.unregister(type: type, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - Temperature
+
         describe("Temperature") {
             context("when set lower") {
                 it("must return lower") {
@@ -81,7 +87,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setLower(celsius: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set upper") {
@@ -95,7 +102,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setUpper(celsius: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set description") {
@@ -110,11 +118,14 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setTemperature(description: uuid, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - Relative Humidity
+
         describe("Relative Humidity") {
             context("when set lower") {
                 it("must return lower") {
@@ -127,7 +138,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setLower(relativeHumidity: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set upper") {
@@ -141,7 +153,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setUpper(relativeHumidity: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set description") {
@@ -156,11 +169,14 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setRelativeHumidity(description: uuid, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - Absolute Humidity
+
         describe("Absolute Humidity") {
             context("when set lower") {
                 it("must return lower") {
@@ -173,7 +189,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setLower(absoluteHumidity: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set upper") {
@@ -187,7 +204,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set description") {
@@ -202,11 +220,14 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setAbsoluteHumidity(description: uuid, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - Dew Point
+
         describe("Dew Point") {
             context("when set lower") {
                 it("must return lower") {
@@ -219,7 +240,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setLowerDewPoint(celsius: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set upper") {
@@ -233,7 +255,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set description") {
@@ -248,11 +271,14 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setDewPoint(description: uuid, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - Pressure
+
         describe("Pressure") {
             context("when set lower") {
                 it("must return lower") {
@@ -265,7 +291,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setLower(pressure: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set upper") {
@@ -279,7 +306,8 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setUpper(pressure: randomDouble, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
             context("when set description") {
@@ -294,11 +322,14 @@ class AlertServiceSpec: QuickSpec {
                         alertService.setPressure(description: uuid, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - Connection
+
         describe("Connection") {
             context("when set description") {
                 it("must return description") {
@@ -310,11 +341,13 @@ class AlertServiceSpec: QuickSpec {
                 }
             }
         }
+
         // MARK: - Movement
+
         describe("Movement") {
             context("when set counter") {
                 it("must retur counter") {
-                    let randomInt: Int = Int(randomDouble)
+                    let randomInt: Int = .init(randomDouble)
                     alertService.setMovement(counter: randomInt, for: uuid)
                     expect(alertService.movementCounter(for: uuid)).to(equal(randomInt))
                 }
@@ -325,17 +358,20 @@ class AlertServiceSpec: QuickSpec {
                     expect(alertService.movementDescription(for: uuid)).to(equal(uuid))
                 }
                 it("must send notification AlertServiceAlertDidChange with type .movement(last: c)") {
-                    let randomInt: Int = Int(randomDouble)
+                    let randomInt: Int = .init(randomDouble)
                     alertService.alertPersistence.setMovement(counter: randomInt, for: uuid)
                     expect {
                         alertService.setMovement(description: uuid, for: uuid)
                     }.toEventually(
                         postNotifications(self.equalName(.AlertServiceAlertDidChange, for: uuid)
-                    ), timeout: self.notificationWaitTimeout)
+                        ), timeout: self.notificationWaitTimeout
+                    )
                 }
             }
         }
+
         // MARK: - HeartBeat
+
         describe("HeartBeat process") {
             context("temperature trigger") {
                 it("if less") {
@@ -491,7 +527,9 @@ class AlertServiceSpec: QuickSpec {
                 }
             }
         }
+
         // MARK: - WPSData
+
         describe("WPSData process") {
             context("temperature trigger") {
                 it("if less") {
@@ -499,7 +537,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: randomDouble - 10, humidity: nil, pressure: nil)
+                    let vTag: WPSData = .init(celsius: randomDouble - 10, humidity: nil, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -512,7 +550,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: randomDouble + 10, humidity: nil, pressure: nil)
+                    let vTag: WPSData = .init(celsius: randomDouble + 10, humidity: nil, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -528,7 +566,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: nil, humidity: randomPercentDouble - 10, pressure: nil)
+                    let vTag: WPSData = .init(celsius: nil, humidity: randomPercentDouble - 10, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -541,7 +579,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: nil, humidity: randomPercentDouble + 10, pressure: nil)
+                    let vTag: WPSData = .init(celsius: nil, humidity: randomPercentDouble + 10, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -560,7 +598,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: randomDouble, humidity: h.ah, pressure: nil)
+                    let vTag: WPSData = .init(celsius: randomDouble, humidity: h.ah, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -576,7 +614,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: randomDouble, humidity: h.rh, pressure: nil)
+                    let vTag: WPSData = .init(celsius: randomDouble, humidity: h.rh, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -593,7 +631,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: 30, humidity: h.rh, pressure: nil)
+                    let vTag: WPSData = .init(celsius: 30, humidity: h.rh, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -607,7 +645,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: 30, humidity: h.rh, pressure: nil)
+                    let vTag: WPSData = .init(celsius: 30, humidity: h.rh, pressure: nil)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -623,7 +661,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: nil, humidity: nil, pressure: randomDouble - 10)
+                    let vTag: WPSData = .init(celsius: nil, humidity: nil, pressure: randomDouble - 10)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -636,7 +674,7 @@ class AlertServiceSpec: QuickSpec {
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
-                    let vTag: WPSData = WPSData(celsius: nil, humidity: nil, pressure: randomDouble + 10)
+                    let vTag: WPSData = .init(celsius: nil, humidity: nil, pressure: randomDouble + 10)
                     alertService.process(data: vTag, for: uuid)
                     expect(fakeDelegate.uuid).toEventually(equal(uuid))
                     expect(fakeDelegate.service).toEventuallyNot(beNil())
@@ -648,8 +686,9 @@ class AlertServiceSpec: QuickSpec {
             }
         }
     }
+
     func equalName(_ expectedName: Notification.Name, for uuid: String) -> Predicate<[Notification]> {
-        return Predicate.define("equal <\(stringify(expectedName))>") { actualExpression, msg in
+        Predicate.define("equal <\(stringify(expectedName))>") { actualExpression, msg in
             guard let actualValue = try actualExpression.evaluate() else {
                 return PredicateResult(status: .fail, message: msg)
             }
@@ -662,7 +701,7 @@ class AlertServiceSpec: QuickSpec {
                     }
                     return userInfo[RuuviServiceAlertDidChangeKey.uuid] as? String == uuid
                 }
-                .compactMap { $0.name }
+                .compactMap(\.name)
             let matches = actualNames.contains(expectedName)
             return PredicateResult(bool: matches, message: msg)
         }

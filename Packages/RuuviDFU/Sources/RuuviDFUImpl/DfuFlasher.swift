@@ -1,11 +1,11 @@
+import Combine
 import Foundation
 import RuuviDFU
-import Combine
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 class DfuFlasher: NSObject {
@@ -44,7 +44,7 @@ class DfuFlasher: NSObject {
         return subject.eraseToAnyPublisher()
     }
 
-    func stopFlashFirmware(device: DFUDevice) -> Bool {
+    func stopFlashFirmware(device _: DFUDevice) -> Bool {
         guard let serviceController = dfuServiceController else {
             return false
         }
@@ -65,7 +65,7 @@ extension DfuFlasher: DFUServiceDelegate {
         }
     }
 
-    func dfuError(_ error: DFUError, didOccurWithMessage message: String) {
+    func dfuError(_: DFUError, didOccurWithMessage message: String) {
         subject?.send(completion: .failure(RuuviDfuError(description: message)))
     }
 }
@@ -74,8 +74,9 @@ extension DfuFlasher: DFUProgressDelegate {
     func dfuProgressDidChange(for part: Int,
                               outOf totalParts: Int,
                               to progress: Int,
-                              currentSpeedBytesPerSecond: Double,
-                              avgSpeedBytesPerSecond: Double) {
+                              currentSpeedBytesPerSecond _: Double,
+                              avgSpeedBytesPerSecond _: Double)
+    {
         guard let parts = firmware?.parts else {
             return
         }

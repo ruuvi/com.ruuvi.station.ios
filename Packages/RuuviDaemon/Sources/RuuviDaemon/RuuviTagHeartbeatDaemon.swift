@@ -1,9 +1,9 @@
 import Foundation
 import Future
 
-extension Notification.Name {
-    public static let RuuviTagHeartbeatDaemonDidFail = Notification.Name("RuuviTagHeartbeatDaemonDidFail")
-    public static let RuuviTagHeartBeatDaemonShouldRestart = Notification.Name("RuuviTagHeartBeatDaemonShouldRestart")
+public extension Notification.Name {
+    static let RuuviTagHeartbeatDaemonDidFail = Notification.Name("RuuviTagHeartbeatDaemonDidFail")
+    static let RuuviTagHeartBeatDaemonShouldRestart = Notification.Name("RuuviTagHeartBeatDaemonShouldRestart")
 }
 
 public enum RuuviTagHeartbeatDaemonDidFailKey: String {

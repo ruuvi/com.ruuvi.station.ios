@@ -1,5 +1,5 @@
-import RuuviLocalization
 import Foundation
+import RuuviLocalization
 import RuuviNotifier
 
 struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {

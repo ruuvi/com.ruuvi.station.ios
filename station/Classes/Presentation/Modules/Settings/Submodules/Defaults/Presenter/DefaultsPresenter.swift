@@ -47,6 +47,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
 }
 
 // MARK: - DefaultsViewOutput
+
 extension DefaultsPresenter: DefaultsViewOutput {
     func viewDidTriggerUseDevServer(useDevServer: Bool?) {
         changeRuuviCloudEndpoint(useDevServer: useDevServer)
@@ -54,6 +55,7 @@ extension DefaultsPresenter: DefaultsViewOutput {
 }
 
 // MARK: Private
+
 extension DefaultsPresenter {
     private func buildWelcomeShown() -> DefaultsViewModel {
         let welcomeShown = DefaultsViewModel()
@@ -246,7 +248,7 @@ extension DefaultsPresenter {
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
-            if let showChart = showChart {
+            if let showChart {
                 observer.settings.dashboardTapActionType = showChart ? .chart : .card
             }
         }
@@ -270,11 +272,12 @@ extension DefaultsPresenter {
         // local settings module for this since we load the whole Local settings in
         // the AppAssembly.
         bind(viewModel.boolean,
-             fire: false) { [weak self] _, useDevServer in
+             fire: false)
+        { [weak self] _, useDevServer in
             self?.view
                 .showEndpointChangeConfirmationDialog(
-                useDevServer: useDevServer
-            )
+                    useDevServer: useDevServer
+                )
         }
         return viewModel
     }
@@ -286,14 +289,14 @@ extension DefaultsPresenter {
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean,
-             fire: false) { observer, hideNFC in
+             fire: false)
+        { observer, hideNFC in
             observer.settings.hideNFCForSensorContest = hideNFC.bound
         }
         return viewModel
     }
 
     private func buildShowEmailAlertSettings() -> DefaultsViewModel {
-
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowEmailAlertsSettings.title
         viewModel.boolean.value = settings.showEmailAlertSettings
@@ -307,7 +310,6 @@ extension DefaultsPresenter {
     }
 
     private func buildShowPushAlertSettings() -> DefaultsViewModel {
-
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowPushAlertsSettings.title
         viewModel.boolean.value = settings.showPushAlertSettings
@@ -319,7 +321,6 @@ extension DefaultsPresenter {
 
         return viewModel
     }
-
 }
 
 extension DefaultsPresenter {

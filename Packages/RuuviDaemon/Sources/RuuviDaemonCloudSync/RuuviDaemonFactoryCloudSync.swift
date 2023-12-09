@@ -1,7 +1,7 @@
 import Foundation
+import RuuviDaemon
 import RuuviLocal
 import RuuviService
-import RuuviDaemon
 
 public final class RuuviDaemonFactoryImpl: RuuviDaemonFactory {
     public init() {}
@@ -11,7 +11,7 @@ public final class RuuviDaemonFactoryImpl: RuuviDaemonFactory {
         localSyncState: RuuviLocalSyncState,
         cloudSyncService: RuuviServiceCloudSync
     ) -> RuuviDaemonCloudSync {
-        return RuuviDaemonCloudSyncWorker(
+        RuuviDaemonCloudSyncWorker(
             localSettings: localSettings,
             localSyncState: localSyncState,
             cloudSyncService: cloudSyncService

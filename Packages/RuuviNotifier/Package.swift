@@ -9,32 +9,37 @@ let package = Package(
     products: [
         .library(
             name: "RuuviNotifier",
-            targets: ["RuuviNotifier"]),
+            targets: ["RuuviNotifier"]
+        ),
         .library(
             name: "RuuviNotifierImpl",
-            targets: ["RuuviNotifierImpl"])
+            targets: ["RuuviNotifierImpl"]
+        ),
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviService"),
-        .package(path: "../RuuviNotification")
+        .package(path: "../RuuviNotification"),
     ],
     targets: [
         .target(
             name: "RuuviNotifier",
             dependencies: [
                 "RuuviOntology",
-            ]),
+            ]
+        ),
         .target(
             name: "RuuviNotifierImpl",
             dependencies: [
                 "RuuviNotifier",
                 "RuuviOntology",
                 "RuuviService",
-                "RuuviNotification"
-            ]),
+                "RuuviNotification",
+            ]
+        ),
         .testTarget(
             name: "RuuviNotifierTests",
-            dependencies: ["RuuviNotifier"])
+            dependencies: ["RuuviNotifier"]
+        ),
     ]
 )

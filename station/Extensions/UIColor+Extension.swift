@@ -1,11 +1,10 @@
 import UIKit
 
 extension UIColor {
-
     convenience init(hex: Int, alpha: CGFloat = 1.0) {
-        self.init(red: CGFloat((hex>>16)&0xFF)/255.0,
-                  green: CGFloat((hex>>8)&0xFF)/255.0,
-                  blue: CGFloat((hex)&0xFF)/255.0,
+        self.init(red: CGFloat((hex >> 16) & 0xFF) / 255.0,
+                  green: CGFloat((hex >> 8) & 0xFF) / 255.0,
+                  blue: CGFloat(hex & 0xFF) / 255.0,
                   alpha: CGFloat(255 * alpha) / 255)
     }
 
@@ -26,11 +25,10 @@ extension UIColor {
                   blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
                   alpha: alpha)
     }
-
 }
 
 extension UIColor {
     static func rgb(r: CGFloat, g: CGFloat, b: CGFloat) -> UIColor {
-        return UIColor(red: r/255, green: g/255, blue: b/255, alpha: 1)
+        UIColor(red: r / 255, green: g / 255, blue: b / 255, alpha: 1)
     }
 }

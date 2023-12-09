@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocalization
+import UIKit
 
 // swiftlint:disable:next type_name
 protocol ChartSettingsStepperTableViewCellDelegate: AnyObject {
@@ -9,8 +9,8 @@ protocol ChartSettingsStepperTableViewCellDelegate: AnyObject {
 class ChartSettingsStepperTableViewCell: UITableViewCell {
     weak var delegate: ChartSettingsStepperTableViewCellDelegate?
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var stepper: UIStepper!
 
     var prefix: String = ""
 
@@ -19,7 +19,7 @@ class ChartSettingsStepperTableViewCell: UITableViewCell {
         stepper.layer.cornerRadius = 8
     }
 
-    @IBAction func stepperValueChanged(_ sender: Any) {
+    @IBAction func stepperValueChanged(_: Any) {
         let result = Int(stepper.value)
         let unitString: String = result > 1 ? RuuviLocalization.Interval.Days.string : RuuviLocalization.Interval.Day.string
         titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"

@@ -6,13 +6,13 @@ protocol SignInViewDelegate: NSObjectProtocol {
 }
 
 class SignInView: UIView {
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -102,7 +102,7 @@ extension SignInView {
         container.fillSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel
+            titleLabel, subtitleLabel,
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
@@ -122,7 +122,7 @@ extension SignInView {
 
     private func setUpTextFieldView() {
         let textFieldStack = UIStackView(arrangedSubviews: [
-            emailTextField, requestCodeButton
+            emailTextField, requestCodeButton,
         ])
         textFieldStack.axis = .vertical
         textFieldStack.distribution = .fillEqually
@@ -131,11 +131,11 @@ extension SignInView {
 
         container.addSubview(textFieldStack)
         textFieldStack.anchor(top: titleStack.bottomAnchor,
-                         leading: container.safeLeftAnchor,
-                         bottom: nil,
-                         trailing: container.safeRightAnchor,
-                         padding: .init(top: 30, left: !UIDevice.isTablet() ? 30 : 100,
-                                        bottom: 0, right: !UIDevice.isTablet() ? 30 : 100))
+                              leading: container.safeLeftAnchor,
+                              bottom: nil,
+                              trailing: container.safeRightAnchor,
+                              padding: .init(top: 30, left: !UIDevice.isTablet() ? 30 : 100,
+                                             bottom: 0, right: !UIDevice.isTablet() ? 30 : 100))
         textFieldStack.centerYInSuperview()
 
         container.addSubview(noPasswordLabel)
@@ -152,7 +152,7 @@ extension SignInView {
 }
 
 extension SignInView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
         emailTextField.resignFirstResponder()
     }
 }

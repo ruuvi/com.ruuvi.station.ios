@@ -1,7 +1,7 @@
 import Foundation
-import RuuviStorage
-import RuuviService
 import RuuviMigration
+import RuuviService
+import RuuviStorage
 
 class MigrationManagerSensorSettings: RuuviMigration {
     private let calibrationPersistence: CalibrationPersistence

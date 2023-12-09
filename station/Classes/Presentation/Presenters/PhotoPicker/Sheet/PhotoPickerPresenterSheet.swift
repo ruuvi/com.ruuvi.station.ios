@@ -1,7 +1,7 @@
-import UIKit
 import MobileCoreServices
 import RuuviCore
 import RuuviPresenters
+import UIKit
 
 class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     weak var delegate: PhotoPickerPresenterDelegate?
@@ -18,9 +18,11 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
 }
 
 // MARK: - UIImagePickerControllerDelegate
+
 extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any])
+    {
         picker.dismiss(animated: true, completion: { [weak self] in
             guard let sSelf = self else { return }
             if let photo = info[.originalImage] as? UIImage {
@@ -31,13 +33,13 @@ extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigati
 }
 
 // MARK: - Private
-extension PhotoPickerPresenterSheet {
 
+extension PhotoPickerPresenterSheet {
     private func checkPhotoLibraryPermission() {
         if permissionsManager.isPhotoLibraryPermissionGranted {
             showPhotoLibrary()
         } else {
-            permissionsManager.requestPhotoLibraryPermission { [weak self] (granted) in
+            permissionsManager.requestPhotoLibraryPermission { [weak self] granted in
                 if granted {
                     self?.showPhotoLibrary()
                 } else {
@@ -51,7 +53,7 @@ extension PhotoPickerPresenterSheet {
         if permissionsManager.isCameraPermissionGranted {
             showCamera()
         } else {
-            permissionsManager.requestCameraPermission { [weak self] (granted) in
+            permissionsManager.requestCameraPermission { [weak self] granted in
                 if granted {
                     self?.showCamera()
                 } else {
@@ -76,5 +78,4 @@ extension PhotoPickerPresenterSheet {
         vc.delegate = self
         viewController.present(vc, animated: true)
     }
-
 }

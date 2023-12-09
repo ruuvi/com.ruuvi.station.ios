@@ -1,7 +1,6 @@
 import UIKit
 
 class RuuviCustomButton: UIView {
-
     var image: UIImage? {
         didSet {
             iconView.image = image
@@ -24,17 +23,18 @@ class RuuviCustomButton: UIView {
         iconSize: CGSize = .init(width: 20, height: 20)
     ) {
         self.init()
-        self.iconView.image = icon
-        self.iconView.tintColor = tintColor
+        iconView.image = icon
+        iconView.tintColor = tintColor
         self.iconSize = iconSize
-        self.setUpUI()
+        setUpUI()
     }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

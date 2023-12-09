@@ -2,25 +2,28 @@ import BTKit
 import Humidity
 
 extension RuuviTagEnvLogFull {
-
     var unitTemperature: Temperature? {
-        return Temperature(value: temperature, unit: .celsius)
+        Temperature(value: temperature, unit: .celsius)
     }
+
     var unitHumidity: Humidity? {
-        return Humidity(relative: humidity / 100.0, temperature: unitTemperature)
+        Humidity(relative: humidity / 100.0, temperature: unitTemperature)
     }
+
     var unitPressure: Pressure? {
-        return Pressure(value: pressure, unit: .hectopascals)
+        Pressure(value: pressure, unit: .hectopascals)
     }
+
     var acceleration: Acceleration? {
-        return nil
+        nil
     }
+
     var unitVoltage: Voltage? {
-        return nil
+        nil
     }
 
     public func ruuviSensorRecord(uuid: String, mac: String?) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(
+        RuuviTagSensorRecordStruct(
             luid: uuid.luid,
             date: date,
             source: .log,

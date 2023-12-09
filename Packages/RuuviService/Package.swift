@@ -9,47 +9,60 @@ let package = Package(
     products: [
         .library(
             name: "RuuviService",
-            targets: ["RuuviService"]),
+            targets: ["RuuviService"]
+        ),
         .library(
             name: "RuuviServiceAlert",
-            targets: ["RuuviServiceAlert"]),
+            targets: ["RuuviServiceAlert"]
+        ),
         .library(
             name: "RuuviServiceAuth",
-            targets: ["RuuviServiceAuth"]),
+            targets: ["RuuviServiceAuth"]
+        ),
         .library(
             name: "RuuviServiceCloudNotification",
-            targets: ["RuuviServiceCloudNotification"]),
+            targets: ["RuuviServiceCloudNotification"]
+        ),
         .library(
             name: "RuuviServiceAppSettings",
-            targets: ["RuuviServiceAppSettings"]),
+            targets: ["RuuviServiceAppSettings"]
+        ),
         .library(
             name: "RuuviServiceCloudSync",
-            targets: ["RuuviServiceCloudSync"]),
+            targets: ["RuuviServiceCloudSync"]
+        ),
         .library(
             name: "RuuviServiceOffsetCalibration",
-            targets: ["RuuviServiceOffsetCalibration"]),
+            targets: ["RuuviServiceOffsetCalibration"]
+        ),
         .library(
             name: "RuuviServiceOwnership",
-            targets: ["RuuviServiceOwnership"]),
+            targets: ["RuuviServiceOwnership"]
+        ),
         .library(
             name: "RuuviServiceSensorProperties",
-            targets: ["RuuviServiceSensorProperties"]),
+            targets: ["RuuviServiceSensorProperties"]
+        ),
         .library(
             name: "RuuviServiceSensorRecords",
-            targets: ["RuuviServiceSensorRecords"]),
+            targets: ["RuuviServiceSensorRecords"]
+        ),
         .library(
             name: "RuuviServiceMeasurement",
-            targets: ["RuuviServiceMeasurement"]),
+            targets: ["RuuviServiceMeasurement"]
+        ),
         .library(
             name: "RuuviServiceExport",
-            targets: ["RuuviServiceExport"]),
+            targets: ["RuuviServiceExport"]
+        ),
         .library(
             name: "RuuviServiceGATT",
-            targets: ["RuuviServiceGATT"]),
+            targets: ["RuuviServiceGATT"]
+        ),
         .library(
             name: "RuuviServiceFactory",
             targets: ["RuuviServiceFactory"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
@@ -61,7 +74,7 @@ let package = Package(
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviRepository"),
-        .package(path: "../RuuviCore")
+        .package(path: "../RuuviCore"),
     ],
     targets: [
         .target(
@@ -74,19 +87,19 @@ let package = Package(
                 "RuuviPool",
                 "RuuviLocal",
                 "RuuviRepository",
-                "RuuviCore"
+                "RuuviCore",
             ]
         ),
         .target(
             name: "RuuviServiceAlert",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceAuth",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
@@ -96,56 +109,56 @@ let package = Package(
                 .product(
                     name: "RuuviCloudApi",
                     package: "RuuviCloud"
-                )
+                ),
             ]
         ),
         .target(
             name: "RuuviServiceAppSettings",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceCloudSync",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceOffsetCalibration",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceOwnership",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceSensorProperties",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceSensorRecords",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceExport",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceGATT",
             dependencies: [
                 "RuuviService",
-                "BTKit"
+                "BTKit",
             ]
         ),
         .target(
@@ -154,7 +167,7 @@ let package = Package(
                 "RuuviService",
                 "RuuviLocal",
                 "RuuviOntology",
-                "Humidity"
+                "Humidity",
             ]
         ),
         .target(
@@ -169,11 +182,12 @@ let package = Package(
                 "RuuviServiceOwnership",
                 "RuuviServiceSensorProperties",
                 "RuuviServiceSensorRecords",
-                "RuuviServiceCloudNotification"
+                "RuuviServiceCloudNotification",
             ]
         ),
         .testTarget(
             name: "RuuviServiceTests",
-            dependencies: ["RuuviService"])
+            dependencies: ["RuuviService"]
+        ),
     ]
 )

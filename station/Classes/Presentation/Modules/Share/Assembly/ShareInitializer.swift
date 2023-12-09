@@ -1,7 +1,7 @@
 import UIKit
 
 class ShareInitializer: NSObject {
-    @IBOutlet weak var viewController: ShareViewController!
+    @IBOutlet var viewController: ShareViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

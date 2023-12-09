@@ -1,15 +1,15 @@
 import UIKit
 
 class SwipeDownToDismissTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
-
     let interactionControllerForDismissal = SwipeDownToDismissInteractiveTransition()
 
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return SwipeDownToDismissTransitionAnimation()
+    func animationController(forDismissed _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        SwipeDownToDismissTransitionAnimation()
     }
 
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
-        -> UIViewControllerInteractiveTransitioning? {
-        return interactionControllerForDismissal.hasStarted ? interactionControllerForDismissal : nil
+    func interactionControllerForDismissal(using _: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning?
+    {
+        interactionControllerForDismissal.hasStarted ? interactionControllerForDismissal : nil
     }
 }

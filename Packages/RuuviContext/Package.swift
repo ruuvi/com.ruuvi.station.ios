@@ -18,26 +18,26 @@ let package = Package(
         .library(
             name: "RuuviContextSQLite",
             targets: ["RuuviContextSQLite"]
-        )
+        ),
     ],
     dependencies: [
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMajor(from: "10.8.0")),
         .package(path: "../RuuviOntology"),
-        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0"))
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
     ],
     targets: [
         .target(
             name: "RuuviContext",
             dependencies: [
                 .product(name: "RealmSwift", package: "Realm"),
-                .product(name: "GRDB", package: "GRDB")
+                .product(name: "GRDB", package: "GRDB"),
             ]
         ),
         .target(
             name: "RuuviContextRealm",
             dependencies: [
                 .product(name: "RealmSwift", package: "Realm"),
-                "RuuviContext"
+                "RuuviContext",
             ]
         ),
         .target(
@@ -46,11 +46,12 @@ let package = Package(
                 .product(name: "GRDB", package: "GRDB"),
                 .product(name: "RuuviOntologySQLite", package: "RuuviOntology"),
                 "RuuviOntology",
-                "RuuviContext"
+                "RuuviContext",
             ]
         ),
         .testTarget(
             name: "RuuviContextTests",
-            dependencies: ["RuuviContext"])
+            dependencies: ["RuuviContext"]
+        ),
     ]
 )

@@ -27,9 +27,9 @@ public protocol RuuviCloudQueuedRequest {
     var additionalData: Data? { get }
 }
 
-extension RuuviCloudQueuedRequest {
-    public func with(attempts: Int) -> RuuviCloudQueuedRequest {
-        return RuuviCloudQueuedRequestStruct(
+public extension RuuviCloudQueuedRequest {
+    func with(attempts: Int) -> RuuviCloudQueuedRequest {
+        RuuviCloudQueuedRequestStruct(
             id: id,
             type: type,
             status: status,
@@ -44,7 +44,6 @@ extension RuuviCloudQueuedRequest {
 }
 
 public struct RuuviCloudQueuedRequestStruct: RuuviCloudQueuedRequest {
-
     public var id: Int64?
     public var type: RuuviCloudQueuedRequestType?
     public var status: RuuviCloudQueuedRequestStatusType?

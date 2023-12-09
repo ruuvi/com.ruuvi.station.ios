@@ -1,21 +1,21 @@
-import Foundation
 import Combine
+import Foundation
 
 public enum DownloadResponse {
     case progress(Progress)
     case response(fileUrl: URL)
 }
 
-extension URLSession {
-    public func downloadTaskPublisher(for url: URL, progress: Progress) -> URLSession.DownloadTaskPublisher {
-        self.downloadTaskPublisher(for: .init(url: url), progress: progress)
+public extension URLSession {
+    func downloadTaskPublisher(for url: URL, progress: Progress) -> URLSession.DownloadTaskPublisher {
+        downloadTaskPublisher(for: .init(url: url), progress: progress)
     }
 
-    public func downloadTaskPublisher(for request: URLRequest, progress: Progress) -> URLSession.DownloadTaskPublisher {
+    func downloadTaskPublisher(for request: URLRequest, progress: Progress) -> URLSession.DownloadTaskPublisher {
         .init(request: request, session: self, progress: progress)
     }
 
-    public struct DownloadTaskPublisher: Publisher {
+    struct DownloadTaskPublisher: Publisher {
         public typealias Output = DownloadResponse
         public typealias Failure = URLError
 
@@ -31,12 +31,13 @@ extension URLSession {
 
         public func receive<S>(subscriber: S) where S: Subscriber,
             DownloadTaskPublisher.Failure == S.Failure,
-            DownloadTaskPublisher.Output == S.Input {
+            DownloadTaskPublisher.Output == S.Input
+        {
             let subscription = DownloadTaskSubscription(
                 subscriber: subscriber,
-                session: self.session,
-                request: self.request,
-                progress: self.progress
+                session: session,
+                request: request,
+                progress: progress
             )
             subscriber.receive(subscription: subscription)
         }
@@ -46,7 +47,8 @@ extension URLSession {
 extension URLSession {
     final class DownloadTaskSubscription<SubscriberType: Subscriber>: Subscription where
         SubscriberType.Input == DownloadResponse,
-        SubscriberType.Failure == URLError {
+        SubscriberType.Failure == URLError
+    {
         private var subscriber: SubscriberType?
         private weak var session: URLSession?
         private var request: URLRequest
@@ -77,7 +79,7 @@ extension URLSession {
             guard task == nil else {
                 return
             }
-            self.task = self.session?.downloadTask(with: request) { [weak self] url, response, error in
+            self.task = session?.downloadTask(with: request) { [weak self] url, response, error in
                 if let error = error as? URLError {
                     self?.subscriber?.receive(completion: .failure(error))
                     return
@@ -86,13 +88,13 @@ extension URLSession {
                     self?.subscriber?.receive(completion: .failure(URLError(.badServerResponse)))
                     return
                 }
-                guard let url = url else {
+                guard let url else {
                     self?.subscriber?.receive(completion: .failure(URLError(.badURL)))
                     return
                 }
                 do {
                     let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-                    let fileUrl = cacheDir.appendingPathComponent((UUID().uuidString))
+                    let fileUrl = cacheDir.appendingPathComponent(UUID().uuidString)
                     try FileManager.default.moveItem(atPath: url.path, toPath: fileUrl.path)
                     _ = self?.subscriber?.receive(.response(fileUrl: fileUrl))
                     self?.subscriber?.receive(completion: .finished)
@@ -100,7 +102,7 @@ extension URLSession {
                     self?.subscriber?.receive(completion: .failure(URLError(.cannotCreateFile)))
                 }
             }
-            guard let task = self.task else { return }
+            guard let task else { return }
             progress.addChild(task.progress, withPendingUnitCount: 1)
 
             observation = progress.observe(\.fractionCompleted) { [weak self] progress, _ in
@@ -111,7 +113,7 @@ extension URLSession {
         }
 
         func cancel() {
-            self.task?.cancel()
+            task?.cancel()
         }
     }
 }

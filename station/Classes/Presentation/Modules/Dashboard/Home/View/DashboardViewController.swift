@@ -1,13 +1,12 @@
-// swiftlint:disable file_length
-import UIKit
 import Humidity
-import RuuviOntology
 import RuuviLocal
 import RuuviLocalization
+import RuuviOntology
 import RuuviService
+// swiftlint:disable file_length
+import UIKit
 
 class DashboardViewController: UIViewController {
-
     // Configuration
     var output: DashboardViewOutput!
     var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
@@ -45,7 +44,8 @@ class DashboardViewController: UIViewController {
 
     private func cell(collectionView: UICollectionView,
                       indexPath: IndexPath,
-                      viewModel: CardsViewModel) -> UICollectionViewCell? {
+                      viewModel: CardsViewModel) -> UICollectionViewCell?
+    {
         switch dashboardType {
         case .image:
             let cell = collectionView.dequeueReusableCell(
@@ -74,7 +74,7 @@ class DashboardViewController: UIViewController {
 
     // UI
     private lazy var noSensorView: NoSensorView = {
-       let view = NoSensorView()
+        let view = NoSensorView()
         view.backgroundColor = RuuviColor.dashboardCardBGColor
         view.layer.cornerRadius = 12
         view.clipsToBounds = true
@@ -95,7 +95,7 @@ class DashboardViewController: UIViewController {
 
     // Action Buttons
     private lazy var menuButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = RuuviColor.menuButtonTintColor
         let menuImage = UIImage(named: "baseline_menu_white_48pt")
         button.setImage(menuImage, for: .normal)
@@ -108,13 +108,13 @@ class DashboardViewController: UIViewController {
     }()
 
     private lazy var viewButton: RuuviContextMenuButton =
-        RuuviContextMenuButton(menu: viewToggleMenuOptions(),
-                               titleColor: RuuviColor.dashboardIndicatorTextColor,
-                               title: RuuviLocalization.view,
-                               icon: RuuviAssets.dropDownArrowImage,
-                               iconTintColor: RuuviColor.logoTintColor,
-                               iconSize: .init(width: 14, height: 14),
-                               preccedingIcon: false)
+        .init(menu: viewToggleMenuOptions(),
+              titleColor: RuuviColor.dashboardIndicatorTextColor,
+              title: RuuviLocalization.view,
+              icon: RuuviAssets.dropDownArrowImage,
+              iconTintColor: RuuviColor.logoTintColor,
+              iconSize: .init(width: 14, height: 14),
+              preccedingIcon: false)
 
     // BODY
     private lazy var collectionView: UICollectionView = {
@@ -139,6 +139,7 @@ class DashboardViewController: UIViewController {
         rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         return rc
     }()
+
     private var tagNameTextField = UITextField()
     private let tagNameCharaterLimit: Int = 32
 
@@ -155,6 +156,7 @@ class DashboardViewController: UIViewController {
 }
 
 // MARK: - View lifecycle
+
 extension DashboardViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -183,31 +185,32 @@ extension DashboardViewController {
 
     override func viewWillTransition(to size: CGSize,
                                      with coordinator:
-                                     UIViewControllerTransitionCoordinator) {
+                                     UIViewControllerTransitionCoordinator)
+    {
         super.viewWillTransition(to: size, with: coordinator)
         reloadCollectionView(redrawLayout: true)
     }
 }
 
-extension DashboardViewController {
-    @objc fileprivate func handleMenuButtonTap() {
+private extension DashboardViewController {
+    @objc func handleMenuButtonTap() {
         output.viewDidTriggerMenu()
     }
 
     private func reloadCollectionView(redrawLayout: Bool = false) {
         DispatchQueue.main.async { [weak self] in
             if redrawLayout {
-                guard let self = self else { return }
-                let flowLayout = self.createLayout()
-                self.collectionView.setCollectionViewLayout(
+                guard let self else { return }
+                let flowLayout = createLayout()
+                collectionView.setCollectionViewLayout(
                     flowLayout,
                     animated: false,
                     completion: { _ in
                         guard self.viewModels.count > 0 else { return }
                         let indexPath = IndexPath(item: 0, section: 0)
                         self.collectionView.scrollToItem(at: indexPath,
-                                                          at: .top,
-                                                          animated: false)
+                                                         at: .top,
+                                                         animated: false)
                         self.collectionView.contentOffset.y = -8
                     }
                 )
@@ -216,19 +219,19 @@ extension DashboardViewController {
         }
     }
 
-    @objc fileprivate func didPullToRefresh() {
+    @objc func didPullToRefresh() {
         guard !isRefreshing else {
-          refresher.endRefreshing()
-          return
+            refresher.endRefreshing()
+            return
         }
         refresher.fadeIn()
         isRefreshing = true
         output.viewDidTriggerPullToRefresh()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
             self?.refresher.endRefreshing()
             self?.isRefreshing = false
             self?.refresher.fadeOut()
-        })
+        }
     }
 }
 
@@ -255,8 +258,8 @@ extension DashboardViewController {
         let cardTypeMenu = UIMenu(title: RuuviLocalization.cardType,
                                   options: .displayInline,
                                   children: [
-            imageViewTypeAction, simpleViewTypeAction
-        ])
+                                      imageViewTypeAction, simpleViewTypeAction,
+                                  ])
 
         // Card action
         let openSensorViewAction = UIAction(title: RuuviLocalization.openSensorView) {
@@ -277,13 +280,13 @@ extension DashboardViewController {
         let cardActionMenu = UIMenu(title: RuuviLocalization.cardAction,
                                     options: .displayInline,
                                     children: [
-            openSensorViewAction, openHistoryViewAction
-        ])
+                                        openSensorViewAction, openHistoryViewAction,
+                                    ])
 
         return UIMenu(
             title: "",
             children: [
-                cardTypeMenu, cardActionMenu
+                cardTypeMenu, cardActionMenu,
             ]
         )
     }
@@ -332,37 +335,38 @@ extension DashboardViewController {
         }
 
         var contextMenuActions: [UIAction] = [
-          fullImageViewAction,
-          historyViewAction,
-          settingsAction,
-          changeBackgroundAction,
-          renameAction
+            fullImageViewAction,
+            historyViewAction,
+            settingsAction,
+            changeBackgroundAction,
+            renameAction,
         ]
 
         let viewModel = viewModels[index]
         if let canShare = viewModel.canShareTag.value,
-           canShare {
-          contextMenuActions.append(shareSensorAction)
+           canShare
+        {
+            contextMenuActions.append(shareSensorAction)
         }
 
         return UIMenu(title: "", children: contextMenuActions)
     }
 }
 
-extension DashboardViewController {
-    fileprivate func setUpUI() {
+private extension DashboardViewController {
+    func setUpUI() {
         updateNavBarTitleFont()
         setUpBaseView()
         setUpHeaderView()
         setUpContentView()
     }
 
-    fileprivate func updateNavBarTitleFont() {
+    func updateNavBarTitleFont() {
         navigationController?.navigationBar.titleTextAttributes =
             [NSAttributedString.Key.font: UIFont.Muli(.bold, size: 18)]
     }
 
-    fileprivate func setUpBaseView() {
+    func setUpBaseView() {
         view.backgroundColor = RuuviColor.dashboardBGColor
 
         view.addSubview(noSensorView)
@@ -377,8 +381,7 @@ extension DashboardViewController {
         noSensorView.isHidden = true
     }
 
-    fileprivate func setUpHeaderView() {
-
+    func setUpHeaderView() {
         let leftBarButtonView = UIView(color: .clear)
 
         leftBarButtonView.addSubview(menuButton)
@@ -412,8 +415,7 @@ extension DashboardViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
     }
 
-    fileprivate func setUpContentView() {
-
+    func setUpContentView() {
         view.addSubview(collectionView)
         collectionView.anchor(top: view.safeTopAnchor,
                               leading: view.safeLeftAnchor,
@@ -430,7 +432,7 @@ extension DashboardViewController {
     }
 
     // swiftlint:disable:next function_body_length
-    fileprivate func createLayout() -> UICollectionViewLayout {
+    func createLayout() -> UICollectionViewLayout {
         var itemEstimatedHeight: CGFloat = 144
         switch dashboardType {
         case .image:
@@ -443,7 +445,7 @@ extension DashboardViewController {
 
         let sectionProvider = { (_: Int,
                                  _: NSCollectionLayoutEnvironment)
-            -> NSCollectionLayoutSection? in
+                -> NSCollectionLayoutSection? in
             let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
                 (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
                 (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
@@ -494,20 +496,23 @@ extension DashboardViewController {
             .default
             .addObserver(forName: UIApplication.didBecomeActiveNotification,
                          object: nil,
-                         queue: .main) { [weak self] _ in
-                self?.reloadCollectionView()
+                         queue: .main)
+        { [weak self] _ in
+            self?.reloadCollectionView()
         }
     }
 }
 
 extension DashboardViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        return viewModels.count
+    func collectionView(_: UICollectionView,
+                        numberOfItemsInSection _: Int) -> Int
+    {
+        viewModels.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
         guard let cell = cell(
             collectionView: collectionView,
             indexPath: indexPath,
@@ -520,43 +525,46 @@ extension DashboardViewController: UICollectionViewDataSource {
 }
 
 extension DashboardViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView,
+    func collectionView(_: UICollectionView,
                         contextMenuConfigurationForItemAt indexPath: IndexPath,
-                        point: CGPoint) -> UIContextMenuConfiguration? {
+                        point _: CGPoint) -> UIContextMenuConfiguration?
+    {
         configureContextMenu(index: indexPath.row)
     }
 
     func configureContextMenu(index: Int) -> UIContextMenuConfiguration {
         let context = UIContextMenuConfiguration(identifier: nil,
-                                                 previewProvider: nil) { [weak self]
-            (_) -> UIMenu? in
-            self?.highlightedViewModel = self?.viewModels[index]
-            return self?.cardContextMenuOption(for: index)
+                                                 previewProvider: nil)
+        { [weak self]
+            _ -> UIMenu? in
+                self?.highlightedViewModel = self?.viewModels[index]
+                return self?.cardContextMenuOption(for: index)
         }
         return context
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        willEndContextMenuInteraction
-                        configuration: UIContextMenuConfiguration,
-                        animator: UIContextMenuInteractionAnimating?
-    ) {
+    func collectionView(_: UICollectionView,
+                        willEndContextMenuInteraction _: UIContextMenuConfiguration,
+
+                        animator _: UIContextMenuInteractionAnimating?)
+    {
         highlightedViewModel = nil
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath)
+    {
         let viewModel = viewModels[indexPath.item]
         output.viewDidTriggerDashboardCard(for: viewModel)
     }
 
     func collectionView(
-        _ collectionView: UICollectionView,
+        _: UICollectionView,
         willDisplay cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
     ) {
         guard viewModels.count > 0,
-        indexPath.item < viewModels.count else { return }
+              indexPath.item < viewModels.count else { return }
         let viewModel = viewModels[indexPath.item]
         if let cell = cell as? DashboardImageCell {
             cell.restartAlertAnimation(for: viewModel)
@@ -576,19 +584,20 @@ extension DashboardViewController: UICollectionViewDelegate {
         }
     }
 
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    func scrollViewDidEndScrollingAnimation(_: UIScrollView) {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         isListRefreshable = true
     }
 }
 
 // MARK: - DashboardViewInput
-extension DashboardViewController: DashboardViewInput {
 
+extension DashboardViewController: DashboardViewInput {
     func applyUpdate(to viewModel: CardsViewModel) {
-        if let highlightedViewModel = highlightedViewModel,
-           (highlightedViewModel.luid.value != nil && highlightedViewModel.luid.value == viewModel.luid.value ||
-            highlightedViewModel.mac.value != nil && highlightedViewModel.mac.value == viewModel.mac.value) {
+        if let highlightedViewModel,
+           highlightedViewModel.luid.value != nil && highlightedViewModel.luid.value == viewModel.luid.value ||
+           highlightedViewModel.mac.value != nil && highlightedViewModel.mac.value == viewModel.mac.value
+        {
             return
         }
 
@@ -598,17 +607,19 @@ extension DashboardViewController: DashboardViewInput {
 
         if let index = viewModels.firstIndex(where: { vm in
             vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
-            vm.mac.value != nil && vm.mac.value == viewModel.mac.value
+                vm.mac.value != nil && vm.mac.value == viewModel.mac.value
         }) {
             let indexPath = IndexPath(item: index, section: 0)
             if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardImageCell {
+                .cellForItem(at: indexPath) as? DashboardImageCell
+            {
                 cell.configure(
                     with: viewModel, measurementService: measurementService
                 )
                 cell.restartAlertAnimation(for: viewModel)
             } else if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardPlainCell {
+                .cellForItem(at: indexPath) as? DashboardPlainCell
+            {
                 cell.configure(
                     with: viewModel, measurementService: measurementService
                 )
@@ -627,13 +638,14 @@ extension DashboardViewController: DashboardViewInput {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
                                         style: .default, handler: { _ in
-            guard let url = URL(string: userDeclined ?
-                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
-                  UIApplication.shared.canOpenURL(url) else {
-                return
-            }
-            UIApplication.shared.open(url)
-        }))
+                                            guard let url = URL(string: userDeclined ?
+                                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                                                UIApplication.shared.canOpenURL(url)
+                                            else {
+                                                return
+                                            }
+                                            UIApplication.shared.open(url)
+                                        }))
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -695,18 +707,18 @@ extension DashboardViewController: DashboardViewInput {
                                       message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
                                       preferredStyle: .alert)
         alert.addTextField { [weak self] alertTextField in
-            guard let self = self else { return }
+            guard let self else { return }
             alertTextField.delegate = self
             alertTextField.text = (defaultName == viewModel.name.value) ? nil : viewModel.name.value
             alertTextField.placeholder = defaultName
-            self.tagNameTextField = alertTextField
+            tagNameTextField = alertTextField
         }
         let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            if let name = self.tagNameTextField.text, !name.isEmpty {
-                self.output.viewDidRenameTag(to: name, viewModel: viewModel)
+            guard let self else { return }
+            if let name = tagNameTextField.text, !name.isEmpty {
+                output.viewDidRenameTag(to: name, viewModel: viewModel)
             } else {
-                self.output.viewDidRenameTag(to: defaultName, viewModel: viewModel)
+                output.viewDidRenameTag(to: defaultName, viewModel: viewModel)
             }
         }
         let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
@@ -732,31 +744,33 @@ extension DashboardViewController: DashboardCellDelegate {
 }
 
 extension DashboardViewController: NoSensorViewDelegate {
-    func didTapSignInButton(sender: NoSensorView) {
+    func didTapSignInButton(sender _: NoSensorView) {
         output.viewDidTriggerSignIn()
     }
 
-    func didTapAddSensorButton(sender: NoSensorView) {
+    func didTapAddSensorButton(sender _: NoSensorView) {
         output.viewDidTriggerAddSensors()
     }
 
-    func didTapBuySensorButton(sender: NoSensorView) {
+    func didTapBuySensorButton(sender _: NoSensorView) {
         output.viewDidTriggerBuySensors()
     }
 }
 
-extension DashboardViewController {
-    fileprivate func updateUI() {
+private extension DashboardViewController {
+    func updateUI() {
         showNoSensorsAddedMessage(show: viewModels.isEmpty)
         collectionView.reloadWithoutAnimation()
     }
 }
 
-    // MARK: - UITextFieldDelegate
+// MARK: - UITextFieldDelegate
+
 extension DashboardViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn
-                   range: NSRange,
-                   replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+
+                   replacementString string: String) -> Bool
+    {
         guard let text = textField.text else {
             return true
         }

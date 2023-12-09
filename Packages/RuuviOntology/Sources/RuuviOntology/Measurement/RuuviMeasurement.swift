@@ -3,15 +3,17 @@ import Humidity
 
 public struct RuuviMeasurement {
     public var id: String {
-        if let macId = macId,
-            !macId.value.isEmpty {
-            return macId.value
-        } else if let luid = luid {
-            return luid.value
+        if let macId,
+           !macId.value.isEmpty
+        {
+            macId.value
+        } else if let luid {
+            luid.value
         } else {
             fatalError()
         }
     }
+
     public var luid: LocalIdentifier?
     public var macId: MACIdentifier?
     public var measurementSequenceNumber: Int?

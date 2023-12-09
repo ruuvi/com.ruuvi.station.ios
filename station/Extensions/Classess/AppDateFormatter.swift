@@ -29,15 +29,15 @@ class AppDateFormatter {
 
 extension AppDateFormatter {
     func ruuviAgoString(from date: Date) -> String {
-        return ruuviAgoFormatter.string(from: date)
+        ruuviAgoFormatter.string(from: date)
     }
 
     func shortTimeString(from date: Date) -> String {
-        return shortTimeFormatter.string(from: date)
+        shortTimeFormatter.string(from: date)
     }
 
     func graphXAxisTimeString(from date: Date) -> String {
-        return shortTimeFormatter.string(from: date)
+        shortTimeFormatter.string(from: date)
     }
 
     func graphXAxisDateString(from date: Date) -> String {

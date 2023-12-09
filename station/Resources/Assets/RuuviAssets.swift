@@ -1,6 +1,6 @@
 import UIKit
 
-struct RuuviAssets {
+enum RuuviAssets {
     static let alertActiveImage = UIImage(named: "icon-alert-active")
     static let alertOffImage = UIImage(named: "icon-alert-off")
     static let alertOnImage = UIImage(named: "icon-alert-on")

@@ -1,6 +1,6 @@
+import BTKit
 import Foundation
 import Future
-import BTKit
 import RuuviOntology
 
 protocol TagChartsViewInteractorInput: AnyObject {

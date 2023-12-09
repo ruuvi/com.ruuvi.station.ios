@@ -12,8 +12,8 @@ class UnitSettingsRouter: UnitSettingsRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: SelectionModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ module in
+            .then { module in
                 module.configure(viewModel: viewModel, output: output)
-            })
+            }
     }
 }

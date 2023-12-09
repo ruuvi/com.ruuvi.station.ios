@@ -9,8 +9,8 @@ class DefaultsStepperTableViewCell: UITableViewCell {
     weak var delegate: DefaultsStepperTableViewCellDelegate?
     var unit: DefaultsIntegerUnit = .seconds
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var stepper: UIStepper!
 
     var prefix: String = ""
 
@@ -19,18 +19,17 @@ class DefaultsStepperTableViewCell: UITableViewCell {
         stepper.layer.cornerRadius = 8
     }
 
-    @IBAction func stepperValueChanged(_ sender: Any) {
+    @IBAction func stepperValueChanged(_: Any) {
         let result = Int(stepper.value)
-        let unitString: String
-        switch unit {
+        let unitString: String = switch unit {
         case .hours:
-            unitString = RuuviLocalization.Defaults.Interval.Hour.string
+            RuuviLocalization.Defaults.Interval.Hour.string
         case .minutes:
-            unitString = RuuviLocalization.Defaults.Interval.Min.string
+            RuuviLocalization.Defaults.Interval.Min.string
         case .seconds:
-            unitString = RuuviLocalization.Defaults.Interval.Sec.string
+            RuuviLocalization.Defaults.Interval.Sec.string
         case .decimal:
-            unitString = ""
+            ""
         }
         switch unit {
         case .hours, .minutes, .seconds:

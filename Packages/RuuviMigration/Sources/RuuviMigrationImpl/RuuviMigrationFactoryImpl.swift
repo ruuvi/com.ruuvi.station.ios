@@ -1,9 +1,9 @@
-import RuuviLocal
-import RuuviPool
 import RuuviContext
-import RuuviStorage
-import RuuviService
+import RuuviLocal
 import RuuviMigration
+import RuuviPool
+import RuuviService
+import RuuviStorage
 
 public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let settings: RuuviLocalSettings

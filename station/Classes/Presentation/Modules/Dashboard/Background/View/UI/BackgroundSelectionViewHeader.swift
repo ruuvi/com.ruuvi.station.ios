@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocalization
+import UIKit
 
 enum SelectionMode {
     case camera
@@ -11,7 +11,6 @@ protocol BackgroundSelectionViewHeaderDelegate: NSObjectProtocol {
 }
 
 class BackgroundSelectionViewHeader: UICollectionReusableView {
-
     weak var delegate: BackgroundSelectionViewHeaderDelegate?
 
     private lazy var descriptionLabel: UILabel = {
@@ -28,11 +27,13 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
     lazy var takePhotoButton = BackgroundSelectionButtonView(
         title: RuuviLocalization.takePhoto,
         icon: "camera.fill",
-        delegate: self)
+        delegate: self
+    )
     lazy var selectFromGalleryButton = BackgroundSelectionButtonView(
         title: RuuviLocalization.selectFromGallery,
         icon: "photo",
-        delegate: self)
+        delegate: self
+    )
 
     private lazy var selectFromDefaultLabel: UILabel = {
         let label = UILabel()
@@ -49,13 +50,14 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension BackgroundSelectionViewHeader {
-    fileprivate func setUpUI() {
+private extension BackgroundSelectionViewHeader {
+    func setUpUI() {
         backgroundColor = .clear
 
         addSubview(descriptionLabel)
@@ -92,10 +94,10 @@ extension BackgroundSelectionViewHeader {
 
         addSubview(selectFromDefaultLabel)
         selectFromDefaultLabel.anchor(top: selectFromGalleryButton.bottomAnchor,
-                                       leading: seprator.leadingAnchor,
-                                       bottom: safeBottomAnchor,
-                                       trailing: seprator.trailingAnchor,
-                                       size: .init(width: 0, height: 44))
+                                      leading: seprator.leadingAnchor,
+                                      bottom: safeBottomAnchor,
+                                      trailing: seprator.trailingAnchor,
+                                      size: .init(width: 0, height: 44))
     }
 }
 

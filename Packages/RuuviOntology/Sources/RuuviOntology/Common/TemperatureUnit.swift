@@ -8,24 +8,24 @@ public enum TemperatureUnit {
     public var unitTemperature: UnitTemperature {
         switch self {
         case .celsius:
-            return .celsius
+            .celsius
         case .fahrenheit:
-            return .fahrenheit
+            .fahrenheit
         case .kelvin:
-            return .kelvin
+            .kelvin
         }
     }
 
     public var symbol: String {
-        return unitTemperature.symbol
+        unitTemperature.symbol
     }
 }
 
 // defaults range of temperature
-extension TemperatureUnit {
-    public var alertRange: Range<Double> {
-        let lowerTemp = Temperature(value: -40, unit: .celsius).converted(to: self.unitTemperature).value
-        let upperTemp = Temperature(value: 85, unit: .celsius).converted(to: self.unitTemperature).value
+public extension TemperatureUnit {
+    var alertRange: Range<Double> {
+        let lowerTemp = Temperature(value: -40, unit: .celsius).converted(to: unitTemperature).value
+        let upperTemp = Temperature(value: 85, unit: .celsius).converted(to: unitTemperature).value
         return .init(uncheckedBounds: (lowerTemp, upperTemp))
     }
 }

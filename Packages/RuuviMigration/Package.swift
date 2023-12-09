@@ -9,10 +9,12 @@ let package = Package(
     products: [
         .library(
             name: "RuuviMigration",
-            targets: ["RuuviMigration"]),
+            targets: ["RuuviMigration"]
+        ),
         .library(
             name: "RuuviMigrationImpl",
-            targets: ["RuuviMigrationImpl"])
+            targets: ["RuuviMigrationImpl"]
+        ),
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
@@ -20,12 +22,13 @@ let package = Package(
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviContext"),
         .package(path: "../RuuviStorage"),
-        .package(path: "../RuuviService")
+        .package(path: "../RuuviService"),
     ],
     targets: [
         .target(
             name: "RuuviMigration",
-            dependencies: []),
+            dependencies: []
+        ),
         .target(
             name: "RuuviMigrationImpl",
             dependencies: [
@@ -36,9 +39,11 @@ let package = Package(
                 "RuuviStorage",
                 "RuuviService",
                 .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
-            ]),
+            ]
+        ),
         .testTarget(
             name: "RuuviMigrationTests",
-            dependencies: ["RuuviMigration"])
+            dependencies: ["RuuviMigration"]
+        ),
     ]
 )

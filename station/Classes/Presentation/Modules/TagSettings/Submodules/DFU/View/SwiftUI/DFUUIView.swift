@@ -1,6 +1,6 @@
 import RuuviFirmware
-import SwiftUI
 import RuuviLocalization
+import SwiftUI
 
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
@@ -61,10 +61,10 @@ struct DFUUIView: View {
             }
         })
         .onAppear {
-            self.viewModel.send(event: .onAppear)
+            viewModel.send(event: .onAppear)
         }
         .onDisappear {
-            self.viewModel.restartPropertiesDaemon()
+            viewModel.restartPropertiesDaemon()
         }
     }
 
@@ -86,7 +86,7 @@ struct DFUUIView: View {
             )
             .padding()
             .eraseToAnyView()
-        case .error(let error):
+        case let .error(error):
             return Text(error.localizedDescription)
                 .font(muliRegular16)
                 .eraseToAnyView()
@@ -109,7 +109,7 @@ struct DFUUIView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { self.viewModel.send(event: .onLoaded(latestRelease)) }
+            .onAppear { viewModel.send(event: .onLoaded(latestRelease)) }
             .eraseToAnyView()
         case let .serving(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
@@ -158,9 +158,9 @@ struct DFUUIView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
+            .onAppear { viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
-        case .noNeedToUpgrade(_, let currentRelease):
+        case let .noNeedToUpgrade(_, currentRelease):
             return Text(texts.alreadyOnLatest)
                 .font(muliRegular16)
                 .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -170,7 +170,7 @@ struct DFUUIView: View {
                     alignment: .topLeading
                 )
                 .padding()
-                .onAppear { self.viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
+                .onAppear { viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
                 .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {
@@ -195,7 +195,7 @@ struct DFUUIView: View {
                     }
                     Button(
                         action: {
-                            self.viewModel.send(
+                            viewModel.send(
                                 event: .onStartUpgrade(latestRelease, currentRelease)
                             )
                         },
@@ -346,7 +346,7 @@ struct DFUUIView: View {
                         }
                         Button(
                             action: {
-                                self.viewModel.send(
+                                viewModel.send(
                                     event: .onUserDidConfirmToFlash(
                                         latestRelease,
                                         currentRelease,
@@ -396,7 +396,6 @@ struct DFUUIView: View {
                     .bold()
                     .multilineTextAlignment(.center)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
-
             }
             .frame(
                 maxWidth: .infinity,
@@ -427,7 +426,7 @@ struct DFUUIView: View {
                 )
                 .padding()
                 .eraseToAnyView()
-        case .firmwareAfterUpdate(let currentRelease):
+        case let .firmwareAfterUpdate(currentRelease):
             viewModel.storeUpdatedFirmware(currentRelease: currentRelease)
             return Text(texts.successfulTitle)
                 .font(muliRegular16)
@@ -443,6 +442,6 @@ struct DFUUIView: View {
     }
 
     func goBack() {
-        self.presentationMode.wrappedValue.dismiss()
+        presentationMode.wrappedValue.dismiss()
     }
 }

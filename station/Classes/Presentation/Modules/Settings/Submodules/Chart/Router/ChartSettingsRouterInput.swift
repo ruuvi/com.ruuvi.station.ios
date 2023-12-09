@@ -1,4 +1,3 @@
 import Foundation
 
-protocol ChartSettingsRouterInput {
-}
+protocol ChartSettingsRouterInput {}

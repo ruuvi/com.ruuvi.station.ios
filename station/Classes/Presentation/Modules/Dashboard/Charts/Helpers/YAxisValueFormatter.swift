@@ -1,5 +1,5 @@
-import Foundation
 import Charts
+import Foundation
 
 public class YAxisValueFormatter: NSObject, AxisValueFormatter {
     private let numberFormatter = NumberFormatter()
@@ -12,7 +12,7 @@ public class YAxisValueFormatter: NSObject, AxisValueFormatter {
         numberFormatter.maximumFractionDigits = 1
     }
 
-    public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+    public func stringForValue(_ value: Double, axis _: AxisBase?) -> String {
         guard let value = numberFormatter.string(from: NSNumber(value: value)) else {
             return ""
         }

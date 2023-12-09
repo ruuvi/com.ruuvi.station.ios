@@ -1,18 +1,18 @@
 import Foundation
-import RuuviOntology
 import RealmSwift
+import RuuviOntology
 
 extension RuuviTagRealm: RuuviTagSensor {
     public var luid: LocalIdentifier? {
-        return uuid.luid
+        uuid.luid
     }
 
     public var macId: MACIdentifier? {
-        return mac?.mac
+        mac?.mac
     }
 
     public var any: AnyRuuviTagSensor {
-        return AnyRuuviTagSensor(
+        AnyRuuviTagSensor(
             object: RuuviTagSensorStruct(
                 version: version,
                 firmwareVersion: firmwareVersion,
@@ -32,24 +32,30 @@ extension RuuviTagRealm: RuuviTagSensor {
     }
 
     public var isClaimed: Bool {
-        return false
+        false
     }
+
     public var owner: String? {
-        return nil
+        nil
     }
+
     public var ownersPlan: String? {
-        return nil
+        nil
     }
+
     public var isCloudSensor: Bool? {
-        return false
+        false
     }
+
     public var firmwareVersion: String? {
-        return nil
+        nil
     }
+
     public var canShare: Bool {
-        return false
+        false
     }
+
     public var sharedTo: [String] {
-        return []
+        []
     }
 }

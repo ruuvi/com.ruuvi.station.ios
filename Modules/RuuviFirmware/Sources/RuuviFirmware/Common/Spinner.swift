@@ -9,14 +9,14 @@ public struct Spinner: UIViewRepresentable {
         self.isAnimating = isAnimating
         self.style = style
     }
-    
-    public func makeUIView(context: Context) -> UIActivityIndicatorView {
+
+    public func makeUIView(context _: Context) -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView(style: style)
         spinner.hidesWhenStopped = true
         return spinner
     }
 
-    public func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+    public func updateUIView(_ uiView: UIActivityIndicatorView, context _: Context) {
         if isAnimating {
             uiView.startAnimating()
         } else {

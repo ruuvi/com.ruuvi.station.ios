@@ -1,6 +1,6 @@
-import Foundation
 import BTKit
 import Charts
+import Foundation
 import RuuviLocal
 import RuuviOntology
 

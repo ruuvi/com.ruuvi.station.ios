@@ -6,7 +6,6 @@ protocol BackgroundSelectionUploadProgressViewDelegate: NSObjectProtocol {
 }
 
 class BackgroundSelectionUploadProgressView: UIView {
-
     weak var delegate: BackgroundSelectionUploadProgressViewDelegate?
 
     lazy var progressLabel: UILabel = {
@@ -35,37 +34,38 @@ class BackgroundSelectionUploadProgressView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension BackgroundSelectionUploadProgressView {
-    fileprivate func setUpUI() {
+private extension BackgroundSelectionUploadProgressView {
+    func setUpUI() {
         backgroundColor = RuuviColor.ruuviGraphBGColor
         layer.cornerRadius = 4
         clipsToBounds = true
 
         addSubview(progressLabel)
         progressLabel.anchor(top: topAnchor,
-                          leading: safeLeftAnchor,
-                          bottom: bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 8,
-                                         left: 8,
-                                         bottom: 8,
-                                         right: 0))
+                             leading: safeLeftAnchor,
+                             bottom: bottomAnchor,
+                             trailing: nil,
+                             padding: .init(top: 8,
+                                            left: 8,
+                                            bottom: 8,
+                                            right: 0))
 
         addSubview(cancelButton)
         cancelButton.anchor(top: nil,
-                          leading: progressLabel.trailingAnchor,
-                          bottom: nil,
-                          trailing: safeRightAnchor,
-                          padding: .init(top: 0,
-                                         left: 24,
-                                         bottom: 8,
-                                         right: 8),
-                          size: .init(width: 24, height: 24))
+                            leading: progressLabel.trailingAnchor,
+                            bottom: nil,
+                            trailing: safeRightAnchor,
+                            padding: .init(top: 0,
+                                           left: 24,
+                                           bottom: 8,
+                                           right: 8),
+                            size: .init(width: 24, height: 24))
         cancelButton.centerYInSuperview()
     }
 }

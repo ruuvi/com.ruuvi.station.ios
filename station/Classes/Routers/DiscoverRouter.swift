@@ -1,7 +1,7 @@
+import BTKit
 import Foundation
 import RuuviDiscover
 import RuuviOntology
-import BTKit
 import UIKit
 
 protocol DiscoverRouterDelegate: AnyObject {
@@ -14,36 +14,38 @@ protocol DiscoverRouterDelegate: AnyObject {
 
 final class DiscoverRouter {
     var viewController: UIViewController {
-        return self.discover.viewController
+        self.discover.viewController
     }
+
     weak var delegate: DiscoverRouterDelegate?
 
     // modules
     private var discover: RuuviDiscover {
-        if let discover = self.weakDiscover {
+        if let discover = weakDiscover {
             return discover
         } else {
             let r = AppAssembly.shared.assembler.resolver
             let discover = r.resolve(RuuviDiscover.self)!
             discover.router = self
             discover.output = self
-            self.weakDiscover = discover
+            weakDiscover = discover
             return discover
         }
     }
+
     private weak var weakDiscover: RuuviDiscover?
 }
 
 extension DiscoverRouter: RuuviDiscoverOutput {
-    func ruuviDiscoverWantsClose(_ ruuviDiscover: RuuviDiscover) {
+    func ruuviDiscoverWantsClose(_: RuuviDiscover) {
         delegate?.discoverRouterWantsClose(self)
     }
 
-    func ruuvi(discover: RuuviDiscover, didAdd ruuviTag: AnyRuuviTagSensor) {
+    func ruuvi(discover _: RuuviDiscover, didAdd _: AnyRuuviTagSensor) {
         delegate?.discoverRouterWantsClose(self)
     }
 
-    func ruuvi(discover: RuuviDiscover, didSelectFromNFC ruuviTag: RuuviTagSensor) {
+    func ruuvi(discover _: RuuviDiscover, didSelectFromNFC ruuviTag: RuuviTagSensor) {
         delegate?.discoverRouterWantsCloseWithRuuviTagNavigation(self, ruuviTag: ruuviTag)
     }
 }

@@ -7,20 +7,20 @@ public enum ActivityPresenterState: Equatable {
     case dismiss
 
     public static func == (
-        lhs: ActivityPresenterState, 
+        lhs: ActivityPresenterState,
         rhs: ActivityPresenterState
     ) -> Bool {
         switch (lhs, rhs) {
-        case (.loading(let lhsMessage), .loading(let rhsMessage)):
-            return lhsMessage == rhsMessage
-        case (.success(let lhsMessage), .success(let rhsMessage)):
-            return lhsMessage == rhsMessage
-        case (.failed(let lhsMessage), .failed(let rhsMessage)):
-            return lhsMessage == rhsMessage
+        case let (.loading(lhsMessage), .loading(rhsMessage)):
+            lhsMessage == rhsMessage
+        case let (.success(lhsMessage), .success(rhsMessage)):
+            lhsMessage == rhsMessage
+        case let (.failed(lhsMessage), .failed(rhsMessage)):
+            lhsMessage == rhsMessage
         case (.dismiss, .dismiss):
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 }

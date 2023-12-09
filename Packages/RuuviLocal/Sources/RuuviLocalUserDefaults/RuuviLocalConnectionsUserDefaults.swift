@@ -1,15 +1,14 @@
 import Foundation
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
 
 final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
-
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
 
     var keepConnectionUUIDs: [AnyLocalIdentifier] {
         let strings = prefs.array(forKey: keepConnectionArrayUDKey) as? [String]
-        return strings?.map({ $0.luid.any }) ?? []
+        return strings?.map(\.luid.any) ?? []
     }
 
     func keepConnection(to luid: LocalIdentifier) -> Bool {
@@ -27,13 +26,14 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
         assert(uuid.count == 36)
         if value {
             if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String],
-                !array.contains(uuid) {
+               !array.contains(uuid)
+            {
                 array.append(uuid)
                 prefs.set(array, forKey: keepConnectionArrayUDKey)
                 NotificationCenter.default.post(name: .ConnectionPersistenceDidStartToKeepConnection,
                                                 object: nil,
                                                 userInfo:
-                    [CPDidStartToKeepConnectionKey.uuid: uuid])
+                                                [CPDidStartToKeepConnectionKey.uuid: uuid])
             } else {
                 var array = [String]()
                 array.append(uuid)
@@ -41,7 +41,7 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
                 NotificationCenter.default.post(name: .ConnectionPersistenceDidStartToKeepConnection,
                                                 object: nil,
                                                 userInfo:
-                    [CPDidStartToKeepConnectionKey.uuid: uuid])
+                                                [CPDidStartToKeepConnectionKey.uuid: uuid])
             }
         } else {
             if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
@@ -50,7 +50,7 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
                 NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,
                                                 object: nil,
                                                 userInfo:
-                    [CPDidStopToKeepConnectionKey.uuid: uuid])
+                                                [CPDidStopToKeepConnectionKey.uuid: uuid])
             }
         }
     }
@@ -61,7 +61,7 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
                 NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,
                                                 object: nil,
                                                 userInfo:
-                    [CPDidStopToKeepConnectionKey.uuid: uuid])
+                                                [CPDidStopToKeepConnectionKey.uuid: uuid])
             }
             array.removeAll()
             prefs.set(array, forKey: keepConnectionArrayUDKey)

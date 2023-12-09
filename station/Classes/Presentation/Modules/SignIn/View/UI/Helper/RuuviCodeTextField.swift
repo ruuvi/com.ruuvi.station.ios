@@ -9,5 +9,4 @@ class RuuviCodeTextField: UITextField {
         text = ""
         previousEntry?.becomeFirstResponder()
     }
-
 }

@@ -1,5 +1,5 @@
-import UIKit
 import RuuviLocal
+import UIKit
 
 protocol PushAlertSoundSelectionModuleFactory {
     func create(with title: String) -> PushAlertSoundSelectionTableViewController

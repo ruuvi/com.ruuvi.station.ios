@@ -1,10 +1,10 @@
 import Foundation
 import RuuviCloud
-import RuuviService
-import RuuviUser
-import RuuviPresenters
 import RuuviDaemon
 import RuuviLocal
+import RuuviPresenters
+import RuuviService
+import RuuviUser
 
 protocol SignInModuleFactory: AnyObject {
     func create() -> SignInViewController

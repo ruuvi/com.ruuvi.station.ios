@@ -3,24 +3,25 @@ import Foundation
 
 public protocol RuuviTagSensor: PhysicalSensor, Versionable, Claimable, Connectable, Nameable, Shareable {}
 
-extension RuuviTagSensor {
-    public var id: String {
-        if let macId = macId,
-            !macId.value.isEmpty {
-            return macId.value
-        } else if let luid = luid {
-            return luid.value
+public extension RuuviTagSensor {
+    var id: String {
+        if let macId,
+           !macId.value.isEmpty
+        {
+            macId.value
+        } else if let luid {
+            luid.value
         } else {
             fatalError()
         }
     }
 
-    public var any: AnyRuuviTagSensor {
-        return AnyRuuviTagSensor(object: self)
+    var any: AnyRuuviTagSensor {
+        AnyRuuviTagSensor(object: self)
     }
 
-    public var `struct`: RuuviTagSensorStruct {
-        return RuuviTagSensorStruct(
+    var `struct`: RuuviTagSensorStruct {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -37,8 +38,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(isClaimed: Bool) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(isClaimed: Bool) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -55,8 +56,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(isOwner: Bool) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(isOwner: Bool) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -73,8 +74,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(version: Int) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(version: Int) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -91,8 +92,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(firmwareVersion: String) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(firmwareVersion: String) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -109,8 +110,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(name: String) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(name: String) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -127,8 +128,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(owner: String) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(owner: String) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -145,8 +146,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(ownersPlan: String) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(ownersPlan: String) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -163,8 +164,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(macId: MACIdentifier) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(macId: MACIdentifier) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -181,8 +182,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func withoutMac() -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func withoutMac() -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -199,8 +200,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func withoutOwner() -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func withoutOwner() -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -217,8 +218,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(isConnectable: Bool) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(isConnectable: Bool) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -235,7 +236,7 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(cloudSensor: CloudSensor) -> RuuviTagSensor {
+    func with(cloudSensor: CloudSensor) -> RuuviTagSensor {
         let sensor = RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
@@ -254,8 +255,8 @@ extension RuuviTagSensor {
         return sensor
     }
 
-    public func with(isCloudSensor: Bool) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(isCloudSensor: Bool) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -272,8 +273,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func unclaimed() -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func unclaimed() -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -290,8 +291,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(sharedTo: [String]) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(sharedTo: [String]) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -308,8 +309,8 @@ extension RuuviTagSensor {
         )
     }
 
-    public func with(canShare: Bool) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+    func with(canShare: Bool) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: firmwareVersion,
             luid: luid,
@@ -328,8 +329,8 @@ extension RuuviTagSensor {
 
     /// This is a computed property to unwrap the optional isCloudSensor property from database
     /// The property returns false if isCloudSensor is nil, otherwise returns the stored value
-    public var isCloud: Bool {
-        return isCloudSensor ?? false
+    var isCloud: Bool {
+        isCloudSensor ?? false
     }
 }
 
@@ -387,48 +388,61 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
 
     public var id: String {
-        return object.id
+        object.id
     }
+
     public var version: Int {
-        return object.version
+        object.version
     }
+
     public var firmwareVersion: String? {
-        return object.firmwareVersion
+        object.firmwareVersion
     }
+
     public var luid: LocalIdentifier? {
-        return object.luid
+        object.luid
     }
+
     public var macId: MACIdentifier? {
-        return object.macId
+        object.macId
     }
+
     public var isConnectable: Bool {
-        return object.isConnectable
+        object.isConnectable
     }
+
     public var name: String {
-        return object.name
+        object.name
     }
+
     public var isClaimed: Bool {
-        return object.isClaimed
+        object.isClaimed
     }
+
     public var isOwner: Bool {
-        return object.isOwner
+        object.isOwner
     }
+
     public var owner: String? {
-        return object.owner
+        object.owner
     }
+
     public var ownersPlan: String? {
-        return object.ownersPlan
+        object.ownersPlan
     }
+
     public var isCloudSensor: Bool? {
-        return object.isCloudSensor
+        object.isCloudSensor
     }
+
     public var canShare: Bool {
-        return object.canShare
+        object.canShare
     }
+
     public var sharedTo: [String] {
-        return object.sharedTo.filter({
+        object.sharedTo.filter {
             !$0.isEmpty
-        })
+        }
     }
 
     public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
@@ -449,6 +463,6 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
 
     public var orderElement: String {
-        return id
+        id
     }
 }

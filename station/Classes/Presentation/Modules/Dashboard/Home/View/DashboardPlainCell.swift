@@ -1,12 +1,11 @@
-// swiftlint:disable file_length
-import UIKit
-import RuuviService
 import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
+import RuuviService
+// swiftlint:disable file_length
+import UIKit
 
 class DashboardPlainCell: UICollectionViewCell {
-
     private lazy var ruuviTagNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorBigTextColor
@@ -100,7 +99,8 @@ class DashboardPlainCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -154,7 +154,8 @@ class DashboardPlainCell: UICollectionViewCell {
             .topAnchor
             .constraint(
                 greaterThanOrEqualTo: ruuviTagNameLabel.bottomAnchor,
-                        constant: 4)
+                constant: 4
+            )
             .isActive = true
 
         let emptySpacer = UIView()
@@ -169,9 +170,9 @@ class DashboardPlainCell: UICollectionViewCell {
 
         leftContainerView.addSubview(temperatureView)
         temperatureView.anchor(top: emptySpacer.bottomAnchor,
-                            leading: leftContainerView.leadingAnchor,
-                            bottom: nil,
-                            trailing: leftContainerView.trailingAnchor)
+                               leading: leftContainerView.leadingAnchor,
+                               bottom: nil,
+                               trailing: leftContainerView.trailingAnchor)
         temperatureViewHeight = temperatureView
             .heightAnchor
             .constraint(equalToConstant: indicatorViewHeight())
@@ -218,7 +219,7 @@ class DashboardPlainCell: UICollectionViewCell {
             .isActive = true
 
         let sourceAndUpdateStack = UIStackView(arrangedSubviews: [
-            dataSourceIconView, updatedAtLabel
+            dataSourceIconView, updatedAtLabel,
         ])
         sourceAndUpdateStack.axis = .horizontal
         sourceAndUpdateStack.spacing = 6
@@ -230,7 +231,7 @@ class DashboardPlainCell: UICollectionViewCell {
         dataSourceIconViewWidthConstraint.isActive = true
 
         let footerStack = UIStackView(arrangedSubviews: [
-            sourceAndUpdateStack, batteryLevelView
+            sourceAndUpdateStack, batteryLevelView,
         ])
         footerStack.spacing = 4
         footerStack.axis = .horizontal
@@ -238,13 +239,13 @@ class DashboardPlainCell: UICollectionViewCell {
 
         container.addSubview(footerStack)
         footerStack.anchor(top: leftContainerView.bottomAnchor,
-                          leading: ruuviTagNameLabel.leadingAnchor,
-                          bottom: container.bottomAnchor,
-                          trailing: container.trailingAnchor,
-                          padding: .init(top: 4,
-                                         left: 0,
-                                         bottom: 6,
-                                         right: 12))
+                           leading: ruuviTagNameLabel.leadingAnchor,
+                           bottom: container.bottomAnchor,
+                           trailing: container.trailingAnchor,
+                           padding: .init(top: 4,
+                                          left: 0,
+                                          bottom: 6,
+                                          right: 12))
         batteryLevelView.isHidden = true
     }
 }
@@ -269,11 +270,10 @@ extension DashboardPlainCell {
 }
 
 extension DashboardPlainCell {
-
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func configure(with viewModel: CardsViewModel,
-                   measurementService: RuuviServiceMeasurement?) {
-
+                   measurementService: RuuviServiceMeasurement?)
+    {
         self.viewModel = viewModel
 
         // Name
@@ -281,7 +281,8 @@ extension DashboardPlainCell {
 
         // Temp
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value),
-           let temperatureUnit = measurementService?.units.temperatureUnit {
+           let temperatureUnit = measurementService?.units.temperatureUnit
+        {
             temperatureView.setValue(with: temp, unit: temperatureUnit.symbol)
         } else {
             temperatureView.setValue(with: RuuviLocalization.na)
@@ -289,7 +290,8 @@ extension DashboardPlainCell {
 
         // Humidity
         if let humidity = viewModel.humidity.value,
-            let measurementService = measurementService {
+           let measurementService
+        {
             hideHumidityView(hide: false)
             let humidityValue = measurementService.stringWithoutSign(
                 for: humidity,
@@ -298,7 +300,7 @@ extension DashboardPlainCell {
             let humidityUnit = measurementService.units.humidityUnit
             let humidityUnitSymbol = humidityUnit.symbol
             let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
-            let unit =  humidityUnit == .dew ? temperatureUnitSymbol
+            let unit = humidityUnit == .dew ? temperatureUnitSymbol
                 : humidityUnitSymbol
             humidityView.setValue(with: humidityValue,
                                   unit: unit)
@@ -370,7 +372,8 @@ extension DashboardPlainCell {
 
         // Battery stat
         if let batteryLow = viewModel.batteryNeedsReplacement.value,
-           batteryLow {
+           batteryLow
+        {
             batteryLevelView.isHidden = false
         } else {
             batteryLevelView.isHidden = true
@@ -379,7 +382,6 @@ extension DashboardPlainCell {
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func restartAlertAnimation(for viewModel: CardsViewModel) {
-
         // Alert
         let alertVisible = viewModel.isCloud.value ?? false ||
             viewModel.isConnected.value ?? false
@@ -390,7 +392,7 @@ extension DashboardPlainCell {
             viewModel.pressureAlertMutedTill.value,
             viewModel.signalAlertMutedTill.value,
             viewModel.movementAlertMutedTill.value,
-            viewModel.connectionAlertMutedTill.value
+            viewModel.connectionAlertMutedTill.value,
         ]
 
         if mutedTills.first(where: { $0 != nil }) != nil || !alertVisible {
@@ -401,28 +403,32 @@ extension DashboardPlainCell {
         }
 
         if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
-           let temperatureAlertState = viewModel.temperatureAlertState.value {
+           let temperatureAlertState = viewModel.temperatureAlertState.value
+        {
             temperatureView.changeColor(highlight: temperatureAlertState == .firing)
         } else {
             temperatureView.changeColor(highlight: false)
         }
 
         if let isOn = viewModel.isRelativeHumidityAlertOn.value, isOn,
-           let rhAlertState = viewModel.relativeHumidityAlertState.value {
+           let rhAlertState = viewModel.relativeHumidityAlertState.value
+        {
             humidityView.changeColor(highlight: rhAlertState == .firing)
         } else {
             humidityView.changeColor(highlight: false)
         }
 
         if let isOn = viewModel.isPressureAlertOn.value, isOn,
-           let pressureAlertState = viewModel.pressureAlertState.value {
+           let pressureAlertState = viewModel.pressureAlertState.value
+        {
             pressureView.changeColor(highlight: pressureAlertState == .firing)
         } else {
             pressureView.changeColor(highlight: false)
         }
 
         if let isOn = viewModel.isMovementAlertOn.value, isOn,
-           let movementAlertState = viewModel.movementAlertState.value {
+           let movementAlertState = viewModel.movementAlertState.value
+        {
             movementView.changeColor(highlight: movementAlertState == .firing)
         } else {
             movementView.changeColor(highlight: false)
@@ -452,16 +458,16 @@ extension DashboardPlainCell {
                 if alertIcon.image != RuuviAssets.alertActiveImage {
                     alertIcon.image = RuuviAssets.alertActiveImage
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     UIView.animate(withDuration: 0.5,
                                    delay: 0,
                                    options: [.repeat,
                                              .autoreverse,
                                              .beginFromCurrentState],
                                    animations: { [weak self] in
-                        self?.alertIcon.alpha = 0.0
-                    })
-                })
+                                       self?.alertIcon.alpha = 0.0
+                                   })
+                }
             }
         } else {
             alertIcon.image = nil
@@ -471,11 +477,10 @@ extension DashboardPlainCell {
     }
 
     func removeAlertAnimations(alpha: Double = 1) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
-                                      execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.alertIcon.layer.removeAllAnimations()
             self?.alertIcon.alpha = alpha
-        })
+        }
     }
 }
 
@@ -486,13 +491,13 @@ extension DashboardPlainCell {
 
         timer = Timer.scheduledTimer(withTimeInterval: 1,
                                      repeats: true,
-                                     block: { [weak self] (_) in
-            if let date = date?.ruuviAgo() {
-                self?.updatedAtLabel.text = date
-            } else {
-                self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-            }
-        })
+                                     block: { [weak self] _ in
+                                         if let date = date?.ruuviAgo() {
+                                             self?.updatedAtLabel.text = date
+                                         } else {
+                                             self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
+                                         }
+                                     })
     }
 
     private func hideHumidityView(hide: Bool) {
@@ -526,11 +531,11 @@ extension DashboardPlainCell {
     }
 
     private func indicatorViewHeight() -> CGFloat {
-        return GlobalHelpers.isDeviceTablet() ? 24 : 18
+        GlobalHelpers.isDeviceTablet() ? 24 : 18
     }
 
     @objc private func alertButtonDidTap() {
-        guard let viewModel = viewModel else {
+        guard let viewModel else {
             return
         }
         delegate?.didTapAlertButton(for: viewModel)

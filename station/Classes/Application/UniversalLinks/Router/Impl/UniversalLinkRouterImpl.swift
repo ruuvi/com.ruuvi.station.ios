@@ -1,5 +1,5 @@
-import UIKit
 import LightRoute
+import UIKit
 
 class UniversalLinkRouterImpl: UniversalLinkRouter {
     func openSignInVerify(with code: String, from transitionHandler: TransitionHandler) {

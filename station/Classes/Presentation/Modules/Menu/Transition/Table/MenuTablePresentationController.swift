@@ -1,7 +1,6 @@
 import UIKit
 
 class MenuTablePresentationController: UIPresentationController {
-
     var menuWidth: CGFloat = 0
     var dismissTransition: MenuTableDismissTransitionAnimation!
 
@@ -44,16 +43,17 @@ class MenuTablePresentationController: UIPresentationController {
     }()
 
     override var shouldPresentInFullscreen: Bool {
-        return true
+        true
     }
 
     override var adaptivePresentationStyle: UIModalPresentationStyle {
-        return .overFullScreen
+        .overFullScreen
     }
 
-    override func size(forChildContentContainer container: UIContentContainer,
-                       withParentContainerSize parentSize: CGSize) -> CGSize {
-        return CGSize(width: menuWidth, height: parentSize.height)
+    override func size(forChildContentContainer _: UIContentContainer,
+                       withParentContainerSize parentSize: CGSize) -> CGSize
+    {
+        CGSize(width: menuWidth, height: parentSize.height)
     }
 
     override var frameOfPresentedViewInContainerView: CGRect {
@@ -70,7 +70,7 @@ class MenuTablePresentationController: UIPresentationController {
     }
 
     override func presentationTransitionWillBegin() {
-        if let containerView = containerView {
+        if let containerView {
             dimmingView.bounds = containerView.bounds
             dimmingView.alpha = 0
 
@@ -86,7 +86,7 @@ class MenuTablePresentationController: UIPresentationController {
                 self.dimmingView.alpha = 1.0
             }, completion: nil)
         } else {
-            self.dimmingView.alpha = 1.0
+            dimmingView.alpha = 1.0
         }
     }
 
@@ -97,7 +97,7 @@ class MenuTablePresentationController: UIPresentationController {
                 self.shadowView.frame = self.presentedView?.frame ?? .zero
             }, completion: nil)
         } else {
-            self.dimmingView.alpha = 0
+            dimmingView.alpha = 0
         }
     }
 
@@ -108,9 +108,10 @@ class MenuTablePresentationController: UIPresentationController {
         presentedView?.frame = frameOfPresentedViewInContainerView
     }
 
-    @objc func dimmingViewTapped(_ tap: UITapGestureRecognizer) {
-        if let navigationController = self.presentedViewController as? UINavigationController,
-            let menuTable = navigationController.topViewController as? MenuTableViewController {
+    @objc func dimmingViewTapped(_: UITapGestureRecognizer) {
+        if let navigationController = presentedViewController as? UINavigationController,
+           let menuTable = navigationController.topViewController as? MenuTableViewController
+        {
             menuTable.output.viewDidTapOnDimmingView()
         }
     }

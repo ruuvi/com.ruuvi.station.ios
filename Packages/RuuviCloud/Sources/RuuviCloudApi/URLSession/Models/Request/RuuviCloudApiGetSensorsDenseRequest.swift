@@ -11,7 +11,8 @@ public struct RuuviCloudApiGetSensorsDenseRequest: Encodable {
                 measurements: Bool?,
                 sharedToMe: Bool?,
                 sharedToOthers: Bool?,
-                alerts: Bool?) {
+                alerts: Bool?)
+    {
         self.sensor = sensor
         self.measurements = measurements
         self.sharedToMe = sharedToMe

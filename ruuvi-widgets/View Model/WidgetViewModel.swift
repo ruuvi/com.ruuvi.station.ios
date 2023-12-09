@@ -1,8 +1,8 @@
 import Foundation
-import SwiftUI
 import RuuviCloud
 import RuuviOntology
 import RuuviUser
+import SwiftUI
 
 public final class WidgetViewModel: ObservableObject {
     private let widgetAssembly = WidgetAssembly.shared.assembler.resolver
@@ -18,10 +18,10 @@ public final class WidgetViewModel: ObservableObject {
 }
 
 // MARK: - Network calls
-extension WidgetViewModel {
 
-    public func fetchRuuviTags(completion: @escaping ([RuuviCloudSensorDense]) -> Void) {
-        guard isAuthorized() && hasCloudSensors() else {
+public extension WidgetViewModel {
+    func fetchRuuviTags(completion: @escaping ([RuuviCloudSensorDense]) -> Void) {
+        guard isAuthorized(), hasCloudSensors() else {
             return
         }
         ruuviCloud.loadSensorsDense(for: nil,
@@ -29,25 +29,27 @@ extension WidgetViewModel {
                                     sharedToOthers: nil,
                                     sharedToMe: true,
                                     alerts: nil).on(success: { sensors in
-            let sensorsWithRecord = sensors.filter({ $0.record != nil })
+            let sensorsWithRecord = sensors.filter { $0.record != nil }
             completion(sensorsWithRecord)
         })
     }
 }
 
 // MARK: - Public methods
-extension WidgetViewModel {
 
-    public func isAuthorized() -> Bool {
-        return appGroupDefaults?.bool(forKey: Constants.isAuthorizedUDKey.rawValue) ?? false
+public extension WidgetViewModel {
+    func isAuthorized() -> Bool {
+        appGroupDefaults?.bool(forKey: Constants.isAuthorizedUDKey.rawValue) ?? false
     }
 
-    public func getValue(from record: RuuviTagSensorRecord?,
-                         settings: SensorSettings?,
-                         config: RuuviTagSelectionIntent) -> String {
+    func getValue(from record: RuuviTagSensorRecord?,
+                  settings: SensorSettings?,
+                  config: RuuviTagSelectionIntent) -> String
+    {
         let measurementService = MeasurementService(settings: getAppSettings())
         guard let sensor = WidgetSensorEnum(rawValue: config.sensor.rawValue),
-              let record = record else {
+              let record
+        else {
             return "69.50" // Default value to show on the preview
         }
         switch sensor {
@@ -76,20 +78,20 @@ extension WidgetViewModel {
         }
     }
 
-    public func getUnit(for sensor: WidgetSensorEnum?) -> String {
-        guard let sensor = sensor else {
+    func getUnit(for sensor: WidgetSensorEnum?) -> String {
+        guard let sensor else {
             return "°C" // Default unit to show on the preview
         }
         let settings = getAppSettings()
         return sensor.unit(from: settings)
     }
 
-    public func locale() -> Locale {
-        return getLanguage().locale
+    func locale() -> Locale {
+        getLanguage().locale
     }
 
     /// Returns value for inline widget
-    func getInlineWidgetValue(from entry: WidgetEntry) -> String {
+    internal func getInlineWidgetValue(from entry: WidgetEntry) -> String {
         let value = getValue(from: entry.record,
                              settings: entry.settings,
                              config: entry.config)
@@ -99,7 +101,7 @@ extension WidgetViewModel {
 
     /// Returns SF Symbol based on sensor since we
     /// can not use Image in inline widget
-    func symbol(from entry: WidgetEntry) -> Image {
+    internal func symbol(from entry: WidgetEntry) -> Image {
         guard let sensor = WidgetSensorEnum(rawValue: entry.config.sensor.rawValue) else {
             return Image(systemName: "thermometer.medium.slash")
         }
@@ -113,15 +115,15 @@ extension WidgetViewModel {
         case .movement_counter:
             return Image(systemName: "repeat.circle")
         case .acceleration_x,
-                .acceleration_y,
-                .acceleration_z:
+             .acceleration_y,
+             .acceleration_z:
             return Image(systemName: "move.3d")
         case .battery_voltage:
             return Image(systemName: "bolt.circle.fill")
         }
     }
 
-    func measurementTime(from entry: WidgetEntry) -> String {
+    internal func measurementTime(from entry: WidgetEntry) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale.autoupdatingCurrent
         formatter.dateStyle = .none
@@ -131,10 +133,10 @@ extension WidgetViewModel {
 }
 
 // MARK: - Private methods
-extension WidgetViewModel {
 
+extension WidgetViewModel {
     private func hasCloudSensors() -> Bool {
-        return appGroupDefaults?.bool(forKey: Constants.hasCloudSensorsKey.rawValue) ?? false
+        appGroupDefaults?.bool(forKey: Constants.hasCloudSensorsKey.rawValue) ?? false
     }
 
     private func getAppSettings() -> MeasurementServiceSettings {
@@ -156,7 +158,8 @@ extension WidgetViewModel {
     private func getLanguage() -> Language {
         let languageCode = Bundle.main.preferredLocalizations[0]
         guard
-              let language = Language(rawValue: languageCode) else {
+            let language = Language(rawValue: languageCode)
+        else {
             return .english
         }
         return language

@@ -1,13 +1,13 @@
-import RuuviLocalization
 import Foundation
-import RuuviOntology
 import RuuviContext
-import RuuviReactor
 import RuuviLocal
-import RuuviService
+import RuuviLocalization
+import RuuviOntology
 import RuuviPresenters
-import RuuviUser
+import RuuviReactor
+import RuuviService
 import RuuviStorage
+import RuuviUser
 import UIKit
 
 class SettingsPresenter: SettingsModuleInput {
@@ -40,14 +40,14 @@ extension SettingsPresenter: SettingsViewOutput {
             .addObserver(forName: .LanguageDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (_) in
-            self?.view.language = self?.settings.language ?? .english
-        })
+                         using: { [weak self] _ in
+                             self?.view.language = self?.settings.language ?? .english
+                         })
 
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
         ruuviStorage.readAll().on(success: { [weak self] tags in
             guard let sSelf = self else { return }
-            let cloudTagsCount = tags.filter({ $0.isOwner || $0.isCloud }).count
+            let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
             let cloudModeVisible = sSelf.ruuviUser.isAuthorized && cloudTagsCount > 0
             sSelf.view.cloudModeVisible = cloudModeVisible
         })
@@ -57,7 +57,7 @@ extension SettingsPresenter: SettingsViewOutput {
         let selectionItems: [TemperatureUnit] = [
             .celsius,
             .fahrenheit,
-            .kelvin
+            .kelvin,
         ]
         let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
                                               items: selectionItems,
@@ -69,7 +69,7 @@ extension SettingsPresenter: SettingsViewOutput {
         let selectionItems: [HumidityUnit] = [
             .percent,
             .gm3,
-            .dew
+            .dew,
         ]
         let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
                                               items: selectionItems,
@@ -81,7 +81,7 @@ extension SettingsPresenter: SettingsViewOutput {
         let selectionItems: [UnitPressure] = [
             .hectopascals,
             .inchesOfMercury,
-            .millimetersOfMercury
+            .millimetersOfMercury,
         ]
         let viewModel = UnitSettingsViewModel(title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
                                               items: selectionItems,

@@ -1,12 +1,11 @@
+import BTKit
 import Foundation
 import RealmSwift
-import BTKit
 import RuuviOntology
 
 public final class RuuviTagDataRealm: Object {
-
     @objc public dynamic var ruuviTag: RuuviTagRealm?
-    @objc public dynamic var date: Date = Date()
+    @objc public dynamic var date: Date = .init()
     @objc public dynamic var compoundKey: String = UUID().uuidString
     @objc public dynamic var sourceString: String = "unknown"
 
@@ -32,19 +31,19 @@ public final class RuuviTagDataRealm: Object {
     @objc public dynamic var pressureOffset: Double = 0.0
 
     public var fahrenheit: Double? {
-        return celsius.value?.fahrenheit
+        celsius.value?.fahrenheit
     }
 
     public var kelvin: Double? {
-        return celsius.value?.kelvin
+        celsius.value?.kelvin
     }
 
     public var source: RuuviTagSensorRecordSource {
-        return RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
+        RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
     }
 
-    public override static func primaryKey() -> String? {
-        return "compoundKey"
+    override public static func primaryKey() -> String? {
+        "compoundKey"
     }
 
     public convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol, date: Date) {
@@ -55,50 +54,50 @@ public final class RuuviTagDataRealm: Object {
     public convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol) {
         self.init()
         self.ruuviTag = ruuviTag
-        self.sourceString = data.source.rawValue
-        self.rssi.value = data.rssi
-        self.celsius.value = data.celsius
-        self.humidity.value = data.relativeHumidity
-        self.pressure.value = data.hectopascals
-        self.accelerationX.value = data.accelerationX
-        self.accelerationY.value = data.accelerationY
-        self.accelerationZ.value = data.accelerationZ
-        self.voltage.value = data.volts
-        self.movementCounter.value = data.movementCounter
-        self.measurementSequenceNumber.value = data.measurementSequenceNumber
-        self.txPower.value = data.txPower
-        self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
+        sourceString = data.source.rawValue
+        rssi.value = data.rssi
+        celsius.value = data.celsius
+        humidity.value = data.relativeHumidity
+        pressure.value = data.hectopascals
+        accelerationX.value = data.accelerationX
+        accelerationY.value = data.accelerationY
+        accelerationZ.value = data.accelerationZ
+        voltage.value = data.volts
+        movementCounter.value = data.movementCounter
+        measurementSequenceNumber.value = data.measurementSequenceNumber
+        txPower.value = data.txPower
+        compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
 
     public convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
         self.init()
         self.ruuviTag = ruuviTag
-        self.sourceString = RuuviTagSensorRecordSource.log.rawValue
-        self.date = data.date
-        self.celsius.value = data.temperature
-        self.humidity.value = data.humidity
-        self.pressure.value = data.pressure
-        self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
+        sourceString = RuuviTagSensorRecordSource.log.rawValue
+        date = data.date
+        celsius.value = data.temperature
+        humidity.value = data.humidity
+        pressure.value = data.pressure
+        compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
 
     public convenience init(ruuviTag: RuuviTagRealm, record: RuuviTagSensorRecord) {
         self.init()
         self.ruuviTag = ruuviTag
-        self.sourceString = record.source.rawValue
-        self.rssi.value = record.rssi
-        self.celsius.value = record.temperature?.converted(to: .celsius).value
-        self.humidity.value = record.humidity?.value
-        self.pressure.value = record.pressure?.converted(to: .hectopascals).value
-        self.accelerationX.value = record.acceleration?.x.value
-        self.accelerationY.value = record.acceleration?.y.value
-        self.accelerationZ.value = record.acceleration?.z.value
-        self.voltage.value = record.voltage?.converted(to: .volts).value
-        self.movementCounter.value = record.movementCounter
-        self.measurementSequenceNumber.value = record.measurementSequenceNumber
-        self.txPower.value = record.txPower
-        self.compoundKey = record.id
-        self.temperatureOffset = record.temperatureOffset
-        self.humidityOffset = record.humidityOffset
-        self.pressureOffset = record.pressureOffset
+        sourceString = record.source.rawValue
+        rssi.value = record.rssi
+        celsius.value = record.temperature?.converted(to: .celsius).value
+        humidity.value = record.humidity?.value
+        pressure.value = record.pressure?.converted(to: .hectopascals).value
+        accelerationX.value = record.acceleration?.x.value
+        accelerationY.value = record.acceleration?.y.value
+        accelerationZ.value = record.acceleration?.z.value
+        voltage.value = record.voltage?.converted(to: .volts).value
+        movementCounter.value = record.movementCounter
+        measurementSequenceNumber.value = record.measurementSequenceNumber
+        txPower.value = record.txPower
+        compoundKey = record.id
+        temperatureOffset = record.temperatureOffset
+        humidityOffset = record.humidityOffset
+        pressureOffset = record.pressureOffset
     }
 }

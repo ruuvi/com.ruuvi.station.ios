@@ -1,8 +1,8 @@
 import Foundation
-import UIKit
-import RuuviOntology
 import RuuviLocal
 import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 class AppearanceSettingsPresenter: NSObject, AppearanceSettingsModuleInput {
     weak var view: AppearanceSettingsViewInput?
@@ -29,18 +29,18 @@ extension AppearanceSettingsPresenter: AppearanceSettingsViewOutput {
 }
 
 extension AppearanceSettingsPresenter {
-    fileprivate func configure() {
-        if let view = view {
+    private func configure() {
+        if let view {
             view.viewModels = [appThemeSetting()]
         }
     }
 
-    fileprivate func appThemeSetting() -> AppearanceSettingsViewModel {
+    private func appThemeSetting() -> AppearanceSettingsViewModel {
         let title = RuuviLocalization.appTheme
         let selectionItems: [RuuviTheme] = [
             .system,
             .dark,
-            .light
+            .light,
         ]
         let selectedTheme: RuuviTheme = settings.theme
 
@@ -59,10 +59,10 @@ extension AppearanceSettingsPresenter {
             .addObserver(forName: .AppearanceSettingsDidChange,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (_) in
-                self?.configure()
-                self?.updateTheme()
-            })
+                         using: { [weak self] _ in
+                             self?.configure()
+                             self?.updateTheme()
+                         })
     }
 
     private func updateTheme() {
@@ -70,9 +70,9 @@ extension AppearanceSettingsPresenter {
                        delay: 0.0,
                        options: .curveLinear,
                        animations: { [weak self] in
-            guard let sSelf = self else { return }
-            UIWindow.key?.overrideUserInterfaceStyle =
-                sSelf.settings.theme.uiInterfaceStyle
-        })
+                           guard let sSelf = self else { return }
+                           UIWindow.key?.overrideUserInterfaceStyle =
+                               sSelf.settings.theme.uiInterfaceStyle
+                       })
     }
 }

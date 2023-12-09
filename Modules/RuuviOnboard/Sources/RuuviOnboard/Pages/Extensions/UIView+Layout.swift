@@ -4,33 +4,32 @@ import UIKit
 /// It helps to reduce a lot of redundant code to set constraint for all views
 
 extension UIView {
-
     @discardableResult
     func anchor(top: NSLayoutYAxisAnchor?,
                 leading: NSLayoutXAxisAnchor?,
                 bottom: NSLayoutYAxisAnchor?,
                 trailing: NSLayoutXAxisAnchor?,
-                padding: UIEdgeInsets = .zero, size: CGSize = .zero) -> AnchoredConstraints {
-
+                padding: UIEdgeInsets = .zero, size: CGSize = .zero) -> AnchoredConstraints
+    {
         translatesAutoresizingMaskIntoConstraints = false
         var anchoredConstraints = AnchoredConstraints()
 
-        if let top = top {
+        if let top {
             anchoredConstraints.top = topAnchor.constraint(equalTo: top,
                                                            constant: padding.top)
         }
 
-        if let leading = leading {
+        if let leading {
             anchoredConstraints.leading = leadingAnchor.constraint(equalTo: leading,
                                                                    constant: padding.left)
         }
 
-        if let bottom = bottom {
+        if let bottom {
             anchoredConstraints.bottom = bottomAnchor.constraint(equalTo: bottom,
                                                                  constant: -padding.bottom)
         }
 
-        if let trailing = trailing {
+        if let trailing {
             anchoredConstraints.trailing = trailingAnchor.constraint(equalTo: trailing,
                                                                      constant: -padding.right)
         }
@@ -59,28 +58,28 @@ extension UIView {
                        bottom: NSLayoutYAxisAnchor?,
                        trailing: NSLayoutXAxisAnchor?,
                        padding: UIEdgeInsets = .zero,
-                       size: CGSize = .zero) -> AnchoredConstraints {
-
+                       size: CGSize = .zero) -> AnchoredConstraints
+    {
         translatesAutoresizingMaskIntoConstraints = false
         var anchoredConstraints = AnchoredConstraints()
 
-        if let top = top {
+        if let top {
             anchoredConstraints.top = topAnchor.constraint(equalTo: top, constant: padding.top)
         }
 
-        if let leading = leading {
+        if let leading {
             anchoredConstraints.leading =
                 leadingAnchor.constraint(greaterThanOrEqualTo: leading,
                                          constant: padding.left)
         }
 
-        if let bottom = bottom {
+        if let bottom {
             anchoredConstraints.bottom =
                 bottomAnchor.constraint(equalTo: bottom,
                                         constant: -padding.bottom)
         }
 
-        if let trailing = trailing {
+        if let trailing {
             anchoredConstraints.trailing =
                 trailingAnchor.constraint(lessThanOrEqualTo: trailing,
                                           constant: -padding.right)
@@ -208,10 +207,10 @@ extension UIView {
 
     func match(view: UIView) {
         translatesAutoresizingMaskIntoConstraints = false
-        self.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        self.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        self.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
 }
 
@@ -225,33 +224,32 @@ struct AnchoredConstraints {
 }
 
 extension UIView {
-
     var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.topAnchor
         }
-        return self.topAnchor
+        return topAnchor
     }
 
     var safeLeadingAnchor: NSLayoutXAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.leadingAnchor
         }
-        return self.leftAnchor
+        return leftAnchor
     }
 
     var safeTrailingAnchor: NSLayoutXAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.trailingAnchor
         }
-        return self.rightAnchor
+        return rightAnchor
     }
 
     var safeBottomAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.bottomAnchor
         }
-        return self.bottomAnchor
+        return bottomAnchor
     }
 
     var topSafeAreaHeight: CGFloat {

@@ -9,33 +9,37 @@ let package = Package(
     products: [
         .library(
             name: "RuuviDFU",
-            targets: ["RuuviDFU"]),
+            targets: ["RuuviDFU"]
+        ),
         .library(
             name: "RuuviDFUImpl",
-            targets: ["RuuviDFUImpl"])
+            targets: ["RuuviDFUImpl"]
+        ),
     ],
     dependencies: [
         .package(
             name: "NordicDFU",
             url: "https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library",
-            from: "4.10.3")
+            from: "4.10.3"
+        ),
     ],
     targets: [
         .target(
             name: "RuuviDFU",
             dependencies: [
-                "NordicDFU"
+                "NordicDFU",
             ]
         ),
         .target(
             name: "RuuviDFUImpl",
             dependencies: [
                 "RuuviDFU",
-                "NordicDFU"
+                "NordicDFU",
             ]
         ),
         .testTarget(
             name: "RuuviDFUTests",
-            dependencies: ["RuuviDFU"])
+            dependencies: ["RuuviDFU"]
+        ),
     ]
 )

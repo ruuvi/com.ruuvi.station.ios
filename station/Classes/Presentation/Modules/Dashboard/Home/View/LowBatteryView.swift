@@ -2,7 +2,6 @@ import RuuviLocalization
 import UIKit
 
 class BatteryLevelView: UIView {
-
     private lazy var batteryLevelLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
@@ -35,7 +34,8 @@ class BatteryLevelView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -43,7 +43,7 @@ class BatteryLevelView: UIView {
         clipsToBounds = true
 
         let stack = UIStackView(arrangedSubviews: [
-            batteryLevelLabel, batteryLevelIcon
+            batteryLevelLabel, batteryLevelIcon,
         ])
         stack.spacing = 4
         stack.axis = .horizontal

@@ -1,12 +1,12 @@
-import UIKit
-import RuuviOntology
 import RuuviLocal
 import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 class SelectionTableViewController: UITableViewController {
     var output: SelectionViewOutput!
     var settings: RuuviLocalSettings!
-    @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet var descriptionTextView: UITextView!
 
     var viewModel: SelectionViewModel? {
         didSet {
@@ -36,6 +36,7 @@ class SelectionTableViewController: UITableViewController {
 }
 
 // MARK: - SelectionViewInput
+
 extension SelectionTableViewController: SelectionViewInput {
     func localize() {
         tableView.reloadData()
@@ -43,6 +44,7 @@ extension SelectionTableViewController: SelectionViewInput {
 }
 
 // MARK: - View lifecycle
+
 extension SelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,21 +54,24 @@ extension SelectionTableViewController {
 }
 
 // MARK: - UITableViewDataSource
+
 extension SelectionTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.items.count ?? 0
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModel?.items.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let item = viewModel?.items[indexPath.row],
               let cell = tableView
-                .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
-                                     for: indexPath) as? SelectionTableViewCell else {
+              .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
+                                   for: indexPath) as? SelectionTableViewCell
+        else {
             return .init()
         }
 
         if viewModel?.unitSettingsType == .accuracy,
-            let item = item as? MeasurementAccuracyType {
+           let item = item as? MeasurementAccuracyType
+        {
             let titleProvider = MeasurementAccuracyTitles()
             let title = titleProvider.formattedTitle(type: item, settings: settings)
             switch viewModel?.measurementType {
@@ -99,6 +104,7 @@ extension SelectionTableViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension SelectionTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -107,6 +113,7 @@ extension SelectionTableViewController {
 }
 
 // MARK: - Update UI
+
 extension SelectionTableViewController {
     private func updateUI() {
         title = viewModel?.title
@@ -123,7 +130,8 @@ extension SelectionTableViewController {
     }
 
     private func updateCellStyle(with title: String?,
-                                 cell: SelectionTableViewCell) {
+                                 cell: SelectionTableViewCell)
+    {
         if title == viewModel?.selection {
             cell.accessoryType = .checkmark
             cell.nameLabel.textColor = RuuviColor.ruuviMenuTextColor

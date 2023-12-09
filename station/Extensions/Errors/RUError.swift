@@ -1,12 +1,12 @@
-import Foundation
 import BTKit
-import RuuviStorage
+import Foundation
+import RuuviDFU
+import RuuviLocal
+import RuuviLocalization
 import RuuviPersistence
 import RuuviPool
-import RuuviLocal
 import RuuviService
-import RuuviDFU
-import RuuviLocalization
+import RuuviStorage
 
 enum RUError: Error {
     case ruuviLocal(RuuviLocalError)
@@ -30,38 +30,38 @@ enum RUError: Error {
 extension RUError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .ruuviLocal(let error):
-            return error.localizedDescription
-        case .ruuviPool(let error):
-            return error.localizedDescription
-        case .ruuviPersistence(let error):
-            return error.localizedDescription
-        case .ruuviStorage(let error):
-            return error.localizedDescription
-        case .ruuviService(let error):
-            return error.localizedDescription
-        case .core(let error):
-            return error.localizedDescription
-        case .persistence(let error):
-            return error.localizedDescription
-        case .networking(let error):
-            return error.localizedDescription
-        case .parse(let error):
-            return error.localizedDescription
-        case .map(let error):
-            return error.localizedDescription
-        case .expected(let error):
-            return error.localizedDescription
-        case .unexpected(let error):
-            return error.localizedDescription
-        case .btkit(let error):
-            return error.localizedDescription
-        case .bluetooth(let error):
-            return error.localizedDescription
-        case .writeToDisk(let error):
-            return error.localizedDescription
-        case .dfuError(let error):
-            return error.localizedDescription
+        case let .ruuviLocal(error):
+            error.localizedDescription
+        case let .ruuviPool(error):
+            error.localizedDescription
+        case let .ruuviPersistence(error):
+            error.localizedDescription
+        case let .ruuviStorage(error):
+            error.localizedDescription
+        case let .ruuviService(error):
+            error.localizedDescription
+        case let .core(error):
+            error.localizedDescription
+        case let .persistence(error):
+            error.localizedDescription
+        case let .networking(error):
+            error.localizedDescription
+        case let .parse(error):
+            error.localizedDescription
+        case let .map(error):
+            error.localizedDescription
+        case let .expected(error):
+            error.localizedDescription
+        case let .unexpected(error):
+            error.localizedDescription
+        case let .btkit(error):
+            error.localizedDescription
+        case let .bluetooth(error):
+            error.localizedDescription
+        case let .writeToDisk(error):
+            error.localizedDescription
+        case let .dfuError(error):
+            error.localizedDescription
         }
     }
 }
@@ -74,7 +74,7 @@ extension BluetoothError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .disconnected:
-            return RuuviLocalization.BluetoothError.disconnected
+            RuuviLocalization.BluetoothError.disconnected
         }
     }
 }
@@ -95,23 +95,23 @@ extension CoreError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .failedToGetDataFromResponse:
-            return RuuviLocalization.CoreError.failedToGetDataFromResponse
+            RuuviLocalization.CoreError.failedToGetDataFromResponse
         case .failedToGetCurrentLocation:
-            return RuuviLocalization.CoreError.failedToGetCurrentLocation
+            RuuviLocalization.CoreError.failedToGetCurrentLocation
         case .failedToGetPngRepresentation:
-            return RuuviLocalization.CoreError.failedToGetPngRepresentation
+            RuuviLocalization.CoreError.failedToGetPngRepresentation
         case .failedToGetDocumentsDirectory:
-            return RuuviLocalization.CoreError.failedToGetDocumentsDirectory
+            RuuviLocalization.CoreError.failedToGetDocumentsDirectory
         case .locationPermissionDenied:
-            return RuuviLocalization.CoreError.locationPermissionDenied
+            RuuviLocalization.CoreError.locationPermissionDenied
         case .locationPermissionNotDetermined:
-            return RuuviLocalization.CoreError.locationPermissionNotDetermined
+            RuuviLocalization.CoreError.locationPermissionNotDetermined
         case .objectNotFound:
-            return RuuviLocalization.CoreError.objectNotFound
+            RuuviLocalization.CoreError.objectNotFound
         case .objectInvalidated:
-            return RuuviLocalization.CoreError.objectInvalidated
+            RuuviLocalization.CoreError.objectInvalidated
         case .unableToSendEmail:
-            return RuuviLocalization.CoreError.unableToSendEmail
+            RuuviLocalization.CoreError.unableToSendEmail
         }
     }
 }
@@ -126,11 +126,11 @@ extension ExpectedError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .missingOpenWeatherMapAPIKey:
-            return RuuviLocalization.ExpectedError.missingOpenWeatherMapAPIKey
+            RuuviLocalization.ExpectedError.missingOpenWeatherMapAPIKey
         case .isAlreadySyncingLogsWithThisTag:
-            return RuuviLocalization.ExpectedError.isAlreadySyncingLogsWithThisTag
+            RuuviLocalization.ExpectedError.isAlreadySyncingLogsWithThisTag
         case .failedToDeleteTag:
-            return RuuviLocalization.ExpectedError.failedToDeleteTag
+            RuuviLocalization.ExpectedError.failedToDeleteTag
         }
     }
 }
@@ -151,23 +151,23 @@ extension UnexpectedError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .callbackErrorAndResultAreNil:
-            return RuuviLocalization.UnexpectedError.callbackErrorAndResultAreNil
+            RuuviLocalization.UnexpectedError.callbackErrorAndResultAreNil
         case .callerDeinitedDuringOperation:
-            return RuuviLocalization.UnexpectedError.callerDeinitedDuringOperation
+            RuuviLocalization.UnexpectedError.callerDeinitedDuringOperation
         case .failedToReverseGeocodeCoordinate:
-            return RuuviLocalization.UnexpectedError.failedToReverseGeocodeCoordinate
+            RuuviLocalization.UnexpectedError.failedToReverseGeocodeCoordinate
         case .failedToFindRuuviTag:
-            return RuuviLocalization.UnexpectedError.failedToFindRuuviTag
+            RuuviLocalization.UnexpectedError.failedToFindRuuviTag
         case .failedToFindLogsForTheTag:
-            return RuuviLocalization.UnexpectedError.failedToFindLogsForTheTag
+            RuuviLocalization.UnexpectedError.failedToFindLogsForTheTag
         case .viewModelUUIDIsNil:
-            return RuuviLocalization.UnexpectedError.viewModelUUIDIsNil
+            RuuviLocalization.UnexpectedError.viewModelUUIDIsNil
         case .attemptToReadDataFromRealmWithoutLUID:
-            return RuuviLocalization.UnexpectedError.attemptToReadDataFromRealmWithoutLUID
+            RuuviLocalization.UnexpectedError.attemptToReadDataFromRealmWithoutLUID
         case .failedToFindOrGenerateBackgroundImage:
-            return RuuviLocalization.UnexpectedError.failedToFindOrGenerateBackgroundImage
+            RuuviLocalization.UnexpectedError.failedToFindOrGenerateBackgroundImage
         case .bothLuidAndMacAreNil:
-            return RuuviLocalization.UnexpectedError.bothLuidAndMacAreNil
+            RuuviLocalization.UnexpectedError.bothLuidAndMacAreNil
         }
     }
 }

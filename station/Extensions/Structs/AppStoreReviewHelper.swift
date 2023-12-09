@@ -1,13 +1,13 @@
 import Foundation
-import StoreKit
 import RuuviLocal
+import StoreKit
 
-struct AppStoreReviewHelper {
+enum AppStoreReviewHelper {
     static func askForReview(settings: RuuviLocalSettings) {
         switch settings.appOpenedCount {
         case settings.appOpenedInitialCountToAskReview:
             requestReview()
-        case _ where settings.appOpenedCount%settings.appOpenedCountDivisibleToAskReview == 0:
+        case _ where settings.appOpenedCount % settings.appOpenedCountDivisibleToAskReview == 0:
             requestReview()
         default:
             break

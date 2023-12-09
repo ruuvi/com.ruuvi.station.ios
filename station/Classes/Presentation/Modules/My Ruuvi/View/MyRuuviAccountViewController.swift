@@ -1,15 +1,15 @@
 import Foundation
-import UIKit
 import RuuviLocalization
+import UIKit
 
 class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
 
-    @IBOutlet weak var headerTitleLabel: UILabel!
-    @IBOutlet weak var loggedInLabel: UILabel!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var signoutButton: UIButton!
-    @IBOutlet weak var deleteAccountButton: UIButton!
+    @IBOutlet var headerTitleLabel: UILabel!
+    @IBOutlet var loggedInLabel: UILabel!
+    @IBOutlet var usernameLabel: UILabel!
+    @IBOutlet var signoutButton: UIButton!
+    @IBOutlet var deleteAccountButton: UIButton!
 
     var viewModel: MyRuuviAccountViewModel? {
         didSet {
@@ -24,15 +24,16 @@ class MyRuuviAccountViewController: UIViewController {
     }
 
     // MARK: - Button actions
-    @IBAction func backButtonTouchUpInside(_ sender: Any) {
+
+    @IBAction func backButtonTouchUpInside(_: Any) {
         output.viewDidTriggerClose()
     }
 
-    @IBAction func deleteButtonTouchUpInside(_ sender: Any) {
+    @IBAction func deleteButtonTouchUpInside(_: Any) {
         output.viewDidTapDeleteButton()
     }
 
-    @IBAction func signoutButtonTouchUpInside(_ sender: Any) {
+    @IBAction func signoutButtonTouchUpInside(_: Any) {
         output.viewDidTapSignoutButton()
     }
 }
@@ -50,7 +51,7 @@ extension MyRuuviAccountViewController: MyRuuviAccountViewInput {
 
 extension MyRuuviAccountViewController {
     private func bindViewModel() {
-        guard let viewModel = viewModel, isViewLoaded else {
+        guard let viewModel, isViewLoaded else {
             return
         }
         usernameLabel.bind(viewModel.username) { label, username in

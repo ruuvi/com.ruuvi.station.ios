@@ -5,8 +5,7 @@ protocol BackgroundSelectionButtonViewDelegate: NSObjectProtocol {
 }
 
 class BackgroundSelectionButtonView: UIView {
-
-    weak private var delegate: BackgroundSelectionButtonViewDelegate?
+    private weak var delegate: BackgroundSelectionButtonViewDelegate?
 
     // UI
     private lazy var titleLabel: UILabel = {
@@ -34,21 +33,23 @@ class BackgroundSelectionButtonView: UIView {
 
     convenience init(title: String,
                      icon: String,
-                     delegate: BackgroundSelectionButtonViewDelegate? = nil) {
+                     delegate: BackgroundSelectionButtonViewDelegate? = nil)
+    {
         self.init()
-        self.titleLabel.text = title
-        self.buttonIcon.image = UIImage(systemName: icon)
+        titleLabel.text = title
+        buttonIcon.image = UIImage(systemName: icon)
         self.delegate = delegate
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension BackgroundSelectionButtonView {
-    fileprivate func setUpUI() {
+private extension BackgroundSelectionButtonView {
+    func setUpUI() {
         backgroundColor = .clear
 
         addSubview(titleLabel)
@@ -86,8 +87,8 @@ extension BackgroundSelectionButtonView {
     }
 }
 
-extension BackgroundSelectionButtonView {
-    @objc fileprivate func handleTap() {
+private extension BackgroundSelectionButtonView {
+    @objc func handleTap() {
         delegate?.didTapButton(self)
     }
 }

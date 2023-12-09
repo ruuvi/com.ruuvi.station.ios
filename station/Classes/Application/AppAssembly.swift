@@ -1,119 +1,119 @@
+import BTKit
+import Foundation
+import RuuviCloud
+import RuuviContext
+import RuuviCore
+import RuuviDaemon
+import RuuviDFU
+import RuuviDiscover
+import RuuviFirmware
+import RuuviLocal
+import RuuviLocalization
+import RuuviMigration
+import RuuviNotification
+import RuuviNotifier
+import RuuviPersistence
+import RuuviPool
+import RuuviPresenters
+import RuuviReactor
+import RuuviRepository
+import RuuviService
+import RuuviStorage
+import RuuviUser
 // swiftlint:disable file_length
 import Swinject
-import Foundation
-import BTKit
-import RuuviLocal
-import RuuviPool
-import RuuviContext
-import RuuviStorage
-import RuuviService
-import RuuviDFU
-import RuuviMigration
-import RuuviPersistence
-import RuuviReactor
-import RuuviCloud
-import RuuviUser
-import RuuviDaemon
-import RuuviLocalization
-import RuuviNotifier
-import RuuviNotification
-import RuuviRepository
-import RuuviCore
-import RuuviFirmware
-import RuuviDiscover
-import RuuviPresenters
 #if canImport(RuuviCloudPure)
-import RuuviCloudPure
+    import RuuviCloudPure
 #endif
 #if canImport(RuuviContextRealm)
-import RuuviContextRealm
+    import RuuviContextRealm
 #endif
 #if canImport(RuuviContextSQLite)
-import RuuviContextSQLite
+    import RuuviContextSQLite
 #endif
 #if canImport(RuuviPersistenceRealm)
-import RuuviPersistenceRealm
+    import RuuviPersistenceRealm
 #endif
 #if canImport(RuuviPersistenceSQLite)
-import RuuviPersistenceSQLite
+    import RuuviPersistenceSQLite
 #endif
 #if canImport(RuuviStorageCoordinator)
-import RuuviStorageCoordinator
+    import RuuviStorageCoordinator
 #endif
 #if canImport(RuuviPoolCoordinator)
-import RuuviPoolCoordinator
+    import RuuviPoolCoordinator
 #endif
 #if canImport(RuuviLocalUserDefaults)
-import RuuviLocalUserDefaults
+    import RuuviLocalUserDefaults
 #endif
 #if canImport(RuuviPoolCoordinator)
-import RuuviPoolCoordinator
+    import RuuviPoolCoordinator
 #endif
 #if canImport(RuuviReactorImpl)
-import RuuviReactorImpl
+    import RuuviReactorImpl
 #endif
 #if canImport(RuuviDFUImpl)
-import RuuviDFUImpl
+    import RuuviDFUImpl
 #endif
 #if canImport(RuuviMigrationImpl)
-import RuuviMigrationImpl
+    import RuuviMigrationImpl
 #endif
 #if canImport(RuuviDaemonOperation)
-import RuuviDaemonOperation
+    import RuuviDaemonOperation
 #endif
 #if canImport(RuuviDaemonBackground)
-import RuuviDaemonBackground
+    import RuuviDaemonBackground
 #endif
 #if canImport(RuuviDaemonRuuviTag)
-import RuuviDaemonRuuviTag
+    import RuuviDaemonRuuviTag
 #endif
 #if canImport(RuuviServiceGATT)
-import RuuviServiceGATT
+    import RuuviServiceGATT
 #endif
 #if canImport(RuuviAnalytics)
-import RuuviAnalytics
+    import RuuviAnalytics
 #endif
 #if canImport(RuuviAnalyticsImpl)
-import RuuviAnalyticsImpl
+    import RuuviAnalyticsImpl
 #endif
 #if canImport(RuuviServiceExport)
-import RuuviServiceExport
+    import RuuviServiceExport
 #endif
 #if canImport(RuuviNotifierImpl)
-import RuuviNotifierImpl
+    import RuuviNotifierImpl
 #endif
 #if canImport(RuuviServiceFactory)
-import RuuviServiceFactory
+    import RuuviServiceFactory
 #endif
 #if canImport(RuuviDaemonCloudSync)
-import RuuviDaemonCloudSync
+    import RuuviDaemonCloudSync
 #endif
 #if canImport(RuuviRepositoryCoordinator)
-import RuuviRepositoryCoordinator
+    import RuuviRepositoryCoordinator
 #endif
 #if canImport(RuuviUserCoordinator)
-import RuuviUserCoordinator
+    import RuuviUserCoordinator
 #endif
 #if canImport(RuuviCoreLocation)
-import RuuviCoreLocation
+    import RuuviCoreLocation
 #endif
 #if canImport(RuuviNotificationLocal)
-import RuuviNotificationLocal
+    import RuuviNotificationLocal
 #endif
 #if canImport(RuuviCoreImage)
-import RuuviCoreImage
+    import RuuviCoreImage
 #endif
 #if canImport(RuuviCoreLocation)
-import RuuviCoreLocation
+    import RuuviCoreLocation
 #endif
 #if canImport(RuuviCorePN)
-import RuuviCorePN
+    import RuuviCorePN
 #endif
 #if canImport(RuuviCorePermission)
-import RuuviCorePermission
+    import RuuviCorePermission
 #endif
 #if canImport(RuuviServiceMeasurement)
-import RuuviServiceMeasurement
+    import RuuviServiceMeasurement
 #endif
 
 final class AppAssembly {
@@ -139,7 +139,7 @@ final class AppAssembly {
 private final class DfuAssembly: Assembly {
     func assemble(container: Container) {
         container.register(RuuviDFU.self) { _ in
-            return RuuviDFUImpl.shared
+            RuuviDFUImpl.shared
         }.inObjectScope(.container)
     }
 }
@@ -202,7 +202,7 @@ private final class PersistenceAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviPoolFactory.self) { _ in
-            return RuuviPoolFactoryCoordinator()
+            RuuviPoolFactoryCoordinator()
         }
 
         container.register(RuuviPool.self) { r in
@@ -222,7 +222,7 @@ private final class PersistenceAssembly: Assembly {
         }
 
         container.register(RuuviReactorFactory.self) { _ in
-            return RuuviReactorFactoryImpl()
+            RuuviReactorFactoryImpl()
         }
 
         container.register(RuuviReactor.self) { r in
@@ -285,13 +285,11 @@ private final class PersistenceAssembly: Assembly {
             let factory = r.resolve(SQLiteContextFactory.self)!
             return factory.create()
         }.inObjectScope(.container)
-
     }
 }
 
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
-
         let appGroupDefaults = UserDefaults(
             suiteName: AppGroupConstants.appGroupSuiteIdentifier
         )
@@ -314,7 +312,7 @@ private final class NetworkingAssembly: Assembly {
         }
 
         container.register(RuuviCloudFactory.self) { _ in
-            return RuuviCloudFactoryPure()
+            RuuviCloudFactoryPure()
         }
     }
 }
@@ -431,7 +429,7 @@ private final class BusinessAssembly: Assembly {
             service.ruuviUser = r.resolve(RuuviUser.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
             #if canImport(RuuviAnalytics)
-            service.userPropertiesService = r.resolve(RuuviAnalytics.self)
+                service.userPropertiesService = r.resolve(RuuviAnalytics.self)
             #endif
             service.universalLinkCoordinator = r.resolve(UniversalLinkCoordinator.self)
             return service
@@ -491,7 +489,7 @@ private final class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviDaemonFactory.self) { _ in
-            return RuuviDaemonFactoryImpl()
+            RuuviDaemonFactoryImpl()
         }
 
         container.register(RuuviDaemonCloudSync.self) { r in
@@ -507,7 +505,7 @@ private final class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviRepositoryFactory.self) { _ in
-            return RuuviRepositoryFactoryCoordinator()
+            RuuviRepositoryFactoryCoordinator()
         }
 
         container.register(RuuviRepository.self) { r in
@@ -521,7 +519,7 @@ private final class BusinessAssembly: Assembly {
         }
 
         container.register(RuuviServiceFactory.self) { _ in
-            return RuuviServiceFactoryImpl()
+            RuuviServiceFactoryImpl()
         }
 
         container.register(RuuviServiceAlert.self) { r in
@@ -647,7 +645,7 @@ private final class BusinessAssembly: Assembly {
         }
 
         container.register(RuuviUserFactory.self) { _ in
-            return RuuviUserFactoryCoordinator()
+            RuuviUserFactoryCoordinator()
         }
 
         container.register(RuuviUser.self) { r in
@@ -656,19 +654,19 @@ private final class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         #if canImport(RuuviAnalytics)
-        container.register(RuuviAnalytics.self) { r in
-            let ruuviUser = r.resolve(RuuviUser.self)!
-            let ruuviStorage = r.resolve(RuuviStorage.self)!
-            let settings = r.resolve(RuuviLocalSettings.self)!
-            let alertService = r.resolve(RuuviServiceAlert.self)!
-            let service = RuuviAnalyticsImpl(
-                ruuviUser: ruuviUser,
-                ruuviStorage: ruuviStorage,
-                settings: settings,
-                alertService: alertService
-            )
-            return service
-        }
+            container.register(RuuviAnalytics.self) { r in
+                let ruuviUser = r.resolve(RuuviUser.self)!
+                let ruuviStorage = r.resolve(RuuviStorage.self)!
+                let settings = r.resolve(RuuviLocalSettings.self)!
+                let alertService = r.resolve(RuuviServiceAlert.self)!
+                let service = RuuviAnalyticsImpl(
+                    ruuviUser: ruuviUser,
+                    ruuviStorage: ruuviStorage,
+                    settings: settings,
+                    alertService: alertService
+                )
+                return service
+            }
         #endif
         container.register(UniversalLinkCoordinator.self, factory: { r in
             let coordinator = UniversalLinkCoordinatorImpl()
@@ -698,14 +696,13 @@ private final class BusinessAssembly: Assembly {
 }
 
 private final class CoreAssembly: Assembly {
-
     func assemble(container: Container) {
         container.register(BTForeground.self) { _ in
-            return BTKit.foreground
+            BTKit.foreground
         }.inObjectScope(.container)
 
         container.register(BTBackground.self) { _ in
-            return BTKit.background
+            BTKit.background
         }.inObjectScope(.container)
 
         container.register(InfoProvider.self) { _ in
@@ -744,7 +741,7 @@ private final class CoreAssembly: Assembly {
         }
 
         container.register(RuuviCoreImage.self) { _ in
-            return RuuviCoreImageImpl()
+            RuuviCoreImageImpl()
         }
 
         container.register(RuuviServiceMeasurement.self, factory: { r in

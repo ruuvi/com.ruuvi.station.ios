@@ -3,16 +3,16 @@ import RuuviLocalization
 
 extension Int {
     var stringValue: String {
-        return "\(self)"
+        "\(self)"
     }
 }
 
-extension Optional where Wrapped == Int {
+extension Int? {
     var stringValue: String {
-        if let self = self {
-            return "\(self)"
+        if let self {
+            "\(self)"
         } else {
-            return RuuviLocalization.na
+            RuuviLocalization.na
         }
     }
 }

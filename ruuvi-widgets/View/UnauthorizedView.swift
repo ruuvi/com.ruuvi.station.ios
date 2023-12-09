@@ -7,6 +7,7 @@ struct UnauthorizedView: View {
         let unauthorizedSmall = "SignIn.Title.text"
         let unauthorizedInline = "Widgets.Unauthorized.Inline.message"
     }
+
     private let texts = Texts()
 
     var body: some View {

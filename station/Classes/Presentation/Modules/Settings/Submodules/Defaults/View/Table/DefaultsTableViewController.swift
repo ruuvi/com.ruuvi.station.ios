@@ -22,21 +22,20 @@ extension DefaultsTableViewController: DefaultsViewInput {
         // do nothing
     }
 
-    func showEndpointChangeConfirmationDialog(useDevServer: Bool?) {
+    func showEndpointChangeConfirmationDialog(useDevServer _: Bool?) {
         // No op.
     }
 }
 
 // MARK: - View lifecycle
-extension DefaultsTableViewController {
 
-}
+extension DefaultsTableViewController {}
 
 // MARK: - UITableViewDataSource
-extension DefaultsTableViewController {
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+extension DefaultsTableViewController {
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModels.count
     }
 
     // swiftlint:disable:next function_body_length
@@ -90,8 +89,8 @@ extension DefaultsTableViewController {
             switch viewModel.unit {
             case .hours, .minutes, .seconds:
                 cell.titleLabel.text = title + " "
-                + "(" + "\(result)" + " "
-                + unitString + ")"
+                    + "(" + "\(result)" + " "
+                    + unitString + ")"
             case .decimal:
                 cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
             }
@@ -103,11 +102,11 @@ extension DefaultsTableViewController {
             // Should never be here
             return UITableViewCell()
         }
-
     }
 }
 
 // MARK: - DefaultsSwitchTableViewCellDelegate
+
 extension DefaultsTableViewController: DefaultsSwitchTableViewCellDelegate {
     func defaultsSwitch(cell: DefaultsSwitchTableViewCell, didChange value: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
@@ -117,6 +116,7 @@ extension DefaultsTableViewController: DefaultsSwitchTableViewCellDelegate {
 }
 
 // MARK: - DefaultsStepperTableViewCellDelegate
+
 extension DefaultsTableViewController: DefaultsStepperTableViewCellDelegate {
     func defaultsStepper(cell: DefaultsStepperTableViewCell, didChange value: Int) {
         if let indexPath = tableView.indexPath(for: cell) {

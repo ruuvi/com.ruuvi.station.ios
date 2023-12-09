@@ -1,6 +1,6 @@
 import Foundation
-import RuuviOntology
 import RuuviLocalization
+import RuuviOntology
 
 extension UnitPressure: SelectionItemProtocol {
     var title: (String) -> String {
@@ -12,10 +12,11 @@ extension UnitPressure: SelectionItemProtocol {
         case .millimetersOfMercury:
             return { _ in RuuviLocalization.UnitPressure.MillimetreOfMercury.title }
         default:
-            assert(false, "Not allowed")
+            assertionFailure("Not allowed")
             return { _ in .init() }
         }
     }
+
     var alertRange: Range<Double> {
         let min = Pressure(500, unit: .hectopascals)?.converted(to: self).value ?? 500
         let max = Pressure(1155, unit: .hectopascals)?.converted(to: self).value ?? 1155

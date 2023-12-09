@@ -12,7 +12,7 @@ public struct RuuviCloudApiSensorImageUploadRequest: UserApiUploadRequest {
     ) {
         self.sensor = sensor
         self.action = action
-        self.mimeType = nil
+        mimeType = nil
     }
 
     public init(

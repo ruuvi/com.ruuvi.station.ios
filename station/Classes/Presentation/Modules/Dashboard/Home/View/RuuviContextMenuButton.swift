@@ -1,7 +1,6 @@
 import UIKit
 
 class RuuviContextMenuButton: UIView {
-
     lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
@@ -30,7 +29,8 @@ class RuuviContextMenuButton: UIView {
         super.init(frame: frame)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -41,33 +41,34 @@ class RuuviContextMenuButton: UIView {
                      iconTintColor: UIColor?,
                      iconSize: CGSize = .init(width: 16, height: 16),
                      interimSpacing: CGFloat = 6.0,
-                     preccedingIcon: Bool = false) {
+                     preccedingIcon: Bool = false)
+    {
         self.init()
         self.preccedingIcon = preccedingIcon
-        self.button.menu = menu
-        self.buttonTitleLabel.text = title
-        self.buttonTitleLabel.textColor = titleColor
-        self.buttonIconView.tintColor = iconTintColor
-        self.buttonIconView.image = icon
+        button.menu = menu
+        buttonTitleLabel.text = title
+        buttonTitleLabel.textColor = titleColor
+        buttonIconView.tintColor = iconTintColor
+        buttonIconView.image = icon
         self.iconSize = iconSize
         self.interimSpacing = interimSpacing
-        self.setUpUI()
+        setUpUI()
     }
 }
 
-extension RuuviContextMenuButton {
-    fileprivate func setUpUI() {
+private extension RuuviContextMenuButton {
+    func setUpUI() {
         var stackView = UIStackView()
 
         if preccedingIcon {
             buttonTitleLabel.textAlignment = .left
             stackView = UIStackView(arrangedSubviews: [
-                buttonIconView, buttonTitleLabel
+                buttonIconView, buttonTitleLabel,
             ])
         } else {
             buttonTitleLabel.textAlignment = .right
             stackView = UIStackView(arrangedSubviews: [
-                buttonTitleLabel, buttonIconView
+                buttonTitleLabel, buttonIconView,
             ])
         }
         buttonIconView.heightAnchor.constraint(
@@ -89,10 +90,10 @@ extension RuuviContextMenuButton {
 
 extension RuuviContextMenuButton {
     func updateMenu(with menu: UIMenu?) {
-        self.button.menu = menu
+        button.menu = menu
     }
 
     func updateTitle(with string: String?) {
-        self.buttonTitleLabel.text = string
+        buttonTitleLabel.text = string
     }
 }

@@ -1,11 +1,11 @@
-import UIKit
 import Future
 import RuuviOntology
+import UIKit
 
-extension Notification.Name {
-    public static let BackgroundPersistenceDidChangeBackground
+public extension Notification.Name {
+    static let BackgroundPersistenceDidChangeBackground
         = Notification.Name("BackgroundPersistenceDidChangeBackground")
-    public static let BackgroundPersistenceDidUpdateBackgroundUploadProgress
+    static let BackgroundPersistenceDidUpdateBackgroundUploadProgress
         = Notification.Name("BackgroundPersistenceDidUpdateBackgroundUploadProgress")
 }
 

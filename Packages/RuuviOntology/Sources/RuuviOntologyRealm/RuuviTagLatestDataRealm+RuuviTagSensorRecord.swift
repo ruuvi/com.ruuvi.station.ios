@@ -1,9 +1,9 @@
 import Foundation
-import RuuviOntology
 import RealmSwift
+import RuuviOntology
 
-extension RuuviTagLatestDataRealm {
-    public var any: AnyRuuviTagSensorRecord? {
+public extension RuuviTagLatestDataRealm {
+    var any: AnyRuuviTagSensorRecord? {
         let inner = RuuviTagSensorRecordStruct(
             luid: ruuviTag?.uuid.luid,
             date: date,

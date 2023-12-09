@@ -1,7 +1,7 @@
-import UIKit
-import Humidity
 import Charts
+import Humidity
 import RuuviOntology
+import UIKit
 
 enum TagChartsType {
     case ruuvi
@@ -9,15 +9,15 @@ enum TagChartsType {
 
 struct TagChartsViewModel {
     var type: TagChartsType = .ruuvi
-    var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
-    var mac: Observable<String?> = Observable<String?>()
-    var name: Observable<String?> = Observable<String?>()
-    var background: Observable<UIImage?> = Observable<UIImage?>()
-    var isConnectable: Observable<Bool?> = Observable<Bool?>(false)
-    var isCloud: Observable<Bool?> = Observable<Bool?>()
-    var alertState: Observable<AlertState?> = Observable<AlertState?>()
-    var isConnected: Observable<Bool?> = Observable<Bool?>()
-    var isHandleInitialResult: Observable<Bool?> = Observable<Bool?>(false)
+    var uuid: Observable<String?> = .init(UUID().uuidString)
+    var mac: Observable<String?> = .init()
+    var name: Observable<String?> = .init()
+    var background: Observable<UIImage?> = .init()
+    var isConnectable: Observable<Bool?> = .init(false)
+    var isCloud: Observable<Bool?> = .init()
+    var alertState: Observable<AlertState?> = .init()
+    var isConnected: Observable<Bool?> = .init()
+    var isHandleInitialResult: Observable<Bool?> = .init(false)
 
     init(type: TagChartsType) {
         self.type = type

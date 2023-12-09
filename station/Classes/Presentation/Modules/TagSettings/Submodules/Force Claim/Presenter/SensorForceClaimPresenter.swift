@@ -1,12 +1,12 @@
-import Foundation
-import RuuviOntology
-import RuuviService
-import RuuviUser
-import RuuviPool
-import RuuviPresenters
 import BTKit
 import CoreNFC
+import Foundation
 import RuuviLocal
+import RuuviOntology
+import RuuviPool
+import RuuviPresenters
+import RuuviService
+import RuuviUser
 
 final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
     weak var view: SensorForceClaimViewInput?
@@ -81,11 +81,12 @@ extension SensorForceClaimPresenter {
         timer = Timer.scheduledTimer(
             withTimeInterval: gattTimeoutSeconds,
             repeats: true,
-            block: { [weak self] (_) in
+            block: { [weak self] _ in
                 self?.activityPresenter.dismiss()
                 self?.invalidateTimer()
                 self?.view?.showGATTConnectionTimeoutDialog()
-            })
+            }
+        )
     }
 
     /// Invalidates the running timer
@@ -105,9 +106,9 @@ extension SensorForceClaimPresenter {
             options: [.connectionTimeout(gattTimeoutSeconds)] // Doesn't work now.
         ) { [weak self] _, result in
             switch result {
-            case .success(let secret):
+            case let .success(secret):
                 self?.contestSensor(with: secret)
-            case .failure(let error):
+            case let .failure(error):
                 self?.activityPresenter.dismiss()
                 self?.errorPresenter.present(error: error)
             }
@@ -116,8 +117,8 @@ extension SensorForceClaimPresenter {
 
     /// Contest sensor with tag secret.
     private func contestSensor(with secret: String?) {
-        guard let ruuviTag = ruuviTag,
-              let secret = secret else { return }
+        guard let ruuviTag,
+              let secret else { return }
 
         activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService

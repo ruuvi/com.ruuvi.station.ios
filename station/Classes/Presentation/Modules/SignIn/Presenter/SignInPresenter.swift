@@ -1,15 +1,15 @@
-import RuuviLocalization
+import FirebaseMessaging
 import Foundation
 import Future
 import RuuviCloud
+import RuuviDaemon
+import RuuviLocal
+import RuuviLocalization
+import RuuviPresenters
 import RuuviService
 import RuuviUser
-import RuuviPresenters
-import RuuviDaemon
-import FirebaseMessaging
-import RuuviLocal
-import WidgetKit
 import UIKit
+import WidgetKit
 
 class SignInPresenter: NSObject {
     enum State {
@@ -44,7 +44,9 @@ class SignInPresenter: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
 }
+
 // MARK: - SignInViewOutput
+
 extension SignInPresenter: SignInViewOutput {
     func viewDidLoad() {
         syncViewModel()
@@ -65,7 +67,7 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapRequestCodeButton(for email: String?) {
-        guard let email = email, isValidEmail(email) else {
+        guard let email, isValidEmail(email) else {
             view.showInvalidEmailEntered()
             return
         }
@@ -88,6 +90,7 @@ extension SignInPresenter: SignInViewOutput {
 }
 
 // MARK: - SignInModuleInput
+
 extension SignInPresenter: SignInModuleInput {
     func configure(with state: SignInPresenter.State, output: SignInModuleOutput?) {
         self.output = output
@@ -100,15 +103,16 @@ extension SignInPresenter: SignInModuleInput {
 }
 
 // MARK: - Private
+
 extension SignInPresenter {
     @objc private func syncViewModel() {
         viewModel = SignInViewModel()
         switch state {
         case .enterEmail:
             viewModel.showVerficationScreen.value = false
-        case .enterVerificationCode(let code):
+        case let .enterVerificationCode(code):
             viewModel.showVerficationScreen.value = true
-            if let code = code {
+            if let code {
                 processCode(code)
             }
         case .isSyncing:
@@ -117,7 +121,7 @@ extension SignInPresenter {
     }
 
     private func isValidEmail(_ email: String?) -> Bool {
-        guard let email = email else {
+        guard let email else {
             return false
         }
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -134,7 +138,7 @@ extension SignInPresenter {
                 sSelf.ruuviUser.email = email
                 sSelf.viewModel.showVerficationScreen.value = true
                 sSelf.state = .enterVerificationCode(nil)
-            }, failure: { [weak self] (error) in
+            }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
                 self?.activityPresenter.dismiss()
@@ -175,7 +179,7 @@ extension SignInPresenter {
                     sSelf.view.showFailedToGetRequestedEmail()
                     sSelf.activityPresenter.dismiss()
                 }
-            }, failure: { [weak self] (error) in
+            }, failure: { [weak self] error in
                 self?.activityPresenter.dismiss()
                 self?.view.showInvalidTokenEntered()
                 self?.errorPresenter.present(error: error)
@@ -188,13 +192,14 @@ extension SignInPresenter {
             .addObserver(forName: .DidOpenWithUniversalLink,
                          object: nil,
                          queue: .main,
-                         using: { [weak self] (notification) in
-            guard let self = self,
-                let userInfo = notification.userInfo else {
-                return
-            }
-            self.processLink(userInfo)
-        })
+                         using: { [weak self] notification in
+                             guard let self,
+                                   let userInfo = notification.userInfo
+                             else {
+                                 return
+                             }
+                             processLink(userInfo)
+                         })
     }
 
     private func startObservingAppState() {
@@ -236,10 +241,11 @@ extension SignInPresenter {
             guard let path = userInfo["path"] as? UniversalLinkType,
                   path == .verify,
                   let code = userInfo["token"] as? String,
-                  !code.isEmpty else {
+                  !code.isEmpty
+            else {
                 return
             }
-            self.processCode(code)
+            processCode(code)
         default:
             break
         }
@@ -248,9 +254,9 @@ extension SignInPresenter {
     private func processCode(_ code: String) {
         view.fromDeepLink = true
         viewModel.inputText.value = code
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750), execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750)) { [weak self] in
             self?.verify(code)
-        })
+        }
     }
 
     private func reloadWidgets() {

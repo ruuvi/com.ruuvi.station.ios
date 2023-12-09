@@ -4,7 +4,7 @@ class SwipeDownToDismissNavigationController: UINavigationController, UIGestureR
     lazy var panGR: UIPanGestureRecognizer = {
         let panGR = UIPanGestureRecognizer(target: self,
                                            action: #selector
-                                            (SwipeDownToDismissNavigationController.handlePanGesture(_:)))
+                                           (SwipeDownToDismissNavigationController.handlePanGesture(_:)))
         panGR.delegate = self
         panGR.isEnabled = true
         return panGR
@@ -12,12 +12,13 @@ class SwipeDownToDismissNavigationController: UINavigationController, UIGestureR
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addGestureRecognizer(panGR)
+        view.addGestureRecognizer(panGR)
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+    func gestureRecognizer(_: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer) -> Bool
+    {
+        true
     }
 
     @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
@@ -35,7 +36,8 @@ class SwipeDownToDismissNavigationController: UINavigationController, UIGestureR
             switch sender.state {
             case .began:
                 if let tagSettings = topViewController as? UITableViewController,
-                    tagSettings.tableView.contentOffset.y <= 0 {
+                   tagSettings.tableView.contentOffset.y <= 0
+                {
                     interactor.hasStarted = true
                     dismiss(animated: true)
                 }

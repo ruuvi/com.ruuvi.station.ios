@@ -1,12 +1,11 @@
-import XCTest
 import Humidity
-import Quick
 import Nimble
+import Quick
+import XCTest
 
 @testable import station
 
 class MeasurementsServiceSvSpec: QuickSpec {
-
     override func spec() {
         let r = AppAssembly.shared.assembler.resolver
         var service: MeasurementsService! = r.resolve(MeasurementsService.self)

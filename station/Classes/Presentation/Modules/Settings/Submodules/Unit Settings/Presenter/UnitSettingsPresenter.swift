@@ -1,8 +1,8 @@
 import Foundation
-import RuuviOntology
 import RuuviLocal
-import RuuviService
 import RuuviLocalization
+import RuuviOntology
+import RuuviService
 
 class UnitSettingsPresenter {
     weak var view: UnitSettingsViewInput!
@@ -22,6 +22,7 @@ class UnitSettingsPresenter {
             view.viewModel = viewModel
         }
     }
+
     var output: UnitSettingsModuleOutput?
 
     deinit {
@@ -33,6 +34,7 @@ class UnitSettingsPresenter {
         pressureAccuracyToken?.invalidate()
     }
 }
+
 extension UnitSettingsPresenter: UnitSettingsModuleInput {
     func configure(viewModel: UnitSettingsViewModel, output: UnitSettingsModuleOutput?) {
         self.viewModel = viewModel
@@ -86,8 +88,9 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
                 break
             }
         case .accuracy:
-            guard let viewModel = viewModel,
-                    let item = item as? MeasurementAccuracyType else {
+            guard let viewModel,
+                  let item = item as? MeasurementAccuracyType
+            else {
                 return
             }
             switch viewModel.measurementType {
@@ -110,7 +113,7 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
 
 extension UnitSettingsPresenter {
     private func unitViewModel() -> SelectionViewModel? {
-        guard let viewModel = viewModel else {
+        guard let viewModel else {
             return nil
         }
 
@@ -168,7 +171,7 @@ extension UnitSettingsPresenter {
         let selectionItems: [MeasurementAccuracyType] = [
             .zero,
             .one,
-            .two
+            .two,
         ]
 
         return SelectionViewModel(title: accuracyTitle,
@@ -185,17 +188,19 @@ extension UnitSettingsPresenter {
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
-                         queue: .main) { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
+                         queue: .main)
+        { [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
         }
         temperatureAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureAccuracyDidChange,
                          object: nil,
-                         queue: .main) { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.temperatureAccuracy = sSelf.settings.temperatureAccuracy
+                         queue: .main)
+        { [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.view.temperatureAccuracy = sSelf.settings.temperatureAccuracy
         }
         humidityUnitToken = NotificationCenter
             .default
@@ -203,36 +208,36 @@ extension UnitSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.humidityUnit = sSelf.settings.humidityUnit
-        })
+                             guard let sSelf = self else { return }
+                             sSelf.view.humidityUnit = sSelf.settings.humidityUnit
+                         })
         humidityAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .HumidityAccuracyDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
-        })
+                             guard let sSelf = self else { return }
+                             sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
+                         })
         pressureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.pressureUnit = sSelf.settings.pressureUnit
-        })
+                             guard let sSelf = self else { return }
+                             sSelf.view.pressureUnit = sSelf.settings.pressureUnit
+                         })
         pressureAccuracyToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitAccuracyChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.pressureAccuracy = sSelf.settings.pressureAccuracy
-        })
+                             guard let sSelf = self else { return }
+                             sSelf.view.pressureAccuracy = sSelf.settings.pressureAccuracy
+                         })
     }
 
     private func updateUnits() {

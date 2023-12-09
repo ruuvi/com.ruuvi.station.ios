@@ -1,7 +1,7 @@
 import Foundation
-import RuuviPool
 import RuuviLocal
 import RuuviPersistence
+import RuuviPool
 
 public final class RuuviPoolFactoryCoordinator: RuuviPoolFactory {
     public init() {}
@@ -13,7 +13,7 @@ public final class RuuviPoolFactoryCoordinator: RuuviPoolFactory {
         settings: RuuviLocalSettings,
         connectionPersistence: RuuviLocalConnections
     ) -> RuuviPool {
-        return RuuviPoolCoordinator(
+        RuuviPoolCoordinator(
             sqlite: sqlite,
             realm: realm,
             idPersistence: idPersistence,

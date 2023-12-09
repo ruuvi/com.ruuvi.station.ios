@@ -1,11 +1,11 @@
-import UIKit
-import Photos
 import CoreLocation
+import Photos
+import UIKit
 import UserNotifications
 
 class InfoProviderImpl: InfoProvider {
     var deviceModel: String {
-        return UIDevice.modelName
+        UIDevice.modelName
     }
 
     var appVersion: String {
@@ -15,15 +15,15 @@ class InfoProviderImpl: InfoProvider {
     }
 
     var appName: String {
-        return Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? "unknown|"
+        Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? "unknown|"
     }
 
     var systemName: String {
-        return UIDevice.current.systemName
+        UIDevice.current.systemName
     }
 
     var systemVersion: String {
-        return UIDevice.current.systemVersion
+        UIDevice.current.systemVersion
     }
 
     var locationPermission: String {
@@ -67,20 +67,20 @@ class InfoProviderImpl: InfoProvider {
     var cameraPermission: String {
         var result = "Camera: "
         #if targetEnvironment(macCatalyst)
-        result += "unknown"
-        #else
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            result += "authorized"
-        case .denied:
-            result += "denied"
-        case .notDetermined:
-            result += notDetermined
-        case .restricted:
-            result += "restricted"
-        @unknown default:
             result += "unknown"
-        }
+        #else
+            switch AVCaptureDevice.authorizationStatus(for: .video) {
+            case .authorized:
+                result += "authorized"
+            case .denied:
+                result += "denied"
+            case .notDetermined:
+                result += notDetermined
+            case .restricted:
+                result += "restricted"
+            @unknown default:
+                result += "unknown"
+            }
         #endif
         return result
     }
@@ -102,7 +102,7 @@ class InfoProviderImpl: InfoProvider {
         result += cameraPermission + "\n"
 
         result += "Notifications: "
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
                 case .authorized:
@@ -123,5 +123,4 @@ class InfoProviderImpl: InfoProvider {
             }
         }
     }
-
 }

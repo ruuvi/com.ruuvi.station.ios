@@ -2,9 +2,9 @@ import Foundation
 import Future
 import RuuviOntology
 
-extension Notification.Name {
-    public static let RuuviServiceAlertDidChange = Notification.Name("RuuviServiceAlertDidChange")
-    public static let RuuviServiceAlertTriggerDidChange =
+public extension Notification.Name {
+    static let RuuviServiceAlertDidChange = Notification.Name("RuuviServiceAlertDidChange")
+    static let RuuviServiceAlertTriggerDidChange =
         Notification.Name("RuuviServiceAlertTriggerDidChange")
 }
 
@@ -14,9 +14,9 @@ public enum RuuviServiceAlertDidChangeKey: String {
 }
 
 public protocol RuuviServiceAlert: RuuviServiceAlertRuuviTag,
-                                   RuuviServiceAlertPhysicalSensor,
-                                   RuuviServiceAlertCloud,
-                                   RuuviServiceAlertDeprecated {}
+    RuuviServiceAlertPhysicalSensor,
+    RuuviServiceAlertCloud,
+    RuuviServiceAlertDeprecated {}
 
 public protocol RuuviServiceAlertRuuviTag {
     func register(type: AlertType, ruuviTag: RuuviTagSensor)

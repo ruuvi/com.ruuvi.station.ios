@@ -1,11 +1,9 @@
 import UIKit
 
 class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
-
     private lazy var appImageView: UIImageView = {
         let iv = UIImageView(image: nil,
-            contentMode: .scaleAspectFit
-        )
+                             contentMode: .scaleAspectFit)
         iv.backgroundColor = .clear
         return iv
     }()
@@ -31,8 +29,7 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
     private lazy var gateWayImageView: UIImageView = {
         let iv = UIImageView(image: UIImage.named(RuuviAssets.gateway,
                                                   for: Self.self),
-            contentMode: .scaleAspectFit
-        )
+                             contentMode: .scaleAspectFit)
         iv.backgroundColor = .clear
         return iv
     }()
@@ -52,22 +49,21 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension RuuviOnboardGatewayFeaturesCell {
-
+private extension RuuviOnboardGatewayFeaturesCell {
     // swiftlint:disable:next function_body_length
-    fileprivate func setUpUI() {
-
+    func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
         container.fillSuperview()
 
         let textStack = UIStackView(arrangedSubviews: [
-            subtitleLabel, titleLabel
+            subtitleLabel, titleLabel,
         ])
         textStack.axis = .vertical
         textStack.distribution = .fillProportionally
@@ -78,7 +74,7 @@ extension RuuviOnboardGatewayFeaturesCell {
                          leading: container.safeLeadingAnchor,
                          bottom: nil,
                          trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44+12, left: 16,
+                         padding: .init(top: 44 + 12, left: 16,
                                         bottom: 0, right: 16))
 
         let appImageViewContainer = UIView(color: .clear)
@@ -103,7 +99,7 @@ extension RuuviOnboardGatewayFeaturesCell {
                           trailing: container.trailingAnchor)
 
         let stackView = UIStackView(arrangedSubviews: [
-            gateWayImageView, gatewayRequireLabel
+            gateWayImageView, gatewayRequireLabel,
         ])
         stackView.distribution = .fillProportionally
         stackView.spacing = 8

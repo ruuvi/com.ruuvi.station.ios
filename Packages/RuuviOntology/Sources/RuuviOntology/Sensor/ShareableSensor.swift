@@ -16,9 +16,9 @@ public struct ShareableSensorStruct: ShareableSensor {
     }
 }
 
-extension ShareableSensor {
-    public var any: AnyShareableSensor {
-        return AnyShareableSensor(object: self)
+public extension ShareableSensor {
+    var any: AnyShareableSensor {
+        AnyShareableSensor(object: self)
     }
 }
 
@@ -30,19 +30,19 @@ public struct AnyShareableSensor: ShareableSensor, Equatable, Hashable, Reordera
     }
 
     public var id: String {
-        return object.id
+        object.id
     }
 
     public var canShare: Bool {
-        return object.canShare
+        object.canShare
     }
 
     public var sharedTo: [String] {
-        return object.sharedTo
+        object.sharedTo
     }
 
     public static func == (lhs: AnyShareableSensor, rhs: AnyShareableSensor) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -50,6 +50,6 @@ public struct AnyShareableSensor: ShareableSensor, Equatable, Hashable, Reordera
     }
 
     public var orderElement: String {
-        return id
+        id
     }
 }

@@ -12,8 +12,8 @@ struct ChartSettingsSection {
 
 struct ChartSettingsCell {
     var type: ChartSettingsCellType
-    var boolean: Observable<Bool?> = Observable<Bool?>()
-    var integer: Observable<Int?> = Observable<Int?>()
+    var boolean: Observable<Bool?> = .init()
+    var integer: Observable<Int?> = .init()
 }
 
 enum ChartSettingsIntegerUnit {
@@ -23,9 +23,9 @@ enum ChartSettingsIntegerUnit {
     var unitString: String {
         switch self {
         case .day:
-            return RuuviLocalization.Interval.Day.string
+            RuuviLocalization.Interval.Day.string
         case .days:
-            return RuuviLocalization.Interval.Days.string
+            RuuviLocalization.Interval.Days.string
         }
     }
 }

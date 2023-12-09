@@ -1,9 +1,8 @@
-import RuuviLocalization
 import Foundation
+import RuuviLocalization
 import UIKit
 
 class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
-
     // Configuration
     var output: SignInBenefitsViewOutput?
 
@@ -94,10 +93,10 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         return label
     }()
-
 }
 
 // MARK: - VIEW LIFE CYCLE
+
 extension SignInBenefitsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,7 +110,7 @@ extension SignInBenefitsViewController {
 }
 
 extension SignInBenefitsViewController {
-    @objc fileprivate func handleCloseButtonTap() {
+    @objc private func handleCloseButtonTap() {
         output?.viewDidTapClose()
     }
 
@@ -127,6 +126,7 @@ extension SignInBenefitsViewController {
 }
 
 // MARK: - PRIVATE UI SETUP
+
 extension SignInBenefitsViewController {
     private func setUpUI() {
         setUpNavBarView()
@@ -134,7 +134,7 @@ extension SignInBenefitsViewController {
         setUpSignInPromoView()
     }
 
-    fileprivate func setUpNavBarView() {
+    private func setUpNavBarView() {
         navigationItem.leftBarButtonItem = closeButton
     }
 
@@ -156,7 +156,7 @@ extension SignInBenefitsViewController {
         container.centerInSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel
+            titleLabel, subtitleLabel,
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
@@ -164,11 +164,11 @@ extension SignInBenefitsViewController {
 
         container.addSubview(titleStack)
         titleStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeftAnchor,
-                         bottom: nil,
-                         trailing: container.safeRightAnchor,
-                         padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                        bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+                          leading: container.safeLeftAnchor,
+                          bottom: nil,
+                          trailing: container.safeRightAnchor,
+                          padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
+                                         bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
 
         container.addSubview(featuresLabel)
         featuresLabel.anchor(
@@ -207,13 +207,13 @@ extension SignInBenefitsViewController {
 
         container.addSubview(signInOptionalLabel)
         signInOptionalLabel.anchor(top: continueButton.bottomAnchor,
-                               leading: container.safeLeftAnchor,
-                               bottom: nil,
-                               trailing: container.safeRightAnchor,
-                               padding: .init(top: UIDevice.isiPhoneSE() ? 6 : 10,
-                                              left: 30,
-                                              bottom: 0,
-                                              right: 30))
+                                   leading: container.safeLeftAnchor,
+                                   bottom: nil,
+                                   trailing: container.safeRightAnchor,
+                                   padding: .init(top: UIDevice.isiPhoneSE() ? 6 : 10,
+                                                  left: 30,
+                                                  bottom: 0,
+                                                  right: 30))
 
         signInOptionalLabel.bottomAnchor.constraint(
             lessThanOrEqualTo: container.bottomAnchor, constant: -30
@@ -223,13 +223,13 @@ extension SignInBenefitsViewController {
 
 extension SignInBenefitsViewController {
     private func prepareFeatures() -> String {
-        return [
+        [
             RuuviLocalization.cloudStoredOwnerships,
             RuuviLocalization.cloudStoredNames,
             RuuviLocalization.cloudStoredAlerts,
             RuuviLocalization.cloudStoredBackgrounds,
             RuuviLocalization.cloudStoredCalibration,
-            RuuviLocalization.cloudStoredSharing
+            RuuviLocalization.cloudStoredSharing,
         ].joined(separator: "\n")
     }
 

@@ -1,9 +1,9 @@
-import RuuviLocalization
-import UIKit
 import Charts
 import RuuviLocal
+import RuuviLocalization
 import RuuviOntology
 import RuuviService
+import UIKit
 
 protocol TagChartsViewDelegate: NSObjectProtocol {
     func chartDidTranslate(_ chartView: TagChartsView)
@@ -36,6 +36,7 @@ class TagChartsView: LineChartView {
     private lazy var markerView = TagChartsMarkerView()
 
     // MARK: - LifeCycle
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         delegate = self
@@ -43,13 +44,15 @@ class TagChartsView: LineChartView {
         configure()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Layout
+
     private func addSubviews() {
-        self.addSubview(chartNameLabel)
+        addSubview(chartNameLabel)
         chartNameLabel.anchor(
             top: nil,
             leading: nil,
@@ -63,7 +66,7 @@ class TagChartsView: LineChartView {
             )
         )
 
-        self.addSubview(chartMinMaxAvgLabel)
+        addSubview(chartMinMaxAvgLabel)
         chartMinMaxAvgLabel.anchor(
             top: nil,
             leading: nil,
@@ -77,6 +80,7 @@ class TagChartsView: LineChartView {
     }
 
     // MARK: - Private
+
     private func configure() {
         chartDescription.enabled = false
         dragEnabled = true
@@ -126,7 +130,7 @@ class TagChartsView: LineChartView {
 
         drawMarkers = true
         markerView.chartView = self
-        self.marker = markerView
+        marker = markerView
         setExtraOffsets(left: 2, top: 4, right: 0, bottom: 2)
     }
 
@@ -137,33 +141,35 @@ class TagChartsView: LineChartView {
 }
 
 extension TagChartsView: ChartViewDelegate {
-    func chartTranslated(_ chartView: ChartViewBase,
-                         dX: CGFloat,
-                         dY: CGFloat) {
+    func chartTranslated(_: ChartViewBase,
+                         dX _: CGFloat,
+                         dY _: CGFloat)
+    {
         chartDelegate?.chartDidTranslate(self)
     }
 
-    func chartScaled(_ chartView: ChartViewBase,
-                     scaleX: CGFloat,
-                     scaleY: CGFloat) {
+    func chartScaled(_: ChartViewBase,
+                     scaleX _: CGFloat,
+                     scaleY _: CGFloat)
+    {
         chartDelegate?.chartDidTranslate(self)
     }
 
-    func chartValueSelected(_ chartView: ChartViewBase,
+    func chartValueSelected(_: ChartViewBase,
                             entry: ChartDataEntry,
-                            highlight: Highlight) {
+                            highlight: Highlight)
+    {
         chartDelegate?.chartValueDidSelect(self,
                                            entry: entry,
                                            highlight: highlight)
     }
 
-    func chartValueNothingSelected(_ chartView: ChartViewBase) {
+    func chartValueNothingSelected(_: ChartViewBase) {
         chartDelegate?.chartValueDidDeselect(self)
     }
 }
 
 extension TagChartsView {
-
     func localize() {
         xAxis.valueFormatter = XAxisValueFormatter()
         leftAxis.valueFormatter = YAxisValueFormatter()
@@ -217,8 +223,10 @@ extension TagChartsView {
     }
 
     // MARK: - UpdateUI
+
     func updateDataSet(with newData: [ChartDataEntry],
-                       isFirstEntry: Bool) {
+                       isFirstEntry: Bool)
+    {
         if isFirstEntry {
             let emptyDataSet = LineChartData(dataSet: TagChartsHelper.newDataSet())
             data = emptyDataSet
@@ -234,8 +242,9 @@ extension TagChartsView {
     func updateLatest(with entry: ChartDataEntry?,
                       type: MeasurementType,
                       measurementService: RuuviServiceMeasurement,
-                      unit: String) {
-        guard let entry = entry else { return }
+                      unit: String)
+    {
+        guard let entry else { return }
         switch type {
         case .temperature:
             let tempValue = measurementService.stringWithoutSign(temperature: entry.y)
@@ -253,14 +262,15 @@ extension TagChartsView {
     func setChartLabel(with name: String,
                        type: MeasurementType,
                        measurementService: RuuviServiceMeasurement,
-                       unit: String) {
+                       unit: String)
+    {
         chartName = name
         chartNameLabel.text = name
         if let marker = marker as? TagChartsMarkerView {
             marker.initialise(with: unit,
                               type: type,
                               measurementService: measurementService,
-                              parentFrame: self.frame)
+                              parentFrame: frame)
         }
     }
 
@@ -272,15 +282,15 @@ extension TagChartsView {
         min: Double,
         max: Double,
         avg: Double,
-        type: MeasurementType
+        type _: MeasurementType
     ) {
-        let roundedTo: Int = 2
+        let roundedTo = 2
         let minText = RuuviLocalization.chartStatMin + ": " +
-                GlobalHelpers().formattedString(from: min.round(to: roundedTo))
+            GlobalHelpers().formattedString(from: min.round(to: roundedTo))
         let maxText = RuuviLocalization.chartStatMax + ": " +
-                GlobalHelpers().formattedString(from: max.round(to: roundedTo))
+            GlobalHelpers().formattedString(from: max.round(to: roundedTo))
         let avgText = RuuviLocalization.chartStatAvg + ": " +
-                GlobalHelpers().formattedString(from: avg.round(to: roundedTo))
+            GlobalHelpers().formattedString(from: avg.round(to: roundedTo))
 
         chartMinMaxAvgLabel.text = minText + " " + maxText + " " + avgText
     }

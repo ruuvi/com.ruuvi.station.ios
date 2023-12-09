@@ -1,5 +1,5 @@
-import UIKit
 import RuuviUser
+import UIKit
 
 // swiftlint:disable file_length
 
@@ -27,8 +27,8 @@ struct OnboardViewModel {
     var title: String
     var subtitle: String
     // swiftlint:disable redundant_optional_initialization
-    var sub_subtitle: String? = nil
-    var image: String? = nil
+    var sub_subtitle: String?
+    var image: String?
     // swiftlint:enable redundant_optional_initialization
 }
 
@@ -40,7 +40,8 @@ class RuuviOnboardViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -106,7 +107,6 @@ class RuuviOnboardViewController: UIViewController {
 }
 
 extension RuuviOnboardViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -117,7 +117,6 @@ extension RuuviOnboardViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
-
 }
 
 extension RuuviOnboardViewController {
@@ -159,17 +158,20 @@ extension RuuviOnboardViewController {
 }
 
 extension RuuviOnboardViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        return viewModels.count
+    func collectionView(_: UICollectionView,
+                        numberOfItemsInSection _: Int) -> Int
+    {
+        viewModels.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
         let viewModel = viewModels[indexPath.item]
         guard let cell = cell(collectionView: collectionView,
                               indexPath: indexPath,
-                              viewModel: viewModel) else {
+                              viewModel: viewModel)
+        else {
             fatalError()
         }
 
@@ -178,7 +180,6 @@ extension RuuviOnboardViewController: UICollectionViewDataSource {
 }
 
 extension RuuviOnboardViewController: UICollectionViewDelegate {
-
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
         let yPoint = scrollView.frame.size.height / 2
@@ -192,25 +193,26 @@ extension RuuviOnboardViewController: UICollectionViewDelegate {
 
 extension RuuviOnboardViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
+        _: UICollectionView,
+        layout _: UICollectionViewLayout,
+        sizeForItemAt _: IndexPath
     ) -> CGSize {
-        return CGSize(width: view.bounds.width, height: view.bounds.height)
+        CGSize(width: view.bounds.width, height: view.bounds.height)
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    func collectionView(_: UICollectionView,
+                        layout _: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt _: Int) -> CGFloat
+    {
+        0
     }
 }
 
 extension RuuviOnboardViewController {
-
     private func cell(collectionView: UICollectionView,
                       indexPath: IndexPath,
-                      viewModel: OnboardViewModel) -> UICollectionViewCell? {
+                      viewModel: OnboardViewModel) -> UICollectionViewCell?
+    {
         switch viewModel.pageType {
         case .measure:
             let cell = collectionView.dequeueReusableCell(
@@ -244,13 +246,11 @@ extension RuuviOnboardViewController {
         default:
             return UICollectionViewCell()
         }
-
     }
-
 }
 
 extension RuuviOnboardViewController: RuuviOnboardSignInCellDelegate {
-    func didTapContinueButton(sender: RuuviOnboardSignInCell) {
+    func didTapContinueButton(sender _: RuuviOnboardSignInCell) {
         if let authorized = ruuviUser?.isAuthorized, authorized {
             showDiscoverPage()
         } else {
@@ -307,12 +307,11 @@ extension RuuviOnboardViewController {
     }
 }
 
-extension RuuviOnboardViewController {
-
-    fileprivate static func createLayout() -> UICollectionViewLayout {
+private extension RuuviOnboardViewController {
+    static func createLayout() -> UICollectionViewLayout {
         let sectionProvider = { (_: Int,
                                  _: NSCollectionLayoutEnvironment)
-            -> NSCollectionLayoutSection? in
+                -> NSCollectionLayoutSection? in
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
                 heightDimension: .fractionalHeight(1)
@@ -339,8 +338,7 @@ extension RuuviOnboardViewController {
     }
 
     // swiftlint:disable:next function_body_length
-    fileprivate func constructOnboardingPages() -> [OnboardViewModel] {
-
+    func constructOnboardingPages() -> [OnboardViewModel] {
         let meaureItem = OnboardViewModel(
             pageType: .measure,
             title: "onboarding_measure_your_world".localized(for: Self.self),
@@ -416,7 +414,7 @@ extension RuuviOnboardViewController {
             shareItem,
             widgetItem,
             webItem,
-            signInItem
+            signInItem,
         ]
     }
 }

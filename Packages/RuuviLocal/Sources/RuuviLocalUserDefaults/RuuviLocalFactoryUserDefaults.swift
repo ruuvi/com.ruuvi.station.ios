@@ -5,22 +5,22 @@ public final class RuuviLocalFactoryUserDefaults: RuuviLocalFactory {
     public init() {}
 
     public func createLocalSettings() -> RuuviLocalSettings {
-        return RuuviLocalSettingsUserDefaults()
+        RuuviLocalSettingsUserDefaults()
     }
 
     public func createLocalIDs() -> RuuviLocalIDs {
-        return RuuviLocalIDsUserDefaults()
+        RuuviLocalIDsUserDefaults()
     }
 
     public func createLocalConnections() -> RuuviLocalConnections {
-        return RuuviLocalConnectionsUserDefaults()
+        RuuviLocalConnectionsUserDefaults()
     }
 
     public func createLocalSyncState() -> RuuviLocalSyncState {
-        return RuuviLocalSyncStateUserDefaults()
+        RuuviLocalSyncStateUserDefaults()
     }
 
     public func createLocalImages() -> RuuviLocalImages {
-        return RuuviLocalImagesUserDefaults(imagePersistence: ImagePersistenceDocuments())
+        RuuviLocalImagesUserDefaults(imagePersistence: ImagePersistenceDocuments())
     }
 }

@@ -1,9 +1,9 @@
-import Foundation
-import RuuviStorage
-import RuuviReactor
-import RuuviPool
-import RuuviPersistence
 import BTKit
+import Foundation
+import RuuviPersistence
+import RuuviPool
+import RuuviReactor
+import RuuviStorage
 
 public enum RuuviDaemonError: Error {
     case ruuviStorage(RuuviStorageError)

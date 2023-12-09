@@ -1,6 +1,6 @@
-import UIKit
 import Foundation
 import RuuviLocalization
+import UIKit
 
 class NotificationsSettingsTableViewController: UITableViewController {
     var output: NotificationsSettingsViewOutput?
@@ -15,7 +15,8 @@ class NotificationsSettingsTableViewController: UITableViewController {
         self.title = title
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -24,6 +25,7 @@ class NotificationsSettingsTableViewController: UITableViewController {
 }
 
 // MARK: - LIFECYCLE
+
 extension NotificationsSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,17 +36,17 @@ extension NotificationsSettingsTableViewController {
 
 extension NotificationsSettingsTableViewController: NotificationsSettingsViewInput {
     func localize() {
-            // no op.
+        // no op.
     }
 }
 
-extension NotificationsSettingsTableViewController {
-    fileprivate func setUpUI() {
+private extension NotificationsSettingsTableViewController {
+    func setUpUI() {
         view.backgroundColor = RuuviColor.ruuviPrimary
         setUpTableView()
     }
 
-    fileprivate func setUpTableView() {
+    func setUpTableView() {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 120
         tableView.sectionFooterHeight = UITableView.automaticDimension
@@ -58,25 +60,27 @@ extension NotificationsSettingsTableViewController {
         )
     }
 
-    fileprivate func updateUI() {
+    func updateUI() {
         if isViewLoaded {
-            DispatchQueue.main.async(execute: { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 self?.tableView.reloadData()
-            })
+            }
         }
     }
 }
 
-    // MARK: - UITableViewDataSource
-extension NotificationsSettingsTableViewController {
+// MARK: - UITableViewDataSource
 
-    override func tableView(_ tableView: UITableView,
-                            numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+extension NotificationsSettingsTableViewController {
+    override func tableView(_: UITableView,
+                            numberOfRowsInSection _: Int) -> Int
+    {
+        viewModels.count
     }
 
     override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         let viewModel = viewModels[indexPath.row]
         switch viewModel.configType.value {
         case .plain:
@@ -109,16 +113,17 @@ extension NotificationsSettingsTableViewController {
         default:
             return UITableViewCell()
         }
-
     }
 
-    override func tableView(_ tableView: UITableView,
-                            estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 100
+    override func tableView(_: UITableView,
+                            estimatedHeightForFooterInSection _: Int) -> CGFloat
+    {
+        100
     }
 
-    override func tableView(_ tableView: UITableView,
-                            viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_: UITableView,
+                            viewForFooterInSection _: Int) -> UIView?
+    {
         let footerView = UIView()
         let footerTextView = RuuviLinkTextView(
             fullTextString: RuuviLocalization.settingsAlertsFooterDescription,
@@ -133,9 +138,11 @@ extension NotificationsSettingsTableViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension NotificationsSettingsTableViewController {
     override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath) {
+                            didSelectRowAt indexPath: IndexPath)
+    {
         tableView.deselectRow(at: indexPath, animated: true)
         let viewModel = viewModels[indexPath.row]
         switch viewModel.settingsType.value {
@@ -148,6 +155,7 @@ extension NotificationsSettingsTableViewController {
 }
 
 // MARK: - NotificationsSettingsSwitchCellDelegate
+
 extension NotificationsSettingsTableViewController: NotificationsSettingsSwitchCellDelegate {
     func didToggleSwitch(isOn: Bool, sender: NotificationsSettingsSwitchCell) {
         if let indexPath = tableView.indexPath(for: sender) {

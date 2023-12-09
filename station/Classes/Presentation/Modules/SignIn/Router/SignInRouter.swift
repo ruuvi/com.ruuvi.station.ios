@@ -11,7 +11,8 @@ class SignInRouter: SignInRouterInput {
     func popViewController(animated: Bool, completion: (() -> Void)?) {
         if let navigationController =
             transitionHandler.navigationController,
-            navigationController.viewControllers.count > 1 {
+            navigationController.viewControllers.count > 1
+        {
             // There is at least one view controller that can be popped
             navigationController.popViewController(animated: animated)
         } else {

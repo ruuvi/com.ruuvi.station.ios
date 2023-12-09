@@ -1,7 +1,6 @@
 import UIKit
 
 class RuuviUISwitch: UISwitch {
-
     private let activeThumbColor: UIColor? =
         RuuviColor.ruuviTintColor
     private let inactiveThumbColor: UIColor? = RuuviColor.ruuviSwitchDisabledThumbTint

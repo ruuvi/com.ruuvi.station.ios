@@ -5,7 +5,6 @@ protocol RuuviLinkTextViewDelegate: NSObjectProtocol {
 }
 
 class RuuviLinkTextView: UITextView {
-
     private var textRegularColor: UIColor? = RuuviColor
         .dashboardIndicatorTextColor?
         .withAlphaComponent(0.6)
@@ -24,8 +23,8 @@ class RuuviLinkTextView: UITextView {
         link: String?
     ) {
         self.init()
-        self.textRegularColor = textColor
-        self.textLinkColor = linkColor
+        textRegularColor = textColor
+        textLinkColor = linkColor
         self.fullTextString = fullTextString
         self.linkString = linkString
         self.link = link
@@ -51,16 +50,16 @@ class RuuviLinkTextView: UITextView {
 
         let regularAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.Muli(.regular, size: 13),
-            .foregroundColor: textRegularColor ?? .secondaryLabel
+            .foregroundColor: textRegularColor ?? .secondaryLabel,
         ]
 
         let tappableAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.Muli(.bold, size: 13),
-            .foregroundColor: textLinkColor ?? .secondaryLabel
+            .foregroundColor: textLinkColor ?? .secondaryLabel,
         ]
 
-        guard let fullTextString = fullTextString,
-                let linkString = linkString else { return }
+        guard let fullTextString,
+              let linkString else { return }
 
         let attributedText = NSMutableAttributedString(
             string: fullTextString, attributes: regularAttributes
@@ -86,9 +85,9 @@ class RuuviLinkTextView: UITextView {
             fractionOfDistanceBetweenInsertionPoints: nil
         )
 
-        guard let fullTextString = fullTextString,
-                let linkString = linkString,
-                let link = link else { return }
+        guard let fullTextString,
+              let linkString,
+              let link else { return }
 
         if let tappableTextRange = fullTextString.range(of: linkString) {
             let nsRange = NSRange(tappableTextRange, in: fullTextString)

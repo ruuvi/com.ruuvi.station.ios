@@ -1,13 +1,13 @@
-import UIKit
-import RuuviLocal
 import RuuviDaemon
-import RuuviUser
+import RuuviLocal
 import RuuviOntology
+import RuuviUser
+import UIKit
 #if canImport(RuuviAnalytics)
-import RuuviAnalytics
+    import RuuviAnalytics
 #endif
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 class AppStateServiceImpl: AppStateService {
@@ -19,12 +19,13 @@ class AppStateServiceImpl: AppStateService {
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var settings: RuuviLocalSettings!
     #if canImport(RuuviAnalytics)
-    var userPropertiesService: RuuviAnalytics!
+        var userPropertiesService: RuuviAnalytics!
     #endif
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+    func application(_: UIApplication,
+                     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?)
+    {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
         }
@@ -43,22 +44,22 @@ class AppStateServiceImpl: AppStateService {
         settings.appIsOnForeground = true
         observeWidgetKind()
         #if canImport(RuuviAnalytics)
-        DispatchQueue.main.async {
-            self.userPropertiesService.update()
-        }
-        settings.appOpenedCount += 1
+            DispatchQueue.main.async {
+                self.userPropertiesService.update()
+            }
+            settings.appOpenedCount += 1
         #endif
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
+    func applicationWillResignActive(_: UIApplication) {
         // do nothing yet
     }
 
-    func applicationDidBecomeActive(_ application: UIApplication) {
+    func applicationDidBecomeActive(_: UIApplication) {
         // do nothing yet
     }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
+    func applicationDidEnterBackground(_: UIApplication) {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.stop()
         }
@@ -71,7 +72,7 @@ class AppStateServiceImpl: AppStateService {
         settings.appIsOnForeground = false
     }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
+    func applicationWillEnterForeground(_: UIApplication) {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
         }
@@ -82,20 +83,20 @@ class AppStateServiceImpl: AppStateService {
         settings.appIsOnForeground = true
     }
 
-    func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
+    func applicationDidOpenWithUniversalLink(_: UIApplication, url: URL) {
         universalLinkCoordinator.processUniversalLink(url: url)
     }
 
-    func applicationDidOpenWithWidgetDeepLink(_ application: UIApplication, macId: String) {
+    func applicationDidOpenWithWidgetDeepLink(_: UIApplication, macId: String) {
         universalLinkCoordinator.processWidgetLink(macId: macId)
     }
 }
 
-extension AppStateServiceImpl {
-    fileprivate func observeWidgetKind() {
+private extension AppStateServiceImpl {
+    func observeWidgetKind() {
         WidgetCenter.shared.getCurrentConfigurations { [weak self] widgetInfos in
-            guard case .success(let infos) = widgetInfos else { return }
-            let simpleWidgets = infos.filter({ $0.kind == AppAssemblyConstants.simpleWidgetKindId })
+            guard case let .success(infos) = widgetInfos else { return }
+            let simpleWidgets = infos.filter { $0.kind == AppAssemblyConstants.simpleWidgetKindId }
             self?.settings.useSimpleWidget = simpleWidgets.count > 0
         }
     }

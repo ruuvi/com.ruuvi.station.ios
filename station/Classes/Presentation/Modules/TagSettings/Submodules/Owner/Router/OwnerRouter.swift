@@ -13,7 +13,7 @@ final class OwnerRouter: OwnerRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
-        self.dfuModule = module
+        dfuModule = module
         transitionHandler
             .navigationController?
             .pushViewController(

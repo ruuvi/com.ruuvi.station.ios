@@ -1,8 +1,8 @@
-import UIKit
-import RuuviOntology
-import RuuviService
-import RuuviPresenters
 import RuuviLocal
+import RuuviOntology
+import RuuviPresenters
+import RuuviService
+import UIKit
 
 protocol DevicesModuleFactory {
     func create() -> DevicesModuleInput

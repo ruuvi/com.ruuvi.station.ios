@@ -17,11 +17,11 @@ class Observable<ObservedType: OptionalType> {
     }
 
     func bind(observer: @escaping Observer) {
-        self.observers.append(observer)
+        observers.append(observer)
     }
 
     private func notifyObservers(_ value: ObservedType.WrappedType?) {
-        self.observers.forEach { [unowned self] (observer) in
+        observers.forEach { [unowned self] observer in
             observer(self, value)
         }
     }

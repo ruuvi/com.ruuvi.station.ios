@@ -1,7 +1,6 @@
 import UIKit
 
 extension UITextField {
-
     func addNumericAccessory() {
         let numberToolbar = UIToolbar()
         numberToolbar.barStyle = UIBarStyle.default
@@ -20,22 +19,20 @@ extension UITextField {
     }
 
     @objc func handleMinusTap() {
-        guard let currentText = self.text else {
+        guard let currentText = text else {
             return
         }
         if currentText.hasPrefix("－") {
             let offsetIndex = currentText.index(currentText.startIndex, offsetBy: 1)
             let substring = currentText[offsetIndex...]
-            self.text = String(substring)
+            text = String(substring)
         } else {
-            self.text = "-" + currentText
+            text = "-" + currentText
         }
     }
-
 }
 
 extension UITextField {
-
     enum PaddingSpace {
         case left(CGFloat)
         case right(CGFloat)
@@ -43,39 +40,39 @@ extension UITextField {
     }
 
     func addPadding(padding: PaddingSpace) {
-
-        self.leftViewMode = .always
-        self.layer.masksToBounds = true
+        leftViewMode = .always
+        layer.masksToBounds = true
 
         switch padding {
-        case .left(let spacing):
-            let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
-            self.leftView = leftPaddingView
-            self.leftViewMode = .always
+        case let .left(spacing):
+            let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: frame.height))
+            leftView = leftPaddingView
+            leftViewMode = .always
 
-        case .right(let spacing):
-            let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
-            self.rightView = rightPaddingView
-            self.rightViewMode = .always
+        case let .right(spacing):
+            let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: frame.height))
+            rightView = rightPaddingView
+            rightViewMode = .always
 
-        case .equalSpacing(let spacing):
-            let equalPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+        case let .equalSpacing(spacing):
+            let equalPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: frame.height))
             // left
-            self.leftView = equalPaddingView
-            self.leftViewMode = .always
+            leftView = equalPaddingView
+            leftViewMode = .always
             // right
-            self.rightView = equalPaddingView
-            self.rightViewMode = .always
+            rightView = equalPaddingView
+            rightViewMode = .always
         }
     }
 
     func setPlaceHolderColor(color: UIColor?) {
-        guard let placeholder = placeholder,
-        let color = color else {
+        guard let placeholder,
+              let color
+        else {
             return
         }
 
-        self.attributedPlaceholder = NSAttributedString(
+        attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [NSAttributedString.Key.foregroundColor: color]
         )

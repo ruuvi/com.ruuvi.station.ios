@@ -25,5 +25,5 @@ extension DFUDevice: Equatable, Hashable {
 }
 
 public func == (lhs: DFUDevice, rhs: DFUDevice) -> Bool {
-    return lhs.uuid == rhs.uuid
+    lhs.uuid == rhs.uuid
 }

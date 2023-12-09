@@ -11,12 +11,12 @@ extension UICollectionView {
     }
 
     func scrollTo(index: Int, section: Int = 0, animated: Bool = false) {
-        guard self.numberOfSections > 0,
-                self.numberOfItems(inSection: section) > 0 else { return }
+        guard numberOfSections > 0,
+              numberOfItems(inSection: section) > 0 else { return }
         let indexPath = IndexPath(item: index,
                                   section: section)
-        self.scrollToItem(at: indexPath,
-                           at: .centeredHorizontally,
-                           animated: animated)
+        scrollToItem(at: indexPath,
+                     at: .centeredHorizontally,
+                     animated: animated)
     }
 }

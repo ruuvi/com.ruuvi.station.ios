@@ -19,11 +19,11 @@ class NotificationsSettingsViewModel: Identifiable {
     var title: String?
     var subtitle: String?
     var configType: Observable<NotificationsSettingsConfigType?> =
-        Observable<NotificationsSettingsConfigType?>()
+        .init()
     var settingsType: Observable<NotificationsSettingsType?> =
-        Observable<NotificationsSettingsType?>()
+        .init()
     // Value for switcher type
-    var boolean: Observable<Bool?> = Observable<Bool?>()
+    var boolean: Observable<Bool?> = .init()
     // Value for plain type
-    var value: Observable<String?> = Observable<String?>()
+    var value: Observable<String?> = .init()
 }

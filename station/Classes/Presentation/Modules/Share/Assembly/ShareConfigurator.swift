@@ -1,7 +1,7 @@
 import Foundation
-import RuuviService
 import RuuviPresenters
 import RuuviReactor
+import RuuviService
 
 class ShareConfigurator {
     func configure(view: ShareViewController) {

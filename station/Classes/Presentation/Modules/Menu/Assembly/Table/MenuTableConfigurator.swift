@@ -1,8 +1,8 @@
 import Foundation
-import RuuviService
 import RuuviLocal
-import RuuviUser
 import RuuviPresenters
+import RuuviService
+import RuuviUser
 
 class MenuTableConfigurator {
     func configure(view: MenuTableViewController) {

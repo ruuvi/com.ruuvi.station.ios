@@ -8,22 +8,22 @@ public enum MeasurementAccuracyType {
     public var value: Int {
         switch self {
         case .zero:
-            return 0
+            0
         case .one:
-            return 1
+            1
         case .two:
-            return 2
+            2
         }
     }
 
     public var displayValue: Double {
         switch self {
         case .zero:
-            return 1
+            1
         case .one:
-            return 0.1
+            0.1
         case .two:
-            return 0.01
+            0.01
         }
     }
 }

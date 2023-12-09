@@ -1,5 +1,5 @@
-import Foundation
 import FirebaseRemoteConfig
+import Foundation
 
 final class FirebaseRemoteConfigService: RemoteConfigService {
     let remoteConfig = RemoteConfig.remoteConfig()
@@ -13,7 +13,7 @@ final class FirebaseRemoteConfigService: RemoteConfigService {
             case .successFetchedFromRemote, .successUsingPreFetchedData:
                 completion?(.success(true))
             case .error:
-                if let error = error {
+                if let error {
                     completion?(.failure(error))
                 } else {
                     completion?(.success(false))

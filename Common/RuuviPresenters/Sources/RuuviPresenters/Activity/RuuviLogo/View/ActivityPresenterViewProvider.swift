@@ -1,5 +1,5 @@
-import UIKit
 import SwiftUI
+import UIKit
 
 public class ActivityPresenterStateHolder: ObservableObject {
     @Published var state: ActivityPresenterState = .dismiss
@@ -14,16 +14,16 @@ public class ActivityPresenterViewProvider: NSObject {
     }
 
     public func makeViewController() -> UIViewController {
-        return UIHostingController(
+        UIHostingController(
             rootView: ActivityPresenterView().environmentObject(stateHolder)
         )
     }
 
     func updateState(_ newState: ActivityPresenterState) {
-        self.stateHolder.state = newState
+        stateHolder.state = newState
     }
 
     func updatePosition(_ position: ActivityPresenterPosition) {
-        self.stateHolder.position = position
+        stateHolder.position = position
     }
 }

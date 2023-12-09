@@ -22,11 +22,11 @@ extension ShareViewController {
         var title: ((Int, Int) -> String)? {
             switch self {
             case .description:
-                return nil
+                nil
             case .addFriend:
-                return { _, _ in RuuviLocalization.ShareViewController.AddFriend.title }
+                { _, _ in RuuviLocalization.ShareViewController.AddFriend.title }
             case .sharedEmails:
-                return { a, b in RuuviLocalization.ShareViewController.SharedEmails.title(a, b) }
+                { a, b in RuuviLocalization.ShareViewController.SharedEmails.title(a, b) }
             }
         }
     }
@@ -37,7 +37,7 @@ class ShareViewController: UITableViewController {
     var viewModel: ShareViewModel!
 
     private lazy var backButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .label
         let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
@@ -49,6 +49,7 @@ class ShareViewController: UITableViewController {
     }()
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
@@ -58,31 +59,32 @@ class ShareViewController: UITableViewController {
 
     // MARK: - TableView
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in _: UITableView) -> Int {
         if let canShare = viewModel.canShare.value, canShare {
             if viewModel.sharedEmails.value?.isEmpty == true {
-                return 2
+                2
             } else {
-                return 3
+                3
             }
         } else {
-            return 1
+            1
         }
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(value: section) {
         case .description:
-            return 1
+            1
         case .addFriend:
-            return 2
+            2
         case .sharedEmails:
-            return viewModel.sharedEmails.value?.count ?? 0
+            viewModel.sharedEmails.value?.count ?? 0
         }
     }
 
-    override func tableView(_ tableView: UITableView,
-                            viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(_: UITableView,
+                            viewForHeaderInSection section: Int) -> UIView?
+    {
         let section = Section(value: section)
         let headerView = UIView(color: .clear)
         let titleLabel = UILabel()
@@ -92,7 +94,8 @@ class ShareViewController: UITableViewController {
         switch section {
         case .sharedEmails:
             if let count = viewModel.sharedEmails.value?.count,
-               let title = section.title {
+               let title = section.title
+            {
                 titleLabel.text = title(count, viewModel.maxCount)
             }
         default:
@@ -107,24 +110,24 @@ class ShareViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell
-        switch Section(value: indexPath.section) {
+        let cell: UITableViewCell = switch Section(value: indexPath.section) {
         case .description:
-            cell = getDescriptionCell(tableView, indexPath: indexPath)
+            getDescriptionCell(tableView, indexPath: indexPath)
         case .addFriend:
             if indexPath.row == 0 {
-                cell = getAddFriendCell(tableView, indexPath: indexPath)
+                getAddFriendCell(tableView, indexPath: indexPath)
             } else {
-                cell = getButtonCell(tableView, indexPath: indexPath)
+                getButtonCell(tableView, indexPath: indexPath)
             }
         case .sharedEmails:
-            cell = getSharedEmailCell(tableView, indexPath: indexPath)
+            getSharedEmailCell(tableView, indexPath: indexPath)
         }
         return cell
     }
 }
 
 // MARK: - ShareViewInput
+
 extension ShareViewController: ShareViewInput {
     func localize() {
         title = RuuviLocalization.ShareViewController.title
@@ -135,7 +138,7 @@ extension ShareViewController: ShareViewInput {
     }
 
     func clearInput() {
-        let indexPath: IndexPath = IndexPath(row: 0, section: Section.addFriend.rawValue)
+        let indexPath = IndexPath(row: 0, section: Section.addFriend.rawValue)
         guard let cell = tableView.cellForRow(at: indexPath) as? ShareEmailInputTableViewCell else {
             return
         }
@@ -163,22 +166,26 @@ extension ShareViewController: ShareViewInput {
         )
     }
 }
+
 extension ShareViewController: ShareEmailTableViewCellDelegate {
     func didTapUnshare(for email: String) {
         output.viewDidTapUnshareEmail(email)
     }
 }
+
 extension ShareViewController: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func textFieldDidBeginEditing(_: UITextField) {
         tableView.scrollToBottom()
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+
+    func textFieldShouldReturn(_: UITextField) -> Bool {
         view.endEditing(true)
         return true
     }
 }
 
 // MARK: - Private
+
 extension ShareViewController {
     func configureTableView() {
         tableView.sectionHeaderHeight = UITableView.automaticDimension
@@ -225,10 +232,11 @@ extension ShareViewController {
         return cell
     }
 
-    @objc private func didTapSendButton(_ sender: UIButton) {
+    @objc private func didTapSendButton(_: UIButton) {
         guard let cell = tableView.cellForRow(at: IndexPath(row: 0,
                                                             section: Section.addFriend.rawValue))
-                as? ShareEmailInputTableViewCell else {
+            as? ShareEmailInputTableViewCell
+        else {
             return
         }
         cell.emailTextField.endEditing(true)
@@ -249,19 +257,19 @@ extension ShareViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 
-    @objc fileprivate func backButtonDidTap() {
+    @objc private func backButtonDidTap() {
         _ = navigationController?.popViewController(animated: true)
     }
 }
 
 extension UITableView {
     func scrollToBottom() {
-        let numberOfSections = self.numberOfSections
+        let numberOfSections = numberOfSections
         if numberOfSections > 0 {
-            let numberOfRows = self.numberOfRows(inSection: numberOfSections - 1)
+            let numberOfRows = numberOfRows(inSection: numberOfSections - 1)
             if numberOfRows > 0 {
-                let indexPath = IndexPath(row: numberOfRows - 1, section: (numberOfSections - 1))
-                self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                let indexPath = IndexPath(row: numberOfRows - 1, section: numberOfSections - 1)
+                scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
         }
     }

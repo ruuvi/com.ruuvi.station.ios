@@ -1,26 +1,26 @@
-import Foundation
-import SwiftUI
-import Combine
-import RuuviOntology
-import RuuviPool
-import RuuviStorage
-import RuuviLocal
-import RuuviDaemon
-import RuuviPresenters
 import BTKit
+import Combine
+import Foundation
+import RuuviDaemon
+import RuuviLocal
+import RuuviOntology
 import RuuviPersistence
+import RuuviPool
+import RuuviPresenters
+import RuuviStorage
+import SwiftUI
 
 final class DFUPresenter: DFUModuleInput {
     var viewController: UIViewController {
-        if let view = self.weakView {
+        if let view = weakView {
             return view
         } else {
             let view = UIHostingController(rootView: DFUUIView(viewModel: viewModel))
-            self.weakView = view
+            weakView = view
             return view
         }
-
     }
+
     private weak var weakView: UIViewController?
     private let viewModel: DFUViewModel
     private let interactor: DFUInteractorInput
@@ -59,7 +59,7 @@ final class DFUPresenter: DFUModuleInput {
         self.settings = settings
         self.propertiesDaemon = propertiesDaemon
         self.activityPresenter = activityPresenter
-        self.viewModel = DFUViewModel(
+        viewModel = DFUViewModel(
             interactor: interactor,
             foreground: foreground,
             idPersistence: idPersistence,
@@ -77,9 +77,9 @@ final class DFUPresenter: DFUModuleInput {
     func isSafeToDismiss() -> Bool {
         switch viewModel.state {
         case .flashing:
-            return false
+            false
         default:
-            return true
+            true
         }
     }
 }

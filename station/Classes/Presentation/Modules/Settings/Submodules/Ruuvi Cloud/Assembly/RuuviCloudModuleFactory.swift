@@ -1,6 +1,6 @@
-import UIKit
-import RuuviService
 import RuuviLocal
+import RuuviService
+import UIKit
 
 protocol RuuviCloudModuleFactory {
     func create() -> RuuviCloudModuleInput

@@ -1,15 +1,15 @@
 import Foundation
 
-struct KeyedArchiver {
+enum KeyedArchiver {
     static func archive(object: Any) -> Data? {
         if #available(iOS 12.0, *) {
-            return try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
+            try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
         } else {
-            return NSKeyedArchiver.archivedData(withRootObject: object)
+            NSKeyedArchiver.archivedData(withRootObject: object)
         }
     }
 
-    static func unarchive<T: Any>(_ data: Data, with type: T.Type) -> T? {
+    static func unarchive<T: Any>(_ data: Data, with _: T.Type) -> T? {
         if #available(iOS 12.0, *) {
             return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T
         } else {

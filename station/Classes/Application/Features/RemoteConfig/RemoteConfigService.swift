@@ -1,5 +1,5 @@
-import Foundation
 import FirebaseRemoteConfig
+import Foundation
 
 protocol RemoteConfigService {
     var remoteConfig: RemoteConfig { get }

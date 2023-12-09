@@ -1,25 +1,27 @@
-import WidgetKit
-import SwiftUI
 import Intents
 import RuuviOntology
+import SwiftUI
+import WidgetKit
 
 final class WidgetProvider: IntentTimelineProvider {
     @ObservedObject private var networkManager = NetworkManager()
     private let viewModel = WidgetViewModel()
 
-    func placeholder(in context: Context) -> WidgetEntry {
-        return WidgetEntry.placeholder()
+    func placeholder(in _: Context) -> WidgetEntry {
+        WidgetEntry.placeholder()
     }
 
-    func getSnapshot(for configuration: RuuviTagSelectionIntent,
-                     in context: Context,
-                     completion: @escaping (WidgetEntry) -> Void) {
-        return completion(.placeholder())
+    func getSnapshot(for _: RuuviTagSelectionIntent,
+                     in _: Context,
+                     completion: @escaping (WidgetEntry) -> Void)
+    {
+        completion(.placeholder())
     }
 
     func getTimeline(for configuration: RuuviTagSelectionIntent,
-                     in context: Context,
-                     completion: @escaping (Timeline<WidgetEntry>) -> Void) {
+                     in _: Context,
+                     completion: @escaping (Timeline<WidgetEntry>) -> Void)
+    {
         guard networkManager.isConnected, viewModel.isAuthorized() else {
             return emptyTimeline(for: configuration,
                                  completion: completion)
@@ -27,11 +29,12 @@ final class WidgetProvider: IntentTimelineProvider {
         viewModel.fetchRuuviTags(completion: { [weak self] tags in
             guard let sSelf = self else { return }
             guard let configuredTag = configuration.ruuviWidgetTag,
-                    let tag = tags.first(where: { result in
-                        result.sensor.id == configuredTag.identifier
-                    }) else {
+                  let tag = tags.first(where: { result in
+                      result.sensor.id == configuredTag.identifier
+                  })
+            else {
                 return sSelf.emptyTimeline(for: configuration,
-                                    completion: completion)
+                                           completion: completion)
             }
 
             guard let record = tag.record else {
@@ -48,7 +51,8 @@ final class WidgetProvider: IntentTimelineProvider {
 
 extension WidgetProvider {
     private func emptyTimeline(for configuration: RuuviTagSelectionIntent,
-                               completion: @escaping (Timeline<WidgetEntry>) -> Void) {
+                               completion: @escaping (Timeline<WidgetEntry>) -> Void)
+    {
         var entries: [WidgetEntry] = []
 
         let entry = WidgetEntry.empty(with: configuration,
@@ -62,7 +66,8 @@ extension WidgetProvider {
     private func timeline(from ruuviTag: AnyCloudSensor,
                           configuration: RuuviTagSelectionIntent,
                           record: RuuviTagSensorRecord,
-                          completion: @escaping (Timeline<WidgetEntry>) -> Void) {
+                          completion: @escaping (Timeline<WidgetEntry>) -> Void)
+    {
         var entries: [WidgetEntry] = []
 
         let settings = SensorSettingsStruct.settings(from: ruuviTag)

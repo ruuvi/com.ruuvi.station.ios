@@ -1,7 +1,7 @@
 import UIKit
 
 class UnitSettingsTableInitializer: NSObject {
-    @IBOutlet weak var viewController: UnitSettingsTableViewController!
+    @IBOutlet var viewController: UnitSettingsTableViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

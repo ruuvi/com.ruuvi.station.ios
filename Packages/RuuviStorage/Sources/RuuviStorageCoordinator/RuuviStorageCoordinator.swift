@@ -1,6 +1,6 @@
 import Foundation
-import RuuviOntology
 import Future
+import RuuviOntology
 import RuuviPersistence
 import RuuviStorage
 
@@ -42,11 +42,11 @@ final class RuuviStorageCoordinator: RuuviStorage {
         let realmOperation = realm.readAll()
         Future.zip(sqliteOperation, realmOperation)
             .on(success: { sqliteEntities, realmEntities in
-            let combinedValues = sqliteEntities + realmEntities
-                promise.succeed(value: combinedValues.map({ $0.any }))
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
+                let combinedValues = sqliteEntities + realmEntities
+                promise.succeed(value: combinedValues.map(\.any))
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         return promise.future
     }
 
@@ -175,7 +175,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
         let promise = Promise<Int, RuuviStorageError>()
         let allTags = readAll()
         allTags.on(success: { tags in
-            let claimedTags = tags.filter({ $0.isClaimed && $0.isOwner })
+            let claimedTags = tags.filter { $0.isClaimed && $0.isOwner }
             promise.succeed(value: claimedTags.count)
         })
         return promise.future
@@ -185,7 +185,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
         let promise = Promise<Int, RuuviStorageError>()
         let allTags = readAll()
         allTags.on(success: { tags in
-            let claimedTags = tags.filter({ !$0.isCloud })
+            let claimedTags = tags.filter { !$0.isCloud }
             promise.succeed(value: claimedTags.count)
         })
         return promise.future
@@ -222,8 +222,10 @@ final class RuuviStorageCoordinator: RuuviStorage {
     }
 
     // MARK: - Queued cloud requests
+
     func readQueuedRequests()
-    -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
+        -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>
+    {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
         sqlite.readQueuedRequests().on(success: { requests in
             promise.succeed(value: requests)

@@ -1,11 +1,9 @@
 import UIKit
 
 class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
-
     private lazy var appImageView: UIImageView = {
         let iv = UIImageView(image: nil,
-            contentMode: .scaleAspectFit
-        )
+                             contentMode: .scaleAspectFit)
         iv.backgroundColor = .clear
         return iv
     }()
@@ -33,21 +31,20 @@ class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension RuuviOnboardCoreFeaturesCell {
-
-    fileprivate func setUpUI() {
-
+private extension RuuviOnboardCoreFeaturesCell {
+    func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
         container.fillSuperview()
 
         let textStack = UIStackView(arrangedSubviews: [
-            subtitleLabel, titleLabel
+            subtitleLabel, titleLabel,
         ])
         textStack.axis = .vertical
         textStack.distribution = .fillProportionally
@@ -58,7 +55,7 @@ extension RuuviOnboardCoreFeaturesCell {
                          leading: container.safeLeadingAnchor,
                          bottom: nil,
                          trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44+12, left: 16,
+                         padding: .init(top: 44 + 12, left: 16,
                                         bottom: 0, right: 16))
 
         container.addSubview(appImageView)
@@ -73,7 +70,6 @@ extension RuuviOnboardCoreFeaturesCell {
 
 extension RuuviOnboardCoreFeaturesCell {
     func configure(with viewModel: OnboardViewModel) {
-
         switch viewModel.pageType {
         case .sensors:
             subtitleLabel.font = UIFont.Montserrat(.extraBold, size: 36)

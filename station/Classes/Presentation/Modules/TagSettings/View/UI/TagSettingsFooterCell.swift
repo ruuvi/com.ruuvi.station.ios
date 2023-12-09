@@ -1,7 +1,6 @@
 import UIKit
 
 class TagSettingsFooterCell: UITableViewCell {
-
     private lazy var noteLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -12,13 +11,15 @@ class TagSettingsFooterCell: UITableViewCell {
     }()
 
     override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+                  reuseIdentifier: String?)
+    {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

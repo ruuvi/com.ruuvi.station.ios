@@ -1,8 +1,8 @@
-import Foundation
-import RuuviOntology
-import RuuviLocal
-import Future
 import BTKit
+import Foundation
+import Future
+import RuuviLocal
+import RuuviOntology
 import RuuviPool
 
 class CardsInteractor {
@@ -13,10 +13,12 @@ class CardsInteractor {
 
 extension CardsInteractor: CardsInteractorInput {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor,
-                                       settings: RuuviLocalSettings) {
+                                       settings _: RuuviLocalSettings)
+    {
         guard let luid = ruuviTag.luid,
               ruuviTag.firmwareVersion == nil ||
-                !ruuviTag.firmwareVersion.hasText() else {
+              !ruuviTag.firmwareVersion.hasText()
+        else {
             return
         }
 
@@ -26,7 +28,7 @@ extension CardsInteractor: CardsInteractorInput {
             options: [.connectionTimeout(15)]
         ) { [weak self] _, result in
             switch result {
-            case .success(let version):
+            case let .success(version):
                 let tagWithVersion = ruuviTag.with(firmwareVersion: version)
                 self?.ruuviPool.update(tagWithVersion)
             default:
