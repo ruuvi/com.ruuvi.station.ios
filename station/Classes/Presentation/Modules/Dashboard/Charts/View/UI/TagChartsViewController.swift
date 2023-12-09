@@ -19,7 +19,32 @@ class TagChartsViewController: UIViewController {
 
     var historyLengthInDay: Int = 1 {
         didSet {
-            historySelectionButton.updateTitle(with: "day_\(historyLengthInDay)") // TODO: @rinat localize
+            switch historyLengthInDay {
+            case 1:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day1)
+            case 2:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day2)
+            case 3:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day3)
+            case 4:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day4)
+            case 5:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day5)
+            case 6:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day6)
+            case 7:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day7)
+            case 8:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day8)
+            case 9:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day9)
+            case 10:
+                historySelectionButton.updateTitle(with: RuuviLocalization.day10)
+            default:
+                historySelectionButton.updateTitle(
+                    with: String(format: RuuviLocalization.dayX, historyLengthInDay)
+                )
+            }
         }
     }
 
@@ -122,7 +147,6 @@ class TagChartsViewController: UIViewController {
     lazy var syncProgressView = UIView(color: .clear)
     lazy var syncStatusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Reading history..." // TODO: @rinat localize
         label.textColor = .white
         label.textAlignment = .left
         label.font = UIFont.Muli(.regular, size: 16)
