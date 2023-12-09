@@ -27,8 +27,10 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.signInOrCreateFreeAccount
-        label.font = UIFont.Montserrat(.extraBold,
-                                       size: UIDevice.isiPhoneSE() ? 24 : 30)
+        label.font = UIFont.Montserrat(
+            .extraBold,
+            size: UIDevice.isiPhoneSE() ? 24 : 30
+        )
         return label
     }()
 
@@ -61,15 +63,21 @@ class SignInView: UIView {
     }()
 
     private lazy var requestCodeButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
-        button.setTitle(RuuviLocalization.requestCode,
-                        for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
+        button.setTitle(
+            RuuviLocalization.requestCode,
+            for: .normal
+        )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
-        button.addTarget(self,
-                         action: #selector(handleRequestTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleRequestTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -102,19 +110,25 @@ extension SignInView {
         container.fillSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel,
+            titleLabel, subtitleLabel
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
         titleStack.spacing = 16
 
         container.addSubview(titleStack)
-        titleStack.anchor(top: nil,
-                          leading: container.safeLeftAnchor,
-                          bottom: nil,
-                          trailing: container.safeRightAnchor,
-                          padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                         bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+        titleStack.anchor(
+            top: nil,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: !UIDevice.isTablet() ? 20 : 80,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 20 : 80
+            )
+        )
         titleStack.topAnchor.constraint(
             greaterThanOrEqualTo: container.safeTopAnchor
         ).isActive = true
@@ -122,7 +136,7 @@ extension SignInView {
 
     private func setUpTextFieldView() {
         let textFieldStack = UIStackView(arrangedSubviews: [
-            emailTextField, requestCodeButton,
+            emailTextField, requestCodeButton
         ])
         textFieldStack.axis = .vertical
         textFieldStack.distribution = .fillEqually
@@ -130,21 +144,33 @@ extension SignInView {
         emailTextField.constrainHeight(constant: 50)
 
         container.addSubview(textFieldStack)
-        textFieldStack.anchor(top: titleStack.bottomAnchor,
-                              leading: container.safeLeftAnchor,
-                              bottom: nil,
-                              trailing: container.safeRightAnchor,
-                              padding: .init(top: 30, left: !UIDevice.isTablet() ? 30 : 100,
-                                             bottom: 0, right: !UIDevice.isTablet() ? 30 : 100))
+        textFieldStack.anchor(
+            top: titleStack.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 30,
+                left: !UIDevice.isTablet() ? 30 : 100,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 30 : 100
+            )
+        )
         textFieldStack.centerYInSuperview()
 
         container.addSubview(noPasswordLabel)
-        noPasswordLabel.anchor(top: textFieldStack.bottomAnchor,
-                               leading: container.safeLeftAnchor,
-                               bottom: nil,
-                               trailing: container.safeRightAnchor,
-                               padding: .init(top: 30, left: !UIDevice.isTablet() ? 30 : 100,
-                                              bottom: 0, right: !UIDevice.isTablet() ? 30 : 100))
+        noPasswordLabel.anchor(
+            top: textFieldStack.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 30,
+                left: !UIDevice.isTablet() ? 30 : 100,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 30 : 100
+            )
+        )
         noPasswordLabel.bottomAnchor.constraint(
             lessThanOrEqualTo: container.bottomAnchor, constant: 20
         ).isActive = true

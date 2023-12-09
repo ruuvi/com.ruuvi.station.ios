@@ -30,11 +30,14 @@ class TagSettingsPlainCell: UITableViewCell {
         return label
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -47,42 +50,47 @@ class TagSettingsPlainCell: UITableViewCell {
         backgroundColor = .clear
 
         let stack = UIStackView(arrangedSubviews: [
-            titleLabel, noteLabel, valueLabel,
+            titleLabel, noteLabel, valueLabel
         ])
         stack.spacing = 8
         stack.distribution = .fill
         stack.axis = .horizontal
         addSubview(stack)
-        stack.anchor(top: safeTopAnchor,
-                     leading: safeLeftAnchor,
-                     bottom: safeBottomAnchor,
-                     trailing: safeRightAnchor,
-                     padding: .init(top: 8, left: 8, bottom: 8, right: 12))
+        stack.anchor(
+            top: safeTopAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: safeRightAnchor,
+            padding: .init(top: 8, left: 8, bottom: 8, right: 12)
+        )
     }
 
-    func configure(title: String?,
-                   value: String?,
-                   note: String? = nil,
-                   noteColor: UIColor? = nil)
-    {
+    func configure(
+        title: String?,
+        value: String?,
+        note: String? = nil,
+        noteColor: UIColor? = nil
+    ) {
         titleLabel.text = title
         valueLabel.text = value
         noteLabel.text = note
         noteLabel.textColor = noteColor
     }
 
-    func configure(value: String?,
-                   note: String? = nil,
-                   noteColor: UIColor? = nil)
-    {
+    func configure(
+        value: String?,
+        note: String? = nil,
+        noteColor: UIColor? = nil
+    ) {
         valueLabel.text = value
         noteLabel.text = note
         noteLabel.textColor = noteColor
     }
 
-    func configure(note: String? = nil,
-                   noteColor: UIColor? = nil)
-    {
+    func configure(
+        note: String? = nil,
+        noteColor: UIColor? = nil
+    ) {
         noteLabel.text = note
         noteLabel.textColor = noteColor
     }

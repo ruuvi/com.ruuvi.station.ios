@@ -27,8 +27,10 @@ class DiffCalculatorImpl: DiffCalculator {
                         let newCellItem = newCellData[cellKey]
                         if let oldCellItem, let newCelItem = newCellItem {
                             if oldCellItem != newCelItem {
-                                let indexPath: IndexPath = .init(row: oldCellItem.index,
-                                                                 section: oldSectionItem.index)
+                                let indexPath: IndexPath = .init(
+                                    row: oldCellItem.index,
+                                    section: oldSectionItem.index
+                                )
                                 cellChanges.reloads
                                     .append(indexPath)
                             }
@@ -51,10 +53,11 @@ class DiffCalculatorImpl: DiffCalculator {
         return sectionChanges
     }
 
-    func calculate<N>(oldItems: [ReloadableCell<N>],
-                      newItems: [ReloadableCell<N>],
-                      in sectionIndex: Int) -> CellChanges
-    {
+    func calculate<N>(
+        oldItems: [ReloadableCell<N>],
+        newItems: [ReloadableCell<N>],
+        in sectionIndex: Int
+    ) -> CellChanges {
         let cellChanges = CellChanges()
 
         let oldCellIData = ReloadableCellData(items: oldItems)

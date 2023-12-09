@@ -13,7 +13,8 @@ public class YAxisValueFormatter: NSObject, AxisValueFormatter {
     }
 
     public func stringForValue(_ value: Double, axis _: AxisBase?) -> String {
-        guard let value = numberFormatter.string(from: NSNumber(value: value)) else {
+        guard let value = numberFormatter.string(from: NSNumber(value: value))
+        else {
             return ""
         }
         return value

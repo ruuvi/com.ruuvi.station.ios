@@ -38,16 +38,20 @@ class CardsBackgroundView: UIView {
 }
 
 extension CardsBackgroundView {
-    func setBackgroundImage(with image: UIImage?,
-                            withAnimation: Bool = true)
-    {
+    func setBackgroundImage(
+        with image: UIImage?,
+        withAnimation: Bool = true
+    ) {
         if withAnimation {
-            UIView.transition(with: cardImageView,
-                              duration: 0.3,
-                              options: .transitionCrossDissolve,
-                              animations: { [weak self] in
-                                  self?.cardImageView.image = image
-                              }, completion: nil)
+            UIView.transition(
+                with: cardImageView,
+                duration: 0.3,
+                options: .transitionCrossDissolve,
+                animations: { [weak self] in
+                    self?.cardImageView.image = image
+                },
+                completion: nil
+            )
         } else {
             cardImageView.image = image
         }

@@ -42,10 +42,11 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    private func cell(collectionView: UICollectionView,
-                      indexPath: IndexPath,
-                      viewModel: CardsViewModel) -> UICollectionViewCell?
-    {
+    private func cell(
+        collectionView: UICollectionView,
+        indexPath: IndexPath,
+        viewModel: CardsViewModel
+    ) -> UICollectionViewCell? {
         switch dashboardType {
         case .image:
             let cell = collectionView.dequeueReusableCell(
@@ -86,8 +87,10 @@ class DashboardViewController: UIViewController {
     // Header View
     // Ruuvi Logo
     private lazy var ruuviLogoView: UIImageView = {
-        let iv = UIImageView(image: UIImage(named: "ruuvi_logo_"),
-                             contentMode: .scaleAspectFit)
+        let iv = UIImageView(
+            image: UIImage(named: "ruuvi_logo_"),
+            contentMode: .scaleAspectFit
+        )
         iv.backgroundColor = .clear
         iv.tintColor = RuuviColor.logoTintColor
         return iv
@@ -101,20 +104,24 @@ class DashboardViewController: UIViewController {
         button.setImage(menuImage, for: .normal)
         button.setImage(menuImage, for: .highlighted)
         button.backgroundColor = .clear
-        button.addTarget(self,
-                         action: #selector(handleMenuButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleMenuButtonTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
     private lazy var viewButton: RuuviContextMenuButton =
-        .init(menu: viewToggleMenuOptions(),
-              titleColor: RuuviColor.dashboardIndicatorTextColor,
-              title: RuuviLocalization.view,
-              icon: RuuviAssets.dropDownArrowImage,
-              iconTintColor: RuuviColor.logoTintColor,
-              iconSize: .init(width: 14, height: 14),
-              preccedingIcon: false)
+        .init(
+            menu: viewToggleMenuOptions(),
+            titleColor: RuuviColor.dashboardIndicatorTextColor,
+            title: RuuviLocalization.view,
+            icon: RuuviAssets.dropDownArrowImage,
+            iconTintColor: RuuviColor.logoTintColor,
+            iconSize: .init(width: 14, height: 14),
+            preccedingIcon: false
+        )
 
     // BODY
     private lazy var collectionView: UICollectionView = {
@@ -183,10 +190,11 @@ extension DashboardViewController {
         output.viewWillDisappear()
     }
 
-    override func viewWillTransition(to size: CGSize,
-                                     with coordinator:
-                                     UIViewControllerTransitionCoordinator)
-    {
+    override func viewWillTransition(
+        to size: CGSize,
+        with coordinator:
+        UIViewControllerTransitionCoordinator
+    ) {
         super.viewWillTransition(to: size, with: coordinator)
         reloadCollectionView(redrawLayout: true)
     }
@@ -208,9 +216,11 @@ private extension DashboardViewController {
                     completion: { _ in
                         guard self.viewModels.count > 0 else { return }
                         let indexPath = IndexPath(item: 0, section: 0)
-                        self.collectionView.scrollToItem(at: indexPath,
-                                                         at: .top,
-                                                         animated: false)
+                        self.collectionView.scrollToItem(
+                            at: indexPath,
+                            at: .top,
+                            animated: false
+                        )
                         self.collectionView.contentOffset.y = -8
                     }
                 )
@@ -220,7 +230,8 @@ private extension DashboardViewController {
     }
 
     @objc func didPullToRefresh() {
-        guard !isRefreshing else {
+        guard !isRefreshing
+        else {
             refresher.endRefreshing()
             return
         }
@@ -255,11 +266,13 @@ extension DashboardViewController {
         simpleViewTypeAction.state = dashboardType == .simple ? .on : .off
         imageViewTypeAction.state = dashboardType == .image ? .on : .off
 
-        let cardTypeMenu = UIMenu(title: RuuviLocalization.cardType,
-                                  options: .displayInline,
-                                  children: [
-                                      imageViewTypeAction, simpleViewTypeAction,
-                                  ])
+        let cardTypeMenu = UIMenu(
+            title: RuuviLocalization.cardType,
+            options: .displayInline,
+            children: [
+                imageViewTypeAction, simpleViewTypeAction
+            ]
+        )
 
         // Card action
         let openSensorViewAction = UIAction(title: RuuviLocalization.openSensorView) {
@@ -277,16 +290,18 @@ extension DashboardViewController {
         openSensorViewAction.state = dashboardTapActionType == .card ? .on : .off
         openHistoryViewAction.state = dashboardTapActionType == .chart ? .on : .off
 
-        let cardActionMenu = UIMenu(title: RuuviLocalization.cardAction,
-                                    options: .displayInline,
-                                    children: [
-                                        openSensorViewAction, openHistoryViewAction,
-                                    ])
+        let cardActionMenu = UIMenu(
+            title: RuuviLocalization.cardAction,
+            options: .displayInline,
+            children: [
+                openSensorViewAction, openHistoryViewAction
+            ]
+        )
 
         return UIMenu(
             title: "",
             children: [
-                cardTypeMenu, cardActionMenu,
+                cardTypeMenu, cardActionMenu
             ]
         )
     }
@@ -344,8 +359,7 @@ extension DashboardViewController {
 
         let viewModel = viewModels[index]
         if let canShare = viewModel.canShareTag.value,
-           canShare
-        {
+           canShare {
             contextMenuActions.append(shareSensorAction)
         }
 
@@ -370,14 +384,18 @@ private extension DashboardViewController {
         view.backgroundColor = RuuviColor.dashboardBGColor
 
         view.addSubview(noSensorView)
-        noSensorView.anchor(top: view.safeTopAnchor,
-                            leading: view.safeLeftAnchor,
-                            bottom: view.safeBottomAnchor,
-                            trailing: view.safeRightAnchor,
-                            padding: .init(top: 12,
-                                           left: 12,
-                                           bottom: 12,
-                                           right: 12))
+        noSensorView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(
+                top: 12,
+                left: 12,
+                bottom: 12,
+                right: 12
+            )
+        )
         noSensorView.isHidden = true
     }
 
@@ -385,31 +403,39 @@ private extension DashboardViewController {
         let leftBarButtonView = UIView(color: .clear)
 
         leftBarButtonView.addSubview(menuButton)
-        menuButton.anchor(top: leftBarButtonView.topAnchor,
-                          leading: leftBarButtonView.leadingAnchor,
-                          bottom: leftBarButtonView.bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 0, left: 0, bottom: 0, right: 0),
-                          size: .init(width: 32, height: 32))
+        menuButton.anchor(
+            top: leftBarButtonView.topAnchor,
+            leading: leftBarButtonView.leadingAnchor,
+            bottom: leftBarButtonView.bottomAnchor,
+            trailing: nil,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0),
+            size: .init(width: 32, height: 32)
+        )
 
         leftBarButtonView.addSubview(ruuviLogoView)
-        ruuviLogoView.anchor(top: nil,
-                             leading: menuButton.trailingAnchor,
-                             bottom: nil,
-                             trailing: leftBarButtonView.trailingAnchor,
-                             padding: .init(top: 0, left: 8, bottom: 0, right: 0),
-                             size: .init(width: 110, height: 22))
+        ruuviLogoView.anchor(
+            top: nil,
+            leading: menuButton.trailingAnchor,
+            bottom: nil,
+            trailing: leftBarButtonView.trailingAnchor,
+            padding: .init(top: 0, left: 8, bottom: 0, right: 0),
+            size: .init(width: 110, height: 22)
+        )
         ruuviLogoView.centerYInSuperview()
 
         let rightBarButtonView = UIView(color: .clear)
         rightBarButtonView.addSubview(viewButton)
-        viewButton.anchor(top: rightBarButtonView.topAnchor,
-                          leading: rightBarButtonView.leadingAnchor,
-                          bottom: rightBarButtonView.bottomAnchor,
-                          trailing: rightBarButtonView.trailingAnchor,
-                          padding: .init(top: 0, left: 0, bottom: 0, right: 4),
-                          size: .init(width: 0,
-                                      height: 32))
+        viewButton.anchor(
+            top: rightBarButtonView.topAnchor,
+            leading: rightBarButtonView.leadingAnchor,
+            bottom: rightBarButtonView.bottomAnchor,
+            trailing: rightBarButtonView.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 4),
+            size: .init(
+                width: 0,
+                height: 32
+            )
+        )
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
@@ -417,14 +443,18 @@ private extension DashboardViewController {
 
     func setUpContentView() {
         view.addSubview(collectionView)
-        collectionView.anchor(top: view.safeTopAnchor,
-                              leading: view.safeLeftAnchor,
-                              bottom: view.bottomAnchor,
-                              trailing: view.safeRightAnchor,
-                              padding: .init(top: 12,
-                                             left: 12,
-                                             bottom: 0,
-                                             right: 12))
+        collectionView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.bottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(
+                top: 12,
+                left: 12,
+                bottom: 0,
+                right: 12
+            )
+        )
 
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
@@ -443,43 +473,45 @@ private extension DashboardViewController {
             break
         }
 
-        let sectionProvider = { (_: Int,
-                                 _: NSCollectionLayoutEnvironment)
-                -> NSCollectionLayoutSection? in
-            let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
-                (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
-                (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
+        let sectionProvider = { (
+            _: Int,
+            _: NSCollectionLayoutEnvironment
+        )
+            -> NSCollectionLayoutSection? in
+        let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
+            (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
+            (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
 
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(widthMultiplier),
-                heightDimension: .absolute(itemEstimatedHeight)
-            )
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 0,
-                leading: itemHorizontalSpacing,
-                bottom: 0,
-                trailing: itemHorizontalSpacing
-            )
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(widthMultiplier),
+            heightDimension: .absolute(itemEstimatedHeight)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
+        item.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: itemHorizontalSpacing,
+            bottom: 0,
+            trailing: itemHorizontalSpacing
+        )
 
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(itemEstimatedHeight)
-            )
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: groupSize, subitems: [item]
-            )
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(itemEstimatedHeight)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: groupSize, subitems: [item]
+        )
 
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
-            section.contentInsets = NSDirectionalEdgeInsets(
-                top: 0,
-                leading: 0,
-                bottom: 12,
-                trailing: 0
-            )
-            return section
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
+        section.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 0,
+            bottom: 12,
+            trailing: 0
+        )
+        return section
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()
@@ -494,30 +526,34 @@ private extension DashboardViewController {
     private func configureRestartAnimationsOnAppDidBecomeActive() {
         appDidBecomeActiveToken = NotificationCenter
             .default
-            .addObserver(forName: UIApplication.didBecomeActiveNotification,
-                         object: nil,
-                         queue: .main)
-        { [weak self] _ in
-            self?.reloadCollectionView()
-        }
+            .addObserver(
+                forName: UIApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.reloadCollectionView()
+            }
     }
 }
 
 extension DashboardViewController: UICollectionViewDataSource {
-    func collectionView(_: UICollectionView,
-                        numberOfItemsInSection _: Int) -> Int
-    {
+    func collectionView(
+        _: UICollectionView,
+        numberOfItemsInSection _: Int
+    ) -> Int {
         viewModels.count
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         guard let cell = cell(
             collectionView: collectionView,
             indexPath: indexPath,
             viewModel: viewModels[indexPath.item]
-        ) else {
+        )
+        else {
             fatalError()
         }
         return cell
@@ -525,17 +561,19 @@ extension DashboardViewController: UICollectionViewDataSource {
 }
 
 extension DashboardViewController: UICollectionViewDelegate {
-    func collectionView(_: UICollectionView,
-                        contextMenuConfigurationForItemAt indexPath: IndexPath,
-                        point _: CGPoint) -> UIContextMenuConfiguration?
-    {
+    func collectionView(
+        _: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point _: CGPoint
+    ) -> UIContextMenuConfiguration? {
         configureContextMenu(index: indexPath.row)
     }
 
     func configureContextMenu(index: Int) -> UIContextMenuConfiguration {
-        let context = UIContextMenuConfiguration(identifier: nil,
-                                                 previewProvider: nil)
-        { [weak self]
+        let context = UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil
+        ) { [weak self]
             _ -> UIMenu? in
                 self?.highlightedViewModel = self?.viewModels[index]
                 return self?.cardContextMenuOption(for: index)
@@ -543,17 +581,19 @@ extension DashboardViewController: UICollectionViewDelegate {
         return context
     }
 
-    func collectionView(_: UICollectionView,
-                        willEndContextMenuInteraction _: UIContextMenuConfiguration,
+    func collectionView(
+        _: UICollectionView,
+        willEndContextMenuInteraction _: UIContextMenuConfiguration,
 
-                        animator _: UIContextMenuInteractionAnimating?)
-    {
+        animator _: UIContextMenuInteractionAnimating?
+    ) {
         highlightedViewModel = nil
     }
 
-    func collectionView(_: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath)
-    {
+    func collectionView(
+        _: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
         let viewModel = viewModels[indexPath.item]
         output.viewDidTriggerDashboardCard(for: viewModel)
     }
@@ -575,9 +615,11 @@ extension DashboardViewController: UICollectionViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
-        perform(#selector(UIScrollViewDelegate.scrollViewDidEndScrollingAnimation),
-                with: nil,
-                afterDelay: 0.3)
+        perform(
+            #selector(UIScrollViewDelegate.scrollViewDidEndScrollingAnimation),
+            with: nil,
+            afterDelay: 0.3
+        )
         if scrollView.isDragging {
             refresher.fadeIn()
             isListRefreshable = false
@@ -596,12 +638,12 @@ extension DashboardViewController: DashboardViewInput {
     func applyUpdate(to viewModel: CardsViewModel) {
         if let highlightedViewModel,
            highlightedViewModel.luid.value != nil && highlightedViewModel.luid.value == viewModel.luid.value ||
-           highlightedViewModel.mac.value != nil && highlightedViewModel.mac.value == viewModel.mac.value
-        {
+           highlightedViewModel.mac.value != nil && highlightedViewModel.mac.value == viewModel.mac.value {
             return
         }
 
-        guard isListRefreshable else {
+        guard isListRefreshable
+        else {
             return
         }
 
@@ -611,15 +653,13 @@ extension DashboardViewController: DashboardViewInput {
         }) {
             let indexPath = IndexPath(item: index, section: 0)
             if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardImageCell
-            {
+                .cellForItem(at: indexPath) as? DashboardImageCell {
                 cell.configure(
                     with: viewModel, measurementService: measurementService
                 )
                 cell.restartAlertAnimation(for: viewModel)
             } else if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardPlainCell
-            {
+                .cellForItem(at: indexPath) as? DashboardPlainCell {
                 cell.configure(
                     with: viewModel, measurementService: measurementService
                 )
@@ -636,16 +676,19 @@ extension DashboardViewController: DashboardViewInput {
         let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
         let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.PermissionPresenter.settings,
-                                        style: .default, handler: { _ in
-                                            guard let url = URL(string: userDeclined ?
-                                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
-                                                UIApplication.shared.canOpenURL(url)
-                                            else {
-                                                return
-                                            }
-                                            UIApplication.shared.open(url)
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.PermissionPresenter.settings,
+            style: .default,
+            handler: { _ in
+                guard let url = URL(string: userDeclined ?
+                    UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                    UIApplication.shared.canOpenURL(url)
+                else {
+                    return
+                }
+                UIApplication.shared.open(url)
+            }
+        ))
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -703,9 +746,11 @@ extension DashboardViewController: DashboardViewInput {
             from: viewModel.mac.value?.mac,
             luid: viewModel.luid.value?.value
         )
-        let alert = UIAlertController(title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
-                                      message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
-                                      preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
+            message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
+            preferredStyle: .alert
+        )
         alert.addTextField { [weak self] alertTextField in
             guard let self else { return }
             alertTextField.delegate = self
@@ -730,7 +775,8 @@ extension DashboardViewController: DashboardViewInput {
 
 extension DashboardViewController: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
-        guard isViewLoaded else {
+        guard isViewLoaded
+        else {
             return
         }
         reloadCollectionView()
@@ -767,11 +813,14 @@ private extension DashboardViewController {
 // MARK: - UITextFieldDelegate
 
 extension DashboardViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
 
-                   replacementString string: String) -> Bool
-    {
-        guard let text = textField.text else {
+        replacementString string: String
+    ) -> Bool {
+        guard let text = textField.text
+        else {
             return true
         }
         let limit = text.utf16.count + string.utf16.count - range.length

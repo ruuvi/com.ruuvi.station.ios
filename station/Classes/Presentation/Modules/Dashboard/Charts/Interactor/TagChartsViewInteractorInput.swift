@@ -6,8 +6,10 @@ import RuuviOntology
 protocol TagChartsViewInteractorInput: AnyObject {
     var ruuviTagData: [RuuviMeasurement] { get }
     var lastMeasurement: RuuviMeasurement? { get }
-    func configure(withTag ruuviTag: AnyRuuviTagSensor,
-                   andSettings settings: SensorSettings?)
+    func configure(
+        withTag ruuviTag: AnyRuuviTagSensor,
+        andSettings settings: SensorSettings?
+    )
     func updateSensorSettings(settings: SensorSettings?)
     func restartObservingTags()
     func stopObservingTags()

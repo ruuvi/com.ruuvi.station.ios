@@ -30,20 +30,24 @@ open class RuuviDaemonWorker: NSObject {
         thread.name = "\(threadName)-\(UUID().uuidString)"
         thread.start()
 
-        perform(#selector(runBlock),
-                on: thread,
-                with: nil,
-                waitUntilDone: false,
-                modes: [RunLoop.Mode.default.rawValue])
+        perform(
+            #selector(runBlock),
+            on: thread,
+            with: nil,
+            waitUntilDone: false,
+            modes: [RunLoop.Mode.default.rawValue]
+        )
     }
 
     public func stopWork() {
         block = nil
-        perform(#selector(stopThread),
-                on: thread,
-                with: nil,
-                waitUntilDone: false,
-                modes: [RunLoop.Mode.default.rawValue])
+        perform(
+            #selector(stopThread),
+            on: thread,
+            with: nil,
+            waitUntilDone: false,
+            modes: [RunLoop.Mode.default.rawValue]
+        )
     }
 
     @objc func stopThread() {

@@ -55,16 +55,14 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
             case let .initial(sensors):
                 self?.sensors = sensors
                 if let id = self?.ruuviTagSensor.id,
-                   let sensor = sensors.first(where: { $0.id == id })
-                {
+                   let sensor = sensors.first(where: { $0.id == id }) {
                     self?.ruuviTagSensor = sensor
                 }
             case let .insert(sensor):
                 self?.sensors.append(sensor)
             case let .update(sensor):
                 if self?.ruuviTagSensor.id == sensor.id,
-                   let index = self?.sensors.firstIndex(where: { $0.id == sensor.id })
-                {
+                   let index = self?.sensors.firstIndex(where: { $0.id == sensor.id }) {
                     self?.ruuviTagSensor = sensor
                     self?.sensors[index] = sensor
                     self?.presenter.interactorDidUpdate(sensor: sensor)
@@ -80,9 +78,10 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         ruuviTagSensorObservationToken = nil
     }
 
-    func configure(withTag ruuviTag: AnyRuuviTagSensor,
-                   andSettings settings: SensorSettings?)
-    {
+    func configure(
+        withTag ruuviTag: AnyRuuviTagSensor,
+        andSettings settings: SensorSettings?
+    ) {
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
@@ -117,7 +116,8 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
 
     func export() -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
-        guard let sensorSettings else {
+        guard let sensorSettings
+        else {
             return promise.future
         }
         let op = exportService.csvLog(for: ruuviTagSensor.id, settings: sensorSettings)
@@ -130,7 +130,8 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
     }
 
     func isSyncingRecords() -> Bool {
-        guard let luid = ruuviTagSensor.luid else {
+        guard let luid = ruuviTagSensor.luid
+        else {
             return false
         }
         if gattService.isSyncingLogs(with: luid.value) {
@@ -142,7 +143,8 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
 
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        guard let luid = ruuviTagSensor.luid else {
+        guard let luid = ruuviTagSensor.luid
+        else {
             promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
             return promise.future
         }
@@ -158,18 +160,19 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
             syncFrom = historyLength
         } else if let from = syncFrom,
                   let history = historyLength,
-                  from < history
-        {
+                  from < history {
             syncFrom = history
         }
 
-        let op = gattService.syncLogs(uuid: luid.value,
-                                      mac: ruuviTagSensor.macId?.value,
-                                      from: syncFrom ?? Date.distantPast,
-                                      settings: sensorSettings,
-                                      progress: progress,
-                                      connectionTimeout: connectionTimeout,
-                                      serviceTimeout: serviceTimeout)
+        let op = gattService.syncLogs(
+            uuid: luid.value,
+            mac: ruuviTagSensor.macId?.value,
+            from: syncFrom ?? Date.distantPast,
+            settings: sensorSettings,
+            progress: progress,
+            connectionTimeout: connectionTimeout,
+            serviceTimeout: serviceTimeout
+        )
         op.on(success: { [weak self] _ in
             if let isInterrupted = self?.gattSyncInterruptedByUser, !isInterrupted {
                 self?.localSyncState.setGattSyncDate(Date(), for: self?.ruuviTagSensor.macId)
@@ -184,7 +187,8 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
 
     func stopSyncRecords() -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        guard let luid = ruuviTagSensor.luid else {
+        guard let luid = ruuviTagSensor.luid
+        else {
             promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
             return promise.future
         }
@@ -246,13 +250,15 @@ extension TagChartsViewInteractor {
     }
 
     private func fetchLast() {
-        guard ruuviTagSensor != nil else {
+        guard ruuviTagSensor != nil
+        else {
             return
         }
         let op = ruuviStorage.readLatest(ruuviTagSensor)
         op.on(success: { [weak self] record in
             guard let sSelf = self else { return }
-            guard let record else {
+            guard let record
+            else {
                 sSelf.presenter.createChartModules(from: [])
                 return
             }
@@ -303,7 +309,8 @@ extension TagChartsViewInteractor {
     private func fetchPoints(_ completion: (() -> Void)? = nil) {
         if settings.chartDownsamplingOn {
             fetchAll { [weak self] in
-                guard let self else {
+                guard let self
+                else {
                     return
                 }
                 if ruuviTagData.count < minimumDownsampleThreshold {
@@ -318,7 +325,8 @@ extension TagChartsViewInteractor {
     }
 
     private func fetchAll(_ completion: (() -> Void)? = nil) {
-        guard ruuviTagSensor != nil else {
+        guard ruuviTagSensor != nil
+        else {
             return
         }
 
@@ -340,7 +348,8 @@ extension TagChartsViewInteractor {
     }
 
     private func fetchDownSampled(_ competion: (() -> Void)? = nil) {
-        guard ruuviTagSensor != nil else {
+        guard ruuviTagSensor != nil
+        else {
             return
         }
 

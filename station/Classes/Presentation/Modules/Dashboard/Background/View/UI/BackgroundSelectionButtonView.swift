@@ -31,10 +31,11 @@ class BackgroundSelectionButtonView: UIView {
         super.init(frame: frame)
     }
 
-    convenience init(title: String,
-                     icon: String,
-                     delegate: BackgroundSelectionButtonViewDelegate? = nil)
-    {
+    convenience init(
+        title: String,
+        icon: String,
+        delegate: BackgroundSelectionButtonViewDelegate? = nil
+    ) {
         self.init()
         titleLabel.text = title
         buttonIcon.image = UIImage(systemName: icon)
@@ -53,33 +54,43 @@ private extension BackgroundSelectionButtonView {
         backgroundColor = .clear
 
         addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor,
-                          leading: safeLeftAnchor,
-                          bottom: bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 8,
-                                         left: 0,
-                                         bottom: 8,
-                                         right: 0))
+        titleLabel.anchor(
+            top: topAnchor,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 8,
+                left: 0,
+                bottom: 8,
+                right: 0
+            )
+        )
 
         addSubview(buttonIcon)
-        buttonIcon.anchor(top: nil,
-                          leading: titleLabel.trailingAnchor,
-                          bottom: nil,
-                          trailing: safeRightAnchor,
-                          padding: .init(top: 0,
-                                         left: 8,
-                                         bottom: 8,
-                                         right: 0),
-                          size: .init(width: 24, height: 24))
+        buttonIcon.anchor(
+            top: nil,
+            leading: titleLabel.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: 8,
+                bottom: 8,
+                right: 0
+            ),
+            size: .init(width: 24, height: 24)
+        )
         buttonIcon.centerYInSuperview()
 
         addSubview(seprator)
-        seprator.anchor(top: nil,
-                        leading: leadingAnchor,
-                        bottom: bottomAnchor,
-                        trailing: trailingAnchor,
-                        size: .init(width: 0, height: 1))
+        seprator.anchor(
+            top: nil,
+            leading: leadingAnchor,
+            bottom: bottomAnchor,
+            trailing: trailingAnchor,
+            size: .init(width: 0, height: 1)
+        )
 
         isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))

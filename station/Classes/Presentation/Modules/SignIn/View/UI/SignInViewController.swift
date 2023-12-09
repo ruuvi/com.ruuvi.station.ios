@@ -20,10 +20,12 @@ class SignInViewController: UIViewController {
 
     // UI Componenets starts
     private lazy var backButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: RuuviAssets.backButtonImage,
-                                     style: .plain,
-                                     target: self,
-                                     action: #selector(handleBackButtonTap))
+        let button = UIBarButtonItem(
+            image: RuuviAssets.backButtonImage,
+            style: .plain,
+            target: self,
+            action: #selector(handleBackButtonTap)
+        )
         button.tintColor = .white
         return button
     }()
@@ -46,14 +48,18 @@ class SignInViewController: UIViewController {
     private lazy var useWithoutAccountButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.setTitle(RuuviLocalization.useWithoutAccount,
-                        for: .normal)
+        button.setTitle(
+            RuuviLocalization.useWithoutAccount,
+            for: .normal
+        )
         button.titleLabel?.font = UIFont.Muli(.semiBoldItalic, size: 14)
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.textAlignment = .center
-        button.addTarget(self,
-                         action: #selector(handleUseWithoutAccountTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleUseWithoutAccountTap),
+            for: .touchUpInside
+        )
         button.underline()
         return button
     }()
@@ -92,7 +98,8 @@ private extension SignInViewController {
     }
 
     private func bindViewModel() {
-        guard isViewLoaded else {
+        guard isViewLoaded
+        else {
             return
         }
 
@@ -180,10 +187,12 @@ extension SignInViewController {
         bgLayer.fillSuperview()
 
         view.addSubview(scrollView)
-        scrollView.anchor(top: view.safeTopAnchor,
-                          leading: nil,
-                          bottom: view.bottomAnchor,
-                          trailing: nil)
+        scrollView.anchor(
+            top: view.safeTopAnchor,
+            leading: nil,
+            bottom: view.bottomAnchor,
+            trailing: nil
+        )
         scrollView.centerXInSuperview()
         scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
     }
@@ -194,10 +203,12 @@ extension SignInViewController {
 
     private func setUpSignInView() {
         scrollView.addSubview(signInView)
-        signInView.anchor(top: scrollView.topAnchor,
-                          leading: nil,
-                          bottom: nil,
-                          trailing: nil)
+        signInView.anchor(
+            top: scrollView.topAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: nil
+        )
         signInView.centerXInSuperview()
         signInView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         signInView.alpha = 1
@@ -206,14 +217,16 @@ extension SignInViewController {
 
     private func setUpSignInVerifyView() {
         scrollView.addSubview(signInVerifyView)
-        signInVerifyView.anchor(top: scrollView.topAnchor,
-                                leading: scrollView.leadingAnchor,
-                                bottom: scrollView.safeBottomAnchor,
-                                trailing: scrollView.trailingAnchor,
-                                size: .init(
-                                    width: 0,
-                                    height: view.bounds.height
-                                ))
+        signInVerifyView.anchor(
+            top: scrollView.topAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: scrollView.safeBottomAnchor,
+            trailing: scrollView.trailingAnchor,
+            size: .init(
+                width: 0,
+                height: view.bounds.height
+            )
+        )
         signInVerifyView.centerXInSuperview()
         signInVerifyView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         signInVerifyView.alpha = 0
@@ -222,11 +235,17 @@ extension SignInViewController {
 
     private func setUpFooterView() {
         scrollView.addSubview(useWithoutAccountButton)
-        useWithoutAccountButton.anchor(top: signInView.bottomAnchor,
-                                       leading: view.safeLeftAnchor,
-                                       bottom: view.safeBottomAnchor,
-                                       trailing: view.safeRightAnchor,
-                                       padding: .init(top: 8, left: 20,
-                                                      bottom: 16, right: 20))
+        useWithoutAccountButton.anchor(
+            top: signInView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(
+                top: 8,
+                left: 20,
+                bottom: 16,
+                right: 20
+            )
+        )
     }
 }

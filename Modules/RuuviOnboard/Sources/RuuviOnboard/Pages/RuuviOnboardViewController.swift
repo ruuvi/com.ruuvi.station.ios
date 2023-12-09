@@ -4,10 +4,14 @@ import UIKit
 // swiftlint:disable file_length
 
 protocol RuuviOnboardViewControllerOutput: AnyObject {
-    func ruuviOnboardPages(_ viewController: RuuviOnboardViewController,
-                           didFinish sender: Any?)
-    func ruuviOnboardCloudSignIn(_ viewController: RuuviOnboardViewController,
-                                 didPresentSignIn sender: Any?)
+    func ruuviOnboardPages(
+        _ viewController: RuuviOnboardViewController,
+        didFinish sender: Any?
+    )
+    func ruuviOnboardCloudSignIn(
+        _ viewController: RuuviOnboardViewController,
+        didPresentSignIn sender: Any?
+    )
 }
 
 enum OnboardPageType: Int {
@@ -46,8 +50,10 @@ class RuuviOnboardViewController: UIViewController {
     }
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: UIImage.named(RuuviAssets.bg_layer,
-                                                  for: Self.self))
+        let iv = UIImageView(image: UIImage.named(
+            RuuviAssets.bg_layer,
+            for: Self.self
+        ))
         iv.backgroundColor = .clear
         return iv
     }()
@@ -66,9 +72,11 @@ class RuuviOnboardViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.setTitle("onboarding_skip".localized(for: Self.self), for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 14)
-        button.addTarget(self,
-                         action: #selector(handleSkipButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleSkipButtonTap),
+            for: .touchUpInside
+        )
         button.underline()
         return button
     }()
@@ -76,8 +84,10 @@ class RuuviOnboardViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        let cv = UICollectionView(frame: .zero,
-                                  collectionViewLayout: layout)
+        let cv = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
         cv.backgroundColor = .clear
         cv.delegate = self
         cv.dataSource = self
@@ -121,7 +131,8 @@ extension RuuviOnboardViewController {
 
 extension RuuviOnboardViewController {
     private func isUserAuthorized() -> Bool {
-        guard let isAuthorized = ruuviUser?.isAuthorized else {
+        guard let isAuthorized = ruuviUser?.isAuthorized
+        else {
             return false
         }
         return isAuthorized
@@ -138,9 +149,11 @@ extension RuuviOnboardViewController {
         currentPage = lastPageIndex
         pageControl.currentPage = lastPageIndex
         let indexPath = IndexPath(item: lastPageIndex, section: 0)
-        collectionView.scrollToItem(at: indexPath,
-                                    at: .centeredHorizontally,
-                                    animated: false)
+        collectionView.scrollToItem(
+            at: indexPath,
+            at: .centeredHorizontally,
+            animated: false
+        )
     }
 
     private func updateSkipButtonState() {
@@ -149,7 +162,8 @@ extension RuuviOnboardViewController {
 
     private func showDiscoverPage() {
         viewModels = constructOnboardingPages()
-        guard isUserAuthorized() else {
+        guard isUserAuthorized()
+        else {
             return
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
@@ -158,19 +172,23 @@ extension RuuviOnboardViewController {
 }
 
 extension RuuviOnboardViewController: UICollectionViewDataSource {
-    func collectionView(_: UICollectionView,
-                        numberOfItemsInSection _: Int) -> Int
-    {
+    func collectionView(
+        _: UICollectionView,
+        numberOfItemsInSection _: Int
+    ) -> Int {
         viewModels.count
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         let viewModel = viewModels[indexPath.item]
-        guard let cell = cell(collectionView: collectionView,
-                              indexPath: indexPath,
-                              viewModel: viewModel)
+        guard let cell = cell(
+            collectionView: collectionView,
+            indexPath: indexPath,
+            viewModel: viewModel
+        )
         else {
             fatalError()
         }
@@ -200,19 +218,21 @@ extension RuuviOnboardViewController: UICollectionViewDelegateFlowLayout {
         CGSize(width: view.bounds.width, height: view.bounds.height)
     }
 
-    func collectionView(_: UICollectionView,
-                        layout _: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt _: Int) -> CGFloat
-    {
+    func collectionView(
+        _: UICollectionView,
+        layout _: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt _: Int
+    ) -> CGFloat {
         0
     }
 }
 
 extension RuuviOnboardViewController {
-    private func cell(collectionView: UICollectionView,
-                      indexPath: IndexPath,
-                      viewModel: OnboardViewModel) -> UICollectionViewCell?
-    {
+    private func cell(
+        collectionView: UICollectionView,
+        indexPath: IndexPath,
+        viewModel: OnboardViewModel
+    ) -> UICollectionViewCell? {
         switch viewModel.pageType {
         case .measure:
             let cell = collectionView.dequeueReusableCell(
@@ -275,57 +295,71 @@ extension RuuviOnboardViewController {
         view.addSubview(collectionView)
         collectionView.fillSuperview()
 
-        collectionView.register(RuuviOnboardStartCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierMeasure)
-        collectionView.register(RuuviOnboardCoreFeaturesCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierCoreFeatures)
-        collectionView.register(RuuviOnboardGatewayFeaturesCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierGatewayFeatures)
-        collectionView.register(RuuviOnboardSignInCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierSignIn)
+        collectionView.register(
+            RuuviOnboardStartCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierMeasure
+        )
+        collectionView.register(
+            RuuviOnboardCoreFeaturesCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierCoreFeatures
+        )
+        collectionView.register(
+            RuuviOnboardGatewayFeaturesCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierGatewayFeatures
+        )
+        collectionView.register(
+            RuuviOnboardSignInCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierSignIn
+        )
     }
 
     private func setUpHeaderView() {
         let headerView = UIView(color: .clear)
         view.addSubview(headerView)
-        headerView.anchor(top: view.safeTopAnchor,
-                          leading: view.safeLeadingAnchor,
-                          bottom: nil,
-                          trailing: view.safeTrailingAnchor,
-                          padding: .init(top: 0, left: 12, bottom: 0, right: 12),
-                          size: .init(width: 0, height: 44))
+        headerView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeadingAnchor,
+            bottom: nil,
+            trailing: view.safeTrailingAnchor,
+            padding: .init(top: 0, left: 12, bottom: 0, right: 12),
+            size: .init(width: 0, height: 44)
+        )
 
         headerView.addSubview(pageControl)
         pageControl.centerInSuperview()
 
         headerView.addSubview(skipButton)
-        skipButton.anchor(top: nil,
-                          leading: nil,
-                          bottom: nil,
-                          trailing: headerView.trailingAnchor)
+        skipButton.anchor(
+            top: nil,
+            leading: nil,
+            bottom: nil,
+            trailing: headerView.trailingAnchor
+        )
         skipButton.centerYInSuperview()
     }
 }
 
 private extension RuuviOnboardViewController {
     static func createLayout() -> UICollectionViewLayout {
-        let sectionProvider = { (_: Int,
-                                 _: NSCollectionLayoutEnvironment)
-                -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .fractionalHeight(1)
-            )
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let sectionProvider = { (
+            _: Int,
+            _: NSCollectionLayoutEnvironment
+        )
+            -> NSCollectionLayoutSection? in
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
-            let section = NSCollectionLayoutSection(group: group)
-            return section
+        let section = NSCollectionLayoutSection(group: group)
+        return section
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()

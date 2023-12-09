@@ -86,8 +86,10 @@ extension RuuviCloudQueuedRequestSQLite: PersistableRecord {
 public extension RuuviCloudQueuedRequestSQLite {
     static func createTable(in db: Database) throws {
         try db.create(table: RuuviCloudQueuedRequestSQLite.databaseTableName, body: { table in
-            table.autoIncrementedPrimaryKey(RuuviCloudQueuedRequestSQLite.idColumn.name,
-                                            onConflict: .fail)
+            table.autoIncrementedPrimaryKey(
+                RuuviCloudQueuedRequestSQLite.idColumn.name,
+                onConflict: .fail
+            )
             table.column(RuuviCloudQueuedRequestSQLite.typeColumn.name, .integer)
             table.column(RuuviCloudQueuedRequestSQLite.statusColumn.name, .integer)
             table.column(RuuviCloudQueuedRequestSQLite.uniqueKeyColumn.name, .text)

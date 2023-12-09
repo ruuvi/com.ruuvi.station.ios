@@ -40,7 +40,8 @@ class ImagePersistenceDocuments: ImagePersistence {
     }
 
     private func getBgDirectory() throws -> URL {
-        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        else {
             throw RuuviLocalError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)

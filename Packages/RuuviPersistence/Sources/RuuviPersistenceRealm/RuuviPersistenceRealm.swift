@@ -278,9 +278,11 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                 .filter("ruuviTag.uuid == %@", ruuviTagId)
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { realmRecord in
-                self.constructRecordStruct(from: realmRecord,
-                                           luid: realmRecord.ruuviTag?.luid,
-                                           sequenceNumber: realmRecord.measurementSequenceNumber.value)
+                self.constructRecordStruct(
+                    from: realmRecord,
+                    luid: realmRecord.ruuviTag?.luid,
+                    sequenceNumber: realmRecord.measurementSequenceNumber.value
+                )
             }
             promise.succeed(value: result)
         }
@@ -300,14 +302,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             var previousDate = ruuviTagDataRealms.first?.date ?? Date()
             for tagDataRealm in ruuviTagDataRealms {
                 autoreleasepool {
-                    guard tagDataRealm.date >= previousDate.addingTimeInterval(interval) else {
+                    guard tagDataRealm.date >= previousDate.addingTimeInterval(interval)
+                    else {
                         return
                     }
                     previousDate = tagDataRealm.date
                     results.append(
-                        self.constructRecordStruct(from: tagDataRealm,
-                                                   luid: tagDataRealm.ruuviTag?.luid,
-                                                   sequenceNumber: tagDataRealm.measurementSequenceNumber.value)
+                        self.constructRecordStruct(
+                            from: tagDataRealm,
+                            luid: tagDataRealm.ruuviTag?.luid,
+                            sequenceNumber: tagDataRealm.measurementSequenceNumber.value
+                        )
                     )
                 }
             }
@@ -329,14 +334,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             var previousDate = realmRecords.first?.date ?? Date()
             for realmRecord in realmRecords {
                 autoreleasepool {
-                    guard realmRecord.date >= previousDate else {
+                    guard realmRecord.date >= previousDate
+                    else {
                         return
                     }
                     previousDate = realmRecord.date
                     results.append(
-                        self.constructRecordStruct(from: realmRecord,
-                                                   luid: realmRecord.ruuviTag?.luid,
-                                                   sequenceNumber: realmRecord.measurementSequenceNumber.value)
+                        self.constructRecordStruct(
+                            from: realmRecord,
+                            luid: realmRecord.ruuviTag?.luid,
+                            sequenceNumber: realmRecord.measurementSequenceNumber.value
+                        )
                     )
                 }
             }
@@ -359,14 +367,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             var previousDate = realmRecords.first?.date ?? Date()
             for realmRecord in realmRecords {
                 autoreleasepool {
-                    guard realmRecord.date >= previousDate.addingTimeInterval(interval) else {
+                    guard realmRecord.date >= previousDate.addingTimeInterval(interval)
+                    else {
                         return
                     }
                     previousDate = realmRecord.date
                     results.append(
-                        self.constructRecordStruct(from: realmRecord,
-                                                   luid: realmRecord.ruuviTag?.luid,
-                                                   sequenceNumber: realmRecord.measurementSequenceNumber.value)
+                        self.constructRecordStruct(
+                            from: realmRecord,
+                            luid: realmRecord.ruuviTag?.luid,
+                            sequenceNumber: realmRecord.measurementSequenceNumber.value
+                        )
                     )
                 }
             }
@@ -394,14 +405,18 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         context.bgWorker.enqueue {
             let realmRecords = self.context.bg
                 .objects(RuuviTagDataRealm.self)
-                .filter("ruuviTag.uuid == %@ AND date > %@",
-                        ruuviTagId,
-                        Date(timeIntervalSince1970: from))
+                .filter(
+                    "ruuviTag.uuid == %@ AND date > %@",
+                    ruuviTagId,
+                    Date(timeIntervalSince1970: from)
+                )
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { record in
-                self.constructRecordStruct(from: record,
-                                           luid: record.ruuviTag?.luid,
-                                           sequenceNumber: record.measurementSequenceNumber.value)
+                self.constructRecordStruct(
+                    from: record,
+                    luid: record.ruuviTag?.luid,
+                    sequenceNumber: record.measurementSequenceNumber.value
+                )
             }
             promise.succeed(value: result)
         }
@@ -420,12 +435,13 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             if let lastRecord = self.context.bg.objects(RuuviTagDataRealm.self)
                 .filter("ruuviTag.uuid == %@", luid.value)
                 .sorted(byKeyPath: "date", ascending: false)
-                .first
-            {
+                .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
-                let lastRecordResult = self.constructRecordStruct(from: lastRecord,
-                                                                  luid: luid,
-                                                                  sequenceNumber: sequenceNumber)
+                let lastRecordResult = self.constructRecordStruct(
+                    from: lastRecord,
+                    luid: luid,
+                    sequenceNumber: sequenceNumber
+                )
                 promise.succeed(value: lastRecordResult)
             } else {
                 promise.succeed(value: nil)
@@ -446,12 +462,13 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             if let lastRecord = self.context.bg.objects(RuuviTagLatestDataRealm.self)
                 .filter("ruuviTag.uuid == %@", luid.value)
                 .sorted(byKeyPath: "date", ascending: false)
-                .first
-            {
+                .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
-                let lastRecordResult = self.constructRecordStruct(from: lastRecord,
-                                                                  luid: luid,
-                                                                  sequenceNumber: sequenceNumber)
+                let lastRecordResult = self.constructRecordStruct(
+                    from: lastRecord,
+                    luid: luid,
+                    sequenceNumber: sequenceNumber
+                )
                 promise.succeed(value: lastRecordResult)
             } else {
                 promise.succeed(value: nil)
@@ -491,8 +508,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                 .first(where: {
                     ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
                         || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
-                })
-            {
+                }) {
                 promise.succeed(value: record.sensorSettings)
             } else {
                 promise.succeed(value: nil)
@@ -534,8 +550,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                     .first(where: {
                         ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
                             || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
-                    })
-                {
+                    }) {
                     try self.context.bg.write {
                         switch type {
                         case .humidity:
@@ -586,8 +601,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                     .first(where: {
                         ($0.luid != nil && $0.luid == ruuviTag.luid?.value)
                             || ($0.macId != nil && $0.macId == ruuviTag.macId?.value)
-                    })
-                {
+                    }) {
                     try self.context.bg.write {
                         self.context.bg.delete(sensorSettingRealm)
                     }
@@ -690,10 +704,11 @@ extension RuuviPersistenceRealm {
         ).any
     }
 
-    private func constructRecordStruct(from lastRecord: RuuviTagDataRealm,
-                                       luid: LocalIdentifier?,
-                                       sequenceNumber: Int?) -> RuuviTagSensorRecordStruct
-    {
+    private func constructRecordStruct(
+        from lastRecord: RuuviTagDataRealm,
+        luid: LocalIdentifier?,
+        sequenceNumber: Int?
+    ) -> RuuviTagSensorRecordStruct {
         let lastRecordResult = RuuviTagSensorRecordStruct(
             luid: luid,
             date: lastRecord.date,
@@ -715,10 +730,11 @@ extension RuuviPersistenceRealm {
         return lastRecordResult
     }
 
-    private func constructRecordStruct(from lastRecord: RuuviTagLatestDataRealm,
-                                       luid: LocalIdentifier,
-                                       sequenceNumber: Int?) -> RuuviTagSensorRecordStruct
-    {
+    private func constructRecordStruct(
+        from lastRecord: RuuviTagLatestDataRealm,
+        luid: LocalIdentifier,
+        sequenceNumber: Int?
+    ) -> RuuviTagSensorRecordStruct {
         let lastRecordResult = RuuviTagSensorRecordStruct(
             luid: luid,
             date: lastRecord.date,

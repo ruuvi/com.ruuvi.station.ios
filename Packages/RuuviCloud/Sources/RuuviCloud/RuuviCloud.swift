@@ -35,15 +35,19 @@ public protocol RuuviCloud {
     func deleteAccount(email: String) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func registerPNToken(token: String,
-                         type: String,
-                         name: String?,
-                         data: String?,
-                         params: [String: String]?) -> Future<Int, RuuviCloudError>
+    func registerPNToken(
+        token: String,
+        type: String,
+        name: String?,
+        data: String?,
+        params: [String: String]?
+    ) -> Future<Int, RuuviCloudError>
 
     @discardableResult
-    func unregisterPNToken(token: String?,
-                           tokenId: Int?) -> Future<Bool, RuuviCloudError>
+    func unregisterPNToken(
+        token: String?,
+        tokenId: Int?
+    ) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
     func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError>
@@ -52,11 +56,13 @@ public protocol RuuviCloud {
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult
-    func loadSensorsDense(for sensor: RuuviTagSensor?,
-                          measurements: Bool?,
-                          sharedToOthers: Bool?,
-                          sharedToMe: Bool?,
-                          alerts: Bool?) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
+    func loadSensorsDense(
+        for sensor: RuuviTagSensor?,
+        measurements: Bool?,
+        sharedToOthers: Bool?,
+        sharedToMe: Bool?,
+        alerts: Bool?
+    ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
 
     @discardableResult
     func loadRecords(

@@ -15,7 +15,8 @@ extension Double {
 
 extension Double? {
     var intValue: Int {
-        guard let self else {
+        guard let self
+        else {
             return 0
         }
         return Int(self)

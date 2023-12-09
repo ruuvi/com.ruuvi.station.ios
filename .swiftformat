@@ -1,2 +1,5 @@
 --swiftversion 5.9
 --exclude ./Common/RuuviLocalization/Sources/RuuviLocalization/RuuviLocalization.swift
+--disable wrapMultilineStatementBraces,trailingCommas
+--xcodeindentation enabled
+--wraparguments before-first

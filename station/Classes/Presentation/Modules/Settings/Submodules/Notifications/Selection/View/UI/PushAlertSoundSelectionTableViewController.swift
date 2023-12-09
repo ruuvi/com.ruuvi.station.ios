@@ -65,8 +65,10 @@ private extension PushAlertSoundSelectionTableViewController {
 
     func setUpTableView() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.register(PushAlertSelectionTableViewCell.self,
-                           forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(
+            PushAlertSelectionTableViewCell.self,
+            forCellReuseIdentifier: reuseIdentifier
+        )
     }
 
     func updateUI() {
@@ -85,13 +87,15 @@ extension PushAlertSoundSelectionTableViewController {
         viewModel?.items.count ?? 0
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: reuseIdentifier,
             for: indexPath
-        ) as? PushAlertSelectionTableViewCell else {
+        ) as? PushAlertSelectionTableViewCell
+        else {
             fatalError()
         }
         if let viewModel {
@@ -108,9 +112,10 @@ extension PushAlertSoundSelectionTableViewController {
 // MARK: - UITableViewDelegate
 
 extension PushAlertSoundSelectionTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let viewModel {
             output.viewDidSelectItem(item: viewModel.items[indexPath.row])
@@ -128,7 +133,8 @@ extension PushAlertSoundSelectionTableViewController {
         guard let audioURL = Bundle.main.url(
             forResource: sound.fileName,
             withExtension: "caf"
-        ) else {
+        )
+        else {
             return
         }
 

@@ -13,11 +13,13 @@ import RuuviLocalization
                 }
 
                 if env.viewModel.bgScanningState.value.bound {
-                    Stepper(RuuviLocalization.Heartbeat.Interval.Every.string
-                        + " " + "\(env.viewModel.bgScanningInterval.value.bound)"
-                        + " " + RuuviLocalization.Heartbeat.Interval.Min.string,
+                    Stepper(
+                        RuuviLocalization.Heartbeat.Interval.Every.string
+                            + " " + "\(env.viewModel.bgScanningInterval.value.bound)"
+                            + " " + RuuviLocalization.Heartbeat.Interval.Min.string,
                         value: $env.viewModel.bgScanningInterval.value.bound,
-                        in: 0 ... 3600)
+                        in: 0 ... 3600
+                    )
                 }
             }
         }

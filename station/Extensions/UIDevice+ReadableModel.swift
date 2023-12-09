@@ -9,9 +9,13 @@ extension UIDevice {
 
         var sysinfo = utsname()
         uname(&sysinfo)
-        let deviceModel = String(bytes: Data(bytes: &sysinfo.machine,
-                                             count: Int(_SYS_NAMELEN)),
-                                 encoding: .ascii)!
+        let deviceModel = String(
+            bytes: Data(
+                bytes: &sysinfo.machine,
+                count: Int(_SYS_NAMELEN)
+            ),
+            encoding: .ascii
+        )!
             .trimmingCharacters(in: .controlCharacters)
 
         var modelReadable = iOSDevices?.value(forKey: deviceModel) as? String
@@ -149,15 +153,18 @@ extension UIDevice {
 
     fileprivate static func modelIdentifier() -> String {
         if let simulatorModelIdentifier = ProcessInfo()
-            .environment["SIMULATOR_MODEL_IDENTIFIER"]
-        {
+            .environment["SIMULATOR_MODEL_IDENTIFIER"] {
             return simulatorModelIdentifier
         }
         var sysinfo = utsname()
         uname(&sysinfo) // ignore return value
-        return String(bytes: Data(bytes: &sysinfo.machine,
-                                  count: Int(_SYS_NAMELEN)),
-                      encoding: .ascii)!.trimmingCharacters(in: .controlCharacters)
+        return String(
+            bytes: Data(
+                bytes: &sysinfo.machine,
+                count: Int(_SYS_NAMELEN)
+            ),
+            encoding: .ascii
+        )!.trimmingCharacters(in: .controlCharacters)
     }
 }
 

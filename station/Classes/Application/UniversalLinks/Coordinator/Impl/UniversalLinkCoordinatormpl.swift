@@ -28,8 +28,10 @@ class UniversalLinkCoordinatorImpl {
 
 extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
     func processUniversalLink(url: URL) {
-        guard let urlComponents = URLComponents(url: url,
-                                                resolvingAgainstBaseURL: false),
+        guard let urlComponents = URLComponents(
+            url: url,
+            resolvingAgainstBaseURL: false
+        ),
             let path = UniversalLinkType(rawValue: urlComponents.path)
         else {
             return
@@ -40,9 +42,11 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
 
     func processWidgetLink(macId: String) {
         settings.setCardToOpenFromWidget(for: macId)
-        NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
-                                        object: nil,
-                                        userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
+        NotificationCenter.default.post(
+            name: .DidOpenWithWidgetDeepLink,
+            object: nil,
+            userInfo: [WidgetDeepLinkMacIdKey.macId: macId]
+        )
     }
 }
 
@@ -51,7 +55,8 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
 extension UniversalLinkCoordinatorImpl {
     private func detectViewController(for path: UniversalLinkType) {
         DispatchQueue.main.async { [weak self] in
-            guard let topViewController = UIApplication.shared.topViewController() else {
+            guard let topViewController = UIApplication.shared.topViewController()
+            else {
                 return
             }
             if topViewController.isMember(of: path.handlerType) {
@@ -73,9 +78,11 @@ extension UniversalLinkCoordinatorImpl {
             .value,
             !ruuviUser.isAuthorized
         else {
-            NotificationCenter.default.post(name: .DidOpenWithUniversalLink,
-                                            object: nil,
-                                            userInfo: nil)
+            NotificationCenter.default.post(
+                name: .DidOpenWithUniversalLink,
+                object: nil,
+                userInfo: nil
+            )
             return
         }
         router.openSignInVerify(with: token, from: topViewController)
@@ -88,13 +95,15 @@ extension UniversalLinkCoordinatorImpl {
 
     private func postNotification(with path: UniversalLinkType) {
         var userInfo: [String: Any] = [
-            "path": path,
+            "path": path
         ]
         urlComponents.queryItems?.forEach {
             userInfo[$0.name] = $0.value
         }
-        NotificationCenter.default.post(name: .DidOpenWithUniversalLink,
-                                        object: nil,
-                                        userInfo: userInfo)
+        NotificationCenter.default.post(
+            name: .DidOpenWithUniversalLink,
+            object: nil,
+            userInfo: userInfo
+        )
     }
 }

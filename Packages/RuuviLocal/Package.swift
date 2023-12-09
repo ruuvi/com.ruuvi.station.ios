@@ -31,7 +31,7 @@ let package = Package(
         .target(
             name: "RuuviLocalUserDefaults",
             dependencies: [
-                "RuuviLocal",
+                "RuuviLocal"
             ]
         ),
         .testTarget(

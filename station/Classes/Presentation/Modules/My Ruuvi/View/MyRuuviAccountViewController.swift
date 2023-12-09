@@ -51,7 +51,8 @@ extension MyRuuviAccountViewController: MyRuuviAccountViewInput {
 
 extension MyRuuviAccountViewController {
     private func bindViewModel() {
-        guard let viewModel, isViewLoaded else {
+        guard let viewModel, isViewLoaded
+        else {
             return
         }
         usernameLabel.bind(viewModel.username) { label, username in

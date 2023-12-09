@@ -32,9 +32,11 @@ enum ChartSettingsIntegerUnit {
 
 enum ChartSettingsCellType {
     case disclosure(title: String)
-    case stepper(title: String,
-                 value: Int,
-                 unitSingular: ChartSettingsIntegerUnit,
-                 unitPlural: ChartSettingsIntegerUnit)
+    case stepper(
+        title: String,
+        value: Int,
+        unitSingular: ChartSettingsIntegerUnit,
+        unitPlural: ChartSettingsIntegerUnit
+    )
     case switcher(title: String, value: Bool)
 }

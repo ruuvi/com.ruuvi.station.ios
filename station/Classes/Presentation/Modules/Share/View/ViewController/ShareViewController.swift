@@ -23,10 +23,8 @@ extension ShareViewController {
             switch self {
             case .description:
                 nil
-            case .addFriend:
-                { _, _ in RuuviLocalization.ShareViewController.AddFriend.title }
-            case .sharedEmails:
-                { a, b in RuuviLocalization.ShareViewController.SharedEmails.title(a, b) }
+            case .addFriend: { _, _ in RuuviLocalization.ShareViewController.AddFriend.title }
+            case .sharedEmails: { a, b in RuuviLocalization.ShareViewController.SharedEmails.title(a, b) }
             }
         }
     }
@@ -82,9 +80,10 @@ class ShareViewController: UITableViewController {
         }
     }
 
-    override func tableView(_: UITableView,
-                            viewForHeaderInSection section: Int) -> UIView?
-    {
+    override func tableView(
+        _: UITableView,
+        viewForHeaderInSection section: Int
+    ) -> UIView? {
         let section = Section(value: section)
         let headerView = UIView(color: .clear)
         let titleLabel = UILabel()
@@ -94,8 +93,7 @@ class ShareViewController: UITableViewController {
         switch section {
         case .sharedEmails:
             if let count = viewModel.sharedEmails.value?.count,
-               let title = section.title
-            {
+               let title = section.title {
                 titleLabel.text = title(count, viewModel.maxCount)
             }
         default:
@@ -103,8 +101,12 @@ class ShareViewController: UITableViewController {
         }
         headerView.addSubview(titleLabel)
         titleLabel.fillSuperviewToSafeArea(
-            padding: .init(top: 0, left: 20,
-                           bottom: 8, right: 20)
+            padding: .init(
+                top: 0,
+                left: 20,
+                bottom: 8,
+                right: 20
+            )
         )
         return headerView
     }
@@ -139,7 +141,8 @@ extension ShareViewController: ShareViewInput {
 
     func clearInput() {
         let indexPath = IndexPath(row: 0, section: Section.addFriend.rawValue)
-        guard let cell = tableView.cellForRow(at: indexPath) as? ShareEmailInputTableViewCell else {
+        guard let cell = tableView.cellForRow(at: indexPath) as? ShareEmailInputTableViewCell
+        else {
             return
         }
         cell.emailTextField.text = nil
@@ -194,8 +197,10 @@ extension ShareViewController {
     }
 
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
-        let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self,
-                                                 for: indexPath)
+        let cell = tableView.dequeueReusableCell(
+            with: ShareDescriptionTableViewCell.self,
+            for: indexPath
+        )
         if let canShare = viewModel.canShare.value, canShare {
             cell.sharingDisabledLabel.text = ""
         } else {
@@ -233,8 +238,10 @@ extension ShareViewController {
     }
 
     @objc private func didTapSendButton(_: UIButton) {
-        guard let cell = tableView.cellForRow(at: IndexPath(row: 0,
-                                                            section: Section.addFriend.rawValue))
+        guard let cell = tableView.cellForRow(at: IndexPath(
+            row: 0,
+            section: Section.addFriend.rawValue
+        ))
             as? ShareEmailInputTableViewCell
         else {
             return
@@ -248,12 +255,14 @@ extension ShareViewController {
     private func setupCustomBackButton() {
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(top: backBarButtonItemView.topAnchor,
-                          leading: backBarButtonItemView.leadingAnchor,
-                          bottom: backBarButtonItemView.bottomAnchor,
-                          trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: backBarButtonItemView.topAnchor,
+            leading: backBarButtonItemView.leadingAnchor,
+            bottom: backBarButtonItemView.bottomAnchor,
+            trailing: backBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 

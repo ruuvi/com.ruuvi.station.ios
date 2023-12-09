@@ -4,8 +4,7 @@ import Humidity
 public struct RuuviMeasurement {
     public var id: String {
         if let macId,
-           !macId.value.isEmpty
-        {
+           !macId.value.isEmpty {
             macId.value
         } else if let luid {
             luid.value

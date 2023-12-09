@@ -42,9 +42,11 @@ class MigrationManagerToSQLite: RuuviMigration {
             dispatchGroup.notify(queue: .main) {
                 NotificationCenter
                     .default
-                    .post(name: .MigrationManagerToSQLiteDidFinish,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .MigrationManagerToSQLiteDidFinish,
+                        object: self,
+                        userInfo: nil
+                    )
             }
             didMigrateRuuviTagRealmWithMAC = true
         }

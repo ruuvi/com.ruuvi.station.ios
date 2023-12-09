@@ -18,10 +18,12 @@ class DfuFlasher: NSObject {
     private var subject: PassthroughSubject<FlashResponse, Error>?
 
     override init() {
-        dfuServiceInitiator = DFUServiceInitiator(queue: queue,
-                                                  delegateQueue: queue,
-                                                  progressQueue: queue,
-                                                  loggerQueue: queue)
+        dfuServiceInitiator = DFUServiceInitiator(
+            queue: queue,
+            delegateQueue: queue,
+            progressQueue: queue,
+            loggerQueue: queue
+        )
         super.init()
     }
 
@@ -29,7 +31,8 @@ class DfuFlasher: NSObject {
         uuid: String,
         with firmware: DFUFirmware
     ) -> AnyPublisher<FlashResponse, Error> {
-        guard let uuid = UUID(uuidString: uuid) else {
+        guard let uuid = UUID(uuidString: uuid)
+        else {
             return Fail<FlashResponse, Error>(error: RuuviDfuError.failedToConstructUUID).eraseToAnyPublisher()
         }
         let subject = PassthroughSubject<FlashResponse, Error>()
@@ -45,7 +48,8 @@ class DfuFlasher: NSObject {
     }
 
     func stopFlashFirmware(device _: DFUDevice) -> Bool {
-        guard let serviceController = dfuServiceController else {
+        guard let serviceController = dfuServiceController
+        else {
             return false
         }
         return serviceController.abort()
@@ -71,13 +75,15 @@ extension DfuFlasher: DFUServiceDelegate {
 }
 
 extension DfuFlasher: DFUProgressDelegate {
-    func dfuProgressDidChange(for part: Int,
-                              outOf totalParts: Int,
-                              to progress: Int,
-                              currentSpeedBytesPerSecond _: Double,
-                              avgSpeedBytesPerSecond _: Double)
-    {
-        guard let parts = firmware?.parts else {
+    func dfuProgressDidChange(
+        for part: Int,
+        outOf totalParts: Int,
+        to progress: Int,
+        currentSpeedBytesPerSecond _: Double,
+        avgSpeedBytesPerSecond _: Double
+    ) {
+        guard let parts = firmware?.parts
+        else {
             return
         }
         // Update the total progress view

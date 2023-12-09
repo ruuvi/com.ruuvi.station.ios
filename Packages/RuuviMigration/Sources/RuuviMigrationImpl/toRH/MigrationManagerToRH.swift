@@ -29,8 +29,7 @@ final class MigrationManagerToRH: RuuviMigration {
                     let temperature = tuple.1
                     if let lower = self.ruuviAlertService.lowerHumidity(for: sensor),
                        let upper = self.ruuviAlertService.upperHumidity(for: sensor),
-                       let temperature
-                    {
+                       let temperature {
                         let humidityType: AlertType = .humidity(lower: lower, upper: upper)
                         if self.ruuviAlertService.isOn(type: humidityType, for: sensor) {
                             self.ruuviAlertService.register(

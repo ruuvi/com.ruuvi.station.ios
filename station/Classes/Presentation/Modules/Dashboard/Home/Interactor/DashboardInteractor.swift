@@ -58,17 +58,18 @@ extension DashboardInteractor: DashboardInteractorInput {
 
         // Check in every 15 days if the tag doesn't have any owner.
         if let checkedDate = settings.ownerCheckDate(for: macId),
-           let days = checkedDate.numberOfDaysFromNow(), days < 15
-        {
+           let days = checkedDate.numberOfDaysFromNow(), days < 15 {
             return
         }
 
         ruuviOwnershipService.checkOwner(macId: macId)
             .on(success: { [weak self] owner in
-                guard let sSelf = self else {
+                guard let sSelf = self
+                else {
                     return
                 }
-                guard let owner, !owner.isEmpty else {
+                guard let owner, !owner.isEmpty
+                else {
                     NotificationCenter.default.post(
                         name: .RuuviTagOwnershipCheckDidEnd,
                         object: nil,

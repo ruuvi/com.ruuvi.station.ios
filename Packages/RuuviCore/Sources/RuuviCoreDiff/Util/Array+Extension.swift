@@ -13,7 +13,8 @@ extension Array where Element: Hashable {
 
 extension String {
     subscript(safe range: NSRange) -> String? {
-        guard count > range.location else {
+        guard count > range.location
+        else {
             return nil
         }
         let length = count > range.location + range.length ? range.location + range.length : count

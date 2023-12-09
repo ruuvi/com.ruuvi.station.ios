@@ -25,7 +25,7 @@ let package = Package(
         .target(
             name: "RuuviNotifier",
             dependencies: [
-                "RuuviOntology",
+                "RuuviOntology"
             ]
         ),
         .target(

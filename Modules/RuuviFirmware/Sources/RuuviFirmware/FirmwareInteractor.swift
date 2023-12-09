@@ -34,16 +34,17 @@ final class FirmwareInteractor {
 
     func loadLatestGitHubRelease() -> AnyPublisher<GitHubRelease, Error> {
         let urlString = "https://api.github.com/repos/ruuvi/ruuvi.firmware.c/releases/latest"
-        guard let url = URL(string: urlString) else {
+        guard let url = URL(string: urlString)
+        else {
             return Fail<GitHubRelease, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         return
             URLSession.shared.dataTaskPublisher(for: url)
-                .map(\.data)
-                .decode(type: GitHubRelease.self, decoder: JSONDecoder())
-                .catch { error in Fail<GitHubRelease, Error>(error: error) }
-                .receive(on: RunLoop.main)
-                .eraseToAnyPublisher()
+            .map(\.data)
+            .decode(type: GitHubRelease.self, decoder: JSONDecoder())
+            .catch { error in Fail<GitHubRelease, Error>(error: error) }
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
     }
 
     func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error> {
@@ -66,12 +67,14 @@ final class FirmwareInteractor {
     }
 
     func read(release: GitHubRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error> {
-        guard let fullName = release.defaultFullZipName else {
+        guard let fullName = release.defaultFullZipName
+        else {
             return Fail<(appUrl: URL, fullUrl: URL), Error>(
                 error: FirmwareError.failedToGetFirmwareName
             ).eraseToAnyPublisher()
         }
-        guard let appName = release.defaultAppZipName else {
+        guard let appName = release.defaultAppZipName
+        else {
             return Fail<(appUrl: URL, fullUrl: URL), Error>(
                 error: FirmwareError.failedToGetFirmwareName
             ).eraseToAnyPublisher()
@@ -179,7 +182,8 @@ final class FirmwareInteractor {
             firmwareUrl = fullUrl
         }
 
-        guard let firmware = ruuviDFU.firmwareFromUrl(url: firmwareUrl) else {
+        guard let firmware = ruuviDFU.firmwareFromUrl(url: firmwareUrl)
+        else {
             return Fail<FlashResponse, Error>(error: FirmwareError.failedToConstructFirmwareFromFile).eraseToAnyPublisher()
         }
         return ruuviDFU.flashFirmware(uuid: uuid, with: firmware).eraseToAnyPublisher()

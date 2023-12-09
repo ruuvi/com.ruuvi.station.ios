@@ -16,27 +16,29 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     )
 
     func configure(output: DefaultsModuleOutput) {
-        view.viewModels = [buildWelcomeShown(),
-                           buildChartsSwipeInstruction(),
-                           buildConnectionTimeout(),
-                           buildServiceTimeout(),
-                           buildCardsSwipeHint(),
-                           buildAlertsMuteInterval(),
-                           buildWebPullInterval(),
-                           buildPruningOffsetHours(),
-                           buildChartIntervalSeconds(),
-                           buildChartDurationHours(),
-                           saveAdvertisementsInterval(),
-                           buildAskForReviewFirstTime(),
-                           buildAskForReviewLater(),
-                           buildDashboardCardTapAction(),
-                           buildConnectToDevServer(),
-                           buildHideNFCButtonInSensorContents(),
-                           buildIsAuthorized(),
-                           buildAuthToken(),
-                           buildShowEmailAlertSettings(),
-                           buildShowPushAlertSettings(),
-                           buildIsAuthorized()]
+        view.viewModels = [
+            buildWelcomeShown(),
+            buildChartsSwipeInstruction(),
+            buildConnectionTimeout(),
+            buildServiceTimeout(),
+            buildCardsSwipeHint(),
+            buildAlertsMuteInterval(),
+            buildWebPullInterval(),
+            buildPruningOffsetHours(),
+            buildChartIntervalSeconds(),
+            buildChartDurationHours(),
+            saveAdvertisementsInterval(),
+            buildAskForReviewFirstTime(),
+            buildAskForReviewLater(),
+            buildDashboardCardTapAction(),
+            buildConnectToDevServer(),
+            buildHideNFCButtonInSensorContents(),
+            buildIsAuthorized(),
+            buildAuthToken(),
+            buildShowEmailAlertSettings(),
+            buildShowPushAlertSettings(),
+            buildIsAuthorized(),
+        ]
         self.output = output
     }
 
@@ -271,9 +273,10 @@ extension DefaultsPresenter {
         // This also has to be loaded in the AppAssembly. So, we can't really use
         // local settings module for this since we load the whole Local settings in
         // the AppAssembly.
-        bind(viewModel.boolean,
-             fire: false)
-        { [weak self] _, useDevServer in
+        bind(
+            viewModel.boolean,
+            fire: false
+        ) { [weak self] _, useDevServer in
             self?.view
                 .showEndpointChangeConfirmationDialog(
                     useDevServer: useDevServer
@@ -288,9 +291,10 @@ extension DefaultsPresenter {
         viewModel.boolean.value = settings.hideNFCForSensorContest
         viewModel.type.value = .switcher
 
-        bind(viewModel.boolean,
-             fire: false)
-        { observer, hideNFC in
+        bind(
+            viewModel.boolean,
+            fire: false
+        ) { observer, hideNFC in
             observer.settings.hideNFCForSensorContest = hideNFC.bound
         }
         return viewModel
@@ -334,9 +338,11 @@ extension DefaultsPresenter {
         )
         NotificationCenter
             .default
-            .post(name: .NetworkSyncDidFailForAuthorization,
-                  object: self,
-                  userInfo: nil)
+            .post(
+                name: .NetworkSyncDidFailForAuthorization,
+                object: self,
+                userInfo: nil
+            )
         output?.defaultsModuleDidDismiss(module: self)
     }
 }

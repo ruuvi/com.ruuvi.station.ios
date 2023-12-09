@@ -42,9 +42,10 @@ class RuuviReactorImpl: RuuviReactor {
     private lazy var latestRecordCombines = [String: RuuviTagLatestRecordSubjectCombine]()
     private lazy var sensorSettingsCombines = [String: SensorSettingsCombine]()
 
-    func observe(_ luid: LocalIdentifier,
-                 _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RuuviReactorToken
-    {
+    func observe(
+        _ luid: LocalIdentifier,
+        _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void
+    ) -> RuuviReactorToken {
         var recordCombine: RuuviTagRecordSubjectCombine
         if let combine = recordCombines[luid.value] {
             recordCombine = combine
@@ -96,9 +97,10 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLast(_ ruuviTag: RuuviTagSensor,
-                     _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken
-    {
+    func observeLast(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
+    ) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLast(ruuviTag)
         let realmOperation = realmPersistence.readLast(ruuviTag)
         Future.zip(realmOperation, sqliteOperation).on(success: { realmRecord, sqliteRecord in
@@ -129,9 +131,10 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLatest(_ ruuviTag: RuuviTagSensor,
-                       _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken
-    {
+    func observeLatest(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
+    ) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLatest(ruuviTag)
         let realmOperation = realmPersistence.readLatest(ruuviTag)
         Future.zip(realmOperation, sqliteOperation).on(success: { realmRecord, sqliteRecord in
@@ -162,9 +165,10 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observe(_ ruuviTag: RuuviTagSensor,
-                 _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void) -> RuuviReactorToken
-    {
+    func observe(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void
+    ) -> RuuviReactorToken {
         sqlitePersistence.readSensorSettings(ruuviTag).on { [weak self] sqliteRecord in
             if let sensorSettings = sqliteRecord {
                 block(.update(sensorSettings))

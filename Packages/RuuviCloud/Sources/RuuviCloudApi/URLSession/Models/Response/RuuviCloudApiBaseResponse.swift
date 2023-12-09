@@ -26,7 +26,8 @@ public extension RuuviCloudApiBaseResponse {
     var result: Swift.Result<T, RuuviCloudApiError> {
         switch status {
         case .success:
-            guard let data else {
+            guard let data
+            else {
                 if let emptyModel = T.emptyModel {
                     return .success(emptyModel)
                 } else {
@@ -35,7 +36,8 @@ public extension RuuviCloudApiBaseResponse {
             }
             return .success(data)
         case .error:
-            guard let code else {
+            guard let code
+            else {
                 if errorDescription != nil {
                     return .failure(.api(.erInternal))
                 } else {
@@ -56,8 +58,7 @@ public extension Decodable {
     static var emptyModel: Self? {
         let emptyString = "{}"
         if let emptyData = emptyString.data(using: .utf8),
-           let emptyModel = try? JSONDecoder().decode(self, from: emptyData)
-        {
+           let emptyModel = try? JSONDecoder().decode(self, from: emptyData) {
             return emptyModel
         } else {
             return nil

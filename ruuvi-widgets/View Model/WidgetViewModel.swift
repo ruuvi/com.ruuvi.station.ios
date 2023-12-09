@@ -21,14 +21,17 @@ public final class WidgetViewModel: ObservableObject {
 
 public extension WidgetViewModel {
     func fetchRuuviTags(completion: @escaping ([RuuviCloudSensorDense]) -> Void) {
-        guard isAuthorized(), hasCloudSensors() else {
+        guard isAuthorized(), hasCloudSensors()
+        else {
             return
         }
-        ruuviCloud.loadSensorsDense(for: nil,
-                                    measurements: true,
-                                    sharedToOthers: nil,
-                                    sharedToMe: true,
-                                    alerts: nil).on(success: { sensors in
+        ruuviCloud.loadSensorsDense(
+            for: nil,
+            measurements: true,
+            sharedToOthers: nil,
+            sharedToMe: true,
+            alerts: nil
+        ).on(success: { sensors in
             let sensorsWithRecord = sensors.filter { $0.record != nil }
             completion(sensorsWithRecord)
         })
@@ -42,10 +45,11 @@ public extension WidgetViewModel {
         appGroupDefaults?.bool(forKey: Constants.isAuthorizedUDKey.rawValue) ?? false
     }
 
-    func getValue(from record: RuuviTagSensorRecord?,
-                  settings: SensorSettings?,
-                  config: RuuviTagSelectionIntent) -> String
-    {
+    func getValue(
+        from record: RuuviTagSensorRecord?,
+        settings: SensorSettings?,
+        config: RuuviTagSelectionIntent
+    ) -> String {
         let measurementService = MeasurementService(settings: getAppSettings())
         guard let sensor = WidgetSensorEnum(rawValue: config.sensor.rawValue),
               let record
@@ -59,9 +63,11 @@ public extension WidgetViewModel {
         case .humidity:
             let temperature = record.temperature?.plus(sensorSettings: settings)
             let humidity = record.humidity?.plus(sensorSettings: settings)
-            return measurementService.humidity(for: humidity,
-                                               temperature: temperature,
-                                               isDecimal: false)
+            return measurementService.humidity(
+                for: humidity,
+                temperature: temperature,
+                isDecimal: false
+            )
         case .pressure:
             let pressure = record.pressure?.plus(sensorSettings: settings)
             return measurementService.pressure(for: pressure)
@@ -79,7 +85,8 @@ public extension WidgetViewModel {
     }
 
     func getUnit(for sensor: WidgetSensorEnum?) -> String {
-        guard let sensor else {
+        guard let sensor
+        else {
             return "°C" // Default unit to show on the preview
         }
         let settings = getAppSettings()
@@ -92,9 +99,11 @@ public extension WidgetViewModel {
 
     /// Returns value for inline widget
     internal func getInlineWidgetValue(from entry: WidgetEntry) -> String {
-        let value = getValue(from: entry.record,
-                             settings: entry.settings,
-                             config: entry.config)
+        let value = getValue(
+            from: entry.record,
+            settings: entry.settings,
+            config: entry.config
+        )
         let unit = getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue))
         return value + " " + unit
     }
@@ -102,7 +111,8 @@ public extension WidgetViewModel {
     /// Returns SF Symbol based on sensor since we
     /// can not use Image in inline widget
     internal func symbol(from entry: WidgetEntry) -> Image {
-        guard let sensor = WidgetSensorEnum(rawValue: entry.config.sensor.rawValue) else {
+        guard let sensor = WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)
+        else {
             return Image(systemName: "thermometer.medium.slash")
         }
         switch sensor {
@@ -146,13 +156,15 @@ extension WidgetViewModel {
         let humidityAccuracy = humidityAccuracy(from: appGroupDefaults)
         let pressureUnit = pressureUnit(from: appGroupDefaults)
         let pressureAccuracy = pressureAccuracy(from: appGroupDefaults)
-        return MeasurementServiceSettings(temperatureUnit: temperatureUnit,
-                                          temperatureAccuracy: temperatureAccuracy,
-                                          humidityUnit: humidityUnit,
-                                          humidityAccuracy: humidityAccuracy,
-                                          pressureUnit: pressureUnit,
-                                          pressureAccuracy: pressureAccuracy,
-                                          language: getLanguage())
+        return MeasurementServiceSettings(
+            temperatureUnit: temperatureUnit,
+            temperatureAccuracy: temperatureAccuracy,
+            humidityUnit: humidityUnit,
+            humidityAccuracy: humidityAccuracy,
+            pressureUnit: pressureUnit,
+            pressureAccuracy: pressureAccuracy,
+            language: getLanguage()
+        )
     }
 
     private func getLanguage() -> Language {

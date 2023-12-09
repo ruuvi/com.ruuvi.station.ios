@@ -5,8 +5,10 @@ class MockLocalNotificationsManager: LocalNotificationsManager {
     var reason: LowHighNotificationReason?
     var type: LowHighNotificationType?
     var uuid: String?
-    func application(_: UIApplication,
-                     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) {}
+    func application(
+        _: UIApplication,
+        didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
+    ) {}
 
     func showDidConnect(uuid _: String) {}
 

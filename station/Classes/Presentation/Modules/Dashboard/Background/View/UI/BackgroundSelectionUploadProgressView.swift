@@ -47,25 +47,33 @@ private extension BackgroundSelectionUploadProgressView {
         clipsToBounds = true
 
         addSubview(progressLabel)
-        progressLabel.anchor(top: topAnchor,
-                             leading: safeLeftAnchor,
-                             bottom: bottomAnchor,
-                             trailing: nil,
-                             padding: .init(top: 8,
-                                            left: 8,
-                                            bottom: 8,
-                                            right: 0))
+        progressLabel.anchor(
+            top: topAnchor,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 8,
+                left: 8,
+                bottom: 8,
+                right: 0
+            )
+        )
 
         addSubview(cancelButton)
-        cancelButton.anchor(top: nil,
-                            leading: progressLabel.trailingAnchor,
-                            bottom: nil,
-                            trailing: safeRightAnchor,
-                            padding: .init(top: 0,
-                                           left: 24,
-                                           bottom: 8,
-                                           right: 8),
-                            size: .init(width: 24, height: 24))
+        cancelButton.anchor(
+            top: nil,
+            leading: progressLabel.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: 24,
+                bottom: 8,
+                right: 8
+            ),
+            size: .init(width: 24, height: 24)
+        )
         cancelButton.centerYInSuperview()
     }
 }

@@ -67,19 +67,25 @@ extension SignInVerifyView {
         container.fillSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel,
+            titleLabel, subtitleLabel
         ])
         titleStack.axis = .vertical
         titleStack.distribution = .fillProportionally
         titleStack.spacing = 16
 
         container.addSubview(titleStack)
-        titleStack.anchor(top: nil,
-                          leading: container.safeLeftAnchor,
-                          bottom: nil,
-                          trailing: container.safeRightAnchor,
-                          padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                         bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+        titleStack.anchor(
+            top: nil,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: !UIDevice.isTablet() ? 20 : 80,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 20 : 80
+            )
+        )
         titleStack.topAnchor.constraint(
             equalTo: container.safeTopAnchor
         ).isActive = true
@@ -88,11 +94,14 @@ extension SignInVerifyView {
     private func setUpCodeEnterView() {
         container.addSubview(ruuviCodeView)
         ruuviCodeView.delegate = self
-        ruuviCodeView.anchor(top: titleStack.bottomAnchor,
-                             leading: nil,
-                             bottom: nil, trailing: nil,
-                             padding: .init(top: 30, left: 0, bottom: 0, right: 0),
-                             size: .init(width: 0, height: 50))
+        ruuviCodeView.anchor(
+            top: titleStack.bottomAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 30, left: 0, bottom: 0, right: 0),
+            size: .init(width: 0, height: 50)
+        )
         ruuviCodeView.centerXInSuperview()
     }
 
@@ -100,16 +109,20 @@ extension SignInVerifyView {
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
 
-        beaverContainerView.anchor(top: ruuviCodeView.bottomAnchor,
-                                   leading: container.leadingAnchor,
-                                   bottom: container.bottomAnchor,
-                                   trailing: container.trailingAnchor)
+        beaverContainerView.anchor(
+            top: ruuviCodeView.bottomAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor
+        )
         beaverContainerView.addSubview(beaverImageView)
 
-        beaverImageView.anchor(top: nil,
-                               leading: beaverContainerView.leadingAnchor,
-                               bottom: nil,
-                               trailing: beaverContainerView.trailingAnchor)
+        beaverImageView.anchor(
+            top: nil,
+            leading: beaverContainerView.leadingAnchor,
+            bottom: nil,
+            trailing: beaverContainerView.trailingAnchor
+        )
         beaverImageView.constrainHeight(constant: 400)
         beaverImageView.image = RuuviAssets.signInBeaver.resize(targetHeight: 400)
         beaverImageView.centerYInSuperview()
@@ -124,7 +137,8 @@ extension SignInVerifyView {
 
 extension SignInVerifyView: RuuviCodeViewDelegate {
     func didFinishTypingCode() {
-        guard ruuviCodeView.isValidCode else {
+        guard ruuviCodeView.isValidCode
+        else {
             return
         }
         let code = ruuviCodeView.ruuviCode()

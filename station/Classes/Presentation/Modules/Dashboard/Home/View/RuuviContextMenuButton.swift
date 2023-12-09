@@ -34,15 +34,16 @@ class RuuviContextMenuButton: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    convenience init(menu: UIMenu?,
-                     titleColor: UIColor?,
-                     title: String?,
-                     icon: UIImage?,
-                     iconTintColor: UIColor?,
-                     iconSize: CGSize = .init(width: 16, height: 16),
-                     interimSpacing: CGFloat = 6.0,
-                     preccedingIcon: Bool = false)
-    {
+    convenience init(
+        menu: UIMenu?,
+        titleColor: UIColor?,
+        title: String?,
+        icon: UIImage?,
+        iconTintColor: UIColor?,
+        iconSize: CGSize = .init(width: 16, height: 16),
+        interimSpacing: CGFloat = 6.0,
+        preccedingIcon: Bool = false
+    ) {
         self.init()
         self.preccedingIcon = preccedingIcon
         button.menu = menu
@@ -63,12 +64,12 @@ private extension RuuviContextMenuButton {
         if preccedingIcon {
             buttonTitleLabel.textAlignment = .left
             stackView = UIStackView(arrangedSubviews: [
-                buttonIconView, buttonTitleLabel,
+                buttonIconView, buttonTitleLabel
             ])
         } else {
             buttonTitleLabel.textAlignment = .right
             stackView = UIStackView(arrangedSubviews: [
-                buttonTitleLabel, buttonIconView,
+                buttonTitleLabel, buttonIconView
             ])
         }
         buttonIconView.heightAnchor.constraint(

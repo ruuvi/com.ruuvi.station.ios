@@ -46,9 +46,11 @@ struct EmptyWidgetView: View {
                     (isSimple ? texts.messageSimple.localized :
                         texts.messageRectangular.localized)
                     : texts.loading.localized)
-                    .font(.custom(Constants.muliBold.rawValue,
-                                  size: family == .systemSmall ? 16 : 10,
-                                  relativeTo: .subheadline))
+                    .font(.custom(
+                        Constants.muliBold.rawValue,
+                        size: family == .systemSmall ? 16 : 10,
+                        relativeTo: .subheadline
+                    ))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)
@@ -70,15 +72,19 @@ struct EmptyWidgetView: View {
                     .renderingMode(.template)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .padding(.init(top: 4,
-                                   leading: 8,
-                                   bottom: -4,
-                                   trailing: 8))
+                    .padding(.init(
+                        top: 4,
+                        leading: 8,
+                        bottom: -4,
+                        trailing: 8
+                    ))
                 Text(entry.config.ruuviWidgetTag == nil ?
                     texts.messageCircular.localized : texts.loading.localized)
-                    .font(.custom(Constants.muliBold.rawValue,
-                                  size: 8,
-                                  relativeTo: .headline))
+                    .font(.custom(
+                        Constants.muliBold.rawValue,
+                        size: 8,
+                        relativeTo: .headline
+                    ))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)

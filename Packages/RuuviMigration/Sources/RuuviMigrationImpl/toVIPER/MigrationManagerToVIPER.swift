@@ -73,18 +73,20 @@ public final class MigrationManagerToVIPER: RuuviMigration {
 
     private func from1to2(_ migration: Migration) {
         migration.enumerateObjects(ofType: "RuuviTag") { oldObject, _ in
-
             if let uuid = oldObject?["uuid"] as? String,
                let name = oldObject?["name"] as? String,
                let version = oldObject?["dataFormat"] as? Int,
-               let mac = oldObject?["mac"] as? String
-            {
+               let mac = oldObject?["mac"] as? String {
                 let realName = real(name, mac, uuid)
-                let ruuviTag = migration.create(RuuviTagRealm.className(),
-                                                value: ["uuid": uuid,
-                                                        "name": realName,
-                                                        "version": version,
-                                                        "mac": mac])
+                let ruuviTag = migration.create(
+                    RuuviTagRealm.className(),
+                    value: [
+                        "uuid": uuid,
+                        "name": realName,
+                        "version": version,
+                        "mac": mac,
+                    ]
+                )
 
                 if let temperature = oldObject?["temperature"] as? Double,
                    let humidity = oldObject?["humidity"] as? Double,
@@ -97,22 +99,25 @@ public final class MigrationManagerToVIPER: RuuviMigration {
                    let movementCounter = oldObject?["movementCounter"] as? Int,
                    let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
                    let txPower = oldObject?["txPower"] as? Int,
-                   let updatedAt = oldObject?["updatedAt"] as? NSDate
-                {
-                    migration.create(RuuviTagDataRealm.className(),
-                                     value: ["ruuviTag": ruuviTag,
-                                             "date": updatedAt,
-                                             "rssi": rssi,
-                                             "celsius": temperature,
-                                             "humidity": humidity,
-                                             "pressure": pressure,
-                                             "accelerationX": accelerationX,
-                                             "accelerationY": accelerationY,
-                                             "accelerationZ": accelerationZ,
-                                             "voltage": voltage,
-                                             "movementCounter": movementCounter,
-                                             "measurementSequenceNumber": measurementSequenceNumber,
-                                             "txPower": txPower])
+                   let updatedAt = oldObject?["updatedAt"] as? NSDate {
+                    migration.create(
+                        RuuviTagDataRealm.className(),
+                        value: [
+                            "ruuviTag": ruuviTag,
+                            "date": updatedAt,
+                            "rssi": rssi,
+                            "celsius": temperature,
+                            "humidity": humidity,
+                            "pressure": pressure,
+                            "accelerationX": accelerationX,
+                            "accelerationY": accelerationY,
+                            "accelerationZ": accelerationZ,
+                            "voltage": voltage,
+                            "movementCounter": movementCounter,
+                            "measurementSequenceNumber": measurementSequenceNumber,
+                            "txPower": txPower,
+                        ]
+                    )
                 }
             }
 

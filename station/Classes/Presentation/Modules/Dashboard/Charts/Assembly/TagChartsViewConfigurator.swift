@@ -10,9 +10,10 @@ import RuuviService
 import RuuviStorage
 
 class TagChartsViewConfigurator {
-    func configure(view: TagChartsViewController,
-                   ruuviTag: AnyRuuviTagSensor)
-    {
+    func configure(
+        view: TagChartsViewController,
+        ruuviTag: AnyRuuviTagSensor
+    ) {
         let r = AppAssembly.shared.assembler.resolver
 
         let interactor = TagChartsViewInteractor()

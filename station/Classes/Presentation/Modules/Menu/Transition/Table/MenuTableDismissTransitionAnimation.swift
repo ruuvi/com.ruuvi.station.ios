@@ -42,25 +42,30 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
 
         let appearedFrame = transitionContext.finalFrame(for: fromVC)
         let initialFrame = appearedFrame
-        let finalFrame = CGRect(x: -appearedFrame.size.width,
-                                y: appearedFrame.origin.y,
-                                width: appearedFrame.size.width,
-                                height: appearedFrame.size.height)
+        let finalFrame = CGRect(
+            x: -appearedFrame.size.width,
+            y: appearedFrame.origin.y,
+            width: appearedFrame.size.width,
+            height: appearedFrame.size.height
+        )
         fromView.frame = initialFrame
 
         let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration,
-                       delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseInOut,
-                       animations: {
-                           fromView.frame = finalFrame
-                       }, completion: { _ in
-                           if !transitionContext.transitionWasCancelled {
-                               fromView.removeFromSuperview()
-                           }
-                           transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-                       })
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 1,
+            options: .curveEaseInOut,
+            animations: {
+                fromView.frame = finalFrame
+            },
+            completion: { _ in
+                if !transitionContext.transitionWasCancelled {
+                    fromView.removeFromSuperview()
+                }
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            }
+        )
     }
 }

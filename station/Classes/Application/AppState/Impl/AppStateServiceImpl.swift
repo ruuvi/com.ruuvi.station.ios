@@ -23,9 +23,10 @@ class AppStateServiceImpl: AppStateService {
     #endif
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
-    func application(_: UIApplication,
-                     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?)
-    {
+    func application(
+        _: UIApplication,
+        didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
+    ) {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
         }

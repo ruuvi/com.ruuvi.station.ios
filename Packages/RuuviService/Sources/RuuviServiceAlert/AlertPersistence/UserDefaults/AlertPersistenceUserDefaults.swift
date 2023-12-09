@@ -127,8 +127,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .temperature:
             if prefs.bool(forKey: temperatureAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: temperatureLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: temperatureUpperBoundUDKeyPrefix + uuid)
-            {
+               let upper = prefs.optionalDouble(forKey: temperatureUpperBoundUDKeyPrefix + uuid) {
                 .temperature(lower: lower, upper: upper)
             } else {
                 nil
@@ -136,8 +135,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .relativeHumidity:
             if prefs.bool(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
-            {
+               let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid) {
                 .relativeHumidity(lower: lower, upper: upper)
             } else {
                 nil
@@ -147,8 +145,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
                let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid),
                let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
-               let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self)
-            {
+               let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self) {
                 .humidity(lower: lowerHumidity, upper: upperHumidity)
             } else {
                 nil
@@ -156,8 +153,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .pressure:
             if prefs.bool(forKey: pressureAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: pressureLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pressureUpperBoundUDKeyPrefix + uuid)
-            {
+               let upper = prefs.optionalDouble(forKey: pressureUpperBoundUDKeyPrefix + uuid) {
                 .pressure(lower: lower, upper: upper)
             } else {
                 nil
@@ -165,8 +161,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .signal:
             if prefs.bool(forKey: signalAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid)
-            {
+               let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid) {
                 .signal(lower: lower, upper: upper)
             } else {
                 nil
@@ -181,16 +176,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             if prefs.bool(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid),
                let unseenDuration = prefs.optionalDouble(
                    forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid
-               )
-            {
+               ) {
                 .cloudConnection(unseenDuration: unseenDuration)
             } else {
                 nil
             }
         case .movement:
             if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid),
-               let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid)
-            {
+               let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid) {
                 .movement(last: counter)
             } else {
                 nil
@@ -519,7 +512,8 @@ extension AlertPersistenceUserDefaults {
 
 extension AlertPersistenceUserDefaults {
     func lowerHumidity(for uuid: String) -> Humidity? {
-        guard let data = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid) else {
+        guard let data = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid)
+        else {
             return nil
         }
         return KeyedArchiver.unarchive(data, with: Humidity.self)
@@ -534,7 +528,8 @@ extension AlertPersistenceUserDefaults {
     }
 
     func upperHumidity(for uuid: String) -> Humidity? {
-        guard let data = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid) else {
+        guard let data = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        else {
             return nil
         }
         return KeyedArchiver.unarchive(data, with: Humidity.self)

@@ -12,17 +12,23 @@ protocol TagChartsViewInput: ViewInput {
     var viewIsVisible: Bool { get }
     func createChartViews(from: [MeasurementType])
     func clearChartHistory()
-    func setChartViewData(from chartViewData: [TagChartViewData],
-                          settings: RuuviLocalSettings)
-    func updateChartViewData(temperatureEntries: [ChartDataEntry],
-                             humidityEntries: [ChartDataEntry],
-                             pressureEntries: [ChartDataEntry],
-                             isFirstEntry: Bool,
-                             settings: RuuviLocalSettings)
-    func updateLatestMeasurement(temperature: ChartDataEntry?,
-                                 humidity: ChartDataEntry?,
-                                 pressure: ChartDataEntry?,
-                                 settings: RuuviLocalSettings)
+    func setChartViewData(
+        from chartViewData: [TagChartViewData],
+        settings: RuuviLocalSettings
+    )
+    func updateChartViewData(
+        temperatureEntries: [ChartDataEntry],
+        humidityEntries: [ChartDataEntry],
+        pressureEntries: [ChartDataEntry],
+        isFirstEntry: Bool,
+        settings: RuuviLocalSettings
+    )
+    func updateLatestMeasurement(
+        temperature: ChartDataEntry?,
+        humidity: ChartDataEntry?,
+        pressure: ChartDataEntry?,
+        settings: RuuviLocalSettings
+    )
     func updateLatestRecordStatus(with record: RuuviTagSensorRecord)
     func showBluetoothDisabled(userDeclined: Bool)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)

@@ -24,28 +24,34 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         containerView.addSubview(toView)
 
         let appearedFrame = transitionContext.finalFrame(for: toVC)
-        let initialFrame = CGRect(x: -appearedFrame.size.width,
-                                  y: appearedFrame.origin.y,
-                                  width: appearedFrame.size.width,
-                                  height: appearedFrame.size.height)
+        let initialFrame = CGRect(
+            x: -appearedFrame.size.width,
+            y: appearedFrame.origin.y,
+            width: appearedFrame.size.width,
+            height: appearedFrame.size.height
+        )
         let finalFrame = appearedFrame
         toView.frame = initialFrame
 
         let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration,
-                       delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseInOut,
-                       animations: {
-                           toView.frame = finalFrame
-                       }, completion: { _ in
-                           transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-                       })
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 1,
+            options: .curveEaseInOut,
+            animations: {
+                toView.frame = finalFrame
+            },
+            completion: { _ in
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            }
+        )
     }
 
     func handlePresentMenuPan(_ pan: UIPanGestureRecognizer) {
-        guard let view = pan.view else {
+        guard let view = pan.view
+        else {
             return
         }
 

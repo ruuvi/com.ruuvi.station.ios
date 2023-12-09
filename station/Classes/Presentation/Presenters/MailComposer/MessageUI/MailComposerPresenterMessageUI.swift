@@ -21,10 +21,11 @@ class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
 // MARK: - MFMailComposeViewControllerDelegate
 
 extension MailComposerPresenterMessageUI: MFMailComposeViewControllerDelegate {
-    func mailComposeController(_ controller: MFMailComposeViewController,
-                               didFinishWith _: MFMailComposeResult,
-                               error _: Error?)
-    {
+    func mailComposeController(
+        _ controller: MFMailComposeViewController,
+        didFinishWith _: MFMailComposeResult,
+        error _: Error?
+    ) {
         controller.dismiss(animated: true)
     }
 }
@@ -38,7 +39,7 @@ extension MailComposerPresenterMessageUI {
         guard let toEncoded = email
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
             let subjectEncoded = subject
-            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         else {
             return nil
         }

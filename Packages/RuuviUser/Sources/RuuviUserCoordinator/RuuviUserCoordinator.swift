@@ -44,9 +44,11 @@ final class RuuviUserCoordinator: RuuviUser {
         isAuthorized = true
         NotificationCenter
             .default
-            .post(name: .RuuviUserDidAuthorized,
-                  object: self,
-                  userInfo: nil)
+            .post(
+                name: .RuuviUserDidAuthorized,
+                object: self,
+                userInfo: nil
+            )
     }
 
     func logout() {

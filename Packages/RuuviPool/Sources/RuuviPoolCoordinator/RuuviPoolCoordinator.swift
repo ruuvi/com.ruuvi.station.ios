@@ -30,13 +30,11 @@ final class RuuviPoolCoordinator: RuuviPool {
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         if let macId = ruuviTag.macId,
-           let luid = ruuviTag.luid
-        {
+           let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
         }
         if ruuviTag.macId != nil,
-           ruuviTag.macId?.value.isEmpty == false
-        {
+           ruuviTag.macId?.value.isEmpty == false {
             sqlite.create(ruuviTag).on(success: { result in
                 promise.succeed(value: result)
             }, failure: { error in
@@ -115,8 +113,7 @@ final class RuuviPoolCoordinator: RuuviPool {
                 promise.fail(error: .ruuviPersistence(error))
             })
         } else if let luid = record.luid,
-                  let macId = idPersistence.mac(for: luid)
-        {
+                  let macId = idPersistence.mac(for: luid) {
             sqlite.create(record.with(macId: macId)).on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -141,8 +138,7 @@ final class RuuviPoolCoordinator: RuuviPool {
                 promise.fail(error: .ruuviPersistence(error))
             })
         } else if let luid = record.luid,
-                  let macId = idPersistence.mac(for: luid)
-        {
+                  let macId = idPersistence.mac(for: luid) {
             sqlite.createLast(record.with(macId: macId)).on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in
@@ -167,8 +163,7 @@ final class RuuviPoolCoordinator: RuuviPool {
                 promise.fail(error: .ruuviPersistence(error))
             })
         } else if let luid = record.luid,
-                  let macId = idPersistence.mac(for: luid)
-        {
+                  let macId = idPersistence.mac(for: luid) {
             sqlite.updateLast(record.with(macId: macId)).on(success: { success in
                 promise.succeed(value: success)
             }, failure: { error in

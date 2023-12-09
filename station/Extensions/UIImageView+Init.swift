@@ -1,11 +1,12 @@
 import UIKit
 
 extension UIImageView {
-    convenience init(image: UIImage? = nil,
-                     backgroundColor: UIColor = .clear,
-                     contentMode: ContentMode = .scaleAspectFill,
-                     cornerRadius: CGFloat = 0)
-    {
+    convenience init(
+        image: UIImage? = nil,
+        backgroundColor: UIColor = .clear,
+        contentMode: ContentMode = .scaleAspectFill,
+        cornerRadius: CGFloat = 0
+    ) {
         self.init()
         self.image = image
         self.backgroundColor = backgroundColor

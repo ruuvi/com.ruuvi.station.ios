@@ -58,10 +58,13 @@ extension DiscoverTableViewController: DiscoverViewInput {
         let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
         let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(for: Self.self),
-                                        style: .default, handler: { [weak self] _ in
-                                            self?.takeUserToBTSettings(userDeclined: userDeclined)
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: "PermissionPresenter.settings".localized(for: Self.self),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.takeUserToBTSettings(userDeclined: userDeclined)
+            }
+        ))
         alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -118,34 +121,49 @@ extension DiscoverTableViewController: DiscoverViewInput {
         alertVC.setValue(messageText, forKey: "attributedMessage")
 
         if showAddSensor {
-            alertVC.addAction(UIAlertAction(title: "add_sensor".localized(for: Self.self),
-                                            style: .default, handler: { [weak self] _ in
-                                                self?.output.viewDidAddDeviceWithNFC(with: tag)
-                                            }))
+            alertVC.addAction(UIAlertAction(
+                title: "add_sensor".localized(for: Self.self),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidAddDeviceWithNFC(with: tag)
+                }
+            ))
         }
 
-        alertVC.addAction(UIAlertAction(title: "copy_mac_address".localized(for: Self.self),
-                                        style: .default, handler: { [weak self] _ in
-                                            self?.output.viewDidACopyMacAddress(of: tag)
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: "copy_mac_address".localized(for: Self.self),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output.viewDidACopyMacAddress(of: tag)
+            }
+        ))
 
-        alertVC.addAction(UIAlertAction(title: "copy_unique_id".localized(for: Self.self),
-                                        style: .default, handler: { [weak self] _ in
-                                            self?.output.viewDidACopySecret(of: tag)
-                                        }))
+        alertVC.addAction(UIAlertAction(
+            title: "copy_unique_id".localized(for: Self.self),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output.viewDidACopySecret(of: tag)
+            }
+        ))
 
         if showGoToSensor {
-            alertVC.addAction(UIAlertAction(title: "go_to_sensor".localized(for: Self.self),
-                                            style: .default, handler: { [weak self] _ in
-                                                self?.output.viewDidGoToSensor(with: tag)
-                                            }))
+            alertVC.addAction(UIAlertAction(
+                title: "go_to_sensor".localized(for: Self.self),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidGoToSensor(with: tag)
+                }
+            ))
         }
 
         if showUpgradeFirmware {
-            alertVC.addAction(UIAlertAction(title: "upgrade_firmware".localized(for: Self.self),
-                                            style: .default, handler: { [weak self] _ in
-                                                self?.output.viewDidAskToUpgradeFirmware(of: tag)
-                                            }))
+            alertVC.addAction(UIAlertAction(
+                title: "upgrade_firmware".localized(for: Self.self),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidAskToUpgradeFirmware(of: tag)
+                }
+            ))
         }
 
         alertVC.addAction(UIAlertAction(title: "close".localized(for: Self.self), style: .cancel, handler: nil))
@@ -365,17 +383,19 @@ extension DiscoverTableViewController {
 // MARK: - NFCNDEFReaderSessionDelegate
 
 extension DiscoverTableViewController: NFCNDEFReaderSessionDelegate {
-    func readerSession(_: NFCNDEFReaderSession,
-                       didInvalidateWithError _: Error)
-    {
+    func readerSession(
+        _: NFCNDEFReaderSession,
+        didInvalidateWithError _: Error
+    ) {
         DispatchQueue.main.async { [weak self] in
             self?.stopNFCSession()
         }
     }
 
-    func readerSession(_: NFCNDEFReaderSession,
-                       didDetectNDEFs messages: [NFCNDEFMessage])
-    {
+    func readerSession(
+        _: NFCNDEFReaderSession,
+        didDetectNDEFs messages: [NFCNDEFMessage]
+    ) {
         DispatchQueue.main.async { [weak self] in
             self?.output?.viewDidReceiveNFCMessages(messages: messages)
         }

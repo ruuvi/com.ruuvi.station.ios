@@ -7,9 +7,11 @@ import UIKit
 
 protocol TagChartsViewDelegate: NSObjectProtocol {
     func chartDidTranslate(_ chartView: TagChartsView)
-    func chartValueDidSelect(_ chartView: TagChartsView,
-                             entry: ChartDataEntry,
-                             highlight: Highlight)
+    func chartValueDidSelect(
+        _ chartView: TagChartsView,
+        entry: ChartDataEntry,
+        highlight: Highlight
+    )
     func chartValueDidDeselect(_ chartView: TagChartsView)
 }
 
@@ -141,27 +143,32 @@ class TagChartsView: LineChartView {
 }
 
 extension TagChartsView: ChartViewDelegate {
-    func chartTranslated(_: ChartViewBase,
-                         dX _: CGFloat,
-                         dY _: CGFloat)
-    {
+    func chartTranslated(
+        _: ChartViewBase,
+        dX _: CGFloat,
+        dY _: CGFloat
+    ) {
         chartDelegate?.chartDidTranslate(self)
     }
 
-    func chartScaled(_: ChartViewBase,
-                     scaleX _: CGFloat,
-                     scaleY _: CGFloat)
-    {
+    func chartScaled(
+        _: ChartViewBase,
+        scaleX _: CGFloat,
+        scaleY _: CGFloat
+    ) {
         chartDelegate?.chartDidTranslate(self)
     }
 
-    func chartValueSelected(_: ChartViewBase,
-                            entry: ChartDataEntry,
-                            highlight: Highlight)
-    {
-        chartDelegate?.chartValueDidSelect(self,
-                                           entry: entry,
-                                           highlight: highlight)
+    func chartValueSelected(
+        _: ChartViewBase,
+        entry: ChartDataEntry,
+        highlight: Highlight
+    ) {
+        chartDelegate?.chartValueDidSelect(
+            self,
+            entry: entry,
+            highlight: highlight
+        )
     }
 
     func chartValueNothingSelected(_: ChartViewBase) {
@@ -224,9 +231,10 @@ extension TagChartsView {
 
     // MARK: - UpdateUI
 
-    func updateDataSet(with newData: [ChartDataEntry],
-                       isFirstEntry: Bool)
-    {
+    func updateDataSet(
+        with newData: [ChartDataEntry],
+        isFirstEntry: Bool
+    ) {
         if isFirstEntry {
             let emptyDataSet = LineChartData(dataSet: TagChartsHelper.newDataSet())
             data = emptyDataSet
@@ -239,11 +247,12 @@ extension TagChartsView {
         reloadData()
     }
 
-    func updateLatest(with entry: ChartDataEntry?,
-                      type: MeasurementType,
-                      measurementService: RuuviServiceMeasurement,
-                      unit: String)
-    {
+    func updateLatest(
+        with entry: ChartDataEntry?,
+        type: MeasurementType,
+        measurementService: RuuviServiceMeasurement,
+        unit: String
+    ) {
         guard let entry else { return }
         switch type {
         case .temperature:
@@ -259,18 +268,21 @@ extension TagChartsView {
         }
     }
 
-    func setChartLabel(with name: String,
-                       type: MeasurementType,
-                       measurementService: RuuviServiceMeasurement,
-                       unit: String)
-    {
+    func setChartLabel(
+        with name: String,
+        type: MeasurementType,
+        measurementService: RuuviServiceMeasurement,
+        unit: String
+    ) {
         chartName = name
         chartNameLabel.text = name
         if let marker = marker as? TagChartsMarkerView {
-            marker.initialise(with: unit,
-                              type: type,
-                              measurementService: measurementService,
-                              parentFrame: frame)
+            marker.initialise(
+                with: unit,
+                type: type,
+                measurementService: measurementService,
+                parentFrame: frame
+            )
         }
     }
 

@@ -24,10 +24,11 @@ class NotificationService: UNNotificationServiceExtension {
     var bestAttemptContent: UNMutableNotificationContent?
     var currentRequest: UNNotificationRequest?
 
-    override func didReceive(_ request: UNNotificationRequest,
-                             withContentHandler contentHandler:
-                             @escaping (UNNotificationContent) -> Void)
-    {
+    override func didReceive(
+        _ request: UNNotificationRequest,
+        withContentHandler contentHandler:
+        @escaping (UNNotificationContent) -> Void
+    ) {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         currentRequest = request
@@ -41,8 +42,7 @@ class NotificationService: UNNotificationServiceExtension {
     private func processNotification() {
         if let contentHandler,
            let userInfo = currentRequest?.content.userInfo,
-           let bestAttemptContent
-        {
+           let bestAttemptContent {
             // If this value is not available on data, show formatted message.
             // Otherwise don't do anything.
             let showLocallyFormattedMessage = userInfo["showLocallyFormatted"] as? Bool ?? true
@@ -51,11 +51,12 @@ class NotificationService: UNNotificationServiceExtension {
                    let alertType = userInfo["alertType"] as? String,
                    let triggerType = userInfo["triggerType"] as? String,
                    let threshold = userInfo["thresholdValue"] as? String,
-                   let alertMessage = userInfo["alertData"] as? String
-                {
-                    let title = titleForAlert(from: triggerType,
-                                              alertType: alertType,
-                                              threshold: threshold)
+                   let alertMessage = userInfo["alertData"] as? String {
+                    let title = titleForAlert(
+                        from: triggerType,
+                        alertType: alertType,
+                        threshold: threshold
+                    )
                     bestAttemptContent.subtitle = alertMessage
                     bestAttemptContent.title = title
                     bestAttemptContent.body = sensorName
@@ -97,10 +98,11 @@ extension NotificationService {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func titleForAlert(from triggerType: String,
-                               alertType: String,
-                               threshold: String) -> String
-    {
+    private func titleForAlert(
+        from triggerType: String,
+        alertType: String,
+        threshold: String
+    ) -> String {
         guard let triggerType = getTriggerType(from: triggerType),
               let alertType = getAlertType(from: alertType)
         else {
@@ -158,9 +160,11 @@ extension NotificationService {
             return NSLocalizedString(value, comment: value)
         }
 
-        return NSLocalizedString(value,
-                                 tableName: nil,
-                                 bundle: languageBundle,
-                                 comment: value)
+        return NSLocalizedString(
+            value,
+            tableName: nil,
+            bundle: languageBundle,
+            comment: value
+        )
     }
 }

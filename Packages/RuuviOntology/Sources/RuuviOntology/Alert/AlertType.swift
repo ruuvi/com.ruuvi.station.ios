@@ -11,15 +11,19 @@ public enum AlertType: CaseIterable {
     case movement(last: Int)
 
     public static var allCases: [AlertType] {
-        [.temperature(lower: 0, upper: 0),
-         .relativeHumidity(lower: 0, upper: 0),
-         .humidity(lower: Humidity.zeroAbsolute,
-                   upper: Humidity.zeroAbsolute),
-         .pressure(lower: 0, upper: 0),
-         .signal(lower: 0, upper: 0),
-         .connection,
-         .cloudConnection(unseenDuration: 0),
-         .movement(last: 0)]
+        [
+            .temperature(lower: 0, upper: 0),
+            .relativeHumidity(lower: 0, upper: 0),
+            .humidity(
+                lower: Humidity.zeroAbsolute,
+                upper: Humidity.zeroAbsolute
+            ),
+            .pressure(lower: 0, upper: 0),
+            .signal(lower: 0, upper: 0),
+            .connection,
+            .cloudConnection(unseenDuration: 0),
+            .movement(last: 0),
+        ]
     }
 }
 

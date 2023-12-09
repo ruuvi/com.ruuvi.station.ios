@@ -45,7 +45,7 @@ struct RuuviWidgets: Widget {
             ]
         } else {
             [
-                .systemSmall,
+                .systemSmall
             ]
         }
     }

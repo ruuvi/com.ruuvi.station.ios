@@ -36,7 +36,8 @@ class CustomYAxisRenderer: YAxisRenderer {
     ]
 
     override func computeAxisValues(min: Double, max: Double) {
-        guard min != CGFloat.greatestFiniteMagnitude && max != CGFloat.greatestFiniteMagnitude else {
+        guard min != CGFloat.greatestFiniteMagnitude && max != CGFloat.greatestFiniteMagnitude
+        else {
             super.computeAxisValues(min: min, max: max)
             return
         }

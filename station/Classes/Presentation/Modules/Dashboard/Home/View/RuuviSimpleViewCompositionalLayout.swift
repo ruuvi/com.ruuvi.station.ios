@@ -45,8 +45,10 @@ class RuuviSimpleViewCompositionalLayout: UICollectionViewCompositionalLayout {
 
         largests[row] = max(largests[row] ?? 0, height)
 
-        let size = CGSize(width: layoutAttributes.frame.width,
-                          height: largests[row] ?? 0)
+        let size = CGSize(
+            width: layoutAttributes.frame.width,
+            height: largests[row] ?? 0
+        )
         layoutAttributes.frame = .init(origin: layoutAttributes.frame.origin, size: size)
     }
 }

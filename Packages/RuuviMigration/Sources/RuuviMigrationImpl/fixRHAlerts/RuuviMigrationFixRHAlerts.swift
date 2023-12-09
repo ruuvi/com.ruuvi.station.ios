@@ -28,8 +28,7 @@ final class RuuviMigrationFixRHAlerts: RuuviMigration {
                 .on(success: { sensors in
                     sensors.forEach { sensor in
                         if let lower = self.ruuviAlertService.lowerRelativeHumidity(for: sensor),
-                           lower > 1.0
-                        {
+                           lower > 1.0 {
                             self.ruuviAlertService.setLower(
                                 relativeHumidity: lower / 100.0,
                                 ruuviTag: sensor

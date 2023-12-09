@@ -22,8 +22,7 @@ extension PushAlertSoundSelectionPresenter: PushAlertSoundSelectionViewOutput {
 
     func viewDidSelectItem(item: SelectionItemProtocol) {
         if let selectedSound = item as? RuuviAlertSound,
-           let viewModel
-        {
+           let viewModel {
             settings.alertSound = selectedSound
             let updatedViewModel = PushAlertSoundSelectionViewModel(
                 title: viewModel.title,

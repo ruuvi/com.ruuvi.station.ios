@@ -6,11 +6,12 @@ public struct RuuviCloudSensorDense {
     public let alerts: RuuviCloudSensorAlerts
     public let subscription: CloudSensorSubscription?
 
-    public init(sensor: CloudSensor,
-                record: RuuviTagSensorRecord?,
-                alerts: RuuviCloudSensorAlerts,
-                subscription: CloudSensorSubscription?)
-    {
+    public init(
+        sensor: CloudSensor,
+        record: RuuviTagSensorRecord?,
+        alerts: RuuviCloudSensorAlerts,
+        subscription: CloudSensorSubscription?
+    ) {
         self.sensor = sensor
         self.record = record
         self.alerts = alerts
@@ -23,10 +24,11 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
     private let record: RuuviTagSensorRecord
     private let subscription: CloudSensorSubscription?
 
-    public init(sensor: CloudSensor,
-                record: RuuviTagSensorRecord,
-                subscription: CloudSensorSubscription?)
-    {
+    public init(
+        sensor: CloudSensor,
+        record: RuuviTagSensorRecord,
+        subscription: CloudSensorSubscription?
+    ) {
         self.sensor = sensor
         self.record = record
         self.subscription = subscription

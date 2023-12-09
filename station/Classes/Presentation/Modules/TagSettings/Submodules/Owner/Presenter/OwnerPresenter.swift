@@ -85,7 +85,8 @@ extension OwnerPresenter: OwnerViewOutput {
 
 extension OwnerPresenter {
     private func removeConnection() {
-        guard settings.cloudModeEnabled else {
+        guard settings.cloudModeEnabled
+        else {
             return
         }
         if let luid = ruuviTag.luid {

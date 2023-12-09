@@ -72,22 +72,25 @@ private extension NotificationsSettingsTableViewController {
 // MARK: - UITableViewDataSource
 
 extension NotificationsSettingsTableViewController {
-    override func tableView(_: UITableView,
-                            numberOfRowsInSection _: Int) -> Int
-    {
+    override func tableView(
+        _: UITableView,
+        numberOfRowsInSection _: Int
+    ) -> Int {
         viewModels.count
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
         switch viewModel.configType.value {
         case .plain:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: Self.reuseIdentifierTextCell,
                 for: indexPath
-            ) as? NotificationsSettingsTextCell else {
+            ) as? NotificationsSettingsTextCell
+            else {
                 fatalError()
             }
             cell.configure(
@@ -100,7 +103,8 @@ extension NotificationsSettingsTableViewController {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: Self.reuseIdentifierSwitchCell,
                 for: indexPath
-            ) as? NotificationsSettingsSwitchCell else {
+            ) as? NotificationsSettingsSwitchCell
+            else {
                 fatalError()
             }
             cell.configure(
@@ -115,15 +119,17 @@ extension NotificationsSettingsTableViewController {
         }
     }
 
-    override func tableView(_: UITableView,
-                            estimatedHeightForFooterInSection _: Int) -> CGFloat
-    {
+    override func tableView(
+        _: UITableView,
+        estimatedHeightForFooterInSection _: Int
+    ) -> CGFloat {
         100
     }
 
-    override func tableView(_: UITableView,
-                            viewForFooterInSection _: Int) -> UIView?
-    {
+    override func tableView(
+        _: UITableView,
+        viewForFooterInSection _: Int
+    ) -> UIView? {
         let footerView = UIView()
         let footerTextView = RuuviLinkTextView(
             fullTextString: RuuviLocalization.settingsAlertsFooterDescription,
@@ -140,9 +146,10 @@ extension NotificationsSettingsTableViewController {
 // MARK: - UITableViewDelegate
 
 extension NotificationsSettingsTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         tableView.deselectRow(at: indexPath, animated: true)
         let viewModel = viewModels[indexPath.row]
         switch viewModel.settingsType.value {
@@ -166,7 +173,8 @@ extension NotificationsSettingsTableViewController: NotificationsSettingsSwitchC
 
 extension NotificationsSettingsTableViewController: RuuviLinkTextViewDelegate {
     func didTapLink(url: String) {
-        guard let settingsURL = URL(string: url) else {
+        guard let settingsURL = URL(string: url)
+        else {
             return
         }
         UIApplication.shared.open(settingsURL)

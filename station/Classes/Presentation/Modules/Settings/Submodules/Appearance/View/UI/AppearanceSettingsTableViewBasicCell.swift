@@ -19,11 +19,14 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         return label
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -37,7 +40,7 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         accessoryType = .disclosureIndicator
 
         let stack = UIStackView(arrangedSubviews: [
-            titleLabel, valueLabel,
+            titleLabel, valueLabel
         ])
         stack.spacing = 4
         stack.distribution = .fillProportionally

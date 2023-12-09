@@ -59,12 +59,14 @@ class OffsetCorrectionAppleViewController: UIViewController {
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(top: backBarButtonItemView.topAnchor,
-                          leading: backBarButtonItemView.leadingAnchor,
-                          bottom: backBarButtonItemView.bottomAnchor,
-                          trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: backBarButtonItemView.topAnchor,
+            leading: backBarButtonItemView.leadingAnchor,
+            bottom: backBarButtonItemView.bottomAnchor,
+            trailing: backBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
 
         output.viewDidLoad()
@@ -97,11 +99,15 @@ class OffsetCorrectionAppleViewController: UIViewController {
             case .humidity:
                 label.text = "\((value.bound * 100).round(to: 2))%)"
             case .pressure:
-                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
-                                                             allowSettings: false)
+                label.text = self?.measurementService.string(
+                    for: Pressure(value, unit: .hectopascals),
+                    allowSettings: false
+                )
             default:
-                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius),
-                                                             allowSettings: false)
+                label.text = self?.measurementService.string(
+                    for: Temperature(value, unit: .celsius),
+                    allowSettings: false
+                )
             }
         }
         originalValueUpdateTimeLabel.bind(viewModel.updateAt) { [weak self] label, date in
@@ -127,11 +133,15 @@ class OffsetCorrectionAppleViewController: UIViewController {
             case .humidity:
                 label.text = "\((value.bound * 100).round(to: 2))%"
             case .pressure:
-                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
-                                                             allowSettings: false)
+                label.text = self?.measurementService.string(
+                    for: Pressure(value, unit: .hectopascals),
+                    allowSettings: false
+                )
             default:
-                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius),
-                                                             allowSettings: false)
+                label.text = self?.measurementService.string(
+                    for: Temperature(value, unit: .celsius),
+                    allowSettings: false
+                )
             }
         }
     }
@@ -155,9 +165,11 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         // make text color gray
-        attrString.addAttribute(.foregroundColor,
-                                value: RuuviColor.ruuviTextColor ?? UIColor.secondaryLabel,
-                                range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttribute(
+            .foregroundColor,
+            value: RuuviColor.ruuviTextColor ?? UIColor.secondaryLabel,
+            range: NSRange(location: 0, length: attrString.length)
+        )
 
         descriptionTextView.attributedText = attrString
         descriptionTextView.textColor = RuuviColor.ruuviTextColor
@@ -183,12 +195,14 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         controller.addTextField { textfield in
             textfield.keyboardType = .numbersAndPunctuation
         }
-        controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-                                               let text = controller.textFields?.first?.text ?? "0.0"
-                                               self?.output.viewDidSetCorrectValue(correctValue: text.doubleValue)
-                                           }))
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.confirm,
+            style: .destructive,
+            handler: { [weak self] _ in
+                let text = controller.textFields?.first?.text ?? "0.0"
+                self?.output.viewDidSetCorrectValue(correctValue: text.doubleValue)
+            }
+        ))
         controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
@@ -197,11 +211,13 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         let title = RuuviLocalization.OffsetCorrection.Dialog.Calibration.title
         let message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.clearConfirm
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.confirm,
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-                                               self?.output.viewDidClearOffsetValue()
-                                           }))
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.confirm,
+            style: .destructive,
+            handler: { [weak self] _ in
+                self?.output.viewDidClearOffsetValue()
+            }
+        ))
         controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }

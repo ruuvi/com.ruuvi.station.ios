@@ -44,8 +44,7 @@ public struct JSONParsingService: ParsingService {
         if let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments),
            let jsonContainer = json as? [String: Any],
            let featureToggles = jsonContainer[containerName],
-           let featureTogglesData = try? JSONSerialization.data(withJSONObject: featureToggles)
-        {
+           let featureTogglesData = try? JSONSerialization.data(withJSONObject: featureToggles) {
             toggleData = featureTogglesData
         }
 

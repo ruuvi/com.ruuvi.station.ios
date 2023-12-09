@@ -99,26 +99,32 @@ extension MigrationManagerAlertService {
         if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
            let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
            let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
-           let temperature = element.1
-        {
+           let temperature = element.1 {
             prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity = Humidity(value: lower / 100,
-                                         unit: .relative(temperature: temperature))
-            let upperHumidity = Humidity(value: upper / 100,
-                                         unit: .relative(temperature: temperature))
+            let lowerHumidity = Humidity(
+                value: lower / 100,
+                unit: .relative(temperature: temperature)
+            )
+            let upperHumidity = Humidity(
+                value: upper / 100,
+                unit: .relative(temperature: temperature)
+            )
             ruuviAlertService.register(
                 type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                 ruuviTag: element.0
             )
         } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
                   let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
-                  let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id)
-        {
+                  let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
             prefs.set(false, forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity = Humidity(value: lower,
-                                         unit: .absolute)
-            let upperHumidity = Humidity(value: upper,
-                                         unit: .absolute)
+            let lowerHumidity = Humidity(
+                value: lower,
+                unit: .absolute
+            )
+            let upperHumidity = Humidity(
+                value: upper,
+                unit: .absolute
+            )
             ruuviAlertService.register(
                 type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                 ruuviTag: element.0

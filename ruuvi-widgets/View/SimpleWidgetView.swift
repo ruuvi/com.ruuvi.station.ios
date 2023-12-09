@@ -43,20 +43,26 @@ struct SimpleWidgetView: View {
                     }
 
                     HStack(spacing: 2) {
-                        Text(viewModel.getValue(from: entry.record,
-                                                settings: entry.settings,
-                                                config: entry.config))
-                            .environment(\.locale, viewModel.locale())
-                            .foregroundColor(.bodyTextColor)
-                            .font(.custom(Constants.oswaldBold.rawValue,
-                                          size: canShowBackground ? 36 : 66,
-                                          relativeTo: .largeTitle))
-                            .minimumScaleFactor(0.5)
+                        Text(viewModel.getValue(
+                            from: entry.record,
+                            settings: entry.settings,
+                            config: entry.config
+                        ))
+                        .environment(\.locale, viewModel.locale())
+                        .foregroundColor(.bodyTextColor)
+                        .font(.custom(
+                            Constants.oswaldBold.rawValue,
+                            size: canShowBackground ? 36 : 66,
+                            relativeTo: .largeTitle
+                        ))
+                        .minimumScaleFactor(0.5)
                         Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                             .foregroundColor(Color.unitTextColor)
-                            .font(.custom(Constants.oswaldExtraLight.rawValue,
-                                          size: canShowBackground ? 16 : 24,
-                                          relativeTo: .title3))
+                            .font(.custom(
+                                Constants.oswaldExtraLight.rawValue,
+                                size: canShowBackground ? 16 : 24,
+                                relativeTo: .title3
+                            ))
                             .baselineOffset(14)
                             .minimumScaleFactor(0.5)
                         Spacer()

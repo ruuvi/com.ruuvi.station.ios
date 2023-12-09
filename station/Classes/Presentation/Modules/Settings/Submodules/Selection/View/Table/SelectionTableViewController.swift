@@ -63,15 +63,16 @@ extension SelectionTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let item = viewModel?.items[indexPath.row],
               let cell = tableView
-              .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
-                                   for: indexPath) as? SelectionTableViewCell
+                  .dequeueReusableCell(
+                      withIdentifier: cellReuseIdentifier,
+                      for: indexPath
+                  ) as? SelectionTableViewCell
         else {
             return .init()
         }
 
         if viewModel?.unitSettingsType == .accuracy,
-           let item = item as? MeasurementAccuracyType
-        {
+           let item = item as? MeasurementAccuracyType {
             let titleProvider = MeasurementAccuracyTitles()
             let title = titleProvider.formattedTitle(type: item, settings: settings)
             switch viewModel?.measurementType {
@@ -89,7 +90,6 @@ extension SelectionTableViewController {
                 cell.nameLabel.text = RuuviLocalization.na
             }
             updateCellStyle(with: title, cell: cell)
-
         } else {
             if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
                 cell.nameLabel.text = item.title(settings.temperatureUnit.symbol)
@@ -129,9 +129,10 @@ extension SelectionTableViewController {
         }
     }
 
-    private func updateCellStyle(with title: String?,
-                                 cell: SelectionTableViewCell)
-    {
+    private func updateCellStyle(
+        with title: String?,
+        cell: SelectionTableViewCell
+    ) {
         if title == viewModel?.selection {
             cell.accessoryType = .checkmark
             cell.nameLabel.textColor = RuuviColor.ruuviMenuTextColor

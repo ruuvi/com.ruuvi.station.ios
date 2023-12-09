@@ -338,8 +338,10 @@ public extension RuuviServiceAlertImpl {
             cloud.setAlert(
                 type: .signal,
                 settingType: .lowerBound,
-                isEnabled: isOn(type: .signal(lower: 0, upper: 0),
-                                for: ruuviTag),
+                isEnabled: isOn(
+                    type: .signal(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
                 min: signal ?? 0,
                 max: upperSignal(for: ruuviTag) ?? 0,
                 counter: nil,
@@ -356,8 +358,10 @@ public extension RuuviServiceAlertImpl {
             cloud.setAlert(
                 type: .signal,
                 settingType: .upperBound,
-                isEnabled: isOn(type: .signal(lower: 0, upper: 0),
-                                for: ruuviTag),
+                isEnabled: isOn(
+                    type: .signal(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
                 min: lowerSignal(for: ruuviTag) ?? 0,
                 max: signal ?? 0,
                 counter: nil,
@@ -374,8 +378,10 @@ public extension RuuviServiceAlertImpl {
             cloud.setAlert(
                 type: .signal,
                 settingType: .description,
-                isEnabled: isOn(type: .signal(lower: 0, upper: 0),
-                                for: ruuviTag),
+                isEnabled: isOn(
+                    type: .signal(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
                 min: lowerSignal(for: ruuviTag) ?? 0,
                 max: upperSignal(for: ruuviTag) ?? 0,
                 counter: nil,
@@ -489,8 +495,10 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     setMovement(description: cloudAlert.description, for: physicalSensor)
                 case .signal:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
-                    type = .signal(lower: min,
-                                   upper: max)
+                    type = .signal(
+                        lower: min,
+                        upper: max
+                    )
                     setSignal(description: cloudAlert.description, for: physicalSensor)
                 case .offline:
                     guard let unseenDuration = cloudAlert.max else { return }
@@ -1045,8 +1053,7 @@ public extension RuuviServiceAlertImpl {
         }
 
         if let l = lowerHumidity(for: sensor),
-           let u = upperHumidity(for: sensor)
-        {
+           let u = upperHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
         }
     }

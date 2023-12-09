@@ -85,9 +85,12 @@ final class RuuviStorageCoordinator: RuuviStorage {
         pick points: Double
     ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.readDownsampled(id, after: date,
-                                                     with: intervalMinutes,
-                                                     pick: points)
+        let sqliteOperation = sqlite.readDownsampled(
+            id,
+            after: date,
+            with: intervalMinutes,
+            pick: points
+        )
         sqliteOperation.on(success: { sqliteEntities in
             promise.succeed(value: sqliteEntities)
         }, failure: { error in
@@ -224,8 +227,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
     // MARK: - Queued cloud requests
 
     func readQueuedRequests()
-        -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>
-    {
+    -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
         sqlite.readQueuedRequests().on(success: { requests in
             promise.succeed(value: requests)

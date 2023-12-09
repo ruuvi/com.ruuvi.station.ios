@@ -18,7 +18,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
 
     func configure() {
         let sections: [ChartSettingsSection] = [
-            buildDisplayAllDataSection(),
+            buildDisplayAllDataSection()
         ]
         viewModel = ChartSettingsViewModel(sections: sections)
     }
@@ -27,7 +27,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
         ChartSettingsSection(
             note: RuuviLocalization.ChartSettings.AllPoints.description,
             cells: [
-                buildChartDownsampling(),
+                buildChartDownsampling()
             ]
         )
     }
@@ -38,7 +38,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
         ChartSettingsSection(
             note: RuuviLocalization.ChartSettings.DrawDots.description,
             cells: [
-                buildChartDotsDrawing(),
+                buildChartDotsDrawing()
             ]
         )
     }
@@ -58,8 +58,10 @@ extension ChartSettingsPresenter {
     private func buildChartDownsampling() -> ChartSettingsCell {
         let title = RuuviLocalization.ChartSettings.AllPoints.title
         let value = !settings.chartDownsamplingOn
-        let type: ChartSettingsCellType = .switcher(title: title,
-                                                    value: value)
+        let type: ChartSettingsCellType = .switcher(
+            title: title,
+            value: value
+        )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
         bind(cell.boolean, fire: false) { [weak self] observer, value in
@@ -73,8 +75,10 @@ extension ChartSettingsPresenter {
     private func buildChartDotsDrawing() -> ChartSettingsCell {
         let title = RuuviLocalization.ChartSettings.DrawDots.title
         let value = settings.chartDrawDotsOn
-        let type: ChartSettingsCellType = .switcher(title: title,
-                                                    value: value)
+        let type: ChartSettingsCellType = .switcher(
+            title: title,
+            value: value
+        )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
         bind(cell.boolean, fire: false) { [weak self] observer, value in

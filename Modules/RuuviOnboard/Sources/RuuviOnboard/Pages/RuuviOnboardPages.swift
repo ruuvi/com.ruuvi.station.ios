@@ -27,15 +27,17 @@ public final class RuuviOnboardPages: RuuviOnboard {
 }
 
 extension RuuviOnboardPages: RuuviOnboardViewControllerOutput {
-    func ruuviOnboardPages(_: RuuviOnboardViewController,
-                           didFinish _: Any?)
-    {
+    func ruuviOnboardPages(
+        _: RuuviOnboardViewController,
+        didFinish _: Any?
+    ) {
         output?.ruuviOnboardDidFinish(self)
     }
 
-    func ruuviOnboardCloudSignIn(_: RuuviOnboardViewController,
-                                 didPresentSignIn _: Any?)
-    {
+    func ruuviOnboardCloudSignIn(
+        _: RuuviOnboardViewController,
+        didPresentSignIn _: Any?
+    ) {
         output?.ruuviOnboardDidShowSignIn(self)
     }
 }

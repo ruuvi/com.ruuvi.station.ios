@@ -12,9 +12,10 @@ class CardsInteractor {
 }
 
 extension CardsInteractor: CardsInteractorInput {
-    func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor,
-                                       settings _: RuuviLocalSettings)
-    {
+    func checkAndUpdateFirmwareVersion(
+        for ruuviTag: RuuviTagSensor,
+        settings _: RuuviLocalSettings
+    ) {
         guard let luid = ruuviTag.luid,
               ruuviTag.firmwareVersion == nil ||
               !ruuviTag.firmwareVersion.hasText()

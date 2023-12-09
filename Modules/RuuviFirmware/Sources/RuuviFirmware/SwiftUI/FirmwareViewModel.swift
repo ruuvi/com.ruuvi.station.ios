@@ -63,7 +63,8 @@ extension FirmwareViewModel {
 
     func whenLoading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .loading = state, let self else {
+            guard case .loading = state, let self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return interactor.loadLatestGitHubRelease()
@@ -76,7 +77,8 @@ extension FirmwareViewModel {
 
     func whenServing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .serving = state, let self else {
+            guard case .serving = state, let self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             if let currentFirmware {
@@ -117,7 +119,8 @@ extension FirmwareViewModel {
 
     func whenDownloading() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .downloading(latestRelease, currentRelease) = state, let self else {
+            guard case let .downloading(latestRelease, currentRelease) = state, let self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return interactor.download(release: latestRelease)
@@ -188,7 +191,8 @@ extension FirmwareViewModel {
                 uuid,
                 appUrl,
                 fullUrl
-            ) = state, let sSelf = self else {
+            ) = state, let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(

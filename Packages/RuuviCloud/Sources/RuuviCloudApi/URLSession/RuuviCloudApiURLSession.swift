@@ -53,153 +53,186 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     public func register(
         _ requestModel: RuuviCloudApiRegisterRequest
     ) -> Future<RuuviCloudApiRegisterResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.register,
-                with: requestModel,
-                method: .post)
+        request(
+            endpoint: Routes.register,
+            with: requestModel,
+            method: .post
+        )
     }
 
     public func verify(
         _ requestModel: RuuviCloudApiVerifyRequest
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.verify,
-                with: requestModel)
+        request(
+            endpoint: Routes.verify,
+            with: requestModel
+        )
     }
 
-    public func deleteAccount(_ requestModel: RuuviCloudApiAccountDeleteRequest,
-                              authorization: String) ->
-        Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError>
-    {
-        request(endpoint: Routes.deleteAccount,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+    public func deleteAccount(
+        _ requestModel: RuuviCloudApiAccountDeleteRequest,
+        authorization: String
+    ) ->
+    Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError> {
+        request(
+            endpoint: Routes.deleteAccount,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func registerPNToken(
         _ requestModel: RuuviCloudPNTokenRegisterRequest,
         authorization: String
     ) -> Future<RuuviCloudPNTokenRegisterResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.registerPNToken,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.registerPNToken,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func unregisterPNToken(
         _ requestModel: RuuviCloudPNTokenUnregisterRequest,
         authorization: String?
     ) -> Future<RuuviCloudPNTokenUnregisterResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.unregisterPNToken,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.unregisterPNToken,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func listPNTokens(
         _ requestModel: RuuviCloudPNTokenListRequest,
         authorization: String
     ) -> Future<RuuviCloudPNTokenListResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.PNTokens,
-                with: requestModel,
-                method: .get,
-                authorization: authorization)
+        request(
+            endpoint: Routes.PNTokens,
+            with: requestModel,
+            method: .get,
+            authorization: authorization
+        )
     }
 
     public func claim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String
     ) -> Future<RuuviCloudApiClaimResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.claim,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.claim,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func contest(
         _ requestModel: RuuviCloudApiContestRequest,
         authorization: String
     ) -> Future<RuuviCloudApiContestResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.contest,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.contest,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func unclaim(
         _ requestModel: RuuviCloudApiUnclaimRequest,
         authorization: String
     ) -> Future<RuuviCloudApiUnclaimResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.unclaim,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.unclaim,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func share(
         _ requestModel: RuuviCloudApiShareRequest,
         authorization: String
     ) -> Future<RuuviCloudApiShareResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.share,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.share,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func unshare(
         _ requestModel: RuuviCloudApiShareRequest,
         authorization: String
     ) -> Future<RuuviCloudApiUnshareResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.unshare,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
+        request(
+            endpoint: Routes.unshare,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
     }
 
     public func sensors(
         _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.sensors,
-                with: requestModel,
-                method: .get,
-                authorization: authorization)
+        request(
+            endpoint: Routes.sensors,
+            with: requestModel,
+            method: .get,
+            authorization: authorization
+        )
     }
 
     public func owner(
         _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
     ) -> Future<RuuviCloudAPICheckOwnerResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.check,
-                with: requestModel,
-                method: .get,
-                authorization: authorization)
+        request(
+            endpoint: Routes.check,
+            with: requestModel,
+            method: .get,
+            authorization: authorization
+        )
     }
 
     public func sensorsDense(
         _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorsDenseResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.sensorsDense,
-                with: requestModel,
-                method: .get,
-                authorization: authorization)
+        request(
+            endpoint: Routes.sensorsDense,
+            with: requestModel,
+            method: .get,
+            authorization: authorization
+        )
     }
 
     public func user(authorization: String) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError> {
         let requestModel = RuuviCloudApiUserRequest()
-        return request(endpoint: Routes.user,
-                       with: requestModel,
-                       authorization: authorization)
+        return request(
+            endpoint: Routes.user,
+            with: requestModel,
+            authorization: authorization
+        )
     }
 
     public func getSensorData(
         _ requestModel: RuuviCloudApiGetSensorRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSensorResponse, RuuviCloudApiError> {
-        request(endpoint: Routes.getSensorData,
-                with: requestModel,
-                method: .get,
-                authorization: authorization)
+        request(
+            endpoint: Routes.getSensorData,
+            with: requestModel,
+            method: .get,
+            authorization: authorization
+        )
     }
 
     public func update(
@@ -281,28 +314,30 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         uploadProgress: ((Double) -> Void)?
     ) -> Future<RuuviCloudApiSensorImageUploadResponse, RuuviCloudApiError> {
         let promise = Promise<RuuviCloudApiSensorImageUploadResponse, RuuviCloudApiError>()
-        request(endpoint: Routes.uploadImage,
-                with: requestModel,
-                method: .post,
-                authorization: authorization)
-            .on(success: { [weak self] (response: RuuviCloudApiSensorImageUploadResponse) in
-                let url = response.uploadURL
-                self?.upload(url: url, with: imageData, mimeType: .jpg, progress: { percentage in
-                    #if DEBUG
-                        debugPrint(percentage)
-                    #endif
-                    uploadProgress?(percentage)
-                }, completion: { result in
-                    switch result {
-                    case .success:
-                        promise.succeed(value: response)
-                    case let .failure(error):
-                        promise.fail(error: error)
-                    }
-                })
-            }, failure: { error in
-                promise.fail(error: error)
+        request(
+            endpoint: Routes.uploadImage,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
+        .on(success: { [weak self] (response: RuuviCloudApiSensorImageUploadResponse) in
+            let url = response.uploadURL
+            self?.upload(url: url, with: imageData, mimeType: .jpg, progress: { percentage in
+                #if DEBUG
+                    debugPrint(percentage)
+                #endif
+                uploadProgress?(percentage)
+            }, completion: { result in
+                switch result {
+                case .success:
+                    promise.succeed(value: response)
+                case let .failure(error):
+                    promise.fail(error: error)
+                }
             })
+        }, failure: { error in
+            promise.fail(error: error)
+        })
         return promise.future
     }
 }
@@ -318,7 +353,8 @@ extension RuuviCloudApiURLSession {
         authorization: String? = nil
     ) -> Future<Response, RuuviCloudApiError> {
         let promise = Promise<Response, RuuviCloudApiError>()
-        guard Reachability.active else {
+        guard Reachability.active
+        else {
             promise.fail(error: .connection)
             return promise.future
         }
@@ -326,7 +362,8 @@ extension RuuviCloudApiURLSession {
         if method == .get {
             var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
             urlComponents?.queryItems = try? URLQueryItemEncoder().encode(model)
-            guard let urlFromComponents = urlComponents?.url else {
+            guard let urlFromComponents = urlComponents?.url
+            else {
                 fatalError()
             }
             url = urlFromComponents
@@ -343,11 +380,15 @@ extension RuuviCloudApiURLSession {
 
         if let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
             #if DEBUG
-                request.setValue("Station_iOS_Debug/Build_\(buildNumber)/\(endpoint.rawValue)",
-                                 forHTTPHeaderField: "User-Agent")
+                request.setValue(
+                    "Station_iOS_Debug/Build_\(buildNumber)/\(endpoint.rawValue)",
+                    forHTTPHeaderField: "User-Agent"
+                )
             #else
-                request.setValue("Station_iOS/Build_\(buildNumber)/\(endpoint.rawValue)",
-                                 forHTTPHeaderField: "User-Agent")
+                request.setValue(
+                    "Station_iOS/Build_\(buildNumber)/\(endpoint.rawValue)",
+                    forHTTPHeaderField: "User-Agent"
+                )
             #endif
         }
 
@@ -364,8 +405,7 @@ extension RuuviCloudApiURLSession {
                     #if DEBUG
                         if let object = try? JSONSerialization.jsonObject(with: data, options: []),
                            let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
-                           let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)
-                        {
+                           let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
                             debugPrint("📬 Response of request", dump(request), prettyPrintedString)
                         }
                     #endif

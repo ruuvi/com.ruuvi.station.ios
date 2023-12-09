@@ -2,8 +2,10 @@ import UIKit
 
 class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
     private lazy var appImageView: UIImageView = {
-        let iv = UIImageView(image: nil,
-                             contentMode: .scaleAspectFit)
+        let iv = UIImageView(
+            image: nil,
+            contentMode: .scaleAspectFit
+        )
         iv.backgroundColor = .clear
         return iv
     }()
@@ -27,9 +29,13 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
     }()
 
     private lazy var gateWayImageView: UIImageView = {
-        let iv = UIImageView(image: UIImage.named(RuuviAssets.gateway,
-                                                  for: Self.self),
-                             contentMode: .scaleAspectFit)
+        let iv = UIImageView(
+            image: UIImage.named(
+                RuuviAssets.gateway,
+                for: Self.self
+            ),
+            contentMode: .scaleAspectFit
+        )
         iv.backgroundColor = .clear
         return iv
     }()
@@ -63,26 +69,34 @@ private extension RuuviOnboardGatewayFeaturesCell {
         container.fillSuperview()
 
         let textStack = UIStackView(arrangedSubviews: [
-            subtitleLabel, titleLabel,
+            subtitleLabel, titleLabel
         ])
         textStack.axis = .vertical
         textStack.distribution = .fillProportionally
         textStack.spacing = 12
 
         container.addSubview(textStack)
-        textStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeadingAnchor,
-                         bottom: nil,
-                         trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44 + 12, left: 16,
-                                        bottom: 0, right: 16))
+        textStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 44 + 12,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
 
         let appImageViewContainer = UIView(color: .clear)
         container.addSubview(appImageViewContainer)
-        appImageViewContainer.anchor(top: textStack.bottomAnchor,
-                                     leading: container.safeLeadingAnchor,
-                                     bottom: nil,
-                                     trailing: container.safeTrailingAnchor)
+        appImageViewContainer.anchor(
+            top: textStack.bottomAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor
+        )
 
         appImageViewContainer.addSubview(appImageView)
         if UIDevice.isTablet() {
@@ -93,13 +107,15 @@ private extension RuuviOnboardGatewayFeaturesCell {
 
         let footerView = UIView(color: RuuviAssets.ruuviTintColor)
         container.addSubview(footerView)
-        footerView.anchor(top: appImageViewContainer.bottomAnchor,
-                          leading: container.leadingAnchor,
-                          bottom: container.bottomAnchor,
-                          trailing: container.trailingAnchor)
+        footerView.anchor(
+            top: appImageViewContainer.bottomAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor
+        )
 
         let stackView = UIStackView(arrangedSubviews: [
-            gateWayImageView, gatewayRequireLabel,
+            gateWayImageView, gatewayRequireLabel
         ])
         stackView.distribution = .fillProportionally
         stackView.spacing = 8
@@ -107,14 +123,18 @@ private extension RuuviOnboardGatewayFeaturesCell {
         gateWayImageView.size(width: 70, height: 60)
 
         footerView.addSubview(stackView)
-        stackView.anchor(top: footerView.topAnchor,
-                         leading: nil,
-                         bottom: footerView.safeBottomAnchor,
-                         trailing: nil,
-                         padding: .init(top: 12,
-                                        left: 0,
-                                        bottom: bottomSafeAreaHeight > 0 ? 0 : 12,
-                                        right: 0))
+        stackView.anchor(
+            top: footerView.topAnchor,
+            leading: nil,
+            bottom: footerView.safeBottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 12,
+                left: 0,
+                bottom: bottomSafeAreaHeight > 0 ? 0 : 12,
+                right: 0
+            )
+        )
 
         stackView.leadingAnchor.constraint(
             lessThanOrEqualTo: footerView.leadingAnchor, constant: 20
@@ -140,7 +160,8 @@ extension RuuviOnboardGatewayFeaturesCell {
 
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
-        guard let image = viewModel.image else {
+        guard let image = viewModel.image
+        else {
             return
         }
         appImageView.image = UIImage.named(image, for: Self.self)

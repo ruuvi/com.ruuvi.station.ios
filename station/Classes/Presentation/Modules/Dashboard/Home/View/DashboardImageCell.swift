@@ -125,123 +125,155 @@ class DashboardImageCell: UICollectionViewCell {
 
     // swiftlint:disable:next function_body_length
     fileprivate func setUpUI() {
-        let container = UIView(color: RuuviColor.dashboardCardBGColor,
-                               cornerRadius: 8)
+        let container = UIView(
+            color: RuuviColor.dashboardCardBGColor,
+            cornerRadius: 8
+        )
         contentView.addSubview(container)
         container.fillSuperview()
 
         container.addSubview(cardBackgroundView)
-        cardBackgroundView.anchor(top: container.topAnchor,
-                                  leading: container.leadingAnchor,
-                                  bottom: container.bottomAnchor,
-                                  trailing: nil)
+        cardBackgroundView.anchor(
+            top: container.topAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: nil
+        )
         cardBackgroundView.widthAnchor.constraint(
             equalTo: container.widthAnchor,
             multiplier: 0.25
         ).isActive = true
 
         container.addSubview(ruuviTagNameLabel)
-        ruuviTagNameLabel.anchor(top: container.topAnchor,
-                                 leading: cardBackgroundView.trailingAnchor,
-                                 bottom: nil,
-                                 trailing: nil,
-                                 padding: .init(top: 8, left: 8, bottom: 0, right: 0))
+        ruuviTagNameLabel.anchor(
+            top: container.topAnchor,
+            leading: cardBackgroundView.trailingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 8, left: 8, bottom: 0, right: 0)
+        )
         ruuviTagNameLabel.heightAnchor.constraint(
             greaterThanOrEqualToConstant: 14
         ).isActive = true
 
         container.addSubview(alertIcon)
-        alertIcon.anchor(top: ruuviTagNameLabel.topAnchor,
-                         leading: ruuviTagNameLabel.trailingAnchor,
-                         bottom: nil,
-                         trailing: nil,
-                         padding: .init(top: 4, left: 12, bottom: 0, right: 0),
-                         size: .init(width: 18, height: 18))
+        alertIcon.anchor(
+            top: ruuviTagNameLabel.topAnchor,
+            leading: ruuviTagNameLabel.trailingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 4, left: 12, bottom: 0, right: 0),
+            size: .init(width: 18, height: 18)
+        )
 
         container.addSubview(alertButton)
         alertButton.match(view: alertIcon)
 
         container.addSubview(moreIcon)
-        moreIcon.anchor(top: alertIcon.topAnchor,
-                        leading: alertIcon.trailingAnchor,
-                        bottom: nil,
-                        trailing: container.trailingAnchor,
-                        padding: .init(top: 0, left: 10, bottom: 0, right: 14),
-                        size: .init(width: 18, height: 18))
+        moreIcon.anchor(
+            top: alertIcon.topAnchor,
+            leading: alertIcon.trailingAnchor,
+            bottom: nil,
+            trailing: container.trailingAnchor,
+            padding: .init(top: 0, left: 10, bottom: 0, right: 14),
+            size: .init(width: 18, height: 18)
+        )
 
         container.addSubview(moreButton)
         moreButton.match(view: moreIcon)
 
         container.addSubview(temperatureLabel)
-        temperatureLabel.anchor(top: ruuviTagNameLabel.bottomAnchor,
-                                leading: ruuviTagNameLabel.leadingAnchor,
-                                bottom: nil,
-                                trailing: nil,
-                                padding: .init(top: -4, left: 0, bottom: 0, right: 0))
+        temperatureLabel.anchor(
+            top: ruuviTagNameLabel.bottomAnchor,
+            leading: ruuviTagNameLabel.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: -4, left: 0, bottom: 0, right: 0)
+        )
 
         container.addSubview(temperatureUnitLabel)
-        temperatureUnitLabel.anchor(top: temperatureLabel.topAnchor,
-                                    leading: temperatureLabel.trailingAnchor,
-                                    bottom: nil,
-                                    trailing: nil,
-                                    padding: .init(top: 6,
-                                                   left: 2,
-                                                   bottom: 0,
-                                                   right: 0))
+        temperatureUnitLabel.anchor(
+            top: temperatureLabel.topAnchor,
+            leading: temperatureLabel.trailingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(
+                top: 6,
+                left: 2,
+                bottom: 0,
+                right: 0
+            )
+        )
 
         let leftContainerView = UIView()
         container.addSubview(leftContainerView)
-        leftContainerView.anchor(top: nil,
-                                 leading: ruuviTagNameLabel.leadingAnchor,
-                                 bottom: nil,
-                                 trailing: nil,
-                                 padding: .init(top: 4,
-                                                left: 0,
-                                                bottom: 0,
-                                                right: 0))
+        leftContainerView.anchor(
+            top: nil,
+            leading: ruuviTagNameLabel.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(
+                top: 4,
+                left: 0,
+                bottom: 0,
+                right: 0
+            )
+        )
 
         leftContainerView.addSubview(humidityView)
-        humidityView.anchor(top: leftContainerView.topAnchor,
-                            leading: leftContainerView.leadingAnchor,
-                            bottom: nil,
-                            trailing: leftContainerView.trailingAnchor)
+        humidityView.anchor(
+            top: leftContainerView.topAnchor,
+            leading: leftContainerView.leadingAnchor,
+            bottom: nil,
+            trailing: leftContainerView.trailingAnchor
+        )
         humidityViewHeight = humidityView.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
         humidityViewHeight.isActive = true
 
         leftContainerView.addSubview(movementView)
-        movementView.anchor(top: humidityView.bottomAnchor,
-                            leading: leftContainerView.leadingAnchor,
-                            bottom: leftContainerView.bottomAnchor,
-                            trailing: leftContainerView.trailingAnchor)
+        movementView.anchor(
+            top: humidityView.bottomAnchor,
+            leading: leftContainerView.leadingAnchor,
+            bottom: leftContainerView.bottomAnchor,
+            trailing: leftContainerView.trailingAnchor
+        )
         movementViewHeight = movementView.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
         movementViewHeight.isActive = true
 
         let rightContainerView = UIView()
         container.addSubview(rightContainerView)
-        rightContainerView.anchor(top: nil,
-                                  leading: leftContainerView.trailingAnchor,
-                                  bottom: leftContainerView.bottomAnchor,
-                                  trailing: container.trailingAnchor,
-                                  padding: .init(top: 0,
-                                                 left: 4,
-                                                 bottom: 0,
-                                                 right: 4))
+        rightContainerView.anchor(
+            top: nil,
+            leading: leftContainerView.trailingAnchor,
+            bottom: leftContainerView.bottomAnchor,
+            trailing: container.trailingAnchor,
+            padding: .init(
+                top: 0,
+                left: 4,
+                bottom: 0,
+                right: 4
+            )
+        )
 
         rightContainerView.addSubview(pressureView)
-        pressureView.anchor(top: rightContainerView.topAnchor,
-                            leading: rightContainerView.leadingAnchor,
-                            bottom: nil,
-                            trailing: rightContainerView.trailingAnchor)
+        pressureView.anchor(
+            top: rightContainerView.topAnchor,
+            leading: rightContainerView.leadingAnchor,
+            bottom: nil,
+            trailing: rightContainerView.trailingAnchor
+        )
         pressureViewHeight = pressureView.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
         pressureViewHeight.isActive = true
 
         let emptySpacer = UIView()
         emptySpacer.backgroundColor = .clear
         rightContainerView.addSubview(emptySpacer)
-        emptySpacer.anchor(top: pressureView.bottomAnchor,
-                           leading: rightContainerView.leadingAnchor,
-                           bottom: rightContainerView.bottomAnchor,
-                           trailing: rightContainerView.trailingAnchor)
+        emptySpacer.anchor(
+            top: pressureView.bottomAnchor,
+            leading: rightContainerView.leadingAnchor,
+            bottom: rightContainerView.bottomAnchor,
+            trailing: rightContainerView.trailingAnchor
+        )
         emptyViewHeight = emptySpacer.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
         emptyViewHeight.isActive = true
 
@@ -251,7 +283,7 @@ class DashboardImageCell: UICollectionViewCell {
             .isActive = true
 
         let sourceAndUpdateStack = UIStackView(arrangedSubviews: [
-            dataSourceIconView, updatedAtLabel,
+            dataSourceIconView, updatedAtLabel
         ])
         sourceAndUpdateStack.axis = .horizontal
         sourceAndUpdateStack.spacing = 6
@@ -263,21 +295,25 @@ class DashboardImageCell: UICollectionViewCell {
         dataSourceIconViewWidthConstraint.isActive = true
 
         let footerStack = UIStackView(arrangedSubviews: [
-            sourceAndUpdateStack, batteryLevelView,
+            sourceAndUpdateStack, batteryLevelView
         ])
         footerStack.spacing = 4
         footerStack.axis = .horizontal
         footerStack.distribution = .fillProportionally
 
         container.addSubview(footerStack)
-        footerStack.anchor(top: leftContainerView.bottomAnchor,
-                           leading: ruuviTagNameLabel.leadingAnchor,
-                           bottom: container.bottomAnchor,
-                           trailing: container.trailingAnchor,
-                           padding: .init(top: 4,
-                                          left: 0,
-                                          bottom: 6,
-                                          right: 12))
+        footerStack.anchor(
+            top: leftContainerView.bottomAnchor,
+            leading: ruuviTagNameLabel.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor,
+            padding: .init(
+                top: 4,
+                left: 0,
+                bottom: 6,
+                right: 12
+            )
+        )
         batteryLevelView.isHidden = true
     }
 }
@@ -304,14 +340,17 @@ extension DashboardImageCell {
 
 extension DashboardImageCell {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
-    func configure(with viewModel: CardsViewModel,
-                   measurementService: RuuviServiceMeasurement?)
-    {
+    func configure(
+        with viewModel: CardsViewModel,
+        measurementService: RuuviServiceMeasurement?
+    ) {
         self.viewModel = viewModel
 
         cardBackgroundView
-            .setBackgroundImage(with: viewModel.background.value,
-                                withAnimation: false)
+            .setBackgroundImage(
+                with: viewModel.background.value,
+                withAnimation: false
+            )
 
         // Name
         ruuviTagNameLabel.text = viewModel.name.value
@@ -331,8 +370,7 @@ extension DashboardImageCell {
 
         // Humidity
         if let humidity = viewModel.humidity.value,
-           let measurementService
-        {
+           let measurementService {
             hideHumidityView(hide: false)
             let humidityValue = measurementService.stringWithoutSign(
                 for: humidity,
@@ -343,8 +381,10 @@ extension DashboardImageCell {
             let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
             let unit = humidityUnit == .dew ? temperatureUnitSymbol
                 : humidityUnitSymbol
-            humidityView.setValue(with: humidityValue,
-                                  unit: unit)
+            humidityView.setValue(
+                with: humidityValue,
+                unit: unit
+            )
         } else {
             hideHumidityView(hide: true)
         }
@@ -353,8 +393,10 @@ extension DashboardImageCell {
         if let pressure = viewModel.pressure.value {
             hidePressureView(hide: false)
             let pressureValue = measurementService?.stringWithoutSign(for: pressure)
-            pressureView.setValue(with: pressureValue,
-                                  unit: measurementService?.units.pressureUnit.symbol)
+            pressureView.setValue(
+                with: pressureValue,
+                unit: measurementService?.units.pressureUnit.symbol
+            )
         } else {
             hidePressureView(hide: true)
         }
@@ -364,8 +406,10 @@ extension DashboardImageCell {
         case .ruuvi:
             if let movement = viewModel.movementCounter.value {
                 hideMovementView(hide: false)
-                movementView.setValue(with: "\(movement)",
-                                      unit: RuuviLocalization.Cards.Movements.title)
+                movementView.setValue(
+                    with: "\(movement)",
+                    unit: RuuviLocalization.Cards.Movements.title
+                )
             } else {
                 hideMovementView(hide: true)
             }
@@ -412,8 +456,7 @@ extension DashboardImageCell {
 
         // Battery state
         if let batteryLow = viewModel.batteryNeedsReplacement.value,
-           batteryLow
-        {
+           batteryLow {
             batteryLevelView.isHidden = false
         } else {
             batteryLevelView.isHidden = true
@@ -442,32 +485,28 @@ extension DashboardImageCell {
         }
 
         if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
-           let temperatureAlertState = viewModel.temperatureAlertState.value
-        {
+           let temperatureAlertState = viewModel.temperatureAlertState.value {
             highlightTemperatureValues(highlight: temperatureAlertState == .firing)
         } else {
             highlightTemperatureValues(highlight: false)
         }
 
         if let isOn = viewModel.isRelativeHumidityAlertOn.value, isOn,
-           let rhAlertState = viewModel.relativeHumidityAlertState.value
-        {
+           let rhAlertState = viewModel.relativeHumidityAlertState.value {
             humidityView.changeColor(highlight: rhAlertState == .firing)
         } else {
             humidityView.changeColor(highlight: false)
         }
 
         if let isOn = viewModel.isPressureAlertOn.value, isOn,
-           let pressureAlertState = viewModel.pressureAlertState.value
-        {
+           let pressureAlertState = viewModel.pressureAlertState.value {
             pressureView.changeColor(highlight: pressureAlertState == .firing)
         } else {
             pressureView.changeColor(highlight: false)
         }
 
         if let isOn = viewModel.isMovementAlertOn.value, isOn,
-           let movementAlertState = viewModel.movementAlertState.value
-        {
+           let movementAlertState = viewModel.movementAlertState.value {
             movementView.changeColor(highlight: movementAlertState == .firing)
         } else {
             movementView.changeColor(highlight: false)
@@ -498,13 +537,17 @@ extension DashboardImageCell {
                     alertIcon.image = RuuviAssets.alertActiveImage
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    UIView.animate(withDuration: 0.5,
-                                   delay: 0,
-                                   options: [.repeat,
-                                             .autoreverse],
-                                   animations: { [weak self] in
-                                       self?.alertIcon.alpha = 0.0
-                                   })
+                    UIView.animate(
+                        withDuration: 0.5,
+                        delay: 0,
+                        options: [
+                            .repeat,
+                            .autoreverse,
+                        ],
+                        animations: { [weak self] in
+                            self?.alertIcon.alpha = 0.0
+                        }
+                    )
                 }
             }
         } else {
@@ -527,15 +570,17 @@ extension DashboardImageCell {
         timer?.invalidate()
         timer = nil
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1,
-                                     repeats: true,
-                                     block: { [weak self] _ in
-                                         if let date = date?.ruuviAgo() {
-                                             self?.updatedAtLabel.text = date
-                                         } else {
-                                             self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-                                         }
-                                     })
+        timer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: true,
+            block: { [weak self] _ in
+                if let date = date?.ruuviAgo() {
+                    self?.updatedAtLabel.text = date
+                } else {
+                    self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
+                }
+            }
+        )
     }
 
     private func hideHumidityView(hide: Bool) {
@@ -573,7 +618,8 @@ extension DashboardImageCell {
     }
 
     @objc private func alertButtonDidTap() {
-        guard let viewModel else {
+        guard let viewModel
+        else {
             return
         }
         delegate?.didTapAlertButton(for: viewModel)

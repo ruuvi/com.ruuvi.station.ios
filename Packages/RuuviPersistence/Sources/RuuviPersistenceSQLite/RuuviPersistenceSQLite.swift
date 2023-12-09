@@ -30,8 +30,10 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
 
     private let context: SQLiteContext
     private let readQueue: DispatchQueue =
-        .init(label: "RuuviTagPersistenceSQLite.readQueue",
-              qos: .default)
+        .init(
+            label: "RuuviTagPersistenceSQLite.readQueue",
+            qos: .default
+        )
     public init(context: SQLiteContext) {
         self.context = context
     }
@@ -258,9 +260,11 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         with intervalMinutes: Int,
         pick points: Double
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let highDensityDate = Calendar.current.date(byAdding: .minute,
-                                                    value: -intervalMinutes,
-                                                    to: Date()) ?? Date()
+        let highDensityDate = Calendar.current.date(
+            byAdding: .minute,
+            value: -intervalMinutes,
+            to: Date()
+        ) ?? Date()
         let pruningInterval =
             (highDensityDate.timeIntervalSince1970 - date.timeIntervalSince1970) / points
 
@@ -677,8 +681,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
 
     @discardableResult
     public func readQueuedRequests()
-        -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
-    {
+    -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviCloudQueuedRequest]()
@@ -820,8 +823,7 @@ extension RuuviPersistenceSQLite {
         newRequest: RuuviCloudQueuedRequest,
         existingRequest: RuuviCloudQueuedRequest?
     )
-        -> Future<Bool, RuuviPersistenceError>
-    {
+    -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         if isCreate {
             do {
@@ -835,7 +837,8 @@ extension RuuviPersistenceSQLite {
                 promise.fail(error: .grdb(error))
             }
         } else {
-            guard let existingRequest else {
+            guard let existingRequest
+            else {
                 return promise.future
             }
 

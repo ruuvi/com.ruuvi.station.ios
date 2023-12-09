@@ -239,7 +239,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidAddDeviceWithNFC(with tag: NFCSensor?) {
-        guard let displayName = displayName(for: tag) else {
+        guard let displayName = displayName(for: tag)
+        else {
             return
         }
         if let ruuviTag = ruuviTags.first(where: { $0.mac != nil && $0.mac == tag?.macId }) {
@@ -381,12 +382,10 @@ extension DiscoverPresenter {
         let filtered = ruuviTags.filter { tag in
             !persistedSensors.contains(where: { persistedTag in
                 if let tagLuid = tag.luid?.value,
-                   let persistedTagLuid = persistedTag.luid?.value
-                {
+                   let persistedTagLuid = persistedTag.luid?.value {
                     tagLuid == persistedTagLuid
                 } else if let tagMacId = tag.mac,
-                          let persistedTagMacId = persistedTag.macId?.value
-                {
+                          let persistedTagMacId = persistedTag.macId?.value {
                     tagMacId == persistedTagMacId
                 } else {
                     false
@@ -428,7 +427,8 @@ extension DiscoverPresenter {
     }
 
     private func displayName(for tag: NFCSensor?) -> String? {
-        guard let tag else {
+        guard let tag
+        else {
             return nil
         }
         return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)

@@ -24,14 +24,16 @@ extension RuuviTag: RuuviTagSensorRecord {
     }
 
     public var humidity: Humidity? {
-        guard let rH = relativeHumidity else {
+        guard let rH = relativeHumidity
+        else {
             return nil
         }
         return Humidity(relative: rH / 100.0, temperature: temperature)
     }
 
     public var pressure: Pressure? {
-        guard let hectopascals else {
+        guard let hectopascals
+        else {
             return nil
         }
         return Pressure(value: hectopascals, unit: .hectopascals)
@@ -44,15 +46,23 @@ extension RuuviTag: RuuviTagSensorRecord {
         else {
             return nil
         }
-        return Acceleration(x:
-            AccelerationMeasurement(value: accelerationX,
-                                    unit: .metersPerSecondSquared),
+        return Acceleration(
+            x:
+            AccelerationMeasurement(
+                value: accelerationX,
+                unit: .metersPerSecondSquared
+            ),
             y:
-            AccelerationMeasurement(value: accelerationY,
-                                    unit: .metersPerSecondSquared),
+            AccelerationMeasurement(
+                value: accelerationY,
+                unit: .metersPerSecondSquared
+            ),
             z:
-            AccelerationMeasurement(value: accelerationZ,
-                                    unit: .metersPerSecondSquared))
+            AccelerationMeasurement(
+                value: accelerationZ,
+                unit: .metersPerSecondSquared
+            )
+        )
     }
 
     public var voltage: Voltage? {

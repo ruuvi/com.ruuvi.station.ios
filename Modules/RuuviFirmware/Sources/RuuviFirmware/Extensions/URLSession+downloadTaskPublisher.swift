@@ -31,8 +31,7 @@ public extension URLSession {
 
         public func receive<S>(subscriber: S) where S: Subscriber,
             DownloadTaskPublisher.Failure == S.Failure,
-            DownloadTaskPublisher.Output == S.Input
-        {
+            DownloadTaskPublisher.Output == S.Input {
             let subscription = DownloadTaskSubscription(
                 subscriber: subscriber,
                 session: session,
@@ -47,8 +46,7 @@ public extension URLSession {
 extension URLSession {
     final class DownloadTaskSubscription<SubscriberType: Subscriber>: Subscription where
         SubscriberType.Input == DownloadResponse,
-        SubscriberType.Failure == URLError
-    {
+        SubscriberType.Failure == URLError {
         private var subscriber: SubscriberType?
         private weak var session: URLSession?
         private var request: URLRequest
@@ -73,10 +71,12 @@ extension URLSession {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            guard demand > 0 else {
+            guard demand > 0
+            else {
                 return
             }
-            guard task == nil else {
+            guard task == nil
+            else {
                 return
             }
             self.task = session?.downloadTask(with: request) { [weak self] url, response, error in
@@ -84,11 +84,13 @@ extension URLSession {
                     self?.subscriber?.receive(completion: .failure(error))
                     return
                 }
-                guard response != nil else {
+                guard response != nil
+                else {
                     self?.subscriber?.receive(completion: .failure(URLError(.badServerResponse)))
                     return
                 }
-                guard let url else {
+                guard let url
+                else {
                     self?.subscriber?.receive(completion: .failure(URLError(.badURL)))
                     return
                 }

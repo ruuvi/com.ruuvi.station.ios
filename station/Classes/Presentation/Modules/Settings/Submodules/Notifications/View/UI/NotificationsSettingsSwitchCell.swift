@@ -30,17 +30,22 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
     lazy var statusSwitch: RuuviUISwitch = {
         let toggle = RuuviUISwitch()
         toggle.isOn = false
-        toggle.addTarget(self,
-                         action: #selector(handleStatusToggle),
-                         for: .valueChanged)
+        toggle.addTarget(
+            self,
+            action: #selector(handleStatusToggle),
+            for: .valueChanged
+        )
         return toggle
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?)
-    {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
@@ -56,7 +61,7 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
         backgroundColor = .clear
 
         let textStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel,
+            titleLabel, subtitleLabel
         ])
         textStack.spacing = 4
         textStack.distribution = .fillProportionally
@@ -67,10 +72,12 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
             leading: contentView.safeLeftAnchor,
             bottom: contentView.safeBottomAnchor,
             trailing: nil,
-            padding: .init(top: 12,
-                           left: 20,
-                           bottom: 12,
-                           right: 0)
+            padding: .init(
+                top: 12,
+                left: 20,
+                bottom: 12,
+                right: 0
+            )
         )
 
         contentView.addSubview(statusSwitch)

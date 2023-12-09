@@ -15,14 +15,15 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
     private var ruuviRepository: RuuviRepository
     private var ruuviLocalIDs: RuuviLocalIDs
 
-    init(sensor: RuuviTagSensor,
-         since: Date,
-         until: Date? = nil,
-         ruuviCloud: RuuviCloud,
-         ruuviRepository: RuuviRepository,
-         syncState _: RuuviLocalSyncState,
-         ruuviLocalIDs: RuuviLocalIDs)
-    {
+    init(
+        sensor: RuuviTagSensor,
+        since: Date,
+        until: Date? = nil,
+        ruuviCloud: RuuviCloud,
+        ruuviRepository: RuuviRepository,
+        syncState _: RuuviLocalSyncState,
+        ruuviLocalIDs: RuuviLocalIDs
+    ) {
         self.sensor = sensor
         self.since = since
         self.until = until
@@ -32,7 +33,8 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
     }
 
     override func main() {
-        guard let macId = sensor.macId else {
+        guard let macId = sensor.macId
+        else {
             error = .macIdIsNil
             state = .finished
             return
@@ -40,15 +42,15 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
         let op = ruuviCloud.loadRecords(macId: macId, since: since, until: until)
         op.on(success: { [weak self] loadedRecords in
             guard let sSelf = self else { return }
-            guard !loadedRecords.isEmpty else {
+            guard !loadedRecords.isEmpty
+            else {
                 sSelf.state = .finished
                 return
             }
             let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
                 if record.luid == nil,
                    let macId = record.macId,
-                   let luid = sSelf.ruuviLocalIDs.luid(for: macId)
-                {
+                   let luid = sSelf.ruuviLocalIDs.luid(for: macId) {
                     record.with(luid: luid).any
                 } else {
                     record
