@@ -273,31 +273,31 @@ class AlertPersistenceUserDefaults: AlertPersistence {
 
     func remove(type: AlertType, for uuid: String) {
         switch type {
-        case let .temperature(lower, upper):
+        case .temperature:
             prefs.removeObject(forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: temperatureLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: temperatureUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
-        case let .relativeHumidity(lower, upper):
+        case .relativeHumidity:
             prefs.removeObject(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
-        case let .humidity(lower, upper):
+        case .humidity:
             prefs.removeObject(forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
-        case let .pressure(lower, upper):
+        case .pressure:
             prefs.removeObject(forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
-        case let .signal(lower, upper):
+        case .signal:
             prefs.removeObject(forKey: signalAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalLowerBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
@@ -305,12 +305,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
             prefs.removeObject(forKey: connectionAlertIsOnUDKeyPrefix + uuid)
-        case let .cloudConnection(unseenDuration):
+        case .cloudConnection:
             prefs.removeObject(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid)
             prefs.removeObject(forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
-        case let .movement(last):
+        case .movement:
             prefs.removeObject(forKey: movementAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: movementAlertCounterUDPrefix + uuid)
             prefs.removeObject(forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)

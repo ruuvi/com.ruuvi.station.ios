@@ -241,7 +241,7 @@ If you cannot see the Language option in the settings, make sure that you have a
 "LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
 "TagSettings.Alerts.Off" = "Отключено";
-"TagSettings.Alerts.Temperature.description" = "Уведомление если меньше %0.f или больше %0.f";
+"TagSettings.Alerts.Temperature.description" = "Уведомление если меньше %.0f или больше %.0f";
 "TagSettings.Label.alerts.text" = "Уведомления";
 "TagSettings.backgroundImageLabel.text" = "Фоновое изображение";
 "TagSettings.batteryVoltageTitleLabel.text" = "Напряжение Батареи";
@@ -559,8 +559,8 @@ If you cannot see the Language option in the settings, make sure that you have a
 "TagSettings.Alert.SetHumidity.title" = "Set humidity alert";
 "TagSettings.Alert.SetPressure.title" = "Set pressure alert";
 "TagSettings.Alert.SetRSSI.title" = "Set signal strength alert";
-"TagSettings.AlertSettings.Dialog.Min" = "Min (%0.f)";
-"TagSettings.AlertSettings.Dialog.Max" = "Max (%0.f)";
+"TagSettings.AlertSettings.Dialog.Min" = "Min (%.0f)";
+"TagSettings.AlertSettings.Dialog.Max" = "Max (%.0f)";
 "export_history" = "Выгрузить историю (csv)";
 "clear_view" = "Clear history view";
 "day_1" = "1 день";
@@ -573,12 +573,12 @@ If you cannot see the Language option in the settings, make sure that you have a
 "day_8" = "8 дней";
 "day_9" = "9 дней";
 "day_10" = "10 дней";
-"day_x" = "%0.f days";
+"day_x" = "%.0f days";
 "more" = "Больше...";
 "all" = "All";
 "longer_history_title" = "Longer history";
 "longer_history_message" = "Ruuvi Station mobile app supports maximum 10 days of history. Ruuvi Cloud subscribers are able to view up to 2 years of historical data using web app at ruuvi.com/station (requires Ruuvi Gateway router).";
-"reading_history_x" = "Bluetooth sync: %0.f";
+"reading_history_x" = "Bluetooth sync: %.0f";
 "rssi_alert_description" = "Using this alert requires you to be signed in to the app, and that you have claimed the ownership of this sensor and it's in the range of Ruuvi Gateway router. iOS devices are unable to indicate signal strength information of received data sent by Ruuvi sensor when sensor is paired and measurements are being received in the background. Realtime Bluetooth signal strength is shown in the app but doesn't affect this alert.";
 "bluetooth_download" = "Bluetooth download";
 "bluetooth_download_description" = "Local sensor data can be downloaded, when you're within its Bluetooth range.";

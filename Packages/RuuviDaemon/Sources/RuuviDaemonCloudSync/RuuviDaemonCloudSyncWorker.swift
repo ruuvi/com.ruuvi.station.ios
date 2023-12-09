@@ -1,5 +1,4 @@
 import Foundation
-import RuuviDaemon
 import RuuviLocal
 import RuuviService
 

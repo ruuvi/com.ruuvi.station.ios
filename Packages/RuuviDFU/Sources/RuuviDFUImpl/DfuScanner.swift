@@ -1,6 +1,5 @@
 import CoreBluetooth
 import Foundation
-import RuuviDFU
 import UIKit
 
 class DfuScanner: NSObject {

@@ -5,7 +5,6 @@ import Future
 import RealmSwift
 import RuuviContext
 import RuuviOntology
-import RuuviPersistence
 #if canImport(FirebaseCrashlytics) // TODO: @rinat eliminate
     import FirebaseCrashlytics
 #endif

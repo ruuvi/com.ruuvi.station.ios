@@ -263,8 +263,6 @@ extension RuuviOnboardViewController {
             cell?.delegate = self
             cell?.configure(with: viewModel)
             return cell
-        default:
-            return UICollectionViewCell()
         }
     }
 }

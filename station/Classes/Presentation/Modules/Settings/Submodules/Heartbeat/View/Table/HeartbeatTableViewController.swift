@@ -52,6 +52,7 @@ extension HeartbeatTableViewController {
         super.viewDidLoad()
         bindViewModel()
         updateUIComponent()
+        localize()
     }
 }
 

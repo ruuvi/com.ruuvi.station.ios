@@ -3,7 +3,6 @@ import Future
 import Humidity
 import RuuviLocal
 import RuuviOntology
-import RuuviService
 import RuuviStorage
 
 public final class RuuviServiceExportImpl: RuuviServiceExport {
@@ -113,7 +112,7 @@ extension RuuviServiceExportImpl {
                             pressure = toString(p, format: "%.2f")
                         }
 
-                        var rssi: String = if let rssiValue = log.rssi {
+                        let rssi: String = if let rssiValue = log.rssi {
                             "\(rssiValue)"
                         } else {
                             self.emptyValueString
@@ -131,13 +130,13 @@ extension RuuviServiceExportImpl {
                             self.emptyValueString
                         }
 
-                        var measurementSequenceNumber: String = if let msn = log.measurementSequenceNumber {
+                        let measurementSequenceNumber: String = if let msn = log.measurementSequenceNumber {
                             "\(msn)"
                         } else {
                             self.emptyValueString
                         }
 
-                        var txPower: String = if let tx = log.txPower {
+                        let txPower: String = if let tx = log.txPower {
                             "\(tx)"
                         } else {
                             self.emptyValueString

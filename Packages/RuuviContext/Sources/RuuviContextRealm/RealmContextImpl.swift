@@ -1,5 +1,4 @@
 import RealmSwift
-import RuuviContext
 
 class RealmContextImpl: RealmContext {
     var main: Realm = try! Realm()

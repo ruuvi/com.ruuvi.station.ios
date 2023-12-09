@@ -1,5 +1,4 @@
 import Future
-import RuuviLocal
 import RuuviOntology
 import UIKit
 

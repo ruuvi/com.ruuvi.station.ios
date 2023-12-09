@@ -109,6 +109,7 @@ extension SignInBenefitsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -194,6 +194,7 @@ class TagChartsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 
@@ -797,7 +798,7 @@ extension TagChartsViewController: TagChartsViewInput {
                 syncStatusLabel.text = RuuviLocalization.TagCharts.Status.serving
             case let .reading(points):
                 let format = RuuviLocalization.readingHistoryX
-                syncStatusLabel.text = String(format: format, Float(points))
+                syncStatusLabel.text = format(Float(points))
             case .disconnecting:
                 syncStatusLabel.text = RuuviLocalization.TagCharts.Status.disconnecting
             case .success:
@@ -1240,7 +1241,7 @@ private extension Int {
         case 10:
             RuuviLocalization.day10
         default:
-            String(format: RuuviLocalization.dayX, self)
+            RuuviLocalization.dayX(Float(self)) // TOOD: @rinat check
         }
     }
 }

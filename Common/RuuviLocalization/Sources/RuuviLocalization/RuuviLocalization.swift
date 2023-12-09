@@ -180,8 +180,10 @@ public enum RuuviLocalization {
   public static let day8 = RuuviLocalization.tr("Localizable", "day_8", fallback: "8 days")
   /// 9 days
   public static let day9 = RuuviLocalization.tr("Localizable", "day_9", fallback: "9 days")
-  /// %0.f days
-  public static let dayX = RuuviLocalization.tr("Localizable", "day_x", fallback: "%0.f days")
+  /// %.0f days
+  public static func dayX(_ p1: Float) -> String {
+    return RuuviLocalization.tr("Localizable", "day_x", p1, fallback: "%.0f days")
+  }
   /// dBm
   public static let dBm = RuuviLocalization.tr("Localizable", "dBm", fallback: "dBm")
   /// Are you sure?
@@ -349,8 +351,10 @@ public enum RuuviLocalization {
   public static let openSensorView = RuuviLocalization.tr("Localizable", "open_sensor_view", fallback: "Open sensor view")
   /// Owner's Ruuvi Plan
   public static let ownersPlan = RuuviLocalization.tr("Localizable", "owners_plan", fallback: "Owner's Ruuvi Plan")
-  /// Reading Bluetooth: %0.f
-  public static let readingHistoryX = RuuviLocalization.tr("Localizable", "reading_history_x", fallback: "Reading Bluetooth: %0.f")
+  /// Reading Bluetooth: %.0f
+  public static func readingHistoryX(_ p1: Float) -> String {
+    return RuuviLocalization.tr("Localizable", "reading_history_x", p1, fallback: "Reading Bluetooth: %.0f")
+  }
   /// Remove
   public static let remove = RuuviLocalization.tr("Localizable", "Remove", fallback: "Remove")
   /// By removing the sensor, your sensor ownership status will be revoked and sensor settings, such as name, background image, calibration settings and alert settings will be removed. After removal, someone else can claim ownership of the sensor. Each Ruuvi sensor can have only one owner.
@@ -1920,10 +1924,14 @@ public enum RuuviLocalization {
     }
     public enum AlertSettings {
       public enum Dialog {
-        /// Max (%0.f)
-        public static let max = RuuviLocalization.tr("Localizable", "TagSettings.AlertSettings.Dialog.Max", fallback: "Max (%0.f)")
-        /// Min (%0.f)
-        public static let min = RuuviLocalization.tr("Localizable", "TagSettings.AlertSettings.Dialog.Min", fallback: "Min (%0.f)")
+        /// Max (%.0f)
+        public static func max(_ p1: Float) -> String {
+          return RuuviLocalization.tr("Localizable", "TagSettings.AlertSettings.Dialog.Max", p1, fallback: "Max (%.0f)")
+        }
+        /// Min (%.0f)
+        public static func min(_ p1: Float) -> String {
+          return RuuviLocalization.tr("Localizable", "TagSettings.AlertSettings.Dialog.Min", p1, fallback: "Min (%.0f)")
+        }
       }
     }
     public enum Alerts {
@@ -1956,8 +1964,10 @@ public enum RuuviLocalization {
         }
       }
       public enum Temperature {
-        /// Alert when less than %0.f or more than %0.f
-        public static let description = RuuviLocalization.tr("Localizable", "TagSettings.Alerts.Temperature.description", fallback: "Alert when less than %0.f or more than %0.f")
+        /// Alert when less than %.0f or more than %.0f
+        public static func description(_ p1: Float, _ p2: Float) -> String {
+          return RuuviLocalization.tr("Localizable", "TagSettings.Alerts.Temperature.description", p1, p2, fallback: "Alert when less than %.0f or more than %.0f")
+        }
       }
     }
     public enum AlertsAreDisabled {

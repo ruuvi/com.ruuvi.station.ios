@@ -52,6 +52,7 @@ class ShareViewController: UITableViewController {
         super.viewDidLoad()
         configureTableView()
         setupCustomBackButton()
+        localize()
         output.viewDidLoad()
     }
 

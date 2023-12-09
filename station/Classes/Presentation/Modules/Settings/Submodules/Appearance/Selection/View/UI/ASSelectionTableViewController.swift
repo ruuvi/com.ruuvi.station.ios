@@ -28,6 +28,7 @@ extension ASSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 }

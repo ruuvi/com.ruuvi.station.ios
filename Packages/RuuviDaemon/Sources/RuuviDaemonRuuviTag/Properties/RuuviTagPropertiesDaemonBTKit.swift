@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import RuuviDaemon
 import RuuviLocal
 import RuuviOntology
 import RuuviPersistence
@@ -166,7 +165,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                         .with(isOwner: true)
                 ).on(success: { [weak self] _ in
                     self?.realmPersistence.readAll(pair.device.uuid).on(success: { realmRecords in
-                        var records = realmRecords.map { $0.with(macId: mac.mac) }
+                        let records = realmRecords.map { $0.with(macId: mac.mac) }
                         self?.sqiltePersistence.create(records).on(success: { _ in
                             self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
                                 self?.idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)

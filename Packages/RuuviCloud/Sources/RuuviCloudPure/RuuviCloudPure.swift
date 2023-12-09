@@ -2,13 +2,9 @@ import BTKit
 // swiftlint:disable file_length
 import Foundation
 import Future
-import RuuviCloud
 import RuuviOntology
 import RuuviPool
 import RuuviUser
-#if canImport(RuuviCloudApi)
-    import RuuviCloudApi
-#endif
 
 // swiftlint:disable:next type_body_length
 public final class RuuviCloudPure: RuuviCloud {

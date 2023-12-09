@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RuuviOntology
 
 public struct SensorSettingsSQLite: SensorSettings {
     public var luid: LocalIdentifier?

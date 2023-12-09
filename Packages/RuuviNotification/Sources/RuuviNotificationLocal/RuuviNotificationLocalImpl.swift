@@ -1,6 +1,5 @@
 import Foundation
 import RuuviLocal
-import RuuviNotification
 import RuuviOntology
 import RuuviService
 import RuuviStorage
@@ -87,17 +86,12 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     }
 
     private func id(for uuid: String) -> String {
-        var id: String = if let macId = idPersistence.mac(for: uuid.luid) {
-            macId.value
-        } else {
-            uuid
-        }
-        return id
+        idPersistence.mac(for: uuid.luid)?.value ?? uuid
     }
 
     public func showDidConnect(uuid: String, title: String) {
         var needsToShow: Bool
-        var cache: [String: Date] = connectAlerts
+        let cache: [String: Date] = connectAlerts
 
         if let shownDate = cache[uuid] {
             var intervalPassed = true
@@ -145,7 +139,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public func showDidDisconnect(uuid: String, title: String) {
         var needsToShow: Bool
-        var cache: [String: Date] = disconnectAlerts
+        let cache: [String: Date] = disconnectAlerts
 
         if let shownDate = cache[uuid] {
             var intervalPassed = true
@@ -193,7 +187,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public func notifyDidMove(for uuid: String, counter _: Int, title: String) {
         var needsToShow: Bool
-        var cache: [String: Date] = movementAlerts
+        let cache: [String: Date] = movementAlerts
 
         if let shownDate = cache[uuid] {
             var intervalPassed = true
@@ -252,7 +246,7 @@ public extension RuuviNotificationLocalImpl {
         title: String
     ) {
         var needsToShow: Bool
-        var cache: [String: Date] = switch reason {
+        let cache: [String: Date] = switch reason {
         case .low:
             switch type {
             case .temperature:
@@ -512,7 +506,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         willPresent _: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.alert, .badge, .sound])
+        completionHandler([.banner, .list, .badge, .sound])
     }
 
     // swiftlint:disable:next function_body_length

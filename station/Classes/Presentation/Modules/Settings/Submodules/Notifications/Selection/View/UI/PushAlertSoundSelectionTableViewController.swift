@@ -38,6 +38,7 @@ extension PushAlertSoundSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 }

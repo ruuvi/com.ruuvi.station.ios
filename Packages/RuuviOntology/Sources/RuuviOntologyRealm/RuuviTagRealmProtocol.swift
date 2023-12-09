@@ -1,6 +1,5 @@
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 public protocol RuuviTagRealmProtocol: Object {
     var uuid: String { get set }

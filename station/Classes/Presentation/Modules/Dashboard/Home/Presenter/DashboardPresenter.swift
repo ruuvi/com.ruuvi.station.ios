@@ -1746,7 +1746,7 @@ extension DashboardPresenter {
         for uuid: String,
         viewModel: CardsViewModel
     ) {
-        var observable: Observable<Date?> = switch type {
+        let observable: Observable<Date?> = switch type {
         case .temperature:
             viewModel.temperatureAlertMutedTill
         case .relativeHumidity:
@@ -1776,7 +1776,7 @@ extension DashboardPresenter {
         for uuid: String,
         viewModel: CardsViewModel
     ) {
-        var observable: Observable<Bool?> = switch type {
+        let observable: Observable<Bool?> = switch type {
         case .temperature:
             viewModel.isTemperatureAlertOn
         case .relativeHumidity:

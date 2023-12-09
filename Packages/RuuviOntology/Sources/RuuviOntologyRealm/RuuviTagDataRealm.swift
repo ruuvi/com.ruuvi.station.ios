@@ -1,7 +1,6 @@
 import BTKit
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 public final class RuuviTagDataRealm: Object {
     @objc public dynamic var ruuviTag: RuuviTagRealm?

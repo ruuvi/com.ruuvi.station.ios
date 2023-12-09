@@ -1,5 +1,4 @@
 import Foundation
-import RuuviLocal
 import RuuviOntology
 
 final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {

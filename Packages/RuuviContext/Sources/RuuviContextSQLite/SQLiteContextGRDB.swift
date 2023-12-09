@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RuuviContext
 import RuuviOntology
 #if canImport(RuuviOntologySQLite)
     import RuuviOntologySQLite

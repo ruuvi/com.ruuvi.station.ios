@@ -396,6 +396,7 @@ class TagSettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 
@@ -1865,42 +1866,15 @@ extension TagSettingsViewController {
         max: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min, let max {
-            return attributedString(from: String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                min,
-                max
-            ))
+            return attributedString(from: format(Float(min), Float(max)))
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
            let l = viewModel?.temperatureLowerBound.value?.converted(to: tu),
            let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
-            if l.value.decimalPoint > 0 {
-                let decimalPointToConsider = l.value.decimalPoint > 2 ? 2 : l.value.decimalPoint
-                format = format.replacingFirstOccurrence(
-                    of: "%0.f",
-                    with: "%0.\(decimalPointToConsider)f"
-                )
-            }
-
-            if u.value.decimalPoint > 0 {
-                let decimalPointToConsider = u.value.decimalPoint > 2 ? 2 : u.value.decimalPoint
-                format = format.replacingLastOccurrence(
-                    of: "%0.f",
-                    with: "%0.\(decimalPointToConsider)f"
-                )
-            }
-
-            let message = String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                l.value.round(to: 2),
-                u.value.round(to: 2)
-            )
-            return attributedString(from: message)
+            return attributedString(from: format(Float(l.value.round(to: 2)), Float(u.value.round(to: 2))))
         } else {
             return nil
         }
@@ -1948,31 +1922,15 @@ extension TagSettingsViewController {
         max: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min, let max {
-            return attributedString(from: String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                min,
-                max
-            ))
+            return attributedString(from: format(Float(min), Float(max)))
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
            let u = viewModel?.relativeHumidityUpperBound.value {
-            if l.decimalPoint > 0 {
-                let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
-            }
-
-            if u.decimalPoint > 0 {
-                let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
-            }
-            let message = String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                l.round(to: 2),
-                u.round(to: 2)
+            let message = format(
+                Float(l.round(to: 2)),
+                Float(u.round(to: 2))
             )
             return attributedString(from: message)
         } else {
@@ -2014,15 +1972,12 @@ extension TagSettingsViewController {
         maxValue: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        var format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
 
         if let minValue, let maxValue {
-            return attributedString(from: String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                minValue,
-                maxValue
-            ))
+            return attributedString(
+                from: format(Float(minValue), Float(maxValue))
+            )
         }
 
         if let pu = viewModel?.pressureUnit.value,
@@ -2036,20 +1991,9 @@ extension TagSettingsViewController {
                 min(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
-            if l.decimalPoint > 0 {
-                let decimalPointToConsider = l.decimalPoint > 2 ? 2 : l.decimalPoint
-                format = format.replacingFirstOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
-            }
-
-            if u.decimalPoint > 0 {
-                let decimalPointToConsider = u.decimalPoint > 2 ? 2 : u.decimalPoint
-                format = format.replacingLastOccurrence(of: "%0.f", with: "%0.\(decimalPointToConsider)f")
-            }
-            let message = String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                l.round(to: 2),
-                u.round(to: 2)
+            let message = format(
+                Float(l.round(to: 2)),
+                Float(u.round(to: 2))
             )
             return attributedString(from: message)
         } else {
@@ -2110,21 +2054,16 @@ extension TagSettingsViewController {
         let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
 
         if let min, let max {
-            return attributedString(from: String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                min,
-                max
-            ))
+            return attributedString(
+                from: format(Float(min), Float(max))
+            )
         }
 
         if let lower = viewModel?.signalLowerBound.value,
            let upper = viewModel?.signalUpperBound.value {
-            let message = String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                lower,
-                upper
+            let message = format(
+                Float(lower),
+                Float(upper)
             )
             return attributedString(from: message)
         } else {
@@ -3788,10 +3727,8 @@ extension TagSettingsViewController {
             guard let self else { return }
             alertTextField.delegate = self
             let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.min
-            alertTextField.placeholder = String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                minimumBound
+            alertTextField.placeholder = format(
+                Float(minimumBound)
             )
             alertTextField.keyboardType = .decimalPad
             alertMinRangeTextField = alertTextField
@@ -3807,10 +3744,8 @@ extension TagSettingsViewController {
             guard let self else { return }
             alertTextField.delegate = self
             let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.max
-            alertTextField.placeholder = String(
-                format: format,
-                locale: Locale.autoupdatingCurrent,
-                maximumBound
+            alertTextField.placeholder = format(
+                Float(maximumBound)
             )
             alertTextField.keyboardType = .decimalPad
             alertMaxRangeTextField = alertTextField

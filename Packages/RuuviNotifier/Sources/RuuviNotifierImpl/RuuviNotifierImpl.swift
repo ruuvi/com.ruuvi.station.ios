@@ -1,7 +1,6 @@
 import Foundation
 import RuuviLocal
 import RuuviNotification
-import RuuviNotifier
 import RuuviOntology
 import RuuviService
 

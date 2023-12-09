@@ -80,6 +80,7 @@ extension SensorRemovalViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output?.viewDidLoad()
     }
 }

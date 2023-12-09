@@ -3,7 +3,6 @@ import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
-import RuuviService
 
 public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
     private let pool: RuuviPool

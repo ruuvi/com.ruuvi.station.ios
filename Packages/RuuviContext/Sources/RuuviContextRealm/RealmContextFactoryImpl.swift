@@ -1,5 +1,3 @@
-import RuuviContext
-
 public final class RealmContextFactoryImpl: RealmContextFactory {
     public init() {}
 

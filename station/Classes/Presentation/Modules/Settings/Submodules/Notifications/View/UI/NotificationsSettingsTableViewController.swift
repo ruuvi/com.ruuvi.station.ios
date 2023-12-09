@@ -30,6 +30,7 @@ extension NotificationsSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output?.viewDidLoad()
     }
 }

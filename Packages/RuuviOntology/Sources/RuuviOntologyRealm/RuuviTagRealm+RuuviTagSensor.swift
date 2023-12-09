@@ -1,6 +1,5 @@
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 extension RuuviTagRealm: RuuviTagSensor {
     public var luid: LocalIdentifier? {

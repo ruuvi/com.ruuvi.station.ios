@@ -3,7 +3,6 @@ import RuuviCloud
 import RuuviLocal
 import RuuviOntology
 import RuuviRepository
-import RuuviService
 
 final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
     var sensor: RuuviTagSensor

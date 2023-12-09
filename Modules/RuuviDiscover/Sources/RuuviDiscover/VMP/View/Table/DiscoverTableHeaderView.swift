@@ -15,13 +15,7 @@ class DiscoverTableHeaderView: UIView {
     }
 
     private var isBluetoothPermissionGranted: Bool {
-        if #available(iOS 13.1, *) {
-            return CBCentralManager.authorization == .allowedAlways
-        } else if #available(iOS 13.0, *) {
-            return CBCentralManager().authorization == .allowedAlways
-        }
-        // Before iOS 13, Bluetooth permissions are not required
-        return true
+        CBCentralManager.authorization == .allowedAlways
     }
 
     private let addSensorDescriptionKey: String = "add_sensor_description"

@@ -1,5 +1,4 @@
 import Foundation
-import RuuviUser
 import WidgetKit
 
 final class RuuviUserCoordinator: RuuviUser {

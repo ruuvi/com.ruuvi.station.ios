@@ -1,5 +1,4 @@
 import Foundation
-import RuuviContext
 
 public final class SQLiteContextFactoryGRDB: SQLiteContextFactory {
     public init() {}

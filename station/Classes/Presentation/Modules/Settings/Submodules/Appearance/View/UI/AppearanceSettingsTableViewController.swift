@@ -28,6 +28,7 @@ extension AppearanceSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 }

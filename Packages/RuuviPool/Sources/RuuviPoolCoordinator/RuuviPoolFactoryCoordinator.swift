@@ -1,7 +1,6 @@
 import Foundation
 import RuuviLocal
 import RuuviPersistence
-import RuuviPool
 
 public final class RuuviPoolFactoryCoordinator: RuuviPoolFactory {
     public init() {}

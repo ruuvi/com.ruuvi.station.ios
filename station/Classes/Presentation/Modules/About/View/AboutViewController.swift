@@ -41,6 +41,7 @@ extension AboutViewController {
         super.viewDidLoad()
         configureViews()
         setUpChangelogTapGesture()
+        localize()
         output.viewDidLoad()
     }
 

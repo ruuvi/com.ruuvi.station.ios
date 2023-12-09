@@ -3,7 +3,6 @@ import Future
 import RuuviCloud
 import RuuviOntology
 import RuuviPool
-import RuuviService
 
 public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration {
     private let cloud: RuuviCloud

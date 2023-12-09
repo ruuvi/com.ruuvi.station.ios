@@ -1,10 +1,6 @@
 import Foundation
-import RuuviCloud
 import RuuviPool
 import RuuviUser
-#if canImport(RuuviCloudApi)
-    import RuuviCloudApi
-#endif
 public final class RuuviCloudFactoryPure: RuuviCloudFactory {
     public init() {}
 

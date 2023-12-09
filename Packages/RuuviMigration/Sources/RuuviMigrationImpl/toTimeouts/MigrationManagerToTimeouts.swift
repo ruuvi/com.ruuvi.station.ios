@@ -1,6 +1,5 @@
 import Foundation
 import RuuviLocal
-import RuuviMigration
 
 final class MigrationManagerToTimeouts: RuuviMigration {
     private var settings: RuuviLocalSettings

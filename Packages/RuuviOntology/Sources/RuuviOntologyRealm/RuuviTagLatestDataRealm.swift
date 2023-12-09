@@ -1,7 +1,6 @@
 import BTKit
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 public final class RuuviTagLatestDataRealm: Object {
     @objc public dynamic var uuid: String = ""

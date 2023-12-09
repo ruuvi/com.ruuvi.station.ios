@@ -1,7 +1,6 @@
 import Foundation
 import Humidity
 import RealmSwift
-import RuuviOntology
 
 public extension RuuviTagLatestDataRealm {
     var unitTemperature: Temperature? {

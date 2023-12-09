@@ -3,7 +3,6 @@ import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
-import RuuviService
 
 public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     private let cloud: RuuviCloud

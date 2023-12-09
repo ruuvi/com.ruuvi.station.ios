@@ -846,7 +846,7 @@ extension TagChartsViewPresenter {
         var value: Double?
         switch type {
         case .temperature:
-            var temp: Temperature?
+            let temp: Temperature?
                 // Backword compatibility for the users who used earlier versions than 0.7.7
                 // 1: If local record has temperature offset added, calculate and get original temp data
                 // 2: Apply current sensor settings
@@ -859,7 +859,7 @@ extension TagChartsViewPresenter {
             }
             value = measurementService.double(for: temp) ?? 0
         case .humidity:
-            var humidity: Humidity?
+            let humidity: Humidity?
                 // Backword compatibility for the users who used earlier versions than 0.7.7
                 // 1: If local record has humidity offset added, calculate and get original humidity data
                 // 2: Apply current sensor settings
@@ -876,7 +876,7 @@ extension TagChartsViewPresenter {
                 isDecimal: false
             )
         case .pressure:
-            var pressure: Pressure?
+            let pressure: Pressure?
                 // Backword compatibility for the users who used earlier versions than 0.7.7
                 // 1: If local record has pressure offset added, calculate and get original pressure data
                 // 2: Apply current sensor settings

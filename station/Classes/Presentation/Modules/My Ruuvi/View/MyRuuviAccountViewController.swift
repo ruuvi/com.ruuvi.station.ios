@@ -20,6 +20,7 @@ class MyRuuviAccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        localize()
         output.viewDidLoad()
     }
 
