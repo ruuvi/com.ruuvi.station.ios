@@ -94,7 +94,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
         originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))\(RuuviLocalization.humidityRelativeUnit)"
+                label.text = "\((value.bound * 100).round(to: 2))%)"
             case .pressure:
                 label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
                                                              allowSettings: false)
@@ -125,7 +125,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
         correctedValueLabel.bind(viewModel.correctedValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))\(RuuviLocalization.humidityRelativeUnit)"
+                label.text = "\((value.bound * 100).round(to: 2))%"
             case .pressure:
                 label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals),
                                                              allowSettings: false)
@@ -168,7 +168,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         var message = ""
         switch self.viewModel.type {
         case .humidity:
-            message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterHumidity(RuuviLocalization.humidityRelativeUnit)
+            message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterHumidity("%")
         case .pressure:
             let format = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterPressure
             let unit = self.viewModel.pressureUnit.value ?? .hectopascals

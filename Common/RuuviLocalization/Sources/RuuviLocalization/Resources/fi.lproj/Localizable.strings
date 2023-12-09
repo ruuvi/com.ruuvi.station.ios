@@ -280,7 +280,6 @@ Mikäli et näe Kieli-valintaa asetuksissa, varmista, että sinulla on vähintä
 "HumidityUnit.gm3.title" = "Absoluuttinen (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Suhteellinen (%)";
-"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "MAC-osoite";
 "Menu.Label.AboutHelp.text" = "Tietoa / Apua";
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";

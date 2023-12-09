@@ -280,7 +280,6 @@ If you cannot see the Language option in the settings, make sure that you have a
 "HumidityUnit.gm3.title" = "Абсолютная влажность (г/м³)";
 "g/m³" = "г/м³";
 "HumidityUnit.Percent.title" = "Относительная влажность (%)";
-"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "MAC адрес";
 "Menu.Label.AboutHelp.text" = "О Приложении";
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";

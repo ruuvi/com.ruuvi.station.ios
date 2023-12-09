@@ -279,7 +279,6 @@
 "HumidityUnit.gm3.title" = "Absolue (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relative (%)";
-"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "Adresse MAC";
 "Menu.Label.AboutHelp.text" = "Infos/Aide";
 "Menu.Label.AddAnNewSensor.text" = "Ajouter un capteur";

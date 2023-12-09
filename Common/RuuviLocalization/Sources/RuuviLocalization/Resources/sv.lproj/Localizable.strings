@@ -280,7 +280,6 @@ Om du inte kan se språkalternativet i inställningarna, se till att du har lagt
 "HumidityUnit.gm3.title" = "Absolut (g/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relativ (%)";
-"humidity_relative_unit" = "%";
 "TagSettings.Mac.Alert.title" = "MAC Adress";
 "Menu.Label.AboutHelp.text" = "Om / Hjälp";
 "Menu.Label.AddAnNewSensor.text" = "Lägg till en ny Sensor";

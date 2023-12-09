@@ -251,8 +251,6 @@ public enum RuuviLocalization {
   public static let hours = RuuviLocalization.tr("Localizable", "hours", fallback: "Hours")
   /// hPa
   public static let hPa = RuuviLocalization.tr("Localizable", "hPa", fallback: "hPa")
-  /// %
-  public static let humidityRelativeUnit = RuuviLocalization.tr("Localizable", "humidity_relative_unit", fallback: "%")
   /// Image cards
   public static let imageCards = RuuviLocalization.tr("Localizable", "image_cards", fallback: "Image cards")
   /// Internet connection problem

@@ -17,7 +17,7 @@ extension HumidityUnit: SelectionItemProtocol {
     var symbol: String {
         switch self {
         case .percent:
-            return RuuviLocalization.humidityRelativeUnit
+            return "%"
         case .gm3:
             return RuuviLocalization.gm³
         default:
