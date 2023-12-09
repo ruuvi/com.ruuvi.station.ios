@@ -294,27 +294,6 @@ extension TagChartsViewPresenter: TagChartsViewInteractorOutput {
         ruuviTagData = interactor.ruuviTagData
         self.createChartData()
     }
-
-    func interactorDidSyncComplete(_ recordsCount: Int) {
-        let okAction = UIAlertAction(title: RuuviLocalization.ok,
-                                     style: .default,
-                                     handler: nil)
-        let title, message: String
-        if recordsCount > 0 {
-            title = RuuviLocalization.TagCharts.Status.success
-            message = RuuviLocalization.TagChartsPresenter.numberOfPointsSynchronizedOverNetwork(String(recordsCount))
-        } else {
-            title = "TagChartsPresenter.NetworkSync" // TODO: @rinat localize
-            message = "TagChartsPresenter.NoNewMeasurementsFromNetwork" // TODO: @rinat localize
-        }
-
-        let alertViewModel: AlertViewModel = AlertViewModel(
-            title: title,
-            message: message,
-            style: .alert,
-            actions: [okAction])
-        alertPresenter.showAlert(alertViewModel)
-    }
 }
 
 // MARK: - RuuviNotifierObserver
