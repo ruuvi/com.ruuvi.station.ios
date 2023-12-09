@@ -22,6 +22,7 @@ targets:
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
         Debug:
           CODE_SIGN_STYLE: Automatic
+          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
         Release:
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
