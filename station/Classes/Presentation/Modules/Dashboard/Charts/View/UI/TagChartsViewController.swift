@@ -441,7 +441,32 @@ class TagChartsViewController: UIViewController {
         }
 
         for day in minimumHistoryLimit...maximumHistoryLimit {
-            let action = UIAction(title: "day_\(day)") { // TODO: @rinat localize
+            let title: String
+            switch day {
+            case 1:
+                title = RuuviLocalization.day1
+            case 2:
+                title = RuuviLocalization.day2
+            case 3:
+                title = RuuviLocalization.day3
+            case 4:
+                title = RuuviLocalization.day4
+            case 5:
+                title = RuuviLocalization.day5
+            case 6:
+                title = RuuviLocalization.day6
+            case 7:
+                title = RuuviLocalization.day7
+            case 8:
+                title = RuuviLocalization.day8
+            case 9:
+                title = RuuviLocalization.day9
+            case 10:
+                title = RuuviLocalization.day10
+            default:
+                title = String(format: RuuviLocalization.dayX, historyLengthInDay)
+            }
+            let action = UIAction(title: title) {
                 [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: day*24)
             }
