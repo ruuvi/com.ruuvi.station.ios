@@ -45,35 +45,35 @@ private extension RuuviCloudApiErrorCode {
         case .erThrottled:
             return RuuviLocalization.UserApiError.erThrottled
         case .erGatewayNotFound:
-            return "Gateway not found" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erGatewayNotFound
         case .erGatewayAlreadyWhitelisted:
-            return "Gateway already whitelisted" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erGatewayAlreadyWhitelisted
         case .erGatewayStatusReportFailed:
-            return "Gateway status report failed" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erGatewayStatusReportFailed
         case .erConflict:
-            return "Conflict" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erConflict
         case .erSubscriptionNotFound:
             return RuuviLocalization.UserApiError.erSubscriptionNotFound
         case .erShareCountReached:
             return RuuviLocalization.UserApiError.erShareCountReached
         case .erClaimCountReached:
-            return "Maximum claim count for the user reached" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erClaimCountReached
         case .erSensorShareCountReached:
-            return "Maximum share count for the sensor reached" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erSensorShareCountReached
         case .erNoDataToShare:
-            return "No data to share" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erNoDataToShare
         case .erSensorAlreadyShared:
             return RuuviLocalization.UserApiError.erSensorAlreadyShared
         case .erSensorAlreadyClaimed:
-            return RuuviLocalization.UserApiError.erSensorAlreadyClaimed("") // TODO: @rinat check
+            return RuuviLocalization.UserApiError.erSensorAlreadyClaimed("")
         case .erSensorAlreadyRegistered:
-            return "Sensor already registered" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erSensorAlreadyRegistered
         case .erUnableToSendEmail:
             return RuuviLocalization.UserApiError.erUnableToSendEmail
         case .erSubscriptionCodeExists:
-            return "Subscription code exists" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erSubscriptionCodeExists
         case .erSubscriptionCodeUsed:
-            return "Subscription code used" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erSubscriptionCodeUsed
         case .erMissingArgument:
             return RuuviLocalization.UserApiError.erMissingArgument
         case .erInvalidDensityMode:
@@ -83,19 +83,19 @@ private extension RuuviCloudApiErrorCode {
         case .erInvalidTimeRange:
             return RuuviLocalization.UserApiError.erInvalidTimeRange
         case .erOldEntry:
-            return "Old entry" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erOldEntry
         case .erInvalidEmailAddress:
             return RuuviLocalization.UserApiError.erInvalidEmailAddress
         case .erInvalidMacAddress:
             return RuuviLocalization.UserApiError.erInvalidMacAddress
         case .erInvalidEnumValue:
-            return "Invalid enum value" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.erInvalidEnumValue
         case .erSubDataStorageError:
             return RuuviLocalization.UserApiError.erSubDataStorageError
         case .erSubNoUser:
             return RuuviLocalization.UserApiError.erSubNoUser
         case .ok:
-            return "Ok" // TODO: @rinat localize
+            return RuuviLocalization.UserApiError.ok
         }
     }
 }

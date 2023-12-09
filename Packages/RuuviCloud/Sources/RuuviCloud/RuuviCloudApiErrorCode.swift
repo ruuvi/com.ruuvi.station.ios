@@ -22,7 +22,7 @@ public enum RuuviCloudApiErrorCode: String, Codable {
     // Gateway already whitelisted
     // swiftlint:disable:next inclusive_language
     case erGatewayAlreadyWhitelisted = "ER_GATEWAY_ALREADY_WHITELISTED"
-    // Gateway already whitelisted
+    // Gateway status report failed
     case erGatewayStatusReportFailed = "ER_GATEWAY_STATUS_REPORT_FAILED"
     // Data already exists, cannot update
     case erConflict = "ER_CONFLICT"

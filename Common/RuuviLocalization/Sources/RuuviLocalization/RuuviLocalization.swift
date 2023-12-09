@@ -2366,14 +2366,26 @@ public enum RuuviLocalization {
     }
   }
   public enum UserApiError {
+    /// Maximum claim count for the user reached
+    public static let erClaimCountReached = RuuviLocalization.tr("Localizable", "UserApiError.ER_CLAIM_COUNT_REACHED", fallback: "Maximum claim count for the user reached")
+    /// Data already exists, cannot update
+    public static let erConflict = RuuviLocalization.tr("Localizable", "UserApiError.ER_CONFLICT", fallback: "Data already exists, cannot update")
     /// Forbidden
     public static let erForbidden = RuuviLocalization.tr("Localizable", "UserApiError.ER_FORBIDDEN", fallback: "Forbidden")
+    /// Gateway already whitelisted
+    public static let erGatewayAlreadyWhitelisted = RuuviLocalization.tr("Localizable", "UserApiError.ER_GATEWAY_ALREADY_WHITELISTED", fallback: "Gateway already whitelisted")
+    /// Gateway not found
+    public static let erGatewayNotFound = RuuviLocalization.tr("Localizable", "UserApiError.ER_GATEWAY_NOT_FOUND", fallback: "Gateway not found")
+    /// Gateway status report failed
+    public static let erGatewayStatusReportFailed = RuuviLocalization.tr("Localizable", "UserApiError.ER_GATEWAY_STATUS_REPORT_FAILED", fallback: "Gateway status report failed")
     /// Internal error
     public static let erInternal = RuuviLocalization.tr("Localizable", "UserApiError.ER_INTERNAL", fallback: "Internal error")
     /// Invalid density mode
     public static let erInvalidDensityMode = RuuviLocalization.tr("Localizable", "UserApiError.ER_INVALID_DENSITY_MODE", fallback: "Invalid density mode")
     /// Invalid email address
     public static let erInvalidEmailAddress = RuuviLocalization.tr("Localizable", "UserApiError.ER_INVALID_EMAIL_ADDRESS", fallback: "Invalid email address")
+    /// Invalid ENUM value given
+    public static let erInvalidEnumValue = RuuviLocalization.tr("Localizable", "UserApiError.ER_INVALID_ENUM_VALUE", fallback: "Invalid ENUM value given")
     /// Invalid request format
     public static let erInvalidFormat = RuuviLocalization.tr("Localizable", "UserApiError.ER_INVALID_FORMAT", fallback: "Invalid request format")
     /// Invalid MAC-address
@@ -2384,26 +2396,34 @@ public enum RuuviLocalization {
     public static let erInvalidTimeRange = RuuviLocalization.tr("Localizable", "UserApiError.ER_INVALID_TIME_RANGE", fallback: "Invalid time range")
     /// Missing argument
     public static let erMissingArgument = RuuviLocalization.tr("Localizable", "UserApiError.ER_MISSING_ARGUMENT", fallback: "Missing argument")
-    /// In order to share the sensor, you need to have a Ruuvi Gateway router nearby the sensor
-    public static let erNoDataToShare = RuuviLocalization.tr("Localizable", "UserApiError.ER_NO_DATA_TO_SHARE", fallback: "In order to share the sensor, you need to have a Ruuvi Gateway router nearby the sensor")
+    /// In order to share a sensor, it must have data
+    public static let erNoDataToShare = RuuviLocalization.tr("Localizable", "UserApiError.ER_NO_DATA_TO_SHARE", fallback: "In order to share a sensor, it must have data")
+    /// Newer data already exists, cannot update
+    public static let erOldEntry = RuuviLocalization.tr("Localizable", "UserApiError.ER_OLD_ENTRY", fallback: "Newer data already exists, cannot update")
     /// Sensor already claimed by %@
     public static func erSensorAlreadyClaimed(_ p1: Any) -> String {
       return RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_ALREADY_CLAIMED", String(describing: p1), fallback: "Sensor already claimed by %@")
     }
     /// Sensor already claimed
     public static let erSensorAlreadyClaimedNoEmail = RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_ALREADY_CLAIMED_NO_EMAIL", fallback: "Sensor already claimed")
+    /// The sensor has already been registered
+    public static let erSensorAlreadyRegistered = RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_ALREADY_REGISTERED", fallback: "The sensor has already been registered")
     /// This sensor is already shared
     public static let erSensorAlreadyShared = RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_ALREADY_SHARED", fallback: "This sensor is already shared")
     /// Sensor not found
     public static let erSensorNotFound = RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_NOT_FOUND", fallback: "Sensor not found")
-    /// Sensor share limit is reached
-    public static let erSensorShareCountReached = RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED", fallback: "Sensor share limit is reached")
+    /// Maximum share count for the sensor reached
+    public static let erSensorShareCountReached = RuuviLocalization.tr("Localizable", "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED", fallback: "Maximum share count for the sensor reached")
     /// The share limit is reached
     public static let erShareCountReached = RuuviLocalization.tr("Localizable", "UserApiError.ER_SHARE_COUNT_REACHED", fallback: "The share limit is reached")
     /// Data storage error
     public static let erSubDataStorageError = RuuviLocalization.tr("Localizable", "UserApiError.ER_SUB_DATA_STORAGE_ERROR", fallback: "Data storage error")
     /// No user
     public static let erSubNoUser = RuuviLocalization.tr("Localizable", "UserApiError.ER_SUB_NO_USER", fallback: "No user")
+    /// Tried to add duplicate subscription to a code
+    public static let erSubscriptionCodeExists = RuuviLocalization.tr("Localizable", "UserApiError.ER_SUBSCRIPTION_CODE_EXISTS", fallback: "Tried to add duplicate subscription to a code")
+    /// Tried to claim already used code
+    public static let erSubscriptionCodeUsed = RuuviLocalization.tr("Localizable", "UserApiError.ER_SUBSCRIPTION_CODE_USED", fallback: "Tried to claim already used code")
     /// Subscription is not found
     public static let erSubscriptionNotFound = RuuviLocalization.tr("Localizable", "UserApiError.ER_SUBSCRIPTION_NOT_FOUND", fallback: "Subscription is not found")
     /// Too many requests
@@ -2416,6 +2436,8 @@ public enum RuuviLocalization {
     public static let erUnauthorized = RuuviLocalization.tr("Localizable", "UserApiError.ER_UNAUTHORIZED", fallback: "Unauthorised")
     /// User not found
     public static let erUserNotFound = RuuviLocalization.tr("Localizable", "UserApiError.ER_USER_NOT_FOUND", fallback: "User not found")
+    /// Operation was successful
+    public static let ok = RuuviLocalization.tr("Localizable", "UserApiError.OK", fallback: "Operation was successful")
   }
   public enum WebTagLocationSource {
     /// Your location
