@@ -39,7 +39,6 @@ extension HeartbeatViewController: HeartbeatViewInput {
 extension HeartbeatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
     }
 

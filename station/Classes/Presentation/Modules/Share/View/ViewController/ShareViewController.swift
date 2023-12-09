@@ -52,7 +52,6 @@ class ShareViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        setupLocalization()
         setupCustomBackButton()
         output.viewDidLoad()
     }

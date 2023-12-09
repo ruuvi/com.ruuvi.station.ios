@@ -25,7 +25,6 @@ class ASSelectionTableViewController: UITableViewController {
 extension ASSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }

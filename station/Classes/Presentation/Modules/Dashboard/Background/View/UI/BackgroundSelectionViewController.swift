@@ -51,7 +51,6 @@ extension BackgroundSelectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
-        setupLocalization()
         bindViewModel()
         output.viewDidLoad()
     }

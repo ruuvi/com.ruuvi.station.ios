@@ -34,11 +34,6 @@ extension MenuTableEmbededViewController {
 
 // MARK: - View lifecycle
 extension MenuTableEmbededViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupLocalization()
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()

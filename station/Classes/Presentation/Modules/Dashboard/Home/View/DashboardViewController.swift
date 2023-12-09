@@ -159,7 +159,6 @@ extension DashboardViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
-        setupLocalization()
         configureRestartAnimationsOnAppDidBecomeActive()
         output.viewDidLoad()
     }

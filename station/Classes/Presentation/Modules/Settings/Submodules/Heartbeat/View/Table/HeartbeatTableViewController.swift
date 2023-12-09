@@ -48,7 +48,6 @@ extension HeartbeatTableViewController {
 extension HeartbeatTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         bindViewModel()
         updateUIComponent()
     }

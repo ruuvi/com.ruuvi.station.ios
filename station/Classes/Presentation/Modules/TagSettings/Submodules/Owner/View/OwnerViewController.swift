@@ -59,7 +59,6 @@ final class OwnerViewController: UIViewController {
         super.viewDidLoad()
         setUpCustomBackButton()
         setUpCloudHistoryContentView()
-        setupLocalization()
         output.viewDidTriggerFirmwareUpdateDialog()
     }
 }

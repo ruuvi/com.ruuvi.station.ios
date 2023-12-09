@@ -120,7 +120,6 @@ extension SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateNavBarTitleFont()
-        setupLocalization()
         updateUI()
         output.viewDidLoad()
         becomeFirstResponder()

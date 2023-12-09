@@ -3,7 +3,7 @@ import UIKit
 import RuuviOntology
 import RuuviLocalization
 
-protocol DiscoverViewInput: UIViewController, Localizable {
+protocol DiscoverViewInput: UIViewController {
     var ruuviTags: [DiscoverRuuviTagViewModel] { get set }
     var isBluetoothEnabled: Bool { get set }
     var isCloseEnabled: Bool { get set }

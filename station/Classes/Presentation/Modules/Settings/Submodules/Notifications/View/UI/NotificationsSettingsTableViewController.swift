@@ -27,7 +27,6 @@ class NotificationsSettingsTableViewController: UITableViewController {
 extension NotificationsSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output?.viewDidLoad()
     }

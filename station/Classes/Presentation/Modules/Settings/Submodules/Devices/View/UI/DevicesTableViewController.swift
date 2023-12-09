@@ -24,7 +24,6 @@ class DevicesTableViewController: UITableViewController {
 extension DevicesTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpTableView()
         output.viewDidLoad()
     }

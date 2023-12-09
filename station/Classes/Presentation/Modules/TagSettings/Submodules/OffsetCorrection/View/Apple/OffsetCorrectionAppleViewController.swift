@@ -49,7 +49,6 @@ class OffsetCorrectionAppleViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
 
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
             if let updateAt = self?.updatedAt {

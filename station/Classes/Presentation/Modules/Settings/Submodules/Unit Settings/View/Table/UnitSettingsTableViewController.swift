@@ -67,7 +67,6 @@ extension UnitSettingsTableViewController {
         super.viewDidLoad()
         output.viewDidLoad()
         updateUI()
-        setupLocalization()
     }
 }
 

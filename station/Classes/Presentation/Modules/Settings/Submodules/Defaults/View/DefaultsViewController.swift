@@ -51,7 +51,6 @@ extension DefaultsViewController: DefaultsViewInput {
 extension DefaultsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
     }
 

@@ -38,7 +38,6 @@ extension AboutViewController {
 extension AboutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
         setUpChangelogTapGesture()
         output.viewDidLoad()

@@ -25,7 +25,6 @@ class AppearanceSettingsTableViewController: UITableViewController {
 extension AppearanceSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }

@@ -200,7 +200,6 @@ extension CardsViewController {
         super.viewDidLoad()
         setUpUI()
         configureGestureViews()
-        setupLocalization()
         output.viewDidLoad()
     }
 

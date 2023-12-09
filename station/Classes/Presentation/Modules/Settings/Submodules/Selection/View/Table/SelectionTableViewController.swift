@@ -48,7 +48,6 @@ extension SelectionTableViewController {
         super.viewDidLoad()
         output.viewDidLoad()
         updateUI()
-        setupLocalization()
     }
 }
 

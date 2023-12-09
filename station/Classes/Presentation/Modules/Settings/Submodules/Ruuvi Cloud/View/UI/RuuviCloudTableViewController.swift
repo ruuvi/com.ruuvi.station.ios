@@ -25,7 +25,6 @@ class RuuviCloudTableViewController: UITableViewController {
 extension RuuviCloudTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
         output.viewDidLoad()
     }

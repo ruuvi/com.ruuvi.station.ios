@@ -1,5 +1,4 @@
 import Foundation
 
-protocol ViewInput: Localizable {
-
+protocol ViewInput: AnyObject {
 }
