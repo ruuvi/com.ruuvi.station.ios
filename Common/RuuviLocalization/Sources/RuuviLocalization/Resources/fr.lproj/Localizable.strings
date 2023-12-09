@@ -752,4 +752,5 @@ RuuviTag est prêt à être utilisé !";
 "activity_ongoing_generic" = "S'il vous plaît, attendez...";
 "activity_success_generic" = "Opération réussie.";
 "activity_failed_generic" = "L'opération a échoué.";
+"Devices.tokenId" = "Token Id";
 

@@ -751,3 +751,4 @@ RuuviTag-sensorn är redo att användas!";
 "activity_ongoing_generic" = "Vänta...";
 "activity_success_generic" = "Operationen lyckades.";
 "activity_failed_generic" = "Operationen misslyckades.";
+"Devices.tokenId" = "Token Id";

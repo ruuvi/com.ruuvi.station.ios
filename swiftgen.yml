@@ -22,7 +22,7 @@ json:
   - inputs: ./station.localization/station.localization.json
     outputs:
       - templatePath: ./Common/RuuviLocalization/Templates/Localizable_de.strings.stencil
-        output: ./station/Resources/Strings/de.lproj/Localizable.strings
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/de.lproj/Localizable.strings
 strings:
   inputs: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/en.lproj/Localizable.strings
   outputs:

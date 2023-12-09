@@ -45,7 +45,7 @@ extension DevicesTableViewController: DevicesViewInput {
             return
         }
 
-        let title = "Token Id" // TODO: @rinat translate
+        let title = RuuviLocalization.Devices.tokenId
         let controller = UIAlertController(title: title,
                                            message: tokenId.stringValue,
                                            preferredStyle: .alert)

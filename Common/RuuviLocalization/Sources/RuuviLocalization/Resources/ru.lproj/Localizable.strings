@@ -751,3 +751,4 @@ If you cannot see the Language option in the settings, make sure that you have a
 "activity_ongoing_generic" = "Please wait...";
 "activity_success_generic" = "Operation successful.";
 "activity_failed_generic" = "Operation failed.";
+"Devices.tokenId" = "Token Id";

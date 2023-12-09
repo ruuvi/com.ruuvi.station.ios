@@ -751,3 +751,4 @@ RuuviTag on valmis käyttöön!";
 "activity_ongoing_generic" = "Odota...";
 "activity_success_generic" = "Toiminto onnistui.";
 "activity_failed_generic" = "Toiminto epäonnistui.";
+"Devices.tokenId" = "Token Id";

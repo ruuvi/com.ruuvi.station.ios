@@ -843,6 +843,10 @@ public enum RuuviLocalization {
       public static let title = RuuviLocalization.tr("Localizable", "Defaults.navigationItem.title", fallback: "Defaults")
     }
   }
+  public enum Devices {
+    /// Token Id
+    public static let tokenId = RuuviLocalization.tr("Localizable", "Devices.tokenId", fallback: "Token Id")
+  }
   public enum DfuDevicesScanner {
     public enum BluetoothDisabled {
       /// (Bluetooth is disabled)
