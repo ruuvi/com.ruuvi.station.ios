@@ -21,7 +21,9 @@ class ChartSettingsStepperTableViewCell: UITableViewCell {
 
     @IBAction func stepperValueChanged(_: Any) {
         let result = Int(stepper.value)
-        let unitString: String = result > 1 ? RuuviLocalization.Interval.Days.string : RuuviLocalization.Interval.Day.string
+        let unitString: String = result > 1
+            ? RuuviLocalization.Interval.Days.string
+            : RuuviLocalization.Interval.Day.string
         titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"
         delegate?.chartSettingsStepper(cell: self, didChange: result)
     }

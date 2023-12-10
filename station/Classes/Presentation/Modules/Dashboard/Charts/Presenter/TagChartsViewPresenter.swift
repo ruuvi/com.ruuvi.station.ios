@@ -747,6 +747,7 @@ extension TagChartsViewPresenter {
         view?.updateLatestRecordStatus(with: record)
     }
 
+    // swiftlint:disable:next function_body_length
     private func createChartData() {
         guard view != nil else { return }
         datasource.removeAll()

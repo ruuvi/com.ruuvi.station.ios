@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Combine
 import Foundation
 
@@ -305,6 +306,7 @@ extension FirmwareViewModel {
 }
 
 extension FirmwareViewModel {
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     static func reduce(_ state: State, _ event: Event) -> State {
         switch state {
         case .idle:
@@ -416,3 +418,5 @@ extension FirmwareViewModel {
         return !currentRelease.version.contains(latestRelease.version)
     }
 }
+
+// swiftlint:enable file_length

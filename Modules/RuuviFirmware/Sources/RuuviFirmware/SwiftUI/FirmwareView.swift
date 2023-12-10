@@ -1,5 +1,7 @@
+// swiftlint:disable file_length
 import SwiftUI
 
+// swiftlint:disable:next type_body_length
 struct FirmwareView: View {
     @ObservedObject var viewModel: FirmwareViewModel
 
@@ -17,8 +19,12 @@ struct FirmwareView: View {
         let openCoverTitle = "DFUUIView.openCoverTitle".localized(for: FirmwareViewModel.self)
         let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized(for: FirmwareViewModel.self)
         let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized(for: FirmwareViewModel.self)
-        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized(for: FirmwareViewModel.self)
-        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized(for: FirmwareViewModel.self)
+        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized(
+            for: FirmwareViewModel.self
+        )
+        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized(
+            for: FirmwareViewModel.self
+        )
         let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized(for: FirmwareViewModel.self)
         let updatingTitle = "DFUUIView.updatingTitle".localized(for: FirmwareViewModel.self)
         let searchingTitle = "DFUUIView.searchingTitle".localized(for: FirmwareViewModel.self)
@@ -435,3 +441,5 @@ private extension CGFloat {
         UIDevice.current.userInterfaceIdiom == .pad ? self + 4 : self
     }
 }
+
+// swiftlint:enable file_length

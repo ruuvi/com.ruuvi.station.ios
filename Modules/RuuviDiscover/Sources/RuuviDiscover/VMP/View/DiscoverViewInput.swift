@@ -11,6 +11,7 @@ protocol DiscoverViewInput: UIViewController {
     func showBluetoothDisabled(userDeclined: Bool)
     func startNFCSession()
     func stopNFCSession()
+    // swiftlint:disable:next function_parameter_count
     func showSensorDetailsDialog(
         for tag: NFCSensor?,
         message: String,

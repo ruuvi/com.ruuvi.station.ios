@@ -28,6 +28,7 @@ extension RuuviCloudApiURLSession {
     }
 }
 
+// swiftlint:disable:next type_body_length
 public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     private lazy var uploadSession: URLSession = {
         let config = URLSessionConfiguration.default
@@ -396,14 +397,20 @@ extension RuuviCloudApiURLSession {
             config.waitsForConnectivity = true
             config.timeoutIntervalForResource = 30
         }
-        let task = URLSession(configuration: config).dataTask(with: request) { data, _, error in
+        let task = URLSession(configuration: config).dataTask(with: request) {
+            data,
+                _,
+                error in
             if let error {
                 promise.fail(error: .networking(error))
             } else {
                 if let data {
                     #if DEBUG
                         if let object = try? JSONSerialization.jsonObject(with: data, options: []),
-                           let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
+                           let jsonData = try? JSONSerialization.data(
+                               withJSONObject: object,
+                               options: [.prettyPrinted]
+                           ),
                            let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
                             debugPrint("📬 Response of request", dump(request), prettyPrintedString)
                         }

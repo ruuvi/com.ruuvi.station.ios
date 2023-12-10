@@ -510,7 +510,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    // swiftlint:disable switch_case_alignment
     var dashboardTapActionType: DashboardTapActionType {
         get {
             switch dashboardTapActionTypeId {
@@ -538,8 +537,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 )
         }
     }
-
-    // swiftlint:enable switch_case_alignment
 
     private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
     private var ruuviThemeId: Int {

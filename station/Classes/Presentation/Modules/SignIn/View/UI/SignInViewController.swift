@@ -129,7 +129,11 @@ extension SignInViewController: SignInViewInput {
     }
 
     func showEmailsAreDifferent(requestedEmail: String, validatedEmail: String) {
-        let message = RuuviLocalization.SignIn.EmailMismatch.Alert.message(requestedEmail, validatedEmail, requestedEmail)
+        let message = RuuviLocalization.SignIn.EmailMismatch.Alert.message(
+            requestedEmail,
+            validatedEmail,
+            requestedEmail
+        )
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)

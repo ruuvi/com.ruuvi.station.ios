@@ -5,7 +5,9 @@ import XCTest
 
 @testable import station
 
+// swiftlint:disable:next type_body_length
 class MeasurementsServiceRuSpec: QuickSpec {
+    // swiftlint:disable:next function_body_length
     override func spec() {
         let r = AppAssembly.shared.assembler.resolver
         var service: MeasurementsService! = r.resolve(MeasurementsService.self)

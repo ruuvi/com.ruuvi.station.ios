@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import RangeSeekSlider
 import RuuviLocalization
 import UIKit
@@ -432,3 +433,5 @@ extension TagSettingsAlertConfigCell: RangeSeekSliderDelegate {
         )
     }
 }
+
+// swiftlint:enable file_length

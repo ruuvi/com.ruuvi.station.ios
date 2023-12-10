@@ -73,8 +73,10 @@ extension DefaultsPresenter {
 
     private func buildChartsSwipeInstruction() -> DefaultsViewModel {
         let tagChartsLandscapeSwipeInstructionWasShown = DefaultsViewModel()
-        tagChartsLandscapeSwipeInstructionWasShown.title = RuuviLocalization.Defaults.ChartsSwipeInstructionWasShown.title
-        tagChartsLandscapeSwipeInstructionWasShown.boolean.value = settings.tagChartsLandscapeSwipeInstructionWasShown
+        tagChartsLandscapeSwipeInstructionWasShown.title
+            = RuuviLocalization.Defaults.ChartsSwipeInstructionWasShown.title
+        tagChartsLandscapeSwipeInstructionWasShown.boolean.value
+            = settings.tagChartsLandscapeSwipeInstructionWasShown
         tagChartsLandscapeSwipeInstructionWasShown.type.value = .switcher
 
         bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) {

@@ -1,6 +1,6 @@
+// swiftlint:disable file_length
 import BTKit
 import Combine
-// swiftlint:disable file_length
 import Foundation
 import RuuviDaemon
 import RuuviFirmware
@@ -11,6 +11,7 @@ import RuuviPool
 import RuuviPresenters
 import RuuviStorage
 
+// swiftlint:disable:next type_body_length
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published var downloadProgress: Double = 0

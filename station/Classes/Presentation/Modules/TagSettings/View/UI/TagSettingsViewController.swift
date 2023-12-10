@@ -65,7 +65,6 @@ class TagSettingsSection {
 }
 
 struct TagSettingsItem {
-    // swiftlint:disable:next redundant_optional_initialization
     var identifier: TagSettingsItemCellIdentifier?
     var createdCell: () -> UITableViewCell
     var action: ((TagSettingsItem) -> Swift.Void)?
@@ -215,7 +214,10 @@ class TagSettingsViewController: UIViewController {
         return section
     }()
 
-    private lazy var humidityAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
+    private lazy var humidityAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
 
     // Pressure
     private lazy var pressureAlertSectionHeaderView:
@@ -3518,6 +3520,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
 }
 
 private extension TagSettingsViewController {
+    // swiftlint:disable:next function_body_length
     func setUpUI() {
         title = RuuviLocalization.TagSettings.NavigationItem.title
 
@@ -3635,7 +3638,6 @@ extension TagSettingsViewController {
 // MARK: - Sensor alert custom description dialog
 
 extension TagSettingsViewController {
-    // swiftlint:disable:next function_body_length
     private func showSensorCustomAlertDescriptionDialog(
         description: String?,
         sender: TagSettingsAlertConfigCell
@@ -3709,7 +3711,7 @@ extension TagSettingsViewController {
 // MARK: - Sensor alert range settings
 
 extension TagSettingsViewController {
-    // swiftlint:disable:next function_parameter_count function_body_length cyclomatic_complexity
+    // swiftlint:disable:next function_parameter_count function_body_length
     private func showSensorCustomAlertRangeDialog(
         title: String?,
         minimumBound: Double,

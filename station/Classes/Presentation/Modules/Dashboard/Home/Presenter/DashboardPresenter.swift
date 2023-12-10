@@ -1,6 +1,5 @@
 import BTKit
 import CoreBluetooth
-// swiftlint:disable file_length trailing_whitespace
 import Foundation
 import Future
 import Humidity
@@ -19,6 +18,7 @@ import RuuviUser
 import UIKit
 import WidgetKit
 
+// swiftlint:disable file_length
 class DashboardPresenter: DashboardModuleInput {
     weak var view: DashboardViewInput?
     var router: DashboardRouterInput!
@@ -227,7 +227,6 @@ extension DashboardPresenter: DashboardViewOutput {
         openCardView(viewModel: viewModel, showCharts: false)
     }
 
-    // swiftlint:disable switch_case_alignment
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
         switch settings.dashboardTapActionType {
         case .card:
@@ -236,8 +235,6 @@ extension DashboardPresenter: DashboardViewOutput {
             viewDidTriggerChart(for: viewModel)
         }
     }
-
-    // swiftlint:enable switch_case_alignment
 
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
@@ -556,7 +553,6 @@ extension DashboardPresenter: TagSettingsModuleOutput {
 // MARK: - Private
 
 extension DashboardPresenter {
-    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         view?.userSignedInOnce = settings.signedInAtleastOnce
         view?.dashboardType = settings.dashboardType
@@ -1058,7 +1054,7 @@ extension DashboardPresenter {
             }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     func startObservingDaemonsErrors() {
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter
@@ -1190,7 +1186,6 @@ extension DashboardPresenter {
             )
     }
 
-    // swiftlint:disable:next function_body_length
     private func startObservingAlertChanges() {
         alertDidChangeToken?.invalidate()
         alertDidChangeToken = NotificationCenter
@@ -1879,4 +1874,4 @@ extension DashboardPresenter {
     }
 }
 
-// swiftlint:enable file_length trailing_whitespace
+// swiftlint:enable file_length

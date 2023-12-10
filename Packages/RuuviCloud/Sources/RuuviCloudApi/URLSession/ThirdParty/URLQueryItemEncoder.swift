@@ -357,7 +357,10 @@ private extension URLQueryItemEncoder {
             keyedBy _: NestedKey.Type
         ) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
             codingPath.append(
-                URLQueryItemArrayElementKey(index: encodedItemsCount, encodingStrategy: encoder.arrayIndexEncodingStrategy)
+                URLQueryItemArrayElementKey(
+                    index: encodedItemsCount,
+                    encodingStrategy: encoder.arrayIndexEncodingStrategy
+                )
             )
             defer { codingPath.removeLast() }
             return KeyedEncodingContainer(KeyedContainer<NestedKey>(encoder: encoder, codingPath: codingPath))
@@ -365,7 +368,10 @@ private extension URLQueryItemEncoder {
 
         func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
             codingPath.append(
-                URLQueryItemArrayElementKey(index: encodedItemsCount, encodingStrategy: encoder.arrayIndexEncodingStrategy)
+                URLQueryItemArrayElementKey(
+                    index: encodedItemsCount,
+                    encodingStrategy: encoder.arrayIndexEncodingStrategy
+                )
             )
             defer { codingPath.removeLast() }
             return self
@@ -384,7 +390,10 @@ private extension URLQueryItemEncoder {
 
         func encodeNil() throws {
             codingPath.append(
-                URLQueryItemArrayElementKey(index: encodedItemsCount, encodingStrategy: encoder.arrayIndexEncodingStrategy)
+                URLQueryItemArrayElementKey(
+                    index: encodedItemsCount,
+                    encodingStrategy: encoder.arrayIndexEncodingStrategy
+                )
             )
             defer { codingPath.removeLast() }
             try encoder.pushNil(forKey: codingPath)
@@ -393,7 +402,10 @@ private extension URLQueryItemEncoder {
 
         func encode(_ value: some Encodable) throws {
             codingPath.append(
-                URLQueryItemArrayElementKey(index: encodedItemsCount, encodingStrategy: encoder.arrayIndexEncodingStrategy)
+                URLQueryItemArrayElementKey(
+                    index: encodedItemsCount,
+                    encodingStrategy: encoder.arrayIndexEncodingStrategy
+                )
             )
             defer { codingPath.removeLast() }
             try encoder.push(value, forKey: codingPath)
