@@ -1,7 +1,7 @@
-.PHONY: installed_xcodegen installed_swiftgen installed_firebase
+.PHONY: installed_xcodegen installed_swiftgen installed_swiftlint installed_firebase 
 
 # generates xcodeproj for frameworks build configuration
-xcodeproj_with_frameworks: installed_xcodegen installed_swiftgen
+xcodeproj_with_frameworks: installed_xcodegen installed_swiftgen installed_swiftlint
 	.tools/xcodegen/bin/xcodegen -s project_frameworks.yml
 
 # install firebase
@@ -9,6 +9,13 @@ installed_firebase: .tools/firebase/firebase
 
 .tools/firebase/firebase: scripts/install/install_firebase.sh
 	scripts/install/install_firebase.sh
+	touch $@
+
+# install swiftgen
+installed_swiftlint: .tools/swiftlint/swiftlint
+
+.tools/swiftlint/swiftlint: scripts/install/install_swiftlint.sh
+	scripts/install/install_swiftlint.sh
 	touch $@
 
 # install swiftgen
@@ -27,7 +34,7 @@ installed_xcodegen: .tools/xcodegen/bin/xcodegen
 	touch $@
 
 # generates xcodeproj for swift package manager build configuration
-xcodeproj_with_spm: installed_xcodegen installed_swiftgen
+xcodeproj_with_spm: installed_xcodegen installed_swiftgen installed_swiftlint
 	.tools/xcodegen/bin/xcodegen -s project_spm.yml
 
 # builds station target with frameworks build configuration for iOS
