@@ -53,3 +53,4 @@ targets:
       - package: RuuviLocal
       - package: RuuviPersistence
       - package: RuuviContext
+      - package: RuuviLocalization
