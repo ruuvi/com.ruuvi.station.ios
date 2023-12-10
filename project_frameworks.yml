@@ -325,8 +325,7 @@ targets:
     postCompileScripts:
       - path: scripts/build/lint.sh
         name: Lint
-        BASED_ON_DEPENDENCY_ANALYSIS: false
-        ENABLE_USER_SCRIPT_SANDBOXING: false
+        basedOnDependencyAnalysis: false
     postBuildScripts:
       - path: scripts/build/load_keystore.sh
         name: Load Keystore
