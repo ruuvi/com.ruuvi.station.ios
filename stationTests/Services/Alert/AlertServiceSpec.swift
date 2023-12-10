@@ -3,9 +3,12 @@ import Nimble
 import Quick
 import XCTest
 
+// swiftlint:disable file_length
 @testable import station
+// swiftlint:disable:next type_body_length
 class AlertServiceSpec: QuickSpec {
     let notificationWaitTimeout: DispatchTimeInterval = .milliseconds(200)
+    // swiftlint:disable:next function_body_length
     override func spec() {
         let alertService = AlertServiceImpl()
         alertService.alertPersistence = AlertPersistenceUserDefaults()
@@ -81,6 +84,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(celsius: randomDouble, for: uuid)
                     expect(alertService.lowerCelsius(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if set upper temp is set must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(celsius: randomDouble, for: uuid)
                     expect {
@@ -96,6 +100,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(celsius: randomDouble, for: uuid)
                     expect(alertService.upperCelsius(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if lower temp is set must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(celsius: randomDouble, for: uuid)
                     expect {
@@ -111,6 +116,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setTemperature(description: uuid, for: uuid)
                     expect(alertService.temperatureDescription(for: uuid)).to(equal(uuid))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper and lower temp is set, must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(celsius: randomDouble, for: uuid)
                     alertService.alertPersistence.setLower(celsius: randomDouble, for: uuid)
@@ -132,6 +138,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(humidity: Humidity(randomDouble), for: uuid)
                     expect(alertService.lowerHumidity(for: uuid)?.value.isEqual(to: randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper is set must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(relativeHumidity: randomDouble, for: uuid)
                     expect {
@@ -147,6 +154,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(relativeHumidity: randomDouble, for: uuid)
                     expect(alertService.upperRelativeHumidity(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if lower is set must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(relativeHumidity: randomDouble, for: uuid)
                     expect {
@@ -162,6 +170,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setRelativeHumidity(description: uuid, for: uuid)
                     expect(alertService.relativeHumidityDescription(for: uuid)).to(equal(uuid))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper and lower relative humidity is set, must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(relativeHumidity: randomDouble, for: uuid)
                     alertService.alertPersistence.setLower(relativeHumidity: randomDouble, for: uuid)
@@ -183,6 +192,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(absoluteHumidity: randomDouble, for: uuid)
                     expect(alertService.lowerAbsoluteHumidity(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     expect {
@@ -198,6 +208,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     expect(alertService.upperAbsoluteHumidity(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if lower is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(absoluteHumidity: randomDouble, for: uuid)
                     expect {
@@ -213,6 +224,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setAbsoluteHumidity(description: uuid, for: uuid)
                     expect(alertService.absoluteHumidityDescription(for: uuid)).to(equal(uuid))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper and lower absolute humidity is set, must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     alertService.alertPersistence.setLower(absoluteHumidity: randomDouble, for: uuid)
@@ -234,6 +246,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLowerDewPoint(celsius: randomDouble, for: uuid)
                     expect(alertService.lowerDewPointCelsius(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     expect {
@@ -249,6 +262,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     expect(alertService.upperDewPointCelsius(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if lower is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setLowerDewPoint(celsius: randomDouble, for: uuid)
                     expect {
@@ -264,6 +278,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setDewPoint(description: uuid, for: uuid)
                     expect(alertService.dewPointDescription(for: uuid)).to(equal(uuid))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper and lower is set, must send notification AlertServiceAlertDidChange with type .dewPoint(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     alertService.alertPersistence.setLowerDewPoint(celsius: randomDouble, for: uuid)
@@ -285,6 +300,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(pressure: randomDouble, for: uuid)
                     expect(alertService.lowerPressure(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper is set must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(pressure: randomDouble, for: uuid)
                     expect {
@@ -300,6 +316,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(pressure: randomDouble, for: uuid)
                     expect(alertService.upperPressure(for: uuid)).to(equal(randomDouble))
                 }
+                // swiftlint:disable:next line_length
                 it("if lower is set must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(pressure: randomDouble, for: uuid)
                     expect {
@@ -315,6 +332,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setPressure(description: uuid, for: uuid)
                     expect(alertService.pressureDescription(for: uuid)).to(equal(uuid))
                 }
+                // swiftlint:disable:next line_length
                 it("if upper and lower pressure is set, must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(pressure: randomDouble, for: uuid)
                     alertService.alertPersistence.setUpper(pressure: randomDouble, for: uuid)
@@ -404,7 +422,13 @@ class AlertServiceSpec: QuickSpec {
             }
             context("relativeHumidity trigger") {
                 it("if less") {
-                    alertService.register(type: .relativeHumidity(lower: randomPercentDouble, upper: randomPercentDouble + 10), for: uuid)
+                    alertService.register(
+                        type: .relativeHumidity(
+                            lower: randomPercentDouble,
+                            upper: randomPercentDouble + 10
+                        ),
+                        for: uuid
+                    )
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
@@ -417,7 +441,13 @@ class AlertServiceSpec: QuickSpec {
                     expect(localNotificationManager.type).toEventually(equal(LowHighNotificationType.relativeHumidity))
                 }
                 it("if greather") {
-                    alertService.register(type: .relativeHumidity(lower: randomPercentDouble - 10, upper: randomPercentDouble), for: uuid)
+                    alertService.register(
+                        type: .relativeHumidity(
+                            lower: randomPercentDouble - 10,
+                            upper: randomPercentDouble
+                        ),
+                        for: uuid
+                    )
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
@@ -562,7 +592,13 @@ class AlertServiceSpec: QuickSpec {
             }
             context("relativeHumidity trigger") {
                 it("if less") {
-                    alertService.register(type: .relativeHumidity(lower: randomPercentDouble, upper: randomPercentDouble + 10), for: uuid)
+                    alertService.register(
+                        type: .relativeHumidity(
+                            lower: randomPercentDouble,
+                            upper: randomPercentDouble + 10
+                        ),
+                        for: uuid
+                    )
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
@@ -575,7 +611,13 @@ class AlertServiceSpec: QuickSpec {
                     expect(localNotificationManager.type).toEventually(equal(LowHighNotificationType.relativeHumidity))
                 }
                 it("if greather") {
-                    alertService.register(type: .relativeHumidity(lower: randomPercentDouble - 10, upper: randomPercentDouble), for: uuid)
+                    alertService.register(
+                        type: .relativeHumidity(
+                            lower: randomPercentDouble - 10,
+                            upper: randomPercentDouble
+                        ),
+                        for: uuid
+                    )
                     let fakeDelegate = MockAlertServiceObserver()
                     alertService.subscribe(fakeDelegate, to: uuid)
 
@@ -709,3 +751,5 @@ class AlertServiceSpec: QuickSpec {
         }
     }
 }
+
+// swiftlint:enable file_length

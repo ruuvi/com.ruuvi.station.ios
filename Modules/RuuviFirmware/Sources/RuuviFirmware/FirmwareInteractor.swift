@@ -184,7 +184,9 @@ final class FirmwareInteractor {
 
         guard let firmware = ruuviDFU.firmwareFromUrl(url: firmwareUrl)
         else {
-            return Fail<FlashResponse, Error>(error: FirmwareError.failedToConstructFirmwareFromFile).eraseToAnyPublisher()
+            return Fail<FlashResponse, Error>(
+                error: FirmwareError.failedToConstructFirmwareFromFile
+            ).eraseToAnyPublisher()
         }
         return ruuviDFU.flashFirmware(uuid: uuid, with: firmware).eraseToAnyPublisher()
     }

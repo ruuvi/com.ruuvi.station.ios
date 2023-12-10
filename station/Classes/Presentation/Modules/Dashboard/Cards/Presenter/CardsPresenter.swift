@@ -1,6 +1,6 @@
+// swiftlint:disable file_length
 import BTKit
 import CoreBluetooth
-// swiftlint:disable file_length trailing_whitespace
 import Foundation
 import RuuviCore
 import RuuviDaemon
@@ -295,7 +295,6 @@ extension CardsPresenter {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     private func startObservingAlertChanges() {
         alertDidChangeToken?.invalidate()
         alertDidChangeToken = NotificationCenter
@@ -538,7 +537,7 @@ extension CardsPresenter {
             }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     func startObservingDaemonsErrors() {
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter
@@ -659,7 +658,6 @@ extension CardsPresenter {
     }
 
     // ACTIONS
-    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
@@ -1383,4 +1381,4 @@ extension CardsPresenter {
     }
 }
 
-// swiftlint:enable file_length trailing_whitespace
+// swiftlint:enable file_length

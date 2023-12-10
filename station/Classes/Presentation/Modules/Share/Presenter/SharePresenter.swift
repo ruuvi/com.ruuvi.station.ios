@@ -134,7 +134,6 @@ extension SharePresenter: ShareModuleInput {
 // MARK: - Private
 
 extension SharePresenter {
-    // swiftlint:disable switch_case_alignment
     private func startObservingRuuviTag() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] change in
@@ -210,5 +209,3 @@ extension SharePresenter {
         return emailPred.evaluate(with: email)
     }
 }
-
-// swiftlint:enable switch_case_alignment

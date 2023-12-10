@@ -32,6 +32,7 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     func setKeepConnection(
         _ value: Bool,
         for luid: LocalIdentifier

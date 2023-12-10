@@ -30,10 +30,8 @@ struct OnboardViewModel {
     var pageType: OnboardPageType
     var title: String
     var subtitle: String
-    // swiftlint:disable redundant_optional_initialization
     var sub_subtitle: String?
     var image: String?
-    // swiftlint:enable redundant_optional_initialization
 }
 
 class RuuviOnboardViewController: UIViewController {

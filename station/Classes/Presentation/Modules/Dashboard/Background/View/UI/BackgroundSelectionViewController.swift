@@ -142,6 +142,7 @@ private extension BackgroundSelectionViewController {
         uploadProgressView.isHidden = true
     }
 
+    // swiftlint:disable:next function_body_length
     func createLayout() -> UICollectionViewLayout {
         let sectionProvider = { [weak self] (
             _: Int,

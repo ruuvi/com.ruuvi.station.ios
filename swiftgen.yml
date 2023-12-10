@@ -24,11 +24,11 @@ json:
       - templatePath: ./Common/RuuviLocalization/Templates/Localizable_de.strings.stencil
         output: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/de.lproj/Localizable.strings
 strings:
-  inputs: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/en.lproj/Localizable.strings
-  outputs:
-    templateName: structured-swift5
-    params:
-      forceProvidesNamespaces: true 
-      publicAccess: true             
-      enumName: RuuviLocalization          
-    output: ./Common/RuuviLocalization/Sources/RuuviLocalization/RuuviLocalization.swift
+  - inputs: ./Common/RuuviLocalization/Sources/RuuviLocalization/Resources/en.lproj/Localizable.strings
+    outputs:
+      - templatePath: ./Common/RuuviLocalization/Templates/structured-swift5.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviLocalization/RuuviLocalization.swift
+        params:
+          forceProvidesNamespaces: true 
+          publicAccess: true             
+          enumName: RuuviLocalization        

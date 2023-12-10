@@ -2,9 +2,11 @@ import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
 import RuuviService
-// swiftlint:disable file_length
+
 import UIKit
 
+// swiftlint:disable file_length
+// swiftlint:disable:next type_body_length
 class DashboardImageCell: UICollectionViewCell {
     private lazy var cardBackgroundView = CardsBackgroundView()
 

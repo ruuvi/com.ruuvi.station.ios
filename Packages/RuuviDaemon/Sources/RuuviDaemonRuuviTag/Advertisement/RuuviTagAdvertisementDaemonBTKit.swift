@@ -169,7 +169,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func restartObserving() {
         observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()

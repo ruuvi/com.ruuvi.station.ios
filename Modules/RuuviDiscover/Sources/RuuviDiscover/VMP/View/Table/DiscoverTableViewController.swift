@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import BTKit
 import CoreNFC
 import RuuviLocalization
@@ -86,6 +87,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         session = nil
     }
 
+    // swiftlint:disable:next function_parameter_count function_body_length
     func showSensorDetailsDialog(
         for tag: NFCSensor?,
         message: String,
@@ -402,3 +404,5 @@ extension DiscoverTableViewController: NFCNDEFReaderSessionDelegate {
         }
     }
 }
+
+// swiftlint:enable file_length

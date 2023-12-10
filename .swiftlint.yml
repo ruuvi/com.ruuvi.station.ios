@@ -9,3 +9,6 @@ excluded:
   - Pods
 disabled_rules:
   - closure_parameter_position
+  - identifier_name
+  - force_try
+  - todo

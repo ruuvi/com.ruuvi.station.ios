@@ -1,7 +1,6 @@
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
-    // swiftlint:disable redundant_string_enum_value
     private enum AlertType: String {
         case temperature
         case humidity
@@ -15,8 +14,6 @@ class NotificationService: UNNotificationServiceExtension {
         case under
         case over
     }
-
-    // swiftlint:enable redundant_string_enum_value
 
     private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
 

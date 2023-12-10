@@ -6,6 +6,7 @@ import RuuviPersistence
 import RuuviPool
 import RuuviReactor
 
+// swiftlint:disable:next type_body_length
 public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPropertiesDaemon {
     private let ruuviPool: RuuviPool
     private let ruuviReactor: RuuviReactor

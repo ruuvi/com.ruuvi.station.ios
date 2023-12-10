@@ -70,6 +70,7 @@ public final class MigrationManagerToVIPER: RuuviMigration {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func from1to2(_ migration: Migration) {
         migration.enumerateObjects(ofType: "RuuviTag") { oldObject, _ in
             if let uuid = oldObject?["uuid"] as? String,
