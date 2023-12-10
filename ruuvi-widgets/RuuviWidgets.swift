@@ -1,6 +1,7 @@
 import Intents
 import SwiftUI
 import WidgetKit
+import RuuviLocalization
 
 struct RuuviWidgetEntryView: View {
     @Environment(\.widgetFamily) private var family
@@ -59,7 +60,7 @@ struct RuuviWidgets: Widget {
             RuuviWidgetEntryView(entry: entry)
                 .environment(\.locale, viewModel.locale())
         }.configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
-            .description(LocalizedStringKey("Widgets.Description.message"))
+            .description(RuuviLocalization.Widgets.Description.message)
             .supportedFamilies(supportedFamilies)
             .contentMarginsDisabledIfAvailable()
     }

@@ -1,13 +1,14 @@
 import SwiftUI
+import RuuviLocalization
 
 struct EmptyWidgetView: View {
     @Environment(\.widgetFamily) private var family
     struct Texts {
-        let messageSimple = "Widgets.Unconfigured.Simple.message"
-        let messageRectangular = "Widgets.Unconfigured.Rectangular.message"
-        let messageCircular = "Widgets.Unconfigured.Circular.message"
-        let messageInline = "Widgets.Unconfigured.Inline.message"
-        let loading = "Widgets.Loading.message"
+        let messageSimple = RuuviLocalization.Widgets.Unconfigured.Simple.message
+        let messageRectangular = RuuviLocalization.Widgets.Unconfigured.Rectangular.message
+        let messageCircular = RuuviLocalization.Widgets.Unconfigured.Circular.message
+        let messageInline = RuuviLocalization.Widgets.Unconfigured.Inline.message
+        let loading = RuuviLocalization.Widgets.Loading.message
     }
 
     private let texts = Texts()
