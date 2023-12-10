@@ -235,7 +235,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 return promise.succeed(value: true)
             }
 
-            let queuedRequests = requests.flatMap { request in
+            let queuedRequests = requests.compactMap { request in
                 self?.syncQueuedRequest(request: request)
             }
 
