@@ -94,6 +94,7 @@ extension NotificationService {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func titleForAlert(
         from triggerType: String,
         alertType: String,
