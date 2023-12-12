@@ -35,5 +35,5 @@ targets:
         - "*.entitlements"
         - Info.plist
     resources:
-      - path: ../Station/Sources/Resources/Strings/
-      - path: ../Station/Sources/Resources/Sounds/
+      - path: ../Sources/Resources/Strings/
+      - path: ../Sources/Resources/Sounds/

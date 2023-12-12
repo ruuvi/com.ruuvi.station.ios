@@ -103,7 +103,8 @@ targetTemplates:
       properties:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
     sources:
-    - path: Common/${target_name}
+    - path: Common/${target_name}/Sources
+      name: ${target_name}
       excludes:
       - "*.stencil"
       - target.yml

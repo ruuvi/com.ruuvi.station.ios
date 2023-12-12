@@ -113,12 +113,12 @@ targets:
         inputFiles:
           - $(SRCROOT)/station.localization/station.localization.json
         outputFiles:
-          - $(SRCROOT)/Sources/Resources/Strings/en.lproj/Localizable.strings
-          - $(SRCROOT)/Sources/Resources/Strings/sv.lproj/Localizable.strings
-          - $(SRCROOT)/Sources/Resources/Strings/ru.lproj/Localizable.strings
-          - $(SRCROOT)/Sources/Resources/Strings/fi.lproj/Localizable.strings
-          - $(SRCROOT)/Sources/Resources/Strings/fr.lproj/Localizable.strings
-          - $(SRCROOT)/Sources/Resources/Strings/de.lproj/Localizable.strings
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/en.lproj/Localizable.strings
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/sv.lproj/Localizable.strings
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/ru.lproj/Localizable.strings
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/fi.lproj/Localizable.strings
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/fr.lproj/Localizable.strings
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/de.lproj/Localizable.strings
     postCompileScripts:
       - path: ../../scripts/build/lint.sh
         name: Lint
@@ -127,8 +127,8 @@ targets:
       - path: ../../scripts/build/load_keystore.sh
         name: Load Keystore
         inputFiles:
-          - $(SRCROOT)/Sources/Classes/Networking/Assembly/Networking.plist
-          - $(SRCROOT)/Sources/Resources/Plists/GoogleService-Info.plist
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Classes/Networking/Assembly/Networking.plist
+          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Plists/GoogleService-Info.plist
         runOnlyWhenInstalling: true
         basedOnDependencyAnalysis: false
 schemes:
