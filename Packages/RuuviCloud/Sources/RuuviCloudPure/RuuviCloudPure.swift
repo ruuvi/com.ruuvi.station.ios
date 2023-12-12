@@ -53,10 +53,12 @@ public final class RuuviCloudPure: RuuviCloud {
         description: String?,
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {
+        notifyListener(state: .loading, macId: macId.mac)
         let promise = Promise<Void, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
             promise.fail(error: .notAuthorized)
+            notifyListener(state: .failed, macId: macId.mac)
             return promise.future
         }
         let request = RuuviCloudApiPostAlertRequest(
@@ -71,8 +73,9 @@ public final class RuuviCloudPure: RuuviCloud {
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postAlert(request, authorization: apiKey)
-            .on(success: { _ in
+            .on(success: { [weak self] _ in
                 promise.succeed(value: ())
+                self?.notifyListener(state: .success, macId: macId.mac)
             }, failure: { [weak self] error in
                 let uniqueKey = macId.value + "-" + type.rawValue + "-" + settingType.rawValue
                 self?.createQueuedRequest(
@@ -82,6 +85,9 @@ public final class RuuviCloudPure: RuuviCloud {
                 )
 
                 promise.fail(error: .api(error))
+                self?.notifyListener(state: .failed, macId: macId.mac)
+            }, completion: { [weak self] in
+                self?.notifyListener(state: .complete, macId: macId.mac)
             })
         return promise.future
     }
@@ -676,10 +682,12 @@ public final class RuuviCloudPure: RuuviCloud {
         name: String,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+        notifyListener(state: .loading, macId: sensor.id)
         let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
             promise.fail(error: .notAuthorized)
+            notifyListener(state: .failed, macId: sensor.id)
             return promise.future
         }
         let request = RuuviCloudApiSensorUpdateRequest(
@@ -691,8 +699,9 @@ public final class RuuviCloudPure: RuuviCloud {
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.update(request, authorization: apiKey)
-            .on(success: { _ in
+            .on(success: { [weak self] _ in
                 promise.succeed(value: sensor.with(name: name).any)
+                self?.notifyListener(state: .success, macId: sensor.id)
             }, failure: { [weak self] error in
                 let uniqueKey = sensor.id + "-name"
                 self?.createQueuedRequest(
@@ -701,6 +710,9 @@ public final class RuuviCloudPure: RuuviCloud {
                     uniqueKey: uniqueKey
                 )
                 promise.fail(error: .api(error))
+                self?.notifyListener(state: .failed, macId: sensor.id)
+            }, completion: { [weak self] in
+                self?.notifyListener(state: .complete, macId: sensor.id)
             })
         return promise.future
     }
@@ -1361,6 +1373,20 @@ public final class RuuviCloudPure: RuuviCloud {
             additionalData: additionalData
         )
         pool?.createQueuedRequest(request)
+    }
+
+    private func notifyListener(
+        state: RuuviCloudRequestStateType,
+        macId: String
+    ) {
+        NotificationCenter.default.post(
+            name: .RuuviCloudRequestStateDidChange,
+            object: nil,
+            userInfo: [
+                RuuviCloudRequestStateKey.macId: macId,
+                RuuviCloudRequestStateKey.state: state,
+            ]
+        )
     }
 }
 

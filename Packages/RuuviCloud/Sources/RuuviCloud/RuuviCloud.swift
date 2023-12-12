@@ -223,3 +223,21 @@ public enum MimeType: String, Codable {
     case gif = "image/gif"
     case jpg = "image/jpeg"
 }
+
+// MARK: State Observer
+public extension Notification.Name {
+    static let RuuviCloudRequestStateDidChange =
+        Notification.Name("RuuviCloudRequestStateDidChange")
+}
+
+public enum RuuviCloudRequestStateKey: String {
+    case state
+    case macId
+}
+
+public enum RuuviCloudRequestStateType: String {
+    case loading
+    case success
+    case failed
+    case complete
+}
