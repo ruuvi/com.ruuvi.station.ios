@@ -36,7 +36,7 @@ installed_xcodegen: .tools/xcodegen/bin/xcodegen
 # builds station target with frameworks build configuration for iOS
 build: 
 	d=$$(date +%s)\
-	; xcodebuild -project frameworks.xcodeproj -scheme station -configuration Release -sdk iphoneos17.0 build\
+	; xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Release -sdk iphoneos17.0 build\
     && echo "Build took $$(($$(date +%s)-d)) seconds"
 
 # sets the build number to current datetime
