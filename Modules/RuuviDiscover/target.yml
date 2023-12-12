@@ -3,6 +3,9 @@ targets:
   RuuviDiscover:
     templates:
     - Module
+    sources:
+    - path: Sources
+      name: Discover
     dependencies:
     - package: BTKit
     - package: Future

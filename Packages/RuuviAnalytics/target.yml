@@ -4,6 +4,9 @@ targets:
     name: RuuviAnalytics
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Analytics
     dependencies:
     - package: Humidity
     - package: Future

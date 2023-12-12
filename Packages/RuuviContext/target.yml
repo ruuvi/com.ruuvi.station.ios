@@ -7,6 +7,9 @@ targets:
         MERGEABLE_LIBRARY: false
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Context
     dependencies:
     - package: Realm
     - package: Realm
