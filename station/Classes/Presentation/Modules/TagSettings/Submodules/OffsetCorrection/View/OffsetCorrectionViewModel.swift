@@ -1,85 +1,88 @@
-import UIKit
 import BTKit
 import Humidity
-import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 class OffsetCorrectionViewModel {
     var type: OffsetCorrectionType = .temperature
 
-    var originalValue: Observable<Double?> = Observable<Double?>()
-    var updateAt: Observable<Date?> = Observable<Date?>()
-    var offsetCorrectionValue: Observable<Double?> = Observable<Double?>()
-    var offsetCorrectionDate: Observable<Date?> = Observable<Date?>()
-    var correctedValue: Observable<Double?> = Observable<Double?>()
+    var originalValue: Observable<Double?> = .init()
+    var updateAt: Observable<Date?> = .init()
+    var offsetCorrectionValue: Observable<Double?> = .init()
+    var offsetCorrectionDate: Observable<Date?> = .init()
+    var correctedValue: Observable<Double?> = .init()
 
-    let temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
-    let humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
-    let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
+    let temperatureUnit: Observable<TemperatureUnit?> = .init()
+    let humidityUnit: Observable<HumidityUnit?> = .init()
+    let pressureUnit: Observable<UnitPressure?> = .init()
 
     var title: String {
         switch type {
         case .humidity:
-            return "OffsetCorrection.Humidity.Title".localized()
+            RuuviLocalization.OffsetCorrection.Humidity.title
         case .pressure:
-            return "OffsetCorrection.Pressure.Title".localized()
+            RuuviLocalization.OffsetCorrection.Pressure.title
         default:
-            return "OffsetCorrection.Temperature.Title".localized()
+            RuuviLocalization.OffsetCorrection.Temperature.title
         }
     }
 
-    var hasOffsetValue: Observable<Bool?> = Observable<Bool?>(false)
+    var hasOffsetValue: Observable<Bool?> = .init(false)
 
     init() {
         type = .pressure
         hasOffsetValue.value = false
     }
 
-    convenience init(type: OffsetCorrectionType,
-                     sensorSettings: SensorSettings) {
+    convenience init(
+        type: OffsetCorrectionType,
+        sensorSettings: SensorSettings
+    ) {
         self.init()
         self.type = type
-        self.update(sensorSettings: sensorSettings)
+        update(sensorSettings: sensorSettings)
     }
 
     func update(ruuviTagRecord: RuuviTagSensorRecord) {
         switch type {
         case .temperature:
             if let value = ruuviTagRecord.temperature?.value {
-                self.originalValue.value = value - ruuviTagRecord.temperatureOffset
-                self.correctedValue.value = value
+                originalValue.value = value - ruuviTagRecord.temperatureOffset
+                correctedValue.value = value
             }
         case .humidity:
             if let value = ruuviTagRecord.humidity?.value {
-                self.originalValue.value = value - ruuviTagRecord.humidityOffset
-                self.correctedValue.value = value
+                originalValue.value = value - ruuviTagRecord.humidityOffset
+                correctedValue.value = value
             }
         case .pressure:
             if let value = ruuviTagRecord.pressure?.value {
-                self.originalValue.value = value - ruuviTagRecord.pressureOffset
-                self.correctedValue.value = value
+                originalValue.value = value - ruuviTagRecord.pressureOffset
+                correctedValue.value = value
             }
         }
-        self.updateAt.value = ruuviTagRecord.date
+        updateAt.value = ruuviTagRecord.date
     }
 
     func update(sensorSettings: SensorSettings) {
         switch type {
         case .temperature:
-            self.offsetCorrectionValue.value = sensorSettings.temperatureOffset
-            self.offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
+            offsetCorrectionValue.value = sensorSettings.temperatureOffset
+            offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         case .humidity:
-            self.offsetCorrectionValue.value = sensorSettings.humidityOffset
-            self.offsetCorrectionDate.value = sensorSettings.humidityOffsetDate
+            offsetCorrectionValue.value = sensorSettings.humidityOffset
+            offsetCorrectionDate.value = sensorSettings.humidityOffsetDate
         case .pressure:
-            self.offsetCorrectionValue.value = sensorSettings.pressureOffset
-            self.offsetCorrectionDate.value = sensorSettings.pressureOffsetDate
+            offsetCorrectionValue.value = sensorSettings.pressureOffset
+            offsetCorrectionDate.value = sensorSettings.pressureOffsetDate
         }
 
-        if let value = self.offsetCorrectionValue.value, value != 0 {
-            self.hasOffsetValue.value = true
+        if let value = offsetCorrectionValue.value, value != 0 {
+            hasOffsetValue.value = true
         } else {
-            self.hasOffsetValue.value = false
+            hasOffsetValue.value = false
         }
     }
 }

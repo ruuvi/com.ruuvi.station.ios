@@ -1,6 +1,7 @@
+import RuuviLocalization
 import UIKit
 #if canImport(SwiftUI) && canImport(Combine)
-import SwiftUI
+    import SwiftUI
 #endif
 
 class HeartbeatViewController: UIViewController {
@@ -8,68 +9,69 @@ class HeartbeatViewController: UIViewController {
 
     var viewModel = HeartbeatViewModel() {
         didSet {
-#if canImport(SwiftUI) && canImport(Combine)
-            if #available(iOS 13, *) {
-                env.viewModel = viewModel
-            }
-#endif
+            #if canImport(SwiftUI) && canImport(Combine)
+                if #available(iOS 13, *) {
+                    env.viewModel = viewModel
+                }
+            #endif
             table?.viewModel = viewModel
         }
     }
 
-    @IBOutlet weak var tableContainer: UIView!
-    @IBOutlet weak var listContainer: UIView!
+    @IBOutlet var tableContainer: UIView!
+    @IBOutlet var listContainer: UIView!
 
-#if canImport(SwiftUI) && canImport(Combine)
-    @available(iOS 13, *)
-    private lazy var env = HeartbeatEnvironmentObject()
-#endif
+    #if canImport(SwiftUI) && canImport(Combine)
+        @available(iOS 13, *)
+        private lazy var env = HeartbeatEnvironmentObject()
+    #endif
 
     private var table: HeartbeatTableViewController?
 }
 
 extension HeartbeatViewController: HeartbeatViewInput {
     func localize() {
-        navigationItem.title = "Settings.BackgroundScanning.title".localized()
+        navigationItem.title = RuuviLocalization.Settings.BackgroundScanning.title
     }
 }
 
 // MARK: - View lifecycle
+
 extension HeartbeatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
+        localize()
     }
 
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {
         #if SWIFTUI
-        if #available(iOS 13, *) {
-            return identifier == HeartbeatEmbedSegue.list.rawValue
-        } else {
-            return identifier == HeartbeatEmbedSegue.table.rawValue
-        }
+            if #available(iOS 13, *) {
+                return identifier == HeartbeatEmbedSegue.list.rawValue
+            } else {
+                return identifier == HeartbeatEmbedSegue.table.rawValue
+            }
         #else
-        return identifier == HeartbeatEmbedSegue.table.rawValue
+            return identifier == HeartbeatEmbedSegue.table.rawValue
         #endif
     }
 
     #if SWIFTUI && canImport(SwiftUI) && canImport(Combine)
-    @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 13, *) {
-            env.viewModel = viewModel
-            return UIHostingController(coder: coder, rootView: HeartbeatList().environmentObject(env))
-        } else {
-            return nil
+        @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
+            if #available(iOS 13, *) {
+                env.viewModel = viewModel
+                return UIHostingController(coder: coder, rootView: HeartbeatList().environmentObject(env))
+            } else {
+                return nil
+            }
         }
-    }
     #else
-    @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-        return nil
-    }
+        @IBSegueAction func addSwiftUIView(_: NSCoder) -> UIViewController? {
+            nil
+        }
     #endif
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         switch segue.identifier {
         case HeartbeatEmbedSegue.table.rawValue:
             table = segue.destination as? HeartbeatTableViewController
@@ -82,6 +84,7 @@ extension HeartbeatViewController {
 }
 
 // MARK: - Configure Views
+
 extension HeartbeatViewController {
     func configureViews() {
         tableContainer.isHidden = !shouldPerformSegue(withIdentifier: HeartbeatEmbedSegue.table.rawValue, sender: nil)

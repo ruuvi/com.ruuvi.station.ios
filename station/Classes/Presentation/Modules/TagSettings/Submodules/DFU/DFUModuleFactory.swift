@@ -1,13 +1,13 @@
-import UIKit
-import RuuviOntology
-import RuuviDFU
 import BTKit
-import RuuviPool
-import RuuviStorage
-import RuuviLocal
 import RuuviDaemon
-import RuuviPresenters
+import RuuviDFU
+import RuuviLocal
+import RuuviOntology
 import RuuviPersistence
+import RuuviPool
+import RuuviPresenters
+import RuuviStorage
+import UIKit
 
 protocol DFUModuleFactory {
     func create(for ruuviTag: RuuviTagSensor) -> DFUModuleInput

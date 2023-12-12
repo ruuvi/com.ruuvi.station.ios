@@ -13,10 +13,10 @@ enum MeasurementType: String {
 
 extension MeasurementType {
     static var chartsCases: [MeasurementType] {
-        return [
+        [
             .temperature,
             .humidity,
-            .pressure
+            .pressure,
         ]
     }
 }

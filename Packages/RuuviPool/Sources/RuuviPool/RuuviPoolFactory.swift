@@ -1,6 +1,6 @@
 import Foundation
-import RuuviPersistence
 import RuuviLocal
+import RuuviPersistence
 
 public protocol RuuviPoolFactory {
     func create(

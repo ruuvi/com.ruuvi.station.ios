@@ -1,11 +1,11 @@
-import UIKit
 import CoreNFC
+import RuuviLocalization
 import RuuviOntology
+import UIKit
 
 class SensorForceClaimViewController: UIViewController {
-
     private lazy var backButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .label
         let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
@@ -21,24 +21,28 @@ class SensorForceClaimViewController: UIViewController {
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.text = "force_claim_sensor_description1".localized()
+        label.text = RuuviLocalization.forceClaimSensorDescription1
         label.font = UIFont.Muli(.regular, size: 16)
         return label
     }()
 
     private lazy var claimSensorButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
-        button.setTitle("force_claim".localized(), for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
+        button.setTitle(RuuviLocalization.forceClaim, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleClaimSensorTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleClaimSensorTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
-    private lazy var sensorClaimNotesViewContainer: UIView = UIView(
+    private lazy var sensorClaimNotesViewContainer: UIView = .init(
         color: RuuviColor.ruuviPrimary
     )
     private lazy var sensorClaimNotesView: UITextView = {
@@ -46,7 +50,7 @@ class SensorForceClaimViewController: UIViewController {
         tv.isSelectable = false
         tv.isEditable = false
         tv.textAlignment = .left
-        tv.text = "force_claim_sensor_description2".localized()
+        tv.text = RuuviLocalization.forceClaimSensorDescription2
         tv.textColor = RuuviColor.ruuviTextColor
         tv.backgroundColor = .clear
         tv.font = UIFont.Muli(.regular, size: 16)
@@ -55,39 +59,48 @@ class SensorForceClaimViewController: UIViewController {
     }()
 
     private lazy var useNFCButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
-        button.setTitle(
-            "use_nfc".localized(),
-                        for: .normal
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
         )
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleUseNFCButtonTap),
-                         for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var useBluetoothButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
         button.setTitle(
-            "use_bluetooth".localized(),
+            RuuviLocalization.useNfc,
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleUseBluetoothButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleUseNFCButtonTap),
+            for: .touchUpInside
+        )
+        return button
+    }()
+
+    private lazy var useBluetoothButton: UIButton = {
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
+        button.setTitle(
+            RuuviLocalization.useBluetooth,
+            for: .normal
+        )
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.addTarget(
+            self,
+            action: #selector(handleUseBluetoothButtonTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
     // Implementation
     private var isNFCAvailable: Bool {
-        return NFCNDEFReaderSession.readingAvailable
+        NFCNDEFReaderSession.readingAvailable
     }
+
     private var session: NFCNDEFReaderSession?
 
     // Constraints
@@ -99,19 +112,21 @@ class SensorForceClaimViewController: UIViewController {
 
     // Output
     var output: SensorForceClaimViewOutput?
-
 }
 
 // MARK: - VIEW LIFECYCLE
+
 extension SensorForceClaimViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output?.viewDidLoad()
     }
 }
 
 // MARK: - SensorForceClaimViewInput
+
 extension SensorForceClaimViewController: SensorForceClaimViewInput {
     func localize() {
         // No op.
@@ -135,18 +150,19 @@ extension SensorForceClaimViewController: SensorForceClaimViewInput {
     }
 
     func showGATTConnectionTimeoutDialog() {
-        let message = "sensor_not_found_error".localized()
+        let message = RuuviLocalization.sensorNotFoundError
         let controller = UIAlertController(
             title: nil, message: message, preferredStyle: .alert
         )
         controller.addAction(
-            UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil)
+            UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil)
         )
         present(controller, animated: true)
     }
 }
 
 // MARK: - PRIVATE SET UI
+
 extension SensorForceClaimViewController {
     private func setUpUI() {
         setUpBase()
@@ -155,18 +171,20 @@ extension SensorForceClaimViewController {
     }
 
     private func setUpBase() {
-        self.title = "force_claim_sensor".localized()
+        title = RuuviLocalization.forceClaimSensor
 
         view.backgroundColor = RuuviColor.ruuviPrimary
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(top: backBarButtonItemView.topAnchor,
-                          leading: backBarButtonItemView.leadingAnchor,
-                          bottom: backBarButtonItemView.bottomAnchor,
-                          trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: backBarButtonItemView.topAnchor,
+            leading: backBarButtonItemView.leadingAnchor,
+            bottom: backBarButtonItemView.bottomAnchor,
+            trailing: backBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 
@@ -264,8 +282,9 @@ extension SensorForceClaimViewController {
 }
 
 // MARK: - IBACTIONS
+
 extension SensorForceClaimViewController {
-    @objc fileprivate func backButtonDidTap() {
+    @objc private func backButtonDidTap() {
         _ = navigationController?.popViewController(animated: true)
     }
 
@@ -283,8 +302,9 @@ extension SensorForceClaimViewController {
 }
 
 // MARK: - PRIVATE
-extension SensorForceClaimViewController {
-    fileprivate func hideNFCButton(hide: Bool) {
+
+private extension SensorForceClaimViewController {
+    func hideNFCButton(hide: Bool) {
         useNFCButton.alpha = hide ? 0 : 1
         bluetoothButtonRegularLeadingConstraint.isActive = !hide
         bluetoothButtonRegularTrailingConstraint.isActive = !hide
@@ -295,14 +315,15 @@ extension SensorForceClaimViewController {
 }
 
 // MARK: - NFCNDEFReaderSessionDelegate
+
 extension SensorForceClaimViewController: NFCNDEFReaderSessionDelegate {
-    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
+    func readerSession(_: NFCNDEFReaderSession, didInvalidateWithError _: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.stopNFCSession()
         }
     }
 
-    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
+    func readerSession(_: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
         DispatchQueue.main.async { [weak self] in
             self?.output?.viewDidReceiveNFCMessages(messages: messages)
         }

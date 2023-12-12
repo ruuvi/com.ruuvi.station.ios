@@ -8,6 +8,7 @@ protocol TagChartsViewModuleInput: AnyObject {
     func notifyDismissInstruction(dismissParent: Bool)
     func dismiss(completion: (() -> Void)?)
 }
+
 extension TagChartsViewModuleInput {
     func dismiss() {
         dismiss(completion: nil)

@@ -1,7 +1,7 @@
 import Foundation
-import RuuviService
-import RuuviPresenters
 import RuuviLocal
+import RuuviPresenters
+import RuuviService
 
 protocol SensorRemovalModuleFactory {
     func create() -> SensorRemovalViewController

@@ -1,13 +1,12 @@
 import Foundation
+import RuuviLocalization
 import RuuviOntology
 
 extension RuuviAlertSound: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
-        case .systemDefault:
-          return "settings_alert_sound_default".localized()
-        case .ruuviSpeak:
-          return "settings_alert_sound_ruuvi_speak".localized()
+        case .systemDefault: { _ in RuuviLocalization.settingsAlertSoundDefault }
+        case .ruuviSpeak: { _ in RuuviLocalization.settingsAlertSoundRuuviSpeak }
         }
     }
 }

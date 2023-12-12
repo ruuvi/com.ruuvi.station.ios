@@ -1,7 +1,7 @@
 import UIKit
 
 class SelectionTableInitializer: NSObject {
-    @IBOutlet weak var viewController: SelectionTableViewController!
+    @IBOutlet var viewController: SelectionTableViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

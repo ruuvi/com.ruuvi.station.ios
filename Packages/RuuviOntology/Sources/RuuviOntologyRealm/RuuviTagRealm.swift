@@ -1,7 +1,6 @@
+import BTKit
 import Foundation
 import RealmSwift
-import BTKit
-import RuuviOntology
 
 public final class RuuviTagRealm: Object, RuuviTagRealmProtocol {
     @objc public dynamic var uuid: String = ""
@@ -13,37 +12,37 @@ public final class RuuviTagRealm: Object, RuuviTagRealmProtocol {
 
     public let data = LinkingObjects(fromType: RuuviTagDataRealm.self, property: "ruuviTag")
 
-    public override static func primaryKey() -> String {
-        return "uuid"
+    override public static func primaryKey() -> String {
+        "uuid"
     }
 
-    public convenience required init(mac: String) {
+    public required convenience init(mac: String) {
         self.init()
-        self.uuid = UUID().uuidString
+        uuid = UUID().uuidString
         self.mac = mac
-        self.name = mac
-        self.version = 5
-        self.isConnectable = true
-        self.isOwner = true
+        name = mac
+        version = 5
+        isConnectable = true
+        isOwner = true
     }
 
-    public convenience required init(ruuviTag: RuuviTagProtocol, name: String) {
+    public required convenience init(ruuviTag: RuuviTagProtocol, name: String) {
         self.init()
-        self.uuid = ruuviTag.uuid
+        uuid = ruuviTag.uuid
         self.name = name
-        self.mac = ruuviTag.mac
-        self.version = ruuviTag.version
-        self.isConnectable = ruuviTag.isConnectable
-        self.isOwner = ruuviTag.isOwner
+        mac = ruuviTag.mac
+        version = ruuviTag.version
+        isConnectable = ruuviTag.isConnectable
+        isOwner = ruuviTag.isOwner
     }
 
-    public convenience required init(ruuviTag: RuuviTagSensor) {
+    public required convenience init(ruuviTag: RuuviTagSensor) {
         self.init()
-        self.uuid = ruuviTag.id
-        self.name = ruuviTag.name
-        self.mac = ruuviTag.macId?.value
-        self.version = ruuviTag.version
-        self.isConnectable = ruuviTag.isConnectable
-        self.isOwner = ruuviTag.isOwner
+        uuid = ruuviTag.id
+        name = ruuviTag.name
+        mac = ruuviTag.macId?.value
+        version = ruuviTag.version
+        isConnectable = ruuviTag.isConnectable
+        isOwner = ruuviTag.isOwner
     }
 }

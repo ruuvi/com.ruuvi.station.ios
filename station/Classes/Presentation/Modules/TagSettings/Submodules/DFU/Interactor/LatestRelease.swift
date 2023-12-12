@@ -6,11 +6,11 @@ struct LatestRelease: Codable {
 
     enum CodingKeys: String, CodingKey {
         case version = "tag_name"
-        case assets = "assets"
+        case assets
     }
 
     private var defaultFullZipAsset: LatestReleaseAsset? {
-        return assets.first(where: {
+        assets.first(where: {
             $0.name.hasSuffix("zip")
                 && $0.name.contains("default")
                 && !$0.name.contains("app")
@@ -18,7 +18,7 @@ struct LatestRelease: Codable {
     }
 
     private var defaultAppZipAsset: LatestReleaseAsset? {
-        return assets.first(where: {
+        assets.first(where: {
             $0.name.hasSuffix("zip")
                 && $0.name.contains("default")
                 && $0.name.contains("app")
@@ -26,26 +26,26 @@ struct LatestRelease: Codable {
     }
 
     var defaultFullZipName: String? {
-        return defaultFullZipAsset?.name
+        defaultFullZipAsset?.name
     }
 
     var defaultFullZipUrl: URL? {
         if let downloadUrlString = defaultFullZipAsset?.downloadUrlString {
-            return URL(string: downloadUrlString)
+            URL(string: downloadUrlString)
         } else {
-            return nil
+            nil
         }
     }
 
     var defaultAppZipName: String? {
-        return defaultAppZipAsset?.name
+        defaultAppZipAsset?.name
     }
 
     var defaultAppZipUrl: URL? {
         if let downloadUrlString = defaultAppZipAsset?.downloadUrlString {
-            return URL(string: downloadUrlString)
+            URL(string: downloadUrlString)
         } else {
-            return nil
+            nil
         }
     }
 }

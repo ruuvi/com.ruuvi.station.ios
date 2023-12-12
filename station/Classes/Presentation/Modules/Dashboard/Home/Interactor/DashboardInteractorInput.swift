@@ -1,7 +1,7 @@
 import Foundation
 import Future
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
 
 protocol DashboardInteractorInput: AnyObject {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor)

@@ -1,7 +1,7 @@
-import UIKit
 import Foundation
 import Future
 import RuuviOntology
+import UIKit
 
 public protocol RuuviServiceSensorProperties {
     @discardableResult
@@ -26,12 +26,12 @@ public protocol RuuviServiceSensorProperties {
     func removeImage(for sensor: RuuviTagSensor)
 }
 
-extension RuuviServiceSensorProperties {
-    public func set(
+public extension RuuviServiceSensorProperties {
+    func set(
         image: UIImage,
         for sensor: RuuviTagSensor
     ) -> Future<URL, RuuviServiceError> {
-        return set(
+        set(
             image: image,
             for: sensor,
             progress: nil,

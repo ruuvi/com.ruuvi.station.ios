@@ -1,6 +1,6 @@
-import UIKit
-import RuuviUser
 import RuuviLocal
+import RuuviUser
+import UIKit
 
 enum UniversalLinkType: String {
     case verify = "/verify"
@@ -9,9 +9,9 @@ enum UniversalLinkType: String {
     var handlerType: UIViewController.Type {
         switch self {
         case .verify:
-            return SignInViewController.self
+            SignInViewController.self
         case .dashboard:
-            return DashboardViewController.self
+            DashboardViewController.self
         }
     }
 }
@@ -23,13 +23,17 @@ class UniversalLinkCoordinatorImpl {
 
     private var urlComponents: URLComponents!
 }
+
 // MARK: - UniversalLinkInteractorInput
 
 extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
     func processUniversalLink(url: URL) {
-        guard let urlComponents = URLComponents(url: url,
-                                                resolvingAgainstBaseURL: false),
-              let path = UniversalLinkType(rawValue: urlComponents.path) else {
+        guard let urlComponents = URLComponents(
+            url: url,
+            resolvingAgainstBaseURL: false
+        ),
+            let path = UniversalLinkType(rawValue: urlComponents.path)
+        else {
             return
         }
         self.urlComponents = urlComponents
@@ -38,19 +42,21 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
 
     func processWidgetLink(macId: String) {
         settings.setCardToOpenFromWidget(for: macId)
-        NotificationCenter.default.post(name: .DidOpenWithWidgetDeepLink,
-                                        object: nil,
-                                        userInfo: [WidgetDeepLinkMacIdKey.macId: macId])
+        NotificationCenter.default.post(
+            name: .DidOpenWithWidgetDeepLink,
+            object: nil,
+            userInfo: [WidgetDeepLinkMacIdKey.macId: macId]
+        )
     }
 }
 
 // MARK: - Private
 
 extension UniversalLinkCoordinatorImpl {
-
     private func detectViewController(for path: UniversalLinkType) {
         DispatchQueue.main.async { [weak self] in
-            guard let topViewController = UIApplication.shared.topViewController() else {
+            guard let topViewController = UIApplication.shared.topViewController()
+            else {
                 return
             }
             if topViewController.isMember(of: path.handlerType) {
@@ -68,18 +74,21 @@ extension UniversalLinkCoordinatorImpl {
 
     private func openVerify(from topViewController: UIViewController) {
         guard let token = urlComponents.queryItems?
-                .first(where: { $0.name == "token" })?
-                .value,
-              !ruuviUser.isAuthorized else {
-                  NotificationCenter.default.post(name: .DidOpenWithUniversalLink,
-                                                  object: nil,
-                                                  userInfo: nil)
+            .first(where: { $0.name == "token" })?
+            .value,
+            !ruuviUser.isAuthorized
+        else {
+            NotificationCenter.default.post(
+                name: .DidOpenWithUniversalLink,
+                object: nil,
+                userInfo: nil
+            )
             return
         }
         router.openSignInVerify(with: token, from: topViewController)
     }
 
-    private func openDashboard(from topViewController: UIViewController) {
+    private func openDashboard(from _: UIViewController) {
         // No action needed here since root view controller is dashboard, and
         // we will be opening dashboard anyway on deeplink tap.
     }
@@ -88,11 +97,13 @@ extension UniversalLinkCoordinatorImpl {
         var userInfo: [String: Any] = [
             "path": path
         ]
-        urlComponents.queryItems?.forEach({
+        urlComponents.queryItems?.forEach {
             userInfo[$0.name] = $0.value
-        })
-        NotificationCenter.default.post(name: .DidOpenWithUniversalLink,
-                                        object: nil,
-                                        userInfo: userInfo)
+        }
+        NotificationCenter.default.post(
+            name: .DidOpenWithUniversalLink,
+            object: nil,
+            userInfo: userInfo
+        )
     }
 }

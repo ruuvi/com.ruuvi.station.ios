@@ -1,12 +1,12 @@
 import Foundation
-import Swinject
 import RuuviCloud
 import RuuviUser
+import Swinject
 #if canImport(RuuviCloudPure)
-import RuuviCloudPure
+    import RuuviCloudPure
 #endif
 #if canImport(RuuviUserCoordinator)
-import RuuviUserCoordinator
+    import RuuviUserCoordinator
 #endif
 
 final class WidgetAssembly {
@@ -23,7 +23,6 @@ final class WidgetAssembly {
 
 private final class NetworkingAssembly: Assembly {
     func assemble(container: Container) {
-
         let appGroupDefaults = UserDefaults(
             suiteName: Constants.appGroupBundleId.rawValue
         )
@@ -45,17 +44,16 @@ private final class NetworkingAssembly: Assembly {
         }
 
         container.register(RuuviCloudFactory.self) { _ in
-            return RuuviCloudFactoryPure()
+            RuuviCloudFactoryPure()
         }
 
         container.register(RuuviUserFactory.self) { _ in
-            return RuuviUserFactoryCoordinator()
+            RuuviUserFactoryCoordinator()
         }
 
         container.register(RuuviUser.self) { r in
             let factory = r.resolve(RuuviUserFactory.self)!
             return factory.createUser()
         }.inObjectScope(.container)
-
     }
 }

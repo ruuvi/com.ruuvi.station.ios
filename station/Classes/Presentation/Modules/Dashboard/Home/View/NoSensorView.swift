@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol NoSensorViewDelegate: NSObjectProtocol {
@@ -7,13 +8,13 @@ protocol NoSensorViewDelegate: NSObjectProtocol {
 }
 
 class NoSensorView: UIView {
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -46,43 +47,65 @@ class NoSensorView: UIView {
     }()
 
     private lazy var signInButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25)
-        button.setTitle("SignIn.Title.text".localized(),
-                        for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25
+        )
+        button.setTitle(
+            RuuviLocalization.SignIn.Title.text,
+            for: .normal
+        )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold,
-                                              size: UIDevice.isiPhoneSE() ? 14 : 16)
-        button.addTarget(self,
-                         action: #selector(handleSignInTap),
-                         for: .touchUpInside)
+        button.titleLabel?.font = UIFont.Muli(
+            .bold,
+            size: UIDevice.isiPhoneSE() ? 14 : 16
+        )
+        button.addTarget(
+            self,
+            action: #selector(handleSignInTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
     private lazy var addSensorButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25)
-        button.setTitle("add_a_sensor".localized(),
-                        for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25
+        )
+        button.setTitle(
+            RuuviLocalization.addASensor,
+            for: .normal
+        )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold,
-                                              size: UIDevice.isiPhoneSE() ? 14 : 16)
-        button.addTarget(self,
-                         action: #selector(handleAddSensorTap),
-                         for: .touchUpInside)
+        button.titleLabel?.font = UIFont.Muli(
+            .bold,
+            size: UIDevice.isiPhoneSE() ? 14 : 16
+        )
+        button.addTarget(
+            self,
+            action: #selector(handleAddSensorTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
     private lazy var buySensorButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(RuuviColor.ruuviTextColor, for: .normal)
-        button.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(),
-                        for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold,
-                                              size: 14)
-        button.addTarget(self,
-                         action: #selector(handleBuySensorTap),
-                         for: .touchUpInside)
+        button.setTitle(
+            RuuviLocalization.DiscoverTable.GetMoreSensors.Button.title,
+            for: .normal
+        )
+        button.titleLabel?.font = UIFont.Muli(
+            .bold,
+            size: 14
+        )
+        button.addTarget(
+            self,
+            action: #selector(handleBuySensorTap),
+            for: .touchUpInside
+        )
         button.underline()
         return button
     }()
@@ -100,11 +123,11 @@ extension NoSensorView {
 }
 
 // MARK: - Public
+
 extension NoSensorView {
     func updateView(userSignInOnce: Bool) {
-
         if centerButtonStackView.subviews.count > 0 {
-            centerButtonStackView.subviews.forEach({ $0.removeFromSuperview() })
+            centerButtonStackView.subviews.forEach { $0.removeFromSuperview() }
         }
 
         let buttons = userSignInOnce ? [signInButton, addSensorButton] : [addSensorButton]
@@ -112,8 +135,8 @@ extension NoSensorView {
             centerButtonStackView.addArrangedSubview(button)
         }
         messageLabel.text = userSignInOnce ?
-            "dashboard_no_sensors_message_signed_out".localized() :
-            "dashboard_no_sensors_message".localized()
+            RuuviLocalization.dashboardNoSensorsMessageSignedOut :
+            RuuviLocalization.dashboardNoSensorsMessage
         centerButtonCenterYAnchor.isActive =
             userSignInOnce ? activateCenterButtonStackConstraint() : true
     }
@@ -144,16 +167,22 @@ extension NoSensorView {
         container
             .widthAnchor
             .constraint(
-            equalTo: self.widthAnchor
-        ).isActive = true
+                equalTo: widthAnchor
+            ).isActive = true
 
         container.addSubview(messageLabel)
-        messageLabel.anchor(top: nil,
-                            leading: container.safeLeftAnchor,
-                            bottom: nil,
-                            trailing: container.safeRightAnchor,
-                            padding: .init(top: 0, left: 30,
-                                           bottom: 0, right: 30))
+        messageLabel.anchor(
+            top: nil,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: 30,
+                bottom: 0,
+                right: 30
+            )
+        )
         messageLabelTopAnchor = messageLabel
             .topAnchor
             .constraint(
@@ -166,11 +195,13 @@ extension NoSensorView {
         container.addSubview(centerButtonStackView)
         addSensorButton.constrainHeight(constant: UIDevice.isiPhoneSE() ? 40 : 50)
         if UIDevice.isiPhoneSE() {
-            centerButtonStackView.anchor(top: nil,
-                                   leading: container.leadingAnchor,
-                                   bottom: nil,
-                                   trailing: container.trailingAnchor,
-                                   padding: .init(top: 0, left: 8, bottom: 0, right: 8))
+            centerButtonStackView.anchor(
+                top: nil,
+                leading: container.leadingAnchor,
+                bottom: nil,
+                trailing: container.trailingAnchor,
+                padding: .init(top: 0, left: 8, bottom: 0, right: 8)
+            )
         } else {
             centerButtonStackView.widthAnchor.constraint(
                 greaterThanOrEqualToConstant: 300
@@ -186,18 +217,24 @@ extension NoSensorView {
         centerButtonCenterYAnchor = centerButtonStackView
             .centerYAnchor
             .constraint(
-                equalTo: self.centerYAnchor
+                equalTo: centerYAnchor
             )
         centerButtonCenterYAnchor.priority = .defaultLow
         centerButtonCenterYAnchor.isActive = activateCenterButtonStackConstraint()
 
         container.addSubview(buySensorButton)
-        buySensorButton.anchor(top: centerButtonStackView.bottomAnchor,
-                               leading: container.safeLeftAnchor,
-                               bottom: nil,
-                               trailing: container.safeRightAnchor,
-                               padding: .init(top: 24, left: 30,
-                                              bottom: 0, right: 30))
+        buySensorButton.anchor(
+            top: centerButtonStackView.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 24,
+                left: 30,
+                bottom: 0,
+                right: 30
+            )
+        )
         buySensorsButtonBottomAnchor = buySensorButton
             .bottomAnchor
             .constraint(

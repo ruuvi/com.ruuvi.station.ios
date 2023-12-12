@@ -1,7 +1,7 @@
 import LightRoute
 import UIKit
 
-class  NotificationsSettingsRouter: NotificationsSettingsRouterInput {
+class NotificationsSettingsRouter: NotificationsSettingsRouterInput {
     weak var transitionHandler: UIViewController?
 
     func dismiss() {

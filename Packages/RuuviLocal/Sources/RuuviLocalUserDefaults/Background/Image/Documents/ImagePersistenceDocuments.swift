@@ -1,10 +1,8 @@
-import UIKit
 import Future
 import RuuviOntology
-import RuuviLocal
+import UIKit
 
 class ImagePersistenceDocuments: ImagePersistence {
-
     private let ext = ".png"
     private let bgDir = "bg"
     private var isBgDirCreated = false
@@ -41,7 +39,8 @@ class ImagePersistenceDocuments: ImagePersistence {
     }
 
     private func getBgDirectory() throws -> URL {
-        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        else {
             throw RuuviLocalError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)
@@ -51,5 +50,4 @@ class ImagePersistenceDocuments: ImagePersistence {
         }
         return dir
     }
-
 }

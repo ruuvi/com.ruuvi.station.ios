@@ -1,20 +1,28 @@
-import UIKit
+// swiftlint:disable file_length
 import RangeSeekSlider
+import RuuviLocalization
+import UIKit
 
 protocol TagSettingsAlertConfigCellDelegate: AnyObject {
     func didSelectSetCustomDescription(sender: TagSettingsAlertConfigCell)
     func didSelectAlertLimitDescription(sender: TagSettingsAlertConfigCell)
-    func didChangeAlertState(sender: TagSettingsAlertConfigCell,
-                             didToggle isOn: Bool)
+    func didChangeAlertState(
+        sender: TagSettingsAlertConfigCell,
+        didToggle isOn: Bool
+    )
     // When slider is changing we would like to update the labels.
     // But, we will not make endpoint calls.
-    func didChangeAlertRange(sender: TagSettingsAlertConfigCell,
-                             didSlideTo minValue: CGFloat,
-                             maxValue: CGFloat)
+    func didChangeAlertRange(
+        sender: TagSettingsAlertConfigCell,
+        didSlideTo minValue: CGFloat,
+        maxValue: CGFloat
+    )
     // We will make endpoind calls for this method only.
-    func didSetAlertRange(sender: TagSettingsAlertConfigCell,
-                          minValue: CGFloat,
-                          maxValue: CGFloat)
+    func didSetAlertRange(
+        sender: TagSettingsAlertConfigCell,
+        minValue: CGFloat,
+        maxValue: CGFloat
+    )
 }
 
 class TagSettingsAlertConfigCell: UITableViewCell {
@@ -39,7 +47,7 @@ class TagSettingsAlertConfigCell: UITableViewCell {
 
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Off".localized()
+        label.text = RuuviLocalization.off
         label.textAlignment = .right
         label.numberOfLines = 0
         label.textColor = .label
@@ -97,8 +105,10 @@ class TagSettingsAlertConfigCell: UITableViewCell {
     private var additionalTextViewHiddenHeight: NSLayoutConstraint!
 
     // Init
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setUpUI()
     }
@@ -127,100 +137,124 @@ extension TagSettingsAlertConfigCell {
         backgroundColor = RuuviColor.ruuviPrimary
 
         addSubview(noticeView)
-        noticeView.anchor(top: topAnchor,
-                          leading: self.safeLeftAnchor,
-                          bottom: nil,
-                          trailing: self.safeRightAnchor)
+        noticeView.anchor(
+            top: topAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor
+        )
         noticeViewHiddenHeight = noticeView.heightAnchor.constraint(equalToConstant: 0)
         noticeViewHiddenHeight.isActive = true
 
         noticeView.addSubview(noticeLabel)
-        noticeLabel.fillSuperview(padding: .init(top: 8,
-                                                 left: 8,
-                                                 bottom: 8,
-                                                 right: 8))
+        noticeLabel.fillSuperview(padding: .init(
+            top: 8,
+            left: 8,
+            bottom: 8,
+            right: 8
+        ))
 
         let statusContainerView = UIView(color: .clear)
 
         addSubview(statusContainerView)
-        statusContainerView.anchor(top: noticeView.bottomAnchor,
-                                   leading: self.safeLeftAnchor,
-                                   bottom: nil,
-                                   trailing: self.safeRightAnchor,
-                                   padding: .init(top: 0,
-                                                  left: 18,
-                                                  bottom: 0,
-                                                  right: 16),
-                                   size: .init(width: 0, height: 44))
+        statusContainerView.anchor(
+            top: noticeView.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: 18,
+                bottom: 0,
+                right: 16
+            ),
+            size: .init(width: 0, height: 44)
+        )
 
         statusContainerView.addSubview(statusLabel)
-        statusLabel.anchor(top: statusContainerView.topAnchor,
-                           leading: statusContainerView.leadingAnchor,
-                           bottom: statusContainerView.bottomAnchor,
-                           trailing: nil)
+        statusLabel.anchor(
+            top: statusContainerView.topAnchor,
+            leading: statusContainerView.leadingAnchor,
+            bottom: statusContainerView.bottomAnchor,
+            trailing: nil
+        )
 
         statusContainerView.addSubview(statusSwitch)
-        statusSwitch.anchor(top: nil,
-                            leading: statusLabel.trailingAnchor,
-                            bottom: nil,
-                            trailing: statusContainerView.trailingAnchor,
-                            padding: .init(top: 0, left: 12, bottom: 0, right: 4))
+        statusSwitch.anchor(
+            top: nil,
+            leading: statusLabel.trailingAnchor,
+            bottom: nil,
+            trailing: statusContainerView.trailingAnchor,
+            padding: .init(top: 0, left: 12, bottom: 0, right: 4)
+        )
         statusSwitch.sizeToFit()
         statusSwitch.centerYInSuperview()
 
         let statusSeparator = UIView()
         statusSeparator.backgroundColor = RuuviColor.ruuviLineColor
         addSubview(statusSeparator)
-        statusSeparator.anchor(top: statusContainerView.bottomAnchor,
-                               leading: self.safeLeftAnchor,
-                               bottom: nil,
-                               trailing: self.safeRightAnchor,
-                               padding: .init(top: 0, left: 16, bottom: 0, right: 16),
-                               size: .init(width: 0, height: 1))
+        statusSeparator.anchor(
+            top: statusContainerView.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
+            size: .init(width: 0, height: 1)
+        )
 
         addSubview(setCustomDescriptionView)
-        setCustomDescriptionView.anchor(top: statusSeparator.bottomAnchor,
-                                        leading: self.safeLeftAnchor,
-                                        bottom: nil,
-                                        trailing: self.safeRightAnchor,
-                                        size: .init(width: 0, height: 44))
+        setCustomDescriptionView.anchor(
+            top: statusSeparator.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            size: .init(width: 0, height: 44)
+        )
 
         let customDescriptionSeparator = UIView()
         customDescriptionSeparator.backgroundColor = RuuviColor.ruuviLineColor
         addSubview(customDescriptionSeparator)
-        customDescriptionSeparator.anchor(top: setCustomDescriptionView.bottomAnchor,
-                                          leading: self.safeLeftAnchor,
-                                          bottom: nil,
-                                          trailing: self.safeRightAnchor,
-                                          padding: .init(top: 0, left: 16, bottom: 0, right: 16),
-                                          size: .init(width: 0, height: 1))
+        customDescriptionSeparator.anchor(
+            top: setCustomDescriptionView.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
+            size: .init(width: 0, height: 1)
+        )
 
         addSubview(alertLimitDescriptionView)
-        alertLimitDescriptionView.anchor(top: customDescriptionSeparator.bottomAnchor,
-                                         leading: self.safeLeftAnchor,
-                                         bottom: nil,
-                                         trailing: self.safeRightAnchor)
+        alertLimitDescriptionView.anchor(
+            top: customDescriptionSeparator.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor
+        )
         alertLimitDescriptionViewHiddenHeight = alertLimitDescriptionView
             .heightAnchor
             .constraint(equalToConstant: 0)
 
         addSubview(alertLimitSliderView)
-        alertLimitSliderView.anchor(top: alertLimitDescriptionView.bottomAnchor,
-                                    leading: self.safeLeftAnchor,
-                                    bottom: nil,
-                                    trailing: self.safeRightAnchor,
-                                    padding: .init(top: 0, left: 0, bottom: 0, right: 4),
-                                    size: .init(width: 0, height: 40))
+        alertLimitSliderView.anchor(
+            top: alertLimitDescriptionView.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 4),
+            size: .init(width: 0, height: 40)
+        )
         alertLimitSliderViewHiddenHeight = alertLimitSliderView
             .heightAnchor
             .constraint(equalToConstant: 0)
 
         addSubview(additionalTextView)
-        additionalTextView.anchor(top: alertLimitSliderView.bottomAnchor,
-                                  leading: self.safeLeftAnchor,
-                                  bottom: self.safeBottomAnchor,
-                                  trailing: self.safeRightAnchor,
-                                  size: .init(width: 0, height: 44))
+        additionalTextView.anchor(
+            top: alertLimitSliderView.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: safeRightAnchor,
+            size: .init(width: 0, height: 44)
+        )
         additionalTextViewHiddenHeight = additionalTextView
             .heightAnchor
             .constraint(equalToConstant: 0)
@@ -236,6 +270,7 @@ extension TagSettingsAlertConfigCell {
 }
 
 // MARK: - Private action
+
 extension TagSettingsAlertConfigCell {
     @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
         delegate?.didChangeAlertState(sender: self, didToggle: sender.isOn)
@@ -243,10 +278,11 @@ extension TagSettingsAlertConfigCell {
 }
 
 // MARK: - Pubic Setters
+
 extension TagSettingsAlertConfigCell {
     func setStatus(with value: Bool?) {
-        if let value = value {
-            statusLabel.text = value ? "On".localized() : "Off".localized()
+        if let value {
+            statusLabel.text = value ? RuuviLocalization.on : RuuviLocalization.off
             statusSwitch.setOn(value, animated: false)
         }
     }
@@ -263,23 +299,25 @@ extension TagSettingsAlertConfigCell {
         alertLimitDescriptionView.configure(with: description)
     }
 
-    func setAlertRange(minValue: CGFloat? = nil,
-                       selectedMinValue: CGFloat? = nil,
-                       maxValue: CGFloat? = nil,
-                       selectedMaxValue: CGFloat? = nil) {
-        if let minValue = minValue {
+    func setAlertRange(
+        minValue: CGFloat? = nil,
+        selectedMinValue: CGFloat? = nil,
+        maxValue: CGFloat? = nil,
+        selectedMaxValue: CGFloat? = nil
+    ) {
+        if let minValue {
             alertLimitSliderView.minValue = minValue
         }
 
-        if let maxValue = maxValue {
+        if let maxValue {
             alertLimitSliderView.maxValue = maxValue
         }
 
-        if let selectedMinValue = selectedMinValue {
+        if let selectedMinValue {
             alertLimitSliderView.selectedMinValue = selectedMinValue
         }
 
-        if let selectedMaxValue = selectedMaxValue {
+        if let selectedMaxValue {
             alertLimitSliderView.selectedMaxValue = selectedMaxValue
         }
         alertLimitSliderView.refresh()
@@ -343,8 +381,10 @@ extension TagSettingsAlertConfigCell {
         noticeView.alpha = 1
     }
 
-    func disableEditing(disable: Bool,
-                        identifier: TagSettingsSectionIdentifier) {
+    func disableEditing(
+        disable: Bool,
+        identifier: TagSettingsSectionIdentifier
+    ) {
         statusSwitch.disable(disable)
         statusLabel.disable(disable)
         setCustomDescriptionView.disable(disable)
@@ -363,6 +403,7 @@ extension TagSettingsAlertConfigCell {
 }
 
 // MARK: - RUAlertDetailsCellChildViewDelegate
+
 extension TagSettingsAlertConfigCell: RUAlertDetailsCellChildViewDelegate {
     func didTapView(sender: RUAlertDetailsCellChildView) {
         if sender == setCustomDescriptionView {
@@ -374,16 +415,23 @@ extension TagSettingsAlertConfigCell: RUAlertDetailsCellChildViewDelegate {
 }
 
 // MARK: - RangeSeekSliderDelegate
+
 extension TagSettingsAlertConfigCell: RangeSeekSliderDelegate {
-    func rangeSeekSlider(_ slider: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
-        delegate?.didChangeAlertRange(sender: self,
-                                      didSlideTo: minValue,
-                                      maxValue: maxValue)
+    func rangeSeekSlider(_: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
+        delegate?.didChangeAlertRange(
+            sender: self,
+            didSlideTo: minValue,
+            maxValue: maxValue
+        )
     }
 
-    func didEndTouches(in slider: RangeSeekSlider) {
-        delegate?.didSetAlertRange(sender: self,
-                                   minValue: alertLimitSliderView.selectedMinValue,
-                                   maxValue: alertLimitSliderView.selectedMaxValue)
+    func didEndTouches(in _: RangeSeekSlider) {
+        delegate?.didSetAlertRange(
+            sender: self,
+            minValue: alertLimitSliderView.selectedMinValue,
+            maxValue: alertLimitSliderView.selectedMaxValue
+        )
     }
 }
+
+// swiftlint:enable file_length

@@ -1,10 +1,10 @@
 import Foundation
-import RuuviUser
-import RuuviService
-import RuuviPresenters
 import RuuviCloud
 import RuuviCore
 import RuuviLocal
+import RuuviPresenters
+import RuuviService
+import RuuviUser
 
 class MyRuuviAccountConfigurator {
     func configure(view: MyRuuviAccountViewController) {

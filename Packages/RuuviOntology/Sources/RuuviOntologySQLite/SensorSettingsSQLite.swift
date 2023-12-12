@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RuuviOntology
 
 public struct SensorSettingsSQLite: SensorSettings {
     public var luid: LocalIdentifier?
@@ -33,16 +32,16 @@ public struct SensorSettingsSQLite: SensorSettings {
     }
 }
 
-extension SensorSettingsSQLite {
-    public static let idColumn = Column("id")
-    public static let luidColumn = Column("luid")
-    public static let macIdColumn = Column("macId")
-    public static let temperatureOffsetColumn = Column("temperatureOffset")
-    public static let temperatureOffsetDateColumn = Column("temperatureOffsetDate")
-    public static let humidityOffsetColumn = Column("humidityOffset")
-    public static let humidityOffsetDateColumn = Column("humidityOffsetDate")
-    public static let pressureOffsetColumn = Column("pressureOffset")
-    public static let pressureOffsetDateColumn = Column("pressureOffsetDate")
+public extension SensorSettingsSQLite {
+    static let idColumn = Column("id")
+    static let luidColumn = Column("luid")
+    static let macIdColumn = Column("macId")
+    static let temperatureOffsetColumn = Column("temperatureOffset")
+    static let temperatureOffsetDateColumn = Column("temperatureOffsetDate")
+    static let humidityOffsetColumn = Column("humidityOffset")
+    static let humidityOffsetDateColumn = Column("humidityOffsetDate")
+    static let pressureOffsetColumn = Column("pressureOffset")
+    static let pressureOffsetDateColumn = Column("pressureOffsetDate")
 }
 
 extension SensorSettingsSQLite: FetchableRecord {
@@ -64,7 +63,7 @@ extension SensorSettingsSQLite: FetchableRecord {
 
 extension SensorSettingsSQLite: PersistableRecord {
     public static var databaseTableName: String {
-        return "sensor_settings"
+        "sensor_settings"
     }
 
     public func encode(to container: inout PersistenceContainer) {
@@ -80,8 +79,8 @@ extension SensorSettingsSQLite: PersistableRecord {
     }
 }
 
-extension SensorSettingsSQLite {
-    public static func createTable(in db: Database) throws {
+public extension SensorSettingsSQLite {
+    static func createTable(in db: Database) throws {
         try db.create(table: SensorSettingsSQLite.databaseTableName, body: { table in
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(SensorSettingsSQLite.luidColumn.name, .text)
@@ -96,9 +95,9 @@ extension SensorSettingsSQLite {
     }
 }
 
-extension SensorSettingsSQLite {
-    public var sensorSettings: SensorSettings {
-        return SensorSettingsStruct(
+public extension SensorSettingsSQLite {
+    var sensorSettings: SensorSettings {
+        SensorSettingsStruct(
             luid: luid,
             macId: macId,
             temperatureOffset: temperatureOffset,
@@ -111,9 +110,9 @@ extension SensorSettingsSQLite {
     }
 }
 
-extension SensorSettings {
-    public var sqlite: SensorSettingsSQLite {
-        return SensorSettingsSQLite(
+public extension SensorSettings {
+    var sqlite: SensorSettingsSQLite {
+        SensorSettingsSQLite(
             luid: luid,
             macId: macId,
             temperatureOffset: temperatureOffset,

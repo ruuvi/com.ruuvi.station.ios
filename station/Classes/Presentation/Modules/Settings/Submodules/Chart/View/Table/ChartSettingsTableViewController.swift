@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class ChartSettingsTableViewController: UITableViewController {
@@ -25,62 +26,63 @@ class ChartSettingsTableViewController: UITableViewController {
 
 extension ChartSettingsTableViewController: ChartSettingsViewInput {
     func localize() {
-        title = "Settings.Label.Chart".localized()
+        title = RuuviLocalization.Settings.Label.chart
     }
 }
 
 // MARK: - View lifecycle
-extension ChartSettingsTableViewController {
 
-}
+extension ChartSettingsTableViewController {}
 
 // MARK: - UITableViewDataSource
-extension ChartSettingsTableViewController {
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.sections.count
+extension ChartSettingsTableViewController {
+    override func numberOfSections(in _: UITableView) -> Int {
+        viewModel.sections.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.sections[section].cells.count
+    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.sections[section].cells.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
 
         switch cellViewModel.type {
-        case .switcher(let title, let value):
+        case let .switcher(title, value):
             let cell = tableView
                 .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
             cell.isOnSwitch.isOn = value
             cell.delegate = self
             return cell
-        case .stepper(let title, let value, let unitSingular, let unitPlural):
+        case let .stepper(title, value, unitSingular, unitPlural):
             let cell = tableView
-                .dequeueReusableCell(with: ChartSettingsStepperTableViewCell.self,
-                                     for: indexPath)
+                .dequeueReusableCell(
+                    with: ChartSettingsStepperTableViewCell.self,
+                    for: indexPath
+                )
             let title = title
             let unit = value > 1 ? unitPlural : unitSingular
             cell.titleLabel.text = title + " "
                 + "(" + "\(value)" + " "
-            + unit.unitString + ")"
+                + unit.unitString + ")"
             cell.prefix = title
             cell.stepper.value = Double(value)
             cell.delegate = self
             return cell
-        case .disclosure(let title):
+        case let .disclosure(title):
             let cell = tableView.dequeueReusableCell(with: ChartSettingsDisclosureTableViewCell.self, for: indexPath)
             cell.textLabel?.text = title
             return cell
         }
     }
 
-    override func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 100
+    override func tableView(_: UITableView, estimatedHeightForFooterInSection _: Int) -> CGFloat {
+        100
     }
 
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
         footerLabel.textColor = RuuviColor.ruuviTextColor
@@ -98,6 +100,7 @@ extension ChartSettingsTableViewController {
 }
 
 // MARK: - AdvancedSwitchTableViewCellDelegate
+
 extension ChartSettingsTableViewController: ChartSettingsSwitchTableViewCellDelegate {
     func chartSettingsSwitch(cell: ChartSettingsSwitchTableViewCell, didChange value: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
@@ -108,6 +111,7 @@ extension ChartSettingsTableViewController: ChartSettingsSwitchTableViewCellDele
 }
 
 // MARK: - AdvancedStepperTableViewCellDelegate
+
 extension ChartSettingsTableViewController: ChartSettingsStepperTableViewCellDelegate {
     func chartSettingsStepper(cell: ChartSettingsStepperTableViewCell, didChange value: Int) {
         if let indexPath = tableView.indexPath(for: cell) {

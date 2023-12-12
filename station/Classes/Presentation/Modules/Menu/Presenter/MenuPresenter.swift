@@ -1,10 +1,10 @@
-import UIKit
-import RuuviService
 import RuuviLocal
-import RuuviUser
 import RuuviPresenters
+import RuuviService
+import RuuviUser
+import UIKit
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 class MenuPresenter: MenuModuleInput {
@@ -30,15 +30,14 @@ class MenuPresenter: MenuModuleInput {
 }
 
 extension MenuPresenter: MenuViewOutput {
-
     func viewWillAppear() {}
 
     var userIsAuthorized: Bool {
-        return ruuviUser.isAuthorized
+        ruuviUser.isAuthorized
     }
 
     var userEmail: String? {
-        return ruuviUser.email
+        ruuviUser.email
     }
 
     func viewDidTapOnDimmingView() {

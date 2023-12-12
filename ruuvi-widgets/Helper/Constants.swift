@@ -10,15 +10,15 @@ public enum Constants: String {
     case simpleWidgetDisplayName = "Ruuvi Widget"
 
     case isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
-    case hasCloudSensorsKey = "hasCloudSensorsKey"
-    case languageKey = "languageKey"
-    case temperatureUnitKey = "temperatureUnitKey"
-    case temperatureAccuracyKey = "temperatureAccuracyKey"
-    case humidityUnitKey = "humidityUnitKey"
-    case humidityAccuracyKey = "humidityAccuracyKey"
-    case pressureUnitKey = "pressureUnitKey"
-    case pressureAccuracyKey = "pressureAccuracyKey"
-    case useDevServerKey = "useDevServerKey"
+    case hasCloudSensorsKey
+    case languageKey
+    case temperatureUnitKey
+    case temperatureAccuracyKey
+    case humidityUnitKey
+    case humidityAccuracyKey
+    case pressureUnitKey
+    case pressureAccuracyKey
+    case useDevServerKey
 
     case ruuviLogo = "ruuvi_logo"
     case ruuviLogoEye = "eye_circle"

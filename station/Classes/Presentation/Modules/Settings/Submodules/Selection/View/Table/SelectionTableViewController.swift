@@ -1,11 +1,12 @@
-import UIKit
-import RuuviOntology
 import RuuviLocal
+import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 class SelectionTableViewController: UITableViewController {
     var output: SelectionViewOutput!
     var settings: RuuviLocalSettings!
-    @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet var descriptionTextView: UITextView!
 
     var viewModel: SelectionViewModel? {
         didSet {
@@ -35,6 +36,7 @@ class SelectionTableViewController: UITableViewController {
 }
 
 // MARK: - SelectionViewInput
+
 extension SelectionTableViewController: SelectionViewInput {
     func localize() {
         tableView.reloadData()
@@ -42,31 +44,36 @@ extension SelectionTableViewController: SelectionViewInput {
 }
 
 // MARK: - View lifecycle
+
 extension SelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        localize()
         output.viewDidLoad()
         updateUI()
-        setupLocalization()
     }
 }
 
 // MARK: - UITableViewDataSource
+
 extension SelectionTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.items.count ?? 0
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModel?.items.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let item = viewModel?.items[indexPath.row],
               let cell = tableView
-                .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
-                                     for: indexPath) as? SelectionTableViewCell else {
+                  .dequeueReusableCell(
+                      withIdentifier: cellReuseIdentifier,
+                      for: indexPath
+                  ) as? SelectionTableViewCell
+        else {
             return .init()
         }
 
         if viewModel?.unitSettingsType == .accuracy,
-            let item = item as? MeasurementAccuracyType {
+           let item = item as? MeasurementAccuracyType {
             let titleProvider = MeasurementAccuracyTitles()
             let title = titleProvider.formattedTitle(type: item, settings: settings)
             switch viewModel?.measurementType {
@@ -81,17 +88,16 @@ extension SelectionTableViewController {
             case .pressure:
                 cell.nameLabel.text = title + " " + pressureUnit.symbol
             default:
-                cell.nameLabel.text = "N/A".localized()
+                cell.nameLabel.text = RuuviLocalization.na
             }
             updateCellStyle(with: title, cell: cell)
-
         } else {
             if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
-                cell.nameLabel.text = String(format: item.title, settings.temperatureUnit.symbol)
+                cell.nameLabel.text = item.title(settings.temperatureUnit.symbol)
             } else {
-                cell.nameLabel.text = item.title
+                cell.nameLabel.text = item.title("")
             }
-            updateCellStyle(with: item.title, cell: cell)
+            updateCellStyle(with: item.title(""), cell: cell)
         }
 
         return cell
@@ -99,6 +105,7 @@ extension SelectionTableViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension SelectionTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -107,6 +114,7 @@ extension SelectionTableViewController {
 }
 
 // MARK: - Update UI
+
 extension SelectionTableViewController {
     private func updateUI() {
         title = viewModel?.title
@@ -122,8 +130,10 @@ extension SelectionTableViewController {
         }
     }
 
-    private func updateCellStyle(with title: String?,
-                                 cell: SelectionTableViewCell) {
+    private func updateCellStyle(
+        with title: String?,
+        cell: SelectionTableViewCell
+    ) {
         if title == viewModel?.selection {
             cell.accessoryType = .checkmark
             cell.nameLabel.textColor = RuuviColor.ruuviMenuTextColor

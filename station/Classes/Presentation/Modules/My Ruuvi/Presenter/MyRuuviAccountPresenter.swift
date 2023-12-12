@@ -1,15 +1,16 @@
 import Foundation
-import RuuviUser
-import RuuviService
-import RuuviPresenters
+import Future
 import RuuviCloud
 import RuuviCore
-import Future
 import RuuviLocal
+import RuuviLocalization
+import RuuviPresenters
+import RuuviService
+import RuuviUser
 import UIKit
 
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
@@ -27,6 +28,7 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
 }
 
 // MARK: - MyRuuviAccountViewOutput
+
 extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     func viewDidLoad() {
         syncViewModel()
@@ -57,6 +59,7 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
 }
 
 // MARK: - Private
+
 extension MyRuuviAccountPresenter {
     private func syncViewModel() {
         let viewModel = MyRuuviAccountViewModel()
@@ -68,14 +71,15 @@ extension MyRuuviAccountPresenter {
 }
 
 extension MyRuuviAccountPresenter {
-
     private func createSignOutAlert() {
-        let title = "Menu.SignOut.text".localized()
-        let message = "TagsManagerPresenter.SignOutConfirmAlert.Message".localized()
-        let confirmActionTitle = "OK".localized()
-        let cancelActionTitle = "Cancel".localized()
-        let confirmAction = UIAlertAction(title: confirmActionTitle,
-                                          style: .default) { [weak self] (_) in
+        let title = RuuviLocalization.Menu.SignOut.text
+        let message = RuuviLocalization.TagsManagerPresenter.SignOutConfirmAlert.message
+        let confirmActionTitle = RuuviLocalization.ok
+        let cancelActionTitle = RuuviLocalization.cancel
+        let confirmAction = UIAlertAction(
+            title: confirmActionTitle,
+            style: .default
+        ) { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.activityPresenter.show(with: .loading(message: nil))
             sSelf.cloudNotificationService.unregister(
@@ -97,14 +101,18 @@ extension MyRuuviAccountPresenter {
                     self?.activityPresenter.dismiss()
                 })
         }
-        let cancleAction = UIAlertAction(title: cancelActionTitle,
-                                         style: .cancel,
-                                         handler: nil)
-        let actions = [ confirmAction, cancleAction ]
-        let alertViewModel = AlertViewModel(title: title,
-                                            message: message,
-                                            style: .alert,
-                                            actions: actions)
+        let cancleAction = UIAlertAction(
+            title: cancelActionTitle,
+            style: .cancel,
+            handler: nil
+        )
+        let actions = [confirmAction, cancleAction]
+        let alertViewModel = AlertViewModel(
+            title: title,
+            message: message,
+            style: .alert,
+            actions: actions
+        )
         alertPresenter.showAlert(alertViewModel)
     }
 

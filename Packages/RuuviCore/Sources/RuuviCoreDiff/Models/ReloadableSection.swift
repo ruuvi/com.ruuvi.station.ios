@@ -6,6 +6,6 @@ public struct ReloadableSection<N: Equatable>: Equatable {
     public var index: Int
 
     public static func == (lhs: ReloadableSection, rhs: ReloadableSection) -> Bool {
-        return lhs.key == rhs.key && lhs.value == rhs.value
+        lhs.key == rhs.key && lhs.value == rhs.value
     }
 }

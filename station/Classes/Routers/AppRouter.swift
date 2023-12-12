@@ -1,19 +1,19 @@
-import UIKit
-import RuuviLocal
 import LightRoute
-import RuuviUser
+import RuuviLocal
 import RuuviOntology
+import RuuviUser
+import UIKit
 
 final class AppRouter {
     var viewController: UIViewController {
-        return self.navigationController
+        navigationController
     }
 
     var settings: RuuviLocalSettings!
 
     // navigation controller
     private var navigationController: UINavigationController {
-        if let navigationController = self.weakNavigationController {
+        if let navigationController = weakNavigationController {
             return navigationController
         } else {
             let rootViewController: UIViewController
@@ -22,11 +22,11 @@ final class AppRouter {
                 rootViewController = controller
             } else {
                 AppUtility.lockOrientation(.portrait)
-                rootViewController = self.onboardRouter().viewController
+                rootViewController = onboardRouter().viewController
             }
             let navigationController = UINavigationController(rootViewController: rootViewController)
             navigationController.navigationBar.tintColor = .clear
-            self.weakNavigationController = navigationController
+            weakNavigationController = navigationController
             return navigationController
         }
     }
@@ -36,15 +36,16 @@ final class AppRouter {
 
     // routers
     private func onboardRouter() -> OnboardRouter {
-        if let onboardRouter = self.weakOnboardRouter {
+        if let onboardRouter = weakOnboardRouter {
             return onboardRouter
         } else {
             let onboardRouter = OnboardRouter()
             onboardRouter.delegate = self
-            self.weakOnboardRouter = onboardRouter
+            weakOnboardRouter = onboardRouter
             return onboardRouter
         }
     }
+
     private weak var weakOnboardRouter: OnboardRouter?
 
     private func discoverRouter() -> DiscoverRouter {
@@ -53,10 +54,11 @@ final class AppRouter {
         } else {
             let discoverRouter = DiscoverRouter()
             discoverRouter.delegate = self
-            self.weakDiscoverRouter = discoverRouter
+            weakDiscoverRouter = discoverRouter
             return discoverRouter
         }
     }
+
     private weak var weakDiscoverRouter: DiscoverRouter?
 
     /// Return dashboard view controller
@@ -71,24 +73,26 @@ final class AppRouter {
     func prepareRootViewControllerWidgets() {
         let rootViewController: UIViewController
         if settings.welcomeShown {
-            if let weakDashboardController = weakDashboardController {
+            if let weakDashboardController {
                 rootViewController = weakDashboardController
             } else {
                 let controller = dashboardViewController()
                 rootViewController = controller
             }
         } else {
-            rootViewController = self.onboardRouter().viewController
+            rootViewController = onboardRouter().viewController
         }
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.tintColor = .clear
-        self.weakNavigationController = navigationController
+        weakNavigationController = navigationController
     }
 }
 
 extension AppRouter: OnboardRouterDelegate {
-    func onboardRouterDidShowSignIn(_ router: OnboardRouter,
-                                    output: SignInBenefitsModuleOutput) {
+    func onboardRouterDidShowSignIn(
+        _: OnboardRouter,
+        output: SignInBenefitsModuleOutput
+    ) {
         let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
 
@@ -101,13 +105,15 @@ extension AppRouter: OnboardRouterDelegate {
         }
     }
 
-    func onboardRouterDidFinish(_ router: OnboardRouter) {
+    func onboardRouterDidFinish(_: OnboardRouter) {
         presentDashboard()
     }
 
-    func onboardRouterDidFinish(_ router: OnboardRouter,
-                                module: SignInBenefitsModuleInput,
-                                showDashboard: Bool) {
+    func onboardRouterDidFinish(
+        _: OnboardRouter,
+        module: SignInBenefitsModuleInput,
+        showDashboard: Bool
+    ) {
         module.dismiss(completion: { [weak self] in
             if showDashboard {
                 self?.presentDashboard()
@@ -125,10 +131,12 @@ extension AppRouter: OnboardRouterDelegate {
 }
 
 extension AppRouter: DiscoverRouterDelegate {
-    func discoverRouterWantsClose(_ router: DiscoverRouter) {
-        if let weakDashboardController = weakDashboardController {
-            navigationController.pushViewController(weakDashboardController,
-                                                    animated: true)
+    func discoverRouterWantsClose(_: DiscoverRouter) {
+        if let weakDashboardController {
+            navigationController.pushViewController(
+                weakDashboardController,
+                animated: true
+            )
         } else {
             let controller = dashboardViewController()
             navigationController.setViewControllers([controller], animated: true)
@@ -136,8 +144,8 @@ extension AppRouter: DiscoverRouterDelegate {
     }
 
     func discoverRouterWantsCloseWithRuuviTagNavigation(
-        _ router: DiscoverRouter,
-        ruuviTag: RuuviTagSensor
+        _: DiscoverRouter,
+        ruuviTag _: RuuviTagSensor
     ) {
         // No op.
     }

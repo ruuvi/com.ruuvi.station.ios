@@ -31,7 +31,6 @@ public struct MeasurementServiceSettings {
 }
 
 final class MeasurementService: NSObject {
-
     public var settings: MeasurementServiceSettings
 
     private var commonFormatter: NumberFormatter {
@@ -73,10 +72,11 @@ final class MeasurementService: NSObject {
 }
 
 // MARK: - MeasurementsService
-extension MeasurementService {
 
+extension MeasurementService {
     public func temperature(for temperature: Temperature?) -> String {
-        guard let temperature = temperature else {
+        guard let temperature
+        else {
             return emptyValueString
         }
         let value = temperature
@@ -89,7 +89,8 @@ extension MeasurementService {
     }
 
     public func pressure(for pressure: Pressure?) -> String {
-        guard let pressure = pressure else {
+        guard let pressure
+        else {
             return emptyValueString
         }
         let value = pressure
@@ -102,7 +103,8 @@ extension MeasurementService {
     }
 
     public func voltage(for voltage: Voltage?) -> String {
-        guard let voltage = voltage else {
+        guard let voltage
+        else {
             return emptyValueString
         }
         let value = voltage
@@ -112,11 +114,14 @@ extension MeasurementService {
         return formattedValue(from: value, formatter: commonFormatter)
     }
 
-    public func humidity(for humidity: Humidity?,
-                         temperature: Temperature?,
-                         isDecimal: Bool) -> String {
-        guard let humidity = humidity,
-              let temperature = temperature else {
+    public func humidity(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        isDecimal: Bool
+    ) -> String {
+        guard let humidity,
+              let temperature
+        else {
             return emptyValueString
         }
         let humidityWithTemperature = Humidity(
@@ -130,9 +135,9 @@ extension MeasurementService {
         case .percent:
             let value = humidityWithTemperature.value
             humidityValue = isDecimal
-            ? value
+                ? value
                 .round(to: settings.humidityAccuracy.value)
-            : (value * 100)
+                : (value * 100)
                 .round(to: settings.humidityAccuracy.value)
         case .gm3:
             humidityValue = humidityWithTemperature.converted(to: .absolute)
@@ -150,7 +155,8 @@ extension MeasurementService {
     }
 
     public func acceleration(for acceleration: Double?) -> String {
-        guard let acceleration = acceleration else {
+        guard let acceleration
+        else {
             return emptyValueString
         }
         let value = acceleration.round(to: commonFormatter.maximumFractionDigits)
@@ -158,18 +164,24 @@ extension MeasurementService {
     }
 
     public func movements(for movements: Int?) -> String {
-        guard let movements = movements else {
+        guard let movements
+        else {
             return emptyValueString
         }
         return movements.value
     }
 }
+
 // MARK: - MeasurementService Helper methods
+
 extension MeasurementService {
-    private func formattedValue(from value: Double?,
-                                formatter: NumberFormatter) -> String {
-        guard let value = value,
-              let formattedValue = formatter.string(from: value.nsNumber) else {
+    private func formattedValue(
+        from value: Double?,
+        formatter: NumberFormatter
+    ) -> String {
+        guard let value,
+              let formattedValue = formatter.string(from: value.nsNumber)
+        else {
             return emptyValueString
         }
         return formattedValue

@@ -5,7 +5,6 @@ protocol RUAlertDetailsCellChildViewDelegate: NSObjectProtocol {
 }
 
 class RUAlertDetailsCellChildView: UIView {
-
     // Public
     weak var delegate: RUAlertDetailsCellChildViewDelegate?
 
@@ -30,41 +29,49 @@ class RUAlertDetailsCellChildView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setUpUI()
+        setUpUI()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.setUpUI()
+        setUpUI()
     }
 }
 
 extension RUAlertDetailsCellChildView {
     private func setUpUI() {
-        self.backgroundColor = .clear
+        backgroundColor = .clear
 
         addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor,
-                          leading: leadingAnchor,
-                          bottom: bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 8,
-                                         left: 14,
-                                         bottom: 8,
-                                         right: 0))
+        titleLabel.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            bottom: bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 8,
+                left: 14,
+                bottom: 8,
+                right: 0
+            )
+        )
 
         addSubview(imageView)
-        imageView.anchor(top: nil,
-                         leading: titleLabel.trailingAnchor,
-                         bottom: nil,
-                         trailing: trailingAnchor,
-                         padding: .init(top: 0, left: 16, bottom: 0, right: 16),
-                         size: .init(width: 16, height: 16))
+        imageView.anchor(
+            top: nil,
+            leading: titleLabel.trailingAnchor,
+            bottom: nil,
+            trailing: trailingAnchor,
+            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
+            size: .init(width: 16, height: 16)
+        )
         imageView.centerYInSuperview()
 
         isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self,
-                                                action: #selector(handleViewTap))
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(handleViewTap)
+        )
         addGestureRecognizer(tapGesture)
     }
 }
@@ -74,7 +81,9 @@ extension RUAlertDetailsCellChildView {
         delegate?.didTapView(sender: self)
     }
 }
+
 // MARK: - Public Setter
+
 extension RUAlertDetailsCellChildView {
     func configure(with message: String?) {
         titleLabel.text = message

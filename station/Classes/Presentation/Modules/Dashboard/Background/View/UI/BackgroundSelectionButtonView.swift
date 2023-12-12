@@ -5,8 +5,7 @@ protocol BackgroundSelectionButtonViewDelegate: NSObjectProtocol {
 }
 
 class BackgroundSelectionButtonView: UIView {
-
-    weak private var delegate: BackgroundSelectionButtonViewDelegate?
+    private weak var delegate: BackgroundSelectionButtonViewDelegate?
 
     // UI
     private lazy var titleLabel: UILabel = {
@@ -32,53 +31,66 @@ class BackgroundSelectionButtonView: UIView {
         super.init(frame: frame)
     }
 
-    convenience init(title: String,
-                     icon: String,
-                     delegate: BackgroundSelectionButtonViewDelegate? = nil) {
+    convenience init(
+        title: String,
+        icon: String,
+        delegate: BackgroundSelectionButtonViewDelegate? = nil
+    ) {
         self.init()
-        self.titleLabel.text = title
-        self.buttonIcon.image = UIImage(systemName: icon)
+        titleLabel.text = title
+        buttonIcon.image = UIImage(systemName: icon)
         self.delegate = delegate
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension BackgroundSelectionButtonView {
-    fileprivate func setUpUI() {
+private extension BackgroundSelectionButtonView {
+    func setUpUI() {
         backgroundColor = .clear
 
         addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor,
-                          leading: safeLeftAnchor,
-                          bottom: bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 8,
-                                         left: 0,
-                                         bottom: 8,
-                                         right: 0))
+        titleLabel.anchor(
+            top: topAnchor,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 8,
+                left: 0,
+                bottom: 8,
+                right: 0
+            )
+        )
 
         addSubview(buttonIcon)
-        buttonIcon.anchor(top: nil,
-                          leading: titleLabel.trailingAnchor,
-                          bottom: nil,
-                          trailing: safeRightAnchor,
-                          padding: .init(top: 0,
-                                         left: 8,
-                                         bottom: 8,
-                                         right: 0),
-                          size: .init(width: 24, height: 24))
+        buttonIcon.anchor(
+            top: nil,
+            leading: titleLabel.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: 8,
+                bottom: 8,
+                right: 0
+            ),
+            size: .init(width: 24, height: 24)
+        )
         buttonIcon.centerYInSuperview()
 
         addSubview(seprator)
-        seprator.anchor(top: nil,
-                        leading: leadingAnchor,
-                        bottom: bottomAnchor,
-                        trailing: trailingAnchor,
-                        size: .init(width: 0, height: 1))
+        seprator.anchor(
+            top: nil,
+            leading: leadingAnchor,
+            bottom: bottomAnchor,
+            trailing: trailingAnchor,
+            size: .init(width: 0, height: 1)
+        )
 
         isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -86,8 +98,8 @@ extension BackgroundSelectionButtonView {
     }
 }
 
-extension BackgroundSelectionButtonView {
-    @objc fileprivate func handleTap() {
+private extension BackgroundSelectionButtonView {
+    @objc func handleTap() {
         delegate?.didTapButton(self)
     }
 }

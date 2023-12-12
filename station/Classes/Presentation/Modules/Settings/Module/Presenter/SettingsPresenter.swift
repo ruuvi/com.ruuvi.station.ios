@@ -1,12 +1,13 @@
 import Foundation
-import RuuviOntology
 import RuuviContext
-import RuuviReactor
 import RuuviLocal
-import RuuviService
+import RuuviLocalization
+import RuuviOntology
 import RuuviPresenters
-import RuuviUser
+import RuuviReactor
+import RuuviService
 import RuuviStorage
+import RuuviUser
 import UIKit
 
 class SettingsPresenter: SettingsModuleInput {
@@ -36,17 +37,19 @@ extension SettingsPresenter: SettingsViewOutput {
 
         languageToken = NotificationCenter
             .default
-            .addObserver(forName: .LanguageDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] (_) in
-            self?.view.language = self?.settings.language ?? .english
-        })
+            .addObserver(
+                forName: .LanguageDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.view.language = self?.settings.language ?? .english
+                }
+            )
 
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
         ruuviStorage.readAll().on(success: { [weak self] tags in
             guard let sSelf = self else { return }
-            let cloudTagsCount = tags.filter({ $0.isOwner || $0.isCloud }).count
+            let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
             let cloudModeVisible = sSelf.ruuviUser.isAuthorized && cloudTagsCount > 0
             sSelf.view.cloudModeVisible = cloudModeVisible
         })
@@ -56,11 +59,13 @@ extension SettingsPresenter: SettingsViewOutput {
         let selectionItems: [TemperatureUnit] = [
             .celsius,
             .fahrenheit,
-            .kelvin
+            .kelvin,
         ]
-        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Temperature".localized(),
-                                              items: selectionItems,
-                                              measurementType: .temperature)
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
+            items: selectionItems,
+            measurementType: .temperature
+        )
         router.openUnitSettings(with: viewModel, output: nil)
     }
 
@@ -68,11 +73,13 @@ extension SettingsPresenter: SettingsViewOutput {
         let selectionItems: [HumidityUnit] = [
             .percent,
             .gm3,
-            .dew
+            .dew,
         ]
-        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Humidity".localized(),
-                                              items: selectionItems,
-                                              measurementType: .humidity)
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+            items: selectionItems,
+            measurementType: .humidity
+        )
         router.openUnitSettings(with: viewModel, output: nil)
     }
 
@@ -80,11 +87,13 @@ extension SettingsPresenter: SettingsViewOutput {
         let selectionItems: [UnitPressure] = [
             .hectopascals,
             .inchesOfMercury,
-            .millimetersOfMercury
+            .millimetersOfMercury,
         ]
-        let viewModel = UnitSettingsViewModel(title: "TagSettings.OffsetCorrection.Pressure".localized(),
-                                              items: selectionItems,
-                                              measurementType: .pressure)
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+            items: selectionItems,
+            measurementType: .pressure
+        )
         router.openUnitSettings(with: viewModel, output: nil)
     }
 
@@ -97,7 +106,8 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidSelectChangeLanguage() {
-        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString)
+        else {
             return
         }
         UIApplication.shared.open(settingsURL)
@@ -124,7 +134,8 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTriggerShake() {
-        guard !settings.experimentalFeaturesEnabled else {
+        guard !settings.experimentalFeaturesEnabled
+        else {
             return
         }
         settings.experimentalFeaturesEnabled = true

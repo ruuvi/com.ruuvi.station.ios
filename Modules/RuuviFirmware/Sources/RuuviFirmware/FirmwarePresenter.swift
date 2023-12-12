@@ -8,7 +8,7 @@ final class FirmwarePresenter: RuuviFirmware {
     var router: AnyObject?
 
     var viewController: UIViewController {
-        if let view = self.weakView {
+        if let view = weakView {
             return view
         } else {
             let viewModel = FirmwareViewModel(
@@ -18,10 +18,11 @@ final class FirmwarePresenter: RuuviFirmware {
             )
             viewModel.output = self
             let view = UIHostingController(rootView: FirmwareView(viewModel: viewModel))
-            self.weakView = view
+            weakView = view
             return view
         }
     }
+
     private weak var weakView: UIViewController?
     private let interactor: FirmwareInteractor
     private let uuid: String
@@ -36,7 +37,7 @@ final class FirmwarePresenter: RuuviFirmware {
     ) {
         self.uuid = uuid
         self.currentFirmware = currentFirmware
-        self.interactor = FirmwareInteractor(
+        interactor = FirmwareInteractor(
             background: background,
             ruuviDFU: ruuviDFU,
             firmwareRepository: firmwareRepository

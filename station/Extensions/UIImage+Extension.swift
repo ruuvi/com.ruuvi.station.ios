@@ -1,8 +1,9 @@
 import UIKit
 
-extension Optional where Wrapped == UIImage {
+extension UIImage? {
     func resize(targetWidth: CGFloat = 100) -> UIImage? {
-        guard let self = self else {
+        guard let self
+        else {
             return nil
         }
 
@@ -18,7 +19,8 @@ extension Optional where Wrapped == UIImage {
     }
 
     func resize(targetHeight: CGFloat) -> UIImage? {
-        guard let self = self else {
+        guard let self
+        else {
             return nil
         }
 

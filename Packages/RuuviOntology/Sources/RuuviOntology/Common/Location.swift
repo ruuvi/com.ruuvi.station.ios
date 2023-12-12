@@ -1,5 +1,5 @@
-import Foundation
 import CoreLocation
+import Foundation
 
 public protocol Location {
     var city: String? { get }
@@ -8,32 +8,32 @@ public protocol Location {
     var coordinate: CLLocationCoordinate2D { get }
 }
 
-extension Location {
-    public var cityCommaCountry: String? {
-        if let city = city, let country = country {
-            return city + ", " + country
-        } else if let city = city {
-            return city
-        } else if let country = country {
-            return country
+public extension Location {
+    var cityCommaCountry: String? {
+        if let city, let country {
+            city + ", " + country
+        } else if let city {
+            city
+        } else if let country {
+            country
         } else {
-            return nil
+            nil
         }
     }
 
-    public var description: String? {
-        if let city = city, let state = state {
-            return city + ", " + state
-        } else if let city = city, let country = country {
-            return city + ", " + country
-        } else if let city = city {
-            return city
-        } else if let state = state {
-            return state
-        } else if let country = country {
-            return country
+    var description: String? {
+        if let city, let state {
+            city + ", " + state
+        } else if let city, let country {
+            city + ", " + country
+        } else if let city {
+            city
+        } else if let state {
+            state
+        } else if let country {
+            country
         } else {
-            return nil
+            nil
         }
     }
 }

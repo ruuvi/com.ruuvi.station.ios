@@ -1,15 +1,14 @@
 import Foundation
-import GRDB
 import Future
-import RuuviOntology
+import GRDB
 import RuuviContext
+import RuuviOntology
 import RuuviPersistence
-import RuuviReactor
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 #if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
+    import RuuviOntologySQLite
 #endif
 
 class RuuviReactorImpl: RuuviReactor {
@@ -42,8 +41,10 @@ class RuuviReactorImpl: RuuviReactor {
     private lazy var latestRecordCombines = [String: RuuviTagLatestRecordSubjectCombine]()
     private lazy var sensorSettingsCombines = [String: SensorSettingsCombine]()
 
-    func observe(_ luid: LocalIdentifier,
-                 _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RuuviReactorToken {
+    func observe(
+        _ luid: LocalIdentifier,
+        _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void
+    ) -> RuuviReactorToken {
         var recordCombine: RuuviTagRecordSubjectCombine
         if let combine = recordCombines[luid.value] {
             recordCombine = combine
@@ -73,11 +74,11 @@ class RuuviReactorImpl: RuuviReactor {
         let realmOperation = realmPersistence.readAll()
         Future.zip(realmOperation, sqliteOperation)
             .on(success: { realmEntities, sqliteEntities in
-            let combinedValues = sqliteEntities + realmEntities
-            block(.initial(combinedValues))
-        }, failure: { error in
-            block(.error(.ruuviPersistence(error)))
-        })
+                let combinedValues = sqliteEntities + realmEntities
+                block(.initial(combinedValues))
+            }, failure: { error in
+                block(.error(.ruuviPersistence(error)))
+            })
 
         let insert = entityCombine.insertSubject.sink { value in
             block(.insert(value))
@@ -95,12 +96,14 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLast(_ ruuviTag: RuuviTagSensor,
-                     _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken {
+    func observeLast(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
+    ) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLast(ruuviTag)
         let realmOperation = realmPersistence.readLast(ruuviTag)
-        Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
-            let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
+        Future.zip(realmOperation, sqliteOperation).on(success: { realmRecord, sqliteRecord in
+            let result = [realmRecord, sqliteRecord].compactMap { $0?.any }.last
             block(.update(result))
         })
         var recordCombine: RuuviTagLastRecordSubjectCombine
@@ -116,7 +119,7 @@ class RuuviReactorImpl: RuuviReactor {
             lastRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
         }
-        let cancellable = recordCombine.subject.sink { (record) in
+        let cancellable = recordCombine.subject.sink { record in
             block(.update(record))
         }
         if !recordCombine.isServing {
@@ -127,12 +130,14 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLatest(_ ruuviTag: RuuviTagSensor,
-                       _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken {
+    func observeLatest(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
+    ) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLatest(ruuviTag)
         let realmOperation = realmPersistence.readLatest(ruuviTag)
-        Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
-            let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
+        Future.zip(realmOperation, sqliteOperation).on(success: { realmRecord, sqliteRecord in
+            let result = [realmRecord, sqliteRecord].compactMap { $0?.any }.last
             block(.update(result))
         })
         var recordCombine: RuuviTagLatestRecordSubjectCombine
@@ -148,7 +153,7 @@ class RuuviReactorImpl: RuuviReactor {
             latestRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
         }
-        let cancellable = recordCombine.subject.sink { (record) in
+        let cancellable = recordCombine.subject.sink { record in
             block(.update(record))
         }
         if !recordCombine.isServing {
@@ -159,8 +164,10 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observe(_ ruuviTag: RuuviTagSensor,
-                 _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void) -> RuuviReactorToken {
+    func observe(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void
+    ) -> RuuviReactorToken {
         sqlitePersistence.readSensorSettings(ruuviTag).on { [weak self] sqliteRecord in
             if let sensorSettings = sqliteRecord {
                 block(.update(sensorSettings))

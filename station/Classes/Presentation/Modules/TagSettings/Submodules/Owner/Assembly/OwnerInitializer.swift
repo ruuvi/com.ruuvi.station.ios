@@ -1,7 +1,7 @@
 import UIKit
 
 final class OwnerInitializer: NSObject {
-    @IBOutlet weak var viewController: OwnerViewController!
+    @IBOutlet var viewController: OwnerViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

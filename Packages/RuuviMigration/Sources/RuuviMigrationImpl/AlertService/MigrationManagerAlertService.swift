@@ -1,10 +1,9 @@
-import Foundation
 import AVKit
-import RuuviOntology
+import Foundation
 import RuuviContext
-import RuuviStorage
+import RuuviOntology
 import RuuviService
-import RuuviMigration
+import RuuviStorage
 
 final class MigrationManagerAlertService: RuuviMigration {
     private let ruuviStorage: RuuviStorage
@@ -22,13 +21,13 @@ final class MigrationManagerAlertService: RuuviMigration {
     @UserDefault("MigrationManagerAlertService.persistanceVersion", defaultValue: 0)
     private var persistanceVersion: UInt
     private let actualServiceVersion: UInt = 1
-    private let queue: DispatchQueue = DispatchQueue(label: "MigrationManagerAlertService", qos: .utility)
+    private let queue: DispatchQueue = .init(label: "MigrationManagerAlertService", qos: .utility)
 
     func migrateIfNeeded() {
         guard persistanceVersion < actualServiceVersion else { return }
-        for version in persistanceVersion..<actualServiceVersion {
+        for version in persistanceVersion ..< actualServiceVersion {
             let nextVersion = version + 1
-            migrate(to: nextVersion) { (result) in
+            migrate(to: nextVersion) { result in
                 if result {
                     self.persistanceVersion = nextVersion
                 }
@@ -41,13 +40,13 @@ final class MigrationManagerAlertService: RuuviMigration {
         case 1:
             migrateTo1Version(completion: completion)
         default:
-            assert(false, "⛔️ Need implement v\(version) migration before")
+            assertionFailure("⛔️ Need implement v\(version) migration before")
             completion(true)
         }
     }
 
     private enum Keys {
-        struct Ver1 {
+        enum Ver1 {
             // relativeHumidity
             static let relativeHumidityLowerBoundUDKeyPrefix
                 = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
@@ -71,22 +70,23 @@ final class MigrationManagerAlertService: RuuviMigration {
 }
 
 // MARK: - V1 migration
+
 extension MigrationManagerAlertService {
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
         let group = DispatchGroup()
         group.enter()
         fetchRuuviSensors { ruuviTagSensors in
             self.queue.async {
-                ruuviTagSensors.forEach({ element in
+                ruuviTagSensors.forEach { element in
                     group.enter()
                     self.migrateTo1Version(element: element, completion: {
                         group.leave()
                     })
-                })
+                }
                 group.leave()
             }
         }
-        self.queue.async {
+        queue.async {
             group.notify(queue: .main, execute: {
                 completion(true)
             })
@@ -100,10 +100,14 @@ extension MigrationManagerAlertService {
            let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
            let temperature = element.1 {
             prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity: Humidity = Humidity(value: lower / 100,
-                                                   unit: .relative(temperature: temperature))
-            let upperHumidity: Humidity = Humidity(value: upper / 100,
-                                                   unit: .relative(temperature: temperature))
+            let lowerHumidity = Humidity(
+                value: lower / 100,
+                unit: .relative(temperature: temperature)
+            )
+            let upperHumidity = Humidity(
+                value: upper / 100,
+                unit: .relative(temperature: temperature)
+            )
             ruuviAlertService.register(
                 type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                 ruuviTag: element.0
@@ -112,10 +116,14 @@ extension MigrationManagerAlertService {
                   let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
                   let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
             prefs.set(false, forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity: Humidity = Humidity(value: lower,
-                                                   unit: .absolute)
-            let upperHumidity: Humidity = Humidity(value: upper,
-                                                   unit: .absolute)
+            let lowerHumidity = Humidity(
+                value: lower,
+                unit: .absolute
+            )
+            let upperHumidity = Humidity(
+                value: upper,
+                unit: .absolute
+            )
             ruuviAlertService.register(
                 type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                 ruuviTag: element.0
@@ -137,14 +145,14 @@ extension MigrationManagerAlertService {
             let group = DispatchGroup()
             group.enter()
             var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: {sensors in
-                sensors.forEach({ sensor in
+            self.ruuviStorage.readAll().on(success: { sensors in
+                sensors.forEach { sensor in
                     group.enter()
                     self.fetchRecord(for: sensor) {
                         result.append($0)
                         group.leave()
                     }
-                })
+                }
                 group.leave()
             }, failure: { _ in
                 group.leave()
@@ -166,5 +174,4 @@ extension MigrationManagerAlertService {
                 complete((sensor, nil))
             })
     }
-
 }

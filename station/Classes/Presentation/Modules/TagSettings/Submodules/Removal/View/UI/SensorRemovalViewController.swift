@@ -1,11 +1,11 @@
-import UIKit
 import CoreNFC
+import RuuviLocalization
 import RuuviOntology
+import UIKit
 
 class SensorRemovalViewController: UIViewController {
-
     private lazy var backButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .label
         let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
@@ -25,10 +25,10 @@ class SensorRemovalViewController: UIViewController {
         return label
     }()
 
-    private var removeCloudHistoryActionContainer = UIView.init(color: .clear)
+    private var removeCloudHistoryActionContainer = UIView(color: .clear)
     private lazy var removeCloudHistoryTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "remove_cloud_history_title".localized()
+        label.text = RuuviLocalization.removeCloudHistoryTitle
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -38,7 +38,7 @@ class SensorRemovalViewController: UIViewController {
 
     private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "remove_cloud_history_description".localized()
+        label.text = RuuviLocalization.removeCloudHistoryDescription
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -53,14 +53,18 @@ class SensorRemovalViewController: UIViewController {
     }()
 
     private lazy var removeButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
-        button.setTitle("Remove".localized(), for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
+        button.setTitle(RuuviLocalization.remove, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleRemoveButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleRemoveButtonTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -68,37 +72,38 @@ class SensorRemovalViewController: UIViewController {
     var output: SensorRemovalViewOutput?
     var removeButtonConstraintClaimedSensor: NSLayoutConstraint!
     var removeButtonConstraintOtherSensor: NSLayoutConstraint!
-
 }
 
 // MARK: - VIEW LIFECYCLE
+
 extension SensorRemovalViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
         output?.viewDidLoad()
     }
 }
 
 // MARK: - SensorForceClaimViewInput
-extension SensorRemovalViewController: SensorRemovalViewInput {
 
+extension SensorRemovalViewController: SensorRemovalViewInput {
     func localize() {
         // No op.
     }
 
     func updateView(claimedAndOwned: Bool, locallyOwned: Bool, shared: Bool) {
-        var message: String = ""
+        var message = ""
         if claimedAndOwned {
-            message = "remove_claimed_sensor_description".localized()
+            message = RuuviLocalization.removeClaimedSensorDescription
         }
 
         if locallyOwned {
-            message = "remove_local_sensor_description".localized()
+            message = RuuviLocalization.removeLocalSensorDescription
         }
 
         if shared {
-            message = "remove_shared_sensor_description".localized()
+            message = RuuviLocalization.removeSharedSensorDescription
         }
 
         messageLabel.text = message
@@ -110,21 +115,24 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
     }
 
     func showHistoryDataRemovalConfirmationDialog() {
-        let title = "dialog_are_you_sure".localized()
-        let message = "dialog_operation_undone".localized()
+        let title = RuuviLocalization.dialogAreYouSure
+        let message = RuuviLocalization.dialogOperationUndone
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(),
-                                           style: .destructive,
-                                           handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.output?.viewDidConfirmTagRemoval(with: self.removeCloudHistorySwitch.isOn)
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.confirm,
+            style: .destructive,
+            handler: { [weak self] _ in
+                guard let self else { return }
+                output?.viewDidConfirmTagRemoval(with: removeCloudHistorySwitch.isOn)
+            }
+        ))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 }
 
 // MARK: - PRIVATE SET UI
+
 extension SensorRemovalViewController {
     private func setUpUI() {
         setUpBase()
@@ -132,18 +140,20 @@ extension SensorRemovalViewController {
     }
 
     private func setUpBase() {
-        self.title = "TagSettings.confirmTagRemovalDialog.title".localized()
+        title = RuuviLocalization.TagSettings.ConfirmTagRemovalDialog.title
 
         view.backgroundColor = RuuviColor.ruuviPrimary
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(top: backBarButtonItemView.topAnchor,
-                          leading: backBarButtonItemView.leadingAnchor,
-                          bottom: backBarButtonItemView.bottomAnchor,
-                          trailing: backBarButtonItemView.trailingAnchor,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: backBarButtonItemView.topAnchor,
+            leading: backBarButtonItemView.leadingAnchor,
+            bottom: backBarButtonItemView.bottomAnchor,
+            trailing: backBarButtonItemView.trailingAnchor,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 
@@ -200,22 +210,23 @@ extension SensorRemovalViewController {
             removeButton
                 .topAnchor
                 .constraint(
-                equalTo: removeCloudHistoryActionContainer.bottomAnchor,
-                constant: 40
-            )
+                    equalTo: removeCloudHistoryActionContainer.bottomAnchor,
+                    constant: 40
+                )
         removeButtonConstraintOtherSensor =
             removeButton
                 .topAnchor
                 .constraint(
-                equalTo: messageLabel.bottomAnchor,
-                constant: 40
-            )
+                    equalTo: messageLabel.bottomAnchor,
+                    constant: 40
+                )
     }
 }
 
 // MARK: - IBACTIONS
+
 extension SensorRemovalViewController {
-    @objc fileprivate func backButtonDidTap() {
+    @objc private func backButtonDidTap() {
         _ = navigationController?.popViewController(animated: true)
     }
 

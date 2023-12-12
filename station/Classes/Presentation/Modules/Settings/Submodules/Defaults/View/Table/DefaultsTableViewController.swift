@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class DefaultsTableViewController: UITableViewController {
@@ -21,21 +22,25 @@ extension DefaultsTableViewController: DefaultsViewInput {
         // do nothing
     }
 
-    func showEndpointChangeConfirmationDialog(useDevServer: Bool?) {
+    func showEndpointChangeConfirmationDialog(useDevServer _: Bool?) {
         // No op.
     }
 }
 
 // MARK: - View lifecycle
-extension DefaultsTableViewController {
 
+extension DefaultsTableViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        localize()
+    }
 }
 
 // MARK: - UITableViewDataSource
-extension DefaultsTableViewController {
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+extension DefaultsTableViewController {
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModels.count
     }
 
     // swiftlint:disable:next function_body_length
@@ -45,17 +50,21 @@ extension DefaultsTableViewController {
         case .plain:
             // swiftlint:disable force_cast
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: plainCellReuseIdentifier,
-                                     for: indexPath) as! DefaultsPlainTableViewCell
+                .dequeueReusableCell(
+                    withIdentifier: plainCellReuseIdentifier,
+                    for: indexPath
+                ) as! DefaultsPlainTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
-            cell.valueLabel.text = viewModel.value.value ?? "N/A".localized()
+            cell.valueLabel.text = viewModel.value.value ?? RuuviLocalization.na
             return cell
         case .switcher:
             // swiftlint:disable force_cast
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: switchCellReuseIdentifier,
-                                     for: indexPath) as! DefaultsSwitchTableViewCell
+                .dequeueReusableCell(
+                    withIdentifier: switchCellReuseIdentifier,
+                    for: indexPath
+                ) as! DefaultsSwitchTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
             cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
@@ -64,20 +73,22 @@ extension DefaultsTableViewController {
         case .stepper:
             // swiftlint:disable force_cast
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier,
-                                     for: indexPath) as! DefaultsStepperTableViewCell
+                .dequeueReusableCell(
+                    withIdentifier: stepperCellReuseIdentifier,
+                    for: indexPath
+                ) as! DefaultsStepperTableViewCell
             // swiftlint:enable force_cast
             let title = viewModel.title ?? ""
             let unitString: String
             switch viewModel.unit {
             case .hours:
-                unitString = "Defaults.Interval.Hour.string".localized()
+                unitString = RuuviLocalization.Defaults.Interval.Hour.string
                 cell.stepper.stepValue = 1
             case .minutes:
-                unitString = "Defaults.Interval.Min.string".localized()
+                unitString = RuuviLocalization.Defaults.Interval.Min.string
                 cell.stepper.stepValue = 5
             case .seconds:
-                unitString = "Defaults.Interval.Sec.string".localized()
+                unitString = RuuviLocalization.Defaults.Interval.Sec.string
                 cell.stepper.stepValue = 30
             case .decimal:
                 unitString = ""
@@ -89,8 +100,8 @@ extension DefaultsTableViewController {
             switch viewModel.unit {
             case .hours, .minutes, .seconds:
                 cell.titleLabel.text = title + " "
-                + "(" + "\(result)" + " "
-                + unitString + ")"
+                    + "(" + "\(result)" + " "
+                    + unitString + ")"
             case .decimal:
                 cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
             }
@@ -102,11 +113,11 @@ extension DefaultsTableViewController {
             // Should never be here
             return UITableViewCell()
         }
-
     }
 }
 
 // MARK: - DefaultsSwitchTableViewCellDelegate
+
 extension DefaultsTableViewController: DefaultsSwitchTableViewCellDelegate {
     func defaultsSwitch(cell: DefaultsSwitchTableViewCell, didChange value: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
@@ -116,6 +127,7 @@ extension DefaultsTableViewController: DefaultsSwitchTableViewCellDelegate {
 }
 
 // MARK: - DefaultsStepperTableViewCellDelegate
+
 extension DefaultsTableViewController: DefaultsStepperTableViewCellDelegate {
     func defaultsStepper(cell: DefaultsStepperTableViewCell, didChange value: Int) {
         if let indexPath = tableView.indexPath(for: cell) {

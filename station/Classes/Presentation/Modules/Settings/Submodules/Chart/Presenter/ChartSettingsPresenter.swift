@@ -1,5 +1,6 @@
 import Foundation
 import RuuviLocal
+import RuuviLocalization
 import RuuviService
 
 class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
@@ -9,7 +10,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     var featureToggleService: FeatureToggleService!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
 
-    private var viewModel: ChartSettingsViewModel = ChartSettingsViewModel(sections: []) {
+    private var viewModel: ChartSettingsViewModel = .init(sections: []) {
         didSet {
             view.viewModel = viewModel
         }
@@ -23,8 +24,8 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     }
 
     private func buildDisplayAllDataSection() -> ChartSettingsSection {
-        return ChartSettingsSection(
-            note: "ChartSettings.AllPoints.description".localized(),
+        ChartSettingsSection(
+            note: RuuviLocalization.ChartSettings.AllPoints.description,
             cells: [
                 buildChartDownsampling()
             ]
@@ -34,8 +35,8 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     // Draw dots feature is disabled from v1.3.0 onwards to
     // maintain better performance until we find a better approach to do it.
     private func buildDrawDotsSection() -> ChartSettingsSection {
-        return ChartSettingsSection(
-            note: "ChartSettings.DrawDots.description".localized(),
+        ChartSettingsSection(
+            note: RuuviLocalization.ChartSettings.DrawDots.description,
             cells: [
                 buildChartDotsDrawing()
             ]
@@ -44,6 +45,7 @@ class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
 }
 
 // MARK: - ChartSettingsViewOutput
+
 extension ChartSettingsPresenter: ChartSettingsViewOutput {
     func viewWillDisappear() {
         // No op.
@@ -51,17 +53,19 @@ extension ChartSettingsPresenter: ChartSettingsViewOutput {
 }
 
 // MARK: Private
-extension ChartSettingsPresenter {
 
+extension ChartSettingsPresenter {
     private func buildChartDownsampling() -> ChartSettingsCell {
-        let title = "ChartSettings.AllPoints.title".localized()
+        let title = RuuviLocalization.ChartSettings.AllPoints.title
         let value = !settings.chartDownsamplingOn
-        let type: ChartSettingsCellType = .switcher(title: title,
-                         value: value)
+        let type: ChartSettingsCellType = .switcher(
+            title: title,
+            value: value
+        )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
         bind(cell.boolean, fire: false) { [weak self] observer, value in
-            guard let value = value else { return }
+            guard let value else { return }
             observer.settings.chartDownsamplingOn = !value
             self?.ruuviAppSettingsService.set(showAllData: value)
         }
@@ -69,18 +73,19 @@ extension ChartSettingsPresenter {
     }
 
     private func buildChartDotsDrawing() -> ChartSettingsCell {
-        let title = "ChartSettings.DrawDots.title".localized()
+        let title = RuuviLocalization.ChartSettings.DrawDots.title
         let value = settings.chartDrawDotsOn
-        let type: ChartSettingsCellType = .switcher(title: title,
-                         value: value)
+        let type: ChartSettingsCellType = .switcher(
+            title: title,
+            value: value
+        )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
         bind(cell.boolean, fire: false) { [weak self] observer, value in
-            guard let value = value else { return }
+            guard let value else { return }
             observer.settings.chartDrawDotsOn = value
             self?.ruuviAppSettingsService.set(drawDots: value)
         }
         return cell
     }
-
 }

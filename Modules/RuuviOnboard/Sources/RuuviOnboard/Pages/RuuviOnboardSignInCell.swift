@@ -5,14 +5,14 @@ protocol RuuviOnboardSignInCellDelegate: NSObjectProtocol {
 }
 
 class RuuviOnboardSignInCell: UICollectionViewCell {
-
     weak var delegate: RuuviOnboardSignInCellDelegate?
 
     private lazy var beaverImageView: UIImageView = {
         let iv = UIImageView(
             image: UIImage.named(
-            RuuviAssets.beaver_sign_in,
-            for: Self.self),
+                RuuviAssets.beaver_sign_in,
+                for: Self.self
+            ),
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
@@ -39,13 +39,17 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
 
     private lazy var continueButton: UIButton = {
         let button = UIButton(color: RuuviAssets.ruuviTintColor, cornerRadius: 22)
-        button.setTitle("onboarding_continue".localized(for: Self.self),
-                        for: .normal)
+        button.setTitle(
+            "onboarding_continue".localized(for: Self.self),
+            for: .normal
+        )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleContinueTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleContinueTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
@@ -54,15 +58,14 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension RuuviOnboardSignInCell {
-
-    fileprivate func setUpUI() {
-
+private extension RuuviOnboardSignInCell {
+    func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
         container.fillSuperview()
@@ -75,42 +78,54 @@ extension RuuviOnboardSignInCell {
         textStack.spacing = 12
 
         container.addSubview(textStack)
-        textStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeadingAnchor,
-                         bottom: nil,
-                         trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44+12, left: 16,
-                                        bottom: 0, right: 16))
+        textStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 44 + 12,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
 
         container.addSubview(continueButton)
-        continueButton.anchor(top: textStack.bottomAnchor,
-                              leading: nil,
-                              bottom: nil,
-                              trailing: nil,
-                              padding: .init(top: 20, left: 0, bottom: 0, right: 0),
-                              size: .init(width: 0, height: 44))
+        continueButton.anchor(
+            top: textStack.bottomAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 20, left: 0, bottom: 0, right: 0),
+            size: .init(width: 0, height: 44)
+        )
         continueButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 140).isActive = true
         continueButton.centerXInSuperview()
 
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
-        beaverContainerView.anchor(top: continueButton.bottomAnchor,
-                                   leading: container.leadingAnchor,
-                                   bottom: container.bottomAnchor,
-                                   trailing: container.trailingAnchor)
+        beaverContainerView.anchor(
+            top: continueButton.bottomAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor
+        )
         beaverContainerView.addSubview(beaverImageView)
 
-        beaverImageView.anchor(top: nil,
-                               leading: beaverContainerView.safeLeadingAnchor,
-                               bottom: nil,
-                               trailing: beaverContainerView.safeTrailingAnchor,
-                               size: .init(width: 0, height: self.bounds.height/2))
+        beaverImageView.anchor(
+            top: nil,
+            leading: beaverContainerView.safeLeadingAnchor,
+            bottom: nil,
+            trailing: beaverContainerView.safeTrailingAnchor,
+            size: .init(width: 0, height: bounds.height / 2)
+        )
         beaverImageView.centerYInSuperview()
     }
 }
 
-extension RuuviOnboardSignInCell {
-    @objc fileprivate func handleContinueTap() {
+private extension RuuviOnboardSignInCell {
+    @objc func handleContinueTap() {
         delegate?.didTapContinueButton(sender: self)
     }
 }

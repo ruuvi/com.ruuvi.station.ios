@@ -1,9 +1,8 @@
 import Foundation
 import Future
+import RuuviLocal
 import RuuviOntology
 import RuuviPersistence
-import RuuviLocal
-import RuuviPool
 
 // swiftlint:disable:next type_body_length
 final class RuuviPoolCoordinator: RuuviPool {
@@ -30,20 +29,20 @@ final class RuuviPoolCoordinator: RuuviPool {
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         if let macId = ruuviTag.macId,
-            let luid = ruuviTag.luid {
+           let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
         }
         if ruuviTag.macId != nil,
-            ruuviTag.macId?.value.isEmpty == false {
-            sqlite.create(ruuviTag).on(success: { (result) in
+           ruuviTag.macId?.value.isEmpty == false {
+            sqlite.create(ruuviTag).on(success: { result in
                 promise.succeed(value: result)
-            }, failure: { (error) in
+            }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))
             })
         } else {
-            realm.create(ruuviTag).on(success: { (result) in
+            realm.create(ruuviTag).on(success: { result in
                 promise.succeed(value: result)
-            }, failure: { (error) in
+            }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))
             })
         }
@@ -102,7 +101,6 @@ final class RuuviPoolCoordinator: RuuviPool {
             })
         }
         return promise.future
-
     }
 
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
@@ -194,8 +192,8 @@ final class RuuviPoolCoordinator: RuuviPool {
 
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
-        let sqliteRecords = records.filter({ $0.macId != nil })
-        let realmRecords = records.filter({ $0.macId == nil })
+        let sqliteRecords = records.filter { $0.macId != nil }
+        let realmRecords = records.filter { $0.macId == nil }
         let sqliteOperation = sqlite.create(sqliteRecords)
         let realmOpearion = realm.create(realmRecords)
         Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
@@ -255,28 +253,31 @@ final class RuuviPoolCoordinator: RuuviPool {
                 type: type,
                 with: value,
                 of: ruuviTag,
-                lastOriginalRecord: record)
-                .on(success: { settings in
-                    promise.succeed(value: settings)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPersistence(error))
-                })
+                lastOriginalRecord: record
+            )
+            .on(success: { settings in
+                promise.succeed(value: settings)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         } else {
             realm.updateOffsetCorrection(
                 type: type,
                 with: value,
                 of: ruuviTag,
-                lastOriginalRecord: record)
-                .on(success: { settings in
-                    promise.succeed(value: settings)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPersistence(error))
-                })
+                lastOriginalRecord: record
+            )
+            .on(success: { settings in
+                promise.succeed(value: settings)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         }
         return promise.future
     }
 
     // MARK: - Queued cloud requests
+
     func createQueuedRequest(
         _ request: RuuviCloudQueuedRequest
     ) -> Future<Bool, RuuviPoolError> {

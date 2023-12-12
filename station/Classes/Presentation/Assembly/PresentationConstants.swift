@@ -5,7 +5,7 @@ struct Presentation: Codable {
     var FeedbackSubject: String
 }
 
-final class PresentationConstants {
+enum PresentationConstants {
     static let presentationPath = Bundle.main.path(forResource: "Presentation", ofType: "plist")!
     static let xml = FileManager.default.contents(atPath: presentationPath)!
     static let presentationPlist = try! PropertyListDecoder().decode(Presentation.self, from: xml)

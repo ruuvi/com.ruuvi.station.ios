@@ -1,11 +1,11 @@
+import BTKit
 import Foundation
-import RuuviService
-import RuuviUser
+import RuuviDFU
+import RuuviLocal
 import RuuviPool
 import RuuviPresenters
-import RuuviDFU
-import BTKit
-import RuuviLocal
+import RuuviService
+import RuuviUser
 
 protocol SensorForceClaimModuleFactory {
     func create() -> SensorForceClaimViewController

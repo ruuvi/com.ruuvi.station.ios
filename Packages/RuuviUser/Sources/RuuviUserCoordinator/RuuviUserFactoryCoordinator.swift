@@ -1,6 +1,3 @@
-import Foundation
-import RuuviUser
-
 public final class RuuviUserFactoryCoordinator: RuuviUserFactory {
     public init() {}
 

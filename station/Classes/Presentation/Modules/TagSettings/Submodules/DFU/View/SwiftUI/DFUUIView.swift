@@ -1,4 +1,5 @@
 import RuuviFirmware
+import RuuviLocalization
 import SwiftUI
 
 // swiftlint:disable file_length
@@ -8,29 +9,29 @@ struct DFUUIView: View {
     @ObservedObject var viewModel: DFUViewModel
 
     private struct Texts {
-        let navigationTitle = "DFUUIView.navigationTitle".localized()
-        let latestTitle = "DFUUIView.latestTitle".localized()
-        let currentTitle = "DFUUIView.currentTitle".localized()
-        let lowBatteryWarningMessage = "DFUUIView.lowBattery.warning.message".localized()
-        let okTitle = "ErrorPresenterAlert.OK".localized()
-        let notReportingDescription = "DFUUIView.notReportingDescription".localized()
-        let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized()
-        let startUpdateProcess = "DFUUIView.startUpdateProcess".localized()
-        let downloadingTitle = "DFUUIView.downloadingTitle".localized()
-        let prepareTitle = "DFUUIView.prepareTitle".localized()
-        let openCoverTitle = "DFUUIView.openCoverTitle".localized()
-        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized()
-        let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized()
-        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized()
-        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized()
-        let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized()
-        let updatingTitle = "DFUUIView.updatingTitle".localized()
-        let searchingTitle = "DFUUIView.searchingTitle".localized()
-        let startTitle = "DFUUIView.startTitle".localized()
-        let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized()
-        let successfulTitle = "DFUUIView.successfulTitle".localized()
-        let errorTitle = "ErrorPresenterAlert.Error".localized()
-        let dbMigrationErrorTitle = "DFUUIView.DBMigration.Error.message".localized()
+        let navigationTitle = RuuviLocalization.DFUUIView.navigationTitle
+        let latestTitle = RuuviLocalization.DFUUIView.latestTitle
+        let currentTitle = RuuviLocalization.DFUUIView.currentTitle
+        let lowBatteryWarningMessage = RuuviLocalization.DFUUIView.LowBattery.Warning.message
+        let okTitle = RuuviLocalization.ErrorPresenterAlert.ok
+        let notReportingDescription = RuuviLocalization.DFUUIView.notReportingDescription
+        let alreadyOnLatest = RuuviLocalization.DFUUIView.alreadyOnLatest
+        let startUpdateProcess = RuuviLocalization.DFUUIView.startUpdateProcess
+        let downloadingTitle = RuuviLocalization.DFUUIView.downloadingTitle
+        let prepareTitle = RuuviLocalization.DFUUIView.prepareTitle
+        let openCoverTitle = RuuviLocalization.DFUUIView.openCoverTitle
+        let localBootButtonTitle = RuuviLocalization.DFUUIView.locateBootButtonTitle
+        let setUpdatingModeTitle = RuuviLocalization.DFUUIView.setUpdatingModeTitle
+        let toBootModeTwoButtonsDescription = RuuviLocalization.DFUUIView.toBootModeTwoButtonsDescription
+        let toBootModeOneButtonDescription = RuuviLocalization.DFUUIView.toBootModeOneButtonDescription
+        let toBootModeSuccessTitle = RuuviLocalization.DFUUIView.toBootModeSuccessTitle
+        let updatingTitle = RuuviLocalization.DFUUIView.updatingTitle
+        let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
+        let startTitle = RuuviLocalization.DFUUIView.startTitle
+        let doNotCloseTitle = RuuviLocalization.DFUUIView.doNotCloseTitle
+        let successfulTitle = RuuviLocalization.DFUUIView.successfulTitle
+        let errorTitle = RuuviLocalization.ErrorPresenterAlert.error
+        let dbMigrationErrorTitle = RuuviLocalization.DFUUIView.DBMigration.Error.message
     }
 
     private let muliBold16 = Font(UIFont.Muli(.bold, size: 16))
@@ -42,9 +43,11 @@ struct DFUUIView: View {
         VStack {
             content
                 .alert(isPresented: $viewModel.isMigrationFailed) {
-                    Alert(title: Text(texts.errorTitle),
-                          message: Text(texts.dbMigrationErrorTitle),
-                          dismissButton: .cancel(Text(texts.okTitle)))
+                    Alert(
+                        title: Text(texts.errorTitle),
+                        message: Text(texts.dbMigrationErrorTitle),
+                        dismissButton: .cancel(Text(texts.okTitle))
+                    )
                 }
         }
         .background(Color(RuuviColor.ruuviPrimarySUI!).edgesIgnoringSafeArea(.all))
@@ -60,10 +63,10 @@ struct DFUUIView: View {
             }
         })
         .onAppear {
-            self.viewModel.send(event: .onAppear)
+            viewModel.send(event: .onAppear)
         }
         .onDisappear {
-            self.viewModel.restartPropertiesDaemon()
+            viewModel.restartPropertiesDaemon()
         }
     }
 
@@ -85,7 +88,7 @@ struct DFUUIView: View {
             )
             .padding()
             .eraseToAnyView()
-        case .error(let error):
+        case let .error(error):
             return Text(error.localizedDescription)
                 .font(muliRegular16)
                 .eraseToAnyView()
@@ -108,7 +111,7 @@ struct DFUUIView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { self.viewModel.send(event: .onLoaded(latestRelease)) }
+            .onAppear { viewModel.send(event: .onLoaded(latestRelease)) }
             .eraseToAnyView()
         case let .serving(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
@@ -157,9 +160,9 @@ struct DFUUIView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { self.viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
+            .onAppear { viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
-        case .noNeedToUpgrade(_, let currentRelease):
+        case let .noNeedToUpgrade(_, currentRelease):
             return Text(texts.alreadyOnLatest)
                 .font(muliRegular16)
                 .foregroundColor(RuuviColor.ruuviTextColorSUI)
@@ -169,7 +172,7 @@ struct DFUUIView: View {
                     alignment: .topLeading
                 )
                 .padding()
-                .onAppear { self.viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
+                .onAppear { viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
                 .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {
@@ -194,7 +197,7 @@ struct DFUUIView: View {
                     }
                     Button(
                         action: {
-                            self.viewModel.send(
+                            viewModel.send(
                                 event: .onStartUpgrade(latestRelease, currentRelease)
                             )
                         },
@@ -227,9 +230,11 @@ struct DFUUIView: View {
                 })
             })
             .alert(isPresented: $isBatteryLow) {
-                Alert(title: Text(""),
-                      message: Text(texts.lowBatteryWarningMessage),
-                      dismissButton: .cancel(Text(texts.okTitle)))
+                Alert(
+                    title: Text(""),
+                    message: Text(texts.lowBatteryWarningMessage),
+                    dismissButton: .cancel(Text(texts.okTitle))
+                )
             }
             .padding()
             .eraseToAnyView()
@@ -345,7 +350,7 @@ struct DFUUIView: View {
                         }
                         Button(
                             action: {
-                                self.viewModel.send(
+                                viewModel.send(
                                     event: .onUserDidConfirmToFlash(
                                         latestRelease,
                                         currentRelease,
@@ -395,7 +400,6 @@ struct DFUUIView: View {
                     .bold()
                     .multilineTextAlignment(.center)
                     .foregroundColor(RuuviColor.ruuviTextColorSUI)
-
             }
             .frame(
                 maxWidth: .infinity,
@@ -426,7 +430,7 @@ struct DFUUIView: View {
                 )
                 .padding()
                 .eraseToAnyView()
-        case .firmwareAfterUpdate(let currentRelease):
+        case let .firmwareAfterUpdate(currentRelease):
             viewModel.storeUpdatedFirmware(currentRelease: currentRelease)
             return Text(texts.successfulTitle)
                 .font(muliRegular16)
@@ -442,6 +446,6 @@ struct DFUUIView: View {
     }
 
     func goBack() {
-        self.presentationMode.wrappedValue.dismiss()
+        presentationMode.wrappedValue.dismiss()
     }
 }

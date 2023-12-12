@@ -1,7 +1,7 @@
-import UIKit
 import SwiftUI
+import UIKit
 
-private struct ActivityPresenterAssets {
+private enum ActivityPresenterAssets {
     static let activityOngoingDefault = "activity_ongoing_generic"
     static let activitySuccessDefault = "activity_success_generic"
     static let activityFailedDefault = "activity_failed_generic"
@@ -19,10 +19,14 @@ public struct ActivityPresenterView: View {
             }
 
             ActivityPresenterContentView(state: stateHolder.state)
-                .padding([.leading, .trailing],
-                         stateHolder.state == .dismiss ? 0 : 12)
-                .padding([.top, .bottom],
-                         stateHolder.state == .dismiss ? 0 : 12)
+                .padding(
+                    [.leading, .trailing],
+                    stateHolder.state == .dismiss ? 0 : 12
+                )
+                .padding(
+                    [.top, .bottom],
+                    stateHolder.state == .dismiss ? 0 : 12
+                )
                 .background(Color.black.opacity(0.8))
                 .cornerRadius(8)
                 .foregroundColor(.white)
@@ -61,47 +65,47 @@ struct ActivityPresenterContentView: View {
     private var contentImage: Image? {
         switch state {
         case .loading:
-            return Image(
-                ActivityPresenterAssets.activityLogoRuuvi, 
+            Image(
+                ActivityPresenterAssets.activityLogoRuuvi,
                 bundle: .pod(ActivityPresenterViewProvider.self)
             )
         case .success:
-            return Image(systemName: "checkmark")
+            Image(systemName: "checkmark")
         case .failed:
-            return Image(systemName: "xmark")
+            Image(systemName: "xmark")
         default:
-            return nil
+            nil
         }
     }
 
     private var message: String {
         switch state {
-        case .loading(let message):
-            if let message = message {
-                return message
+        case let .loading(message):
+            if let message {
+                message
             } else {
-                return ActivityPresenterAssets
+                ActivityPresenterAssets
                     .activityOngoingDefault
                     .localized(for: ActivityPresenterViewProvider.self)
             }
-        case .success(let message):
-            if let message = message {
-                return message
+        case let .success(message):
+            if let message {
+                message
             } else {
-                return ActivityPresenterAssets
+                ActivityPresenterAssets
                     .activitySuccessDefault
                     .localized(for: ActivityPresenterViewProvider.self)
             }
-        case .failed(let message):
-            if let message = message {
-                return message
+        case let .failed(message):
+            if let message {
+                message
             } else {
-                return ActivityPresenterAssets
+                ActivityPresenterAssets
                     .activityFailedDefault
                     .localized(for: ActivityPresenterViewProvider.self)
             }
         case .dismiss:
-            return "" // Placeholder for dismiss state
+            "" // Placeholder for dismiss state
         }
     }
 }

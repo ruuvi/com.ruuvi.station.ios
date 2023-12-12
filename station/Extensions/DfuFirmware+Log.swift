@@ -1,23 +1,24 @@
 import Foundation
 import RuuviDFU
+import RuuviLocalization
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 extension DFUFirmware {
     var log: DFULog {
-        let str = "\("DfuFlash.Firmware.FileName.text".localized()): \(fileName ?? "")"
+        let str = "\(RuuviLocalization.DfuFlash.Firmware.FileName.text): \(fileName ?? "")"
             .appending("\r\n")
-            .appending("\("DfuFlash.Firmware.Parts.text".localized()): \(parts)")
+            .appending("\(RuuviLocalization.DfuFlash.Firmware.Parts.text): \(parts)")
             .appending("\r\n")
-            .appending("\("DfuFlash.Firmware.Size.text".localized()): \(size.application / 1024) KB")
+            .appending("\(RuuviLocalization.DfuFlash.Firmware.Size.text): \(size.application / 1024) KB")
             .appending("\r\n")
-            .appending("\("DfuFlash.Firmware.SoftDeviceSize.text".localized()): \(size.softdevice / 1024) KB")
+            .appending("\(RuuviLocalization.DfuFlash.Firmware.SoftDeviceSize.text): \(size.softdevice / 1024) KB")
             .appending("\r\n")
-            .appending("\("DfuFlash.Firmware.BootloaderSize.text".localized()): \(size.bootloader) byte")
+            .appending("\(RuuviLocalization.DfuFlash.Firmware.BootloaderSize.text): \(size.bootloader) byte")
         return DFULog(message: str, time: Date())
     }
 }

@@ -28,7 +28,7 @@ public final class PermissionPresenterAlert: PermissionPresenter {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel".localized(for: Self.self), style: .cancel, handler: nil)
         let actionTitle = "PermissionPresenter.settings".localized(for: Self.self)
-        let settings = UIAlertAction(title: actionTitle, style: .default) { _ -> Void in
+        let settings = UIAlertAction(title: actionTitle, style: .default) { _ in
             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(settingsUrl, options: [:])
             }

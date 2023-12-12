@@ -1,14 +1,10 @@
+import BTKit
 // swiftlint:disable file_length
 import Foundation
 import Future
 import RuuviOntology
-import BTKit
-import RuuviUser
-import RuuviCloud
 import RuuviPool
-#if canImport(RuuviCloudApi)
-import RuuviCloudApi
-#endif
+import RuuviUser
 
 // swiftlint:disable:next type_body_length
 public final class RuuviCloudPure: RuuviCloud {
@@ -16,9 +12,11 @@ public final class RuuviCloudPure: RuuviCloud {
     private let api: RuuviCloudApi
     private let pool: RuuviPool?
 
-    public init(api: RuuviCloudApi,
-                user: RuuviUser,
-                pool: RuuviPool?) {
+    public init(
+        api: RuuviCloudApi,
+        user: RuuviUser,
+        pool: RuuviPool?
+    ) {
         self.api = api
         self.user = user
         self.pool = pool
@@ -27,7 +25,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError> {
         let promise = Promise<[RuuviCloudSensorAlerts], RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -54,9 +53,12 @@ public final class RuuviCloudPure: RuuviCloud {
         description: String?,
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {
+        notifyListener(state: .loading, macId: macId.mac)
         let promise = Promise<Void, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
+            notifyListener(state: .failed, macId: macId.mac)
             return promise.future
         }
         let request = RuuviCloudApiPostAlertRequest(
@@ -71,8 +73,9 @@ public final class RuuviCloudPure: RuuviCloud {
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postAlert(request, authorization: apiKey)
-            .on(success: { _ in
+            .on(success: { [weak self] _ in
                 promise.succeed(value: ())
+                self?.notifyListener(state: .success, macId: macId.mac)
             }, failure: { [weak self] error in
                 let uniqueKey = macId.value + "-" + type.rawValue + "-" + settingType.rawValue
                 self?.createQueuedRequest(
@@ -82,6 +85,9 @@ public final class RuuviCloudPure: RuuviCloud {
                 )
 
                 promise.fail(error: .api(error))
+                self?.notifyListener(state: .failed, macId: macId.mac)
+            }, completion: { [weak self] in
+                self?.notifyListener(state: .complete, macId: macId.mac)
             })
         return promise.future
     }
@@ -89,7 +95,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
         let promise = Promise<TemperatureUnit, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -115,7 +122,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
         let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -141,7 +149,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
         let promise = Promise<HumidityUnit, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -167,7 +176,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
         let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -193,7 +203,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
         let promise = Promise<UnitPressure, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -219,7 +230,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
         let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -245,7 +257,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(showAllData: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -271,7 +284,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(drawDots: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -297,7 +311,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(chartDuration: Int) -> Future<Int, RuuviCloudError> {
         let promise = Promise<Int, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -323,7 +338,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -349,7 +365,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -375,7 +392,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(dashboard: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -401,7 +419,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError> {
         let promise = Promise<DashboardType, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -426,9 +445,10 @@ public final class RuuviCloudPure: RuuviCloud {
 
     @discardableResult
     public func set(dashboardTapActionType: DashboardTapActionType) ->
-        Future<DashboardTapActionType, RuuviCloudError> {
+    Future<DashboardTapActionType, RuuviCloudError> {
         let promise = Promise<DashboardTapActionType, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -454,7 +474,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(emailAlert: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -480,7 +501,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(pushAlert: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -506,7 +528,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
         let promise = Promise<String, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -532,7 +555,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func getCloudSettings() -> Future<RuuviCloudSettings?, RuuviCloudError> {
         let promise = Promise<RuuviCloudSettings?, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -551,7 +575,8 @@ public final class RuuviCloudPure: RuuviCloud {
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {
         let promise = Promise<Void, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -575,7 +600,8 @@ public final class RuuviCloudPure: RuuviCloud {
         for macId: MACIdentifier
     ) -> Future<URL, RuuviCloudError> {
         let promise = Promise<URL, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -590,18 +616,19 @@ public final class RuuviCloudPure: RuuviCloud {
             authorization: apiKey,
             uploadProgress: { percentage in
                 progress?(macId, percentage)
-            }).on(success: { response in
-                promise.succeed(value: response.uploadURL)
-            }, failure: { [weak self] error in
-                let uniqueKey = macId.value + "-uploadImage"
-                self?.createQueuedRequest(
-                    from: requestModel,
-                    additionalData: imageData,
-                    type: .uploadImage,
-                    uniqueKey: uniqueKey
-                )
-                promise.fail(error: .api(error))
-            })
+            }
+        ).on(success: { response in
+            promise.succeed(value: response.uploadURL)
+        }, failure: { [weak self] error in
+            let uniqueKey = macId.value + "-uploadImage"
+            self?.createQueuedRequest(
+                from: requestModel,
+                additionalData: imageData,
+                type: .uploadImage,
+                uniqueKey: uniqueKey
+            )
+            promise.fail(error: .api(error))
+        })
         return promise.future
     }
 
@@ -612,7 +639,8 @@ public final class RuuviCloudPure: RuuviCloud {
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -654,9 +682,12 @@ public final class RuuviCloudPure: RuuviCloud {
         name: String,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+        notifyListener(state: .loading, macId: sensor.id)
         let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
+            notifyListener(state: .failed, macId: sensor.id)
             return promise.future
         }
         let request = RuuviCloudApiSensorUpdateRequest(
@@ -668,8 +699,9 @@ public final class RuuviCloudPure: RuuviCloud {
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.update(request, authorization: apiKey)
-            .on(success: { _ in
+            .on(success: { [weak self] _ in
                 promise.succeed(value: sensor.with(name: name).any)
+                self?.notifyListener(state: .success, macId: sensor.id)
             }, failure: { [weak self] error in
                 let uniqueKey = sensor.id + "-name"
                 self?.createQueuedRequest(
@@ -678,20 +710,24 @@ public final class RuuviCloudPure: RuuviCloud {
                     uniqueKey: uniqueKey
                 )
                 promise.fail(error: .api(error))
+                self?.notifyListener(state: .failed, macId: sensor.id)
+            }, completion: { [weak self] in
+                self?.notifyListener(state: .complete, macId: sensor.id)
             })
         return promise.future
     }
 
     public func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
         let promise = Promise<Set<AnyShareableSensor>, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
         let request = RuuviCloudApiGetSensorsRequest(sensor: sensor.id)
         api.sensors(request, authorization: apiKey)
             .on(success: { response in
-                let arrayOfAny = response.sensors?.map({ $0.shareableSensor.any })
+                let arrayOfAny = response.sensors?.map(\.shareableSensor.any)
                 let setOfAny = Set<AnyShareableSensor>(arrayOfAny ?? [])
                 promise.succeed(value: setOfAny)
             }, failure: { error in
@@ -703,7 +739,8 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     public func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviCloudError> {
         let promise = Promise<String?, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -725,7 +762,8 @@ public final class RuuviCloudPure: RuuviCloud {
         alerts: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError> {
         let promise = Promise<[RuuviCloudSensorDense], RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -738,7 +776,7 @@ public final class RuuviCloudPure: RuuviCloud {
         )
         api.sensorsDense(request, authorization: apiKey)
             .on(success: { [weak self] response in
-                let arrayOfAny = response.sensors?.compactMap({ sensor in
+                let arrayOfAny = response.sensors?.compactMap { sensor in
                     RuuviCloudSensorDense(
                         sensor: CloudSensorStruct(
                             id: sensor.sensor,
@@ -762,7 +800,7 @@ public final class RuuviCloudPure: RuuviCloud {
                         alerts: sensor.alerts,
                         subscription: sensor.subscription
                     )
-                })
+                }
                 promise.succeed(value: arrayOfAny ?? [])
             }, failure: { error in
                 promise.fail(error: .api(error))
@@ -772,7 +810,8 @@ public final class RuuviCloudPure: RuuviCloud {
 
     public func share(macId: MACIdentifier, with email: String) -> Future<ShareSensorResponse, RuuviCloudError> {
         let promise = Promise<ShareSensorResponse, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -792,7 +831,8 @@ public final class RuuviCloudPure: RuuviCloud {
 
     public func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviCloudError> {
         let promise = Promise<MACIdentifier, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -801,7 +841,8 @@ public final class RuuviCloudPure: RuuviCloud {
             .on(success: { _ in
                 promise.succeed(value: macId)
             }, failure: { [weak self] error in
-                guard let email = email else {
+                guard let email
+                else {
                     promise.fail(error: .api(error))
                     return
                 }
@@ -821,7 +862,8 @@ public final class RuuviCloudPure: RuuviCloud {
         macId: MACIdentifier
     ) -> Future<MACIdentifier?, RuuviCloudError> {
         let promise = Promise<MACIdentifier?, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -841,7 +883,8 @@ public final class RuuviCloudPure: RuuviCloud {
         secret: String
     ) -> Future<MACIdentifier?, RuuviCloudError> {
         let promise = Promise<MACIdentifier?, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -860,7 +903,8 @@ public final class RuuviCloudPure: RuuviCloud {
         removeCloudHistory: Bool
     ) -> Future<MACIdentifier, RuuviCloudError> {
         let promise = Promise<MACIdentifier, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -901,7 +945,8 @@ public final class RuuviCloudPure: RuuviCloud {
         api.verify(request)
             .on(success: { response in
                 guard let email = response.email,
-                      let accessToken = response.accessToken else {
+                      let accessToken = response.accessToken
+                else {
                     return promise.fail(error: .api(.api(.erInternal)))
                 }
                 let result = ValidateCodeResponse(
@@ -917,28 +962,34 @@ public final class RuuviCloudPure: RuuviCloud {
 
     public func deleteAccount(email: String) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
         let request = RuuviCloudApiAccountDeleteRequest(email: email)
-        api.deleteAccount(request,
-                          authorization: apiKey)
-            .on(success: { response in
-                promise.succeed(value: response.email == email)
-            }, failure: { error in
-                promise.fail(error: .api(error))
-            })
+        api.deleteAccount(
+            request,
+            authorization: apiKey
+        )
+        .on(success: { response in
+            promise.succeed(value: response.email == email)
+        }, failure: { error in
+            promise.fail(error: .api(error))
+        })
         return promise.future
     }
 
-    public func registerPNToken(token: String,
-                                type: String,
-                                name: String?,
-                                data: String?,
-                                params: [String: String]?) -> Future<Int, RuuviCloudError> {
+    public func registerPNToken(
+        token: String,
+        type: String,
+        name: String?,
+        data: String?,
+        params: [String: String]?
+    ) -> Future<Int, RuuviCloudError> {
         let promise = Promise<Int, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -949,40 +1000,51 @@ public final class RuuviCloudPure: RuuviCloud {
             data: data,
             params: params
         )
-        api.registerPNToken(request,
-                          authorization: apiKey)
-            .on(success: { response in
-                promise.succeed(value: response.id)
-            }, failure: { error in
-                promise.fail(error: .api(error))
-            })
+        api.registerPNToken(
+            request,
+            authorization: apiKey
+        )
+        .on(success: { response in
+            promise.succeed(value: response.id)
+        }, failure: { error in
+            promise.fail(error: .api(error))
+        })
         return promise.future
     }
 
-    public func unregisterPNToken(token: String?,
-                                  tokenId: Int?) -> Future<Bool, RuuviCloudError> {
+    public func unregisterPNToken(
+        token: String?,
+        tokenId: Int?
+    ) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        let request = RuuviCloudPNTokenUnregisterRequest(token: token,
-                                                         id: tokenId)
-        api.unregisterPNToken(request,
-                              authorization: user.apiKey)
-            .on(success: { _ in
-                promise.succeed(value: true)
-            }, failure: { error in
-                promise.fail(error: .api(error))
-            })
+        let request = RuuviCloudPNTokenUnregisterRequest(
+            token: token,
+            id: tokenId
+        )
+        api.unregisterPNToken(
+            request,
+            authorization: user.apiKey
+        )
+        .on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .api(error))
+        })
         return promise.future
     }
 
     public func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError> {
         let promise = Promise<[RuuviCloudPNToken], RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
         let request = RuuviCloudPNTokenListRequest()
-        api.listPNTokens(request,
-                         authorization: apiKey).on(success: { response in
+        api.listPNTokens(
+            request,
+            authorization: apiKey
+        ).on(success: { response in
             let tokens = response.anyTokens
             promise.succeed(value: tokens)
         }, failure: { error in
@@ -993,13 +1055,14 @@ public final class RuuviCloudPure: RuuviCloud {
 
     public func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError> {
         let promise = Promise<[AnyCloudSensor], RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
         api.user(authorization: apiKey).on(success: { response in
             let email = response.email
-            let sensors = response.sensors.map({ $0.with(email: email).any })
+            let sensors = response.sensors.map { $0.with(email: email).any }
             promise.succeed(value: sensors)
         }, failure: { error in
             promise.fail(error: .api(error))
@@ -1034,7 +1097,8 @@ public final class RuuviCloudPure: RuuviCloud {
         chunkSize: Int,
         promise: Promise<[AnyRuuviTagSensorRecord], RuuviCloudError>
     ) {
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return
         }
@@ -1070,7 +1134,7 @@ public final class RuuviCloudPure: RuuviCloud {
                 } else {
                     promise.succeed(value: records + fetchedRecords)
                 }
-            }, failure: { (error) in
+            }, failure: { error in
                 promise.fail(error: .api(error))
             })
     }
@@ -1079,12 +1143,14 @@ public final class RuuviCloudPure: RuuviCloud {
     public func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
     -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
-        guard let apiKey = user.apiKey else {
+        guard let apiKey = user.apiKey
+        else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
 
-        guard let type = request.type, let requestBody = request.requestBodyData else {
+        guard let type = request.type, let requestBody = request.requestBodyData
+        else {
             promise.fail(error: .api(.unexpectedHTTPStatusCode))
             return promise.future
         }
@@ -1173,7 +1239,8 @@ public final class RuuviCloudPure: RuuviCloud {
             }
         case .uploadImage:
             do {
-                guard let imageData = request.additionalData else {
+                guard let imageData = request.additionalData
+                else {
                     return promise.future
                 }
 
@@ -1207,19 +1274,21 @@ public final class RuuviCloudPure: RuuviCloud {
         response: RuuviCloudApiGetSensorResponse
     ) -> [AnyRuuviTagSensorRecord] {
         let decoder = Ruuvi.decoder
-        guard let measurements = response.measurements else {
+        guard let measurements = response.measurements
+        else {
             return []
         }
-        return measurements.compactMap({ measurement in
+        return measurements.compactMap { measurement in
             guard let rssi = measurement.rssi,
-                    let data = measurement.data,
-                    let device = decoder.decodeNetwork(
-                    uuid: macId.value,
-                    rssi: rssi,
-                    isConnectable: true,
-                    payload: data
-            ),
-            let tag = device.ruuvi?.tag else {
+                  let data = measurement.data,
+                  let device = decoder.decodeNetwork(
+                      uuid: macId.value,
+                      rssi: rssi,
+                      isConnectable: true,
+                      payload: data
+                  ),
+                  let tag = device.ruuvi?.tag
+            else {
                 return nil
             }
             return RuuviTagSensorRecordStruct(
@@ -1240,7 +1309,7 @@ public final class RuuviCloudPure: RuuviCloud {
                 humidityOffset: 0.0,
                 pressureOffset: 0.0
             ).any
-        })
+        }
     }
 
     private func decodeSensorRecord(
@@ -1248,16 +1317,17 @@ public final class RuuviCloudPure: RuuviCloud {
         record: UserApiSensorRecord?
     ) -> AnyRuuviTagSensorRecord? {
         let decoder = Ruuvi.decoder
-        guard let record = record,
+        guard let record,
               let rssi = record.rssi,
               let data = record.data,
               let device = decoder.decodeNetwork(
-                uuid: macId.value,
-                rssi: rssi,
-                isConnectable: true,
-                payload: data
+                  uuid: macId.value,
+                  rssi: rssi,
+                  isConnectable: true,
+                  payload: data
               ),
-        let tag = device.ruuvi?.tag else {
+              let tag = device.ruuvi?.tag
+        else {
             return nil
         }
         return RuuviTagSensorRecordStruct(
@@ -1280,12 +1350,15 @@ public final class RuuviCloudPure: RuuviCloud {
         ).any
     }
 
-    private func createQueuedRequest(from request: Codable,
-                                     additionalData: Data? = nil,
-                                     type: RuuviCloudQueuedRequestType,
-                                     uniqueKey: String) {
+    private func createQueuedRequest(
+        from request: Codable,
+        additionalData: Data? = nil,
+        type: RuuviCloudQueuedRequestType,
+        uniqueKey: String
+    ) {
         let encoder = JSONEncoder()
-        guard let data = try? encoder.encode(request) else {
+        guard let data = try? encoder.encode(request)
+        else {
             return
         }
         let request = RuuviCloudQueuedRequestStruct(
@@ -1301,5 +1374,20 @@ public final class RuuviCloudPure: RuuviCloud {
         )
         pool?.createQueuedRequest(request)
     }
+
+    private func notifyListener(
+        state: RuuviCloudRequestStateType,
+        macId: String
+    ) {
+        NotificationCenter.default.post(
+            name: .RuuviCloudRequestStateDidChange,
+            object: nil,
+            userInfo: [
+                RuuviCloudRequestStateKey.macId: macId,
+                RuuviCloudRequestStateKey.state: state,
+            ]
+        )
+    }
 }
+
 // swiftlint:enable file_length

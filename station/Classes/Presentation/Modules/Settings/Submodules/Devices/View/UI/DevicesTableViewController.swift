@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class DevicesTableViewController: UITableViewController {
@@ -14,17 +15,19 @@ class DevicesTableViewController: UITableViewController {
         super.init(style: .grouped)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: LIFE CYCLE
+
 extension DevicesTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpTableView()
+        localize()
         output.viewDidLoad()
     }
 
@@ -36,48 +39,57 @@ extension DevicesTableViewController {
 
 extension DevicesTableViewController: DevicesViewInput {
     func localize() {
-        self.title = "DfuDevicesScanner.Title.text".localized()
+        title = RuuviLocalization.DfuDevicesScanner.Title.text
     }
 
     func showTokenIdDialog(for viewModel: DevicesViewModel) {
-        guard let tokenId = viewModel.id.value else {
+        guard let tokenId = viewModel.id.value
+        else {
             return
         }
 
-        let title = "Token Id".localized()
-        let controller = UIAlertController(title: title,
-                                           message: tokenId.stringValue,
-                                           preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Copy".localized(),
-                                           style: .default,
-                                           handler: { _ in
-            UIPasteboard.general.string = tokenId.stringValue
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        let title = RuuviLocalization.Devices.tokenId
+        let controller = UIAlertController(
+            title: title,
+            message: tokenId.stringValue,
+            preferredStyle: .alert
+        )
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.copy,
+            style: .default,
+            handler: { _ in
+                UIPasteboard.general.string = tokenId.stringValue
+            }
+        ))
+        controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
     func showTokenFetchError(with error: RUError) {
-        let controller = UIAlertController(title: nil,
-                                           message: error.localizedDescription,
-                                           preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Ok".localized(),
-                                           style: .default,
-                                           handler: { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        }))
+        let controller = UIAlertController(
+            title: nil,
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.ok,
+            style: .default,
+            handler: { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }
+        ))
         present(controller, animated: true)
     }
 }
 
-extension DevicesTableViewController {
-    fileprivate func updateUI() {
+private extension DevicesTableViewController {
+    func updateUI() {
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
         }
     }
 
-    fileprivate func setUpTableView() {
+    func setUpTableView() {
         view.backgroundColor = RuuviColor.ruuviPrimary
         tableView.showsVerticalScrollIndicator = false
         tableView.tableFooterView = UIView()
@@ -85,21 +97,29 @@ extension DevicesTableViewController {
         tableView.estimatedRowHeight = 50
         tableView.separatorStyle = .none
 
-        tableView.register(DevicesTableViewCell.self,
-                           forCellReuseIdentifier: reuseIndentifier)
+        tableView.register(
+            DevicesTableViewCell.self,
+            forCellReuseIdentifier: reuseIndentifier
+        )
     }
 }
 
 // MARK: - TABLEVIEW DATA SOURCE
+
 extension DevicesTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModels.count
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIndentifier,
-                                                       for: indexPath) as? DevicesTableViewCell else {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: reuseIndentifier,
+            for: indexPath
+        ) as? DevicesTableViewCell
+        else {
             fatalError()
         }
         cell.configure(with: viewModels[indexPath.row])
@@ -108,9 +128,12 @@ extension DevicesTableViewController {
 }
 
 // MARK: - TABLEVIEW DELEGATE
+
 extension DevicesTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath) {
+    override func tableView(
+        _: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         output.viewDidTapDevice(viewModel: viewModels[indexPath.row])
     }
 }

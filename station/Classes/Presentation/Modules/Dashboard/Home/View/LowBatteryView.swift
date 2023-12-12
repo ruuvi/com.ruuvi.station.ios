@@ -1,7 +1,7 @@
+import RuuviLocalization
 import UIKit
 
 class BatteryLevelView: UIView {
-
     private lazy var batteryLevelLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
@@ -10,7 +10,7 @@ class BatteryLevelView: UIView {
         label.textAlignment = .right
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 10)
-        label.text = "low_battery".localized()
+        label.text = RuuviLocalization.lowBattery
         return label
     }()
 
@@ -34,7 +34,8 @@ class BatteryLevelView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -4,12 +4,12 @@ extension String {
     static let nbsp = "\u{00a0}"
 }
 
-extension Optional where Wrapped == String {
+extension String? {
     func hasText() -> Bool {
-        if let self = self, !self.isEmpty {
-            return true
+        if let self, !self.isEmpty {
+            true
         } else {
-            return false
+            false
         }
     }
 }

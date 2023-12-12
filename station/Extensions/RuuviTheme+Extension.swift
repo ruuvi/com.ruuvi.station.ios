@@ -1,15 +1,13 @@
 import Foundation
+import RuuviLocalization
 import RuuviOntology
 
 extension RuuviTheme: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
-        case .light:
-            return "light_theme".localized()
-        case .dark:
-            return "dark_theme".localized()
-        case .system:
-            return "follow_system_theme".localized()
+        case .light: { _ in RuuviLocalization.lightTheme }
+        case .dark: { _ in RuuviLocalization.darkTheme }
+        case .system: { _ in RuuviLocalization.followSystemTheme }
         }
     }
 }

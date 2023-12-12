@@ -10,29 +10,37 @@ struct SimpleWidgetViewCircular: View {
 
         VStack(spacing: 0) {
             Text(entry.tag.displayString.substring(toIndex: 8).capitalized)
-                .font(.custom(Constants.muliBold.rawValue,
-                              size: 8,
-                              relativeTo: .subheadline))
+                .font(.custom(
+                    Constants.muliBold.rawValue,
+                    size: 8,
+                    relativeTo: .subheadline
+                ))
                 .foregroundColor(.sensorNameColor1)
                 .frame(maxWidth: .infinity, alignment: .center)
 
-            Text(viewModel.getValue(from: entry.record,
-                                    settings: entry.settings,
-                                    config: entry.config))
+            Text(viewModel.getValue(
+                from: entry.record,
+                settings: entry.settings,
+                config: entry.config
+            ))
             .environment(\.locale, viewModel.locale())
             .foregroundColor(.white)
-            .font(.custom(Constants.oswaldBold.rawValue,
-                          size: 18,
-                          relativeTo: .subheadline))
+            .font(.custom(
+                Constants.oswaldBold.rawValue,
+                size: 18,
+                relativeTo: .subheadline
+            ))
             .minimumScaleFactor(0.6)
             .padding(.top, -4)
 
             Text(viewModel.getUnit(for: WidgetSensorEnum(
                 rawValue: entry.config.sensor.rawValue)))
                 .foregroundColor(Color.unitTextColor)
-                .font(.custom(Constants.muliBold.rawValue,
-                              size: 10,
-                              relativeTo: .body))
+                .font(.custom(
+                    Constants.muliBold.rawValue,
+                    size: 10,
+                    relativeTo: .body
+                ))
                 .minimumScaleFactor(0.5)
                 .padding(.top, -2)
 

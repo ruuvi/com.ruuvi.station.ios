@@ -1,7 +1,6 @@
 import UIKit
 
 class DashboardIndicatorView: UIView {
-
     private lazy var indicatorValueLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorTextColor
@@ -27,32 +26,38 @@ class DashboardIndicatorView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     fileprivate func setUpUI() {
-
         addSubview(indicatorValueLabel)
-        indicatorValueLabel.anchor(top: topAnchor,
-                                   leading: leadingAnchor,
-                                   bottom: bottomAnchor,
-                                   trailing: nil)
+        indicatorValueLabel.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            bottom: bottomAnchor,
+            trailing: nil
+        )
 
         addSubview(indicatorUnitLabel)
-        indicatorUnitLabel.anchor(top: nil,
-                                  leading: indicatorValueLabel.trailingAnchor,
-                                  bottom: indicatorValueLabel.bottomAnchor,
-                                  trailing: nil,
-                                  padding: .init(top: 0,
-                                                 left: 4,
-                                                 bottom: 0,
-                                                 right: 0))
+        indicatorUnitLabel.anchor(
+            top: nil,
+            leading: indicatorValueLabel.trailingAnchor,
+            bottom: indicatorValueLabel.bottomAnchor,
+            trailing: nil,
+            padding: .init(
+                top: 0,
+                left: 4,
+                bottom: 0,
+                right: 0
+            )
+        )
         indicatorUnitLabel
             .topAnchor
             .constraint(
                 lessThanOrEqualTo: indicatorValueLabel.topAnchor,
-                        constant: 2
+                constant: 2
             ).isActive = true
 
         indicatorUnitLabel.trailingAnchor

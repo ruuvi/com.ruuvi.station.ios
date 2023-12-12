@@ -1,8 +1,9 @@
-import SwiftUI
 import Humidity
 import RuuviOntology
+import SwiftUI
 
 // MARK: - COLORS
+
 // Necessary colors used on the widgets
 extension Color {
     static let logoColor = Color("LogoColor")
@@ -14,38 +15,39 @@ extension Color {
 }
 
 // MARK: - LANGUAGE
-extension Language {
-    public var locale: Locale {
+
+public extension Language {
+    var locale: Locale {
         switch self {
         case .english:
-            return Locale(identifier: "en_US")
+            Locale(identifier: "en_US")
         case .russian:
-            return Locale(identifier: "ru_RU")
+            Locale(identifier: "ru_RU")
         case .finnish:
-            return Locale(identifier: "fi")
+            Locale(identifier: "fi")
         case .french:
-            return Locale(identifier: "fr")
+            Locale(identifier: "fr")
         case .swedish:
-            return Locale(identifier: "sv")
+            Locale(identifier: "sv")
         case .german:
-            return Locale(identifier: "de")
+            Locale(identifier: "de")
         }
     }
 
-    public var humidityLanguage: HumiditySettings.Language {
+    var humidityLanguage: HumiditySettings.Language {
         switch self {
         case .german:
-            return .en
+            .en
         case .russian:
-            return .ru
+            .ru
         case .finnish:
-            return .fi
+            .fi
         case .french:
-            return .en
+            .en
         case .swedish:
-            return .sv
+            .sv
         case .english:
-            return .en
+            .en
         }
     }
 }
@@ -56,16 +58,17 @@ extension HumidityUnit {
     var symbol: String {
         switch self {
         case .percent:
-            return "%"
+            "%"
         case .gm3:
-            return "g/m³"
+            "g/m³"
         default:
-            return "°"
+            "°"
         }
     }
 }
 
 // MARK: - NUMBERS
+
 extension Double {
     func round(to places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
@@ -74,61 +77,64 @@ extension Double {
     }
 
     var clean: String {
-        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+        truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
 
     var value: String {
-        return String(self)
+        String(self)
     }
 
     var nsNumber: NSNumber {
-        return NSNumber(value: self)
+        NSNumber(value: self)
     }
 }
 
 extension Int {
     var value: String {
-        return String(self)
+        String(self)
     }
 
     var double: Double {
-        return Double(self)
+        Double(self)
     }
 }
+
 // MARK: - String
-extension Optional where Wrapped == String {
+
+extension String? {
     var unwrapped: String {
-        return self ?? ""
+        self ?? ""
     }
 }
 
 extension String {
     var localized: String {
-        return NSLocalizedString(self, comment: "")
+        NSLocalizedString(self, comment: "")
     }
 }
 
 extension String {
-
     var length: Int {
-        return count
+        count
     }
 
-    subscript (i: Int) -> String {
-        return self[i ..< i + 1]
+    subscript(i: Int) -> String {
+        self[i ..< i + 1]
     }
 
     func substring(fromIndex: Int) -> String {
-        return self[min(fromIndex, length) ..< length]
+        self[min(fromIndex, length) ..< length]
     }
 
     func substring(toIndex: Int) -> String {
-        return self[0 ..< max(0, toIndex)]
+        self[0 ..< max(0, toIndex)]
     }
 
-    subscript (r: Range<Int>) -> String {
-        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
-                                            upper: min(length, max(0, r.upperBound))))
+    subscript(r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (
+            lower: max(0, min(length, r.lowerBound)),
+            upper: min(length, max(0, r.upperBound))
+        ))
         let start = index(startIndex, offsetBy: range.lowerBound)
         let end = index(start, offsetBy: range.upperBound - range.lowerBound)
         return String(self[start ..< end])

@@ -6,6 +6,6 @@ protocol MailComposerPresenter {
 
 extension MailComposerPresenter {
     func present(email: String, subject: String) {
-        return present(email: email, subject: subject, body: nil)
+        present(email: email, subject: subject, body: nil)
     }
 }

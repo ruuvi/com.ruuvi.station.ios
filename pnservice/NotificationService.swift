@@ -1,22 +1,19 @@
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
-
-    // swiftlint:disable redundant_string_enum_value
     private enum AlertType: String {
-        case temperature = "temperature"
-        case humidity = "humidity"
-        case pressure = "pressure"
-        case signal = "signal"
-        case movement = "movement"
-        case offline = "offline"
+        case temperature
+        case humidity
+        case pressure
+        case signal
+        case movement
+        case offline
     }
 
     private enum TriggerType: String {
-        case under = "under"
-        case over = "over"
+        case under
+        case over
     }
-    // swiftlint:enable redundant_string_enum_value
 
     private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
 
@@ -24,10 +21,11 @@ class NotificationService: UNNotificationServiceExtension {
     var bestAttemptContent: UNMutableNotificationContent?
     var currentRequest: UNNotificationRequest?
 
-    override func didReceive(_ request: UNNotificationRequest,
-                             withContentHandler
-                             contentHandler:
-                             @escaping (UNNotificationContent) -> Void) {
+    override func didReceive(
+        _ request: UNNotificationRequest,
+        withContentHandler contentHandler:
+        @escaping (UNNotificationContent) -> Void
+    ) {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         currentRequest = request
@@ -39,10 +37,9 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private func processNotification() {
-
-        if let contentHandler = contentHandler,
+        if let contentHandler,
            let userInfo = currentRequest?.content.userInfo,
-            let bestAttemptContent = bestAttemptContent {
+           let bestAttemptContent {
             // If this value is not available on data, show formatted message.
             // Otherwise don't do anything.
             let showLocallyFormattedMessage = userInfo["showLocallyFormatted"] as? Bool ?? true
@@ -52,9 +49,11 @@ class NotificationService: UNNotificationServiceExtension {
                    let triggerType = userInfo["triggerType"] as? String,
                    let threshold = userInfo["thresholdValue"] as? String,
                    let alertMessage = userInfo["alertData"] as? String {
-                    let title = titleForAlert(from: triggerType,
-                                              alertType: alertType,
-                                              threshold: threshold)
+                    let title = titleForAlert(
+                        from: triggerType,
+                        alertType: alertType,
+                        threshold: threshold
+                    )
                     bestAttemptContent.subtitle = alertMessage
                     bestAttemptContent.title = title
                     bestAttemptContent.body = sensorName
@@ -70,48 +69,51 @@ extension NotificationService {
     private func getAlertType(from value: String) -> AlertType? {
         switch value.lowercased() {
         case "temperature":
-            return .temperature
+            .temperature
         case "humidity":
-            return .humidity
+            .humidity
         case "pressure":
-            return .pressure
+            .pressure
         case "signal":
-            return .signal
+            .signal
         case "movement":
-            return .movement
+            .movement
         default:
-            return nil
+            nil
         }
     }
 
     private func getTriggerType(from value: String) -> TriggerType? {
         switch value.lowercased() {
         case "under":
-            return .under
+            .under
         case "over":
-            return .over
+            .over
         default:
-            return nil
+            nil
         }
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func titleForAlert(from triggerType: String,
-                               alertType: String,
-                               threshold: String) -> String {
+    private func titleForAlert(
+        from triggerType: String,
+        alertType: String,
+        threshold: String
+    ) -> String {
         guard let triggerType = getTriggerType(from: triggerType),
-              let alertType = getAlertType(from: alertType) else {
+              let alertType = getAlertType(from: alertType)
+        else {
             return ""
         }
 
-        var format: String = ""
+        var format = ""
         switch triggerType {
         case .under:
             switch alertType {
             case .temperature:
                 format = "alert_notification_temperature_low_threshold"
             case .humidity:
-                format =  "alert_notification_humidity_low_threshold"
+                format = "alert_notification_humidity_low_threshold"
             case .pressure:
                 format = "alert_notification_pressure_low_threshold"
             case .signal:
@@ -127,7 +129,7 @@ extension NotificationService {
             case .temperature:
                 format = "alert_notification_temperature_high_threshold"
             case .humidity:
-                format =  "alert_notification_humidity_high_threshold"
+                format = "alert_notification_humidity_high_threshold"
             case .pressure:
                 format = "alert_notification_pressure_high_threshold"
             case .signal:
@@ -147,16 +149,19 @@ extension NotificationService {
         let languageUDKey = "SettingsUserDegaults.languageUDKey"
         guard let languageCode = notificationServiceAppGroup?.string(forKey: languageUDKey),
               let bundle = Bundle.main.path(
-            forResource: languageCode,
-            ofType: "lproj"
-        ),
-              let languageBundle = Bundle(path: bundle) else {
+                  forResource: languageCode,
+                  ofType: "lproj"
+              ),
+              let languageBundle = Bundle(path: bundle)
+        else {
             return NSLocalizedString(value, comment: value)
         }
 
-        return NSLocalizedString(value,
-                                 tableName: nil,
-                                 bundle: languageBundle,
-                                 comment: value)
+        return NSLocalizedString(
+            value,
+            tableName: nil,
+            bundle: languageBundle,
+            comment: value
+        )
     }
 }

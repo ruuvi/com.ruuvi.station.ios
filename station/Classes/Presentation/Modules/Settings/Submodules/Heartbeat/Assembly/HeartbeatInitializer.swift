@@ -1,7 +1,7 @@
 import UIKit
 
 class HeartbeatInitializer: NSObject {
-    @IBOutlet weak var viewController: HeartbeatViewController!
+    @IBOutlet var viewController: HeartbeatViewController!
 
     override func awakeFromNib() {
         super.awakeFromNib()

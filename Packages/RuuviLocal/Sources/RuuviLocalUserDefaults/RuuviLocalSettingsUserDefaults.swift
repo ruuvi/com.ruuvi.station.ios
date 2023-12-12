@@ -1,10 +1,8 @@
 import Foundation
 import RuuviOntology
-import RuuviLocal
 
 // swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
-
     @UserDefault("SettingsUserDefaults.signedInAtleastOnce", defaultValue: false)
     var signedInAtleastOnce: Bool
 
@@ -14,7 +12,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool {
-        return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
+        UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier) {
@@ -24,7 +22,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     private let firmwareUpdateDialogWasShownUDPrefix = "SettingsUserDegaults.firmwareUpdateDialogWasShownUDPrefix."
 
     func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool {
-        return UserDefaults.standard.bool(forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
+        UserDefaults.standard.bool(forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
     }
 
     func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier) {
@@ -34,7 +32,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     // TODO: - Deprecate this after version v1.3.2
     private let firmwareVersionPrefix = "SettingsUserDegaults.firmwareVersionPrefix"
     func firmwareVersion(for luid: LocalIdentifier) -> String? {
-        return UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
+        UserDefaults.standard.value(forKey: firmwareVersionPrefix + luid.value) as? String
     }
 
     func setFirmwareVersion(for luid: LocalIdentifier, value: String?) {
@@ -45,11 +43,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
-                return Language(rawValue: savedCode) ?? .english
+                Language(rawValue: savedCode) ?? .english
             } else if let regionCode = Locale.current.languageCode {
-                return Language(rawValue: regionCode) ?? .english
+                Language(rawValue: regionCode) ?? .english
             } else {
-                return .english
+                .english
             }
         }
         set {
@@ -58,11 +56,14 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             UserDefaults.standard.set(newValue.rawValue, forKey: languageUDKey)
             NotificationCenter
                 .default
-                .post(name: .LanguageDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .LanguageDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
+
     private let languageUDKey = "SettingsUserDegaults.languageUDKey"
 
     @UserDefault("SettingsUserDefaults.cardToOpenFromWidgetKey", defaultValue: nil)
@@ -72,11 +73,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch humidityUnitInt {
             case 1:
-                return .gm3
+                .gm3
             case 2:
-                return .dew
+                .dew
             default:
-                return .percent
+                .percent
             }
         }
         set {
@@ -90,9 +91,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .HumidityUnitDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .HumidityUnitDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -103,22 +106,24 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch humidityAccuracyInt {
             case 0:
-                return .zero
+                .zero
             case 1:
-                return .one
+                .one
             case 2:
-                return .two
+                .two
             default:
-                return .two
+                .two
             }
         }
         set {
             humidityAccuracyInt = newValue.value
             NotificationCenter
                 .default
-                .post(name: .HumidityAccuracyDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .HumidityAccuracyDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -126,15 +131,15 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch temperatureUnitInt {
             case 0:
-                return useFahrenheit ? .fahrenheit : .celsius
+                useFahrenheit ? .fahrenheit : .celsius
             case 1:
-                return .kelvin
+                .kelvin
             case 2:
-                return .celsius
+                .celsius
             case 3:
-                return .fahrenheit
+                .fahrenheit
             default:
-                return .celsius
+                .celsius
             }
         }
         set {
@@ -149,9 +154,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .TemperatureUnitDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .TemperatureUnitDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -162,22 +169,24 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch temperatureAccuracyInt {
             case 0:
-                return .zero
+                .zero
             case 1:
-                return .one
+                .one
             case 2:
-                return .two
+                .two
             default:
-                return .two
+                .two
             }
         }
         set {
             temperatureAccuracyInt = newValue.value
             NotificationCenter
                 .default
-                .post(name: .TemperatureAccuracyDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .TemperatureAccuracyDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -185,20 +194,22 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch pressureUnitInt {
             case UnitPressure.inchesOfMercury.hashValue:
-                return .inchesOfMercury
+                .inchesOfMercury
             case UnitPressure.millimetersOfMercury.hashValue:
-                return .millimetersOfMercury
+                .millimetersOfMercury
             default:
-                return .hectopascals
+                .hectopascals
             }
         }
         set {
             pressureUnitInt = newValue.hashValue
             NotificationCenter
                 .default
-                .post(name: .PressureUnitDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .PressureUnitDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -209,22 +220,24 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch pressureAccuracyInt {
             case 0:
-                return .zero
+                .zero
             case 1:
-                return .one
+                .one
             case 2:
-                return .two
+                .two
             default:
-                return .two
+                .two
             }
         }
         set {
             pressureAccuracyInt = newValue.value
             NotificationCenter
                 .default
-                .post(name: .PressureUnitAccuracyChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .PressureUnitAccuracyChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -238,16 +251,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var tagChartsLandscapeSwipeInstructionWasShown: Bool
 
     @UserDefault("DashboardScrollViewController.hasShownSwipeAlert", defaultValue: false)
-     var cardsSwipeHintWasShown: Bool
+    var cardsSwipeHintWasShown: Bool
 
     @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
     var isAdvertisementDaemonOn: Bool {
         didSet {
             NotificationCenter
-            .default
-            .post(name: .isAdvertisementDaemonOnDidChange,
-                  object: self,
-                  userInfo: nil)
+                .default
+                .post(
+                    name: .isAdvertisementDaemonOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -283,9 +298,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .ChartDurationHourDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .ChartDurationHourDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -296,6 +313,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var networkPruningIntervalHours: Int
 
     // MARK: - Private
+
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
 
@@ -318,16 +336,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             UserDefaults.standard.set(newValue, forKey: temperatureUnitIntUDKey)
         }
     }
+
     private let temperatureUnitIntUDKey = "SettingsUserDegaults.temperatureUnitIntUDKey"
 
     private var humidityUnitInt: Int {
         get {
-            return UserDefaults.standard.integer(forKey: humidityUnitIntUDKey)
+            UserDefaults.standard.integer(forKey: humidityUnitIntUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: humidityUnitIntUDKey)
         }
     }
+
     private let humidityUnitIntUDKey = "SettingsUserDegaults.humidityUnitInt"
 
     @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: true)
@@ -335,9 +355,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .DownsampleOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .DownsampleOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -346,9 +368,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .ChartDrawDotsOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .ChartDrawDotsOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -357,9 +381,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .ChartStatsOnDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .ChartStatsOnDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -374,9 +400,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         didSet {
             NotificationCenter
                 .default
-                .post(name: .CloudModeDidChange,
-                      object: self,
-                      userInfo: nil)
+                .post(
+                    name: .CloudModeDidChange,
+                    object: self,
+                    userInfo: nil
+                )
         }
     }
 
@@ -401,6 +429,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func cardToOpenFromWidget() -> String? {
         UserDefaults.standard.value(forKey: cardToOpenFromWidgetKey) as? String
     }
+
     func setCardToOpenFromWidget(for macId: String?) {
         UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
     }
@@ -416,8 +445,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let ownerCheckDateKey = "SettingsUserDefaults.ownerCheckDate"
     func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?) {
-        guard let macId = macId else { return }
-        if let value = value {
+        guard let macId else { return }
+        if let value {
             UserDefaults.standard.set(value, forKey: ownerCheckDateKey + macId.mac)
         } else {
             UserDefaults.standard.removeObject(forKey: ownerCheckDateKey + macId.mac)
@@ -425,7 +454,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
 
     func ownerCheckDate(for macId: MACIdentifier?) -> Date? {
-        guard let macId = macId else { return nil }
+        guard let macId else { return nil }
         return UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
     }
 
@@ -435,7 +464,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     private let dashboardTypeIdKey = "SettingsUserDefaults.dashboardTypeIdKey"
     private var dashboardTypeId: Int {
         get {
-            return UserDefaults.standard.integer(forKey: dashboardTypeIdKey)
+            UserDefaults.standard.integer(forKey: dashboardTypeIdKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: dashboardTypeIdKey)
@@ -446,11 +475,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch dashboardTypeId {
             case 0:
-                return .image
+                .image
             case 1:
-                return .simple
+                .simple
             default:
-                return .image
+                .image
             }
         }
         set {
@@ -462,9 +491,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .DashboardTypeDidChange,
-                      object: self,
-                      userInfo: [DashboardTypeKey.type: newValue])
+                .post(
+                    name: .DashboardTypeDidChange,
+                    object: self,
+                    userInfo: [DashboardTypeKey.type: newValue]
+                )
         }
     }
 
@@ -472,45 +503,45 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         "SettingsUserDefaults.dashboardTapActionTypeIdKey"
     private var dashboardTapActionTypeId: Int {
         get {
-            return UserDefaults.standard.integer(forKey: dashboardTapActionTypeIdKey)
+            UserDefaults.standard.integer(forKey: dashboardTapActionTypeIdKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: dashboardTapActionTypeIdKey)
         }
     }
 
-    // swiftlint:disable switch_case_alignment
     var dashboardTapActionType: DashboardTapActionType {
         get {
             switch dashboardTapActionTypeId {
-                case 0:
-                    return .card
-                case 1:
-                    return .chart
-                default:
-                    return .card
+            case 0:
+                .card
+            case 1:
+                .chart
+            default:
+                .card
             }
         }
         set {
             switch newValue {
-                case .card:
-                    dashboardTapActionTypeId = 0
-                case .chart:
-                    dashboardTapActionTypeId = 1
+            case .card:
+                dashboardTapActionTypeId = 0
+            case .chart:
+                dashboardTapActionTypeId = 1
             }
             NotificationCenter
                 .default
-                .post(name: .DashboardTapActionTypeDidChange,
-                      object: self,
-                      userInfo: [DashboardTapActionTypeKey.type: newValue])
+                .post(
+                    name: .DashboardTapActionTypeDidChange,
+                    object: self,
+                    userInfo: [DashboardTapActionTypeKey.type: newValue]
+                )
         }
     }
-    // swiftlint:enable switch_case_alignment
 
     private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
     private var ruuviThemeId: Int {
         get {
-            return UserDefaults.standard.integer(forKey: ruuviThemeIdKey)
+            UserDefaults.standard.integer(forKey: ruuviThemeIdKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: ruuviThemeIdKey)
@@ -521,13 +552,13 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         get {
             switch ruuviThemeId {
             case 0:
-                return .system
+                .system
             case 1:
-                return .light
+                .light
             case 2:
-                return .dark
+                .dark
             default:
-                return .system
+                .system
             }
         }
         set {
@@ -541,15 +572,17 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
             NotificationCenter
                 .default
-                .post(name: .AppearanceSettingsDidChange,
-                      object: self,
-                      userInfo: [AppearanceTypeKey.style: newValue])
+                .post(
+                    name: .AppearanceSettingsDidChange,
+                    object: self,
+                    userInfo: [AppearanceTypeKey.style: newValue]
+                )
         }
     }
 
     private let syncDialogHiddenKey = "SettingsUserDefaults.syncDialogHiddenKey."
     func syncDialogHidden(for luid: LocalIdentifier) -> Bool {
-        return UserDefaults.standard.bool(forKey: syncDialogHiddenKey + luid.value)
+        UserDefaults.standard.bool(forKey: syncDialogHiddenKey + luid.value)
     }
 
     func setSyncDialogHidden(for luid: LocalIdentifier) {
@@ -570,9 +603,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             UserDefaults.standard.set(newValue.rawValue, forKey: ruuviAlertSoundKey)
             NotificationCenter
                 .default
-                .post(name: .AlertSoundSettingsDidChange,
-                      object: self,
-                      userInfo: [AppearanceTypeKey.style: newValue])
+                .post(
+                    name: .AlertSoundSettingsDidChange,
+                    object: self,
+                    userInfo: [AppearanceTypeKey.style: newValue]
+                )
         }
     }
 
@@ -585,9 +620,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
                     .default
-                    .post(name: .EmailAlertSettingsDidChange,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .EmailAlertSettingsDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
             }
         }
     }
@@ -601,9 +638,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
                     .default
-                    .post(name: .PushAlertSettingsDidChange,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .PushAlertSettingsDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
             }
         }
     }
@@ -614,11 +653,14 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
                     .default
-                    .post(name: .LimitAlertNotificationsSettingsDidChange,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .LimitAlertNotificationsSettingsDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
             }
         }
     }
 }
+
 // swiftlint:enable type_body_length file_length

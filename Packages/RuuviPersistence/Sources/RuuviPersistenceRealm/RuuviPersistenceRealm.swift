@@ -1,19 +1,18 @@
-// swiftlint:disable file_length
-import RealmSwift
-import Future
 import BTKit
 import Foundation
-import RuuviOntology
+import Future
+// swiftlint:disable file_length
+import RealmSwift
 import RuuviContext
-import RuuviPersistence
+import RuuviOntology
 #if canImport(FirebaseCrashlytics) // TODO: @rinat eliminate
-import FirebaseCrashlytics
+    import FirebaseCrashlytics
 #endif
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 #if canImport(RuuviContextRealm)
-import RuuviContextRealm
+    import RuuviContextRealm
 #endif
 
 // swiftlint:disable type_body_length
@@ -264,7 +263,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         context.bgWorker.enqueue {
             let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
             let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
-                return self.constructRuuviTagSensorStruct(from: ruuviTagRealm)
+                self.constructRuuviTagSensorStruct(from: ruuviTagRealm)
             }
             promise.succeed(value: result)
         }
@@ -278,9 +277,11 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                 .filter("ruuviTag.uuid == %@", ruuviTagId)
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { realmRecord in
-                return self.constructRecordStruct(from: realmRecord,
-                                                  luid: realmRecord.ruuviTag?.luid,
-                                                  sequenceNumber: realmRecord.measurementSequenceNumber.value)
+                self.constructRecordStruct(
+                    from: realmRecord,
+                    luid: realmRecord.ruuviTag?.luid,
+                    sequenceNumber: realmRecord.measurementSequenceNumber.value
+                )
             }
             promise.succeed(value: result)
         }
@@ -300,14 +301,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             var previousDate = ruuviTagDataRealms.first?.date ?? Date()
             for tagDataRealm in ruuviTagDataRealms {
                 autoreleasepool {
-                    guard tagDataRealm.date >= previousDate.addingTimeInterval(interval) else {
+                    guard tagDataRealm.date >= previousDate.addingTimeInterval(interval)
+                    else {
                         return
                     }
                     previousDate = tagDataRealm.date
                     results.append(
-                        self.constructRecordStruct(from: tagDataRealm,
-                                                          luid: tagDataRealm.ruuviTag?.luid,
-                                                          sequenceNumber: tagDataRealm.measurementSequenceNumber.value)
+                        self.constructRecordStruct(
+                            from: tagDataRealm,
+                            luid: tagDataRealm.ruuviTag?.luid,
+                            sequenceNumber: tagDataRealm.measurementSequenceNumber.value
+                        )
                     )
                 }
             }
@@ -329,14 +333,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             var previousDate = realmRecords.first?.date ?? Date()
             for realmRecord in realmRecords {
                 autoreleasepool {
-                    guard realmRecord.date >= previousDate else {
+                    guard realmRecord.date >= previousDate
+                    else {
                         return
                     }
                     previousDate = realmRecord.date
                     results.append(
-                        self.constructRecordStruct(from: realmRecord,
-                                                          luid: realmRecord.ruuviTag?.luid,
-                                                          sequenceNumber: realmRecord.measurementSequenceNumber.value)
+                        self.constructRecordStruct(
+                            from: realmRecord,
+                            luid: realmRecord.ruuviTag?.luid,
+                            sequenceNumber: realmRecord.measurementSequenceNumber.value
+                        )
                     )
                 }
             }
@@ -359,14 +366,17 @@ public class RuuviPersistenceRealm: RuuviPersistence {
             var previousDate = realmRecords.first?.date ?? Date()
             for realmRecord in realmRecords {
                 autoreleasepool {
-                    guard realmRecord.date >= previousDate.addingTimeInterval(interval) else {
+                    guard realmRecord.date >= previousDate.addingTimeInterval(interval)
+                    else {
                         return
                     }
                     previousDate = realmRecord.date
                     results.append(
-                        self.constructRecordStruct(from: realmRecord,
-                                                          luid: realmRecord.ruuviTag?.luid,
-                                                          sequenceNumber: realmRecord.measurementSequenceNumber.value)
+                        self.constructRecordStruct(
+                            from: realmRecord,
+                            luid: realmRecord.ruuviTag?.luid,
+                            sequenceNumber: realmRecord.measurementSequenceNumber.value
+                        )
                     )
                 }
             }
@@ -376,10 +386,10 @@ public class RuuviPersistenceRealm: RuuviPersistence {
     }
 
     public func readDownsampled(
-        _ ruuviTagId: String,
-        after date: Date,
-        with intervalMinutes: Int,
-        pick points: Double
+        _: String,
+        after _: Date,
+        with _: Int,
+        pick _: Double
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
         // No need to implement since the RealmDB will be removed in the future.
@@ -394,14 +404,18 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         context.bgWorker.enqueue {
             let realmRecords = self.context.bg
                 .objects(RuuviTagDataRealm.self)
-                .filter("ruuviTag.uuid == %@ AND date > %@",
-                        ruuviTagId,
-                        Date(timeIntervalSince1970: from))
+                .filter(
+                    "ruuviTag.uuid == %@ AND date > %@",
+                    ruuviTagId,
+                    Date(timeIntervalSince1970: from)
+                )
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { record in
-                return self.constructRecordStruct(from: record,
-                                                  luid: record.ruuviTag?.luid,
-                                                  sequenceNumber: record.measurementSequenceNumber.value)
+                self.constructRecordStruct(
+                    from: record,
+                    luid: record.ruuviTag?.luid,
+                    sequenceNumber: record.measurementSequenceNumber.value
+                )
             }
             promise.succeed(value: result)
         }
@@ -411,7 +425,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
     public func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
         let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
-            let luid = ruuviTag.luid else {
+              let luid = ruuviTag.luid
+        else {
             promise.succeed(value: nil)
             return promise.future
         }
@@ -421,9 +436,11 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date", ascending: false)
                 .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
-                let lastRecordResult = self.constructRecordStruct(from: lastRecord,
-                                                                  luid: luid,
-                                                                  sequenceNumber: sequenceNumber)
+                let lastRecordResult = self.constructRecordStruct(
+                    from: lastRecord,
+                    luid: luid,
+                    sequenceNumber: sequenceNumber
+                )
                 promise.succeed(value: lastRecordResult)
             } else {
                 promise.succeed(value: nil)
@@ -435,7 +452,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
     public func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
         let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
-            let luid = ruuviTag.luid else {
+              let luid = ruuviTag.luid
+        else {
             promise.succeed(value: nil)
             return promise.future
         }
@@ -445,9 +463,11 @@ public class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date", ascending: false)
                 .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
-                let lastRecordResult = self.constructRecordStruct(from: lastRecord,
-                                                                  luid: luid,
-                                                                  sequenceNumber: sequenceNumber)
+                let lastRecordResult = self.constructRecordStruct(
+                    from: lastRecord,
+                    luid: luid,
+                    sequenceNumber: sequenceNumber
+                )
                 promise.succeed(value: lastRecordResult)
             } else {
                 promise.succeed(value: nil)
@@ -477,7 +497,8 @@ public class RuuviPersistenceRealm: RuuviPersistence {
     public func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPersistenceError> {
         let promise = Promise<SensorSettings?, RuuviPersistenceError>()
         guard ruuviTag.macId == nil,
-              ruuviTag.luid != nil else {
+              ruuviTag.luid != nil
+        else {
             promise.fail(error: .failedToFindRuuviTag)
             return promise.future
         }
@@ -517,7 +538,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord _: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviPersistenceError> {
         let promise = Promise<SensorSettings, RuuviPersistenceError>()
         assert(ruuviTag.macId == nil)
@@ -602,6 +623,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
     }
 
     // MARK: - Queued cloud requests
+
     @discardableResult
     public func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
@@ -611,7 +633,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
 
     @discardableResult
     public func readQueuedRequests(
-        for key: String
+        for _: String
     ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
         // No op for realmDB since this will be deprecated soon.
@@ -620,7 +642,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
 
     @discardableResult
     public func readQueuedRequests(
-        for type: RuuviCloudQueuedRequestType
+        for _: RuuviCloudQueuedRequestType
     ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
         let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
         // No op for realmDB since this will be deprecated soon.
@@ -629,7 +651,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
 
     @discardableResult
     public func createQueuedRequest(
-        _ request: RuuviCloudQueuedRequest
+        _: RuuviCloudQueuedRequest
     ) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         // No op for realmDB since this will be deprecated soon.
@@ -638,7 +660,7 @@ public class RuuviPersistenceRealm: RuuviPersistence {
 
     @discardableResult
     public func deleteQueuedRequest(
-        _ request: RuuviCloudQueuedRequest
+        _: RuuviCloudQueuedRequest
     ) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         // No op for realmDB since this will be deprecated soon.
@@ -652,16 +674,19 @@ public class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 }
+
 // MARK: - Private
+
 extension RuuviPersistenceRealm {
     func reportToCrashlytics(error: Error, method: String = #function, line: Int = #line) {
         #if canImport(FirebaseCrashlytics)
-        Crashlytics.crashlytics().log("\(method)(line: \(line)")
-        Crashlytics.crashlytics().record(error: error)
+            Crashlytics.crashlytics().log("\(method)(line: \(line)")
+            Crashlytics.crashlytics().record(error: error)
         #endif
     }
+
     private func constructRuuviTagSensorStruct(from ruuviTagRealm: RuuviTagRealm) -> AnyRuuviTagSensor {
-        return RuuviTagSensorStruct(
+        RuuviTagSensorStruct(
             version: ruuviTagRealm.version,
             firmwareVersion: ruuviTagRealm.firmwareVersion,
             luid: ruuviTagRealm.uuid.luid,
@@ -677,9 +702,12 @@ extension RuuviPersistenceRealm {
             sharedTo: ruuviTagRealm.sharedTo
         ).any
     }
-    private func constructRecordStruct(from lastRecord: RuuviTagDataRealm,
-                                       luid: LocalIdentifier?,
-                                       sequenceNumber: Int?) -> RuuviTagSensorRecordStruct {
+
+    private func constructRecordStruct(
+        from lastRecord: RuuviTagDataRealm,
+        luid: LocalIdentifier?,
+        sequenceNumber: Int?
+    ) -> RuuviTagSensorRecordStruct {
         let lastRecordResult = RuuviTagSensorRecordStruct(
             luid: luid,
             date: lastRecord.date,
@@ -701,9 +729,11 @@ extension RuuviPersistenceRealm {
         return lastRecordResult
     }
 
-    private func constructRecordStruct(from lastRecord: RuuviTagLatestDataRealm,
-                                       luid: LocalIdentifier,
-                                       sequenceNumber: Int?) -> RuuviTagSensorRecordStruct {
+    private func constructRecordStruct(
+        from lastRecord: RuuviTagLatestDataRealm,
+        luid: LocalIdentifier,
+        sequenceNumber: Int?
+    ) -> RuuviTagSensorRecordStruct {
         let lastRecordResult = RuuviTagSensorRecordStruct(
             luid: luid,
             date: lastRecord.date,
@@ -725,4 +755,5 @@ extension RuuviPersistenceRealm {
         return lastRecordResult
     }
 }
+
 // swiftlint:enable file_length type_body_length

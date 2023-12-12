@@ -1,8 +1,9 @@
-import LightRoute
 import Foundation
-import UIKit
-import RuuviOntology
+import LightRoute
 import RuuviLocal
+import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: UIViewController!
@@ -22,15 +23,15 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         let factory = StoryboardFactory(storyboardName: "Menu")
         try! transitionHandler
             .forStoryboard(factory: factory, to: MenuModuleInput.self)
-            .apply(to: { (viewController) in
+            .apply(to: { viewController in
                 viewController.modalPresentationStyle = .custom
                 let manager = MenuTableTransitionManager(container: self.transitionHandler, menu: viewController)
                 self.menuTableTransition = MenuTableTransitioningDelegate(manager: manager)
             })
             .add(transitioningDelegate: menuTableTransition)
-            .then({ (module) -> Any? in
+            .then { module -> Any? in
                 module.configure(output: output)
-            })
+            }
     }
 
     func openDiscover(delegate: DiscoverRouterDelegate) {
@@ -56,21 +57,24 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     }
 
     func openWhatToMeasurePage() {
-        guard let url = URL(string: "Menu.Measure.URL.IOS".localized()) else {
+        guard let url = URL(string: RuuviLocalization.Menu.Measure.Url.ios)
+        else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviProductsPage() {
-        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized()) else {
+        guard let url = URL(string: RuuviLocalization.Ruuvi.BuySensors.Url.ios)
+        else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func openRuuviProductsPageFromMenu() {
-        guard let url = URL(string: "Ruuvi.BuySensors.Menu.URL.IOS".localized()) else {
+        guard let url = URL(string: RuuviLocalization.Ruuvi.BuySensors.Menu.Url.ios)
+        else {
             return
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -91,10 +95,12 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         AppUtility.lockOrientation(.portrait)
     }
 
-    func openTagSettings(ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord?,
-                         sensorSettings: SensorSettings?,
-                         output: TagSettingsModuleOutput) {
+    func openTagSettings(
+        ruuviTag: RuuviTagSensor,
+        latestMeasurement: RuuviTagSensorRecord?,
+        sensorSettings: SensorSettings?,
+        output: TagSettingsModuleOutput
+    ) {
         let factory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
         let module = factory.create()
         transitionHandler
@@ -105,18 +111,23 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             )
         if let presenter = module.output as? TagSettingsModuleInput {
             presenter.configure(output: output)
-            presenter.configure(ruuviTag: ruuviTag,
-                             latestMeasurement: latestMeasurement,
-                             sensorSettings: sensorSettings)
+            presenter.configure(
+                ruuviTag: ruuviTag,
+                latestMeasurement: latestMeasurement,
+                sensorSettings: sensorSettings
+            )
         }
     }
+
     // swiftlint:disable:next function_parameter_count
-    func openCardImageView(with viewModels: [CardsViewModel],
-                           ruuviTagSensors: [AnyRuuviTagSensor],
-                           sensorSettings: [SensorSettings],
-                           scrollTo: CardsViewModel?,
-                           showCharts: Bool,
-                           output: CardsModuleOutput) {
+    func openCardImageView(
+        with viewModels: [CardsViewModel],
+        ruuviTagSensors: [AnyRuuviTagSensor],
+        sensorSettings: [SensorSettings],
+        scrollTo: CardsViewModel?,
+        showCharts: Bool,
+        output: CardsModuleOutput
+    ) {
         let factory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
         let module = factory.create()
         if let output = module.output as? CardsModuleInput {
@@ -125,8 +136,8 @@ class DashboardRouter: NSObject, DashboardRouterInput {
 
         // Remove any cards view controller from stack if exists already
         if let navigationController = transitionHandler.navigationController,
-            navigationController
-            .containsViewController(ofKind: CardsViewController.self) {
+           navigationController
+               .containsViewController(ofKind: CardsViewController.self) {
             transitionHandler
                 .navigationController?
                 .removeAnyViewControllers(ofKind: CardsViewController.self)
@@ -138,25 +149,31 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                 module,
                 animated: true
             )
-        if let cards = cards {
+        if let cards {
             cards.configure(output: output)
-            cards.configure(viewModels: viewModels,
-                            ruuviTagSensors: ruuviTagSensors,
-                            sensorSettings: sensorSettings)
-            cards.configure(scrollTo: scrollTo,
-                            openChart: showCharts)
+            cards.configure(
+                viewModels: viewModels,
+                ruuviTagSensors: ruuviTagSensors,
+                sensorSettings: sensorSettings
+            )
+            cards.configure(
+                scrollTo: scrollTo,
+                openChart: showCharts
+            )
         }
     }
 
     // swiftlint:disable:next function_parameter_count
-    func openTagSettings(with viewModels: [CardsViewModel],
-                         ruuviTagSensors: [AnyRuuviTagSensor],
-                         sensorSettings: [SensorSettings],
-                         scrollTo: CardsViewModel?,
-                         ruuviTag: RuuviTagSensor,
-                         latestMeasurement: RuuviTagSensorRecord?,
-                         sensorSetting: SensorSettings?,
-                         output: CardsModuleOutput) {
+    func openTagSettings(
+        with viewModels: [CardsViewModel],
+        ruuviTagSensors: [AnyRuuviTagSensor],
+        sensorSettings: [SensorSettings],
+        scrollTo: CardsViewModel?,
+        ruuviTag: RuuviTagSensor,
+        latestMeasurement: RuuviTagSensorRecord?,
+        sensorSetting: SensorSettings?,
+        output: CardsModuleOutput
+    ) {
         let cardsFactory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
         let cardsModule = cardsFactory.create()
 
@@ -167,19 +184,25 @@ class DashboardRouter: NSObject, DashboardRouterInput {
            let cardsPresenterOutput = cardsPresenter as? TagSettingsModuleOutput,
            let settingsPresenter = settingsModule.output as? TagSettingsModuleInput {
             cardsPresenter.configure(output: output)
-            cardsPresenter.configure(viewModels: viewModels,
-                            ruuviTagSensors: ruuviTagSensors,
-                            sensorSettings: sensorSettings)
-            cardsPresenter.configure(scrollTo: scrollTo,
-                            openChart: false)
+            cardsPresenter.configure(
+                viewModels: viewModels,
+                ruuviTagSensors: ruuviTagSensors,
+                sensorSettings: sensorSettings
+            )
+            cardsPresenter.configure(
+                scrollTo: scrollTo,
+                openChart: false
+            )
             if let cardsOutput = cardsModule as? CardsViewOutput {
                 cardsOutput.viewDidLoad()
             }
 
             settingsPresenter.configure(output: cardsPresenterOutput)
-            settingsPresenter.configure(ruuviTag: ruuviTag,
-                             latestMeasurement: latestMeasurement,
-                             sensorSettings: sensorSetting)
+            settingsPresenter.configure(
+                ruuviTag: ruuviTag,
+                latestMeasurement: latestMeasurement,
+                sensorSettings: sensorSetting
+            )
         }
 
         transitionHandler.navigationController?.setViewControllers([
@@ -190,7 +213,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
-        self.dfuModule = module
+        dfuModule = module
         transitionHandler
             .navigationController?
             .pushViewController(
@@ -213,34 +236,34 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
         let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
-        self.backgroundSelectionModule = module
+        backgroundSelectionModule = module
         transitionHandler
             .navigationController?
             .pushViewController(
                 module.viewController,
                 animated: true
             )
-
     }
 
     func openShare(for sensor: RuuviTagSensor) {
         let restorationId = "ShareViewController"
         let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
         try! transitionHandler
-            .forStoryboard(factory: factory,
-                           to: ShareModuleInput.self)
+            .forStoryboard(
+                factory: factory,
+                to: ShareModuleInput.self
+            )
             .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
+            .then { module -> Any? in
                 module.configure(sensor: sensor)
-            })
+            }
     }
-
 }
 
 extension DashboardRouter: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(
-        _ presentationController: UIPresentationController
+        _: UIPresentationController
     ) -> Bool {
-        return delegate.shouldDismissDiscover()
+        delegate.shouldDismissDiscover()
     }
 }

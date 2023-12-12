@@ -1,15 +1,16 @@
 import Foundation
 import RuuviLocal
+import RuuviLocalization
 
 extension RuuviLocalError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .disk(let error):
-            return error.localizedDescription
+        case let .disk(error):
+            error.localizedDescription
         case .failedToGetJpegRepresentation:
-            return "RuuviLocalError.failedToGetJpegRepresentation".localized()
+            RuuviLocalization.RuuviLocalError.failedToGetJpegRepresentation
         case .failedToGetDocumentsDirectory:
-            return "RuuviLocalError.failedToGetDocumentsDirectory".localized()
+            RuuviLocalization.RuuviLocalError.failedToGetDocumentsDirectory
         }
     }
 }

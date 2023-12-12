@@ -24,10 +24,9 @@ public struct RuuviBoardView: View {
         .padding()
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
             guard let scene = UIApplication.shared.windows.first?.windowScene else { return }
-            self.isPortrait = scene.interfaceOrientation.isPortrait
+            isPortrait = scene.interfaceOrientation.isPortrait
         }
     }
 }
 
-private class RuuviFirmwareDummyClass {
-}
+private class RuuviFirmwareDummyClass {}

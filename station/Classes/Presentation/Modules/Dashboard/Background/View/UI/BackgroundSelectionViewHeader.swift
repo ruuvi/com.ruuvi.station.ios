@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 enum SelectionMode {
@@ -10,7 +11,6 @@ protocol BackgroundSelectionViewHeaderDelegate: NSObjectProtocol {
 }
 
 class BackgroundSelectionViewHeader: UICollectionReusableView {
-
     weak var delegate: BackgroundSelectionViewHeaderDelegate?
 
     private lazy var descriptionLabel: UILabel = {
@@ -19,19 +19,21 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 16)
-        label.text = "change_background_message".localized()
+        label.text = RuuviLocalization.changeBackgroundMessage
         return label
     }()
 
     lazy var seprator = UIView(color: RuuviColor.ruuviLineColor)
     lazy var takePhotoButton = BackgroundSelectionButtonView(
-        title: "take_photo".localized(),
+        title: RuuviLocalization.takePhoto,
         icon: "camera.fill",
-        delegate: self)
+        delegate: self
+    )
     lazy var selectFromGalleryButton = BackgroundSelectionButtonView(
-        title: "select_from_gallery".localized(),
+        title: RuuviLocalization.selectFromGallery,
         icon: "photo",
-        delegate: self)
+        delegate: self
+    )
 
     private lazy var selectFromDefaultLabel: UILabel = {
         let label = UILabel()
@@ -39,7 +41,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
-        label.text = "select_default_image".localized()
+        label.text = RuuviLocalization.selectDefaultImage
         return label
     }()
 
@@ -48,53 +50,66 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension BackgroundSelectionViewHeader {
-    fileprivate func setUpUI() {
+private extension BackgroundSelectionViewHeader {
+    func setUpUI() {
         backgroundColor = .clear
 
         addSubview(descriptionLabel)
-        descriptionLabel.anchor(top: safeTopAnchor,
-                                leading: safeLeftAnchor,
-                                bottom: nil,
-                                trailing: safeRightAnchor,
-                                padding: .init(top: 8,
-                                               left: 4,
-                                               bottom: 0,
-                                               right: 4))
+        descriptionLabel.anchor(
+            top: safeTopAnchor,
+            leading: safeLeftAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(
+                top: 8,
+                left: 4,
+                bottom: 0,
+                right: 4
+            )
+        )
 
         addSubview(seprator)
-        seprator.anchor(top: descriptionLabel.bottomAnchor,
-                        leading: descriptionLabel.leadingAnchor,
-                        bottom: nil,
-                        trailing: descriptionLabel.trailingAnchor,
-                        padding: .init(top: 12, left: 0, bottom: 0, right: 0),
-                        size: .init(width: 0, height: 1))
+        seprator.anchor(
+            top: descriptionLabel.bottomAnchor,
+            leading: descriptionLabel.leadingAnchor,
+            bottom: nil,
+            trailing: descriptionLabel.trailingAnchor,
+            padding: .init(top: 12, left: 0, bottom: 0, right: 0),
+            size: .init(width: 0, height: 1)
+        )
 
         addSubview(takePhotoButton)
-        takePhotoButton.anchor(top: seprator.bottomAnchor,
-                               leading: seprator.leadingAnchor,
-                               bottom: nil,
-                               trailing: seprator.trailingAnchor,
-                               size: .init(width: 0, height: 44))
+        takePhotoButton.anchor(
+            top: seprator.bottomAnchor,
+            leading: seprator.leadingAnchor,
+            bottom: nil,
+            trailing: seprator.trailingAnchor,
+            size: .init(width: 0, height: 44)
+        )
 
         addSubview(selectFromGalleryButton)
-        selectFromGalleryButton.anchor(top: takePhotoButton.bottomAnchor,
-                                       leading: seprator.leadingAnchor,
-                                       bottom: nil,
-                                       trailing: seprator.trailingAnchor,
-                                       size: .init(width: 0, height: 44))
+        selectFromGalleryButton.anchor(
+            top: takePhotoButton.bottomAnchor,
+            leading: seprator.leadingAnchor,
+            bottom: nil,
+            trailing: seprator.trailingAnchor,
+            size: .init(width: 0, height: 44)
+        )
 
         addSubview(selectFromDefaultLabel)
-        selectFromDefaultLabel.anchor(top: selectFromGalleryButton.bottomAnchor,
-                                       leading: seprator.leadingAnchor,
-                                       bottom: safeBottomAnchor,
-                                       trailing: seprator.trailingAnchor,
-                                       size: .init(width: 0, height: 44))
+        selectFromDefaultLabel.anchor(
+            top: selectFromGalleryButton.bottomAnchor,
+            leading: seprator.leadingAnchor,
+            bottom: safeBottomAnchor,
+            trailing: seprator.trailingAnchor,
+            size: .init(width: 0, height: 44)
+        )
     }
 }
 

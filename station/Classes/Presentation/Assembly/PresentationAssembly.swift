@@ -1,6 +1,6 @@
-import Swinject
 import RuuviCore
 import RuuviPresenters
+import Swinject
 
 class PresentationAssembly: Assembly {
     func assemble(container: Container) {

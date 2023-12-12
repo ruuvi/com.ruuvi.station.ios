@@ -1,8 +1,8 @@
 import Foundation
-import RuuviOntology
-import RuuviService
-import RuuviPresenters
 import RuuviLocal
+import RuuviOntology
+import RuuviPresenters
+import RuuviService
 
 final class SensorRemovalPresenter: SensorRemovalModuleInput {
     weak var view: SensorRemovalViewInput?
@@ -29,11 +29,12 @@ final class SensorRemovalPresenter: SensorRemovalModuleInput {
 
 extension SensorRemovalPresenter: SensorRemovalViewOutput {
     func viewDidLoad() {
-        guard let ruuviTag = ruuviTag else { return }
+        guard let ruuviTag else { return }
         view?.updateView(
             claimedAndOwned: ruuviTag.isClaimed && ruuviTag.isOwner,
             locallyOwned: !ruuviTag.isClaimed && ruuviTag.isOwner,
-            shared: !ruuviTag.isOwner)
+            shared: !ruuviTag.isOwner
+        )
     }
 
     func viewDidTriggerRemoveTag() {
@@ -41,7 +42,7 @@ extension SensorRemovalPresenter: SensorRemovalViewOutput {
     }
 
     func viewDidConfirmTagRemoval(with removeCloudData: Bool) {
-        guard let ruuviTag = ruuviTag else { return }
+        guard let ruuviTag else { return }
         ruuviOwnershipService.remove(
             sensor: ruuviTag,
             removeCloudHistory: removeCloudData

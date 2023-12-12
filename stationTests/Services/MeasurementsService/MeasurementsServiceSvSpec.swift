@@ -1,12 +1,13 @@
-import XCTest
 import Humidity
-import Quick
 import Nimble
+import Quick
+import XCTest
 
 @testable import station
 
+// swiftlint:disable:next type_body_length
 class MeasurementsServiceSvSpec: QuickSpec {
-
+    // swiftlint:disable:next function_body_length
     override func spec() {
         let r = AppAssembly.shared.assembler.resolver
         var service: MeasurementsService! = r.resolve(MeasurementsService.self)
@@ -45,17 +46,21 @@ class MeasurementsServiceSvSpec: QuickSpec {
                 }
                 it("string without sign kelvin") {
                     let temp = Temperature(value: 250.10, unit: .kelvin)
-                    service.units = MeasurementsServiceSettigsUnit(temperatureUnit: .kelvin,
-                                                                   humidityUnit: settings.humidityUnit,
-                                                                   pressureUnit: settings.pressureUnit)
+                    service.units = MeasurementsServiceSettigsUnit(
+                        temperatureUnit: .kelvin,
+                        humidityUnit: settings.humidityUnit,
+                        pressureUnit: settings.pressureUnit
+                    )
                     expect(service.stringWithoutSign(for: temp))
                         .to(equal("250,10"))
                 }
                 it("string without sign fahrenheit") {
                     let temp = Temperature(value: 73.10, unit: .fahrenheit)
-                    service.units = MeasurementsServiceSettigsUnit(temperatureUnit: .fahrenheit,
-                                                                   humidityUnit: settings.humidityUnit,
-                                                                   pressureUnit: settings.pressureUnit)
+                    service.units = MeasurementsServiceSettigsUnit(
+                        temperatureUnit: .fahrenheit,
+                        humidityUnit: settings.humidityUnit,
+                        pressureUnit: settings.pressureUnit
+                    )
                     settings.temperatureUnit = .fahrenheit
                     expect(service.stringWithoutSign(for: temp))
                         .to(equal("73,10"))

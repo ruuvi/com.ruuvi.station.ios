@@ -1,5 +1,5 @@
-import UIKit
 import RuuviUser
+import UIKit
 
 public final class RuuviOnboardPages: RuuviOnboard {
     public weak var output: RuuviOnboardOutput?
@@ -12,7 +12,7 @@ public final class RuuviOnboardPages: RuuviOnboard {
             let view = RuuviOnboardViewController()
             view.output = self
             view.ruuviUser = ruuviUser
-            self.weakView = view
+            weakView = view
             return view
         }
     }
@@ -27,13 +27,17 @@ public final class RuuviOnboardPages: RuuviOnboard {
 }
 
 extension RuuviOnboardPages: RuuviOnboardViewControllerOutput {
-    func ruuviOnboardPages(_ viewController: RuuviOnboardViewController,
-                           didFinish sender: Any?) {
+    func ruuviOnboardPages(
+        _: RuuviOnboardViewController,
+        didFinish _: Any?
+    ) {
         output?.ruuviOnboardDidFinish(self)
     }
 
-    func ruuviOnboardCloudSignIn(_ viewController: RuuviOnboardViewController,
-                                 didPresentSignIn sender: Any?) {
+    func ruuviOnboardCloudSignIn(
+        _: RuuviOnboardViewController,
+        didPresentSignIn _: Any?
+    ) {
         output?.ruuviOnboardDidShowSignIn(self)
     }
 }

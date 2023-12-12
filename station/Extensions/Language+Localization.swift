@@ -1,22 +1,23 @@
 import Foundation
 import Humidity
+import RuuviLocalization
 import RuuviOntology
 
 extension Language {
     var name: String {
         switch self {
         case .english:
-            return "Language.English".localized()
+            RuuviLocalization.Language.english
         case .russian:
-            return "Language.Russian".localized()
+            RuuviLocalization.Language.russian
         case .finnish:
-            return "Language.Finnish".localized()
+            RuuviLocalization.Language.finnish
         case .french:
-            return "Language.French".localized()
+            RuuviLocalization.Language.french
         case .swedish:
-            return "Language.Swedish".localized()
+            RuuviLocalization.Language.swedish
         case .german:
-            return "Language.German".localized()
+            RuuviLocalization.Language.german
         }
     }
 }

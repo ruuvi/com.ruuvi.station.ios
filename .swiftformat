@@ -1,0 +1,4 @@
+--swiftversion 5.9
+--disable wrapMultilineStatementBraces,trailingCommas
+--xcodeindentation enabled
+--wraparguments before-first

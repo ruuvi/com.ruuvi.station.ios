@@ -1,7 +1,7 @@
 import Foundation
-import RuuviPool
 import Future
 import RuuviOntology
+import RuuviPool
 import RuuviUser
 
 public struct ValidateCodeResponse {
@@ -35,15 +35,19 @@ public protocol RuuviCloud {
     func deleteAccount(email: String) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func registerPNToken(token: String,
-                         type: String,
-                         name: String?,
-                         data: String?,
-                         params: [String: String]?) -> Future<Int, RuuviCloudError>
+    func registerPNToken(
+        token: String,
+        type: String,
+        name: String?,
+        data: String?,
+        params: [String: String]?
+    ) -> Future<Int, RuuviCloudError>
 
     @discardableResult
-    func unregisterPNToken(token: String?,
-                           tokenId: Int?) -> Future<Bool, RuuviCloudError>
+    func unregisterPNToken(
+        token: String?,
+        tokenId: Int?
+    ) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
     func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError>
@@ -52,11 +56,12 @@ public protocol RuuviCloud {
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult
-    func loadSensorsDense(for sensor: RuuviTagSensor?,
-                          measurements: Bool?,
-                          sharedToOthers: Bool?,
-                          sharedToMe: Bool?,
-                          alerts: Bool?
+    func loadSensorsDense(
+        for sensor: RuuviTagSensor?,
+        measurements: Bool?,
+        sharedToOthers: Bool?,
+        sharedToMe: Bool?,
+        alerts: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
 
     @discardableResult
@@ -203,9 +208,10 @@ public protocol RuuviCloud {
     func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError>
 
     // MARK: Queued requests
+
     @discardableResult
     func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
-    -> Future<Bool, RuuviCloudError>
+        -> Future<Bool, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
@@ -216,4 +222,22 @@ public enum MimeType: String, Codable {
     case png = "image/png"
     case gif = "image/gif"
     case jpg = "image/jpeg"
+}
+
+// MARK: State Observer
+public extension Notification.Name {
+    static let RuuviCloudRequestStateDidChange =
+        Notification.Name("RuuviCloudRequestStateDidChange")
+}
+
+public enum RuuviCloudRequestStateKey: String {
+    case state
+    case macId
+}
+
+public enum RuuviCloudRequestStateType: String {
+    case loading
+    case success
+    case failed
+    case complete
 }

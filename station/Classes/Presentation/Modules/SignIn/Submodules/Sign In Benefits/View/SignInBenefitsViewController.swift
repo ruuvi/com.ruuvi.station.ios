@@ -1,17 +1,19 @@
 import Foundation
+import RuuviLocalization
 import UIKit
 
 class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
-
     // Configuration
     var output: SignInBenefitsViewOutput?
 
     // UI Componenets starts
     private lazy var closeButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: RuuviAssets.closeButtonImage,
-                                     style: .plain,
-                                     target: self,
-                                     action: #selector(handleCloseButtonTap))
+        let button = UIBarButtonItem(
+            image: RuuviAssets.closeButtonImage,
+            style: .plain,
+            target: self,
+            action: #selector(handleCloseButtonTap)
+        )
         button.tintColor = .white
         return button
     }()
@@ -36,7 +38,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "why_should_sign_in".localized()
+        label.text = RuuviLocalization.whyShouldSignIn
         label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
@@ -46,7 +48,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "sensors_ownership_and_settings_stored_in_cloud".localized()
+        label.text = RuuviLocalization.sensorsOwnershipAndSettingsStoredInCloud
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
@@ -72,35 +74,42 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
     }()
 
     private lazy var continueButton: UIButton = {
-        let button = UIButton(color: RuuviColor.ruuviTintColor,
-                              cornerRadius: 25)
-        button.setTitle("sign_in_continue".localized(),
-                        for: .normal)
+        let button = UIButton(
+            color: RuuviColor.ruuviTintColor,
+            cornerRadius: 25
+        )
+        button.setTitle(
+            RuuviLocalization.signInContinue,
+            for: .normal
+        )
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
-        button.addTarget(self,
-                         action: #selector(handleContinueTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleContinueTap),
+            for: .touchUpInside
+        )
         return button
     }()
 
     private lazy var signInOptionalLabel: UILabel = {
         let label = UILabel()
-        label.text = "signing_in_is_optional".localized()
+        label.text = RuuviLocalization.signingInIsOptional
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
         return label
     }()
-
 }
 
 // MARK: - VIEW LIFE CYCLE
+
 extension SignInBenefitsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        localize()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -110,7 +119,7 @@ extension SignInBenefitsViewController {
 }
 
 extension SignInBenefitsViewController {
-    @objc fileprivate func handleCloseButtonTap() {
+    @objc private func handleCloseButtonTap() {
         output?.viewDidTapClose()
     }
 
@@ -126,6 +135,7 @@ extension SignInBenefitsViewController {
 }
 
 // MARK: - PRIVATE UI SETUP
+
 extension SignInBenefitsViewController {
     private func setUpUI() {
         setUpNavBarView()
@@ -133,7 +143,7 @@ extension SignInBenefitsViewController {
         setUpSignInPromoView()
     }
 
-    fileprivate func setUpNavBarView() {
+    private func setUpNavBarView() {
         navigationItem.leftBarButtonItem = closeButton
     }
 
@@ -162,12 +172,18 @@ extension SignInBenefitsViewController {
         titleStack.spacing = UIDevice.isiPhoneSE() ? 16 : 24
 
         container.addSubview(titleStack)
-        titleStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeftAnchor,
-                         bottom: nil,
-                         trailing: container.safeRightAnchor,
-                         padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                        bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+        titleStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: !UIDevice.isTablet() ? 20 : 80,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 20 : 80
+            )
+        )
 
         container.addSubview(featuresLabel)
         featuresLabel.anchor(
@@ -186,33 +202,47 @@ extension SignInBenefitsViewController {
         featuresLabel.centerXInSuperview()
 
         container.addSubview(noteLabel)
-        noteLabel.anchor(top: featuresLabel.bottomAnchor,
-                         leading: titleStack.leadingAnchor,
-                         bottom: nil,
-                         trailing: titleStack.trailingAnchor,
-                         padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30, left: 0,
-                                        bottom: 0, right: 0))
+        noteLabel.anchor(
+            top: featuresLabel.bottomAnchor,
+            leading: titleStack.leadingAnchor,
+            bottom: nil,
+            trailing: titleStack.trailingAnchor,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 20 : 30,
+                left: 0,
+                bottom: 0,
+                right: 0
+            )
+        )
 
         container.addSubview(continueButton)
-        continueButton.anchor(top: noteLabel.bottomAnchor,
-                              leading: container.safeLeftAnchor,
-                              bottom: nil,
-                              trailing: container.safeRightAnchor,
-                              padding: .init(top: UIDevice.isiPhoneSE() ? 20 : 30,
-                                             left: !UIDevice.isTablet() ? 50 : 150,
-                                             bottom: 0,
-                                             right: !UIDevice.isTablet() ? 50 : 150),
-                              size: .init(width: 0, height: 50))
+        continueButton.anchor(
+            top: noteLabel.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 20 : 30,
+                left: !UIDevice.isTablet() ? 50 : 150,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 50 : 150
+            ),
+            size: .init(width: 0, height: 50)
+        )
 
         container.addSubview(signInOptionalLabel)
-        signInOptionalLabel.anchor(top: continueButton.bottomAnchor,
-                               leading: container.safeLeftAnchor,
-                               bottom: nil,
-                               trailing: container.safeRightAnchor,
-                               padding: .init(top: UIDevice.isiPhoneSE() ? 6 : 10,
-                                              left: 30,
-                                              bottom: 0,
-                                              right: 30))
+        signInOptionalLabel.anchor(
+            top: continueButton.bottomAnchor,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: UIDevice.isiPhoneSE() ? 6 : 10,
+                left: 30,
+                bottom: 0,
+                right: 30
+            )
+        )
 
         signInOptionalLabel.bottomAnchor.constraint(
             lessThanOrEqualTo: container.bottomAnchor, constant: -30
@@ -222,44 +252,50 @@ extension SignInBenefitsViewController {
 
 extension SignInBenefitsViewController {
     private func prepareFeatures() -> String {
-        return [
-            "cloud_stored_ownerships".localized(),
-            "cloud_stored_names".localized(),
-            "cloud_stored_alerts".localized(),
-            "cloud_stored_backgrounds".localized(),
-            "cloud_stored_calibration".localized(),
-            "cloud_stored_sharing".localized()
+        [
+            RuuviLocalization.cloudStoredOwnerships,
+            RuuviLocalization.cloudStoredNames,
+            RuuviLocalization.cloudStoredAlerts,
+            RuuviLocalization.cloudStoredBackgrounds,
+            RuuviLocalization.cloudStoredCalibration,
+            RuuviLocalization.cloudStoredSharing,
         ].joined(separator: "\n")
     }
 
     private func prepareNote() -> NSMutableAttributedString {
-        let text =
-            "note".localized() + " " +
-            "claim_warning".localized()
+        let text = RuuviLocalization.note + " " + RuuviLocalization.claimWarning
 
         let attrString = NSMutableAttributedString(string: text)
         let range = NSString(string: attrString.string).range(of: attrString.string)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
-                                range: range)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
+            range: range
+        )
 
         // Make note bold and orange color
-        let makeBoldOrange = "note".localized()
+        let makeBoldOrange = RuuviLocalization.note
         let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 18)
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
-        attrString.addAttribute(NSAttributedString.Key.font,
-                                value: boldFont,
-                                range: boldRange)
-        attrString.addAttribute(.foregroundColor,
-                                value: RuuviColor.ruuviOrangeColor ?? UIColor.systemOrange,
-                                range: boldRange)
+        attrString.addAttribute(
+            NSAttributedString.Key.font,
+            value: boldFont,
+            range: boldRange
+        )
+        attrString.addAttribute(
+            .foregroundColor,
+            value: RuuviColor.ruuviOrangeColor ?? UIColor.systemOrange,
+            range: boldRange
+        )
 
         // Make rest of the text white
         let regularRange = NSString(string: attrString.string)
-            .range(of: "claim_warning".localized())
-        attrString.addAttribute(.foregroundColor,
-                                value: UIColor.white,
-                                range: regularRange)
+            .range(of: RuuviLocalization.claimWarning)
+        attrString.addAttribute(
+            .foregroundColor,
+            value: UIColor.white,
+            range: regularRange
+        )
 
         return attrString
     }

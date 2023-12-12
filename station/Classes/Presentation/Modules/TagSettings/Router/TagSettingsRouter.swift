@@ -1,8 +1,8 @@
-import UIKit
 import LightRoute
-import SwiftUI
 import RuuviOntology
 import RuuviUser
+import SwiftUI
+import UIKit
 
 class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     weak var transitionHandler: UIViewController!
@@ -22,44 +22,47 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
         let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
-        self.backgroundSelectionModule = module
+        backgroundSelectionModule = module
         transitionHandler
             .navigationController?
             .pushViewController(
                 module.viewController,
                 animated: true
             )
-
     }
 
     func openShare(for sensor: RuuviTagSensor) {
         let restorationId = "ShareViewController"
         let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
         try? transitionHandler
-            .forStoryboard(factory: factory,
-                           to: ShareModuleInput.self)
+            .forStoryboard(
+                factory: factory,
+                to: ShareModuleInput.self
+            )
             .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
+            .then { module -> Any? in
                 module.configure(sensor: sensor)
-            })
+            }
     }
 
-    func openOffsetCorrection(type: OffsetCorrectionType,
-                              ruuviTag: RuuviTagSensor,
-                              sensorSettings: SensorSettings?) {
+    func openOffsetCorrection(
+        type: OffsetCorrectionType,
+        ruuviTag: RuuviTagSensor,
+        sensorSettings: SensorSettings?
+    ) {
         let factory = StoryboardFactory(storyboardName: "OffsetCorrection")
         try? transitionHandler
             .forStoryboard(factory: factory, to: OffsetCorrectionModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ (module) -> Any? in
+            .then { module -> Any? in
                 module.configure(type: type, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
-            })
+            }
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
-        self.dfuModule = module
+        dfuModule = module
         transitionHandler
             .navigationController?
             .pushViewController(
@@ -77,9 +80,9 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
         try? transitionHandler
             .forStoryboard(factory: factory, to: OwnerModuleInput.self)
             .to(preferred: .navigation(style: .push))
-            .then({ module in
+            .then { module in
                 module.configure(ruuviTag: ruuviTag, mode: mode)
-            })
+            }
     }
 
     func openContest(ruuviTag: RuuviTagSensor) {
@@ -115,7 +118,7 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
 }
 
 extension TagSettingsRouter: UIAdaptivePresentationControllerDelegate {
-    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        return dfuModule?.isSafeToDismiss() ?? false
+    func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
+        dfuModule?.isSafeToDismiss() ?? false
     }
 }

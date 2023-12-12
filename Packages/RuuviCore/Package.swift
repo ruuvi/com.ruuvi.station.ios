@@ -9,22 +9,28 @@ let package = Package(
     products: [
         .library(
             name: "RuuviCore",
-            targets: ["RuuviCore"]),
+            targets: ["RuuviCore"]
+        ),
         .library(
             name: "RuuviCoreImage",
-            targets: ["RuuviCoreImage"]),
+            targets: ["RuuviCoreImage"]
+        ),
         .library(
             name: "RuuviCoreLocation",
-            targets: ["RuuviCoreLocation"]),
+            targets: ["RuuviCoreLocation"]
+        ),
         .library(
             name: "RuuviCoreDiff",
-            targets: ["RuuviCoreDiff"]),
+            targets: ["RuuviCoreDiff"]
+        ),
         .library(
             name: "RuuviCorePN",
-            targets: ["RuuviCorePN"]),
+            targets: ["RuuviCorePN"]
+        ),
         .library(
             name: "RuuviCorePermission",
-            targets: ["RuuviCorePermission"])
+            targets: ["RuuviCorePermission"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0"))
@@ -56,6 +62,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviCoreTests",
-            dependencies: ["RuuviCore"])
+            dependencies: ["RuuviCore"]
+        ),
     ]
 )

@@ -1,8 +1,8 @@
-import UIKit
 import BTKit
 import Humidity
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
+import UIKit
 
 enum CardType {
     case ruuvi
@@ -11,66 +11,66 @@ enum CardType {
 struct CardsViewModel {
     var type: CardType = .ruuvi
 
-    var id: Observable<String?> = Observable<String?>()
-    var luid: Observable<AnyLocalIdentifier?> = Observable<AnyLocalIdentifier?>()
-    var mac: Observable<AnyMACIdentifier?> = Observable<AnyMACIdentifier?>()
-    var name: Observable<String?> = Observable<String?>()
-    var source: Observable<RuuviTagSensorRecordSource?> = Observable<RuuviTagSensorRecordSource?>()
-    var temperature: Observable<Temperature?> = Observable<Temperature?>()
-    var humidity: Observable<Humidity?> = Observable<Humidity?>()
-    var pressure: Observable<Pressure?> = Observable<Pressure?>()
-    var rssi: Observable<Int?> = Observable<Int?>()
-    var version: Observable<Int?> = Observable<Int?>()
-    var voltage: Observable<Voltage?> = Observable<Voltage?>()
-    let batteryNeedsReplacement: Observable<Bool?> = Observable<Bool?>()
-    var background: Observable<UIImage?> = Observable<UIImage?>()
-    var date: Observable<Date?> = Observable<Date?>()
-    var location: Observable<Location?> = Observable<Location?>()
-    var currentLocation: Observable<Location?> = Observable<Location?>()
-    var animateRSSI: Observable<Bool?> = Observable<Bool?>()
-    var isConnectable: Observable<Bool?> = Observable<Bool?>()
-    var isConnected: Observable<Bool?> = Observable<Bool?>()
-    var isCloud: Observable<Bool?> = Observable<Bool?>()
-    var isOwner: Observable<Bool?> = Observable<Bool?>()
-    var canShareTag: Observable<Bool?> = Observable<Bool?>(false)
-    var alertState: Observable<AlertState?> = Observable<AlertState?>()
-    var rhAlertLowerBound: Observable<Double?> = Observable<Double?>()
-    var rhAlertUpperBound: Observable<Double?> = Observable<Double?>()
+    var id: Observable<String?> = .init()
+    var luid: Observable<AnyLocalIdentifier?> = .init()
+    var mac: Observable<AnyMACIdentifier?> = .init()
+    var name: Observable<String?> = .init()
+    var source: Observable<RuuviTagSensorRecordSource?> = .init()
+    var temperature: Observable<Temperature?> = .init()
+    var humidity: Observable<Humidity?> = .init()
+    var pressure: Observable<Pressure?> = .init()
+    var rssi: Observable<Int?> = .init()
+    var version: Observable<Int?> = .init()
+    var voltage: Observable<Voltage?> = .init()
+    let batteryNeedsReplacement: Observable<Bool?> = .init()
+    var background: Observable<UIImage?> = .init()
+    var date: Observable<Date?> = .init()
+    var location: Observable<Location?> = .init()
+    var currentLocation: Observable<Location?> = .init()
+    var animateRSSI: Observable<Bool?> = .init()
+    var isConnectable: Observable<Bool?> = .init()
+    var isConnected: Observable<Bool?> = .init()
+    var isCloud: Observable<Bool?> = .init()
+    var isOwner: Observable<Bool?> = .init()
+    var canShareTag: Observable<Bool?> = .init(false)
+    var alertState: Observable<AlertState?> = .init()
+    var rhAlertLowerBound: Observable<Double?> = .init()
+    var rhAlertUpperBound: Observable<Double?> = .init()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
-    var movementCounter: Observable<Int?> = Observable<Int?>()
-    var isChartAvailable: Observable<Bool?> = Observable<Bool?>(false)
-    var isAlertAvailable: Observable<Bool?> = Observable<Bool?>(false)
+    var movementCounter: Observable<Int?> = .init()
+    var isChartAvailable: Observable<Bool?> = .init(false)
+    var isAlertAvailable: Observable<Bool?> = .init(false)
 
-    var latestMeasurement: Observable<RuuviTagSensorRecord?> = Observable<RuuviTagSensorRecord?>()
+    var latestMeasurement: Observable<RuuviTagSensorRecord?> = .init()
 
-    let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let temperatureAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let temperatureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let isTemperatureAlertOn: Observable<Bool?> = .init(false)
+    let temperatureAlertState: Observable<AlertState?> = .init()
+    let temperatureAlertMutedTill: Observable<Date?> = .init(nil)
 
-    let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let relativeHumidityAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let relativeHumidityAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let isRelativeHumidityAlertOn: Observable<Bool?> = .init(false)
+    let relativeHumidityAlertState: Observable<AlertState?> = .init()
+    let relativeHumidityAlertMutedTill: Observable<Date?> = .init(nil)
 
-    let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let pressureAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let pressureAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let isPressureAlertOn: Observable<Bool?> = .init(false)
+    let pressureAlertState: Observable<AlertState?> = .init()
+    let pressureAlertMutedTill: Observable<Date?> = .init(nil)
 
-    let isSignalAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let signalAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let signalAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let isSignalAlertOn: Observable<Bool?> = .init(false)
+    let signalAlertState: Observable<AlertState?> = .init()
+    let signalAlertMutedTill: Observable<Date?> = .init(nil)
 
-    let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let movementAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let isMovementAlertOn: Observable<Bool?> = .init(false)
+    let movementAlertState: Observable<AlertState?> = .init()
+    let movementAlertMutedTill: Observable<Date?> = .init(nil)
 
-    let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let connectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
-    let connectionAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
+    let isConnectionAlertOn: Observable<Bool?> = .init(false)
+    let connectionAlertState: Observable<AlertState?> = .init()
+    let connectionAlertMutedTill: Observable<Date?> = .init(nil)
 
-    let isCloudConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let cloudConnectionAlertState: Observable<AlertState?> = Observable<AlertState?>()
+    let isCloudConnectionAlertOn: Observable<Bool?> = .init(false)
+    let cloudConnectionAlertState: Observable<AlertState?> = .init()
 
-    private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
+    private var lastUpdateRssi: Observable<CFTimeInterval?> = .init(CFAbsoluteTimeGetCurrent())
 
     private let batteryStatusProvider = RuuviTagBatteryStatusProvider()
 
@@ -89,7 +89,7 @@ struct CardsViewModel {
         isCloud.value = ruuviTag.isCloud
         isOwner.value = ruuviTag.isOwner
         canShareTag.value =
-          (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
+            (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
     }
 
     func update(_ record: RuuviTagSensorRecord) {
@@ -106,8 +106,10 @@ struct CardsViewModel {
         source.value = record.source
         batteryNeedsReplacement.value =
             batteryStatusProvider
-            .batteryNeedsReplacement(temperature: record.temperature,
-                                     voltage: record.voltage)
+                .batteryNeedsReplacement(
+                    temperature: record.temperature,
+                    voltage: record.voltage
+                )
         isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false
     }
 
@@ -144,12 +146,12 @@ extension CardsViewModel: Hashable {
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        return lhs.luid.value == rhs.luid.value && lhs.mac.value == rhs.mac.value
+        lhs.luid.value == rhs.luid.value && lhs.mac.value == rhs.mac.value
     }
 }
 
 extension CardsViewModel: Reorderable {
     var orderElement: String {
-        return id.value ?? UUID().uuidString
+        id.value ?? UUID().uuidString
     }
 }

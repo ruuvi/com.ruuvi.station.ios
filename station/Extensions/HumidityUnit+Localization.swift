@@ -1,37 +1,36 @@
 import Foundation
+import RuuviLocalization
 import RuuviOntology
 
 extension HumidityUnit: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
-        case .percent:
-            return "HumidityUnit.Percent.title".localized()
-        case .gm3:
-            return "HumidityUnit.gm3.title".localized()
+        case .percent: { _ in RuuviLocalization.HumidityUnit.Percent.title }
+        case .gm3: { _ in RuuviLocalization.HumidityUnit.Gm3.title }
         case .dew:
-            return "HumidityUnit.Dew.title".localized()
+            RuuviLocalization.HumidityUnit.Dew.title
         }
     }
 
     var symbol: String {
         switch self {
         case .percent:
-            return "%".localized()
+            "%"
         case .gm3:
-            return "g/m³".localized()
-        default:
-            return "°".localized()
+            RuuviLocalization.gm³
+        case .dew:
+            "°"
         }
     }
 
     var alertRange: Range<Double> {
         switch self {
         case .gm3:
-            return .init(uncheckedBounds: (lower: 0, upper: 40))
+            .init(uncheckedBounds: (lower: 0, upper: 40))
         case .percent:
-            return .init(uncheckedBounds: (lower: 0, upper: 100))
+            .init(uncheckedBounds: (lower: 0, upper: 100))
         case .dew:
-            return .init(uncheckedBounds: (lower: 0, upper: 100))
+            .init(uncheckedBounds: (lower: 0, upper: 100))
         }
     }
 }

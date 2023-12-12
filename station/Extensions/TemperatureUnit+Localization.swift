@@ -1,30 +1,24 @@
 import Foundation
+import RuuviLocalization
 import RuuviOntology
 
 extension TemperatureUnit: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
-        case .celsius:
-            return "TemperatureUnit.Celsius.title".localized()
-        case .fahrenheit:
-            return "TemperatureUnit.Fahrenheit.title".localized()
-        case .kelvin:
-            return "TemperatureUnit.Kelvin.title".localized()
+        case .celsius: { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
+        case .fahrenheit: { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
+        case .kelvin: { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
         }
     }
 }
 
 extension UnitTemperature: SelectionItemProtocol {
-    var title: String {
+    var title: (String) -> String {
         switch self {
-        case .celsius:
-            return "TemperatureUnit.Celsius.title".localized()
-        case .fahrenheit:
-            return "TemperatureUnit.Fahrenheit.title".localized()
-        case .kelvin:
-            return "TemperatureUnit.Kelvin.title".localized()
-        default:
-            return "N/A".localized()
+        case .celsius: { _ in RuuviLocalization.TemperatureUnit.Celsius.title }
+        case .fahrenheit: { _ in RuuviLocalization.TemperatureUnit.Fahrenheit.title }
+        case .kelvin: { _ in RuuviLocalization.TemperatureUnit.Kelvin.title }
+        default: { _ in RuuviLocalization.na }
         }
     }
 }
@@ -32,8 +26,8 @@ extension UnitTemperature: SelectionItemProtocol {
 // defaults range of temperature
 extension TemperatureUnit {
     var alertRange: Range<Double> {
-        let lowerTemp = Temperature(value: -40, unit: .celsius).converted(to: self.unitTemperature).value
-        let upperTemp = Temperature(value: 85, unit: .celsius).converted(to: self.unitTemperature).value
+        let lowerTemp = Temperature(value: -40, unit: .celsius).converted(to: unitTemperature).value
+        let upperTemp = Temperature(value: 85, unit: .celsius).converted(to: unitTemperature).value
         return .init(uncheckedBounds: (lowerTemp, upperTemp))
     }
 }

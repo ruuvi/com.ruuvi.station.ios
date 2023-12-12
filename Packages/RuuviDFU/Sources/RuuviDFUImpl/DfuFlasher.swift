@@ -1,11 +1,10 @@
-import Foundation
-import RuuviDFU
 import Combine
+import Foundation
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 class DfuFlasher: NSObject {
@@ -18,10 +17,12 @@ class DfuFlasher: NSObject {
     private var subject: PassthroughSubject<FlashResponse, Error>?
 
     override init() {
-        dfuServiceInitiator = DFUServiceInitiator(queue: queue,
-                                                  delegateQueue: queue,
-                                                  progressQueue: queue,
-                                                  loggerQueue: queue)
+        dfuServiceInitiator = DFUServiceInitiator(
+            queue: queue,
+            delegateQueue: queue,
+            progressQueue: queue,
+            loggerQueue: queue
+        )
         super.init()
     }
 
@@ -29,7 +30,8 @@ class DfuFlasher: NSObject {
         uuid: String,
         with firmware: DFUFirmware
     ) -> AnyPublisher<FlashResponse, Error> {
-        guard let uuid = UUID(uuidString: uuid) else {
+        guard let uuid = UUID(uuidString: uuid)
+        else {
             return Fail<FlashResponse, Error>(error: RuuviDfuError.failedToConstructUUID).eraseToAnyPublisher()
         }
         let subject = PassthroughSubject<FlashResponse, Error>()
@@ -44,8 +46,9 @@ class DfuFlasher: NSObject {
         return subject.eraseToAnyPublisher()
     }
 
-    func stopFlashFirmware(device: DFUDevice) -> Bool {
-        guard let serviceController = dfuServiceController else {
+    func stopFlashFirmware(device _: DFUDevice) -> Bool {
+        guard let serviceController = dfuServiceController
+        else {
             return false
         }
         return serviceController.abort()
@@ -65,18 +68,21 @@ extension DfuFlasher: DFUServiceDelegate {
         }
     }
 
-    func dfuError(_ error: DFUError, didOccurWithMessage message: String) {
+    func dfuError(_: DFUError, didOccurWithMessage message: String) {
         subject?.send(completion: .failure(RuuviDfuError(description: message)))
     }
 }
 
 extension DfuFlasher: DFUProgressDelegate {
-    func dfuProgressDidChange(for part: Int,
-                              outOf totalParts: Int,
-                              to progress: Int,
-                              currentSpeedBytesPerSecond: Double,
-                              avgSpeedBytesPerSecond: Double) {
-        guard let parts = firmware?.parts else {
+    func dfuProgressDidChange(
+        for part: Int,
+        outOf totalParts: Int,
+        to progress: Int,
+        currentSpeedBytesPerSecond _: Double,
+        avgSpeedBytesPerSecond _: Double
+    ) {
+        guard let parts = firmware?.parts
+        else {
             return
         }
         // Update the total progress view

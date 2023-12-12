@@ -1,7 +1,7 @@
-import Foundation
 import Charts
+import Foundation
 
-struct TagChartsHelper {
+enum TagChartsHelper {
     static func newDataSet(entries: [ChartDataEntry] = []) -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet(entries: entries)
         lineChartDataSet.axisDependency = .left

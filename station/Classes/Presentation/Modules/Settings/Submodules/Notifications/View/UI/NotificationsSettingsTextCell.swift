@@ -1,7 +1,6 @@
 import UIKit
 
 class NotificationsSettingsTextCell: UITableViewCell {
-
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.ruuviMenuTextColor
@@ -31,14 +30,19 @@ class NotificationsSettingsTextCell: UITableViewCell {
         return label
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -67,7 +71,8 @@ class NotificationsSettingsTextCell: UITableViewCell {
     }
 }
 
-    // MARK: - SETTERS
+// MARK: - SETTERS
+
 extension NotificationsSettingsTextCell {
     func configure(title: String?, subtitle: String?, value: String?) {
         titleLabel.text = title

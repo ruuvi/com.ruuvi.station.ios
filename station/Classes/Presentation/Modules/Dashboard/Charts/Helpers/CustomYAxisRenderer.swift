@@ -1,5 +1,5 @@
-import UIKit
 import Charts
+import UIKit
 
 class CustomYAxisRenderer: YAxisRenderer {
     private let intervals = [
@@ -28,15 +28,16 @@ class CustomYAxisRenderer: YAxisRenderer {
         20000.0,
         25000.0,
         50000.0,
-        100000.0,
-        200000.0,
-        250000.0,
-        500000.0,
-        1000000.0
+        100_000.0,
+        200_000.0,
+        250_000.0,
+        500_000.0,
+        1_000_000.0,
     ]
 
     override func computeAxisValues(min: Double, max: Double) {
-        guard min != CGFloat.greatestFiniteMagnitude && max != CGFloat.greatestFiniteMagnitude else {
+        guard min != CGFloat.greatestFiniteMagnitude && max != CGFloat.greatestFiniteMagnitude
+        else {
             super.computeAxisValues(min: min, max: max)
             return
         }
@@ -75,6 +76,6 @@ class CustomYAxisRenderer: YAxisRenderer {
     }
 
     private func getClosestPredefinedInterval(_ rawInterval: Double) -> Double {
-        return intervals.min(by: { abs($0 - rawInterval) < abs($1 - rawInterval) }) ?? 0.0
+        intervals.min(by: { abs($0 - rawInterval) < abs($1 - rawInterval) }) ?? 0.0
     }
 }

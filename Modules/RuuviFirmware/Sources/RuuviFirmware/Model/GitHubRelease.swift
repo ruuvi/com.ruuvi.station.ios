@@ -16,7 +16,6 @@ struct GitHubRelease: Codable {
 
     enum CodingKeys: String, CodingKey {
         case version = "tag_name"
-        case assets = "assets"
+        case assets
     }
 }
-

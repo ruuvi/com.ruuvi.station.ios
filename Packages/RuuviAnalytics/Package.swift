@@ -9,10 +9,12 @@ let package = Package(
     products: [
         .library(
             name: "RuuviAnalytics",
-            targets: ["RuuviAnalytics"]),
+            targets: ["RuuviAnalytics"]
+        ),
         .library(
             name: "RuuviAnalyticsImpl",
-            targets: ["RuuviAnalyticsImpl"])
+            targets: ["RuuviAnalyticsImpl"]
+        ),
     ],
     dependencies: [
         .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.0.0")),
@@ -20,12 +22,13 @@ let package = Package(
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser"),
-        .package(path: "../RuuviService")
+        .package(path: "../RuuviService"),
     ],
     targets: [
         .target(
             name: "RuuviAnalytics",
-            dependencies: []),
+            dependencies: []
+        ),
         .target(
             name: "RuuviAnalyticsImpl",
             dependencies: [
@@ -35,10 +38,12 @@ let package = Package(
                 "RuuviStorage",
                 "RuuviOntology",
                 "RuuviUser",
-                "RuuviService"
-            ]),
+                "RuuviService",
+            ]
+        ),
         .testTarget(
             name: "RuuviAnalyticsTests",
-            dependencies: ["RuuviAnalytics"])
+            dependencies: ["RuuviAnalytics"]
+        ),
     ]
 )

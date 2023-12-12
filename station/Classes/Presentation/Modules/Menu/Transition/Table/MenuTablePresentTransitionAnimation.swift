@@ -1,20 +1,19 @@
 import UIKit
 
 class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
-
     var manager: MenuTableTransitionManager
 
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
 
-    @objc internal func handlePresentMenuLeftScreenEdge(_ edge: UIScreenEdgePanGestureRecognizer) {
+    @objc func handlePresentMenuLeftScreenEdge(_ edge: UIScreenEdgePanGestureRecognizer) {
         manager.presentDirection = .left
         handlePresentMenuPan(edge)
     }
 
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
+    func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
+        0.35
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -25,28 +24,34 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         containerView.addSubview(toView)
 
         let appearedFrame = transitionContext.finalFrame(for: toVC)
-        let initialFrame = CGRect(x: -appearedFrame.size.width,
-                                  y: appearedFrame.origin.y,
-                                  width: appearedFrame.size.width,
-                                  height: appearedFrame.size.height)
+        let initialFrame = CGRect(
+            x: -appearedFrame.size.width,
+            y: appearedFrame.origin.y,
+            width: appearedFrame.size.width,
+            height: appearedFrame.size.height
+        )
         let finalFrame = appearedFrame
         toView.frame = initialFrame
 
         let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration,
-                       delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseInOut,
-                       animations: {
-                        toView.frame = finalFrame
-        }, completion: { _ -> Void in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 1,
+            options: .curveEaseInOut,
+            animations: {
+                toView.frame = finalFrame
+            },
+            completion: { _ in
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            }
+        )
     }
 
     func handlePresentMenuPan(_ pan: UIPanGestureRecognizer) {
-        guard let view = pan.view else {
+        guard let view = pan.view
+        else {
             return
         }
 

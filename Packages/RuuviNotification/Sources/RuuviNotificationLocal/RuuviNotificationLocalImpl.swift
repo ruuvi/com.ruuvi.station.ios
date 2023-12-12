@@ -1,12 +1,11 @@
+import Foundation
+import RuuviLocal
+import RuuviOntology
+import RuuviService
+import RuuviStorage
+import UIKit
 // swiftlint:disable file_length
 import UserNotifications
-import Foundation
-import UIKit
-import RuuviOntology
-import RuuviStorage
-import RuuviLocal
-import RuuviService
-import RuuviNotification
 
 struct LocalAlertCategory {
     var id: String
@@ -72,9 +71,11 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     private var alertDidChangeToken: NSObjectProtocol?
 
-    public func setup(disableTitle: String,
-                      muteTitle: String,
-                      output: RuuviNotificationLocalOutput?) {
+    public func setup(
+        disableTitle: String,
+        muteTitle: String,
+        output: RuuviNotificationLocalOutput?
+    ) {
         setupButtons(disableTitle: disableTitle, muteTitle: muteTitle)
         startObserving()
         self.output = output
@@ -85,21 +86,15 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     }
 
     private func id(for uuid: String) -> String {
-        var id: String
-        if let macId = idPersistence.mac(for: uuid.luid) {
-            id = macId.value
-        } else {
-            id = uuid
-        }
-        return id
+        idPersistence.mac(for: uuid.luid)?.value ?? uuid
     }
 
     public func showDidConnect(uuid: String, title: String) {
         var needsToShow: Bool
-        var cache: [String: Date] = connectAlerts
+        let cache: [String: Date] = connectAlerts
 
         if let shownDate = cache[uuid] {
-            var intervalPassed: Bool = true
+            var intervalPassed = true
             if settings.limitAlertNotificationsEnabled {
                 intervalPassed = Date() > lastTriggerOffset(from: shownDate)
             }
@@ -144,10 +139,10 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public func showDidDisconnect(uuid: String, title: String) {
         var needsToShow: Bool
-        var cache: [String: Date] = disconnectAlerts
+        let cache: [String: Date] = disconnectAlerts
 
         if let shownDate = cache[uuid] {
-            var intervalPassed: Bool = true
+            var intervalPassed = true
             if settings.limitAlertNotificationsEnabled {
                 intervalPassed = Date() > lastTriggerOffset(from: shownDate)
             }
@@ -190,12 +185,12 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         }
     }
 
-    public func notifyDidMove(for uuid: String, counter: Int, title: String) {
+    public func notifyDidMove(for uuid: String, counter _: Int, title: String) {
         var needsToShow: Bool
-        var cache: [String: Date] = movementAlerts
+        let cache: [String: Date] = movementAlerts
 
         if let shownDate = cache[uuid] {
-            var intervalPassed: Bool = true
+            var intervalPassed = true
             if settings.limitAlertNotificationsEnabled {
                 intervalPassed = Date() > lastTriggerOffset(from: shownDate)
             }
@@ -241,48 +236,47 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 }
 
 // MARK: - Notify
-extension RuuviNotificationLocalImpl {
 
+public extension RuuviNotificationLocalImpl {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    public func notify(
+    func notify(
         _ reason: LowHighNotificationReason,
         _ type: LowHighNotificationType,
         for uuid: String,
         title: String
     ) {
         var needsToShow: Bool
-        var cache: [String: Date]
-        switch reason {
+        let cache: [String: Date] = switch reason {
         case .low:
             switch type {
             case .temperature:
-                cache = lowTemperatureAlerts
+                lowTemperatureAlerts
             case .relativeHumidity:
-                cache = lowRelativeHumidityAlerts
+                lowRelativeHumidityAlerts
             case .humidity:
-                cache = lowHumidityAlerts
+                lowHumidityAlerts
             case .pressure:
-                cache = lowPressureAlerts
+                lowPressureAlerts
             case .signal:
-                cache = lowSignalAlerts
+                lowSignalAlerts
             }
         case .high:
             switch type {
             case .temperature:
-                cache = highTemperatureAlerts
+                highTemperatureAlerts
             case .relativeHumidity:
-                cache = highRelativeHumidityAlerts
+                highRelativeHumidityAlerts
             case .humidity:
-                cache = highHumidityAlerts
+                highHumidityAlerts
             case .pressure:
-                cache = highPressureAlerts
+                highPressureAlerts
             case .signal:
-                cache = highSignalAlerts
+                highSignalAlerts
             }
         }
 
         if let shownDate = cache[uuid] {
-            var intervalPassed: Bool = false
+            var intervalPassed = false
             if settings.limitAlertNotificationsEnabled {
                 intervalPassed = Date() > lastTriggerOffset(from: shownDate)
             } else {
@@ -315,26 +309,28 @@ extension RuuviNotificationLocalImpl {
             content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
             content.categoryIdentifier = lowHigh.id
 
-            let body: String
-            switch type {
+            let body: String = switch type {
             case .temperature:
-                body = ruuviAlertService.temperatureDescription(for: uuid) ?? ""
+                ruuviAlertService.temperatureDescription(for: uuid) ?? ""
             case .relativeHumidity:
-                body = ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
+                ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
             case .humidity:
-                body = ruuviAlertService.humidityDescription(for: uuid) ?? ""
+                ruuviAlertService.humidityDescription(for: uuid) ?? ""
             case .pressure:
-                body = ruuviAlertService.pressureDescription(for: uuid) ?? ""
+                ruuviAlertService.pressureDescription(for: uuid) ?? ""
             case .signal:
-                body = ruuviAlertService.signalDescription(for: uuid) ?? ""
+                ruuviAlertService.signalDescription(for: uuid) ?? ""
             }
             content.body = body
 
             ruuviStorage.readOne(id(for: uuid)).on(success: { ruuviTag in
                 content.subtitle = ruuviTag.name
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-                let request = UNNotificationRequest(identifier: uuid + type.rawValue,
-                                                    content: content, trigger: trigger)
+                let request = UNNotificationRequest(
+                    identifier: uuid + type.rawValue,
+                    content: content,
+                    trigger: trigger
+                )
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             })
 
@@ -371,31 +367,32 @@ extension RuuviNotificationLocalImpl {
 }
 
 // MARK: - Private
+
 extension RuuviNotificationLocalImpl {
     private static func alertType(from type: LowHighNotificationType) -> AlertType {
         switch type {
         case .temperature:
-            return .temperature(lower: 0, upper: 0)
+            .temperature(lower: 0, upper: 0)
         case .relativeHumidity:
-            return .relativeHumidity(lower: 0, upper: 0)
+            .relativeHumidity(lower: 0, upper: 0)
         case .humidity:
-            return .humidity(
+            .humidity(
                 lower: Humidity(value: 0, unit: .absolute),
                 upper: Humidity(value: 0, unit: .absolute)
             )
         case .pressure:
-            return .pressure(lower: 0, upper: 0)
+            .pressure(lower: 0, upper: 0)
         case .signal:
-            return .signal(lower: 0, upper: 0)
+            .signal(lower: 0, upper: 0)
         }
     }
 
     private static func alertType(from type: BlastNotificationType) -> AlertType {
         switch type {
         case .connection:
-            return .connection
+            .connection
         case .movement:
-            return .movement(last: 0)
+            .movement(last: 0)
         }
     }
 
@@ -403,64 +400,65 @@ extension RuuviNotificationLocalImpl {
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .RuuviServiceAlertDidChange,
-                         object: nil,
-                         queue: .main) { [weak self] (notification) in
-            if let userInfo = notification.userInfo,
-                let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
+            .addObserver(
+                forName: .RuuviServiceAlertDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                if let userInfo = notification.userInfo,
+                   let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
+                    let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
 
-                let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
+                    var isOn = false
+                    if let physicalSensor {
+                        isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
+                    }
 
-                var isOn = false
-                if let physicalSensor = physicalSensor {
-                    isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
-                }
-
-                if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value {
-                    switch type {
-                    case .temperature:
-                        self?.lowTemperatureAlerts[uuid] = nil
-                        self?.highTemperatureAlerts[uuid] = nil
-                        if !isOn {
-                            self?.cancel(.temperature, for: uuid)
+                    if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value {
+                        switch type {
+                        case .temperature:
+                            self?.lowTemperatureAlerts[uuid] = nil
+                            self?.highTemperatureAlerts[uuid] = nil
+                            if !isOn {
+                                self?.cancel(.temperature, for: uuid)
+                            }
+                        case .relativeHumidity:
+                            self?.lowRelativeHumidityAlerts[uuid] = nil
+                            self?.highRelativeHumidityAlerts[uuid] = nil
+                            if !isOn {
+                                self?.cancel(.relativeHumidity, for: uuid)
+                            }
+                        case .humidity:
+                            self?.lowHumidityAlerts[uuid] = nil
+                            self?.highHumidityAlerts[uuid] = nil
+                            if !isOn {
+                                self?.cancel(.humidity, for: uuid)
+                            }
+                        case .pressure:
+                            self?.lowPressureAlerts[uuid] = nil
+                            self?.highPressureAlerts[uuid] = nil
+                            if !isOn {
+                                self?.cancel(.pressure, for: uuid)
+                            }
+                        case .signal:
+                            self?.lowSignalAlerts[uuid] = nil
+                            self?.highSignalAlerts[uuid] = nil
+                            if !isOn {
+                                self?.cancel(.signal, for: uuid)
+                            }
+                        case .connection, .cloudConnection, .movement:
+                            // do nothing
+                            break
                         }
-                    case .relativeHumidity:
-                        self?.lowRelativeHumidityAlerts[uuid] = nil
-                        self?.highRelativeHumidityAlerts[uuid] = nil
-                        if !isOn {
-                            self?.cancel(.relativeHumidity, for: uuid)
-                        }
-                    case .humidity:
-                        self?.lowHumidityAlerts[uuid] = nil
-                        self?.highHumidityAlerts[uuid] = nil
-                        if !isOn {
-                            self?.cancel(.humidity, for: uuid)
-                        }
-                    case .pressure:
-                        self?.lowPressureAlerts[uuid] = nil
-                        self?.highPressureAlerts[uuid] = nil
-                        if !isOn {
-                            self?.cancel(.pressure, for: uuid)
-                        }
-                    case .signal:
-                        self?.lowSignalAlerts[uuid] = nil
-                        self?.highSignalAlerts[uuid] = nil
-                        if !isOn {
-                            self?.cancel(.signal, for: uuid)
-                        }
-                    case .connection, .cloudConnection, .movement:
-                        // do nothing
-                        break
                     }
                 }
             }
-        }
     }
 }
 
 // MARK: - UNUserNotificationCenterDelegate
-extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
 
+extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     private func setupButtons(disableTitle: String, muteTitle: String) {
         let nc = UNUserNotificationCenter.current()
         nc.delegate = self
@@ -504,23 +502,23 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     public func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification,
+        _: UNUserNotificationCenter,
+        willPresent _: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.alert, .badge, .sound])
+        completionHandler([.banner, .list, .badge, .sound])
     }
 
     // swiftlint:disable:next function_body_length
     public func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
+        _: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let userInfo = response.notification.request.content.userInfo
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
-            let typeString = userInfo[lowHigh.typeKey] as? String,
-            let type = LowHighNotificationType(rawValue: typeString) {
+           let typeString = userInfo[lowHigh.typeKey] as? String,
+           let type = LowHighNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case lowHigh.disable:
                 // TODO: @rinat go with sensors instead of pure uuid
@@ -545,10 +543,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             default:
                 break
             }
-
         } else if let uuid = userInfo[blast.uuidKey] as? String,
-            let typeString = userInfo[blast.typeKey] as? String,
-            let type = BlastNotificationType(rawValue: typeString) {
+                  let typeString = userInfo[blast.typeKey] as? String,
+                  let type = BlastNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case blast.disable:
                 // TODO: @rinat go with sensors instead of pure uuid
@@ -576,7 +573,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         }
 
         if let uuid = userInfo[lowHigh.uuidKey] as? String
-                     ?? userInfo[blast.uuidKey] as? String {
+            ?? userInfo[blast.uuidKey] as? String {
             NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
             output?.notificationDidTap(for: uuid)
         }
@@ -596,7 +593,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     private func mute(type: LowHighNotificationType, uuid: String) {
-        guard let date = muteOffset() else {
+        guard let date = muteOffset()
+        else {
             assertionFailure(); return
         }
         // TODO: @rinat go with sensors instead of pure uuid
@@ -623,7 +621,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     private func mute(type: BlastNotificationType, uuid: String) {
-        guard let date = muteOffset() else {
+        guard let date = muteOffset()
+        else {
             assertionFailure(); return
         }
         // TODO: @rinat go with sensors instead of pure uuid
@@ -650,24 +649,23 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     private func muteOffset() -> Date? {
-        return Calendar.current.date(
+        Calendar.current.date(
             byAdding: .minute,
-            value: self.settings.alertsMuteIntervalMinutes,
+            value: settings.alertsMuteIntervalMinutes,
             to: Date()
         )
     }
 
     private func lastTriggerOffset(from shown: Date) -> Date {
-        return Calendar.current.date(
+        Calendar.current.date(
             byAdding: .minute,
-            value: self.settings.alertsMuteIntervalMinutes,
+            value: settings.alertsMuteIntervalMinutes,
             to: shown
         ) ?? Date()
     }
 }
 
 extension NSObjectProtocol {
-
     func invalidate() {
         // swiftlint:disable:next notification_center_detachment
         NotificationCenter
@@ -675,4 +673,5 @@ extension NSObjectProtocol {
             .removeObserver(self)
     }
 }
+
 // swiftlint:enable file_length

@@ -1,14 +1,15 @@
 import Foundation
+import RuuviLocalization
 
 class HeartbeatViewModel {
     var bgScanningState = Observable<Bool?>()
     var bgScanningInterval = Observable<Int?>(1)
 
     var bgScanningTitle: String {
-        return "Settings.BackgroundScanning.title".localized()
+        RuuviLocalization.Settings.BackgroundScanning.title
     }
 
     var bgScanningIntervalTitle: String {
-        return "Settings.BackgroundScanning.interval".localized()
+        RuuviLocalization.Settings.BackgroundScanning.interval
     }
 }

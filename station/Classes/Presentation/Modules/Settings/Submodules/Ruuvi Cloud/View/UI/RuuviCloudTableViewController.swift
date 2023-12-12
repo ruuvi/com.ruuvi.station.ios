@@ -1,5 +1,6 @@
-import UIKit
 import Foundation
+import RuuviLocalization
+import UIKit
 
 class RuuviCloudTableViewController: UITableViewController {
     var output: RuuviCloudViewOutput!
@@ -13,7 +14,8 @@ class RuuviCloudTableViewController: UITableViewController {
         super.init(style: .grouped)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -21,11 +23,12 @@ class RuuviCloudTableViewController: UITableViewController {
 }
 
 // MARK: - LIFECYCLE
+
 extension RuuviCloudTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 
@@ -37,44 +40,49 @@ extension RuuviCloudTableViewController {
 
 extension RuuviCloudTableViewController: RuuviCloudViewInput {
     func localize() {
-        self.title = "ruuvi_cloud".localized()
+        title = RuuviLocalization.ruuviCloud
     }
 }
 
-extension RuuviCloudTableViewController {
-    fileprivate func setUpUI() {
+private extension RuuviCloudTableViewController {
+    func setUpUI() {
         view.backgroundColor = RuuviColor.ruuviPrimary
         setUpTableView()
     }
 
-    fileprivate func setUpTableView() {
+    func setUpTableView() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.register(RuuviCloudTableViewCell.self,
-                           forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(
+            RuuviCloudTableViewCell.self,
+            forCellReuseIdentifier: reuseIdentifier
+        )
     }
 
-    fileprivate func updateUI() {
+    func updateUI() {
         if isViewLoaded {
-            DispatchQueue.main.async(execute: { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 self?.tableView.reloadData()
-            })
+            }
         }
     }
 }
 
 // MARK: - UITableViewDataSource
-extension RuuviCloudTableViewController {
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+extension RuuviCloudTableViewController {
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModels.count
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: reuseIdentifier,
             for: indexPath
-        ) as? RuuviCloudTableViewCell else {
+        ) as? RuuviCloudTableViewCell
+        else {
             fatalError()
         }
         let viewModel = viewModels[indexPath.row]
@@ -83,17 +91,17 @@ extension RuuviCloudTableViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 100
+    override func tableView(_: UITableView, estimatedHeightForFooterInSection _: Int) -> CGFloat {
+        100
     }
 
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
         footerLabel.textColor = RuuviColor.ruuviTextColor
         footerLabel.font = UIFont.Muli(.regular, size: 13)
         footerLabel.numberOfLines = 0
-        footerLabel.text = "Settings.Label.CloudMode.description".localized()
+        footerLabel.text = RuuviLocalization.Settings.Label.CloudMode.description
         footerView.addSubview(footerLabel)
         footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
         return footerView
@@ -101,6 +109,7 @@ extension RuuviCloudTableViewController {
 }
 
 // MARK: - RuuviCloudTableViewCellDelegate
+
 extension RuuviCloudTableViewController: RuuviCloudTableViewCellDelegate {
     func didToggleSwitch(isOn: Bool, sender: RuuviCloudTableViewCell) {
         if let indexPath = tableView.indexPath(for: sender) {

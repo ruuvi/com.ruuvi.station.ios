@@ -6,7 +6,6 @@ protocol SignInBenefitsModuleFactory: AnyObject {
 
 class SignInPromoModuleFactoryImpl: SignInBenefitsModuleFactory {
     func create() -> SignInBenefitsViewController {
-
         let view = SignInBenefitsViewController()
         let router = SignInBenefitsRouter()
         let presenter = SignInBenefitsPresenter()

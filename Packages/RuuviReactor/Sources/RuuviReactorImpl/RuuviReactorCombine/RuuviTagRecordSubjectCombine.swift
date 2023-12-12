@@ -1,14 +1,14 @@
+import Combine
 import Foundation
 import GRDB
-import Combine
 import RealmSwift
-import RuuviOntology
 import RuuviContext
+import RuuviOntology
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 #if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
+    import RuuviOntologySQLite
 #endif
 
 final class RuuviTagRecordSubjectCombine {
@@ -41,38 +41,39 @@ final class RuuviTagRecordSubjectCombine {
     }
 
     func start() {
-        self.isServing = true
+        isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
             .filter(
                 (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
-                || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
+                    || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
             )
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
         }.removeDuplicates()
 
-        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
+        ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
             [weak self] records in
-            self?.subject.send(records.map({ $0.any }))
+            self?.subject.send(records.map(\.any))
         }
 
-        let results = self.realm.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@ || ruuviTag.mac == %@",
-                    luid?.value ?? "invalid",
-                    macId?.value ?? "invalid"
+        let results = realm.main.objects(RuuviTagDataRealm.self)
+            .filter(
+                "ruuviTag.uuid == %@ || ruuviTag.mac == %@",
+                luid?.value ?? "invalid",
+                macId?.value ?? "invalid"
             )
             .sorted(byKeyPath: "date")
-        self.ruuviTagDataRealmCache = results.compactMap({ $0.any })
-        self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
+        ruuviTagDataRealmCache = results.compactMap(\.any)
+        ruuviTagDataRealmToken = results.observe { [weak self] change in
             guard let sSelf = self else { return }
             switch change {
-            case .initial(let records):
+            case let .initial(records):
                 if records.count > 0 {
-                    sSelf.subject.send(records.compactMap({ $0.any }))
+                    sSelf.subject.send(records.compactMap(\.any))
                 }
-            case .update(let records, _, _, _):
+            case let .update(records, _, _, _):
                 if records.count > 0 {
-                    sSelf.subject.send(records.compactMap({ $0.any }))
+                    sSelf.subject.send(records.compactMap(\.any))
                 }
             default:
                 break

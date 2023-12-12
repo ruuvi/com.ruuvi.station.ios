@@ -1,7 +1,6 @@
 import UIKit
 
 class CardsBackgroundView: UIView {
-
     private lazy var cardImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -22,7 +21,8 @@ class CardsBackgroundView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -38,15 +38,20 @@ class CardsBackgroundView: UIView {
 }
 
 extension CardsBackgroundView {
-    func setBackgroundImage(with image: UIImage?,
-                            withAnimation: Bool = true) {
+    func setBackgroundImage(
+        with image: UIImage?,
+        withAnimation: Bool = true
+    ) {
         if withAnimation {
-            UIView.transition(with: cardImageView,
-                              duration: 0.3,
-                              options: .transitionCrossDissolve,
-                              animations: { [weak self] in
-                self?.cardImageView.image = image
-            }, completion: nil)
+            UIView.transition(
+                with: cardImageView,
+                duration: 0.3,
+                options: .transitionCrossDissolve,
+                animations: { [weak self] in
+                    self?.cardImageView.image = image
+                },
+                completion: nil
+            )
         } else {
             cardImageView.image = image
         }

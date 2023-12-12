@@ -1,12 +1,12 @@
+import Humidity
+import RuuviLocal
+import RuuviLocalization
+import RuuviOntology
+import RuuviService
 // swiftlint:disable file_length
 import UIKit
-import Humidity
-import RuuviOntology
-import RuuviLocal
-import RuuviService
 
 class CardsViewController: UIViewController {
-
     // Configuration
     var output: CardsViewOutput!
     var measurementService: RuuviServiceMeasurement! {
@@ -20,6 +20,7 @@ class CardsViewController: UIViewController {
             updateUI()
         }
     }
+
     var scrollIndex: Int = 0
 
     private var currentPage: Int = 0 {
@@ -27,11 +28,14 @@ class CardsViewController: UIViewController {
             setArrowButtonsVisibility(with: currentPage)
         }
     }
+
     private static let reuseIdentifier: String = "reuseIdentifier"
 
-    func cell(collectionView: UICollectionView,
-              indexPath: IndexPath,
-              viewModel: CardsViewModel) -> UICollectionViewCell? {
+    func cell(
+        collectionView: UICollectionView,
+        indexPath: IndexPath,
+        viewModel: CardsViewModel
+    ) -> UICollectionViewCell? {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: Self.reuseIdentifier,
             for: indexPath
@@ -57,15 +61,17 @@ class CardsViewController: UIViewController {
     // Header View
     // Ruuvi Logo
     private lazy var ruuviLogoView: UIImageView = {
-        let iv = UIImageView(image: UIImage(named: "ruuvi_logo_"),
-                             contentMode: .scaleAspectFit)
+        let iv = UIImageView(
+            image: UIImage(named: "ruuvi_logo_"),
+            contentMode: .scaleAspectFit
+        )
         iv.tintColor = .white
         return iv
     }()
 
     // Action Buttons
     private lazy var backButton: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.tintColor = .white
         let buttonImage = RuuviAssets.backButtonImage
         button.setImage(buttonImage, for: .normal)
@@ -85,7 +91,7 @@ class CardsViewController: UIViewController {
     /// This button is used to be able to tap the alert button when
     /// the alert icon is blinking.
     private lazy var alertButtonHidden: UIButton = {
-        let button  = UIButton()
+        let button = UIButton()
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(alertButtonDidTap), for: .touchUpInside)
         return button
@@ -157,8 +163,10 @@ class CardsViewController: UIViewController {
     }()
 
     private lazy var collectionView: UICollectionView = {
-        let cv = UICollectionView(frame: .zero,
-                                  collectionViewLayout: createLayout())
+        let cv = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: createLayout()
+        )
         cv.backgroundColor = .clear
         cv.showsHorizontalScrollIndicator = false
         cv.decelerationRate = .fast
@@ -166,8 +174,10 @@ class CardsViewController: UIViewController {
         cv.alwaysBounceVertical = false
         cv.delegate = self
         cv.dataSource = self
-        cv.register(CardsLargeImageCell.self,
-                    forCellWithReuseIdentifier: Self.reuseIdentifier)
+        cv.register(
+            CardsLargeImageCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifier
+        )
         return cv
     }()
 
@@ -185,7 +195,7 @@ class CardsViewController: UIViewController {
     private var isChartsShowing: Bool = false
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        .lightContent
     }
 
     deinit {
@@ -194,12 +204,13 @@ class CardsViewController: UIViewController {
 }
 
 // MARK: - View lifecycle
+
 extension CardsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
         configureGestureViews()
-        setupLocalization()
+        localize()
         output.viewDidLoad()
     }
 
@@ -242,14 +253,14 @@ extension CardsViewController {
     }
 }
 
-extension CardsViewController {
-    fileprivate func setUpUI() {
+private extension CardsViewController {
+    func setUpUI() {
         setUpBaseView()
         setUpHeaderView()
         setUpContentView()
     }
 
-    fileprivate func setUpBaseView() {
+    func setUpBaseView() {
         view.backgroundColor = RuuviColor.ruuviPrimary
 
         view.addSubview(cardBackgroundView)
@@ -260,59 +271,69 @@ extension CardsViewController {
         chartViewBackground.alpha = 0
     }
 
-    fileprivate func setUpHeaderView() {
+    func setUpHeaderView() {
         let leftBarButtonView = UIView(color: .clear)
 
         leftBarButtonView.addSubview(backButton)
-        backButton.anchor(top: leftBarButtonView.topAnchor,
-                          leading: leftBarButtonView.leadingAnchor,
-                          bottom: leftBarButtonView.bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-                          size: .init(width: 40, height: 40))
+        backButton.anchor(
+            top: leftBarButtonView.topAnchor,
+            leading: leftBarButtonView.leadingAnchor,
+            bottom: leftBarButtonView.bottomAnchor,
+            trailing: nil,
+            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
+            size: .init(width: 40, height: 40)
+        )
 
         leftBarButtonView.addSubview(ruuviLogoView)
-        ruuviLogoView.anchor(top: nil,
-                             leading: backButton.trailingAnchor,
-                             bottom: nil,
-                             trailing: leftBarButtonView.trailingAnchor,
-                             padding: .init(top: 0, left: 12, bottom: 0, right: 0),
-                             size: .init(width: 110, height: 22))
+        ruuviLogoView.anchor(
+            top: nil,
+            leading: backButton.trailingAnchor,
+            bottom: nil,
+            trailing: leftBarButtonView.trailingAnchor,
+            padding: .init(top: 0, left: 12, bottom: 0, right: 0),
+            size: .init(width: 110, height: 22)
+        )
         ruuviLogoView.centerYInSuperview()
 
         let rightBarButtonView = UIView(color: .clear)
         // Right action buttons
         rightBarButtonView.addSubview(alertButton)
-        alertButton.anchor(top: rightBarButtonView.topAnchor,
-                           leading: rightBarButtonView.leadingAnchor,
-                           bottom: rightBarButtonView.bottomAnchor,
-                           trailing: nil)
+        alertButton.anchor(
+            top: rightBarButtonView.topAnchor,
+            leading: rightBarButtonView.leadingAnchor,
+            bottom: rightBarButtonView.bottomAnchor,
+            trailing: nil
+        )
         alertButton.centerYInSuperview()
 
         rightBarButtonView.addSubview(alertButtonHidden)
         alertButtonHidden.match(view: alertButton)
 
         rightBarButtonView.addSubview(chartButton)
-        chartButton.anchor(top: nil,
-                           leading: alertButton.trailingAnchor,
-                           bottom: nil,
-                           trailing: nil)
+        chartButton.anchor(
+            top: nil,
+            leading: alertButton.trailingAnchor,
+            bottom: nil,
+            trailing: nil
+        )
         chartButton.centerYInSuperview()
 
         rightBarButtonView.addSubview(settingsButton)
-        settingsButton.anchor(top: nil,
-                              leading: chartButton.trailingAnchor,
-                              bottom: nil,
-                              trailing: rightBarButtonView.trailingAnchor,
-                              padding: .init(top: 0, left: 0, bottom: 0, right: -14))
+        settingsButton.anchor(
+            top: nil,
+            leading: chartButton.trailingAnchor,
+            bottom: nil,
+            trailing: rightBarButtonView.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: -14)
+        )
         settingsButton.centerYInSuperview()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
     }
 
-    fileprivate func setUpContentView() {
-        let swipeToolbarView  = UIView(color: .clear)
+    func setUpContentView() {
+        let swipeToolbarView = UIView(color: .clear)
         // Arrow buttons should stay above of collection view
         swipeToolbarView.addSubview(cardLeftArrowButton)
         cardLeftArrowButton.anchor(
@@ -342,39 +363,51 @@ extension CardsViewController {
         )
 
         view.addSubview(swipeToolbarView)
-        swipeToolbarView.anchor(top: view.safeTopAnchor,
-                                leading: view.safeLeftAnchor,
-                                bottom: nil,
-                                trailing: view.safeRightAnchor)
+        swipeToolbarView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: nil,
+            trailing: view.safeRightAnchor
+        )
 
         view.addSubview(collectionView)
-        collectionView.anchor(top: swipeToolbarView.bottomAnchor,
-                              leading: view.safeLeftAnchor,
-                              bottom: view.safeBottomAnchor,
-                              trailing: view.safeRightAnchor)
+        collectionView.anchor(
+            top: swipeToolbarView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor
+        )
     }
 
-    fileprivate func createLayout() -> UICollectionViewLayout {
-        let sectionProvider = { (_: Int,
-                                 _: NSCollectionLayoutEnvironment)
+    func createLayout() -> UICollectionViewLayout {
+        let sectionProvider = { (
+            _: Int,
+            _: NSCollectionLayoutEnvironment
+        )
             -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
 
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .fractionalHeight(1.0))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
-            let section = NSCollectionLayoutSection(group: group)
-            return section
+        let section = NSCollectionLayoutSection(group: group)
+        return section
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.scrollDirection = .horizontal
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: sectionProvider,
-                                                         configuration: config)
+        let layout = UICollectionViewCompositionalLayout(
+            sectionProvider: sectionProvider,
+            configuration: config
+        )
         return layout
     }
 
@@ -385,11 +418,13 @@ extension CardsViewController {
     private func configureRestartAnimationsOnAppDidBecomeActive() {
         appDidBecomeActiveToken = NotificationCenter
             .default
-            .addObserver(forName: UIApplication.didBecomeActiveNotification,
-                         object: nil,
-                         queue: .main) { [weak self] _ in
+            .addObserver(
+                forName: UIApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
                 self?.restartAnimations()
-        }
+            }
     }
 }
 
@@ -405,18 +440,23 @@ extension CardsViewController: UICollectionViewDelegate {
 }
 
 extension CardsViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        return viewModels.count
+    func collectionView(
+        _: UICollectionView,
+        numberOfItemsInSection _: Int
+    ) -> Int {
+        viewModels.count
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         guard let cell = cell(
             collectionView: collectionView,
             indexPath: indexPath,
             viewModel: viewModels[indexPath.item]
-        ) else {
+        )
+        else {
             fatalError()
         }
         return cell
@@ -424,34 +464,41 @@ extension CardsViewController: UICollectionViewDataSource {
 }
 
 extension CardsViewController {
-    @objc fileprivate func backButtonDidTap() {
+    @objc private func backButtonDidTap() {
         // TODO: Handle the case when chart visible and sync ongoing.
         if isChartsShowing {
-            guard let viewModel = currentVisibleItem else {
+            guard let viewModel = currentVisibleItem
+            else {
                 return
             }
-            output.viewDidTriggerDismissChart(for: viewModel,
-                                              dismissParent: true)
+            output.viewDidTriggerDismissChart(
+                for: viewModel,
+                dismissParent: true
+            )
         } else {
             output.viewShouldDismiss()
         }
     }
 
-    @objc fileprivate func alertButtonDidTap() {
-        guard let viewModel = currentVisibleItem else {
+    @objc private func alertButtonDidTap() {
+        guard let viewModel = currentVisibleItem
+        else {
             return
         }
         output.viewDidTriggerSettings(for: viewModel)
     }
 
-    @objc fileprivate func chartButtonDidTap() {
-        guard let viewModel = currentVisibleItem else {
+    @objc private func chartButtonDidTap() {
+        guard let viewModel = currentVisibleItem
+        else {
             return
         }
 
         if isChartsShowing {
-            output.viewDidTriggerDismissChart(for: viewModel,
-                                              dismissParent: false)
+            output.viewDidTriggerDismissChart(
+                for: viewModel,
+                dismissParent: false
+            )
         } else {
             output.viewDidTriggerShowChart(for: viewModel)
         }
@@ -472,43 +519,44 @@ extension CardsViewController {
     func dismissChart() {
         chartButton.image = RuuviAssets.chartsIcon
         chartViewBackground.alpha = 0
-        children.forEach({
+        children.forEach {
             $0.willMove(toParent: nil)
             $0.view.removeFromSuperview()
             $0.removeFromParent()
-        })
+        }
         isChartsShowing = false
         collectionView.isHidden = false
     }
 
-    @objc fileprivate func settingsButtonDidTap() {
-        guard let viewModel = currentVisibleItem else {
+    @objc private func settingsButtonDidTap() {
+        guard let viewModel = currentVisibleItem
+        else {
             return
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
         output.viewDidTriggerSettings(for: viewModel)
     }
 
-    @objc fileprivate func cardLeftArrowButtonDidTap() {
+    @objc private func cardLeftArrowButtonDidTap() {
         guard viewModels.count > 0 else { return }
         let scrollToPageIndex = currentPage - 1
-        if scrollToPageIndex >= 0 && scrollToPageIndex < viewModels.count {
+        if scrollToPageIndex >= 0, scrollToPageIndex < viewModels.count {
             performPostScrollActions(with: scrollToPageIndex, scroll: true)
         }
     }
 
-    @objc fileprivate func cardRightArrowButtonDidTap() {
+    @objc private func cardRightArrowButtonDidTap() {
         guard viewModels.count > 0 else { return }
         let scrollToPageIndex = currentPage + 1
-        if scrollToPageIndex >= 0 && scrollToPageIndex < viewModels.count {
+        if scrollToPageIndex >= 0, scrollToPageIndex < viewModels.count {
             performPostScrollActions(with: scrollToPageIndex, scroll: true)
         }
     }
 }
 
 // MARK: - CardsViewInput
-extension CardsViewController: CardsViewInput {
 
+extension CardsViewController: CardsViewInput {
     func viewShouldDismiss() {
         output.viewShouldDismiss()
     }
@@ -516,7 +564,7 @@ extension CardsViewController: CardsViewInput {
     func applyUpdate(to viewModel: CardsViewModel) {
         if let index = viewModels.firstIndex(where: { vm in
             vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
-            vm.mac.value != nil && vm.mac.value == viewModel.mac.value
+                vm.mac.value != nil && vm.mac.value == viewModel.mac.value
         }) {
             let indexPath = IndexPath(item: index, section: 0)
             if let cell = collectionView
@@ -530,8 +578,10 @@ extension CardsViewController: CardsViewInput {
         }
     }
 
-    func changeCardBackground(of viewModel: CardsViewModel,
-                              to image: UIImage?) {
+    func changeCardBackground(
+        of viewModel: CardsViewModel,
+        to image: UIImage?
+    ) {
         if viewModel == currentVisibleItem {
             updateCardInfo(with: viewModel.name.value, image: image)
         }
@@ -542,25 +592,30 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
-        let title = "Cards.BluetoothDisabledAlert.title".localized()
-        let message = "Cards.BluetoothDisabledAlert.message".localized()
+        let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(),
-                                        style: .default, handler: { _ in
-            guard let url = URL(string: userDeclined ?
-                                UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
-                  UIApplication.shared.canOpenURL(url) else {
-                return
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.PermissionPresenter.settings,
+            style: .default,
+            handler: { _ in
+                guard let url = URL(string: userDeclined ?
+                    UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                    UIApplication.shared.canOpenURL(url)
+                else {
+                    return
+                }
+                UIApplication.shared.open(url)
             }
-            UIApplication.shared.open(url)
-        }))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        ))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
     func scroll(to index: Int) {
         guard viewModels.count > 0,
-              index < viewModels.count else {
+              index < viewModels.count
+        else {
             return
         }
         let viewModel = viewModels[index]
@@ -576,13 +631,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
-        let message = "Cards.KeepConnectionDialog.message".localized()
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialogChart(for: viewModel)
         }))
-        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionChart(to: viewModel)
         }))
@@ -590,13 +645,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
-        let message = "Cards.KeepConnectionDialog.message".localized()
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialogSettings(for: viewModel)
         }))
-        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
@@ -604,13 +659,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showFirmwareUpdateDialog(for viewModel: CardsViewModel) {
-        let message = "Cards.LegacyFirmwareUpdateDialog.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidIgnoreFirmwareUpdateDialog(for: viewModel)
         }))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
@@ -618,13 +673,13 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel) {
-        let message = "Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message".localized()
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissFirmwareUpdateDialog(for: viewModel)
         }))
-        let checkForUpdateTitle = "Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title".localized()
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
         alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate(for: viewModel)
         }))
@@ -632,17 +687,16 @@ extension CardsViewController: CardsViewInput {
     }
 
     func showReverseGeocodingFailed() {
-        let message = "Cards.Error.ReverseGeocodingFailed.message".localized()
+        let message = RuuviLocalization.Cards.Error.ReverseGeocodingFailed.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 
     func showAlreadyLoggedInAlert(with email: String) {
-        let message = String.localizedStringWithFormat("Cards.Alert.AlreadyLoggedIn.message".localized(),
-                                                                 email)
+        let message = RuuviLocalization.Cards.Alert.AlreadyLoggedIn.message(email)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 }
@@ -650,7 +704,8 @@ extension CardsViewController: CardsViewInput {
 extension CardsViewController: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
         guard isViewLoaded,
-                let viewModel = currentVisibleItem else {
+              let viewModel = currentVisibleItem
+        else {
             return
         }
         applyUpdate(to: viewModel)
@@ -658,7 +713,7 @@ extension CardsViewController: RuuviServiceMeasurementDelegate {
 }
 
 extension CardsViewController {
-    fileprivate func updateUI() {
+    private func updateUI() {
         applySnapshot()
 
         if scrollIndex < viewModels.count {
@@ -668,51 +723,52 @@ extension CardsViewController {
     }
 
     private func bindCurrentVisibleItem() {
-        guard let currentVisibleItem = currentVisibleItem else {
+        guard let currentVisibleItem
+        else {
             return
         }
 
-        view.bind(currentVisibleItem.name) { [weak self] (_, name) in
+        view.bind(currentVisibleItem.name) { [weak self] _, name in
             self?.updateCardInfo(with: name, image: currentVisibleItem.background.value)
         }
 
-        view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.relativeHumidityAlertMutedTill) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.relativeHumidityAlertMutedTill) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.pressureAlertMutedTill) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.pressureAlertMutedTill) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.signalAlertMutedTill) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.signalAlertMutedTill) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.movementAlertMutedTill) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.movementAlertMutedTill) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.connectionAlertMutedTill) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.connectionAlertMutedTill) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.alertState) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.alertState) { [weak self] _, _ in
             self?.restartAnimations()
         }
 
-        view.bind(currentVisibleItem.isChartAvailable) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.isChartAvailable) { [weak self] _, _ in
             self?.updateTopActionButtonVisibility()
         }
 
-        view.bind(currentVisibleItem.isAlertAvailable) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.isAlertAvailable) { [weak self] _, _ in
             self?.updateTopActionButtonVisibility()
         }
 
-        view.bind(currentVisibleItem.isConnected) { [weak self] (_, _) in
+        view.bind(currentVisibleItem.isConnected) { [weak self] _, _ in
             self?.updateTopActionButtonVisibility()
         }
     }
@@ -731,7 +787,7 @@ extension CardsViewController {
             currentVisibleItem?.pressureAlertMutedTill.value,
             currentVisibleItem?.signalAlertMutedTill.value,
             currentVisibleItem?.movementAlertMutedTill.value,
-            currentVisibleItem?.connectionAlertMutedTill.value
+            currentVisibleItem?.connectionAlertMutedTill.value,
         ]
 
         if mutedTills.first(where: { $0 != nil }) != nil {
@@ -751,15 +807,19 @@ extension CardsViewController {
             case .firing:
                 alertButton.alpha = 1.0
                 alertButton.image = RuuviAssets.alertActiveImage
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                    UIView.animate(withDuration: 0.5,
-                                   delay: 0,
-                                   options: [.repeat,
-                                             .autoreverse],
-                                   animations: { [weak self] in
-                        self?.alertButton.alpha = 0.0
-                    })
-                })
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    UIView.animate(
+                        withDuration: 0.5,
+                        delay: 0,
+                        options: [
+                            .repeat,
+                            .autoreverse,
+                        ],
+                        animations: { [weak self] in
+                            self?.alertButton.alpha = 0.0
+                        }
+                    )
+                }
             }
         } else {
             alertButton.image = nil
@@ -768,15 +828,15 @@ extension CardsViewController {
     }
 
     func removeAlertAnimations(alpha: Double = 1) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
-                                      execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.alertButton.layer.removeAllAnimations()
             self?.alertButton.alpha = alpha
-        })
+        }
     }
 
     private func updateTopActionButtonVisibility() {
-        guard let viewModel = currentVisibleItem else {
+        guard let viewModel = currentVisibleItem
+        else {
             return
         }
 
@@ -829,7 +889,7 @@ extension CardsViewController {
             output.viewDidTriggerNavigateChart(to: currentItem)
         } else {
             currentPage = index
-            self.currentVisibleItem = currentItem
+            currentVisibleItem = currentItem
             restartAnimations()
             output.viewDidScroll(to: currentItem)
             output.viewDidTriggerFirmwareUpdateDialog(for: currentItem)

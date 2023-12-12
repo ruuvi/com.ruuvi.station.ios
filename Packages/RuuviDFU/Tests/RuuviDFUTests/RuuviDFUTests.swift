@@ -1,7 +1,6 @@
-import XCTest
 @testable import RuuviDFU
+import XCTest
 
 final class RuuviDFUTests: XCTestCase {
-    func testExample() {
-    }
+    func testExample() {}
 }

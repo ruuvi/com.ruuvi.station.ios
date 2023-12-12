@@ -1,10 +1,10 @@
 import Foundation
 
-extension Notification.Name {
-    public static let RuuviTagAdvertisementDaemonDidFail = Notification.Name(
+public extension Notification.Name {
+    static let RuuviTagAdvertisementDaemonDidFail = Notification.Name(
         "RuuviTagAdvertisementDaemonDidFail"
     )
-    public static let RuuviTagAdvertisementDaemonShouldRestart = Notification.Name(
+    static let RuuviTagAdvertisementDaemonShouldRestart = Notification.Name(
         "RuuviTagAdvertisementDaemonShouldRestart"
     )
 }

@@ -9,10 +9,12 @@ let package = Package(
     products: [
         .library(
             name: "RuuviUser",
-            targets: ["RuuviUser"]),
+            targets: ["RuuviUser"]
+        ),
         .library(
             name: "RuuviUserCoordinator",
-            targets: ["RuuviUserCoordinator"])
+            targets: ["RuuviUserCoordinator"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.1")
@@ -29,6 +31,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviUserTests",
-            dependencies: ["RuuviUser"])
+            dependencies: ["RuuviUser"]
+        ),
     ]
 )

@@ -12,14 +12,14 @@ public protocol RuuviServiceOffsetCalibration {
     ) -> Future<SensorSettings, RuuviServiceError>
 }
 
-extension RuuviServiceOffsetCalibration {
+public extension RuuviServiceOffsetCalibration {
     @discardableResult
-    public func set(
+    func set(
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor
     ) -> Future<SensorSettings, RuuviServiceError> {
-        return set(
+        set(
             offset: offset,
             of: type,
             for: sensor,

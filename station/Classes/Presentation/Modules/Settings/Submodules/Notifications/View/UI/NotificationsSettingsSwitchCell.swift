@@ -5,7 +5,6 @@ protocol NotificationsSettingsSwitchCellDelegate: NSObjectProtocol {
 }
 
 class NotificationsSettingsSwitchCell: UITableViewCell {
-
     weak var delegate: NotificationsSettingsSwitchCellDelegate?
 
     private lazy var titleLabel: UILabel = {
@@ -31,20 +30,27 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
     lazy var statusSwitch: RuuviUISwitch = {
         let toggle = RuuviUISwitch()
         toggle.isOn = false
-        toggle.addTarget(self,
-                         action: #selector(handleStatusToggle),
-                         for: .valueChanged)
+        toggle.addTarget(
+            self,
+            action: #selector(handleStatusToggle),
+            for: .valueChanged
+        )
         return toggle
     }()
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -66,10 +72,12 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
             leading: contentView.safeLeftAnchor,
             bottom: contentView.safeBottomAnchor,
             trailing: nil,
-            padding: .init(top: 12,
-                           left: 20,
-                           bottom: 12,
-                           right: 0)
+            padding: .init(
+                top: 12,
+                left: 20,
+                bottom: 12,
+                right: 0
+            )
         )
 
         contentView.addSubview(statusSwitch)
@@ -88,13 +96,13 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
     }
 }
 
-    // MARK: - SETTERS
-extension NotificationsSettingsSwitchCell {
+// MARK: - SETTERS
 
+extension NotificationsSettingsSwitchCell {
     func configure(title: String?, subtitle: String?, value: Bool?) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
-        if let value = value {
+        if let value {
             statusSwitch.setOn(value, animated: false)
         } else {
             statusSwitch.setOn(false, animated: false)

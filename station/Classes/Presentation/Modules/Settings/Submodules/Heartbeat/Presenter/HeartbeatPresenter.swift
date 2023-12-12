@@ -27,6 +27,4 @@ class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
     }
 }
 
-extension HeartbeatPresenter: HeartbeatViewOutput {
-
-}
+extension HeartbeatPresenter: HeartbeatViewOutput {}

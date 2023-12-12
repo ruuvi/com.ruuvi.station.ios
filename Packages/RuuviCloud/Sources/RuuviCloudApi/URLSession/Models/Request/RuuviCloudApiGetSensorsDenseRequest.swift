@@ -7,11 +7,13 @@ public struct RuuviCloudApiGetSensorsDenseRequest: Encodable {
     let sharedToOthers: Bool?
     let alerts: Bool?
 
-    public init(sensor: String?,
-                measurements: Bool?,
-                sharedToMe: Bool?,
-                sharedToOthers: Bool?,
-                alerts: Bool?) {
+    public init(
+        sensor: String?,
+        measurements: Bool?,
+        sharedToMe: Bool?,
+        sharedToOthers: Bool?,
+        alerts: Bool?
+    ) {
         self.sensor = sensor
         self.measurements = measurements
         self.sharedToMe = sharedToMe

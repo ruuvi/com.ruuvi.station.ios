@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol SignInVerifyViewDelegate: NSObjectProtocol {
@@ -5,7 +6,6 @@ protocol SignInVerifyViewDelegate: NSObjectProtocol {
 }
 
 class SignInVerifyView: UIView {
-
     weak var delegate: SignInVerifyViewDelegate?
 
     override init(frame: CGRect) {
@@ -13,7 +13,8 @@ class SignInVerifyView: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -25,7 +26,7 @@ class SignInVerifyView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "enter_code".localized()
+        label.text = RuuviLocalization.enterCode
         label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
@@ -35,7 +36,7 @@ class SignInVerifyView: UIView {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "SignIn.CheckMailbox".localized()
+        label.text = RuuviLocalization.SignIn.checkMailbox("")
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
@@ -50,6 +51,7 @@ class SignInVerifyView: UIView {
         iv.backgroundColor = .clear
         return iv
     }()
+
     private var beaverImageViewTopAnchor: NSLayoutConstraint!
 }
 
@@ -72,12 +74,18 @@ extension SignInVerifyView {
         titleStack.spacing = 16
 
         container.addSubview(titleStack)
-        titleStack.anchor(top: nil,
-                         leading: container.safeLeftAnchor,
-                         bottom: nil,
-                         trailing: container.safeRightAnchor,
-                         padding: .init(top: 0, left: !UIDevice.isTablet() ? 20 : 80,
-                                        bottom: 0, right: !UIDevice.isTablet() ? 20 : 80))
+        titleStack.anchor(
+            top: nil,
+            leading: container.safeLeftAnchor,
+            bottom: nil,
+            trailing: container.safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: !UIDevice.isTablet() ? 20 : 80,
+                bottom: 0,
+                right: !UIDevice.isTablet() ? 20 : 80
+            )
+        )
         titleStack.topAnchor.constraint(
             equalTo: container.safeTopAnchor
         ).isActive = true
@@ -86,29 +94,35 @@ extension SignInVerifyView {
     private func setUpCodeEnterView() {
         container.addSubview(ruuviCodeView)
         ruuviCodeView.delegate = self
-        ruuviCodeView.anchor(top: titleStack.bottomAnchor,
-                             leading: nil,
-                             bottom: nil, trailing: nil,
-                             padding: .init(top: 30, left: 0, bottom: 0, right: 0),
-                             size: .init(width: 0, height: 50))
+        ruuviCodeView.anchor(
+            top: titleStack.bottomAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 30, left: 0, bottom: 0, right: 0),
+            size: .init(width: 0, height: 50)
+        )
         ruuviCodeView.centerXInSuperview()
     }
 
     private func setUpBeaverView() {
-
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
 
-        beaverContainerView.anchor(top: ruuviCodeView.bottomAnchor,
-                                   leading: container.leadingAnchor,
-                                   bottom: container.bottomAnchor,
-                                   trailing: container.trailingAnchor)
+        beaverContainerView.anchor(
+            top: ruuviCodeView.bottomAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor
+        )
         beaverContainerView.addSubview(beaverImageView)
 
-        beaverImageView.anchor(top: nil,
-                               leading: beaverContainerView.leadingAnchor,
-                               bottom: nil,
-                               trailing: beaverContainerView.trailingAnchor)
+        beaverImageView.anchor(
+            top: nil,
+            leading: beaverContainerView.leadingAnchor,
+            bottom: nil,
+            trailing: beaverContainerView.trailingAnchor
+        )
         beaverImageView.constrainHeight(constant: 400)
         beaverImageView.image = RuuviAssets.signInBeaver.resize(targetHeight: 400)
         beaverImageView.centerYInSuperview()
@@ -116,14 +130,15 @@ extension SignInVerifyView {
 }
 
 extension SignInVerifyView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
         endEditing(true)
     }
 }
 
 extension SignInVerifyView: RuuviCodeViewDelegate {
     func didFinishTypingCode() {
-        guard ruuviCodeView.isValidCode else {
+        guard ruuviCodeView.isValidCode
+        else {
             return
         }
         let code = ruuviCodeView.ruuviCode()
@@ -133,8 +148,8 @@ extension SignInVerifyView: RuuviCodeViewDelegate {
 
 extension SignInVerifyView {
     func updateMessage(with email: String?) {
-        guard let email = email else { return }
-        subtitleLabel.text = String(format: "SignIn.CheckMailbox".localized(), email)
+        guard let email else { return }
+        subtitleLabel.text = RuuviLocalization.SignIn.checkMailbox(email)
     }
 
     func populate(from code: String?) {

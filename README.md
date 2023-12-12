@@ -53,10 +53,10 @@ git clone --recursive https://github.com/ruuvi/com.ruuvi.station.ios.git
 cd com.ruuvi.station.ios
 ```
 
-2. Make and open the `frameworks.xcodeproj`
+2. Make and open the `Ruuvi.xcodeproj`
 ```zsh
 make
-xed frameworks.xcodeproj
+xed Ruuvi.xcodeproj
 ```
 
 3. Configure Signing

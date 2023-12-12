@@ -1,38 +1,37 @@
 import Foundation
-import RuuviStorage
 import RuuviCloud
-import RuuviPool
-import RuuviLocal
 import RuuviCore
+import RuuviLocal
+import RuuviPool
 import RuuviRepository
-import RuuviService
+import RuuviStorage
 import RuuviUser
 #if canImport(RuuviServiceCloudSync)
-import RuuviServiceCloudSync
+    import RuuviServiceCloudSync
 #endif
 #if canImport(RuuviServiceOwnership)
-import RuuviServiceOwnership
+    import RuuviServiceOwnership
 #endif
 #if canImport(RuuviServiceSensorProperties)
-import RuuviServiceSensorProperties
+    import RuuviServiceSensorProperties
 #endif
 #if canImport(RuuviServiceSensorRecords)
-import RuuviServiceSensorRecords
+    import RuuviServiceSensorRecords
 #endif
 #if canImport(RuuviServiceAppSettings)
-import RuuviServiceAppSettings
+    import RuuviServiceAppSettings
 #endif
 #if canImport(RuuviServiceOffsetCalibration)
-import RuuviServiceOffsetCalibration
+    import RuuviServiceOffsetCalibration
 #endif
 #if canImport(RuuviServiceAlert)
-import RuuviServiceAlert
+    import RuuviServiceAlert
 #endif
 #if canImport(RuuviServiceAuth)
-import RuuviServiceAuth
+    import RuuviServiceAuth
 #endif
 #if canImport(RuuviServiceCloudNotification)
-import RuuviServiceCloudNotification
+    import RuuviServiceCloudNotification
 #endif
 
 public protocol RuuviServiceFactory {
@@ -125,7 +124,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviAlertService: RuuviServiceAlert,
         ruuviAppSettingsService: RuuviServiceAppSettings
     ) -> RuuviServiceCloudSync {
-        return RuuviServiceCloudSyncImpl(
+        RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
             ruuviCloud: ruuviCloud,
             ruuviPool: ruuviPool,
@@ -150,7 +149,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         alertService: RuuviServiceAlert,
         ruuviUser: RuuviUser
     ) -> RuuviServiceOwnership {
-        return RuuviServiceOwnershipImpl(
+        RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
             pool: ruuviPool,
             propertiesService: propertiesService,
@@ -168,7 +167,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviCoreImage: RuuviCoreImage,
         ruuviLocalImages: RuuviLocalImages
     ) -> RuuviServiceSensorProperties {
-        return RuuviServiceSensorPropertiesImpl(
+        RuuviServiceSensorPropertiesImpl(
             pool: ruuviPool,
             cloud: ruuviCloud,
             coreImage: ruuviCoreImage,
@@ -180,7 +179,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviPool: RuuviPool,
         ruuviLocalSyncState: RuuviLocalSyncState
     ) -> RuuviServiceSensorRecords {
-        return RuuviServiceSensorRecordsImpl(
+        RuuviServiceSensorRecordsImpl(
             pool: ruuviPool,
             localSyncState: ruuviLocalSyncState
         )
@@ -190,7 +189,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviLocalSettings: RuuviLocalSettings
     ) -> RuuviServiceAppSettings {
-        return RuuviServiceAppSettingsImpl(
+        RuuviServiceAppSettingsImpl(
             cloud: ruuviCloud,
             localSettings: ruuviLocalSettings
         )
@@ -200,7 +199,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool
     ) -> RuuviServiceOffsetCalibration {
-        return RuuviServiceAppOffsetCalibrationImpl(
+        RuuviServiceAppOffsetCalibrationImpl(
             cloud: ruuviCloud,
             pool: ruuviPool
         )
@@ -210,7 +209,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceAlert {
-        return RuuviServiceAlertImpl(
+        RuuviServiceAlertImpl(
             cloud: ruuviCloud,
             localIDs: ruuviLocalIDs
         )
@@ -226,7 +225,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         localSyncState: RuuviLocalSyncState,
         alertService: RuuviServiceAlert
     ) -> RuuviServiceAuth {
-        return RuuviServiceAuthImpl(
+        RuuviServiceAuthImpl(
             ruuviUser: ruuviUser,
             pool: pool,
             storage: storage,
@@ -244,7 +243,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviUser: RuuviUser,
         pnManager: RuuviCorePN
     ) -> RuuviServiceCloudNotification {
-        return RuuviServiceCloudNotificationImpl(
+        RuuviServiceCloudNotificationImpl(
             cloud: ruuviCloud,
             pool: ruuviPool,
             storage: storage,

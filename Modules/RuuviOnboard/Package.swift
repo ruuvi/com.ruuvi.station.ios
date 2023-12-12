@@ -10,7 +10,8 @@ let package = Package(
     products: [
         .library(
             name: "RuuviOnboard",
-            targets: ["RuuviOnboard"])
+            targets: ["RuuviOnboard"]
+        ),
     ],
     dependencies: [
         .package(path: "../../Packages/RuuviUser")
@@ -18,9 +19,11 @@ let package = Package(
     targets: [
         .target(
             name: "RuuviOnboard",
-            dependencies: ["RuuviUser"]),
+            dependencies: ["RuuviUser"]
+        ),
         .testTarget(
             name: "RuuviOnboardTests",
-            dependencies: ["RuuviOnboard"])
+            dependencies: ["RuuviOnboard"]
+        ),
     ]
 )

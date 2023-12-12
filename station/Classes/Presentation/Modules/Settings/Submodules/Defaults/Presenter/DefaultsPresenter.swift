@@ -1,5 +1,6 @@
 import Foundation
 import RuuviLocal
+import RuuviLocalization
 import RuuviUser
 import WidgetKit
 
@@ -15,27 +16,29 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     )
 
     func configure(output: DefaultsModuleOutput) {
-        view.viewModels = [buildWelcomeShown(),
-                           buildChartsSwipeInstruction(),
-                           buildConnectionTimeout(),
-                           buildServiceTimeout(),
-                           buildCardsSwipeHint(),
-                           buildAlertsMuteInterval(),
-                           buildWebPullInterval(),
-                           buildPruningOffsetHours(),
-                           buildChartIntervalSeconds(),
-                           buildChartDurationHours(),
-                           saveAdvertisementsInterval(),
-                           buildAskForReviewFirstTime(),
-                           buildAskForReviewLater(),
-                           buildDashboardCardTapAction(),
-                           buildConnectToDevServer(),
-                           buildHideNFCButtonInSensorContents(),
-                           buildIsAuthorized(),
-                           buildAuthToken(),
-                           buildShowEmailAlertSettings(),
-                           buildShowPushAlertSettings(),
-                           buildIsAuthorized()]
+        view.viewModels = [
+            buildWelcomeShown(),
+            buildChartsSwipeInstruction(),
+            buildConnectionTimeout(),
+            buildServiceTimeout(),
+            buildCardsSwipeHint(),
+            buildAlertsMuteInterval(),
+            buildWebPullInterval(),
+            buildPruningOffsetHours(),
+            buildChartIntervalSeconds(),
+            buildChartDurationHours(),
+            saveAdvertisementsInterval(),
+            buildAskForReviewFirstTime(),
+            buildAskForReviewLater(),
+            buildDashboardCardTapAction(),
+            buildConnectToDevServer(),
+            buildHideNFCButtonInSensorContents(),
+            buildIsAuthorized(),
+            buildAuthToken(),
+            buildShowEmailAlertSettings(),
+            buildShowPushAlertSettings(),
+            buildIsAuthorized(),
+        ]
         self.output = output
     }
 
@@ -46,6 +49,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
 }
 
 // MARK: - DefaultsViewOutput
+
 extension DefaultsPresenter: DefaultsViewOutput {
     func viewDidTriggerUseDevServer(useDevServer: Bool?) {
         changeRuuviCloudEndpoint(useDevServer: useDevServer)
@@ -53,10 +57,11 @@ extension DefaultsPresenter: DefaultsViewOutput {
 }
 
 // MARK: Private
+
 extension DefaultsPresenter {
     private func buildWelcomeShown() -> DefaultsViewModel {
         let welcomeShown = DefaultsViewModel()
-        welcomeShown.title = "Defaults.WelcomeShown.title".localized()
+        welcomeShown.title = RuuviLocalization.Defaults.WelcomeShown.title
         welcomeShown.boolean.value = settings.welcomeShown
         welcomeShown.type.value = .switcher
 
@@ -68,8 +73,10 @@ extension DefaultsPresenter {
 
     private func buildChartsSwipeInstruction() -> DefaultsViewModel {
         let tagChartsLandscapeSwipeInstructionWasShown = DefaultsViewModel()
-        tagChartsLandscapeSwipeInstructionWasShown.title = "Defaults.ChartsSwipeInstructionWasShown.title".localized()
-        tagChartsLandscapeSwipeInstructionWasShown.boolean.value = settings.tagChartsLandscapeSwipeInstructionWasShown
+        tagChartsLandscapeSwipeInstructionWasShown.title
+            = RuuviLocalization.Defaults.ChartsSwipeInstructionWasShown.title
+        tagChartsLandscapeSwipeInstructionWasShown.boolean.value
+            = settings.tagChartsLandscapeSwipeInstructionWasShown
         tagChartsLandscapeSwipeInstructionWasShown.type.value = .switcher
 
         bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) {
@@ -82,7 +89,7 @@ extension DefaultsPresenter {
 
     private func buildConnectionTimeout() -> DefaultsViewModel {
         let connectionTimeout = DefaultsViewModel()
-        connectionTimeout.title = "Defaults.ConnectionTimeout.title".localized()
+        connectionTimeout.title = RuuviLocalization.Defaults.ConnectionTimeout.title
         connectionTimeout.integer.value = Int(settings.connectionTimeout)
         connectionTimeout.type.value = .stepper
         connectionTimeout.unit = .seconds
@@ -95,7 +102,7 @@ extension DefaultsPresenter {
 
     private func buildServiceTimeout() -> DefaultsViewModel {
         let serviceTimeout = DefaultsViewModel()
-        serviceTimeout.title = "Defaults.ServiceTimeout.title".localized()
+        serviceTimeout.title = RuuviLocalization.Defaults.ServiceTimeout.title
         serviceTimeout.integer.value = Int(settings.serviceTimeout)
         serviceTimeout.type.value = .stepper
         serviceTimeout.unit = .seconds
@@ -108,7 +115,7 @@ extension DefaultsPresenter {
 
     private func buildCardsSwipeHint() -> DefaultsViewModel {
         let cardsSwipeHint = DefaultsViewModel()
-        cardsSwipeHint.title = "Defaults.CardsSwipeHint.title".localized()
+        cardsSwipeHint.title = RuuviLocalization.Defaults.CardsSwipeHint.title
         cardsSwipeHint.boolean.value = settings.cardsSwipeHintWasShown
         cardsSwipeHint.type.value = .switcher
 
@@ -120,7 +127,7 @@ extension DefaultsPresenter {
 
     private func buildAlertsMuteInterval() -> DefaultsViewModel {
         let alertsInterval = DefaultsViewModel()
-        alertsInterval.title = "Defaults.AlertsMuteInterval.title".localized()
+        alertsInterval.title = RuuviLocalization.Defaults.AlertsMuteInterval.title
         alertsInterval.integer.value = settings.alertsMuteIntervalMinutes
         alertsInterval.unit = .minutes
         alertsInterval.type.value = .stepper
@@ -133,7 +140,7 @@ extension DefaultsPresenter {
 
     private func buildWebPullInterval() -> DefaultsViewModel {
         let webPullInterval = DefaultsViewModel()
-        webPullInterval.title = "Defaults.WebPullInterval.title".localized()
+        webPullInterval.title = RuuviLocalization.Defaults.WebPullInterval.title
         webPullInterval.integer.value = settings.webPullIntervalMinutes
         webPullInterval.unit = .minutes
         webPullInterval.type.value = .stepper
@@ -146,7 +153,7 @@ extension DefaultsPresenter {
 
     private func buildPruningOffsetHours() -> DefaultsViewModel {
         let pruningOffsetHours = DefaultsViewModel()
-        pruningOffsetHours.title = "Defaults.PruningOffsetHours.title".localized()
+        pruningOffsetHours.title = RuuviLocalization.Defaults.PruningOffsetHours.title
         pruningOffsetHours.integer.value = settings.dataPruningOffsetHours
         pruningOffsetHours.unit = .hours
         pruningOffsetHours.type.value = .stepper
@@ -159,7 +166,7 @@ extension DefaultsPresenter {
 
     private func buildChartIntervalSeconds() -> DefaultsViewModel {
         let chartIntervalSeconds = DefaultsViewModel()
-        chartIntervalSeconds.title = "Defaults.ChartIntervalSeconds.title".localized()
+        chartIntervalSeconds.title = RuuviLocalization.Defaults.ChartIntervalSeconds.title
         chartIntervalSeconds.integer.value = settings.chartIntervalSeconds
         chartIntervalSeconds.unit = .seconds
         chartIntervalSeconds.type.value = .stepper
@@ -172,7 +179,7 @@ extension DefaultsPresenter {
 
     private func buildChartDurationHours() -> DefaultsViewModel {
         let chartDurationHours = DefaultsViewModel()
-        chartDurationHours.title = "Defaults.ChartDurationHours.title".localized()
+        chartDurationHours.title = RuuviLocalization.Defaults.ChartDurationHours.title
         chartDurationHours.integer.value = settings.chartDurationHours
         chartDurationHours.unit = .hours
         chartDurationHours.type.value = .stepper
@@ -185,7 +192,7 @@ extension DefaultsPresenter {
 
     private func saveAdvertisementsInterval() -> DefaultsViewModel {
         let advertisementInterval = DefaultsViewModel()
-        advertisementInterval.title = "ForegroundRow.advertisement.title".localized()
+        advertisementInterval.title = RuuviLocalization.ForegroundRow.Advertisement.title
         advertisementInterval.integer.value = settings.advertisementDaemonIntervalMinutes
         advertisementInterval.unit = .minutes
         advertisementInterval.type.value = .stepper
@@ -198,7 +205,7 @@ extension DefaultsPresenter {
 
     private func buildAskForReviewFirstTime() -> DefaultsViewModel {
         let askForReviewAtLaunch = DefaultsViewModel()
-        askForReviewAtLaunch.title = "Defaults.AppLaunchRequiredForReview.Count.title".localized()
+        askForReviewAtLaunch.title = RuuviLocalization.Defaults.AppLaunchRequiredForReview.Count.title
         askForReviewAtLaunch.integer.value = settings.appOpenedInitialCountToAskReview
         askForReviewAtLaunch.unit = .decimal
         askForReviewAtLaunch.type.value = .stepper
@@ -211,7 +218,7 @@ extension DefaultsPresenter {
 
     private func buildAskForReviewLater() -> DefaultsViewModel {
         let askForReviewAtLaunch = DefaultsViewModel()
-        askForReviewAtLaunch.title = "Defaults.AskReviewIfLaunchDivisibleBy.Count.title".localized()
+        askForReviewAtLaunch.title = RuuviLocalization.Defaults.AskReviewIfLaunchDivisibleBy.Count.title
         askForReviewAtLaunch.integer.value = settings.appOpenedCountDivisibleToAskReview
         askForReviewAtLaunch.unit = .decimal
         askForReviewAtLaunch.type.value = .stepper
@@ -224,9 +231,9 @@ extension DefaultsPresenter {
 
     private func buildIsAuthorized() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Defaults.UserAuthorized.title".localized()
+        viewModel.title = RuuviLocalization.Defaults.UserAuthorized.title
         viewModel.type.value = .plain
-        viewModel.value.value = ruuviUser.isAuthorized ? "Yes".localized() : "No".localized()
+        viewModel.value.value = ruuviUser.isAuthorized ? RuuviLocalization.yes : RuuviLocalization.no
         return viewModel
     }
 
@@ -240,12 +247,12 @@ extension DefaultsPresenter {
 
     private func buildDashboardCardTapAction() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Defaults.DashboardTapActionChart.title".localized()
+        viewModel.title = RuuviLocalization.Defaults.DashboardTapActionChart.title
         viewModel.boolean.value = settings.dashboardTapActionType == .chart
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
-            if let showChart = showChart {
+            if let showChart {
                 observer.settings.dashboardTapActionType = showChart ? .chart : .card
             }
         }
@@ -258,7 +265,7 @@ extension DefaultsPresenter {
         ) ?? false
 
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Defaults.DevServer.title".localized()
+        viewModel.title = RuuviLocalization.Defaults.DevServer.title
         viewModel.boolean.value = useDevServer
         viewModel.type.value = .switcher
 
@@ -268,33 +275,36 @@ extension DefaultsPresenter {
         // This also has to be loaded in the AppAssembly. So, we can't really use
         // local settings module for this since we load the whole Local settings in
         // the AppAssembly.
-        bind(viewModel.boolean,
-             fire: false) { [weak self] _, useDevServer in
+        bind(
+            viewModel.boolean,
+            fire: false
+        ) { [weak self] _, useDevServer in
             self?.view
                 .showEndpointChangeConfirmationDialog(
-                useDevServer: useDevServer
-            )
+                    useDevServer: useDevServer
+                )
         }
         return viewModel
     }
 
     private func buildHideNFCButtonInSensorContents() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Defaults.HideNFC.title".localized()
+        viewModel.title = RuuviLocalization.Defaults.HideNFC.title
         viewModel.boolean.value = settings.hideNFCForSensorContest
         viewModel.type.value = .switcher
 
-        bind(viewModel.boolean,
-             fire: false) { observer, hideNFC in
+        bind(
+            viewModel.boolean,
+            fire: false
+        ) { observer, hideNFC in
             observer.settings.hideNFCForSensorContest = hideNFC.bound
         }
         return viewModel
     }
 
     private func buildShowEmailAlertSettings() -> DefaultsViewModel {
-
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Defaults.ShowEmailAlertsSettings.title".localized()
+        viewModel.title = RuuviLocalization.Defaults.ShowEmailAlertsSettings.title
         viewModel.boolean.value = settings.showEmailAlertSettings
         viewModel.type.value = .switcher
 
@@ -306,9 +316,8 @@ extension DefaultsPresenter {
     }
 
     private func buildShowPushAlertSettings() -> DefaultsViewModel {
-
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Defaults.ShowPushAlertsSettings.title".localized()
+        viewModel.title = RuuviLocalization.Defaults.ShowPushAlertsSettings.title
         viewModel.boolean.value = settings.showPushAlertSettings
         viewModel.type.value = .switcher
 
@@ -318,7 +327,6 @@ extension DefaultsPresenter {
 
         return viewModel
     }
-
 }
 
 extension DefaultsPresenter {
@@ -332,9 +340,11 @@ extension DefaultsPresenter {
         )
         NotificationCenter
             .default
-            .post(name: .NetworkSyncDidFailForAuthorization,
-                  object: self,
-                  userInfo: nil)
+            .post(
+                name: .NetworkSyncDidFailForAuthorization,
+                object: self,
+                userInfo: nil
+            )
         output?.defaultsModuleDidDismiss(module: self)
     }
 }

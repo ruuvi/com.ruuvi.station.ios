@@ -9,20 +9,23 @@ let package = Package(
     products: [
         .library(
             name: "RuuviCloud",
-            targets: ["RuuviCloud"]),
+            targets: ["RuuviCloud"]
+        ),
         .library(
             name: "RuuviCloudApi",
-            targets: ["RuuviCloudApi"]),
+            targets: ["RuuviCloudApi"]
+        ),
         .library(
             name: "RuuviCloudPure",
-            targets: ["RuuviCloudPure"])
+            targets: ["RuuviCloudPure"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser"),
-        .package(path: "../RuuviPool")
+        .package(path: "../RuuviPool"),
     ],
     targets: [
         .target(
@@ -31,7 +34,7 @@ let package = Package(
                 "Future",
                 "RuuviOntology",
                 "RuuviPool",
-                "RuuviUser"
+                "RuuviUser",
             ]
         ),
         .target(
@@ -40,7 +43,7 @@ let package = Package(
                 "RuuviCloud",
                 "RuuviOntology",
                 "Future",
-                "BTKit"
+                "BTKit",
             ]
         ),
         .target(
@@ -50,11 +53,12 @@ let package = Package(
                 "RuuviCloudApi",
                 "RuuviOntology",
                 "RuuviUser",
-                "Future"
+                "Future",
             ]
         ),
         .testTarget(
             name: "RuuviCloudTests",
-            dependencies: ["RuuviCloud"])
+            dependencies: ["RuuviCloud"]
+        ),
     ]
 )

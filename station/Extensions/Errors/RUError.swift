@@ -1,11 +1,12 @@
-import Foundation
 import BTKit
-import RuuviStorage
+import Foundation
+import RuuviDFU
+import RuuviLocal
+import RuuviLocalization
 import RuuviPersistence
 import RuuviPool
-import RuuviLocal
 import RuuviService
-import RuuviDFU
+import RuuviStorage
 
 enum RUError: Error {
     case ruuviLocal(RuuviLocalError)
@@ -23,47 +24,44 @@ enum RUError: Error {
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
-    case userApi(UserApiError)
     case dfuError(RuuviDfuError)
 }
 
 extension RUError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .ruuviLocal(let error):
-            return error.localizedDescription
-        case .ruuviPool(let error):
-            return error.localizedDescription
-        case .ruuviPersistence(let error):
-            return error.localizedDescription
-        case .ruuviStorage(let error):
-            return error.localizedDescription
-        case .ruuviService(let error):
-            return error.localizedDescription
-        case .core(let error):
-            return error.localizedDescription
-        case .persistence(let error):
-            return error.localizedDescription
-        case .networking(let error):
-            return error.localizedDescription
-        case .parse(let error):
-            return error.localizedDescription
-        case .map(let error):
-            return error.localizedDescription
-        case .expected(let error):
-            return error.localizedDescription
-        case .unexpected(let error):
-            return error.localizedDescription
-        case .btkit(let error):
-            return error.localizedDescription
-        case .bluetooth(let error):
-            return error.localizedDescription
-        case .writeToDisk(let error):
-            return error.localizedDescription
-        case .userApi(let error):
-            return error.localizedDescription
-        case .dfuError(let error):
-            return error.localizedDescription
+        case let .ruuviLocal(error):
+            error.localizedDescription
+        case let .ruuviPool(error):
+            error.localizedDescription
+        case let .ruuviPersistence(error):
+            error.localizedDescription
+        case let .ruuviStorage(error):
+            error.localizedDescription
+        case let .ruuviService(error):
+            error.localizedDescription
+        case let .core(error):
+            error.localizedDescription
+        case let .persistence(error):
+            error.localizedDescription
+        case let .networking(error):
+            error.localizedDescription
+        case let .parse(error):
+            error.localizedDescription
+        case let .map(error):
+            error.localizedDescription
+        case let .expected(error):
+            error.localizedDescription
+        case let .unexpected(error):
+            error.localizedDescription
+        case let .btkit(error):
+            error.localizedDescription
+        case let .bluetooth(error):
+            error.localizedDescription
+        case let .writeToDisk(error):
+            error.localizedDescription
+        case let .dfuError(error):
+            error.localizedDescription
         }
     }
 }
@@ -76,7 +74,7 @@ extension BluetoothError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .disconnected:
-            return "BluetoothError.disconnected".localized()
+            RuuviLocalization.BluetoothError.disconnected
         }
     }
 }
@@ -97,23 +95,23 @@ extension CoreError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .failedToGetDataFromResponse:
-            return "CoreError.failedToGetDataFromResponse".localized()
+            RuuviLocalization.CoreError.failedToGetDataFromResponse
         case .failedToGetCurrentLocation:
-            return "CoreError.failedToGetCurrentLocation".localized()
+            RuuviLocalization.CoreError.failedToGetCurrentLocation
         case .failedToGetPngRepresentation:
-            return "CoreError.failedToGetPngRepresentation".localized()
+            RuuviLocalization.CoreError.failedToGetPngRepresentation
         case .failedToGetDocumentsDirectory:
-            return "CoreError.failedToGetDocumentsDirectory".localized()
+            RuuviLocalization.CoreError.failedToGetDocumentsDirectory
         case .locationPermissionDenied:
-            return "CoreError.locationPermissionDenied".localized()
+            RuuviLocalization.CoreError.locationPermissionDenied
         case .locationPermissionNotDetermined:
-            return "CoreError.locationPermissionNotDetermined".localized()
+            RuuviLocalization.CoreError.locationPermissionNotDetermined
         case .objectNotFound:
-            return "CoreError.objectNotFound".localized()
+            RuuviLocalization.CoreError.objectNotFound
         case .objectInvalidated:
-            return "CoreError.objectInvalidated".localized()
+            RuuviLocalization.CoreError.objectInvalidated
         case .unableToSendEmail:
-            return "CoreError.unableToSendEmail".localized()
+            RuuviLocalization.CoreError.unableToSendEmail
         }
     }
 }
@@ -128,11 +126,11 @@ extension ExpectedError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .missingOpenWeatherMapAPIKey:
-            return "ExpectedError.missingOpenWeatherMapAPIKey".localized()
+            RuuviLocalization.ExpectedError.missingOpenWeatherMapAPIKey
         case .isAlreadySyncingLogsWithThisTag:
-            return "ExpectedError.isAlreadySyncingLogsWithThisTag".localized()
+            RuuviLocalization.ExpectedError.isAlreadySyncingLogsWithThisTag
         case .failedToDeleteTag:
-            return "ExpectedError.failedToDeleteTag".localized()
+            RuuviLocalization.ExpectedError.failedToDeleteTag
         }
     }
 }
@@ -145,9 +143,6 @@ enum UnexpectedError: Error {
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
     case attemptToReadDataFromRealmWithoutLUID
-    case failedToConstructURL
-    case notAHttpResponse
-    case failedToParseHttpResponse
     case failedToFindOrGenerateBackgroundImage
     case bothLuidAndMacAreNil
 }
@@ -156,39 +151,23 @@ extension UnexpectedError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .callbackErrorAndResultAreNil:
-            return "UnexpectedError.callbackErrorAndResultAreNil".localized()
+            RuuviLocalization.UnexpectedError.callbackErrorAndResultAreNil
         case .callerDeinitedDuringOperation:
-            return "UnexpectedError.callerDeinitedDuringOperation".localized()
+            RuuviLocalization.UnexpectedError.callerDeinitedDuringOperation
         case .failedToReverseGeocodeCoordinate:
-            return "UnexpectedError.failedToReverseGeocodeCoordinate".localized()
+            RuuviLocalization.UnexpectedError.failedToReverseGeocodeCoordinate
         case .failedToFindRuuviTag:
-            return "UnexpectedError.failedToFindRuuviTag".localized()
+            RuuviLocalization.UnexpectedError.failedToFindRuuviTag
         case .failedToFindLogsForTheTag:
-            return "UnexpectedError.failedToFindLogsForTheTag".localized()
+            RuuviLocalization.UnexpectedError.failedToFindLogsForTheTag
         case .viewModelUUIDIsNil:
-            return "UnexpectedError.viewModelUUIDIsNil".localized()
+            RuuviLocalization.UnexpectedError.viewModelUUIDIsNil
         case .attemptToReadDataFromRealmWithoutLUID:
-            return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
-        case .failedToConstructURL:
-            return "UnexpectedError.failedToConstructURL".localized()
-        case .notAHttpResponse:
-            return "UnexpectedError.notAHttpResponse".localized()
-        case .failedToParseHttpResponse:
-            return "UnexpectedError.failedToParseHttpResponse".localized()
+            RuuviLocalization.UnexpectedError.attemptToReadDataFromRealmWithoutLUID
         case .failedToFindOrGenerateBackgroundImage:
-            return "UnexpectedError.failedToFindOrGenerateBackgroundImage".localized()
+            RuuviLocalization.UnexpectedError.failedToFindOrGenerateBackgroundImage
         case .bothLuidAndMacAreNil:
-            return "UnexpectedError.bothLuidAndMacAreNil".localized()
+            RuuviLocalization.UnexpectedError.bothLuidAndMacAreNil
         }
-    }
-}
-
-struct UserApiError: Error {
-    static let emptyResponse: UserApiError = UserApiError(description: "Empty response")
-    let description: String
-}
-extension UserApiError: LocalizedError {
-    public var errorDescription: String? {
-        return description.localized()
     }
 }

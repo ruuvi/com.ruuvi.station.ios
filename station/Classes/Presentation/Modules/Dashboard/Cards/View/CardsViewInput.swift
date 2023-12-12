@@ -1,5 +1,5 @@
-import Foundation
 import BTKit
+import Foundation
 import RuuviOntology
 import UIKit
 
@@ -22,6 +22,6 @@ protocol CardsViewInput: ViewInput {
 }
 
 extension CardsViewInput {
-    func showChart(module: UIViewController) {}
+    func showChart(module _: UIViewController) {}
     func dismissChart() {}
 }

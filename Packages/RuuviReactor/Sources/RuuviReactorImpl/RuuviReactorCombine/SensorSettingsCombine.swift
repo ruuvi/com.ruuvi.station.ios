@@ -1,14 +1,14 @@
+import Combine
 import Foundation
 import GRDB
-import Combine
 import RealmSwift
-import RuuviOntology
 import RuuviContext
+import RuuviOntology
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 #if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
+    import RuuviOntologySQLite
 #endif
 
 final class SensorSettingsCombine {
@@ -44,12 +44,12 @@ final class SensorSettingsCombine {
         let request = SensorSettingsSQLite
             .filter(
                 (luid?.value != nil && SensorSettingsSQLite.luidColumn == luid?.value)
-                || (macId?.value != nil && SensorSettingsSQLite.macIdColumn == macId?.value)
+                    || (macId?.value != nil && SensorSettingsSQLite.macIdColumn == macId?.value)
             )
-        self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
-        try! self.ruuviTagController.performFetch()
+        ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
+        try! ruuviTagController.performFetch()
 
-        self.ruuviTagController.trackChanges(onChange: { [weak self] _, record, event in
+        ruuviTagController.trackChanges(onChange: { [weak self] _, record, event in
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
@@ -66,22 +66,23 @@ final class SensorSettingsCombine {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             let results = sSelf.realm.main.objects(SensorSettingsRealm.self)
-                .filter("luid == %@ || macId == %@",
-                        luid?.value ?? "invalid",
-                        macId?.value ?? "invalid"
+                .filter(
+                    "luid == %@ || macId == %@",
+                    luid?.value ?? "invalid",
+                    macId?.value ?? "invalid"
                 )
-            sSelf.ruuviTagRealmCache = results.map({ $0.sensorSettings })
-            sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
+            sSelf.ruuviTagRealmCache = results.map(\.sensorSettings)
+            sSelf.ruuviTagsRealmToken = results.observe { [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
-                case .update(let sensorSettings, let deletions, let insertions, let modifications):
+                case let .update(sensorSettings, deletions, insertions, modifications):
                     for del in deletions {
                         sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del])
                     }
                     sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
-                                                    .enumerated()
-                                                    .filter { !deletions.contains($0.offset) }
-                                                    .map { $0.element }
+                        .enumerated()
+                        .filter { !deletions.contains($0.offset) }
+                        .map(\.element)
                     for ins in insertions {
                         sSelf.insertSubject.send(sensorSettings[ins].sensorSettings)
                         // TODO: test if ok with multiple

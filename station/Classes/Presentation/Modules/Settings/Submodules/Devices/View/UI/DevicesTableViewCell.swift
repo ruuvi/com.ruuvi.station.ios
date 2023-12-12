@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class DevicesTableViewCell: UITableViewCell {
@@ -6,7 +7,8 @@ class DevicesTableViewCell: UITableViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -48,13 +50,15 @@ extension DevicesTableViewCell {
     }
 }
 
-extension DevicesTableViewCell {
-    fileprivate func setUpUI() {
+private extension DevicesTableViewCell {
+    func setUpUI() {
         backgroundColor = .clear
         selectionStyle = .none
 
-        let container = UIView(color: RuuviColor.dashboardCardBGColor,
-                               cornerRadius: 8)
+        let container = UIView(
+            color: RuuviColor.dashboardCardBGColor,
+            cornerRadius: 8
+        )
         contentView.addSubview(container)
         container.fillSuperview(padding: .init(top: 4, left: 8, bottom: 4, right: 8))
 
@@ -77,7 +81,7 @@ extension DevicesTableViewCell {
         if let tokenId = viewModel.id.value {
             tokenIdLabel.text = "Token Id: " + tokenId.stringValue
         } else {
-            tokenIdLabel.text = "Token Id: " + "N/A".localized()
+            tokenIdLabel.text = "Token Id: " + RuuviLocalization.na
         }
 
         if let lastAccessed = viewModel.lastAccessed.value {
@@ -85,7 +89,7 @@ extension DevicesTableViewCell {
             lastAccessedLabel.text = "Last accessed: " +
                 AppDateFormatter.shared.ruuviAgoString(from: date)
         } else {
-            lastAccessedLabel.text = "Last accessed: " + "N/A".localized()
+            lastAccessedLabel.text = "Last accessed: " + RuuviLocalization.na
         }
     }
 }

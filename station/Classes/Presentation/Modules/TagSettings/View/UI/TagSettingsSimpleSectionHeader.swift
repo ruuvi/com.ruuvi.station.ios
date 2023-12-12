@@ -1,11 +1,8 @@
 import UIKit
 
-protocol TagSettingsSimpleSectionHeaderDelegate: NSObjectProtocol {
-
-}
+protocol TagSettingsSimpleSectionHeaderDelegate: NSObjectProtocol {}
 
 class TagSettingsSimpleSectionHeader: UIView {
-
     weak var delegate: TagSettingsSimpleSectionHeaderDelegate?
     private var section: Int = 0
 
@@ -23,7 +20,8 @@ class TagSettingsSimpleSectionHeader: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -34,9 +32,11 @@ class TagSettingsSimpleSectionHeader: UIView {
             padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
 
-    func setTitle(with string: String?,
-                  section: Int,
-                  backgroundColor: UIColor? = nil) {
+    func setTitle(
+        with string: String?,
+        section: Int,
+        backgroundColor: UIColor? = nil
+    ) {
         titleLabel.text = string
         self.section = section
         if let color = backgroundColor {

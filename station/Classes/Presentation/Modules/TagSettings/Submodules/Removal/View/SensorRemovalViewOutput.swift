@@ -1,5 +1,5 @@
-import Foundation
 import CoreNFC
+import Foundation
 
 protocol SensorRemovalViewOutput {
     func viewDidLoad()

@@ -1,27 +1,26 @@
 #if canImport(SwiftUI) && canImport(Combine)
-import SwiftUI
+    import SwiftUI
 
-@available(iOS 13.0, *)
-struct DefaultsList: View {
+    @available(iOS 13.0, *)
+    struct DefaultsList: View {
+        @EnvironmentObject var env: DefaultsEnvironmentObject
 
-    @EnvironmentObject var env: DefaultsEnvironmentObject
-
-    var body: some View {
-        List {
-            ForEach(env.viewModels) { _ in
-                Section(header: Text("Hello")) {
-                    Text("World")
+        var body: some View {
+            List {
+                ForEach(env.viewModels) { _ in
+                    Section(header: Text("Hello")) {
+                        Text("World")
+                    }
                 }
-            }
 
-        }.listStyle(GroupedListStyle())
+            }.listStyle(GroupedListStyle())
+        }
     }
-}
 
-@available(iOS 13.0, *)
-struct DefaultsList_Previews: PreviewProvider {
-    static var previews: some View {
-        return DefaultsList().environmentObject(DefaultsEnvironmentObject())
+    @available(iOS 13.0, *)
+    struct DefaultsList_Previews: PreviewProvider {
+        static var previews: some View {
+            DefaultsList().environmentObject(DefaultsEnvironmentObject())
+        }
     }
-}
 #endif

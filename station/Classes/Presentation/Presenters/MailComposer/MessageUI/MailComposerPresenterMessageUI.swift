@@ -19,29 +19,34 @@ class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
 }
 
 // MARK: - MFMailComposeViewControllerDelegate
+
 extension MailComposerPresenterMessageUI: MFMailComposeViewControllerDelegate {
-    func mailComposeController(_ controller: MFMailComposeViewController,
-                               didFinishWith result: MFMailComposeResult,
-                               error: Error?) {
+    func mailComposeController(
+        _ controller: MFMailComposeViewController,
+        didFinishWith _: MFMailComposeResult,
+        error _: Error?
+    ) {
         controller.dismiss(animated: true)
     }
 }
 
 // MARK: - Private method
+
 extension MailComposerPresenterMessageUI {
     /// This method takes three arguments recipient email, subject and body.
     /// Returns a computer email URL that opens the default email client set by the user.
     private func generateEmailURL(email: String, subject: String, body: String?) -> URL? {
         guard let toEncoded = email
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let subjectEncoded = subject
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let subjectEncoded = subject
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        else {
             return nil
         }
         let bodyEncoded = body?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
 
         let defaultURL = URL(string: "mailto:\(toEncoded)?subject=\(subjectEncoded)&body=\(bodyEncoded)")
-        if let defaultURL = defaultURL, UIApplication.shared.canOpenURL(defaultURL) {
+        if let defaultURL, UIApplication.shared.canOpenURL(defaultURL) {
             return defaultURL
         } else {
             return nil

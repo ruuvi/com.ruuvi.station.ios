@@ -1,6 +1,7 @@
-import WidgetKit
-import SwiftUI
 import Intents
+import SwiftUI
+import WidgetKit
+import RuuviLocalization
 
 struct RuuviWidgetEntryView: View {
     @Environment(\.widgetFamily) private var family
@@ -37,14 +38,14 @@ struct RuuviWidgets: Widget {
     let viewModel = WidgetViewModel()
     private var supportedFamilies: [WidgetFamily] {
         if #available(iOSApplicationExtension 16.0, *) {
-            return [
+            [
                 .systemSmall,
                 .accessoryRectangular,
                 .accessoryInline,
-                .accessoryCircular
+                .accessoryCircular,
             ]
         } else {
-            return [
+            [
                 .systemSmall
             ]
         }
@@ -59,7 +60,7 @@ struct RuuviWidgets: Widget {
             RuuviWidgetEntryView(entry: entry)
                 .environment(\.locale, viewModel.locale())
         }.configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
-            .description(LocalizedStringKey("Widgets.Description.message"))
+            .description(RuuviLocalization.Widgets.Description.message)
             .supportedFamilies(supportedFamilies)
             .contentMarginsDisabledIfAvailable()
     }
@@ -68,9 +69,11 @@ struct RuuviWidgets: Widget {
 extension WidgetConfiguration {
     func contentMarginsDisabledIfAvailable() -> some WidgetConfiguration {
         if #available(iOSApplicationExtension 17.0, *) {
+            // swiftformat:disable all
             return self.contentMarginsDisabled()
         } else {
             return self
+            // swiftformat:enable all
         }
     }
 }

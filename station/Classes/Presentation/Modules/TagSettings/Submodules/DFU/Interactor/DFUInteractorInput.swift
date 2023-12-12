@@ -1,8 +1,8 @@
-import Foundation
-import Combine
 import BTKit
-import RuuviOntology
+import Combine
+import Foundation
 import RuuviDFU
+import RuuviOntology
 
 protocol DFUInteractorInput {
     func listen() -> Future<String, Never>

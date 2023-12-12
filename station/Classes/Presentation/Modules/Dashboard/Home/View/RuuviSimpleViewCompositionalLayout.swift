@@ -10,7 +10,8 @@ class RuuviSimpleViewCompositionalLayout: UICollectionViewCompositionalLayout {
         super.init(section: section)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -18,7 +19,7 @@ class RuuviSimpleViewCompositionalLayout: UICollectionViewCompositionalLayout {
         let attributes = super.layoutAttributesForElements(in: rect)
 
         if #unavailable(iOS 15) {
-            if let attributes = attributes {
+            if let attributes {
                 for attribute in attributes {
                     updateLayoutAttributesHeight(layoutAttributes: attribute)
                 }
@@ -44,8 +45,10 @@ class RuuviSimpleViewCompositionalLayout: UICollectionViewCompositionalLayout {
 
         largests[row] = max(largests[row] ?? 0, height)
 
-        let size = CGSize(width: layoutAttributes.frame.width,
-                          height: largests[row] ?? 0)
+        let size = CGSize(
+            width: layoutAttributes.frame.width,
+            height: largests[row] ?? 0
+        )
         layoutAttributes.frame = .init(origin: layoutAttributes.frame.origin, size: size)
     }
 }

@@ -1,12 +1,11 @@
 import Foundation
 import RealmSwift
-import RuuviOntology
 import RuuviContext
 import RuuviLocal
+import RuuviOntology
 import RuuviPool
-import RuuviMigration
 #if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
+    import RuuviOntologyRealm
 #endif
 
 extension Notification.Name {
@@ -35,16 +34,18 @@ class MigrationManagerToSQLite: RuuviMigration {
         if !didMigrateRuuviTagRealmWithMAC {
             let realmTags = realmContext.main.objects(RuuviTagRealm.self)
             let dispatchGroup = DispatchGroup()
-            realmTags.forEach({
+            realmTags.forEach {
                 dispatchGroup.enter()
                 migrate(realmTag: $0, group: dispatchGroup)
-            })
+            }
             dispatchGroup.notify(queue: .main) {
                 NotificationCenter
                     .default
-                    .post(name: .MigrationManagerToSQLiteDidFinish,
-                          object: self,
-                          userInfo: nil)
+                    .post(
+                        name: .MigrationManagerToSQLiteDidFinish,
+                        object: self,
+                        userInfo: nil
+                    )
             }
             didMigrateRuuviTagRealmWithMAC = true
         }

@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 
 protocol SelectionItemProtocol {
-    var title: String { get }
+    var title: (String) -> String { get }
 }
 
 struct SelectionViewModel {

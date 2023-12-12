@@ -1,6 +1,7 @@
+import RuuviLocalization
 import UIKit
 #if canImport(SwiftUI) && canImport(Combine)
-import SwiftUI
+    import SwiftUI
 #endif
 
 class DefaultsViewController: UIViewController {
@@ -8,33 +9,33 @@ class DefaultsViewController: UIViewController {
 
     var viewModels = [DefaultsViewModel]() {
         didSet {
-#if canImport(SwiftUI) && canImport(Combine)
-            if #available(iOS 13, *) {
-                env.viewModels = viewModels
-            }
-#endif
+            #if canImport(SwiftUI) && canImport(Combine)
+                if #available(iOS 13, *) {
+                    env.viewModels = viewModels
+                }
+            #endif
             table?.viewModels = viewModels
         }
     }
 
-    @IBOutlet weak var tableContainer: UIView!
-    @IBOutlet weak var listContainer: UIView!
+    @IBOutlet var tableContainer: UIView!
+    @IBOutlet var listContainer: UIView!
 
-#if canImport(SwiftUI) && canImport(Combine)
-    @available(iOS 13, *)
-    private lazy var env = DefaultsEnvironmentObject()
-#endif
+    #if canImport(SwiftUI) && canImport(Combine)
+        @available(iOS 13, *)
+        private lazy var env = DefaultsEnvironmentObject()
+    #endif
 
     private var table: DefaultsTableViewController?
 }
 
 extension DefaultsViewController: DefaultsViewInput {
     func showEndpointChangeConfirmationDialog(useDevServer: Bool?) {
-        let message = "Defaults.DevServer.message".localized()
+        let message = RuuviLocalization.Defaults.DevServer.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let cancelActionTitle = "Cancel".localized()
+        let cancelActionTitle = RuuviLocalization.cancel
         alert.addAction(UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil))
-        let signOutTitle = "Menu.SignOut.text".localized()
+        let signOutTitle = RuuviLocalization.Menu.SignOut.text
         alert.addAction(UIAlertAction(title: signOutTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidTriggerUseDevServer(useDevServer: useDevServer)
         }))
@@ -42,46 +43,47 @@ extension DefaultsViewController: DefaultsViewInput {
     }
 
     func localize() {
-        navigationItem.title = "Defaults.navigationItem.title".localized()
+        navigationItem.title = RuuviLocalization.Defaults.NavigationItem.title
     }
 }
 
 // MARK: - View lifecycle
+
 extension DefaultsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         configureViews()
+        localize()
     }
 
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {
         #if SWIFTUI
-        if #available(iOS 13, *) {
-            return identifier == DefaultsEmbedSegue.list.rawValue
-        } else {
-            return identifier == DefaultsEmbedSegue.table.rawValue
-        }
+            if #available(iOS 13, *) {
+                return identifier == DefaultsEmbedSegue.list.rawValue
+            } else {
+                return identifier == DefaultsEmbedSegue.table.rawValue
+            }
         #else
-        return identifier == DefaultsEmbedSegue.table.rawValue
+            return identifier == DefaultsEmbedSegue.table.rawValue
         #endif
     }
 
     #if SWIFTUI && canImport(SwiftUI) && canImport(Combine)
-    @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 13, *) {
-            env.viewModels = viewModels
-            return UIHostingController(coder: coder, rootView: DefaultsList().environmentObject(env))
-        } else {
-            return nil
+        @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
+            if #available(iOS 13, *) {
+                env.viewModels = viewModels
+                return UIHostingController(coder: coder, rootView: DefaultsList().environmentObject(env))
+            } else {
+                return nil
+            }
         }
-    }
     #else
-    @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-        return nil
-    }
+        @IBSegueAction func addSwiftUIView(_: NSCoder) -> UIViewController? {
+            nil
+        }
     #endif
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         switch segue.identifier {
         case DefaultsEmbedSegue.table.rawValue:
             table = segue.destination as? DefaultsTableViewController
@@ -94,6 +96,7 @@ extension DefaultsViewController {
 }
 
 // MARK: - Configure Views
+
 extension DefaultsViewController {
     func configureViews() {
         tableContainer.isHidden = !shouldPerformSegue(withIdentifier: DefaultsEmbedSegue.table.rawValue, sender: nil)

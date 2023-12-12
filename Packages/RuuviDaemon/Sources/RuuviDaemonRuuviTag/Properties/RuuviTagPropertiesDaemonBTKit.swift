@@ -1,12 +1,12 @@
-import Foundation
 import BTKit
-import RuuviOntology
-import RuuviReactor
-import RuuviPersistence
+import Foundation
 import RuuviLocal
+import RuuviOntology
+import RuuviPersistence
 import RuuviPool
-import RuuviDaemon
+import RuuviReactor
 
+// swiftlint:disable:next type_body_length
 public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPropertiesDaemon {
     private let ruuviPool: RuuviPool
     private let ruuviReactor: RuuviReactor
@@ -50,53 +50,55 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     }
 
     deinit {
-        observeTokens.forEach({ $0.invalidate() })
+        observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
-        scanTokens.forEach({ $0.invalidate() })
+        scanTokens.forEach { $0.invalidate() }
         scanTokens.removeAll()
         ruuviTagsToken?.invalidate()
     }
 
     public func start() {
         start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe { [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
-                case .initial(let ruuviTags):
+                case let .initial(ruuviTags):
                     sSelf.ruuviTags = ruuviTags
                     sSelf.restartObserving()
-                case .update(let ruuviTag):
+                case let .update(ruuviTag):
                     if let index = sSelf.ruuviTags
                         .firstIndex(
                             where: {
                                 ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
-                                || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
+                                    || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
                             }) {
                         sSelf.ruuviTags[index] = ruuviTag
                     }
                     sSelf.restartObserving()
-                case .insert(let ruuviTag):
+                case let .insert(ruuviTag):
                     sSelf.ruuviTags.append(ruuviTag)
                     sSelf.restartObserving()
-                case .delete(let ruuviTag):
+                case let .delete(ruuviTag):
                     sSelf.ruuviTags.removeAll(where: {
                         ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
-                        || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
+                            || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
                     })
                     sSelf.restartObserving()
-                case .error(let error):
+                case let .error(error):
                     sSelf.post(error: .ruuviReactor(error))
                 }
-            })
+            }
         }
     }
 
     public func stop() {
-        perform(#selector(RuuviTagPropertiesDaemonBTKit.stopDaemon),
-                on: thread,
-                with: nil,
-                waitUntilDone: false,
-                modes: [RunLoop.Mode.default.rawValue])
+        perform(
+            #selector(RuuviTagPropertiesDaemonBTKit.stopDaemon),
+            on: thread,
+            with: nil,
+            waitUntilDone: false,
+            modes: [RunLoop.Mode.default.rawValue]
+        )
     }
 
     @objc private func stopDaemon() {
@@ -106,9 +108,9 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     }
 
     private func removeTokens() {
-        observeTokens.forEach({ $0.invalidate() })
+        observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
-        scanTokens.forEach({ $0.invalidate() })
+        scanTokens.forEach { $0.invalidate() }
         scanTokens.removeAll()
     }
 
@@ -116,18 +118,22 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         removeTokens()
         for ruuviTag in ruuviTags {
             if let luid = ruuviTag.luid {
-                observeTokens.append(foreground.observe(self,
-                                                        uuid: luid.value,
-                                                        options: [.callbackQueue(.untouch)]) {
-                                                            [weak self] (_, device) in
+                observeTokens.append(foreground.observe(
+                    self,
+                    uuid: luid.value,
+                    options: [.callbackQueue(.untouch)]
+                ) {
+                    [weak self] _, device in
                     guard let sSelf = self else { return }
                     if let tag = device.ruuvi?.tag {
                         let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
-                        sSelf.perform(#selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
-                                      on: sSelf.thread,
-                                      with: pair,
-                                      waitUntilDone: false,
-                                      modes: [RunLoop.Mode.default.rawValue])
+                        sSelf.perform(
+                            #selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
+                            on: sSelf.thread,
+                            with: pair,
+                            waitUntilDone: false,
+                            modes: [RunLoop.Mode.default.rawValue]
+                        )
                     }
                 })
             } else if ruuviTag.isCloud {
@@ -160,7 +166,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                         .with(isOwner: true)
                 ).on(success: { [weak self] _ in
                     self?.realmPersistence.readAll(pair.device.uuid).on(success: { realmRecords in
-                        var records = realmRecords.map({ $0.with(macId: mac.mac) })
+                        let records = realmRecords.map { $0.with(macId: mac.mac) }
                         self?.sqiltePersistence.create(records).on(success: { _ in
                             self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
                                 self?.idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
@@ -193,7 +199,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                             })
                         })
                     })
-                }, failure: { [weak self] (error) in
+                }, failure: { [weak self] error in
                     self?.post(error: .ruuviPersistence(error))
                     self?.isTransitioningFromRealmToSQLite = false
                 })
@@ -202,7 +208,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
             if let mac = idPersistence.mac(for: pair.device.uuid.luid),
-                pair.device.version != pair.ruuviTag.version {
+               pair.device.version != pair.ruuviTag.version {
                 ruuviPool.update(pair.ruuviTag
                     .with(macId: mac)
                     .with(version: pair.device.version))
@@ -223,15 +229,17 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
 
     private func scanRemoteSensor(ruuviTag: AnyRuuviTagSensor) {
         guard let mac = ruuviTag.macId,
-              ruuviTag.luid == nil else {
+              ruuviTag.luid == nil
+        else {
             return
         }
-        let scanToken = foreground.scan(self, closure: { [weak self] (_, device) in
+        let scanToken = foreground.scan(self, closure: { [weak self] _, device in
             guard let sSelf = self,
                   let tag = device.ruuvi?.tag,
                   mac.any == tag.macId?.any,
                   ruuviTag.luid == nil,
-                  !sSelf.processingUUIDs.contains(tag.uuid) else {
+                  !sSelf.processingUUIDs.contains(tag.uuid)
+            else {
                 return
             }
             sSelf.processingUUIDs.insert(tag.uuid)
@@ -248,7 +256,8 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 ownersPlan: ruuviTag.ownersPlan,
                 isCloudSensor: ruuviTag.isCloudSensor,
                 canShare: ruuviTag.canShare,
-                sharedTo: ruuviTag.sharedTo)
+                sharedTo: ruuviTag.sharedTo
+            )
             sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
             sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
             sSelf.ruuviPool.update(ruuviSensor)
@@ -265,9 +274,11 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         DispatchQueue.main.async {
             NotificationCenter
                 .default
-                .post(name: .RuuviTagPropertiesDaemonDidFail,
-                      object: nil,
-                      userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
+                .post(
+                    name: .RuuviTagPropertiesDaemonDidFail,
+                    object: nil,
+                    userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error]
+                )
         }
     }
 }

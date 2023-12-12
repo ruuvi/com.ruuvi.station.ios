@@ -1,6 +1,5 @@
 import Foundation
 import RealmSwift
-import RuuviOntology
 
 public class SensorSettingsRealm: Object {
     @objc public dynamic var luid: String?
@@ -34,9 +33,9 @@ public class SensorSettingsRealm: Object {
     }
 }
 
-extension SensorSettingsRealm {
-    public var sensorSettings: SensorSettings {
-        return SensorSettingsStruct(
+public extension SensorSettingsRealm {
+    var sensorSettings: SensorSettings {
+        SensorSettingsStruct(
             luid: luid?.luid,
             macId: macId?.mac,
             temperatureOffset: temperatureOffset.value,

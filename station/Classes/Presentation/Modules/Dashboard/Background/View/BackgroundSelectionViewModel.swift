@@ -7,8 +7,8 @@ struct DefaultBackgroundModel {
 }
 
 struct BackgroundSelectionViewModel {
-    let background: Observable<UIImage?> = Observable<UIImage?>()
-    let isUploadingBackground: Observable<Bool?> = Observable<Bool?>()
-    let uploadingBackgroundPercentage: Observable<Double?> = Observable<Double?>()
-    let defaultImages: Observable<[DefaultBackgroundModel]?> = Observable<[DefaultBackgroundModel]?>()
+    let background: Observable<UIImage?> = .init()
+    let isUploadingBackground: Observable<Bool?> = .init()
+    let uploadingBackgroundPercentage: Observable<Double?> = .init()
+    let defaultImages: Observable<[DefaultBackgroundModel]?> = .init()
 }

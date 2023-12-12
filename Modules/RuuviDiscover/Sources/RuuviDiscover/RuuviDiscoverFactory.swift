@@ -1,12 +1,12 @@
-import Foundation
 import BTKit
+import Foundation
 import RuuviContext
-import RuuviReactor
-import RuuviLocal
-import RuuviService
 import RuuviCore
-import RuuviPresenters
 import RuuviFirmware
+import RuuviLocal
+import RuuviPresenters
+import RuuviReactor
+import RuuviService
 
 public struct RuuviDiscoverDependencies {
     var errorPresenter: ErrorPresenter

@@ -1,15 +1,17 @@
-import UIKit
+import RuuviLocalization
 import RuuviOntology
+import UIKit
 
 // swiftlint:disable:next type_name
 protocol TagSettingsExpandableSectionHeaderDelegate: NSObjectProtocol {
-    func toggleSection(_ header: TagSettingsExpandableSectionHeader,
-                       section: Int)
+    func toggleSection(
+        _ header: TagSettingsExpandableSectionHeader,
+        section: Int
+    )
     func didTapSectionMoreInfo(headerView: TagSettingsExpandableSectionHeader)
 }
 
 class TagSettingsExpandableSectionHeader: UIView {
-
     weak var delegate: TagSettingsExpandableSectionHeaderDelegate?
     private var section: Int = 0
 
@@ -50,7 +52,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     private lazy var noValueContainer = UIView(color: .clear)
     private lazy var noValueLabel: UILabel = {
         let label = UILabel()
-        label.text = "TagSettings.Label.noValues.text".localized()
+        label.text = RuuviLocalization.TagSettings.Label.NoValues.text
         label.textColor = RuuviColor.ruuviTextColor
         label.textAlignment = .right
         label.numberOfLines = 0
@@ -72,7 +74,8 @@ class TagSettingsExpandableSectionHeader: UIView {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -80,45 +83,57 @@ class TagSettingsExpandableSectionHeader: UIView {
     private func setUpUI() {
         backgroundColor = RuuviColor.tagSettingsSectionHeaderColor
         addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor,
-                          leading: safeLeftAnchor,
-                          bottom: bottomAnchor,
-                          trailing: nil,
-                          padding: .init(top: 8, left: 8, bottom: 9, right: 0))
+        titleLabel.anchor(
+            top: topAnchor,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: nil,
+            padding: .init(top: 8, left: 8, bottom: 9, right: 0)
+        )
 
         addSubview(alertIcon)
         alertIcon.size(width: 20, height: 20)
         alertIcon.centerYInSuperview()
 
         addSubview(mutedTillLabel)
-        mutedTillLabel.anchor(top: nil,
-                              leading: alertIcon.trailingAnchor,
-                              bottom: nil,
-                              trailing: nil,
-                              padding: .init(top: 0,
-                                             left: 8,
-                                             bottom: 0,
-                                             right: 0))
+        mutedTillLabel.anchor(
+            top: nil,
+            leading: alertIcon.trailingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(
+                top: 0,
+                left: 8,
+                bottom: 0,
+                right: 0
+            )
+        )
         mutedTillLabel.centerYInSuperview()
 
         addSubview(arrowView)
-        arrowView.anchor(top: nil,
-                                leading: mutedTillLabel.trailingAnchor,
-                                bottom: nil,
-                                trailing: safeRightAnchor,
-                                padding: .init(top: 0,
-                                               left: 8,
-                                               bottom: 0,
-                                               right: 12),
-                                size: .init(width: 14, height: 14))
+        arrowView.anchor(
+            top: nil,
+            leading: mutedTillLabel.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(
+                top: 0,
+                left: 8,
+                bottom: 0,
+                right: 12
+            ),
+            size: .init(width: 14, height: 14)
+        )
         arrowView.centerYInSuperview()
 
         addSubview(seprator)
-        seprator.anchor(top: nil,
-                        leading: safeLeftAnchor,
-                        bottom: bottomAnchor,
-                        trailing: safeRightAnchor,
-                        size: .init(width: 0, height: 1))
+        seprator.anchor(
+            top: nil,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: safeRightAnchor,
+            size: .init(width: 0, height: 1)
+        )
 
         let noValueStack = UIStackView(arrangedSubviews: [
             noValueLabel, iconView
@@ -132,30 +147,37 @@ class TagSettingsExpandableSectionHeader: UIView {
         noValueStack.fillSuperview()
 
         addSubview(noValueContainer)
-        noValueContainer.anchor(top: nil,
-                                leading: nil,
-                                bottom: nil,
-                                trailing: arrowView.leadingAnchor,
-                                padding: .init(top: 0, left: 8, bottom: 0, right: 8))
+        noValueContainer.anchor(
+            top: nil,
+            leading: nil,
+            bottom: nil,
+            trailing: arrowView.leadingAnchor,
+            padding: .init(top: 0, left: 8, bottom: 0, right: 8)
+        )
         noValueContainer.centerYInSuperview()
 
         noValueContainer.addGestureRecognizer(
-            UITapGestureRecognizer(target: self,
-                                   action: #selector(tapNoValuesView(_:))))
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(tapNoValuesView(_:))
+            ))
         addGestureRecognizer(
-            UITapGestureRecognizer(target: self,
-                                   action: #selector(tapHeader(_:))))
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(tapHeader(_:))
+            ))
     }
 
     @objc private func tapHeader(_ gestureRecognizer: UITapGestureRecognizer) {
-        guard let cell = gestureRecognizer.view as? TagSettingsExpandableSectionHeader else {
+        guard let cell = gestureRecognizer.view as? TagSettingsExpandableSectionHeader
+        else {
             return
         }
 
         delegate?.toggleSection(self, section: cell.section)
     }
 
-    @objc private func tapNoValuesView(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc private func tapNoValuesView(_: UITapGestureRecognizer) {
         delegate?.didTapSectionMoreInfo(headerView: self)
     }
 }
@@ -165,11 +187,13 @@ extension TagSettingsExpandableSectionHeader {
         titleLabel.text = string
     }
 
-    func setTitle(with string: String?,
-                  section: Int,
-                  collapsed: Bool,
-                  backgroundColor: UIColor? = nil,
-                  font: UIFont?) {
+    func setTitle(
+        with string: String?,
+        section: Int,
+        collapsed: Bool,
+        backgroundColor: UIColor? = nil,
+        font: UIFont?
+    ) {
         titleLabel.text = string
         self.section = section
         setCollapsed(collapsed)
@@ -178,7 +202,7 @@ extension TagSettingsExpandableSectionHeader {
         } else {
             self.backgroundColor = RuuviColor.tagSettingsItemHeaderColor
         }
-        if let font = font {
+        if let font {
             titleLabel.font = font
         } else {
             titleLabel.font = UIFont.Muli(.bold, size: 16)
@@ -210,15 +234,17 @@ extension TagSettingsExpandableSectionHeader {
         noValueContainer.isHidden = !show
     }
 
-    func setAlertState(with date: Date?,
-                       isOn: Bool,
-                       alertState: AlertState?) {
+    func setAlertState(
+        with date: Date?,
+        isOn: Bool,
+        alertState: AlertState?
+    ) {
         // Show alert icon only when alert is on
         alertIcon.alpha = isOn ? 1 : 0
 
         // Show muted label if muted till is not nil
         // If muted till is not nil, we don't have to execute the rest of the code
-        if let date = date, date > Date() {
+        if let date, date > Date() {
             mutedTillLabel.isHidden = !isOn
             mutedTillLabel.text = AppDateFormatter
                 .shared
@@ -234,7 +260,8 @@ extension TagSettingsExpandableSectionHeader {
         }
 
         // Check the state and show alert bell based on the state if alert is on.
-        guard isOn, let state = alertState else {
+        guard isOn, let state = alertState
+        else {
             return
         }
         switch state {
@@ -246,15 +273,19 @@ extension TagSettingsExpandableSectionHeader {
             alertIcon.alpha = 1.0
             alertIcon.tintColor = RuuviColor.ruuviOrangeColor
             alertIcon.image = RuuviAssets.alertActiveImage
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                UIView.animate(withDuration: 0.5,
-                               delay: 0,
-                               options: [.repeat,
-                                         .autoreverse],
-                               animations: { [weak self] in
-                    self?.alertIcon.alpha = 0.0
-                })
-            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                UIView.animate(
+                    withDuration: 0.5,
+                    delay: 0,
+                    options: [
+                        .repeat,
+                        .autoreverse,
+                    ],
+                    animations: { [weak self] in
+                        self?.alertIcon.alpha = 0.0
+                    }
+                )
+            }
         default:
             alertIcon.image = nil
             removeAlertAnimations()
@@ -262,10 +293,9 @@ extension TagSettingsExpandableSectionHeader {
     }
 
     func removeAlertAnimations() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1,
-                                      execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.alertIcon.layer.removeAllAnimations()
             self?.alertIcon.alpha = 1
-        })
+        }
     }
 }

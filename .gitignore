@@ -2,8 +2,7 @@
 .tools
 
 # Generated
-spm.xcodeproj
-frameworks.xcodeproj
+Ruuvi.xcodeproj
 
 # Private 
 station/Resources/Plists/GoogleService-Info.plist

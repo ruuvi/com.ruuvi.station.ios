@@ -1,14 +1,13 @@
 import UIKit
 
 class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
-
     var manager: MenuTableTransitionManager
 
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
 
-    @objc internal func handleHideMenuPan(_ pan: UIPanGestureRecognizer) {
+    @objc func handleHideMenuPan(_ pan: UIPanGestureRecognizer) {
         let translation = pan.translation(in: pan.view!)
         let direction: CGFloat = manager.presentDirection == .left ? -1 : 1
         let distance = translation.x / MenuTableTransitionManager.appScreenRect.width * direction
@@ -33,8 +32,8 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
         }
     }
 
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
+    func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
+        0.35
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -43,25 +42,30 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
 
         let appearedFrame = transitionContext.finalFrame(for: fromVC)
         let initialFrame = appearedFrame
-        let finalFrame = CGRect(x: -appearedFrame.size.width,
-                                y: appearedFrame.origin.y,
-                                width: appearedFrame.size.width,
-                                height: appearedFrame.size.height)
+        let finalFrame = CGRect(
+            x: -appearedFrame.size.width,
+            y: appearedFrame.origin.y,
+            width: appearedFrame.size.width,
+            height: appearedFrame.size.height
+        )
         fromView.frame = initialFrame
 
         let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration,
-                       delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseInOut,
-                       animations: {
-                        fromView.frame = finalFrame
-        }, completion: { _ -> Void in
-            if !transitionContext.transitionWasCancelled {
-                fromView.removeFromSuperview()
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 1,
+            options: .curveEaseInOut,
+            animations: {
+                fromView.frame = finalFrame
+            },
+            completion: { _ in
+                if !transitionContext.transitionWasCancelled {
+                    fromView.removeFromSuperview()
+                }
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             }
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+        )
     }
 }

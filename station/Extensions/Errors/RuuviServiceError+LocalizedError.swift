@@ -1,39 +1,40 @@
 import Foundation
+import RuuviLocalization
 import RuuviService
 
 extension RuuviServiceError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .btkit(let error):
-            return error.localizedDescription
-        case .writeToDisk(let error):
-            return error.localizedDescription
-        case .ruuviRepository(let error):
-            return error.errorDescription
-        case .ruuviStorage(let error):
-            return error.errorDescription
-        case .ruuviPool(let error):
-            return error.errorDescription
-        case .ruuviLocal(let error):
-            return error.errorDescription
-        case .ruuviCloud(let error):
-            return error.errorDescription
-        case .networking(let error):
-            return error.localizedDescription
+        case let .btkit(error):
+            error.localizedDescription
+        case let .writeToDisk(error):
+            error.localizedDescription
+        case let .ruuviRepository(error):
+            error.errorDescription
+        case let .ruuviStorage(error):
+            error.errorDescription
+        case let .ruuviPool(error):
+            error.errorDescription
+        case let .ruuviLocal(error):
+            error.errorDescription
+        case let .ruuviCloud(error):
+            error.errorDescription
+        case let .networking(error):
+            error.localizedDescription
         case .pictureUrlIsNil:
-            return "RuuviServiceError.pictureUrlIsNil".localized()
+            RuuviLocalization.RuuviServiceError.pictureUrlIsNil
         case .macIdIsNil:
-            return "RuuviServiceError.macIdIsNil".localized()
+            RuuviLocalization.RuuviServiceError.macIdIsNil
         case .bothLuidAndMacAreNil:
-            return "RuuviServiceError.bothLuidAndMacAreNil".localized()
+            RuuviLocalization.RuuviServiceError.bothLuidAndMacAreNil
         case .failedToParseNetworkResponse:
-            return "RuuviServiceError.failedToParseNetworkResponse".localized()
+            RuuviLocalization.RuuviServiceError.failedToParseNetworkResponse
         case .failedToFindOrGenerateBackgroundImage:
-            return "RuuviServiceError.failedToFindOrGenerateBackgroundImage".localized()
+            RuuviLocalization.RuuviServiceError.failedToFindOrGenerateBackgroundImage
         case .failedToGetJpegRepresentation:
-            return "RuuviServiceError.failedToGetJpegRepresentation".localized()
+            RuuviLocalization.RuuviServiceError.failedToGetJpegRepresentation
         case .isAlreadySyncingLogsWithThisTag:
-            return "ExpectedError.isAlreadySyncingLogsWithThisTag".localized()
+            RuuviLocalization.ExpectedError.isAlreadySyncingLogsWithThisTag
         }
     }
 }

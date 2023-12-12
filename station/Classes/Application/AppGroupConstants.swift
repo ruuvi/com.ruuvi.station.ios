@@ -1,6 +1,6 @@
 import Foundation
 
-struct AppGroupConstants {
+enum AppGroupConstants {
     static let appGroupSuiteIdentifier = "group.com.ruuvi.station.widgets"
     static let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
     static let hasCloudSensorsKey = "hasCloudSensorsKey"

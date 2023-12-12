@@ -5,14 +5,12 @@ protocol DefaultsSwitchTableViewCellDelegate: AnyObject {
 }
 
 class DefaultsSwitchTableViewCell: UITableViewCell {
-
     weak var delegate: DefaultsSwitchTableViewCellDelegate?
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var isOnSwitch: UISwitch!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var isOnSwitch: UISwitch!
 
-    @IBAction func isOnSwitchValueChanged(_ sender: Any) {
+    @IBAction func isOnSwitchValueChanged(_: Any) {
         delegate?.defaultsSwitch(cell: self, didChange: isOnSwitch.isOn)
     }
-
 }

@@ -1,9 +1,8 @@
+import RuuviContext
 import RuuviLocal
 import RuuviPool
-import RuuviContext
-import RuuviStorage
 import RuuviService
-import RuuviMigration
+import RuuviStorage
 
 public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let settings: RuuviLocalSettings
@@ -59,14 +58,16 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             ruuviAlertService: ruuviAlertService
         )
         let toNetworkPull60 = MigrationManagerToNetworkPull60(settings: settings)
-        return [toSQLite,
-                toAlertService,
-                toPrune240,
-                toChartDuration240,
-                toSensorSettings,
-                toRH,
-                toTimeouts,
-                fixRHAlerts,
-                toNetworkPull60]
+        return [
+            toSQLite,
+            toAlertService,
+            toPrune240,
+            toChartDuration240,
+            toSensorSettings,
+            toRH,
+            toTimeouts,
+            fixRHAlerts,
+            toNetworkPull60,
+        ]
     }
 }

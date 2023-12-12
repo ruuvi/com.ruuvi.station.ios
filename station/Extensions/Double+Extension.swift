@@ -13,9 +13,10 @@ extension Double {
     }
 }
 
-extension Optional where Wrapped == Double {
+extension Double? {
     var intValue: Int {
-        guard let self = self else {
+        guard let self
+        else {
             return 0
         }
         return Int(self)
@@ -24,6 +25,6 @@ extension Optional where Wrapped == Double {
 
 extension Double {
     var intValue: Int {
-        return Int(self)
+        Int(self)
     }
 }

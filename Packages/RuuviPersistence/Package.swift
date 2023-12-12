@@ -9,20 +9,23 @@ let package = Package(
     products: [
         .library(
             name: "RuuviPersistence",
-            targets: ["RuuviPersistence"]),
+            targets: ["RuuviPersistence"]
+        ),
         .library(
             name: "RuuviPersistenceRealm",
-            targets: ["RuuviPersistenceRealm"]),
+            targets: ["RuuviPersistenceRealm"]
+        ),
         .library(
             name: "RuuviPersistenceSQLite",
-            targets: ["RuuviPersistenceSQLite"])
+            targets: ["RuuviPersistenceSQLite"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMajor(from: "10.8.0")),
         .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
         .package(path: "../RuuviOntology"),
-        .package(path: "../RuuviContext")
+        .package(path: "../RuuviContext"),
     ],
     targets: [
         .target(
@@ -30,7 +33,7 @@ let package = Package(
             dependencies: [
                 "RuuviOntology",
                 "RuuviContext",
-                "Future"
+                "Future",
             ]
         ),
         .target(
@@ -42,7 +45,7 @@ let package = Package(
                 "RuuviPersistence",
                 "RuuviOntology",
                 "RuuviContext",
-                "Future"
+                "Future",
             ]
         ),
         .target(
@@ -54,11 +57,12 @@ let package = Package(
                 "RuuviPersistence",
                 "RuuviOntology",
                 "RuuviContext",
-                "Future"
+                "Future",
             ]
         ),
         .testTarget(
             name: "RuuviPersistenceTests",
-            dependencies: ["RuuviPersistence"])
+            dependencies: ["RuuviPersistence"]
+        ),
     ]
 )

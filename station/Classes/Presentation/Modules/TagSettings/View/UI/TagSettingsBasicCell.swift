@@ -9,7 +9,6 @@ enum TagSettingsBasicAccessory {
 /// Leading title label and trailing aligned value label
 /// with an optional disclosure icon.
 class TagSettingsBasicCell: UITableViewCell {
-
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.ruuviTextColor
@@ -38,14 +37,19 @@ class TagSettingsBasicCell: UITableViewCell {
 
     private lazy var separator = UIView(color: RuuviColor.ruuviLineColor)
 
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
+        super.init(
+            style: style,
+            reuseIdentifier: reuseIdentifier
+        )
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -59,31 +63,37 @@ class TagSettingsBasicCell: UITableViewCell {
         stack.distribution = .fill
         stack.axis = .horizontal
         addSubview(stack)
-        stack.anchor(top: safeTopAnchor,
-                     leading: safeLeftAnchor,
-                     bottom: safeBottomAnchor,
-                     trailing: nil,
-                     padding: .init(top: 12, left: 8, bottom: 12, right: 0))
+        stack.anchor(
+            top: safeTopAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: nil,
+            padding: .init(top: 12, left: 8, bottom: 12, right: 0)
+        )
 
         addSubview(iconView)
-        iconView.anchor(top: nil,
-                        leading: stack.trailingAnchor,
-                        bottom: nil,
-                        trailing: safeRightAnchor,
-                        padding: .init(top: 0, left: 8, bottom: 0, right: 12),
-                        size: .init(width: 16, height: 16))
+        iconView.anchor(
+            top: nil,
+            leading: stack.trailingAnchor,
+            bottom: nil,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 8, bottom: 0, right: 12),
+            size: .init(width: 16, height: 16)
+        )
         iconView.centerYInSuperview()
         iconHiddenWidthConstraints = [
             iconView.widthAnchor.constraint(equalToConstant: 0),
-            stack.trailingAnchor.constraint(equalTo: safeRightAnchor, constant: -12)
+            stack.trailingAnchor.constraint(equalTo: safeRightAnchor, constant: -12),
         ]
 
         addSubview(separator)
-        separator.anchor(top: nil,
-                        leading: safeLeftAnchor,
-                        bottom: bottomAnchor,
-                        trailing: safeRightAnchor,
-                        size: .init(width: 0, height: 1))
+        separator.anchor(
+            top: nil,
+            leading: safeLeftAnchor,
+            bottom: bottomAnchor,
+            trailing: safeRightAnchor,
+            size: .init(width: 0, height: 1)
+        )
     }
 
     func configure(title: String?, value: String?) {
@@ -104,20 +114,20 @@ class TagSettingsBasicCell: UITableViewCell {
         case .pencil:
             iconView.image = RuuviAssets.editPenImage
             iconView.tintColor = RuuviColor.ruuviTintColor
-            iconHiddenWidthConstraints.forEach({ anchor in
+            iconHiddenWidthConstraints.forEach { anchor in
                 anchor.isActive = false
-            })
+            }
         case .chevron:
             iconView.image = UIImage(systemName: "chevron.right")
             iconView.tintColor = .secondaryLabel
-            iconHiddenWidthConstraints.forEach({ anchor in
+            iconHiddenWidthConstraints.forEach { anchor in
                 anchor.isActive = false
-            })
+            }
         case .none:
             iconView.image = nil
-            iconHiddenWidthConstraints.forEach({ anchor in
+            iconHiddenWidthConstraints.forEach { anchor in
                 anchor.isActive = true
-            })
+            }
         }
     }
 

@@ -1,16 +1,16 @@
-import UIKit
 import BTKit
 import RuuviContext
-import RuuviStorage
-import RuuviReactor
-import RuuviLocal
-import RuuviService
 import RuuviCore
-import RuuviNotifier
-import RuuviPresenters
-import RuuviUser
 import RuuviDaemon
+import RuuviLocal
+import RuuviNotifier
 import RuuviPool
+import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
+import RuuviUser
+import UIKit
 
 protocol CardsViewModuleFactory {
     func create() -> CardsViewController

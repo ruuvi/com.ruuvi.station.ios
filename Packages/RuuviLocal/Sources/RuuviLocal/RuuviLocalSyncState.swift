@@ -13,16 +13,16 @@ public enum NetworkSyncStatusKey: String {
     case status
 }
 
-extension Notification.Name {
-    public static let NetworkSyncDidChangeStatus =
+public extension Notification.Name {
+    static let NetworkSyncDidChangeStatus =
         Notification.Name("NetworkPersistence.DidChangeStatus")
-    public static let NetworkSyncDidComplete =
+    static let NetworkSyncDidComplete =
         Notification.Name("NetworkPersistence.NetworkSyncDidComplete")
-    public static let NetworkHistorySyncDidCompleteForSensor =
+    static let NetworkHistorySyncDidCompleteForSensor =
         Notification.Name("NetworkPersistence.NetworkHistorySyncDidCompleteForSensor")
-    public static let NetworkSyncDidChangeCommonStatus =
+    static let NetworkSyncDidChangeCommonStatus =
         Notification.Name("NetworkPersistence.DidChangeCommonStatus")
-    public static let NetworkSyncDidFailForAuthorization =
+    static let NetworkSyncDidFailForAuthorization =
         Notification.Name("NetworkPersistence.NetworkSyncDidFailForAuthorization")
 }
 

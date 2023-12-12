@@ -7,8 +7,7 @@ class MenuTableViewController: UIViewController {
 }
 
 extension MenuTableViewController: MenuViewInput {
-    func localize() {
-    }
+    func localize() {}
 }
 
 extension MenuTableViewController {
@@ -43,8 +42,10 @@ extension MenuTableViewController {
         if let transitioningDelegate = navigationController?.transitioningDelegate as? MenuTableTransitioningDelegate {
             let exitPanGesture = UIPanGestureRecognizer()
             exitPanGesture.cancelsTouchesInView = false
-            exitPanGesture.addTarget(transitioningDelegate.dismiss,
-                                     action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
+            exitPanGesture.addTarget(
+                transitioningDelegate.dismiss,
+                action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:))
+            )
             view.addGestureRecognizer(exitPanGesture)
         }
     }

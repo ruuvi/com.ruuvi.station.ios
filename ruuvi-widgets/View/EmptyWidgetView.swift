@@ -1,14 +1,16 @@
 import SwiftUI
+import RuuviLocalization
 
 struct EmptyWidgetView: View {
     @Environment(\.widgetFamily) private var family
     struct Texts {
-        let messageSimple = "Widgets.Unconfigured.Simple.message"
-        let messageRectangular = "Widgets.Unconfigured.Rectangular.message"
-        let messageCircular = "Widgets.Unconfigured.Circular.message"
-        let messageInline = "Widgets.Unconfigured.Inline.message"
-        let loading = "Widgets.Loading.message"
+        let messageSimple = RuuviLocalization.Widgets.Unconfigured.Simple.message
+        let messageRectangular = RuuviLocalization.Widgets.Unconfigured.Rectangular.message
+        let messageCircular = RuuviLocalization.Widgets.Unconfigured.Circular.message
+        let messageInline = RuuviLocalization.Widgets.Unconfigured.Inline.message
+        let loading = RuuviLocalization.Widgets.Loading.message
     }
+
     private let texts = Texts()
     var entry: WidgetProvider.Entry
 
@@ -42,12 +44,14 @@ struct EmptyWidgetView: View {
             .cornerRadius(8)
             VStack {
                 Text(entry.config.ruuviWidgetTag == nil ?
-                     (isSimple ? texts.messageSimple.localized :
+                    (isSimple ? texts.messageSimple.localized :
                         texts.messageRectangular.localized)
-                     : texts.loading.localized)
-                    .font(.custom(Constants.muliBold.rawValue,
-                                  size: family == .systemSmall ? 16 : 10,
-                                  relativeTo: .subheadline))
+                    : texts.loading.localized)
+                    .font(.custom(
+                        Constants.muliBold.rawValue,
+                        size: family == .systemSmall ? 16 : 10,
+                        relativeTo: .subheadline
+                    ))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)
@@ -69,15 +73,19 @@ struct EmptyWidgetView: View {
                     .renderingMode(.template)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .padding(.init(top: 4,
-                                   leading: 8,
-                                   bottom: -4,
-                                   trailing: 8))
+                    .padding(.init(
+                        top: 4,
+                        leading: 8,
+                        bottom: -4,
+                        trailing: 8
+                    ))
                 Text(entry.config.ruuviWidgetTag == nil ?
-                     texts.messageCircular.localized : texts.loading.localized)
-                    .font(.custom(Constants.muliBold.rawValue,
-                                  size: 8,
-                                  relativeTo: .headline))
+                    texts.messageCircular.localized : texts.loading.localized)
+                    .font(.custom(
+                        Constants.muliBold.rawValue,
+                        size: 8,
+                        relativeTo: .headline
+                    ))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)
@@ -94,7 +102,7 @@ struct EmptyWidgetView: View {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
             }
             Text(entry.config.ruuviWidgetTag == nil ?
-                 texts.messageInline.localized : texts.loading.localized)
+                texts.messageInline.localized : texts.loading.localized)
         }
     }
 }

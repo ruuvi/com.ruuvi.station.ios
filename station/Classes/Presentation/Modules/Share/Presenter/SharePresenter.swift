@@ -1,10 +1,11 @@
 import Foundation
 import Future
-import UIKit
-import RuuviService
+import RuuviLocalization
 import RuuviOntology
 import RuuviPresenters
 import RuuviReactor
+import RuuviService
+import UIKit
 
 class SharePresenter {
     weak var view: ShareViewInput!
@@ -21,6 +22,7 @@ class SharePresenter {
             fetchShared()
         }
     }
+
     private let maxShareCount: Int = 10
     private var viewModel: ShareViewModel! {
         didSet {
@@ -34,16 +36,19 @@ class SharePresenter {
         ruuviTagToken?.invalidate()
     }
 }
+
 // MARK: - ShareViewOutput
+
 extension SharePresenter: ShareViewOutput {
     func viewDidLoad() {
         startObservingRuuviTag()
     }
 
     func viewDidTapSendButton(email: String?) {
-        guard let email = email,
+        guard let email,
               !email.isEmpty,
-              isValidEmail(email) else {
+              isValidEmail(email)
+        else {
             view.showInvalidEmail()
             return
         }
@@ -81,31 +86,40 @@ extension SharePresenter: ShareViewOutput {
     }
 
     func viewDidTapUnshareEmail(_ email: String?) {
-        guard let email = email,
-              !email.isEmpty else {
+        guard let email,
+              !email.isEmpty
+        else {
             return
         }
         let title: String? = nil
-        let message = String(format: "SharePresenter.UnshareSensor.Message".localized(), email)
-        let confirmActionTitle = "Yes".localized()
-        let cancelActionTitle = "No".localized()
-        let confirmAction = UIAlertAction(title: confirmActionTitle,
-                                          style: .default) { [weak self] (_) in
+        let message = RuuviLocalization.SharePresenter.UnshareSensor.message(email)
+        let confirmActionTitle = RuuviLocalization.yes
+        let cancelActionTitle = RuuviLocalization.no
+        let confirmAction = UIAlertAction(
+            title: confirmActionTitle,
+            style: .default
+        ) { [weak self] _ in
             self?.unshareTag(email)
         }
 
-        let cancleAction = UIAlertAction(title: cancelActionTitle,
-                                         style: .cancel,
-                                         handler: nil)
-        let actions = [ confirmAction, cancleAction ]
-        let alertViewModel = AlertViewModel(title: title,
-                                            message: message,
-                                            style: .alert,
-                                            actions: actions)
+        let cancleAction = UIAlertAction(
+            title: cancelActionTitle,
+            style: .cancel,
+            handler: nil
+        )
+        let actions = [confirmAction, cancleAction]
+        let alertViewModel = AlertViewModel(
+            title: title,
+            message: message,
+            style: .alert,
+            actions: actions
+        )
         alertPresenter.showAlert(alertViewModel)
     }
 }
+
 // MARK: - ShareModuleInput
+
 extension SharePresenter: ShareModuleInput {
     func configure(sensor: RuuviTagSensor) {
         viewModel = ShareViewModel(maxCount: maxShareCount)
@@ -116,29 +130,30 @@ extension SharePresenter: ShareModuleInput {
         router.dismiss(completion: nil)
     }
 }
-// MARK: - Private
-extension SharePresenter {
 
-    // swiftlint:disable switch_case_alignment
+// MARK: - Private
+
+extension SharePresenter {
     private func startObservingRuuviTag() {
         ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
+        ruuviTagToken = ruuviReactor.observe { [weak self] change in
             switch change {
-                case .update(let sensor):
-                    if (sensor.luid?.any != nil &&
-                        sensor.luid?.any == self?.sensor.luid?.any)
-                        ||
-                        (sensor.macId?.any != nil &&
-                         sensor.macId?.any == self?.sensor.macId?.any) {
-                        self?.sensor = sensor
-                    }
-                default: return
+            case let .update(sensor):
+                if (sensor.luid?.any != nil &&
+                    sensor.luid?.any == self?.sensor.luid?.any)
+                    ||
+                    (sensor.macId?.any != nil &&
+                        sensor.macId?.any == self?.sensor.macId?.any) {
+                    self?.sensor = sensor
+                }
+            default: return
             }
         }
     }
 
     private func fetchShared() {
-        guard !sensor.canShare else {
+        guard !sensor.canShare
+        else {
             updateViewModel()
             return
         }
@@ -151,7 +166,8 @@ extension SharePresenter {
                     .first(where: {
                         $0.id == sSelf.sensor.id
                     }) {
-                    guard shareable.canShare else {
+                    guard shareable.canShare
+                    else {
                         return
                     }
 
@@ -193,4 +209,3 @@ extension SharePresenter {
         return emailPred.evaluate(with: email)
     }
 }
-// swiftlint:enable switch_case_alignment

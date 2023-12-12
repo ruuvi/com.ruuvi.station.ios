@@ -1,7 +1,6 @@
 import UIKit
 
 class CardsIndicatorView: UIView {
-
     private lazy var indicatorIconView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -32,22 +31,25 @@ class CardsIndicatorView: UIView {
         super.init(frame: frame)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     convenience init(icon: UIImage?) {
         self.init()
-        self.indicatorIconView.image = icon
+        indicatorIconView.image = icon
         setUpUI()
     }
 
     fileprivate func setUpUI() {
         addSubview(indicatorIconView)
-        indicatorIconView.anchor(top: nil,
-                                 leading: leadingAnchor,
-                                 bottom: nil,
-                                 trailing: nil)
+        indicatorIconView.anchor(
+            top: nil,
+            leading: leadingAnchor,
+            bottom: nil,
+            trailing: nil
+        )
         indicatorIconView.heightAnchor.constraint(
             lessThanOrEqualToConstant: 50
         ).isActive = true
@@ -83,7 +85,7 @@ class CardsIndicatorView: UIView {
             .topAnchor
             .constraint(
                 lessThanOrEqualTo: indicatorValueLabel.topAnchor,
-                        constant: 3
+                constant: 3
             ).isActive = true
 
         indicatorUnitLabel.trailingAnchor

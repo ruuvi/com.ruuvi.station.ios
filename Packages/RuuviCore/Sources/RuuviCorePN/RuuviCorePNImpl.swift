@@ -1,5 +1,4 @@
 import UIKit
-import RuuviCore
 import UserNotifications
 
 public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
@@ -9,7 +8,7 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
 
     public var pnTokenData: Data? {
         get {
-            return UserDefaults.standard.data(forKey: pnTokenDataUDKey)
+            UserDefaults.standard.data(forKey: pnTokenDataUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: pnTokenDataUDKey)
@@ -18,7 +17,7 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
 
     public var fcmToken: String? {
         get {
-            return UserDefaults.standard.string(forKey: pnFCMTokenUDKey)
+            UserDefaults.standard.string(forKey: pnFCMTokenUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: pnFCMTokenUDKey)
@@ -27,7 +26,7 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
 
     public var fcmTokenId: Int? {
         get {
-            return UserDefaults.standard.integer(forKey: pnFCMTokenIdUDKey)
+            UserDefaults.standard.integer(forKey: pnFCMTokenIdUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: pnFCMTokenIdUDKey)
@@ -36,7 +35,7 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
 
     public var fcmTokenLastRefreshed: Date? {
         get {
-            return UserDefaults
+            UserDefaults
                 .standard
                 .object(forKey: pnFCMTokenLastRefreshUDKey) as? Date
         }
@@ -47,7 +46,7 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
 
     public func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
                 DispatchQueue.main.async {
                     switch settings.authorizationStatus {
                     case .authorized:
@@ -78,8 +77,8 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
 
     public func registerForRemoteNotifications() {
         if #available(iOS 10.0, *) {
-            let center  = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.sound, .alert, .badge]) { (_, error) in
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.sound, .alert, .badge]) { _, error in
                 if error == nil {
                     DispatchQueue.main.async {
                         self.didAskForRemoteNotificationPermission = true
@@ -102,10 +101,10 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
     private let pnFCMTokenIdUDKey = "PushNotificationsManagerImpl.pnFCMTokenIdUDKey"
     private let pnFCMTokenLastRefreshUDKey = "PushNotificationsManagerImpl.pnFCMTokenLastRefreshUDKey"
     private let didAskForRemoteNotificationPermissionUDKey =
-    "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
+        "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
     private var didAskForRemoteNotificationPermission: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: didAskForRemoteNotificationPermissionUDKey)
+            UserDefaults.standard.bool(forKey: didAskForRemoteNotificationPermissionUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: didAskForRemoteNotificationPermissionUDKey)

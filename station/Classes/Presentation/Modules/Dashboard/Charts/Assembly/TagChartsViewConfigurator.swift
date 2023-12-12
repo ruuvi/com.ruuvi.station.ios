@@ -1,17 +1,19 @@
-import Foundation
-import RuuviOntology
 import BTKit
-import RuuviStorage
-import RuuviReactor
+import Foundation
 import RuuviLocal
-import RuuviPool
-import RuuviService
 import RuuviNotifier
+import RuuviOntology
+import RuuviPool
 import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import RuuviStorage
 
 class TagChartsViewConfigurator {
-    func configure(view: TagChartsViewController,
-                   ruuviTag: AnyRuuviTagSensor) {
+    func configure(
+        view: TagChartsViewController,
+        ruuviTag: AnyRuuviTagSensor
+    ) {
         let r = AppAssembly.shared.assembler.resolver
 
         let interactor = TagChartsViewInteractor()

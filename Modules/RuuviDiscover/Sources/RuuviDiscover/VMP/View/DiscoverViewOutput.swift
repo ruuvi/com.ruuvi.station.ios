@@ -1,5 +1,5 @@
-import Foundation
 import CoreNFC
+import Foundation
 import RuuviOntology
 
 protocol DiscoverViewOutput {

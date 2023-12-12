@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 public enum FirmwareRepositoryError: Error {
     case failedToGetDocumentsDirectory
@@ -18,7 +18,7 @@ public final class FirmwareRepositoryImpl: FirmwareRepository {
     public init() {}
 
     public func read(name: String) -> Future<URL, Error> {
-        return Future { [weak self] promise in
+        Future { [weak self] promise in
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 do {
                     if let dstUrl = try self?.getFirmwareDirectory().appendingPathComponent(name),
@@ -35,7 +35,7 @@ public final class FirmwareRepositoryImpl: FirmwareRepository {
     }
 
     public func save(name: String, fileUrl: URL) throws -> URL {
-        let dstUrl = try self.getFirmwareDirectory().appendingPathComponent(name)
+        let dstUrl = try getFirmwareDirectory().appendingPathComponent(name)
         if FileManager.default.fileExists(atPath: dstUrl.path) {
             try FileManager.default.removeItem(at: dstUrl)
         }
@@ -45,7 +45,8 @@ public final class FirmwareRepositoryImpl: FirmwareRepository {
     }
 
     private func getFirmwareDirectory() throws -> URL {
-        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        else {
             throw FirmwareRepositoryError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(fwDir, isDirectory: true)

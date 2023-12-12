@@ -1,8 +1,9 @@
-import UIKit
+// swiftlint:disable file_length
 import BTKit
-import RuuviOntology
-import RuuviLocalization
 import CoreNFC
+import RuuviLocalization
+import RuuviOntology
+import UIKit
 
 enum DiscoverTableSection {
     case device
@@ -11,22 +12,21 @@ enum DiscoverTableSection {
     static var count = 1 // displayed simultaneously
 
     static func section(for deviceCount: Int) -> DiscoverTableSection {
-        return deviceCount > 0 ? .device : .noDevices
+        deviceCount > 0 ? .device : .noDevices
     }
 }
 
 class DiscoverTableViewController: UIViewController {
-
     var output: DiscoverViewOutput!
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     @IBOutlet var closeBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet var actionButton: UIButton!
     private var discoverTableHeaderView = DiscoverTableHeaderView()
 
     private var alertVC: UIAlertController?
 
-    var ruuviTags: [DiscoverRuuviTagViewModel] = [DiscoverRuuviTagViewModel]() {
+    var ruuviTags: [DiscoverRuuviTagViewModel] = .init() {
         didSet {
             updateTableView()
         }
@@ -49,8 +49,8 @@ class DiscoverTableViewController: UIViewController {
 }
 
 // MARK: - DiscoverViewInput
-extension DiscoverTableViewController: DiscoverViewInput {
 
+extension DiscoverTableViewController: DiscoverViewInput {
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
     }
@@ -59,10 +59,13 @@ extension DiscoverTableViewController: DiscoverViewInput {
         let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
         let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "PermissionPresenter.settings".localized(for: Self.self),
-                                        style: .default, handler: { [weak self] _ in
-            self?.takeUserToBTSettings(userDeclined: userDeclined)
-        }))
+        alertVC.addAction(UIAlertAction(
+            title: "PermissionPresenter.settings".localized(for: Self.self),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.takeUserToBTSettings(userDeclined: userDeclined)
+            }
+        ))
         alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -84,6 +87,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         session = nil
     }
 
+    // swiftlint:disable:next function_parameter_count function_body_length
     func showSensorDetailsDialog(
         for tag: NFCSensor?,
         message: String,
@@ -100,7 +104,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         if isDF3 {
             let df3ErrorMessage = "add_sensor_nfc_df3_error".localized(
                 for: Self.self
-              )
+            )
             messageString = "\n\(df3ErrorMessage)\n" + message
         }
 
@@ -111,7 +115,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
             attributes: [
                 NSAttributedString.Key.paragraphStyle: paragraphStyle,
                 NSAttributedString.Key.foregroundColor: UIColor.label,
-                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)
+                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body),
             ]
         )
 
@@ -119,34 +123,49 @@ extension DiscoverTableViewController: DiscoverViewInput {
         alertVC.setValue(messageText, forKey: "attributedMessage")
 
         if showAddSensor {
-          alertVC.addAction(UIAlertAction(title: "add_sensor".localized(for: Self.self),
-                                          style: .default, handler: { [weak self] _ in
-            self?.output.viewDidAddDeviceWithNFC(with: tag)
-          }))
+            alertVC.addAction(UIAlertAction(
+                title: "add_sensor".localized(for: Self.self),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidAddDeviceWithNFC(with: tag)
+                }
+            ))
         }
 
-        alertVC.addAction(UIAlertAction(title: "copy_mac_address".localized(for: Self.self),
-                                        style: .default, handler: { [weak self] _ in
-            self?.output.viewDidACopyMacAddress(of: tag)
-        }))
+        alertVC.addAction(UIAlertAction(
+            title: "copy_mac_address".localized(for: Self.self),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output.viewDidACopyMacAddress(of: tag)
+            }
+        ))
 
-        alertVC.addAction(UIAlertAction(title: "copy_unique_id".localized(for: Self.self),
-                                        style: .default, handler: { [weak self] _ in
-            self?.output.viewDidACopySecret(of: tag)
-        }))
+        alertVC.addAction(UIAlertAction(
+            title: "copy_unique_id".localized(for: Self.self),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output.viewDidACopySecret(of: tag)
+            }
+        ))
 
         if showGoToSensor {
-          alertVC.addAction(UIAlertAction(title: "go_to_sensor".localized(for: Self.self),
-                                          style: .default, handler: { [weak self] _ in
-            self?.output.viewDidGoToSensor(with: tag)
-          }))
+            alertVC.addAction(UIAlertAction(
+                title: "go_to_sensor".localized(for: Self.self),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidGoToSensor(with: tag)
+                }
+            ))
         }
-        
+
         if showUpgradeFirmware {
-            alertVC.addAction(UIAlertAction(title: "upgrade_firmware".localized(for: Self.self),
-                                            style: .default, handler: { [weak self] _ in
-              self?.output.viewDidAskToUpgradeFirmware(of: tag)
-            }))
+            alertVC.addAction(UIAlertAction(
+                title: "upgrade_firmware".localized(for: Self.self),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidAskToUpgradeFirmware(of: tag)
+                }
+            ))
         }
 
         alertVC.addAction(UIAlertAction(title: "close".localized(for: Self.self), style: .cancel, handler: nil))
@@ -155,29 +174,31 @@ extension DiscoverTableViewController: DiscoverViewInput {
 }
 
 // MARK: - IBActions
+
 extension DiscoverTableViewController {
-    @IBAction func closeBarButtonItemAction(_ sender: Any) {
+    @IBAction func closeBarButtonItemAction(_: Any) {
         output.viewDidTriggerClose()
     }
 
-    @IBAction func handleActionButtonTap(_ sender: Any) {
+    @IBAction func handleActionButtonTap(_: Any) {
         output.viewDidTriggerBuySensors()
     }
 }
 
 // MARK: - DiscoverTableHeaderViewDelegate
+
 extension DiscoverTableViewController: DiscoverTableHeaderViewDelegate {
-    func didTapAddWithNFCButton(sender: DiscoverTableHeaderView) {
+    func didTapAddWithNFCButton(sender _: DiscoverTableHeaderView) {
         output.viewDidTapUseNFC()
     }
 }
 
 // MARK: - View lifecycle
-extension DiscoverTableViewController {
 
+extension DiscoverTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
+        localize()
         configureViews()
         updateUI()
         output.viewDidLoad()
@@ -198,7 +219,6 @@ extension DiscoverTableViewController {
         super.viewDidLayoutSubviews()
 
         if let headerView = tableView.tableHeaderView {
-
             let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
             var headerFrame = headerView.frame
 
@@ -213,12 +233,13 @@ extension DiscoverTableViewController {
 }
 
 // MARK: - UITableViewDataSource
+
 extension DiscoverTableViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return DiscoverTableSection.count
+    func numberOfSections(in _: UITableView) -> Int {
+        DiscoverTableSection.count
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         let section = DiscoverTableSection.section(for: ruuviTags.count)
         switch section {
         case .device:
@@ -247,6 +268,7 @@ extension DiscoverTableViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate {
+
 extension DiscoverTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -266,10 +288,9 @@ extension DiscoverTableViewController: UITableViewDelegate {
 }
 
 // MARK: - Cell configuration
+
 extension DiscoverTableViewController {
-
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverRuuviTagViewModel) {
-
         cell.identifierLabel.text = displayName(for: device)
 
         // RSSI
@@ -290,6 +311,7 @@ extension DiscoverTableViewController {
 }
 
 // MARK: - View configuration
+
 extension DiscoverTableViewController {
     private func configureViews() {
         if let muliBold = UIFont(name: "Muli-Bold", size: 18) {
@@ -313,6 +335,7 @@ extension DiscoverTableViewController {
 }
 
 // MARK: - Update UI
+
 extension DiscoverTableViewController {
     private func updateUI() {
         updateTableView()
@@ -341,18 +364,19 @@ extension DiscoverTableViewController {
     private func displayName(for device: DiscoverRuuviTagViewModel) -> String {
         // identifier
         if let mac = device.mac {
-            return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
+            "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
+            "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
                 + " " + (device.luid?.value.prefix(4) ?? "")
         }
     }
 
     private func takeUserToBTSettings(userDeclined: Bool) {
         guard let url = URL(string: userDeclined ?
-                            UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
-              UIApplication.shared.canOpenURL(url) else {
+            UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+            UIApplication.shared.canOpenURL(url)
+        else {
             return
         }
         UIApplication.shared.open(url)
@@ -360,18 +384,25 @@ extension DiscoverTableViewController {
 }
 
 // MARK: - NFCNDEFReaderSessionDelegate
+
 extension DiscoverTableViewController: NFCNDEFReaderSessionDelegate {
-    func readerSession(_ session: NFCNDEFReaderSession,
-                       didInvalidateWithError error: Error) {
+    func readerSession(
+        _: NFCNDEFReaderSession,
+        didInvalidateWithError _: Error
+    ) {
         DispatchQueue.main.async { [weak self] in
             self?.stopNFCSession()
         }
     }
 
-    func readerSession(_ session: NFCNDEFReaderSession,
-                       didDetectNDEFs messages: [NFCNDEFMessage]) {
+    func readerSession(
+        _: NFCNDEFReaderSession,
+        didDetectNDEFs messages: [NFCNDEFMessage]
+    ) {
         DispatchQueue.main.async { [weak self] in
             self?.output?.viewDidReceiveNFCMessages(messages: messages)
         }
     }
 }
+
+// swiftlint:enable file_length

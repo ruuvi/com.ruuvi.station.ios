@@ -1,14 +1,15 @@
 import Foundation
+import RuuviLocalization
 import UIKit
 
 class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
 
-    @IBOutlet weak var headerTitleLabel: UILabel!
-    @IBOutlet weak var loggedInLabel: UILabel!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var signoutButton: UIButton!
-    @IBOutlet weak var deleteAccountButton: UIButton!
+    @IBOutlet var headerTitleLabel: UILabel!
+    @IBOutlet var loggedInLabel: UILabel!
+    @IBOutlet var usernameLabel: UILabel!
+    @IBOutlet var signoutButton: UIButton!
+    @IBOutlet var deleteAccountButton: UIButton!
 
     var viewModel: MyRuuviAccountViewModel? {
         didSet {
@@ -19,19 +20,21 @@ class MyRuuviAccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        localize()
         output.viewDidLoad()
     }
 
     // MARK: - Button actions
-    @IBAction func backButtonTouchUpInside(_ sender: Any) {
+
+    @IBAction func backButtonTouchUpInside(_: Any) {
         output.viewDidTriggerClose()
     }
 
-    @IBAction func deleteButtonTouchUpInside(_ sender: Any) {
+    @IBAction func deleteButtonTouchUpInside(_: Any) {
         output.viewDidTapDeleteButton()
     }
 
-    @IBAction func signoutButtonTouchUpInside(_ sender: Any) {
+    @IBAction func signoutButtonTouchUpInside(_: Any) {
         output.viewDidTapSignoutButton()
     }
 }
@@ -40,31 +43,32 @@ extension MyRuuviAccountViewController: MyRuuviAccountViewInput {
     func localize() {}
 
     func viewDidShowAccountDeletionConfirmation() {
-        let message = "MyRuuvi.Settings.DeleteAccount.Confirmation.message".localized()
+        let message = RuuviLocalization.MyRuuvi.Settings.DeleteAccount.Confirmation.message
         let alertVC = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 }
 
 extension MyRuuviAccountViewController {
     private func bindViewModel() {
-        guard let viewModel = viewModel, isViewLoaded else {
+        guard let viewModel, isViewLoaded
+        else {
             return
         }
         usernameLabel.bind(viewModel.username) { label, username in
             label.text = username
         }
         loggedInLabel.bind(viewModel.username) { label, username in
-            label.text = username == nil ? nil : "Menu.LoggedIn.title".localized()
+            label.text = username == nil ? nil : RuuviLocalization.Menu.LoggedIn.title
         }
     }
 
     private func configureViews() {
-        headerTitleLabel.text = "Menu.Label.MyRuuviAccount.text".localized()
-        deleteAccountButton.setTitle("MyRuuvi.Settings.DeleteAccount.title".localized(), for: .normal)
-        deleteAccountButton.setTitle("MyRuuvi.Settings.DeleteAccount.title".localized(), for: .normal)
-        signoutButton.setTitle("Menu.SignOut.text".localized(), for: .normal)
-        signoutButton.setTitle("Menu.SignOut.text".localized(), for: .highlighted)
+        headerTitleLabel.text = RuuviLocalization.Menu.Label.MyRuuviAccount.text
+        deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
+        deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
+        signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .normal)
+        signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .highlighted)
     }
 }

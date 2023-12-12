@@ -10,7 +10,8 @@ let package = Package(
     products: [
         .library(
             name: "RuuviDiscover",
-            targets: ["RuuviDiscover"])
+            targets: ["RuuviDiscover"]
+        ),
     ],
     dependencies: [
         .package(path: "../../Packages/RuuviOntology"),
@@ -27,17 +28,17 @@ let package = Package(
             name: "RuuviDiscover",
             dependencies: [
                 "RuuviOntology",
-                "RuuviContext", 
+                "RuuviContext",
                 "RuuviReactor",
                 "RuuviLocal",
                 "RuuviService",
                 "RuuviPresenters",
                 "BTKit",
-                "RuuviLocalization"
+                "RuuviLocalization",
             ]
         ),
         .testTarget(
             name: "RuuviDiscoverTests"
-        )
+        ),
     ]
 )

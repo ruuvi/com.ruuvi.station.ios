@@ -1,7 +1,7 @@
-import UIKit
-import Foundation
 import AVFoundation
+import Foundation
 import RuuviOntology
+import UIKit
 
 // swiftlint:disable:next type_name
 class PushAlertSoundSelectionTableViewController: UITableViewController {
@@ -19,7 +19,8 @@ class PushAlertSoundSelectionTableViewController: UITableViewController {
         self.title = title
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -32,11 +33,12 @@ class PushAlertSoundSelectionTableViewController: UITableViewController {
 }
 
 // MARK: - LIFECYCLE
+
 extension PushAlertSoundSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocalization()
         setUpUI()
+        localize()
         output.viewDidLoad()
     }
 }
@@ -56,47 +58,52 @@ extension PushAlertSoundSelectionTableViewController: PushAlertSoundSelectionVie
     }
 }
 
-extension PushAlertSoundSelectionTableViewController {
-    fileprivate func setUpUI() {
+private extension PushAlertSoundSelectionTableViewController {
+    func setUpUI() {
         view.backgroundColor = RuuviColor.ruuviPrimary
         setUpTableView()
     }
 
-    fileprivate func setUpTableView() {
+    func setUpTableView() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.register(PushAlertSelectionTableViewCell.self,
-                           forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(
+            PushAlertSelectionTableViewCell.self,
+            forCellReuseIdentifier: reuseIdentifier
+        )
     }
 
-    fileprivate func updateUI() {
+    func updateUI() {
         if isViewLoaded {
-            DispatchQueue.main.async(execute: { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 self?.tableView.reloadData()
-            })
+            }
         }
     }
 }
 
 // MARK: - UITableViewDataSource
-extension PushAlertSoundSelectionTableViewController {
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.items.count ?? 0
+extension PushAlertSoundSelectionTableViewController {
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        viewModel?.items.count ?? 0
     }
 
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: reuseIdentifier,
             for: indexPath
-        ) as? PushAlertSelectionTableViewCell else {
+        ) as? PushAlertSelectionTableViewCell
+        else {
             fatalError()
         }
-        if let viewModel = viewModel {
+        if let viewModel {
             let item = viewModel.items[indexPath.row]
             cell.configure(
-                title: item.title,
-                selection: viewModel.selection.title
+                title: item.title(""),
+                selection: viewModel.selection.title("")
             )
         }
         return cell
@@ -104,17 +111,21 @@ extension PushAlertSoundSelectionTableViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension PushAlertSoundSelectionTableViewController {
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath) {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let viewModel = viewModel {
+        if let viewModel {
             output.viewDidSelectItem(item: viewModel.items[indexPath.row])
         }
     }
 }
 
 // MARK: - Audio Player
+
 extension PushAlertSoundSelectionTableViewController {
     func playSound(from sound: RuuviAlertSound) {
         audioPlayer?.invalidate()
@@ -123,7 +134,8 @@ extension PushAlertSoundSelectionTableViewController {
         guard let audioURL = Bundle.main.url(
             forResource: sound.fileName,
             withExtension: "caf"
-        ) else {
+        )
+        else {
             return
         }
 
@@ -133,5 +145,4 @@ extension PushAlertSoundSelectionTableViewController {
             audioPlayer?.play()
         }
     }
-
 }

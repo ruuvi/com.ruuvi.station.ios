@@ -1,10 +1,10 @@
 import Foundation
-import RuuviOntology
 import RuuviLocal
+import RuuviOntology
 
-extension Array where Element == AnyRuuviTagSensor {
+extension [AnyRuuviTagSensor] {
     func reordered() -> Self {
-        return self.sorted(by: {
+        sorted(by: {
             // Sort sensors by name alphabetically
             let first = $0.name.lowercased()
             let second = $1.name.lowercased()

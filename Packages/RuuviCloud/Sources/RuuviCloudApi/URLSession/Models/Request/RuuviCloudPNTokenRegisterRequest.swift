@@ -3,7 +3,7 @@ import Foundation
 // swiftlint:disable:next type_name
 public enum RuuviCloudPNTokenRegisterRequestParamsKey: String {
     case sound = "soundFile"
-    case language = "language"
+    case language
 }
 
 public struct RuuviCloudPNTokenRegisterRequest: Encodable {
@@ -13,11 +13,13 @@ public struct RuuviCloudPNTokenRegisterRequest: Encodable {
     let data: String?
     let params: [String: String]?
 
-    public init(token: String,
-                type: String,
-                name: String? = nil,
-                data: String? = nil,
-                params: [String: String]? = nil) {
+    public init(
+        token: String,
+        type: String,
+        name: String? = nil,
+        data: String? = nil,
+        params: [String: String]? = nil
+    ) {
         self.token = token
         self.type = type
         self.name = name
