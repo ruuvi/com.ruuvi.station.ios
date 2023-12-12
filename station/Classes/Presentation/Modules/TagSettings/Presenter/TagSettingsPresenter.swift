@@ -559,6 +559,11 @@ extension TagSettingsPresenter {
             ruuviTag.ownersPlan?.lowercased() != "basic" &&
             ruuviTag.ownersPlan?.lowercased() != "free"
 
+        viewModel.isCloudConnectionAlertsAvailable.value =
+            ruuviUser.isAuthorized &&
+            ruuviTag.isCloud &&
+            viewModel.isOwnersPlanProPlus.value ?? false
+
         if ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value,
             !ruuviTag.isCloud {

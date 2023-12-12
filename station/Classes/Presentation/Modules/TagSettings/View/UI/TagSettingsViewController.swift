@@ -1375,7 +1375,7 @@ extension TagSettingsViewController {
         }
 
         // Cloud Connection
-        tableView.bind(viewModel.isOwnersPlanProPlus) {
+        tableView.bind(viewModel.isCloudConnectionAlertsAvailable) {
             [weak self] _, _ in
             self?.reloadSection(identifier: .alertCloudConnection)
         }
@@ -2122,7 +2122,7 @@ extension TagSettingsViewController {
 
     // Cloud Connection
     private func cloudConnectionAlertVisible() -> Bool {
-        viewModel?.isOwnersPlanProPlus.value ?? false
+        viewModel?.isCloudConnectionAlertsAvailable.value ?? false
     }
 
     private func cloudConnectionAlertRangeDescription(
