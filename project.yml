@@ -199,9 +199,9 @@ include:
 - Modules/RuuviDiscover/target.yml
 - Modules/RuuviOnboard/target.yml
 - Modules/RuuviFirmware/target.yml
-- widget_frameworks.yml
+- widget.yml
 - pnservice.yml
-- intents_frameworks.yml
+- intents.yml
 
 configs:
   Alpha: debug

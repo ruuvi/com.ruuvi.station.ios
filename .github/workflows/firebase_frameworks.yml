@@ -56,7 +56,7 @@ jobs:
 
       - name: Increment build number
         run: |
-          make set_build_number_frameworks
+          make set_build_number
 
       - name: Tools cache
         uses: actions/cache@v2
@@ -68,7 +68,7 @@ jobs:
 
       - name: Make xcodeproj
         run: |
-          make xcodeproj_with_frameworks
+          make xcodeproj
 
       - name: SPM Cache
         uses: actions/cache@v2
