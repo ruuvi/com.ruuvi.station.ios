@@ -94,6 +94,7 @@ struct TagSettingsViewModel {
     let isAlertsEnabled: Observable<Bool?> = .init(false)
     let isPNAlertsAvailiable: Observable<Bool?> = .init(false)
     let isCloudAlertsAvailable: Observable<Bool?> = .init(false)
+    let isCloudConnectionAlertsAvailable: Observable<Bool?> = .init(false)
 
     var source: Observable<RuuviTagSensorRecordSource?> = .init()
 
