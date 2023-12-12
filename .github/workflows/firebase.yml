@@ -1,13 +1,21 @@
-name: Upload to Firebase
+name: Deploy to Firebase [Ruuvi Station]
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types:
+      - closed
+    branches: [alpha]
 
 jobs:
   build:
-    runs-on: macos-latest
+    if: github.event.pull_request.merged == true
+    runs-on: macos-13
 
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15'
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -20,18 +28,7 @@ jobs:
         run: rm -rf ${{ github.workspace }}/station.localization
 
       - name: Clone localisation submodule
-        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
-
-      - name: Cocoapods Cache
-        uses: actions/cache@v2
-        with:
-          path: Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
-
-      - name: CocoaPods Install
-        run: pod install
+        run: git clone -b master https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
       - name: Install the Apple certificate and provisioning profiles
         env:
@@ -57,10 +54,33 @@ jobs:
           echo -n "${{ secrets.INTENTS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
           echo -n "${{ secrets.PNSERVICE_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.pnservice.mobileprovision
 
+      - name: Increment build number
+        run: |
+          make set_build_number
+
+      - name: Tools cache
+        uses: actions/cache@v2
+        with:
+          path: .tools/
+          key: ${{ runner.os }}-tools-${{ hashFiles('/.tools/') }}
+          restore-keys: |
+            ${{ runner.os }}-tools-
+
+      - name: Make xcodeproj
+        run: |
+          make xcodeproj
+
+      - name: SPM Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/Ruuvi*/SourcePackages/
+          key: ${{ runner.os }}-Ruuvi-${{ hashFiles('Ruuvi.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-Ruuvi-
+
       - name: Build app
         run: |
-          xcodebuild -workspace station.xcworkspace -scheme station_dev -configuration Debug -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
-
+          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
       - name: Export IPA
         env:
           EXPORT_PLIST: ${{ secrets.ADHOC_EXPORT_OPTIONS }}
@@ -69,14 +89,21 @@ jobs:
           echo -n "$EXPORT_PLIST" | base64 --decode > $EXPORT_PLIST_PATH
           xcodebuild -exportArchive -archivePath ./Build/Station_Dev.xcarchive -exportOptionsPlist $EXPORT_PLIST_PATH -exportPath ${{ runner.temp }}/export
 
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v4.1.0
+
+      - name: Install firebase CLI
+        run: |
+          make installed_firebase
+
       - name: Distribute to Firebase
         run: |
-          curl -sL https://firebase.tools | bash
-          firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa \
+          .tools/firebase/firebase appdistribution:distribute ${{ runner.temp }}/export/*.ipa \
             --app ${{ secrets.GOOGLE_APP_ID }} \
             --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-            --release-notes "Features, enhancements and bug fixes."
+            --release-notes "${{ steps.build_changelog.outputs.changelog }}"
 
       - name: Zip dSYM files
         run: |
