@@ -18,6 +18,7 @@ import RuuviNotifier
 import RuuviPool
 import RuuviPresenters
 import RuuviUser
+import RuuviCloud
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -78,6 +79,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
+    private var cloudRequestStateToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
     private var exportFileUrl: URL?
     private var previousAdvertisementSequence: Int?
@@ -109,6 +111,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         appDidBecomeActiveToken?.invalidate()
         alertDidChangeToken?.invalidate()
         backgroundToken?.invalidate()
+        cloudRequestStateToken?.invalidate()
         timer?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
@@ -143,6 +146,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingConnectionStatus()
         startObservingApplicationState()
         startObservingAlertChanges()
+        startObservingCloudRequestState()
         startMutedTillTimer()
         startListeningToRuuviTagsAlertStatus()
         processAlerts()
@@ -1139,6 +1143,30 @@ extension TagSettingsPresenter {
             )
     }
 
+    private func startObservingCloudRequestState() {
+        cloudRequestStateToken?.invalidate()
+        cloudRequestStateToken = nil
+
+        cloudRequestStateToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .RuuviCloudRequestStateDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] notification in
+                    guard let self,
+                          let userInfo = notification.userInfo,
+                          let macId = userInfo[RuuviCloudRequestStateKey.macId] as? String,
+                          macId == self.ruuviTag.macId?.value,
+                          let state = userInfo[RuuviCloudRequestStateKey.state] as? RuuviCloudRequestStateType
+                    else {
+                        return
+                    }
+                    self.presentActivityIndicator(with: state)
+                }
+            )
+    }
+
     private func reloadMutedTill() {
         if let mutedTill = viewModel.temperatureAlertMutedTill.value,
            mutedTill < Date() {
@@ -1767,6 +1795,31 @@ extension TagSettingsPresenter {
         localSyncState.setSyncDate(nil)
         localSyncState.setGattSyncDate(nil, for: ruuviTag.macId)
         settings.setOwnerCheckDate(for: ruuviTag.macId, value: nil)
+    }
+
+    private func presentActivityIndicator(with state: RuuviCloudRequestStateType) {
+        switch state {
+        case .loading:
+            activityPresenter.show(
+                with: .loading(
+                    message: RuuviLocalization.activitySavingToCloud
+                )
+            )
+        case .success:
+            activityPresenter.update(
+                with: .success(
+                    message: RuuviLocalization.activitySavingSuccess
+                )
+            )
+        case .failed:
+            activityPresenter.update(
+                with: .success(
+                    message: RuuviLocalization.activitySavingFail
+                )
+            )
+        case .complete:
+            activityPresenter.dismiss()
+        }
     }
 }
 

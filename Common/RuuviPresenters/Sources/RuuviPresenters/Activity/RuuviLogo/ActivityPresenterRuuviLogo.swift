@@ -34,6 +34,9 @@ public extension ActivityPresenterRuuviLogo {
     }
 
     func update(with state: ActivityPresenterState) {
+        // Reset start time with state update since we want to show
+        // latest state message before dismissing the presenter.
+        startTime = CFAbsoluteTimeGetCurrent()
         activityPresenterViewProvider.updateState(state)
     }
 
