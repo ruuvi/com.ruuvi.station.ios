@@ -1,7 +1,6 @@
 # Ruuvi Station
 
 [![Swift Version][swift-image]][swift-url]
-[![Build Status](https://travis-ci.org/ruuvi/com.ruuvi.station.ios.svg?branch=master)](https://travis-ci.org/ruuvi/com.ruuvi.station.ios)
 [![License][license-image]][license-url]
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 

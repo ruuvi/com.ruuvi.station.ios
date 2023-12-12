@@ -1,17 +1,14 @@
+---
 targets: 
-  station.intents:
+  station.widgets:
     type: app-extension
     platform: iOS
     info:
-      path: intents/Info.plist
+      path: Info.plist
       properties:
         NSExtension: 
-          NSExtensionAttributes: 
-            IntentsRestrictedWhileLocked: []
-            IntentsRestrictedWhileProtectedDataUnavailable: []
-            IntentsSupported: [RuuviTagSelectionIntent]
-          NSExtensionPointIdentifier: com.apple.intents-service
-          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).IntentHandler
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf]
         CFBundleDisplayName: Ruuvi Station
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: $(MARKETING_VERSION)
@@ -19,23 +16,26 @@ targets:
         NSHumanReadableCopyright: Copyright © 2023 Ruuvi Innovations Oy. All rights reserved.
     settings:
       base:
-        CODE_SIGN_ENTITLEMENTS: station_intents.entitlements
+        CODE_SIGN_ENTITLEMENTS: Apps/RuuviStation/Widgets/Sources/Widgets.entitlements
       configs:
         Alpha: 
           CODE_SIGN_IDENTITY: "iPhone Distribution"
-          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.intents"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
         Debug:
           CODE_SIGN_STYLE: Automatic
           OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
         Release:
-          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
           CODE_SIGN_IDENTITY: "iPhone Distribution"
-          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.intents"
-    sources:
-    - path: intents
-    - path: ruuvi-widgets
-      excludes: 
-      - Info.plist
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
+          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
+    sources: 
+      - path: Sources/
+        name: Widgets
+        excludes:
+        - "*.entitlements"
+        - Info.plist
+    resources:
+      - path: ../Sources/Resources/Strings/
     dependencies:
       - package: Swinject
       - package: BTKit
@@ -59,4 +59,6 @@ targets:
       - target: RuuviPersistence
         embed: true
       - target: RuuviContext
+        embed: true
+      - target: RuuviLocalization
         embed: true

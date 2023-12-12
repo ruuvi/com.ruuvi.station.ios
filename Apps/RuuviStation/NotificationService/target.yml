@@ -1,9 +1,10 @@
+---
 targets: 
   station.pnservice:
     type: app-extension
     platform: iOS
     info:
-      path: pnservice/Info.plist
+      path: Info.plist
       properties:
         NSExtension: 
           NSExtensionPointIdentifier: com.apple.usernotifications.service
@@ -15,7 +16,7 @@ targets:
         NSHumanReadableCopyright: Copyright © 2023 Ruuvi Innovations Oy. All rights reserved.
     settings:
       base:
-        CODE_SIGN_ENTITLEMENTS: pnservice.entitlements
+        CODE_SIGN_ENTITLEMENTS: Apps/RuuviStation/NotificationService/Sources/NotificationService.entitlements
       configs:
         Alpha: 
           CODE_SIGN_IDENTITY: "iPhone Distribution"
@@ -28,7 +29,11 @@ targets:
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.pnservice"
     sources:
-      - path: pnservice
+      - path: Sources
+        name: NotificationService
+        excludes:
+        - "*.entitlements"
+        - Info.plist
     resources:
-      - path: station/Resources/Strings/
-      - path: station/Resources/Sounds/
+      - path: ../Station/Sources/Resources/Strings/
+      - path: ../Station/Sources/Resources/Sounds/
