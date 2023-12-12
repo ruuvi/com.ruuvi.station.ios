@@ -1,7 +1,6 @@
 # Ruuvi Station
 
 [![Swift Version][swift-image]][swift-url]
-[![Build Status](https://travis-ci.org/ruuvi/com.ruuvi.station.ios.svg?branch=master)](https://travis-ci.org/ruuvi/com.ruuvi.station.ios)
 [![License][license-image]][license-url]
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -65,10 +64,8 @@ xed Ruuvi.xcodeproj
 
 <details>
 <summary>Optionally</summary>
-
-1. Obtain [OpenWeatherMap](https://openweathermap.org) API Key and put it into ```/station/Classes/Networking/Assembly/Networking.plist```
    
-2. Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
+Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
    
 </details>
 

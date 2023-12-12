@@ -1,6 +1,9 @@
 ---
 targets:
   RuuviOnboard:
+    sources:
+    - path: Sources
+      name: Onboard
     templates:
     - Module
     dependencies:

@@ -3,5 +3,8 @@ targets:
   RuuviUser:
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: User
     dependencies:
     - package: KeychainAccess

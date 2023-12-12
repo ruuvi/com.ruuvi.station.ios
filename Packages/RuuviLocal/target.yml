@@ -3,6 +3,9 @@ targets:
   RuuviLocal:
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Local
     dependencies:
     - package: Future
     - target: RuuviOntology

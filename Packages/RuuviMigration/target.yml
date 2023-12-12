@@ -3,6 +3,9 @@ targets:
   RuuviMigration:
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Migration
     dependencies:
     - package: Humidity
     - package: Future

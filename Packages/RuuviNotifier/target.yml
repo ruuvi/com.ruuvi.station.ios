@@ -3,6 +3,9 @@ targets:
   RuuviNotifier:
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Notifier
     dependencies:
     - package: Humidity
     - target: RuuviOntology

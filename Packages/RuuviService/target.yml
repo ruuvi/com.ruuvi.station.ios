@@ -3,6 +3,9 @@ targets:
   RuuviService:
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Service
     dependencies:
     - package: Future
     - package: Humidity

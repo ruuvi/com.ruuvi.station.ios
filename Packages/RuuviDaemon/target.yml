@@ -3,6 +3,9 @@ targets:
   RuuviDaemon:
     templates:
     - Framework
+    sources:
+    - path: Sources
+      name: Daemon
     dependencies:
     - package: BTKit
     - package: Future

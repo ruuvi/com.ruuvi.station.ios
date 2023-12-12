@@ -3,3 +3,6 @@ targets:
   RuuviLocalization:
     templates:
     - CommonFramework
+    sources:
+    - path: Sources
+      name: Localization
