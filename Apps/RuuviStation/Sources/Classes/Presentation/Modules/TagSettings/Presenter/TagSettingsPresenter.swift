@@ -1813,7 +1813,7 @@ extension TagSettingsPresenter {
             )
         case .failed:
             activityPresenter.update(
-                with: .success(
+                with: .failed(
                     message: RuuviLocalization.activitySavingFail
                 )
             )
