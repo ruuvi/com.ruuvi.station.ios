@@ -9,11 +9,6 @@ targets:
         excludes:
         - "*.entitlements"
         - Info.plist
-      # - path: Widgets/Sources/Widgets.entitlements
-      #   name: Widgets
-      # - path: Intents/Sources/Intents.entitlements
-      #   name: Intents
-      # - path: NotificationService/Sources/NotificationService.entitlements
     dependencies:
       - target: "station.widgets"
       - target: "station.intents"
@@ -107,18 +102,6 @@ targets:
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
-    preBuildScripts:
-      - path: ../../scripts/build/generate_l10n.sh
-        name: Generate L10N
-        inputFiles:
-          - $(SRCROOT)/station.localization/station.localization.json
-        outputFiles:
-          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/en.lproj/Localizable.strings
-          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/sv.lproj/Localizable.strings
-          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/ru.lproj/Localizable.strings
-          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/fi.lproj/Localizable.strings
-          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/fr.lproj/Localizable.strings
-          - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Strings/de.lproj/Localizable.strings
     postCompileScripts:
       - path: ../../scripts/build/lint.sh
         name: Lint

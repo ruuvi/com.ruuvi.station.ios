@@ -6,3 +6,18 @@ targets:
     sources:
     - path: Sources
       name: Localization
+    - path: Sources/RuuviLocalization/RuuviLocalization.swift
+      optional: true
+    preBuildScripts:
+      - path: ../../scripts/build/generate_l10n.sh
+        name: Generate L10N
+        inputFiles:
+          - $(SRCROOT)/station.localization/station.localization.json
+        outputFiles:
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviLocalization/RuuviLocalization.swift
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/sv.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/ru.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/fi.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/fr.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/de.lproj/Localizable.strings
