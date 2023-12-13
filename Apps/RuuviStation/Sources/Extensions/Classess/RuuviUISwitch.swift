@@ -1,9 +1,9 @@
+import RuuviLocalization
 import UIKit
 
 class RuuviUISwitch: UISwitch {
-    private let activeThumbColor: UIColor? =
-        RuuviColor.ruuviTintColor
-    private let inactiveThumbColor: UIColor? = RuuviColor.ruuviSwitchDisabledThumbTint
+    private let activeThumbColor: UIColor? = RuuviColor.tintColor.color
+    private let inactiveThumbColor: UIColor? = RuuviColor.switchDisabledThumbTint.color
 
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -43,7 +43,7 @@ extension NotificationsSettingsTableViewController: NotificationsSettingsViewInp
 
 private extension NotificationsSettingsTableViewController {
     func setUpUI() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         setUpTableView()
     }
 

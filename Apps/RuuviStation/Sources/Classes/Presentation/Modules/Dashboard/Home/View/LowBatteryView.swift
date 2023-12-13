@@ -5,7 +5,7 @@ class BatteryLevelView: UIView {
     private lazy var batteryLevelLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
-            .dashboardIndicatorTextColor?
+            .dashboardIndicator.color
             .withAlphaComponent(0.5)
         label.textAlignment = .right
         label.numberOfLines = 0
@@ -19,7 +19,7 @@ class BatteryLevelView: UIView {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.image = UIImage(systemName: "battery.25")
-        iv.tintColor = RuuviColor.ruuviOrangeColor
+        iv.tintColor = RuuviColor.orangeColor.color
         return iv
     }()
 

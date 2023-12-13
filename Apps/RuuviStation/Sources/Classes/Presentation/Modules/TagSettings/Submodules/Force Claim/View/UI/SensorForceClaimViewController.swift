@@ -18,7 +18,7 @@ class SensorForceClaimViewController: UIViewController {
 
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.text = RuuviLocalization.forceClaimSensorDescription1
@@ -28,7 +28,7 @@ class SensorForceClaimViewController: UIViewController {
 
     private lazy var claimSensorButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 25
         )
         button.setTitle(RuuviLocalization.forceClaim, for: .normal)
@@ -43,7 +43,7 @@ class SensorForceClaimViewController: UIViewController {
     }()
 
     private lazy var sensorClaimNotesViewContainer: UIView = .init(
-        color: RuuviColor.ruuviPrimary
+        color: RuuviColor.primary.color
     )
     private lazy var sensorClaimNotesView: UITextView = {
         let tv = UITextView()
@@ -51,7 +51,7 @@ class SensorForceClaimViewController: UIViewController {
         tv.isEditable = false
         tv.textAlignment = .left
         tv.text = RuuviLocalization.forceClaimSensorDescription2
-        tv.textColor = RuuviColor.ruuviTextColor
+        tv.textColor = RuuviColor.textColor.color
         tv.backgroundColor = .clear
         tv.font = UIFont.Muli(.regular, size: 16)
         tv.isScrollEnabled = true
@@ -60,7 +60,7 @@ class SensorForceClaimViewController: UIViewController {
 
     private lazy var useNFCButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 25
         )
         button.setTitle(
@@ -79,7 +79,7 @@ class SensorForceClaimViewController: UIViewController {
 
     private lazy var useBluetoothButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 25
         )
         button.setTitle(
@@ -173,7 +173,7 @@ extension SensorForceClaimViewController {
     private func setUpBase() {
         title = RuuviLocalization.forceClaimSensor
 
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)

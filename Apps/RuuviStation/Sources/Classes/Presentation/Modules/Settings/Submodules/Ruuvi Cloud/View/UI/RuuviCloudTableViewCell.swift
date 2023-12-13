@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol RuuviCloudTableViewCellDelegate: NSObjectProtocol {
@@ -9,7 +10,7 @@ class RuuviCloudTableViewCell: UITableViewCell {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.bold, size: 16)

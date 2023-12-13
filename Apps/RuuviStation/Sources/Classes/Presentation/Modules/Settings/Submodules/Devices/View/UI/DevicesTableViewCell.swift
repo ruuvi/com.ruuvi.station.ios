@@ -15,7 +15,7 @@ class DevicesTableViewCell: UITableViewCell {
     // UI
     private lazy var deviceNameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBigTextColor
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Montserrat(.bold, size: 14)
@@ -24,7 +24,7 @@ class DevicesTableViewCell: UITableViewCell {
 
     private lazy var tokenIdLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorTextColor
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Montserrat(.regular, size: 12)
@@ -33,7 +33,7 @@ class DevicesTableViewCell: UITableViewCell {
 
     private lazy var lastAccessedLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorTextColor
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Montserrat(.regular, size: 12)
@@ -56,7 +56,7 @@ private extension DevicesTableViewCell {
         selectionStyle = .none
 
         let container = UIView(
-            color: RuuviColor.dashboardCardBGColor,
+            color: RuuviColor.dashboardCardBG.color,
             cornerRadius: 8
         )
         contentView.addSubview(container)

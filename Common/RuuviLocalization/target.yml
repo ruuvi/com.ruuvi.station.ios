@@ -15,7 +15,7 @@ targets:
         name: Generate Resources
         inputFiles:
           - $(SRCROOT)/station.localization/station.localization.json
-          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/Colors.xsassets
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviColors.xsassets
         outputFiles:
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strings
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/sv.lproj/Localizable.strings

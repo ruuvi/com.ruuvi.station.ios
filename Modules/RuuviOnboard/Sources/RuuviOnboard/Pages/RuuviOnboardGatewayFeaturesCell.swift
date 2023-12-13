@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
@@ -105,7 +106,7 @@ private extension RuuviOnboardGatewayFeaturesCell {
             appImageView.fillSuperview(padding: .init(top: 30, left: 30, bottom: 30, right: 30))
         }
 
-        let footerView = UIView(color: RuuviAssets.ruuviTintColor)
+        let footerView = UIView(color: RuuviColor.tintColor.color)
         container.addSubview(footerView)
         footerView.anchor(
             top: appImageViewContainer.bottomAnchor,

@@ -12,7 +12,4 @@ enum RuuviAssets {
     static let web = "onboarding_web"
     static let beaver_sign_in = "onboarding_beaver_sign_in"
     static let gateway = "gateway"
-
-    // Color
-    static let ruuviTintColor = UIColor(named: "RuuviTintColor")
 }

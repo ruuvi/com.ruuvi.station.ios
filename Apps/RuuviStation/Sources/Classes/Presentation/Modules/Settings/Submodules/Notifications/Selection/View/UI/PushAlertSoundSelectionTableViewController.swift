@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import RuuviLocalization
 import RuuviOntology
 import UIKit
 
@@ -60,7 +61,7 @@ extension PushAlertSoundSelectionTableViewController: PushAlertSoundSelectionVie
 
 private extension PushAlertSoundSelectionTableViewController {
     func setUpUI() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         setUpTableView()
     }
 

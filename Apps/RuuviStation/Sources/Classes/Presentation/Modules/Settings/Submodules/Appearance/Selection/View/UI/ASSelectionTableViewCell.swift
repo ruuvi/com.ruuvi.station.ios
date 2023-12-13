@@ -1,9 +1,10 @@
+import RuuviLocalization
 import UIKit
 
 class ASSelectionTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.regular, size: 16)
@@ -28,7 +29,7 @@ class ASSelectionTableViewCell: UITableViewCell {
 
     fileprivate func setUpUI() {
         backgroundColor = .clear
-        tintColor = RuuviColor.ruuviTintColor
+        tintColor = RuuviColor.tintColor.color
 
         addSubview(titleLabel)
         titleLabel.anchor(
@@ -52,8 +53,8 @@ extension ASSelectionTableViewCell {
             UIFont.Muli(.bold, size: 16) :
             UIFont.Muli(.regular, size: 16)
         titleLabel.textColor = isSelected ?
-            RuuviColor.ruuviMenuTextColor :
-            RuuviColor.ruuviTextColor
+        RuuviColor.menuTextColor.color :
+            RuuviColor.textColor.color
         accessoryType = isSelected ? .checkmark : .none
     }
 }

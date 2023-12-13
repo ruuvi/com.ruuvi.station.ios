@@ -22,7 +22,7 @@ class TagSettingsBackgroundSelectionView: UIView {
 
     private lazy var cameraIconContainer: UIView = {
         let container = UIView(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 30
         )
         let cameraIconView = UIImageView()

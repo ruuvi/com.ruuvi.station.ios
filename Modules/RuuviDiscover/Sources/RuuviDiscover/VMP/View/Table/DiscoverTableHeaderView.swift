@@ -1,5 +1,6 @@
 import CoreBluetooth
 import CoreNFC
+import RuuviLocalization
 import UIKit
 
 protocol DiscoverTableHeaderViewDelegate: NSObjectProtocol {
@@ -93,7 +94,7 @@ class DiscoverTableHeaderView: UIView {
         if let font = UIFont(name: "Muli-Regular", size: 16) {
             button.titleLabel?.font = font
         }
-        button.tintColor = UIColor(named: "RuuviTintColor")
+        button.tintColor = RuuviColor.tintColor.color
         button.addTarget(
             self,
             action: #selector(handleButtonTap),

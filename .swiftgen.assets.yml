@@ -1,5 +1,5 @@
 xcassets:
-  - inputs: ./Common/RuuviLocalization/Sources/Resources/Colors.xcassets
+  - inputs: ./Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
     outputs:
       - templatePath: ./Common/RuuviLocalization/Templates/xcassets-swift5.stencil
         output: ./Common/RuuviLocalization/Sources/RuuviColor.swift

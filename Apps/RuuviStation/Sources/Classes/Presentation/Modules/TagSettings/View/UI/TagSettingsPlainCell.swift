@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 /// Leading title label and trailing aligned value label
@@ -6,7 +7,7 @@ import UIKit
 class TagSettingsPlainCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.regular, size: 14)
@@ -15,7 +16,7 @@ class TagSettingsPlainCell: UITableViewCell {
 
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .right
         label.numberOfLines = 1
         label.font = UIFont.Muli(.regular, size: 14)

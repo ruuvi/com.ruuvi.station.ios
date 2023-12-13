@@ -12,3 +12,4 @@ targets:
     dependencies:
     - package: BTKit
     - target: RuuviDFU
+    - target: RuuviLocalization

@@ -81,7 +81,7 @@ private extension BackgroundSelectionViewController {
     }
 
     func setUpBaseView() {
-        view.backgroundColor = RuuviColor.dashboardBGColor
+        view.backgroundColor = RuuviColor.dashboardBG.color
     }
 
     func setUpHeaderView() {

@@ -13,7 +13,7 @@ final class OwnerViewController: UIViewController {
     private lazy var removeCloudHistoryTitleLabel: UILabel = {
         let label = UILabel()
         label.text = RuuviLocalization.removeCloudHistoryTitle
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 14)
@@ -23,7 +23,7 @@ final class OwnerViewController: UIViewController {
     private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
         let label = UILabel()
         label.text = RuuviLocalization.removeCloudHistoryDescription
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 14)
