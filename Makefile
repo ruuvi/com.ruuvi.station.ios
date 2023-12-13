@@ -2,7 +2,7 @@
 
 # generates xcodeproj for frameworks build configuration
 xcodeproj: installed_xcodegen installed_swiftgen installed_swiftlint
-	.tools/xcodegen/bin/xcodegen -s project.yml
+	scripts/generate_project.sh
 
 # install firebase
 installed_firebase: .tools/firebase/firebase
