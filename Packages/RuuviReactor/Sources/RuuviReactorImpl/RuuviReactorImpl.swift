@@ -4,12 +4,6 @@ import GRDB
 import RuuviContext
 import RuuviOntology
 import RuuviPersistence
-#if canImport(RuuviOntologyRealm)
-    import RuuviOntologyRealm
-#endif
-#if canImport(RuuviOntologySQLite)
-    import RuuviOntologySQLite
-#endif
 
 class RuuviReactorImpl: RuuviReactor {
     typealias SQLiteEntity = RuuviTagSQLite

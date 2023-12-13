@@ -4,12 +4,6 @@ import GRDB
 import RealmSwift
 import RuuviContext
 import RuuviOntology
-#if canImport(RuuviOntologyRealm)
-    import RuuviOntologyRealm
-#endif
-#if canImport(RuuviOntologySQLite)
-    import RuuviOntologySQLite
-#endif
 
 final class SensorSettingsCombine {
     var luid: LocalIdentifier?

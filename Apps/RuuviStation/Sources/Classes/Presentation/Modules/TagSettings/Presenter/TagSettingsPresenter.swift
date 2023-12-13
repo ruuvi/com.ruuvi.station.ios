@@ -9,9 +9,6 @@ import RuuviReactor
 import RuuviService
 import RuuviStorage
 import UIKit
-#if canImport(RuuviServiceOwnership)
-    import RuuviServiceOwnership
-#endif
 import RuuviCore
 import RuuviDaemon
 import RuuviNotifier
