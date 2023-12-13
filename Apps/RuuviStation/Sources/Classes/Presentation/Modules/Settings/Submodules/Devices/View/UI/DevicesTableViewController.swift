@@ -90,7 +90,7 @@ private extension DevicesTableViewController {
     }
 
     func setUpTableView() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         tableView.showsVerticalScrollIndicator = false
         tableView.tableFooterView = UIView()
         tableView.estimatedRowHeight = UITableView.automaticDimension

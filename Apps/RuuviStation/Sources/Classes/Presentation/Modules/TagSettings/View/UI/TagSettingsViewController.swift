@@ -2607,7 +2607,7 @@ extension TagSettingsViewController {
             cells: offsetCorrectionItems,
             collapsed: true,
             headerType: .expandable,
-            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor,
+            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
             font: UIFont.Muli(.bold, size: 18)
         )
         return section
@@ -2847,7 +2847,7 @@ extension TagSettingsViewController {
             ],
             collapsed: true,
             headerType: .expandable,
-            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor,
+            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
             font: UIFont.Muli(.bold, size: 18)
         )
         return section
@@ -3045,7 +3045,7 @@ extension TagSettingsViewController {
         if let batteryLow {
             // swiftlint:disable:next line_length
             let batteryStatus = batteryLow ? "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Replace.message))" : "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Ok.message))"
-            let indicatorColor = batteryLow ? .red : RuuviColor.ruuviTintColor
+            let indicatorColor = batteryLow ? .red : RuuviColor.tintColor.color
             return (status: batteryStatus, color: indicatorColor)
         } else {
             return (status: nil, color: nil)
@@ -3095,7 +3095,7 @@ extension TagSettingsViewController {
             ],
             collapsed: true,
             headerType: .expandable,
-            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor,
+            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
             font: UIFont.Muli(.bold, size: 18)
         )
         return section
@@ -3149,7 +3149,7 @@ extension TagSettingsViewController {
             ],
             collapsed: true,
             headerType: .expandable,
-            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor,
+            backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
             font: UIFont.Muli(.bold, size: 18)
         )
         return section
@@ -3524,7 +3524,7 @@ private extension TagSettingsViewController {
     func setUpUI() {
         title = RuuviLocalization.TagSettings.NavigationItem.title
 
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)

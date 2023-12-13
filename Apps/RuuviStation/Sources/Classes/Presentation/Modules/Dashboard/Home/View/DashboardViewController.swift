@@ -76,7 +76,7 @@ class DashboardViewController: UIViewController {
     // UI
     private lazy var noSensorView: NoSensorView = {
         let view = NoSensorView()
-        view.backgroundColor = RuuviColor.dashboardCardBGColor
+        view.backgroundColor = RuuviColor.dashboardCardBG.color
         view.layer.cornerRadius = 12
         view.clipsToBounds = true
         view.delegate = self
@@ -92,14 +92,14 @@ class DashboardViewController: UIViewController {
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
-        iv.tintColor = RuuviColor.logoTintColor
+        iv.tintColor = RuuviColor.logoTintColor.color
         return iv
     }()
 
     // Action Buttons
     private lazy var menuButton: UIButton = {
         let button = UIButton()
-        button.tintColor = RuuviColor.menuButtonTintColor
+        button.tintColor = RuuviColor.menuTintColor.color
         let menuImage = UIImage(named: "baseline_menu_white_48pt")
         button.setImage(menuImage, for: .normal)
         button.setImage(menuImage, for: .highlighted)
@@ -115,10 +115,10 @@ class DashboardViewController: UIViewController {
     private lazy var viewButton: RuuviContextMenuButton =
         .init(
             menu: viewToggleMenuOptions(),
-            titleColor: RuuviColor.dashboardIndicatorTextColor,
+            titleColor: RuuviColor.dashboardIndicator.color,
             title: RuuviLocalization.view,
             icon: RuuviAssets.dropDownArrowImage,
-            iconTintColor: RuuviColor.logoTintColor,
+            iconTintColor: RuuviColor.logoTintColor.color,
             iconSize: .init(width: 14, height: 14),
             preccedingIcon: false
         )
@@ -140,7 +140,7 @@ class DashboardViewController: UIViewController {
 
     private lazy var refresher: UIRefreshControl = {
         let rc = UIRefreshControl()
-        rc.tintColor = RuuviColor.ruuviTintColor
+        rc.tintColor = RuuviColor.tintColor.color
         rc.layer.zPosition = -1
         rc.alpha = 0
         rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
@@ -382,7 +382,7 @@ private extension DashboardViewController {
     }
 
     func setUpBaseView() {
-        view.backgroundColor = RuuviColor.dashboardBGColor
+        view.backgroundColor = RuuviColor.dashboardBG.color
 
         view.addSubview(noSensorView)
         noSensorView.anchor(

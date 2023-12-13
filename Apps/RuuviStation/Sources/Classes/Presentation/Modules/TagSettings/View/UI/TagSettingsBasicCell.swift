@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 enum TagSettingsBasicAccessory {
@@ -11,7 +12,7 @@ enum TagSettingsBasicAccessory {
 class TagSettingsBasicCell: UITableViewCell {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.bold, size: 14)
@@ -20,7 +21,7 @@ class TagSettingsBasicCell: UITableViewCell {
 
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .right
         label.numberOfLines = 1
         label.font = UIFont.Muli(.regular, size: 14)
@@ -35,7 +36,7 @@ class TagSettingsBasicCell: UITableViewCell {
 
     private var iconHiddenWidthConstraints: [NSLayoutConstraint] = []
 
-    private lazy var separator = UIView(color: RuuviColor.ruuviLineColor)
+    private lazy var separator = UIView(color: RuuviColor.lineColor.color)
 
     override init(
         style: UITableViewCell.CellStyle,
@@ -113,7 +114,7 @@ class TagSettingsBasicCell: UITableViewCell {
         switch type {
         case .pencil:
             iconView.image = RuuviAssets.editPenImage
-            iconView.tintColor = RuuviColor.ruuviTintColor
+            iconView.tintColor = RuuviColor.tintColor.color
             iconHiddenWidthConstraints.forEach { anchor in
                 anchor.isActive = false
             }

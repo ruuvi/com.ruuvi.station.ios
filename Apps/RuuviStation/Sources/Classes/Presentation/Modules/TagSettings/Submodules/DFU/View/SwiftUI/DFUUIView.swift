@@ -50,7 +50,8 @@ struct DFUUIView: View {
                     )
                 }
         }
-        .background(Color(RuuviColor.ruuviPrimarySUI!).edgesIgnoringSafeArea(.all))
+        .background(RuuviColor.primary.swiftUIColor)
+        .edgesIgnoringSafeArea(.all)
         .navigationBarTitle(
             texts.navigationTitle
         )
@@ -78,7 +79,7 @@ struct DFUUIView: View {
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -96,13 +97,13 @@ struct DFUUIView: View {
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -117,13 +118,13 @@ struct DFUUIView: View {
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -137,21 +138,21 @@ struct DFUUIView: View {
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 if let currentVersion = currentRelease?.version {
                     Text(currentVersion)
                         .font(muliRegular16)
-                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 } else {
                     Text(texts.notReportingDescription)
                         .font(muliRegular16)
-                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 }
             }
             .frame(
@@ -165,7 +166,7 @@ struct DFUUIView: View {
         case let .noNeedToUpgrade(_, currentRelease):
             return Text(texts.alreadyOnLatest)
                 .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -179,21 +180,21 @@ struct DFUUIView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
                         .font(muliBold16)
-                        .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                        .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     Text(latestRelease.version)
                         .font(muliRegular16)
-                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     Text(texts.currentTitle).bold()
                         .font(muliBold16)
-                        .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                        .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     if let currentVersion = currentRelease?.version {
                         Text(currentVersion)
                             .font(muliRegular16)
-                            .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                            .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     } else {
                         Text(texts.notReportingDescription)
                             .font(muliRegular16)
-                            .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                            .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     }
                     Button(
                         action: {
@@ -210,7 +211,7 @@ struct DFUUIView: View {
                     )
                     .buttonStyle(
                         LargeButtonStyle(
-                            backgroundColor: RuuviColor.ruuviTintColorSUI,
+                            backgroundColor: RuuviColor.tintColor.swiftUIColor,
                             foregroundColor: Color.white,
                             isDisabled: false
                         )
@@ -246,13 +247,13 @@ struct DFUUIView: View {
             return VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 16)
                     .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
             }
             .frame(
                 maxWidth: .infinity,
@@ -269,25 +270,25 @@ struct DFUUIView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text(texts.prepareTitle).bold()
                                 .font(muliBold16)
-                                .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                                .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                             Text(texts.openCoverTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.localBootButtonTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.setUpdatingModeTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeTwoButtonsDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeOneButtonDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeSuccessTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                         }
                         Button(
                             action: {},
@@ -302,7 +303,7 @@ struct DFUUIView: View {
                         )
                         .buttonStyle(
                             LargeButtonStyle(
-                                backgroundColor: RuuviColor.ruuviTintColorSUI,
+                                backgroundColor: RuuviColor.tintColor.swiftUIColor,
                                 foregroundColor: Color.white,
                                 isDisabled: true
                             )
@@ -328,25 +329,25 @@ struct DFUUIView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text(texts.prepareTitle).bold()
                                 .font(muliBold16)
-                                .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                                .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                             Text(texts.openCoverTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.localBootButtonTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.setUpdatingModeTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeTwoButtonsDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeOneButtonDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeSuccessTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                         }
                         Button(
                             action: {
@@ -368,7 +369,7 @@ struct DFUUIView: View {
                         )
                         .buttonStyle(
                             LargeButtonStyle(
-                                backgroundColor: RuuviColor.ruuviTintColorSUI,
+                                backgroundColor: RuuviColor.tintColor.swiftUIColor,
                                 foregroundColor: Color.white,
                                 isDisabled: false
                             )
@@ -389,17 +390,17 @@ struct DFUUIView: View {
             return VStack(alignment: .center, spacing: 24) {
                 Text(texts.updatingTitle)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 ProgressBar(value: $viewModel.flashProgress)
                     .frame(height: 16)
                 Text("\(Int(viewModel.flashProgress * 100))%")
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.doNotCloseTitle)
                     .font(muliBold16)
                     .bold()
                     .multilineTextAlignment(.center)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
             }
             .frame(
                 maxWidth: .infinity,
@@ -411,7 +412,7 @@ struct DFUUIView: View {
         case .successfulyFlashed:
             return Text(texts.updatingTitle)
                 .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -422,7 +423,7 @@ struct DFUUIView: View {
         case .servingAfterUpdate:
             return Text(texts.updatingTitle)
                 .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -434,7 +435,7 @@ struct DFUUIView: View {
             viewModel.storeUpdatedFirmware(currentRelease: currentRelease)
             return Text(texts.successfulTitle)
                 .font(muliRegular16)
-                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,

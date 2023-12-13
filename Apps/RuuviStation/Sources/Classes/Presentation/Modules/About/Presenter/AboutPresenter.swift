@@ -71,7 +71,7 @@ extension AboutPresenter {
         )
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.ruuviTintColor ?? UIColor.blue,
+            value: RuuviColor.tintColor.color,
             range: changelogRange
         )
 
@@ -80,7 +80,7 @@ extension AboutPresenter {
             .range(of: versionText)
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.dashboardIndicatorTextColor ?? UIColor.label,
+            value: RuuviColor.dashboardIndicator.color,
             range: regularRange
         )
 

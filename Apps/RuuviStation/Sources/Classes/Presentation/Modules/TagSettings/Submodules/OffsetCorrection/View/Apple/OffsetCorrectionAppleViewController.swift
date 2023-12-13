@@ -164,12 +164,12 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         // make text color gray
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.ruuviTextColor ?? UIColor.secondaryLabel,
+            value: RuuviColor.textColor.color,
             range: NSRange(location: 0, length: attrString.length)
         )
 
         descriptionTextView.attributedText = attrString
-        descriptionTextView.textColor = RuuviColor.ruuviTextColor
+        descriptionTextView.textColor = RuuviColor.textColor.color
     }
 
     func showCalibrateDialog() {

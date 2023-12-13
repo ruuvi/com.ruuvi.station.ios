@@ -1,4 +1,5 @@
 // swiftlint:disable file_length
+import RuuviLocalization
 import SwiftUI
 
 // swiftlint:disable:next type_body_length
@@ -51,7 +52,7 @@ struct FirmwareView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -69,13 +70,13 @@ struct FirmwareView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -90,13 +91,13 @@ struct FirmwareView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
             .frame(
@@ -110,21 +111,21 @@ struct FirmwareView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
                     .font(muliBold16)
-                    .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 if let currentVersion = currentRelease?.version {
                     Text(currentVersion)
                         .font(muliRegular16)
-                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 } else {
                     Text(texts.notReportingDescription)
                         .font(muliRegular16)
-                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 }
             }
             .frame(
@@ -139,7 +140,7 @@ struct FirmwareView: View {
             VStack {
                 Text(texts.alreadyOnLatest)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: .infinity,
@@ -158,7 +159,7 @@ struct FirmwareView: View {
                 )
                 .buttonStyle(
                     LargeButtonStyle(
-                        backgroundColor: RuuviColor.ruuviTintColorSUI,
+                        backgroundColor: RuuviColor.tintColor.swiftUIColor,
                         foregroundColor: Color.white,
                         isDisabled: false
                     )
@@ -172,21 +173,21 @@ struct FirmwareView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
                         .font(muliBold16)
-                        .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                        .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     Text(latestRelease.version)
                         .font(muliRegular16)
-                        .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     Text(texts.currentTitle).bold()
                         .font(muliBold16)
-                        .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                        .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     if let currentVersion = currentRelease?.version {
                         Text(currentVersion)
                             .font(muliRegular16)
-                            .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                            .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     } else {
                         Text(texts.notReportingDescription)
                             .font(muliRegular16)
-                            .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                            .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     }
                     Button(
                         action: {
@@ -203,7 +204,7 @@ struct FirmwareView: View {
                     )
                     .buttonStyle(
                         LargeButtonStyle(
-                            backgroundColor: RuuviColor.ruuviTintColorSUI,
+                            backgroundColor: RuuviColor.tintColor.swiftUIColor,
                             foregroundColor: Color.white,
                             isDisabled: false
                         )
@@ -227,13 +228,13 @@ struct FirmwareView: View {
             VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 16)
                     .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
             }
             .frame(
                 maxWidth: .infinity,
@@ -250,25 +251,25 @@ struct FirmwareView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text(texts.prepareTitle).bold()
                                 .font(muliBold16)
-                                .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                                .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                             Text(texts.openCoverTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.localBootButtonTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.setUpdatingModeTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeTwoButtonsDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeOneButtonDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeSuccessTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                         }
                         Button(
                             action: {},
@@ -283,7 +284,7 @@ struct FirmwareView: View {
                         )
                         .buttonStyle(
                             LargeButtonStyle(
-                                backgroundColor: RuuviColor.ruuviTintColorSUI,
+                                backgroundColor: RuuviColor.tintColor.swiftUIColor,
                                 foregroundColor: Color.white,
                                 isDisabled: true
                             )
@@ -309,25 +310,25 @@ struct FirmwareView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text(texts.prepareTitle).bold()
                                 .font(muliBold16)
-                                .foregroundColor(RuuviColor.ruuviTitleTextColorSUI)
+                                .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                             Text(texts.openCoverTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.localBootButtonTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.setUpdatingModeTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeTwoButtonsDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeOneButtonDescription)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                             Text(texts.toBootModeSuccessTitle)
                                 .font(muliRegular16)
-                                .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
                         }
                         Button(
                             action: {
@@ -349,7 +350,7 @@ struct FirmwareView: View {
                         )
                         .buttonStyle(
                             LargeButtonStyle(
-                                backgroundColor: RuuviColor.ruuviTintColorSUI,
+                                backgroundColor: RuuviColor.tintColor.swiftUIColor,
                                 foregroundColor: Color.white,
                                 isDisabled: false
                             )
@@ -370,17 +371,17 @@ struct FirmwareView: View {
             VStack(alignment: .center, spacing: 24) {
                 Text(texts.updatingTitle)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 ProgressBar(value: $viewModel.flashProgress)
                     .frame(height: 16)
                 Text("\(Int(viewModel.flashProgress * 100))%")
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.doNotCloseTitle)
                     .font(muliBold16)
                     .bold()
                     .multilineTextAlignment(.center)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
             }
             .frame(
                 maxWidth: .infinity,
@@ -393,7 +394,7 @@ struct FirmwareView: View {
             VStack {
                 Text(texts.successfulTitle)
                     .font(muliRegular16)
-                    .foregroundColor(RuuviColor.ruuviTextColorSUI)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: .infinity,
@@ -412,7 +413,7 @@ struct FirmwareView: View {
                 )
                 .buttonStyle(
                     LargeButtonStyle(
-                        backgroundColor: RuuviColor.ruuviTintColorSUI,
+                        backgroundColor: RuuviColor.tintColor.swiftUIColor,
                         foregroundColor: Color.white,
                         isDisabled: false
                     )

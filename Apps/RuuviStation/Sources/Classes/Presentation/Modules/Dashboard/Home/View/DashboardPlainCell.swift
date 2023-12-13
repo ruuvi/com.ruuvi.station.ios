@@ -8,7 +8,7 @@ import UIKit
 class DashboardPlainCell: UICollectionViewCell {
     private lazy var ruuviTagNameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBigTextColor
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Montserrat(.bold, size: 14)
@@ -19,7 +19,7 @@ class DashboardPlainCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
-        iv.tintColor = RuuviColor.dashboardIndicatorBigTextColor
+        iv.tintColor = RuuviColor.dashboardIndicatorBig.color
         iv.alpha = 0
         return iv
     }()
@@ -38,7 +38,7 @@ class DashboardPlainCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.image = RuuviAssets.threeDotMoreImage
-        iv.tintColor = RuuviColor.dashboardIndicatorBigTextColor
+        iv.tintColor = RuuviColor.dashboardIndicatorBig.color
         return iv
     }()
 
@@ -62,7 +62,7 @@ class DashboardPlainCell: UICollectionViewCell {
         iv.backgroundColor = .clear
         iv.alpha = 0.7
         iv.tintColor = RuuviColor
-            .dashboardIndicatorTextColor?
+            .dashboardIndicator.color
             .withAlphaComponent(0.8)
         return iv
     }()
@@ -70,7 +70,7 @@ class DashboardPlainCell: UICollectionViewCell {
     private lazy var updatedAtLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
-            .dashboardIndicatorTextColor?
+            .dashboardIndicator.color
             .withAlphaComponent(0.8)
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -107,7 +107,7 @@ class DashboardPlainCell: UICollectionViewCell {
     // swiftlint:disable:next function_body_length
     fileprivate func setUpUI() {
         let container = UIView(
-            color: RuuviColor.dashboardCardBGColor,
+            color: RuuviColor.dashboardCardBG.color,
             cornerRadius: 8
         )
         contentView.addSubview(container)
@@ -482,11 +482,11 @@ extension DashboardPlainCell {
                     alertIcon.image = RuuviAssets.alertOnImage
                     removeAlertAnimations()
                 }
-                alertIcon.tintColor = RuuviColor.logoTintColor
+                alertIcon.tintColor = RuuviColor.logoTintColor.color
             case .firing:
                 alertButton.isUserInteractionEnabled = true
                 alertIcon.alpha = 1.0
-                alertIcon.tintColor = RuuviColor.ruuviOrangeColor
+                alertIcon.tintColor = RuuviColor.orangeColor.color
                 if alertIcon.image != RuuviAssets.alertActiveImage {
                     alertIcon.image = RuuviAssets.alertActiveImage
                 }

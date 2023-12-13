@@ -84,7 +84,7 @@ class TagChartsViewController: UIViewController {
             titleColor: .white,
             title: RuuviLocalization.day1,
             icon: RuuviAssets.dropDownArrowImage,
-            iconTintColor: RuuviColor.logoTintColor,
+            iconTintColor: RuuviColor.logoTintColor.color,
             iconSize: .init(width: 14, height: 14),
             preccedingIcon: false
         )

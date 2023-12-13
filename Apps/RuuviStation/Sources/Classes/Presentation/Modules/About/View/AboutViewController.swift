@@ -155,12 +155,12 @@ extension AboutViewController {
         // make text color white
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.ruuviTextColor ?? UIColor.label,
+            value: RuuviColor.textColor.color,
             range: NSRange(location: 0, length: attrString.length)
         )
 
         aboutTextView.attributedText = attrString
-        aboutTextView.textColor = RuuviColor.ruuviTextColor
+        aboutTextView.textColor = RuuviColor.textColor.color
     }
 
     private func setUpChangelogTapGesture() {

@@ -136,11 +136,11 @@ extension SelectionTableViewController {
     ) {
         if title == viewModel?.selection {
             cell.accessoryType = .checkmark
-            cell.nameLabel.textColor = RuuviColor.ruuviMenuTextColor
+            cell.nameLabel.textColor = RuuviColor.menuTextColor.color
             cell.nameLabel.font = UIFont.Muli(.bold, size: 16)
         } else {
             cell.accessoryType = .none
-            cell.nameLabel.textColor = RuuviColor.ruuviTextColor
+            cell.nameLabel.textColor = RuuviColor.textColor.color
             cell.nameLabel.font = UIFont.Muli(.regular, size: 16)
         }
     }

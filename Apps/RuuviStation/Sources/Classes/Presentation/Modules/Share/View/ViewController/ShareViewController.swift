@@ -1,5 +1,6 @@
 import RuuviLocalization
 import UIKit
+
 extension ShareViewController {
     enum Section: Int {
         case addFriend = 0
@@ -88,7 +89,7 @@ class ShareViewController: UITableViewController {
         let section = Section(value: section)
         let headerView = UIView(color: .clear)
         let titleLabel = UILabel()
-        titleLabel.textColor = RuuviColor.ruuviMenuTextColor
+        titleLabel.textColor = RuuviColor.menuTextColor.color
         titleLabel.font = UIFont.Muli(.bold, size: 16)
         titleLabel.numberOfLines = 0
         switch section {
@@ -210,7 +211,7 @@ extension ShareViewController {
 
         let description = RuuviLocalization.ShareViewController.description
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
-        cell.descriptionLabel.textColor = RuuviColor.ruuviTextColor
+        cell.descriptionLabel.textColor = RuuviColor.textColor.color
         return cell
     }
 

@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol BackgroundSelectionButtonViewDelegate: NSObjectProtocol {
@@ -10,7 +11,7 @@ class BackgroundSelectionButtonView: UIView {
     // UI
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
@@ -21,11 +22,11 @@ class BackgroundSelectionButtonView: UIView {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
-        iv.tintColor = RuuviColor.ruuviTintColor
+        iv.tintColor = RuuviColor.tintColor.color
         return iv
     }()
 
-    lazy var seprator = UIView(color: RuuviColor.ruuviLineColor)
+    lazy var seprator = UIView(color: RuuviColor.lineColor.color)
 
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol NotificationsSettingsSwitchCellDelegate: NSObjectProtocol {
@@ -9,7 +10,7 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviMenuTextColor
+        label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.bold, size: 16)
@@ -19,7 +20,7 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
-            .dashboardIndicatorTextColor?
+            .dashboardIndicator.color
             .withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 0

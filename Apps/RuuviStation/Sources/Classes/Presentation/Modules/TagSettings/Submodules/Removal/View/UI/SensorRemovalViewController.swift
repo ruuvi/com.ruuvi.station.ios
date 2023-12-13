@@ -18,7 +18,7 @@ class SensorRemovalViewController: UIViewController {
 
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 16)
@@ -29,7 +29,7 @@ class SensorRemovalViewController: UIViewController {
     private lazy var removeCloudHistoryTitleLabel: UILabel = {
         let label = UILabel()
         label.text = RuuviLocalization.removeCloudHistoryTitle
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 14)
@@ -39,7 +39,7 @@ class SensorRemovalViewController: UIViewController {
     private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
         let label = UILabel()
         label.text = RuuviLocalization.removeCloudHistoryDescription
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 14)
@@ -54,7 +54,7 @@ class SensorRemovalViewController: UIViewController {
 
     private lazy var removeButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 25
         )
         button.setTitle(RuuviLocalization.remove, for: .normal)
@@ -142,7 +142,7 @@ extension SensorRemovalViewController {
     private func setUpBase() {
         title = RuuviLocalization.TagSettings.ConfirmTagRemovalDialog.title
 
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
 
         let backBarButtonItemView = UIView()
         backBarButtonItemView.addSubview(backButton)

@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol TagSettingsSwitchCellDelegate: NSObjectProtocol {
@@ -9,7 +10,7 @@ class TagSettingsSwitchCell: UITableViewCell {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 14)
@@ -18,7 +19,7 @@ class TagSettingsSwitchCell: UITableViewCell {
 
     private lazy var pairingAnimationView: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.tintColor = RuuviColor.ruuviTintColor
+        activityIndicator.tintColor = RuuviColor.tintColor.color
         return activityIndicator
     }()
 
@@ -29,7 +30,7 @@ class TagSettingsSwitchCell: UITableViewCell {
         return toggle
     }()
 
-    lazy var seprator = UIView(color: RuuviColor.ruuviLineColor)
+    lazy var seprator = UIView(color: RuuviColor.lineColor.color)
 
     override init(
         style: UITableViewCell.CellStyle,
