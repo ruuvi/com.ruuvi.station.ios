@@ -1,9 +1,10 @@
+---
 targets: 
   station.widgets:
     type: app-extension
     platform: iOS
     info:
-      path: ruuvi-widgets/Info.plist
+      path: Info.plist
       properties:
         NSExtension: 
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
@@ -15,7 +16,7 @@ targets:
         NSHumanReadableCopyright: Copyright © 2023 Ruuvi Innovations Oy. All rights reserved.
     settings:
       base:
-        CODE_SIGN_ENTITLEMENTS: ruuvi_widgets.entitlements
+        CODE_SIGN_ENTITLEMENTS: Apps/RuuviStation/Widgets/Sources/Widgets.entitlements
       configs:
         Alpha: 
           CODE_SIGN_IDENTITY: "iPhone Distribution"
@@ -27,10 +28,15 @@ targets:
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
-    sources:
-      - path: ruuvi-widgets
+    sources: 
+      - path: Sources/
+        name: Widgets
+        excludes:
+        - "*.entitlements"
+        - Info.plist
     resources:
-      - path: station/Resources/Strings/
+      - path: Sources/Resources/
+      - path: ../Sources/Resources/Strings/
     dependencies:
       - package: Swinject
       - package: BTKit

@@ -1,6 +1,9 @@
 ---
 targets:
   RuuviFirmware:
+    sources:
+    - path: Sources
+      name: Firmware
     settings:
       base:
         MERGEABLE_LIBRARY: false
