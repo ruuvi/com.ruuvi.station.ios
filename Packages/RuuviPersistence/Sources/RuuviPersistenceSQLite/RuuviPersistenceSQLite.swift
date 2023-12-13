@@ -8,12 +8,6 @@ import RuuviOntology
 #if canImport(FirebaseCrashlytics)
     import FirebaseCrashlytics
 #endif
-#if canImport(RuuviOntologySQLite)
-    import RuuviOntologySQLite
-#endif
-#if canImport(RuuviContextSQLite)
-    import RuuviContextSQLite
-#endif
 
 // swiftlint:disable type_body_length
 public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {

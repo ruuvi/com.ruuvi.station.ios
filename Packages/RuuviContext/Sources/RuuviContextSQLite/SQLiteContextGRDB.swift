@@ -1,9 +1,6 @@
 import Foundation
 import GRDB
 import RuuviOntology
-#if canImport(RuuviOntologySQLite)
-    import RuuviOntologySQLite
-#endif
 
 class SQLiteContextGRDB: SQLiteContext {
     let database: GRDBDatabase = SQLiteGRDBDatabase.shared
