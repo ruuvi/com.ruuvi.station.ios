@@ -1,6 +1,9 @@
 ---
 targets:
   RuuviLocalization:
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
     templates:
     - CommonFramework
     sources:
@@ -15,7 +18,7 @@ targets:
         name: Generate Resources
         inputFiles:
           - $(SRCROOT)/station.localization/station.localization.json
-          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviColors.xsassets
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
         outputFiles:
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strings
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/sv.lproj/Localizable.strings
