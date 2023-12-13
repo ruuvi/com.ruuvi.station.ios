@@ -35,6 +35,7 @@ targets:
         - "*.entitlements"
         - Info.plist
     resources:
+      - path: Sources/Resources/
       - path: ../Sources/Resources/Strings/
     dependencies:
       - package: Swinject

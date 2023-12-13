@@ -42,6 +42,8 @@ targets:
         excludes:
           - "*.entitlements"
           - Info.plist
+    resources:
+      - path: ../Widgets/Sources/Resources/
     dependencies:
       - package: Swinject
       - package: BTKit
@@ -65,4 +67,6 @@ targets:
       - target: RuuviPersistence
         embed: true
       - target: RuuviContext
+        embed: true
+      - target: RuuviLocalization
         embed: true
