@@ -6,3 +6,5 @@ targets:
     sources:
     - path: Sources
       name: Presenters
+    dependencies:
+    - target: RuuviLocalization
