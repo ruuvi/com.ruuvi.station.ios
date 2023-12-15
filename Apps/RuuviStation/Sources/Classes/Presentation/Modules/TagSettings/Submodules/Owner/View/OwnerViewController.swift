@@ -67,6 +67,7 @@ final class OwnerViewController: UIViewController {
     private func styleViews() {
         view.backgroundColor = RuuviColor.primary.color
         claimOwnershipDescriptionLabel.textColor = RuuviColor.textColor.color
+        claimOwnershipButton.backgroundColor = RuuviColor.tintColor.color
     }
 }
 

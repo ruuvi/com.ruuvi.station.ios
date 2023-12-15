@@ -214,10 +214,12 @@ extension ShareViewController {
             cell.sharingDisabledLabel.text = RuuviLocalization.networkSharingDisabled
         }
         cell.sharingDisabledLabel.textColor = RuuviColor.textColor.color
+        cell.sharingDisabledLabel.tintColor = RuuviColor.tintColor.color
 
         let description = RuuviLocalization.ShareViewController.description
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.descriptionLabel.textColor = RuuviColor.textColor.color
+        cell.descriptionLabel.tintColor = RuuviColor.tintColor.color
         return cell
     }
 
@@ -234,6 +236,7 @@ extension ShareViewController {
         let cell = tableView.dequeueReusableCell(with: ShareSendButtonTableViewCell.self, for: indexPath)
         cell.sendButton.addTarget(self, action: #selector(didTapSendButton(_:)), for: .touchUpInside)
         cell.sendButton.setTitle(RuuviLocalization.TagSettings.Share.title, for: .normal)
+        cell.sendButton.tintColor = RuuviColor.tintColor.color
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }

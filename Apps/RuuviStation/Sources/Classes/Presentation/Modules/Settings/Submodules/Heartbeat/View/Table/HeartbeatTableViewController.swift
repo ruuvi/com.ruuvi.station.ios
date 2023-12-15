@@ -37,6 +37,8 @@ extension HeartbeatTableViewController: HeartbeatViewInput {
         bgScanningTitleLabel.textColor = RuuviColor.menuTextColor.color
         bgScanningIntervalTitleLabel.textColor = RuuviColor.menuTextColor.color
         bgScanningIntervalValueLabel.textColor = RuuviColor.textColor.color
+        bgScanningSwitch.thumbTintColor = RuuviColor.tintColor.color
+        bgScanningIntervalStepper.backgroundColor = RuuviColor.tintColor.color
     }
 }
 
@@ -61,10 +63,6 @@ extension HeartbeatTableViewController {
         updateUIComponent()
         localize()
         styleViews()
-    }
-
-    private func styleViews() {
-        bgScanningIntervalValueLabel.textColor = RuuviColor.textColor.color
     }
 }
 

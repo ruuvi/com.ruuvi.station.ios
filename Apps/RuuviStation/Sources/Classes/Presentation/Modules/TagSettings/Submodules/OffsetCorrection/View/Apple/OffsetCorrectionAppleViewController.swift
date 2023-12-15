@@ -152,6 +152,9 @@ class OffsetCorrectionAppleViewController: UIViewController {
         originalValueUpdateTimeLabel.textColor = RuuviColor.textColor.color
         correctedValueLabel.textColor = RuuviColor.textColor.color
         offsetValueLabel.textColor = RuuviColor.textColor.color
+        descriptionTextView.tintColor = RuuviColor.tintColor.color
+        calibrateButton.backgroundColor = RuuviColor.tintColor.color
+        clearButton.backgroundColor = RuuviColor.tintColor.color
     }
 }
 

@@ -74,6 +74,7 @@ extension SelectionTableViewController {
         }
 
         cell.nameLabel.textColor = RuuviColor.textColor.color
+        cell.tintColor = RuuviColor.tintColor.color
 
         if viewModel?.unitSettingsType == .accuracy,
            let item = item as? MeasurementAccuracyType {

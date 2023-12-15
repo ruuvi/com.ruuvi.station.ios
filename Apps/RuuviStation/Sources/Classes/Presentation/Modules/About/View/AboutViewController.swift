@@ -52,6 +52,7 @@ extension AboutViewController {
         addedTagsLabel.textColor = RuuviColor.dashboardIndicator.color
         storedMeasurementsLabel.textColor = RuuviColor.dashboardIndicator.color
         databaseSizeLable.textColor = RuuviColor.dashboardIndicator.color
+        aboutTextView.tintColor = RuuviColor.tintColor.color
     }
 
     override func viewWillAppear(_ animated: Bool) {

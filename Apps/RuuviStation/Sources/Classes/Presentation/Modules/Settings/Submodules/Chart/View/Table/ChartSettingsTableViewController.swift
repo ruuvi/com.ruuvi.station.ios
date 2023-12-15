@@ -60,6 +60,7 @@ extension ChartSettingsTableViewController {
             cell.titleLabel.text = title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.isOn = value
+            cell.isOnSwitch.thumbTintColor = RuuviColor.tintColor.color
             cell.delegate = self
             return cell
         case let .stepper(title, value, unitSingular, unitPlural):
@@ -76,6 +77,7 @@ extension ChartSettingsTableViewController {
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.prefix = title
             cell.stepper.value = Double(value)
+            cell.stepper.backgroundColor = RuuviColor.tintColor.color
             cell.delegate = self
             return cell
         case let .disclosure(title):
