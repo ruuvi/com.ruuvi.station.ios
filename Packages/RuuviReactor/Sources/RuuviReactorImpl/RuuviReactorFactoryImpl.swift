@@ -7,15 +7,11 @@ public final class RuuviReactorFactoryImpl: RuuviReactorFactory {
 
     public func create(
         sqliteContext: SQLiteContext,
-        realmContext: RealmContext,
-        sqlitePersistence: RuuviPersistence,
-        realmPersistence: RuuviPersistence
+        sqlitePersistence: RuuviPersistence
     ) -> RuuviReactor {
         RuuviReactorImpl(
             sqliteContext: sqliteContext,
-            realmContext: realmContext,
-            sqlitePersistence: sqlitePersistence,
-            realmPersistence: realmPersistence
+            sqlitePersistence: sqlitePersistence
         )
     }
 }

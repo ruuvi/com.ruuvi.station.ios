@@ -8,7 +8,6 @@ final class AboutPresenter: AboutModuleInput {
     weak var view: AboutViewInput!
     var router: AboutRouterInput!
     var ruuviStorage: RuuviStorage!
-    var realmContext: RealmContext!
     var sqliteContext: SQLiteContext!
 
     private var viewModel: AboutViewModel {
@@ -102,19 +101,10 @@ extension AboutPresenter {
     }
 
     private func obtainDatabaseSize() {
-        let realmSize = getRealmFileSize()
         let sqliteSize = getSQLiteFileSize()
-        let dbSize = ByteCountFormatter().string(fromByteCount: realmSize + sqliteSize)
+        let dbSize = ByteCountFormatter().string(fromByteCount: sqliteSize)
         let dbSizeString = RuuviLocalization.About.DatabaseSize.text(dbSize)
         viewModel.databaseSize.value = dbSizeString
-    }
-
-    func getRealmFileSize() -> Int64 {
-        guard let realmPath = realmContext.main.configuration.fileURL?.relativePath
-        else {
-            return 0
-        }
-        return fileSize(at: realmPath)
     }
 
     func getSQLiteFileSize() -> Int64 {

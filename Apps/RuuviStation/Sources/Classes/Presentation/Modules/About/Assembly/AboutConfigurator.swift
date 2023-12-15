@@ -12,7 +12,6 @@ class AboutConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
-        presenter.realmContext = r.resolve(RealmContext.self)
         presenter.sqliteContext = r.resolve(SQLiteContext.self)
         view.output = presenter
     }

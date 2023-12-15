@@ -43,8 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         featureToggleService.fetchFeatureToggles()
 
         // the order is important
-        r.resolve(RuuviMigration.self, name: "realm")?
-            .migrateIfNeeded()
         r.resolve(SQLiteContext.self)?
             .database
             .migrateIfNeeded()

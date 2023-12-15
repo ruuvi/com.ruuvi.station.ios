@@ -21,7 +21,6 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
         interactor.background = r.resolve(BTBackground.self)
         let foreground = r.resolve(BTForeground.self)!
         let idPersistence = r.resolve(RuuviLocalIDs.self)!
-        let realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")!
         let sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
         let ruuviPool = r.resolve(RuuviPool.self)!
         let ruuviStorage = r.resolve(RuuviStorage.self)!
@@ -33,7 +32,6 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
             ruuviTag: ruuviTag,
             foreground: foreground,
             idPersistence: idPersistence,
-            realmPersistence: realmPersistence,
             sqiltePersistence: sqiltePersistence,
             ruuviPool: ruuviPool,
             ruuviStorage: ruuviStorage,

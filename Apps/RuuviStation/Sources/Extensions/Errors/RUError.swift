@@ -142,7 +142,6 @@ enum UnexpectedError: Error {
     case failedToFindRuuviTag
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
-    case attemptToReadDataFromRealmWithoutLUID
     case failedToFindOrGenerateBackgroundImage
     case bothLuidAndMacAreNil
 }
@@ -162,8 +161,6 @@ extension UnexpectedError: LocalizedError {
             RuuviLocalization.UnexpectedError.failedToFindLogsForTheTag
         case .viewModelUUIDIsNil:
             RuuviLocalization.UnexpectedError.viewModelUUIDIsNil
-        case .attemptToReadDataFromRealmWithoutLUID:
-            RuuviLocalization.UnexpectedError.attemptToReadDataFromRealmWithoutLUID
         case .failedToFindOrGenerateBackgroundImage:
             RuuviLocalization.UnexpectedError.failedToFindOrGenerateBackgroundImage
         case .bothLuidAndMacAreNil:
