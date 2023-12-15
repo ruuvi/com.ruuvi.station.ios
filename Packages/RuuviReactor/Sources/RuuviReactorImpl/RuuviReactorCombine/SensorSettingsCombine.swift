@@ -15,7 +15,6 @@ final class SensorSettingsCombine {
 
     private var ruuviTagController: FetchedRecordsController<SensorSettingsSQLite>
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     init(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,

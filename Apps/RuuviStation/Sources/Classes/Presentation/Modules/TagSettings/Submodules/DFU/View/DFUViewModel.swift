@@ -11,7 +11,6 @@ import RuuviPool
 import RuuviPresenters
 import RuuviStorage
 
-// swiftlint:disable:next type_body_length
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published var downloadProgress: Double = 0

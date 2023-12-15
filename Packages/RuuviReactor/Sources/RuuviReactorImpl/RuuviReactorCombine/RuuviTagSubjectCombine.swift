@@ -13,7 +13,6 @@ final class RuuviTagSubjectCombine {
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     init(sqlite: SQLiteContext) {
         self.sqlite = sqlite
 

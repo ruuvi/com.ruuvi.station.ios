@@ -14,7 +14,7 @@ final class RuuviTagLastRecordSubjectCombine {
     let subject = PassthroughSubject<AnyRuuviTagSensorRecord, Never>()
 
     private var ruuviTagDataTransactionObserver: TransactionObserver?
-    
+
     init(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,

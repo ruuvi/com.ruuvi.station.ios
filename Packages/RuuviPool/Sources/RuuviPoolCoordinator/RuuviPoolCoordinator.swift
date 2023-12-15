@@ -4,7 +4,6 @@ import RuuviLocal
 import RuuviOntology
 import RuuviPersistence
 
-// swiftlint:disable:next type_body_length
 final class RuuviPoolCoordinator: RuuviPool {
     private var sqlite: RuuviPersistence
     private var idPersistence: RuuviLocalIDs

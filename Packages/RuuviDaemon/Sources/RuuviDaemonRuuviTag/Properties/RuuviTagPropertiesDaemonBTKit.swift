@@ -6,7 +6,6 @@ import RuuviPersistence
 import RuuviPool
 import RuuviReactor
 
-// swiftlint:disable:next type_body_length
 public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPropertiesDaemon {
     private let ruuviPool: RuuviPool
     private let ruuviReactor: RuuviReactor
@@ -138,7 +137,6 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         }
     }
 
-    // swiftlint:disable:next function_body_length
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
         if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
             // this is the case when data format 3 tag (2.5.9) changes format
@@ -151,7 +149,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     .on(failure: { [weak self] error in
                         self?.post(error: .ruuviPool(error))
                     })
-            } 
+            }
         } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
