@@ -40,10 +40,7 @@ targetTemplates:
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        MERGEABLE_LIBRARY: true
-      configs:
-        Debug:
-          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
+        MERGEABLE_LIBRARY: false
   Module:
     name: "${target_name}"
     type: framework
@@ -62,10 +59,7 @@ targetTemplates:
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        MERGEABLE_LIBRARY: true
-      configs:
-        Debug:
-          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
+        MERGEABLE_LIBRARY: false
   CommonFramework:
     name: "${target_name}"
     type: framework
@@ -84,11 +78,7 @@ targetTemplates:
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        MERGEABLE_LIBRARY: true
-      configs:
-        Debug:
-          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
-
+        MERGEABLE_LIBRARY: false
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit

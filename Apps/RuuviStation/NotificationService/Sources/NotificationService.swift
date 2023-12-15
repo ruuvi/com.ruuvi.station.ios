@@ -148,7 +148,7 @@ extension NotificationService {
     private func localized(value: String) -> String {
         let languageUDKey = "SettingsUserDegaults.languageUDKey"
         guard let languageCode = notificationServiceAppGroup?.string(forKey: languageUDKey),
-              let bundle = Bundle.main.path(
+              let bundle = Bundle.main.path(  //TODO: @rinat make it working
                   forResource: languageCode,
                   ofType: "lproj"
               ),
