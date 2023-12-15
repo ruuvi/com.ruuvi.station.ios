@@ -1,9 +1,9 @@
+// swiftlint:disable file_length
 import Humidity
 import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
 import RuuviService
-// swiftlint:disable file_length
 import UIKit
 
 class CardsViewController: UIViewController {
@@ -56,7 +56,7 @@ class CardsViewController: UIViewController {
 
     // Base
     private lazy var cardBackgroundView = CardsBackgroundView()
-    private lazy var chartViewBackground = UIView(color: RuuviColor.ruuviGraphBGColor)
+    private lazy var chartViewBackground = UIView(color: RuuviColor.graphBGColor.color)
 
     // Header View
     // Ruuvi Logo
@@ -261,7 +261,7 @@ private extension CardsViewController {
     }
 
     func setUpBaseView() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
 
         view.addSubview(cardBackgroundView)
         cardBackgroundView.fillSuperview()

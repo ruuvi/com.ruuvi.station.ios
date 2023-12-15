@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 import UIKit
 
 class ASSelectionTableViewController: UITableViewController {
@@ -41,7 +42,7 @@ extension ASSelectionTableViewController: ASSelectionViewInput {
 
 private extension ASSelectionTableViewController {
     func setUpUI() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         setUpTableView()
     }
 

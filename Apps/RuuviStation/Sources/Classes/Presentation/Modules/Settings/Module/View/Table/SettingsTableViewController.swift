@@ -88,7 +88,23 @@ extension SettingsTableViewController: SettingsViewInput {
         appearanceTitleLabel.text = RuuviLocalization.settingsAppearance
         alertNotificationsTitleLabel.text = RuuviLocalization.settingsAlertNotifications
         updateUILanguage()
-        tableView.reloadData()
+    }
+
+    func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
+        temperatureTitleLabel.textColor = RuuviColor.menuTextColor.color
+        humidityTitleLabel.textColor = RuuviColor.menuTextColor.color
+        pressureTitleLabel.textColor = RuuviColor.menuTextColor.color
+        languageTitleLabel.textColor = RuuviColor.menuTextColor.color
+        defaultsTitleLabel.textColor = RuuviColor.menuTextColor.color
+        devicesTitleLabel.textColor = RuuviColor.menuTextColor.color
+        heartbeatTitleLabel.textColor = RuuviColor.menuTextColor.color
+        chartTitleLabel.textColor = RuuviColor.menuTextColor.color
+        ruuviCloudTitleLabel.textColor = RuuviColor.menuTextColor.color
+        appearanceTitleLabel.textColor = RuuviColor.menuTextColor.color
+        alertNotificationsTitleLabel.textColor = RuuviColor.menuTextColor.color
+        experimentalFunctionsLabel.textColor = RuuviColor.menuTextColor.color
+        languageValueLabel.textColor = RuuviColor.menuTextColor.color
     }
 
     func viewDidShowLanguageChangeDialog() {
@@ -125,6 +141,7 @@ extension SettingsTableViewController {
         updateNavBarTitleFont()
         updateUI()
         localize()
+        styleViews()
         output.viewDidLoad()
         becomeFirstResponder()
     }

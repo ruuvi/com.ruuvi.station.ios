@@ -7,9 +7,6 @@ import RuuviOntology
 import RuuviPool
 import RuuviStorage
 import RuuviUser
-#if canImport(RuuviCloudApi)
-    import RuuviCloudApi
-#endif
 
 public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotification {
     private let cloud: RuuviCloud

@@ -1,4 +1,5 @@
 import Charts
+import RuuviLocalization
 import RuuviService
 import UIKit
 
@@ -21,7 +22,7 @@ class TagChartsMarkerView: MarkerImage {
     private let yBottomPadding: CGFloat = 32.0
 
     init(
-        color: UIColor? = RuuviColor.ruuviGraphMarkerColor,
+        color: UIColor? = RuuviColor.graphMarkerColor.color,
         font: UIFont = UIFont.Muli(.regular, size: 8),
         textColor: UIColor = .white
     ) {

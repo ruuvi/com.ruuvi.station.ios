@@ -46,7 +46,7 @@ extension RuuviCloudTableViewController: RuuviCloudViewInput {
 
 private extension RuuviCloudTableViewController {
     func setUpUI() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         setUpTableView()
     }
 
@@ -98,7 +98,7 @@ extension RuuviCloudTableViewController {
     override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
-        footerLabel.textColor = RuuviColor.ruuviTextColor
+        footerLabel.textColor = RuuviColor.textColor.color
         footerLabel.font = UIFont.Muli(.regular, size: 13)
         footerLabel.numberOfLines = 0
         footerLabel.text = RuuviLocalization.Settings.Label.CloudMode.description

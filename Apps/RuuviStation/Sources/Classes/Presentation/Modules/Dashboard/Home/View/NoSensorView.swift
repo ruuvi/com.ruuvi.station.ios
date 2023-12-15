@@ -31,7 +31,7 @@ class NoSensorView: UIView {
 
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
@@ -48,7 +48,7 @@ class NoSensorView: UIView {
 
     private lazy var signInButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25
         )
         button.setTitle(
@@ -70,7 +70,7 @@ class NoSensorView: UIView {
 
     private lazy var addSensorButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: UIDevice.isiPhoneSE() ? 20 : 25
         )
         button.setTitle(
@@ -92,7 +92,7 @@ class NoSensorView: UIView {
 
     private lazy var buySensorButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(RuuviColor.ruuviTextColor, for: .normal)
+        button.setTitleColor(RuuviColor.textColor.color, for: .normal)
         button.setTitle(
             RuuviLocalization.DiscoverTable.GetMoreSensors.Button.title,
             for: .normal

@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol RUAlertExpandButtonDelegate: NSObjectProtocol {
@@ -15,7 +16,7 @@ class RUAlertExpandButton: UIView {
         let iv = UIImageView()
         iv.backgroundColor = .clear
         iv.image = UIImage(named: "chevron.down")
-        iv.tintColor = RuuviColor.ruuviTintColor
+        iv.tintColor = RuuviColor.tintColor.color
         iv.contentMode = .scaleAspectFit
         return iv
     }()

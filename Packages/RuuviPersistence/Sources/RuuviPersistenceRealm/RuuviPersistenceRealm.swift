@@ -1,18 +1,12 @@
+// swiftlint:disable file_length
 import BTKit
 import Foundation
 import Future
-// swiftlint:disable file_length
 import RealmSwift
 import RuuviContext
 import RuuviOntology
 #if canImport(FirebaseCrashlytics) // TODO: @rinat eliminate
     import FirebaseCrashlytics
-#endif
-#if canImport(RuuviOntologyRealm)
-    import RuuviOntologyRealm
-#endif
-#if canImport(RuuviContextRealm)
-    import RuuviContextRealm
 #endif
 
 // swiftlint:disable type_body_length

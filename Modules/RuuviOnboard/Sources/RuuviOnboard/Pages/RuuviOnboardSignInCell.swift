@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol RuuviOnboardSignInCellDelegate: NSObjectProtocol {
@@ -38,9 +39,9 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
     }()
 
     private lazy var continueButton: UIButton = {
-        let button = UIButton(color: RuuviAssets.ruuviTintColor, cornerRadius: 22)
+        let button = UIButton(color: RuuviColor.tintColor.color, cornerRadius: 22)
         button.setTitle(
-            "onboarding_continue".localized(for: Self.self),
+            RuuviLocalization.onboardingContinue,
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)

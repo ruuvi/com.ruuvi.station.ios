@@ -38,8 +38,9 @@ class SelectionTableViewController: UITableViewController {
 // MARK: - SelectionViewInput
 
 extension SelectionTableViewController: SelectionViewInput {
-    func localize() {
-        tableView.reloadData()
+    func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
+        descriptionTextView.textColor = RuuviColor.textColor.color
     }
 }
 
@@ -48,7 +49,7 @@ extension SelectionTableViewController: SelectionViewInput {
 extension SelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        localize()
+        styleViews()
         output.viewDidLoad()
         updateUI()
     }
@@ -71,6 +72,9 @@ extension SelectionTableViewController {
         else {
             return .init()
         }
+
+        cell.nameLabel.textColor = RuuviColor.textColor.color
+        cell.tintColor = RuuviColor.tintColor.color
 
         if viewModel?.unitSettingsType == .accuracy,
            let item = item as? MeasurementAccuracyType {
@@ -136,11 +140,11 @@ extension SelectionTableViewController {
     ) {
         if title == viewModel?.selection {
             cell.accessoryType = .checkmark
-            cell.nameLabel.textColor = RuuviColor.ruuviMenuTextColor
+            cell.nameLabel.textColor = RuuviColor.menuTextColor.color
             cell.nameLabel.font = UIFont.Muli(.bold, size: 16)
         } else {
             cell.accessoryType = .none
-            cell.nameLabel.textColor = RuuviColor.ruuviTextColor
+            cell.nameLabel.textColor = RuuviColor.textColor.color
             cell.nameLabel.font = UIFont.Muli(.regular, size: 16)
         }
     }

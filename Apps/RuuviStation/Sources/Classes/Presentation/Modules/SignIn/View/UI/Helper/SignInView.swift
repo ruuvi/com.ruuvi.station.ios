@@ -64,7 +64,7 @@ class SignInView: UIView {
 
     private lazy var requestCodeButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 25
         )
         button.setTitle(

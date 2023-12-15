@@ -2,9 +2,6 @@ import RuuviLocalization
 import RuuviOntology
 import RuuviService
 import UIKit
-#if canImport(RuuviServiceMeasurement)
-    import RuuviServiceMeasurement
-#endif
 
 class OffsetCorrectionAppleViewController: UIViewController {
     var output: OffsetCorrectionViewOutput!
@@ -50,6 +47,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
             if let updateAt = self?.updatedAt {
                 self?.originalValueUpdateTimeLabel.text = "(\(updateAt.ruuviAgo()))"
@@ -145,6 +143,19 @@ class OffsetCorrectionAppleViewController: UIViewController {
             }
         }
     }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
+        correctedValueTitle.textColor = RuuviColor.textColor.color
+        originalValueTitle.textColor = RuuviColor.textColor.color
+        originalValueLabel.textColor = RuuviColor.textColor.color
+        originalValueUpdateTimeLabel.textColor = RuuviColor.textColor.color
+        correctedValueLabel.textColor = RuuviColor.textColor.color
+        offsetValueLabel.textColor = RuuviColor.textColor.color
+        descriptionTextView.tintColor = RuuviColor.tintColor.color
+        calibrateButton.backgroundColor = RuuviColor.tintColor.color
+        clearButton.backgroundColor = RuuviColor.tintColor.color
+    }
 }
 
 extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
@@ -167,12 +178,12 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         // make text color gray
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.ruuviTextColor ?? UIColor.secondaryLabel,
+            value: RuuviColor.textColor.color,
             range: NSRange(location: 0, length: attrString.length)
         )
 
         descriptionTextView.attributedText = attrString
-        descriptionTextView.textColor = RuuviColor.ruuviTextColor
+        descriptionTextView.textColor = RuuviColor.textColor.color
     }
 
     func showCalibrateDialog() {

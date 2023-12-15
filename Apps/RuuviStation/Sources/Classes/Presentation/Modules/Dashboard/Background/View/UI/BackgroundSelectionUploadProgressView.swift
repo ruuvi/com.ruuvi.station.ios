@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 // swiftlint:disable:next type_name
@@ -21,7 +22,7 @@ class BackgroundSelectionUploadProgressView: UIView {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
-        iv.tintColor = RuuviColor.ruuviTintColor
+        iv.tintColor = RuuviColor.tintColor.color
         iv.isUserInteractionEnabled = true
         iv.image = UIImage(systemName: "xmark.circle.fill")
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleCancelTap))
@@ -42,7 +43,7 @@ class BackgroundSelectionUploadProgressView: UIView {
 
 private extension BackgroundSelectionUploadProgressView {
     func setUpUI() {
-        backgroundColor = RuuviColor.ruuviGraphBGColor
+        backgroundColor = RuuviColor.graphBGColor.color
         layer.cornerRadius = 4
         clipsToBounds = true
 

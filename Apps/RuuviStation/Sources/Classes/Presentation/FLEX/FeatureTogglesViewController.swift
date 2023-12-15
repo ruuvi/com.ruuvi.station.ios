@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 final class FeatureTogglesViewController: UITableViewController {
@@ -22,7 +23,7 @@ final class FeatureTogglesViewController: UITableViewController {
     private static let featureCellReuseIdentifier = "FeatureCellReuseIdentifier"
 
     private func setupViews() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         headerView.addSubview(sourceSwitch)
         headerView.addSubview(sourceLabel)
         tableView.tableHeaderView = headerView
@@ -44,7 +45,7 @@ final class FeatureTogglesViewController: UITableViewController {
 
         let sourceSwitch = sourceSwitch
         sourceSwitch.onTintColor = .clear
-        sourceSwitch.thumbTintColor = RuuviColor.ruuviTintColor
+        sourceSwitch.thumbTintColor = RuuviColor.tintColor.color
 
         let sourceLabel = sourceLabel
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,10 +107,10 @@ extension FeatureTogglesViewController {
         let feature = features[indexPath.row]
         cell.textLabel?.text = Self.title(for: feature)
         cell.textLabel?.font = UIFont.Muli(.bold, size: 16)
-        cell.textLabel?.textColor = RuuviColor.ruuviMenuTextColor
+        cell.textLabel?.textColor = RuuviColor.menuTextColor.color
         if featureToggleService.isEnabled(feature) {
             cell.accessoryType = .checkmark
-            cell.tintColor = RuuviColor.ruuviTintColor
+            cell.tintColor = RuuviColor.tintColor.color
         } else {
             cell.accessoryType = .none
         }
@@ -136,7 +137,7 @@ extension FeatureTogglesViewController {
         label.text = "Use local feature toggles"
         label.textAlignment = .right
         label.font = UIFont.Muli(.bold, size: 16)
-        label.textColor = RuuviColor.ruuviMenuTextColor
+        label.textColor = RuuviColor.menuTextColor.color
         return label
     }
 }

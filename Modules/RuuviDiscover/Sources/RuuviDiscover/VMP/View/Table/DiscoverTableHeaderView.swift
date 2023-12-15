@@ -1,5 +1,6 @@
 import CoreBluetooth
 import CoreNFC
+import RuuviLocalization
 import UIKit
 
 protocol DiscoverTableHeaderViewDelegate: NSObjectProtocol {
@@ -17,9 +18,6 @@ class DiscoverTableHeaderView: UIView {
     private var isBluetoothPermissionGranted: Bool {
         CBCentralManager.authorization == .allowedAlways
     }
-
-    private let addSensorDescriptionKey: String = "add_sensor_description"
-    private let addSensorViaNFCKey: String = "add_sensor_via_nfc"
 
     // UI
     private lazy var descriptionLabel = createDescriptionLabel()
@@ -69,8 +67,8 @@ class DiscoverTableHeaderView: UIView {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.numberOfLines = 0
 
-        let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
-        let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
+        let addSensorString: String = RuuviLocalization.addSensorDescription
+        let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
             (isBluetoothPermissionGranted && isNFCAvailable) ?
             (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
@@ -87,13 +85,13 @@ class DiscoverTableHeaderView: UIView {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
-        button.setTitle("add_with_nfc".localized(for: Self.self), for: .normal)
+        button.setTitle(RuuviLocalization.addWithNfc, for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.setInsets(forContentPadding: .zero, imageTitlePadding: 8)
         if let font = UIFont(name: "Muli-Regular", size: 16) {
             button.titleLabel?.font = font
         }
-        button.tintColor = UIColor(named: "RuuviTintColor")
+        button.tintColor = RuuviColor.tintColor.color
         button.addTarget(
             self,
             action: #selector(handleButtonTap),
@@ -156,8 +154,8 @@ extension DiscoverTableHeaderView {
             nfcButton.isHidden = !show
         }
         descriptionLabelBottomConstraint.isActive = !show
-        let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
-        let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
+        let addSensorString: String = RuuviLocalization.addSensorDescription
+        let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
             (show && isBluetoothPermissionGranted && isNFCAvailable) ?
             (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString

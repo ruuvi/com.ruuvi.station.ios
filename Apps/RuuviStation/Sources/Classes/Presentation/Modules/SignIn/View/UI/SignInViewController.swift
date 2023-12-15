@@ -186,7 +186,7 @@ extension SignInViewController {
     }
 
     private func setUpBase() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
 
         view.addSubview(bgLayer)
         bgLayer.fillSuperview()

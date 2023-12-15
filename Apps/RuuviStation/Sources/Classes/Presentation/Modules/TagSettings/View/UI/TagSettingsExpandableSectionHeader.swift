@@ -17,7 +17,7 @@ class TagSettingsExpandableSectionHeader: UIView {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorTextColor
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
@@ -35,7 +35,7 @@ class TagSettingsExpandableSectionHeader: UIView {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.textColor = RuuviColor.ruuviTextColor?.withAlphaComponent(0.7)
+        label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.7)
         label.font = UIFont.Muli(.regular, size: 14)
         return label
     }()
@@ -44,7 +44,7 @@ class TagSettingsExpandableSectionHeader: UIView {
         let iv = UIImageView()
         iv.backgroundColor = .clear
         iv.image = RuuviAssets.dropDownArrowImage
-        iv.tintColor = RuuviColor.ruuviTintColor
+        iv.tintColor = RuuviColor.tintColor.color
         iv.contentMode = .scaleAspectFit
         return iv
     }()
@@ -53,7 +53,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     private lazy var noValueLabel: UILabel = {
         let label = UILabel()
         label.text = RuuviLocalization.TagSettings.Label.NoValues.text
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .right
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 12)
@@ -63,11 +63,11 @@ class TagSettingsExpandableSectionHeader: UIView {
     private lazy var iconView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(systemName: "info.circle")
-        iv.tintColor = RuuviColor.ruuviTintColor
+        iv.tintColor = RuuviColor.tintColor.color
         return iv
     }()
 
-    lazy var seprator = UIView(color: RuuviColor.ruuviPrimary)
+    lazy var seprator = UIView(color: RuuviColor.primary.color)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -81,7 +81,7 @@ class TagSettingsExpandableSectionHeader: UIView {
 
     // swiftlint:disable:next function_body_length
     private func setUpUI() {
-        backgroundColor = RuuviColor.tagSettingsSectionHeaderColor
+        backgroundColor = RuuviColor.tagSettingsSectionHeaderColor.color
         addSubview(titleLabel)
         titleLabel.anchor(
             top: topAnchor,
@@ -200,7 +200,7 @@ extension TagSettingsExpandableSectionHeader {
         if let color = backgroundColor {
             self.backgroundColor = color
         } else {
-            self.backgroundColor = RuuviColor.tagSettingsItemHeaderColor
+            self.backgroundColor = RuuviColor.tagSettingsItemHeaderColor.color
         }
         if let font {
             titleLabel.font = font
@@ -250,12 +250,12 @@ extension TagSettingsExpandableSectionHeader {
                 .shared
                 .shortTimeString(from: date)
             alertIcon.image = RuuviAssets.alertOffImage
-            alertIcon.tintColor = RuuviColor.logoTintColor
+            alertIcon.tintColor = RuuviColor.logoTintColor.color
             return
         } else {
             mutedTillLabel.isHidden = true
             alertIcon.image = isOn ? RuuviAssets.alertOnImage : nil
-            alertIcon.tintColor = RuuviColor.logoTintColor
+            alertIcon.tintColor = RuuviColor.logoTintColor.color
             removeAlertAnimations()
         }
 
@@ -267,11 +267,11 @@ extension TagSettingsExpandableSectionHeader {
         switch state {
         case .registered:
             alertIcon.image = RuuviAssets.alertOnImage
-            alertIcon.tintColor = RuuviColor.logoTintColor
+            alertIcon.tintColor = RuuviColor.logoTintColor.color
             removeAlertAnimations()
         case .firing:
             alertIcon.alpha = 1.0
-            alertIcon.tintColor = RuuviColor.ruuviOrangeColor
+            alertIcon.tintColor = RuuviColor.orangeColor.color
             alertIcon.image = RuuviAssets.alertActiveImage
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 UIView.animate(

@@ -16,6 +16,7 @@ class ChartSettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         localize()
+        styleViews()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -27,6 +28,10 @@ class ChartSettingsTableViewController: UITableViewController {
 extension ChartSettingsTableViewController: ChartSettingsViewInput {
     func localize() {
         title = RuuviLocalization.Settings.Label.chart
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 }
 
@@ -53,7 +58,9 @@ extension ChartSettingsTableViewController {
             let cell = tableView
                 .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.isOn = value
+            cell.isOnSwitch.thumbTintColor = RuuviColor.tintColor.color
             cell.delegate = self
             return cell
         case let .stepper(title, value, unitSingular, unitPlural):
@@ -67,13 +74,16 @@ extension ChartSettingsTableViewController {
             cell.titleLabel.text = title + " "
                 + "(" + "\(value)" + " "
                 + unit.unitString + ")"
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.prefix = title
             cell.stepper.value = Double(value)
+            cell.stepper.backgroundColor = RuuviColor.tintColor.color
             cell.delegate = self
             return cell
         case let .disclosure(title):
             let cell = tableView.dequeueReusableCell(with: ChartSettingsDisclosureTableViewCell.self, for: indexPath)
             cell.textLabel?.text = title
+            cell.textLabel?.textColor = RuuviColor.menuTextColor.color
             return cell
         }
     }
@@ -85,7 +95,7 @@ extension ChartSettingsTableViewController {
     override func tableView(_: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
-        footerLabel.textColor = RuuviColor.ruuviTextColor
+        footerLabel.textColor = RuuviColor.textColor.color
         footerLabel.font = UIFont.Muli(.regular, size: 13)
         footerLabel.numberOfLines = 0
         footerLabel.text = viewModel.sections[section].note

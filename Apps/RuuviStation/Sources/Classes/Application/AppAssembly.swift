@@ -1,5 +1,7 @@
+// swiftlint:disable file_length
 import BTKit
 import Foundation
+import RuuviAnalytics
 import RuuviCloud
 import RuuviContext
 import RuuviCore
@@ -20,101 +22,7 @@ import RuuviRepository
 import RuuviService
 import RuuviStorage
 import RuuviUser
-// swiftlint:disable file_length
 import Swinject
-#if canImport(RuuviCloudPure)
-    import RuuviCloudPure
-#endif
-#if canImport(RuuviContextRealm)
-    import RuuviContextRealm
-#endif
-#if canImport(RuuviContextSQLite)
-    import RuuviContextSQLite
-#endif
-#if canImport(RuuviPersistenceRealm)
-    import RuuviPersistenceRealm
-#endif
-#if canImport(RuuviPersistenceSQLite)
-    import RuuviPersistenceSQLite
-#endif
-#if canImport(RuuviStorageCoordinator)
-    import RuuviStorageCoordinator
-#endif
-#if canImport(RuuviPoolCoordinator)
-    import RuuviPoolCoordinator
-#endif
-#if canImport(RuuviLocalUserDefaults)
-    import RuuviLocalUserDefaults
-#endif
-#if canImport(RuuviPoolCoordinator)
-    import RuuviPoolCoordinator
-#endif
-#if canImport(RuuviReactorImpl)
-    import RuuviReactorImpl
-#endif
-#if canImport(RuuviDFUImpl)
-    import RuuviDFUImpl
-#endif
-#if canImport(RuuviMigrationImpl)
-    import RuuviMigrationImpl
-#endif
-#if canImport(RuuviDaemonOperation)
-    import RuuviDaemonOperation
-#endif
-#if canImport(RuuviDaemonBackground)
-    import RuuviDaemonBackground
-#endif
-#if canImport(RuuviDaemonRuuviTag)
-    import RuuviDaemonRuuviTag
-#endif
-#if canImport(RuuviServiceGATT)
-    import RuuviServiceGATT
-#endif
-#if canImport(RuuviAnalytics)
-    import RuuviAnalytics
-#endif
-#if canImport(RuuviAnalyticsImpl)
-    import RuuviAnalyticsImpl
-#endif
-#if canImport(RuuviServiceExport)
-    import RuuviServiceExport
-#endif
-#if canImport(RuuviNotifierImpl)
-    import RuuviNotifierImpl
-#endif
-#if canImport(RuuviServiceFactory)
-    import RuuviServiceFactory
-#endif
-#if canImport(RuuviDaemonCloudSync)
-    import RuuviDaemonCloudSync
-#endif
-#if canImport(RuuviRepositoryCoordinator)
-    import RuuviRepositoryCoordinator
-#endif
-#if canImport(RuuviUserCoordinator)
-    import RuuviUserCoordinator
-#endif
-#if canImport(RuuviCoreLocation)
-    import RuuviCoreLocation
-#endif
-#if canImport(RuuviNotificationLocal)
-    import RuuviNotificationLocal
-#endif
-#if canImport(RuuviCoreImage)
-    import RuuviCoreImage
-#endif
-#if canImport(RuuviCoreLocation)
-    import RuuviCoreLocation
-#endif
-#if canImport(RuuviCorePN)
-    import RuuviCorePN
-#endif
-#if canImport(RuuviCorePermission)
-    import RuuviCorePermission
-#endif
-#if canImport(RuuviServiceMeasurement)
-    import RuuviServiceMeasurement
-#endif
 
 final class AppAssembly {
     static let shared = AppAssembly()
@@ -428,9 +336,7 @@ private final class BusinessAssembly: Assembly {
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.ruuviUser = r.resolve(RuuviUser.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
-            #if canImport(RuuviAnalytics)
-                service.userPropertiesService = r.resolve(RuuviAnalytics.self)
-            #endif
+            service.userPropertiesService = r.resolve(RuuviAnalytics.self)
             service.universalLinkCoordinator = r.resolve(UniversalLinkCoordinator.self)
             return service
         }.inObjectScope(.container)

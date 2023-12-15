@@ -35,40 +35,6 @@ public extension UIImage {
     }
 }
 
-extension String {
-    public func localized(for clazz: AnyClass) -> String {
-        let bundle: Bundle
-        #if SWIFT_PACKAGE
-            bundle = Bundle.module
-        #else
-            bundle = Bundle.pod(clazz)
-        #endif
-        if let module = NSStringFromClass(clazz).components(separatedBy: ".").first {
-            if let path = bundle.path(forResource: currentLanguage(), ofType: "lproj"),
-               let bundle = Bundle(path: path) {
-                return bundle.localizedString(forKey: self, value: nil, table: module)
-            } else if let path = bundle.path(forResource: "Base", ofType: "lproj"),
-                      let bundle = Bundle(path: path) {
-                return bundle.localizedString(forKey: self, value: nil, table: module)
-            } else {
-                assertionFailure()
-                return self
-            }
-        } else {
-            assertionFailure()
-            return self
-        }
-    }
-
-    private func currentLanguage() -> String {
-        if let preferred = Bundle.main.preferredLocalizations.first {
-            preferred
-        } else {
-            "Base"
-        }
-    }
-}
-
 public extension UIStoryboard {
     static func named(_ name: String, for clazz: AnyClass) -> UIStoryboard {
         let bundle: Bundle

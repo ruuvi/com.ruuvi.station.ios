@@ -42,7 +42,17 @@ extension AboutViewController {
         configureViews()
         setUpChangelogTapGesture()
         localize()
+        styleViews()
         output.viewDidLoad()
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
+        versionLabel.textColor = RuuviColor.dashboardIndicator.color
+        addedTagsLabel.textColor = RuuviColor.dashboardIndicator.color
+        storedMeasurementsLabel.textColor = RuuviColor.dashboardIndicator.color
+        databaseSizeLable.textColor = RuuviColor.dashboardIndicator.color
+        aboutTextView.tintColor = RuuviColor.tintColor.color
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -155,12 +165,12 @@ extension AboutViewController {
         // make text color white
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.ruuviTextColor ?? UIColor.label,
+            value: RuuviColor.textColor.color,
             range: NSRange(location: 0, length: attrString.length)
         )
 
         aboutTextView.attributedText = attrString
-        aboutTextView.textColor = RuuviColor.ruuviTextColor
+        aboutTextView.textColor = RuuviColor.textColor.color
     }
 
     private func setUpChangelogTapGesture() {

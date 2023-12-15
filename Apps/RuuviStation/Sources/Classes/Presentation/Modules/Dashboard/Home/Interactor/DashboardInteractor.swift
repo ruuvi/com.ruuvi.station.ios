@@ -5,9 +5,6 @@ import RuuviLocal
 import RuuviOntology
 import RuuviPool
 import RuuviService
-#if canImport(RuuviServiceOwnership)
-    import RuuviServiceOwnership
-#endif
 import RuuviUser
 
 class DashboardInteractor {

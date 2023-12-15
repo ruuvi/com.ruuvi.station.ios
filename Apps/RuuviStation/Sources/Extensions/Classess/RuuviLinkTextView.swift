@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol RuuviLinkTextViewDelegate: NSObjectProtocol {
@@ -6,9 +7,9 @@ protocol RuuviLinkTextViewDelegate: NSObjectProtocol {
 
 class RuuviLinkTextView: UITextView {
     private var textRegularColor: UIColor? = RuuviColor
-        .dashboardIndicatorTextColor?
+        .dashboardIndicator.color
         .withAlphaComponent(0.6)
-    private var textLinkColor: UIColor? = RuuviColor.ruuviTextColor
+    private var textLinkColor: UIColor? = RuuviColor.textColor.color
     private var fullTextString: String?
     private var linkString: String?
     private var link: String?
@@ -16,8 +17,8 @@ class RuuviLinkTextView: UITextView {
     weak var linkDelegate: RuuviLinkTextViewDelegate?
 
     convenience init(
-        textColor: UIColor? = RuuviColor.dashboardIndicatorTextColor?.withAlphaComponent(0.6),
-        linkColor: UIColor? = RuuviColor.ruuviTextColor,
+        textColor: UIColor? = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6),
+        linkColor: UIColor? = RuuviColor.textColor.color,
         fullTextString: String?,
         linkString: String?,
         link: String?

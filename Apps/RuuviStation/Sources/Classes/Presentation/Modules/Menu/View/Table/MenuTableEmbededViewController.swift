@@ -31,6 +31,17 @@ extension MenuTableEmbededViewController {
         getMoreSensorsLabel.text = RuuviLocalization.Menu.Label.GetMoreSensors.text
         feedbackLabel.text = RuuviLocalization.Menu.Label.Feedback.text
     }
+
+    func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
+        addANewSensorLabel.textColor = RuuviColor.menuTextColor.color
+        appSettingsLabel.textColor = RuuviColor.menuTextColor.color
+        aboutHelpLabel.textColor = RuuviColor.menuTextColor.color
+        whatToMeasureLabel.textColor = RuuviColor.menuTextColor.color
+        getMoreSensorsLabel.textColor = RuuviColor.menuTextColor.color
+        feedbackLabel.textColor = RuuviColor.menuTextColor.color
+        accountAuthLabel.textColor = RuuviColor.menuTextColor.color
+    }
 }
 
 // MARK: - View lifecycle
@@ -39,6 +50,7 @@ extension MenuTableEmbededViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
     }
 
     override func viewWillAppear(_ animated: Bool) {

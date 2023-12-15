@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 protocol RUAlertDetailsCellChildViewDelegate: NSObjectProtocol {
@@ -22,7 +23,7 @@ class RUAlertDetailsCellChildView: UIView {
         let iv = UIImageView()
         iv.backgroundColor = .clear
         iv.image = RuuviAssets.editPenImage
-        iv.tintColor = RuuviColor.ruuviTintColor
+        iv.tintColor = RuuviColor.tintColor.color
         iv.contentMode = .scaleAspectFit
         return iv
     }()

@@ -1,9 +1,10 @@
+import RuuviLocalization
 import UIKit
 
 class DashboardIndicatorView: UIView {
     private lazy var indicatorValueLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorTextColor
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Montserrat(.bold, size: 14)
@@ -13,7 +14,7 @@ class DashboardIndicatorView: UIView {
 
     private lazy var indicatorUnitLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorTextColor
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 12)
@@ -78,15 +79,15 @@ extension DashboardIndicatorView {
 
     func changeColor(highlight: Bool) {
         indicatorValueLabel.textColor =
-            highlight ? RuuviColor.ruuviOrangeColor : RuuviColor.dashboardIndicatorTextColor
+        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicator.color
         indicatorUnitLabel.textColor =
-            highlight ? RuuviColor.ruuviOrangeColor : RuuviColor.dashboardIndicatorTextColor
+        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicator.color
     }
 
     func clearValues() {
         indicatorValueLabel.text = nil
         indicatorUnitLabel.text = nil
-        indicatorValueLabel.textColor = RuuviColor.dashboardIndicatorTextColor
-        indicatorUnitLabel.textColor = RuuviColor.dashboardIndicatorTextColor
+        indicatorValueLabel.textColor = RuuviColor.dashboardIndicator.color
+        indicatorUnitLabel.textColor = RuuviColor.dashboardIndicator.color
     }
 }

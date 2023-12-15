@@ -7,4 +7,5 @@ if [ ! -f "$PROJECT_DIR"/.tools/swiftgen/bin/swiftgen ]; then
 fi
 
 # execute swiftgen
-"$PROJECT_DIR"/.tools/swiftgen/bin/swiftgen
+"$PROJECT_DIR"/.tools/swiftgen/bin/swiftgen --config "$PROJECT_DIR"/.swiftgen.localizable.yml
+"$PROJECT_DIR"/.tools/swiftgen/bin/swiftgen --config "$PROJECT_DIR"/.swiftgen.assets.yml

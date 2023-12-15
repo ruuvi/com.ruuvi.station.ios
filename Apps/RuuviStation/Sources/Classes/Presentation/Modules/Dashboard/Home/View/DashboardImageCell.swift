@@ -12,7 +12,7 @@ class DashboardImageCell: UICollectionViewCell {
 
     private lazy var ruuviTagNameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBigTextColor
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 2
         label.font = UIFont.Montserrat(.bold, size: 14)
@@ -23,7 +23,7 @@ class DashboardImageCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
-        iv.tintColor = RuuviColor.dashboardIndicatorBigTextColor
+        iv.tintColor = RuuviColor.dashboardIndicatorBig.color
         iv.alpha = 0
         return iv
     }()
@@ -42,7 +42,7 @@ class DashboardImageCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.image = RuuviAssets.threeDotMoreImage
-        iv.tintColor = RuuviColor.dashboardIndicatorBigTextColor
+        iv.tintColor = RuuviColor.dashboardIndicatorBig.color
         return iv
     }()
 
@@ -57,7 +57,7 @@ class DashboardImageCell: UICollectionViewCell {
 
     private lazy var temperatureLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBigTextColor
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Oswald(.bold, size: 30)
@@ -66,7 +66,7 @@ class DashboardImageCell: UICollectionViewCell {
 
     private lazy var temperatureUnitLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBigTextColor
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Oswald(.extraLight, size: 16)
@@ -83,7 +83,7 @@ class DashboardImageCell: UICollectionViewCell {
         iv.backgroundColor = .clear
         iv.alpha = 0.7
         iv.tintColor = RuuviColor
-            .dashboardIndicatorTextColor?
+            .dashboardIndicator.color
             .withAlphaComponent(0.8)
         return iv
     }()
@@ -91,7 +91,7 @@ class DashboardImageCell: UICollectionViewCell {
     private lazy var updatedAtLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor
-            .dashboardIndicatorTextColor?
+            .dashboardIndicator.color
             .withAlphaComponent(0.8)
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -128,7 +128,7 @@ class DashboardImageCell: UICollectionViewCell {
     // swiftlint:disable:next function_body_length
     fileprivate func setUpUI() {
         let container = UIView(
-            color: RuuviColor.dashboardCardBGColor,
+            color: RuuviColor.dashboardCardBG.color,
             cornerRadius: 8
         )
         contentView.addSubview(container)
@@ -530,11 +530,11 @@ extension DashboardImageCell {
                     alertIcon.image = RuuviAssets.alertOnImage
                     removeAlertAnimations()
                 }
-                alertIcon.tintColor = RuuviColor.logoTintColor
+                alertIcon.tintColor = RuuviColor.logoTintColor.color
             case .firing:
                 alertButton.isUserInteractionEnabled = true
                 alertIcon.alpha = 1.0
-                alertIcon.tintColor = RuuviColor.ruuviOrangeColor
+                alertIcon.tintColor = RuuviColor.orangeColor.color
                 if alertIcon.image != RuuviAssets.alertActiveImage {
                     alertIcon.image = RuuviAssets.alertActiveImage
                 }
@@ -629,8 +629,8 @@ extension DashboardImageCell {
 
     private func highlightTemperatureValues(highlight: Bool) {
         temperatureLabel.textColor =
-            highlight ? RuuviColor.ruuviOrangeColor : RuuviColor.dashboardIndicatorBigTextColor
+        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
         temperatureUnitLabel.textColor =
-            highlight ? RuuviColor.ruuviOrangeColor : RuuviColor.dashboardIndicatorBigTextColor
+        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
     }
 }

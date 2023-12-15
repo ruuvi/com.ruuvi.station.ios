@@ -4,9 +4,6 @@ import RuuviContext
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
-#if canImport(RuuviOntologyRealm)
-    import RuuviOntologyRealm
-#endif
 
 extension Notification.Name {
     static let MigrationManagerToSQLiteDidFinish = Notification.Name("MigrationManagerToSQLite.DidFinish")

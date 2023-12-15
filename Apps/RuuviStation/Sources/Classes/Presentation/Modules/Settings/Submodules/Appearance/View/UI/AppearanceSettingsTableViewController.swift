@@ -1,3 +1,4 @@
+import RuuviLocalization
 import Foundation
 import UIKit
 
@@ -41,7 +42,7 @@ extension AppearanceSettingsTableViewController: AppearanceSettingsViewInput {
 
 private extension AppearanceSettingsTableViewController {
     func setUpUI() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
         setUpTableView()
     }
 

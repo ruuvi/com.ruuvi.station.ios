@@ -75,10 +75,10 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         slider.handleDiameter = 18
         slider.enableStep = true
         slider.minDistance = 1
-        slider.colorBetweenHandles = RuuviColor.ruuviTintColor
-        slider.handleColor = RuuviColor.ruuviTintColor
+        slider.colorBetweenHandles = RuuviColor.tintColor.color
+        slider.handleColor = RuuviColor.tintColor.color
         slider.backgroundColor = .clear
-        slider.tintColor = RuuviColor.ruuviTintColor?.withAlphaComponent(0.2)
+        slider.tintColor = RuuviColor.tintColor.color.withAlphaComponent(0.2)
         slider.hideLabels = true
         return slider
     }()
@@ -134,7 +134,7 @@ extension TagSettingsAlertConfigCell {
     private func setUpUI() {
         contentView.isUserInteractionEnabled = true
 
-        backgroundColor = RuuviColor.ruuviPrimary
+        backgroundColor = RuuviColor.primary.color
 
         addSubview(noticeView)
         noticeView.anchor(
@@ -191,7 +191,7 @@ extension TagSettingsAlertConfigCell {
         statusSwitch.centerYInSuperview()
 
         let statusSeparator = UIView()
-        statusSeparator.backgroundColor = RuuviColor.ruuviLineColor
+        statusSeparator.backgroundColor = RuuviColor.lineColor.color
         addSubview(statusSeparator)
         statusSeparator.anchor(
             top: statusContainerView.bottomAnchor,
@@ -212,7 +212,7 @@ extension TagSettingsAlertConfigCell {
         )
 
         let customDescriptionSeparator = UIView()
-        customDescriptionSeparator.backgroundColor = RuuviColor.ruuviLineColor
+        customDescriptionSeparator.backgroundColor = RuuviColor.lineColor.color
         addSubview(customDescriptionSeparator)
         customDescriptionSeparator.anchor(
             top: setCustomDescriptionView.bottomAnchor,

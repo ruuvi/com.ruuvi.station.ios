@@ -75,7 +75,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 
     private lazy var continueButton: UIButton = {
         let button = UIButton(
-            color: RuuviColor.ruuviTintColor,
+            color: RuuviColor.tintColor.color,
             cornerRadius: 25
         )
         button.setTitle(
@@ -148,7 +148,7 @@ extension SignInBenefitsViewController {
     }
 
     private func setUpBase() {
-        view.backgroundColor = RuuviColor.ruuviPrimary
+        view.backgroundColor = RuuviColor.primary.color
 
         view.addSubview(bgLayer)
         bgLayer.fillSuperview()
@@ -284,7 +284,7 @@ extension SignInBenefitsViewController {
         )
         attrString.addAttribute(
             .foregroundColor,
-            value: RuuviColor.ruuviOrangeColor ?? UIColor.systemOrange,
+            value: RuuviColor.orangeColor.color,
             range: boldRange
         )
 

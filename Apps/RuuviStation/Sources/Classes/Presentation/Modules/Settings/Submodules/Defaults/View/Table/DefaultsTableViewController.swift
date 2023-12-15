@@ -33,6 +33,11 @@ extension DefaultsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 }
 
@@ -56,7 +61,9 @@ extension DefaultsTableViewController {
                 ) as! DefaultsPlainTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.valueLabel.text = viewModel.value.value ?? RuuviLocalization.na
+            cell.valueLabel.textColor = RuuviColor.menuTextColor.color
             return cell
         case .switcher:
             // swiftlint:disable force_cast
@@ -67,7 +74,10 @@ extension DefaultsTableViewController {
                 ) as! DefaultsSwitchTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
+            cell.isOnSwitch.onTintColor = RuuviColor.switchEnabledTint.color
+            cell.isOnSwitch.thumbTintColor = RuuviColor.tintColor.color
             cell.delegate = self
             return cell
         case .stepper:
@@ -105,6 +115,8 @@ extension DefaultsTableViewController {
             case .decimal:
                 cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
             }
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
+            cell.stepper.backgroundColor = RuuviColor.tintColor.color
             cell.prefix = title
             cell.stepper.value = Double(viewModel.integer.value.bound)
             cell.delegate = self

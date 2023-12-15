@@ -1,3 +1,4 @@
+import RuuviLocalization
 import RuuviUser
 import UIKit
 
@@ -68,7 +69,7 @@ class RuuviOnboardViewController: UIViewController {
     private lazy var skipButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.setTitle("onboarding_skip".localized(for: Self.self), for: .normal)
+        button.setTitle(RuuviLocalization.onboardingSkip, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 14)
         button.addTarget(
             self,
@@ -371,68 +372,68 @@ private extension RuuviOnboardViewController {
     func constructOnboardingPages() -> [OnboardViewModel] {
         let meaureItem = OnboardViewModel(
             pageType: .measure,
-            title: "onboarding_measure_your_world".localized(for: Self.self),
-            subtitle: "onboarding_with_ruuvi_sensors".localized(for: Self.self),
-            sub_subtitle: "onboarding_swipe_to_continue".localized(for: Self.self)
+            title: RuuviLocalization.onboardingMeasureYourWorld,
+            subtitle: RuuviLocalization.onboardingWithRuuviSensors,
+            sub_subtitle: RuuviLocalization.onboardingSwipeToContinue
         )
 
         let dashboardItem = OnboardViewModel(
             pageType: .dashboard,
-            title: "onboarding_dashboard".localized(for: Self.self),
-            subtitle: "onboarding_follow_measurement".localized(for: Self.self),
+            title: RuuviLocalization.onboardingDashboard,
+            subtitle: RuuviLocalization.onboardingFollowMeasurement,
             image: RuuviAssets.dashboard
         )
 
         let sensorItem = OnboardViewModel(
             pageType: .sensors,
-            title: "onboarding_your_sensors".localized(for: Self.self),
-            subtitle: "onboarding_personalise".localized(for: Self.self),
+            title: RuuviLocalization.onboardingYourSensors,
+            subtitle: RuuviLocalization.onboardingPersonalise,
             image: RuuviAssets.sensors
         )
 
         let historyItem = OnboardViewModel(
             pageType: .history,
-            title: "onboarding_history".localized(for: Self.self),
-            subtitle: "onboarding_explore_detailed".localized(for: Self.self),
+            title: RuuviLocalization.onboardingHistory,
+            subtitle: RuuviLocalization.onboardingExploreDetailed,
             image: RuuviAssets.history
         )
 
         let alertItem = OnboardViewModel(
             pageType: .alerts,
-            title: "onboarding_alerts".localized(for: Self.self),
-            subtitle: "onboarding_set_custom".localized(for: Self.self),
+            title: RuuviLocalization.onboardingAlerts,
+            subtitle: RuuviLocalization.onboardingSetCustom,
             image: RuuviAssets.alerts
         )
 
         let shareItem = OnboardViewModel(
             pageType: .share,
-            title: "onboarding_share_your_sensors".localized(for: Self.self),
-            subtitle: "onboarding_sharees_can_use".localized(for: Self.self),
+            title: RuuviLocalization.onboardingShareYourSensors,
+            subtitle: RuuviLocalization.onboardingShareesCanUse,
             image: RuuviAssets.share
         )
 
         let widgetItem = OnboardViewModel(
             pageType: .widgets,
-            title: "onboarding_handy_widgets".localized(for: Self.self),
-            subtitle: "onboarding_access_widgets".localized(for: Self.self),
+            title: RuuviLocalization.onboardingHandyWidgets,
+            subtitle: RuuviLocalization.onboardingAccessWidgets,
             image: RuuviAssets.widgets
         )
 
         let webItem = OnboardViewModel(
             pageType: .web,
-            title: "onboarding_station_web".localized(for: Self.self),
-            subtitle: "onboarding_web_pros".localized(for: Self.self),
+            title: RuuviLocalization.onboardingStationWeb,
+            subtitle: RuuviLocalization.onboardingWebPros,
             image: RuuviAssets.web
         )
 
         let signInItem = OnboardViewModel(
             pageType: .signIn,
             title: isUserAuthorized() ?
-                "onboarding_thats_it_already_signed_in".localized(for: Self.self) :
-                "onboarding_thats_it".localized(for: Self.self),
+            RuuviLocalization.onboardingThatsItAlreadySignedIn :
+                RuuviLocalization.onboardingThatsIt,
             subtitle: isUserAuthorized() ?
-                "onboarding_go_to_sign_in_already_signed_in".localized(for: Self.self) :
-                "onboarding_go_to_sign_in".localized(for: Self.self)
+            RuuviLocalization.onboardingGoToSignInAlreadySignedIn :
+                RuuviLocalization.onboardingGoToSignIn
         )
 
         return [

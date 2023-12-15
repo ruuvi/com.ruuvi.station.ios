@@ -1,11 +1,9 @@
+import RuuviAnalytics
 import RuuviDaemon
 import RuuviLocal
 import RuuviOntology
 import RuuviUser
 import UIKit
-#if canImport(RuuviAnalytics)
-    import RuuviAnalytics
-#endif
 #if canImport(WidgetKit)
     import WidgetKit
 #endif
@@ -18,9 +16,7 @@ class AppStateServiceImpl: AppStateService {
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var settings: RuuviLocalSettings!
-    #if canImport(RuuviAnalytics)
-        var userPropertiesService: RuuviAnalytics!
-    #endif
+    var userPropertiesService: RuuviAnalytics!
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
     func application(
@@ -44,12 +40,10 @@ class AppStateServiceImpl: AppStateService {
         backgroundProcessService.register()
         settings.appIsOnForeground = true
         observeWidgetKind()
-        #if canImport(RuuviAnalytics)
-            DispatchQueue.main.async {
-                self.userPropertiesService.update()
-            }
-            settings.appOpenedCount += 1
-        #endif
+        DispatchQueue.main.async {
+            self.userPropertiesService.update()
+        }
+        settings.appOpenedCount += 1
     }
 
     func applicationWillResignActive(_: UIApplication) {
@@ -66,7 +60,9 @@ class AppStateServiceImpl: AppStateService {
         }
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.stop()
+#if canImport(WidgetKit)
             WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.simpleWidgetKindId)
+#endif
         }
         propertiesDaemon.stop()
         backgroundProcessService.schedule()

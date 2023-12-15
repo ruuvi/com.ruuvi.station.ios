@@ -15,7 +15,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 16)
@@ -23,7 +23,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         return label
     }()
 
-    lazy var seprator = UIView(color: RuuviColor.ruuviLineColor)
+    lazy var seprator = UIView(color: RuuviColor.lineColor.color)
     lazy var takePhotoButton = BackgroundSelectionButtonView(
         title: RuuviLocalization.takePhoto,
         icon: "camera.fill",
@@ -37,7 +37,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
 
     private lazy var selectFromDefaultLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.ruuviTextColor
+        label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
