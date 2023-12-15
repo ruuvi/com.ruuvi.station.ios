@@ -52,21 +52,23 @@ class DiscoverTableViewController: UIViewController {
 
 extension DiscoverTableViewController: DiscoverViewInput {
     func localize() {
-        navigationItem.title = "DiscoverTable.NavigationItem.title".localized(for: Self.self)
+        navigationItem.title = RuuviLocalization.DiscoverTable.NavigationItem.title
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
-        let title = "DiscoverTable.BluetoothDisabledAlert.title".localized(for: Self.self)
-        let message = "DiscoverTable.BluetoothDisabledAlert.message".localized(for: Self.self)
+        let title = RuuviLocalization.DiscoverTable.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.DiscoverTable.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(
-            title: "PermissionPresenter.settings".localized(for: Self.self),
-            style: .default,
-            handler: { [weak self] _ in
-                self?.takeUserToBTSettings(userDeclined: userDeclined)
-            }
-        ))
-        alertVC.addAction(UIAlertAction(title: "OK".localized(for: Self.self), style: .cancel, handler: nil))
+        alertVC.addAction(
+            UIAlertAction(
+                title: RuuviLocalization.PermissionPresenter.settings,
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.takeUserToBTSettings(userDeclined: userDeclined)
+                }
+            )
+        )
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
@@ -96,15 +98,13 @@ extension DiscoverTableViewController: DiscoverViewInput {
         showUpgradeFirmware: Bool,
         isDF3: Bool
     ) {
-        let title = "sensor_details".localized(for: Self.self)
+        let title = RuuviLocalization.sensorDetails
 
         // Message
         var messageString = message
         // We show extra message for DF3 sensors since they can't be added with NFC.
         if isDF3 {
-            let df3ErrorMessage = "add_sensor_nfc_df3_error".localized(
-                for: Self.self
-            )
+            let df3ErrorMessage = RuuviLocalization.addSensorNfcDf3Error
             messageString = "\n\(df3ErrorMessage)\n" + message
         }
 
@@ -124,7 +124,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         if showAddSensor {
             alertVC.addAction(UIAlertAction(
-                title: "add_sensor".localized(for: Self.self),
+                title: RuuviLocalization.addSensor,
                 style: .default,
                 handler: { [weak self] _ in
                     self?.output.viewDidAddDeviceWithNFC(with: tag)
@@ -133,7 +133,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         }
 
         alertVC.addAction(UIAlertAction(
-            title: "copy_mac_address".localized(for: Self.self),
+            title: RuuviLocalization.copyMacAddress,
             style: .default,
             handler: { [weak self] _ in
                 self?.output.viewDidACopyMacAddress(of: tag)
@@ -141,7 +141,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         ))
 
         alertVC.addAction(UIAlertAction(
-            title: "copy_unique_id".localized(for: Self.self),
+            title: RuuviLocalization.copyUniqueId,
             style: .default,
             handler: { [weak self] _ in
                 self?.output.viewDidACopySecret(of: tag)
@@ -150,7 +150,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         if showGoToSensor {
             alertVC.addAction(UIAlertAction(
-                title: "go_to_sensor".localized(for: Self.self),
+                title: RuuviLocalization.goToSensor,
                 style: .default,
                 handler: { [weak self] _ in
                     self?.output.viewDidGoToSensor(with: tag)
@@ -160,7 +160,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         if showUpgradeFirmware {
             alertVC.addAction(UIAlertAction(
-                title: "upgrade_firmware".localized(for: Self.self),
+                title: RuuviLocalization.DFUUIView.navigationTitle,
                 style: .default,
                 handler: { [weak self] _ in
                     self?.output.viewDidAskToUpgradeFirmware(of: tag)
@@ -168,7 +168,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
             ))
         }
 
-        alertVC.addAction(UIAlertAction(title: "close".localized(for: Self.self), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.close, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 }
@@ -260,8 +260,8 @@ extension DiscoverTableViewController: UITableViewDataSource {
         case .noDevices:
             let cell = tableView.dequeueReusableCell(with: DiscoverNoDevicesTableViewCell.self, for: indexPath)
             cell.descriptionLabel.text = isBluetoothEnabled
-                ? "DiscoverTable.NoDevicesSection.NotFound.text".localized(for: Self.self)
-                : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized(for: Self.self)
+            ? RuuviLocalization.DiscoverTable.NoDevicesSection.NotFound.text
+            : RuuviLocalization.DiscoverTable.NoDevicesSection.BluetoothDisabled.text
             return cell
         }
     }
@@ -295,7 +295,7 @@ extension DiscoverTableViewController {
 
         // RSSI
         if let rssi = device.rssi {
-            cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized(for: Self.self)
+            cell.rssiLabel.text = "\(rssi)" + " " + RuuviLocalization.dBm
             if rssi < -80 {
                 cell.rssiImageView.image = UIImage.named("icon-connection-1", for: Self.self)
             } else if rssi < -50 {
@@ -318,9 +318,7 @@ extension DiscoverTableViewController {
             navigationController?.navigationBar.titleTextAttributes =
                 [.font: muliBold]
         }
-        actionButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(
-            for: Self.self
-        ).capitalized, for: .normal)
+        actionButton.setTitle(RuuviLocalization.DiscoverTable.GetMoreSensors.Button.title.capitalized, for: .normal)
         configureTableView()
     }
 
@@ -364,10 +362,10 @@ extension DiscoverTableViewController {
     private func displayName(for device: DiscoverRuuviTagViewModel) -> String {
         // identifier
         if let mac = device.mac {
-            "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
+            RuuviLocalization.DiscoverTable.RuuviDevice.prefix
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
+            RuuviLocalization.DiscoverTable.RuuviDevice.prefix
                 + " " + (device.luid?.value.prefix(4) ?? "")
         }
     }

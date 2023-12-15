@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 public final class ErrorPresenterAlert: ErrorPresenter {
@@ -8,13 +9,13 @@ public final class ErrorPresenterAlert: ErrorPresenter {
     }
 
     private func presentAlert(error: Error) {
-        var title: String? = "ErrorPresenterAlert.Error".localized(for: Self.self)
+        var title: String? = RuuviLocalization.ErrorPresenterAlert.error
         if let localizedError = error as? LocalizedError {
-            title = localizedError.failureReason ?? "ErrorPresenterAlert.Error".localized(for: Self.self)
+            title = localizedError.failureReason ?? RuuviLocalization.ErrorPresenterAlert.error
         }
         let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
         let action = UIAlertAction(
-            title: "ErrorPresenterAlert.OK".localized(for: Self.self),
+            title: RuuviLocalization.ErrorPresenterAlert.ok,
             style: .cancel,
             handler: nil
         )
