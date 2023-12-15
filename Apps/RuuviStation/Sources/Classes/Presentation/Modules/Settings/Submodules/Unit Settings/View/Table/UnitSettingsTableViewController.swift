@@ -60,6 +60,10 @@ extension UnitSettingsTableViewController: UnitSettingsViewInput {
     func localize() {
         tableView.reloadData()
     }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
+    }
 }
 
 // MARK: - View lifecycle
@@ -68,6 +72,7 @@ extension UnitSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
         output.viewDidLoad()
         updateUI()
     }
@@ -136,7 +141,8 @@ extension UnitSettingsTableViewController {
                 cell.valueLbl.text = RuuviLocalization.na
             }
         }
-
+        cell.titleLbl.textColor = RuuviColor.menuTextColor.color
+        cell.valueLbl.textColor = RuuviColor.menuTextColor.color
         return cell
     }
 }

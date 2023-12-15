@@ -42,6 +42,11 @@ extension HeartbeatViewController {
         super.viewDidLoad()
         configureViews()
         localize()
+        styleViews()
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {
