@@ -19,9 +19,15 @@ class MyRuuviAccountViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        styleViews()
         configureViews()
         localize()
         output.viewDidLoad()
+    }
+
+    private func styleViews() {
+        loggedInLabel.textColor = RuuviColor.textColor.color
+        usernameLabel.textColor = RuuviColor.textColor.color
     }
 
     // MARK: - Button actions

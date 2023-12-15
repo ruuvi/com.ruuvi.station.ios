@@ -208,6 +208,7 @@ extension ShareViewController {
         } else {
             cell.sharingDisabledLabel.text = RuuviLocalization.networkSharingDisabled
         }
+        cell.sharingDisabledLabel.textColor = RuuviColor.textColor.color
 
         let description = RuuviLocalization.ShareViewController.description
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -220,6 +221,7 @@ extension ShareViewController {
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         cell.emailTextField.placeholder = RuuviLocalization.ShareViewController.EmailTextField.placeholder
         cell.emailTextField.delegate = self
+        cell.emailTextField.textColor = RuuviColor.textColor.color
         return cell
     }
 
@@ -234,6 +236,8 @@ extension ShareViewController {
     private func getSharedEmailCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareEmailTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareEmailTableViewCell.self, for: indexPath)
         cell.emailLabel.text = viewModel.sharedEmails.value?[indexPath.row]
+        cell.emailLabel.textColor = RuuviColor.textColor.color
+        cell.unshareButton.tintColor = RuuviColor.textColor.color
         cell.delegate = self
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell

@@ -47,6 +47,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
             if let updateAt = self?.updatedAt {
                 self?.originalValueUpdateTimeLabel.text = "(\(updateAt.ruuviAgo()))"
@@ -141,6 +142,15 @@ class OffsetCorrectionAppleViewController: UIViewController {
                 )
             }
         }
+    }
+
+    private func styleViews() {
+        correctedValueTitle.textColor = RuuviColor.textColor.color
+        originalValueTitle.textColor = RuuviColor.textColor.color
+        originalValueLabel.textColor = RuuviColor.textColor.color
+        originalValueUpdateTimeLabel.textColor = RuuviColor.textColor.color
+        correctedValueLabel.textColor = RuuviColor.textColor.color
+        offsetValueLabel.textColor = RuuviColor.textColor.color
     }
 }
 

@@ -60,7 +60,12 @@ final class OwnerViewController: UIViewController {
         setUpCustomBackButton()
         setUpCloudHistoryContentView()
         localize()
+        styleViews()
         output.viewDidTriggerFirmwareUpdateDialog()
+    }
+
+    private func styleViews() {
+        claimOwnershipDescriptionLabel.textColor = RuuviColor.textColor.color
     }
 }
 

@@ -53,6 +53,11 @@ extension HeartbeatTableViewController {
         bindViewModel()
         updateUIComponent()
         localize()
+        styleViews()
+    }
+
+    private func styleViews() {
+        bgScanningIntervalValueLabel.textColor = RuuviColor.textColor.color
     }
 }
 
