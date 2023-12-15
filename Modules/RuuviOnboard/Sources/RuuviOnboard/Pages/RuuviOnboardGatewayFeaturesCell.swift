@@ -46,7 +46,7 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.text = "onboarding_gateway_required".localized(for: Self.self)
+        label.text = RuuviLocalization.onboardingGatewayRequired
         label.font = UIFont.Muli(.semiBoldItalic, size: 16)
         return label
     }()

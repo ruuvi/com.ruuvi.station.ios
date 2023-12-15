@@ -1,13 +1,14 @@
+// swiftlint:disable file_length
 import BTKit
 import CoreBluetooth
 import CoreNFC
-// swiftlint:disable file_length
 import Foundation
 import Future
 import RuuviContext
 import RuuviCore
 import RuuviFirmware
 import RuuviLocal
+import RuuviLocalization
 import RuuviOntology
 import RuuviPresenters
 import RuuviReactor
@@ -138,7 +139,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidTriggerBuySensors() {
-        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized(for: Self.self))
+        guard let url = URL(string: RuuviLocalization.Ruuvi.BuySensors.Url.ios)
         else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
@@ -425,7 +426,7 @@ extension DiscoverPresenter {
         else {
             return nil
         }
-        return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
+        return RuuviLocalization.DiscoverTable.RuuviDevice.prefix
             + " " + tag.macId.replacingOccurrences(of: ":", with: "").suffix(4)
     }
 
@@ -436,12 +437,12 @@ extension DiscoverPresenter {
             return nil
         }
 
-        let nameString = "\("name".localized(for: Self.self))\n\(displayName)"
-        let macIdString = "\("mac_address".localized(for: Self.self))\n\(tag.macId)"
-        let uniqueIdString = "\("unique_id".localized(for: Self.self))\n\(tag.id)"
-        let fwString = "\("firmware_version".localized(for: Self.self))\n\(tag.firmwareVersion)"
+        let nameString = "\(RuuviLocalization.name)\n\(displayName)"
+        let macIdString = "\(RuuviLocalization.macAddress)\n\(tag.macId)"
+        let uniqueIdString = "\(RuuviLocalization.uniqueId)\n\(tag.id)"
+        let fwString = "\(RuuviLocalization.firmwareVersion)\n\(tag.firmwareVersion)"
 
-        return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n".localized(for: Self.self)
+        return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n"
     }
 
     private func addRuuviTagOwnership(

@@ -1,11 +1,8 @@
+import RuuviLocalization
 import SwiftUI
 import UIKit
 
 private enum ActivityPresenterAssets {
-    static let activityOngoingDefault = "activity_ongoing_generic"
-    static let activitySuccessDefault = "activity_success_generic"
-    static let activityFailedDefault = "activity_failed_generic"
-
     static let activityLogoRuuvi = "ruuvi_activity_presenter_logo"
 }
 
@@ -84,25 +81,22 @@ struct ActivityPresenterContentView: View {
             if let message {
                 message
             } else {
-                ActivityPresenterAssets
-                    .activityOngoingDefault
-                    .localized(for: ActivityPresenterViewProvider.self)
+                RuuviLocalization
+                    .activityOngoingGeneric
             }
         case let .success(message):
             if let message {
                 message
             } else {
-                ActivityPresenterAssets
-                    .activitySuccessDefault
-                    .localized(for: ActivityPresenterViewProvider.self)
+                RuuviLocalization
+                    .activitySuccessGeneric
             }
         case let .failed(message):
             if let message {
                 message
             } else {
-                ActivityPresenterAssets
-                    .activityFailedDefault
-                    .localized(for: ActivityPresenterViewProvider.self)
+                RuuviLocalization
+                    .activityFailedGeneric
             }
         case .dismiss:
             "" // Placeholder for dismiss state

@@ -7,32 +7,28 @@ struct FirmwareView: View {
     @ObservedObject var viewModel: FirmwareViewModel
 
     private struct Texts {
-        let navigationTitle = "DFUUIView.navigationTitle".localized(for: FirmwareViewModel.self)
-        let latestTitle = "DFUUIView.latestTitle".localized(for: FirmwareViewModel.self)
-        let currentTitle = "DFUUIView.currentTitle".localized(for: FirmwareViewModel.self)
-        let lowBatteryWarningMessage = "DFUUIView.lowBattery.warning.message".localized(for: FirmwareViewModel.self)
-        let okTitle = "ErrorPresenterAlert.OK".localized(for: FirmwareViewModel.self)
-        let notReportingDescription = "DFUUIView.notReportingDescription".localized(for: FirmwareViewModel.self)
-        let alreadyOnLatest = "DFUUIView.alreadyOnLatest".localized(for: FirmwareViewModel.self)
-        let startUpdateProcess = "DFUUIView.startUpdateProcess".localized(for: FirmwareViewModel.self)
-        let downloadingTitle = "DFUUIView.downloadingTitle".localized(for: FirmwareViewModel.self)
-        let prepareTitle = "DFUUIView.prepareTitle".localized(for: FirmwareViewModel.self)
-        let openCoverTitle = "DFUUIView.openCoverTitle".localized(for: FirmwareViewModel.self)
-        let localBootButtonTitle = "DFUUIView.locateBootButtonTitle".localized(for: FirmwareViewModel.self)
-        let setUpdatingModeTitle = "DFUUIView.setUpdatingModeTitle".localized(for: FirmwareViewModel.self)
-        let toBootModeTwoButtonsDescription = "DFUUIView.toBootModeTwoButtonsDescription".localized(
-            for: FirmwareViewModel.self
-        )
-        let toBootModeOneButtonDescription = "DFUUIView.toBootModeOneButtonDescription".localized(
-            for: FirmwareViewModel.self
-        )
-        let toBootModeSuccessTitle = "DFUUIView.toBootModeSuccessTitle".localized(for: FirmwareViewModel.self)
-        let updatingTitle = "DFUUIView.updatingTitle".localized(for: FirmwareViewModel.self)
-        let searchingTitle = "DFUUIView.searchingTitle".localized(for: FirmwareViewModel.self)
-        let startTitle = "DFUUIView.startTitle".localized(for: FirmwareViewModel.self)
-        let doNotCloseTitle = "DFUUIView.doNotCloseTitle".localized(for: FirmwareViewModel.self)
-        let successfulTitle = "DFUUIView.successfulTitle".localized(for: FirmwareViewModel.self)
-        let finish = "DfuFlash.Finish.text".localized(for: FirmwareViewModel.self)
+        let navigationTitle = RuuviLocalization.DFUUIView.navigationTitle
+        let latestTitle = RuuviLocalization.DFUUIView.latestTitle
+        let currentTitle = RuuviLocalization.DFUUIView.currentTitle
+        let lowBatteryWarningMessage = RuuviLocalization.DFUUIView.LowBattery.Warning.message
+        let okTitle = RuuviLocalization.ErrorPresenterAlert.ok
+        let notReportingDescription = RuuviLocalization.DFUUIView.notReportingDescription
+        let alreadyOnLatest = RuuviLocalization.DFUUIView.alreadyOnLatest
+        let startUpdateProcess = RuuviLocalization.DFUUIView.startUpdateProcess
+        let downloadingTitle = RuuviLocalization.DFUUIView.downloadingTitle
+        let prepareTitle = RuuviLocalization.DFUUIView.prepareTitle
+        let openCoverTitle = RuuviLocalization.DFUUIView.openCoverTitle
+        let localBootButtonTitle = RuuviLocalization.DFUUIView.locateBootButtonTitle
+        let setUpdatingModeTitle = RuuviLocalization.DFUUIView.setUpdatingModeTitle
+        let toBootModeTwoButtonsDescription = RuuviLocalization.DFUUIView.toBootModeTwoButtonsDescription
+        let toBootModeOneButtonDescription = RuuviLocalization.DFUUIView.toBootModeOneButtonDescription
+        let toBootModeSuccessTitle = RuuviLocalization.DFUUIView.toBootModeSuccessTitle
+        let updatingTitle = RuuviLocalization.DFUUIView.updatingTitle
+        let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
+        let startTitle = RuuviLocalization.DFUUIView.startTitle
+        let doNotCloseTitle = RuuviLocalization.DFUUIView.doNotCloseTitle
+        let successfulTitle = RuuviLocalization.DFUUIView.successfulTitle
+        let finish = RuuviLocalization.DfuFlash.Finish.text
     }
 
     private let texts = Texts()
