@@ -56,7 +56,9 @@ extension DefaultsTableViewController {
                 ) as! DefaultsPlainTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.valueLabel.text = viewModel.value.value ?? RuuviLocalization.na
+            cell.valueLabel.textColor = RuuviColor.menuTextColor.color
             return cell
         case .switcher:
             // swiftlint:disable force_cast
@@ -67,6 +69,7 @@ extension DefaultsTableViewController {
                 ) as! DefaultsSwitchTableViewCell
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
             cell.delegate = self
             return cell
@@ -105,6 +108,7 @@ extension DefaultsTableViewController {
             case .decimal:
                 cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
             }
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.prefix = title
             cell.stepper.value = Double(viewModel.integer.value.bound)
             cell.delegate = self

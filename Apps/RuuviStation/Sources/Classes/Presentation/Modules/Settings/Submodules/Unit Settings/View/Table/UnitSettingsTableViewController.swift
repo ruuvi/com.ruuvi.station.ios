@@ -136,7 +136,8 @@ extension UnitSettingsTableViewController {
                 cell.valueLbl.text = RuuviLocalization.na
             }
         }
-
+        cell.titleLbl.textColor = RuuviColor.menuTextColor.color
+        cell.valueLbl.textColor = RuuviColor.menuTextColor.color
         return cell
     }
 }

@@ -42,7 +42,15 @@ extension AboutViewController {
         configureViews()
         setUpChangelogTapGesture()
         localize()
+        styleViews()
         output.viewDidLoad()
+    }
+
+    private func styleViews() {
+        versionLabel.textColor = RuuviColor.dashboardIndicator.color
+        addedTagsLabel.textColor = RuuviColor.dashboardIndicator.color
+        storedMeasurementsLabel.textColor = RuuviColor.dashboardIndicator.color
+        databaseSizeLable.textColor = RuuviColor.dashboardIndicator.color
     }
 
     override func viewWillAppear(_ animated: Bool) {

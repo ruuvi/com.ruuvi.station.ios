@@ -53,6 +53,7 @@ extension ChartSettingsTableViewController {
             let cell = tableView
                 .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.isOn = value
             cell.delegate = self
             return cell
@@ -67,6 +68,7 @@ extension ChartSettingsTableViewController {
             cell.titleLabel.text = title + " "
                 + "(" + "\(value)" + " "
                 + unit.unitString + ")"
+            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.prefix = title
             cell.stepper.value = Double(value)
             cell.delegate = self
@@ -74,6 +76,7 @@ extension ChartSettingsTableViewController {
         case let .disclosure(title):
             let cell = tableView.dequeueReusableCell(with: ChartSettingsDisclosureTableViewCell.self, for: indexPath)
             cell.textLabel?.text = title
+            cell.textLabel?.textColor = RuuviColor.menuTextColor.color
             return cell
         }
     }
