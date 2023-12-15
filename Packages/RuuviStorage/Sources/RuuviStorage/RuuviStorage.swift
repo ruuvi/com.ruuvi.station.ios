@@ -41,5 +41,5 @@ public protocol RuuviStorage {
 }
 
 public protocol RuuviStorageFactory {
-    func create(realm: RuuviPersistence, sqlite: RuuviPersistence) -> RuuviStorage
+    func create(sqlite: RuuviPersistence) -> RuuviStorage
 }

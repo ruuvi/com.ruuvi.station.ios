@@ -29,7 +29,6 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         let presenter = DashboardPresenter()
         presenter.router = router
         presenter.view = view
-        presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)

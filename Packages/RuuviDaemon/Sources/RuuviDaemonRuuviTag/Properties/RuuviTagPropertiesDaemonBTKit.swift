@@ -12,7 +12,6 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     private let ruuviReactor: RuuviReactor
     private let foreground: BTForeground
     private let idPersistence: RuuviLocalIDs
-    private let realmPersistence: RuuviPersistence
     private let sqiltePersistence: RuuviPersistence
 
     public init(
@@ -20,14 +19,12 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         ruuviReactor: RuuviReactor,
         foreground: BTForeground,
         idPersistence: RuuviLocalIDs,
-        realmPersistence: RuuviPersistence,
         sqiltePersistence: RuuviPersistence
     ) {
         self.ruuviPool = ruuviPool
         self.ruuviReactor = ruuviReactor
         self.foreground = foreground
         self.idPersistence = idPersistence
-        self.realmPersistence = realmPersistence
         self.sqiltePersistence = sqiltePersistence
         super.init()
     }
@@ -36,7 +33,6 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     private var observeTokens = [ObservationToken]()
     private var scanTokens = [ObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
-    private var isTransitioningFromRealmToSQLite = false
     private var processingUUIDs = Set<String>()
 
     @objc private class RuuviTagPropertiesDaemonPair: NSObject {
@@ -155,55 +151,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     .on(failure: { [weak self] error in
                         self?.post(error: .ruuviPool(error))
                     })
-            } else {
-                isTransitioningFromRealmToSQLite = true
-                // now we need to remove the tag from Realm and add it to SQLite
-                sqiltePersistence.create(
-                    pair.ruuviTag
-                        .with(macId: mac.mac)
-                        .with(isConnectable: true)
-                        .with(version: pair.device.version)
-                        .with(isOwner: true)
-                ).on(success: { [weak self] _ in
-                    self?.realmPersistence.readAll(pair.device.uuid).on(success: { realmRecords in
-                        let records = realmRecords.map { $0.with(macId: mac.mac) }
-                        self?.sqiltePersistence.create(records).on(success: { _ in
-                            self?.realmPersistence.deleteAllRecords(pair.device.uuid).on(success: { _ in
-                                self?.idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
-                                self?.realmPersistence.delete(pair.ruuviTag.withoutMac())
-                                    .on(success: { [weak self] _ in
-                                        self?.realmPersistence.readSensorSettings(pair.ruuviTag.withoutMac())
-                                            .on(success: { [weak self] sensorSettings in
-                                                if let withMacSettings = sensorSettings?.with(macId: mac.mac) {
-                                                    self?.sqiltePersistence.save(sensorSettings: withMacSettings)
-                                                        .on(success: { _ in
-                                                            self?.isTransitioningFromRealmToSQLite = false
-                                                        }, failure: { error in
-                                                            self?.post(error: .ruuviPersistence(error))
-                                                            self?.isTransitioningFromRealmToSQLite = false
-                                                        })
-                                                } else {
-                                                    self?.isTransitioningFromRealmToSQLite = false
-                                                }
-                                            }, failure: { error in
-                                                self?.post(error: .ruuviPersistence(error))
-                                                self?.isTransitioningFromRealmToSQLite = false
-                                            })
-                                    }, failure: { error in
-                                        self?.post(error: .ruuviPersistence(error))
-                                        self?.isTransitioningFromRealmToSQLite = false
-                                    })
-                            }, failure: { error in
-                                self?.post(error: .ruuviPersistence(error))
-                                self?.isTransitioningFromRealmToSQLite = false
-                            })
-                        })
-                    })
-                }, failure: { [weak self] error in
-                    self?.post(error: .ruuviPersistence(error))
-                    self?.isTransitioningFromRealmToSQLite = false
-                })
-            }
+            } 
         } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already

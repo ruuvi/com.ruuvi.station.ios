@@ -7,7 +7,6 @@ import RuuviStorage
 public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let settings: RuuviLocalSettings
     private let idPersistence: RuuviLocalIDs
-    private let realmContext: RealmContext
     private let ruuviPool: RuuviPool
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
@@ -16,7 +15,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     public init(
         settings: RuuviLocalSettings,
         idPersistence: RuuviLocalIDs,
-        realmContext: RealmContext,
         ruuviPool: RuuviPool,
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert,
@@ -24,7 +22,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     ) {
         self.settings = settings
         self.idPersistence = idPersistence
-        self.realmContext = realmContext
         self.ruuviPool = ruuviPool
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
@@ -32,11 +29,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     }
 
     public func createAllOrdered() -> [RuuviMigration] {
-        let toSQLite = MigrationManagerToSQLite(
-            idPersistence: idPersistence,
-            realmContext: realmContext,
-            ruuviPool: ruuviPool
-        )
         let toAlertService = MigrationManagerAlertService(
             ruuviStorage: ruuviStorage,
             ruuviAlertService: ruuviAlertService
@@ -59,7 +51,6 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         )
         let toNetworkPull60 = MigrationManagerToNetworkPull60(settings: settings)
         return [
-            toSQLite,
             toAlertService,
             toPrune240,
             toChartDuration240,

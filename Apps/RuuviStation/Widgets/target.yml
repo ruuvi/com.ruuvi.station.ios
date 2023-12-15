@@ -43,10 +43,7 @@ targets:
       - package: Future
       - package: GRDB
       - package: Humidity
-      - package: Realm
       - package: KeychainAccess
-      - package: Realm
-        product: RealmSwift
       - target: RuuviUser
         embed: true
       - target: RuuviCloud

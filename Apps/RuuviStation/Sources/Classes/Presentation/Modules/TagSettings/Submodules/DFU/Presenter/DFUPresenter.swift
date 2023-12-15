@@ -26,7 +26,6 @@ final class DFUPresenter: DFUModuleInput {
     private let interactor: DFUInteractorInput
     private let foreground: BTForeground!
     private let idPersistence: RuuviLocalIDs
-    private let realmPersistence: RuuviPersistence
     private let sqiltePersistence: RuuviPersistence
     private let ruuviTag: RuuviTagSensor
     private let ruuviPool: RuuviPool
@@ -40,7 +39,6 @@ final class DFUPresenter: DFUModuleInput {
         ruuviTag: RuuviTagSensor,
         foreground: BTForeground,
         idPersistence: RuuviLocalIDs,
-        realmPersistence: RuuviPersistence,
         sqiltePersistence: RuuviPersistence,
         ruuviPool: RuuviPool,
         ruuviStorage: RuuviStorage,
@@ -51,7 +49,6 @@ final class DFUPresenter: DFUModuleInput {
         self.interactor = interactor
         self.foreground = foreground
         self.idPersistence = idPersistence
-        self.realmPersistence = realmPersistence
         self.sqiltePersistence = sqiltePersistence
         self.ruuviTag = ruuviTag
         self.ruuviPool = ruuviPool
@@ -63,7 +60,6 @@ final class DFUPresenter: DFUModuleInput {
             interactor: interactor,
             foreground: foreground,
             idPersistence: idPersistence,
-            realmPersistence: realmPersistence,
             sqiltePersistence: sqiltePersistence,
             ruuviTag: ruuviTag,
             ruuviPool: ruuviPool,

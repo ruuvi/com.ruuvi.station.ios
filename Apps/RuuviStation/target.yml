@@ -28,9 +28,6 @@ targets:
       - package: KeychainAccess
       - package: Humidity
       - package: Future
-      - package: Realm
-      - package: Realm
-        product: RealmSwift
       - package: FLEX
       - target: RuuviAnalytics
       - target: RuuviCloud
