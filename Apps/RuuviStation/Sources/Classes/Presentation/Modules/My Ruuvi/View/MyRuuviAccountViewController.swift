@@ -26,6 +26,7 @@ class MyRuuviAccountViewController: UIViewController {
     }
 
     private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
         loggedInLabel.textColor = RuuviColor.textColor.color
         usernameLabel.textColor = RuuviColor.textColor.color
         deleteAccountButton.backgroundColor = RuuviColor.orangeColor.color

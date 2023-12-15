@@ -16,6 +16,7 @@ class ChartSettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         localize()
+        styleViews()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -27,6 +28,10 @@ class ChartSettingsTableViewController: UITableViewController {
 extension ChartSettingsTableViewController: ChartSettingsViewInput {
     func localize() {
         title = RuuviLocalization.Settings.Label.chart
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 }
 

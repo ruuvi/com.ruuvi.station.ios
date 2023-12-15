@@ -47,6 +47,7 @@ extension AboutViewController {
     }
 
     private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
         versionLabel.textColor = RuuviColor.dashboardIndicator.color
         addedTagsLabel.textColor = RuuviColor.dashboardIndicator.color
         storedMeasurementsLabel.textColor = RuuviColor.dashboardIndicator.color

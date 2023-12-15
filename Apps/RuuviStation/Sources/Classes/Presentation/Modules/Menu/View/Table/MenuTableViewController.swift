@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class MenuTableViewController: UIViewController {
@@ -14,12 +15,17 @@ extension MenuTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
         configureViews()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 }
 

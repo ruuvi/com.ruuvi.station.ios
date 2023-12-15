@@ -145,6 +145,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
     }
 
     private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
         correctedValueTitle.textColor = RuuviColor.textColor.color
         originalValueTitle.textColor = RuuviColor.textColor.color
         originalValueLabel.textColor = RuuviColor.textColor.color

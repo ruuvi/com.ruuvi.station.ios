@@ -39,6 +39,7 @@ class SelectionTableViewController: UITableViewController {
 
 extension SelectionTableViewController: SelectionViewInput {
     func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
         descriptionTextView.textColor = RuuviColor.textColor.color
     }
 }

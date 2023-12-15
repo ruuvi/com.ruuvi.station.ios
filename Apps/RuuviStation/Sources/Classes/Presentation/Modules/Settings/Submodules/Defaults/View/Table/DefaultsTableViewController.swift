@@ -33,6 +33,11 @@ extension DefaultsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        styleViews()
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 }
 

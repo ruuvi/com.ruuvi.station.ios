@@ -33,6 +33,7 @@ extension MenuTableEmbededViewController {
     }
 
     func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
         addANewSensorLabel.textColor = RuuviColor.menuTextColor.color
         appSettingsLabel.textColor = RuuviColor.menuTextColor.color
         aboutHelpLabel.textColor = RuuviColor.menuTextColor.color

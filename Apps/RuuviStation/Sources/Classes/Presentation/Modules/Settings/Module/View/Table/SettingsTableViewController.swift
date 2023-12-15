@@ -91,6 +91,7 @@ extension SettingsTableViewController: SettingsViewInput {
     }
 
     func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
         temperatureTitleLabel.textColor = RuuviColor.menuTextColor.color
         humidityTitleLabel.textColor = RuuviColor.menuTextColor.color
         pressureTitleLabel.textColor = RuuviColor.menuTextColor.color

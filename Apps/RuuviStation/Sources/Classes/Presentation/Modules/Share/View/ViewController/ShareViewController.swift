@@ -54,7 +54,12 @@ class ShareViewController: UITableViewController {
         configureTableView()
         setupCustomBackButton()
         localize()
+        styleViews()
         output.viewDidLoad()
+    }
+
+    private func styleViews() {
+        view.backgroundColor = RuuviColor.primary.color
     }
 
     // MARK: - TableView
