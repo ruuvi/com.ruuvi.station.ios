@@ -11,8 +11,5 @@ targets:
     - path: Sources
       name: Context
     dependencies:
-    - package: Realm
-    - package: Realm
-      product: RealmSwift
     - package: GRDB
     - target: RuuviOntology

@@ -5,8 +5,6 @@ import RuuviPersistence
 public protocol RuuviReactorFactory {
     func create(
         sqliteContext: SQLiteContext,
-        realmContext: RealmContext,
-        sqlitePersistence: RuuviPersistence,
-        realmPersistence: RuuviPersistence
+        sqlitePersistence: RuuviPersistence
     ) -> RuuviReactor
 }

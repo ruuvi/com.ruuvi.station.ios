@@ -23,7 +23,6 @@ class DashboardPresenter: DashboardModuleInput {
     weak var view: DashboardViewInput?
     var router: DashboardRouterInput!
     var interactor: DashboardInteractorInput!
-    var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: RuuviLocalSettings!
     var foreground: BTForeground!

@@ -13,7 +13,4 @@ targets:
     dependencies:
     - package: Humidity
     - package: BTKit
-    - package: Realm
-    - package: Realm
-      product: RealmSwift
     - package: GRDB

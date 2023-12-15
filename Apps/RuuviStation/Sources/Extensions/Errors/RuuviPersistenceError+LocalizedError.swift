@@ -7,8 +7,6 @@ extension RuuviPersistenceError: LocalizedError {
         switch self {
         case let .grdb(error):
             error.localizedDescription
-        case let .realm(error):
-            error.localizedDescription
         case .failedToFindRuuviTag:
             RuuviLocalization.RuuviPersistenceError.failedToFindRuuviTag
         }

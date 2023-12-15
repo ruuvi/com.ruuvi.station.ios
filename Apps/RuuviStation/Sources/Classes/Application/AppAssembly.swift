@@ -54,16 +54,9 @@ private final class DfuAssembly: Assembly {
 
 private final class MigrationAssembly: Assembly {
     func assemble(container: Container) {
-        container.register(RuuviMigration.self, name: "realm") { r in
-            let localImages = r.resolve(RuuviLocalImages.self)!
-            let settings = r.resolve(RuuviLocalSettings.self)!
-            return MigrationManagerToVIPER(localImages: localImages, settings: settings)
-        }
-
         container.register(RuuviMigrationFactory.self) { r in
             let settings = r.resolve(RuuviLocalSettings.self)!
             let idPersistence = r.resolve(RuuviLocalIDs.self)!
-            let realmContext = r.resolve(RealmContext.self)!
             let ruuviPool = r.resolve(RuuviPool.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
@@ -71,7 +64,6 @@ private final class MigrationAssembly: Assembly {
             return RuuviMigrationFactoryImpl(
                 settings: settings,
                 idPersistence: idPersistence,
-                realmContext: realmContext,
                 ruuviPool: ruuviPool,
                 ruuviStorage: ruuviStorage,
                 ruuviAlertService: ruuviAlertService,
@@ -84,16 +76,6 @@ private final class MigrationAssembly: Assembly {
 private final class PersistenceAssembly: Assembly {
     // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
-        container.register(RealmContextFactory.self) { _ in
-            let factory = RealmContextFactoryImpl()
-            return factory
-        }.inObjectScope(.container)
-
-        container.register(RealmContext.self) { r in
-            let factory = r.resolve(RealmContextFactory.self)!
-            return factory.create()
-        }.inObjectScope(.container)
-
         container.register(RuuviLocalConnections.self) { r in
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalConnections()
@@ -115,14 +97,12 @@ private final class PersistenceAssembly: Assembly {
 
         container.register(RuuviPool.self) { r in
             let factory = r.resolve(RuuviPoolFactory.self)!
-            let realm = r.resolve(RuuviPersistence.self, name: "realm")!
             let sqlite = r.resolve(RuuviPersistence.self, name: "sqlite")!
             let localIDs = r.resolve(RuuviLocalIDs.self)!
             let localSettings = r.resolve(RuuviLocalSettings.self)!
             let localConnections = r.resolve(RuuviLocalConnections.self)!
             return factory.create(
                 sqlite: sqlite,
-                realm: realm,
                 idPersistence: localIDs,
                 settings: localSettings,
                 connectionPersistence: localConnections
@@ -136,14 +116,10 @@ private final class PersistenceAssembly: Assembly {
         container.register(RuuviReactor.self) { r in
             let factory = r.resolve(RuuviReactorFactory.self)!
             let sqliteContext = r.resolve(SQLiteContext.self)!
-            let realmContext = r.resolve(RealmContext.self)!
             let sqltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
-            let realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")!
             return factory.create(
                 sqliteContext: sqliteContext,
-                realmContext: realmContext,
-                sqlitePersistence: sqltePersistence,
-                realmPersistence: realmPersistence
+                sqlitePersistence: sqltePersistence
             )
         }.inObjectScope(.container)
 
@@ -151,11 +127,6 @@ private final class PersistenceAssembly: Assembly {
             let factory = RuuviStorageFactoryCoordinator()
             return factory
         }
-
-        container.register(RuuviPersistence.self, name: "realm") { r in
-            let context = r.resolve(RealmContext.self)!
-            return RuuviPersistenceRealm(context: context)
-        }.inObjectScope(.container)
 
         container.register(RuuviPersistence.self, name: "sqlite") { r in
             let context = r.resolve(SQLiteContext.self)!
@@ -165,8 +136,7 @@ private final class PersistenceAssembly: Assembly {
         container.register(RuuviStorage.self) { r in
             let factory = r.resolve(RuuviStorageFactory.self)!
             let sqlite = r.resolve(RuuviPersistence.self, name: "sqlite")!
-            let realm = r.resolve(RuuviPersistence.self, name: "realm")!
-            return factory.create(realm: realm, sqlite: sqlite)
+            return factory.create(sqlite: sqlite)
         }.inObjectScope(.container)
 
         container.register(RuuviLocalFactory.self) { _ in
@@ -294,14 +264,12 @@ private final class DaemonAssembly: Assembly {
             let ruuviPool = r.resolve(RuuviPool.self)!
             let foreground = r.resolve(BTForeground.self)!
             let idPersistence = r.resolve(RuuviLocalIDs.self)!
-            let realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")!
             let sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
             let daemon = RuuviTagPropertiesDaemonBTKit(
                 ruuviPool: ruuviPool,
                 ruuviReactor: ruuviReactor,
                 foreground: foreground,
                 idPersistence: idPersistence,
-                realmPersistence: realmPersistence,
                 sqiltePersistence: sqiltePersistence
             )
             return daemon

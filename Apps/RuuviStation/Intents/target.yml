@@ -27,7 +27,6 @@ targets:
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.intents"
         Debug:
           CODE_SIGN_STYLE: Automatic
-          OTHER_LDFLAGS: -Xlinker -no_warn_duplicate_libraries
         Release:
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
           CODE_SIGN_IDENTITY: "iPhone Distribution"
@@ -50,10 +49,7 @@ targets:
       - package: Future
       - package: GRDB
       - package: Humidity
-      - package: Realm
       - package: KeychainAccess
-      - package: Realm
-        product: RealmSwift
       - target: RuuviUser
         embed: true
       - target: RuuviCloud

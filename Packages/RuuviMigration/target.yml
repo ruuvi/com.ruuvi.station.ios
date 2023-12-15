@@ -9,9 +9,6 @@ targets:
     dependencies:
     - package: Humidity
     - package: Future
-    - package: Realm
-    - package: Realm
-      product: RealmSwift
     - target: RuuviOntology
     - target: RuuviLocal
     - target: RuuviPool

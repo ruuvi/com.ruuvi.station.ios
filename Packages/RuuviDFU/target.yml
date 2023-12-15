@@ -8,3 +8,4 @@ targets:
       name: DFU
     dependencies:
     - package: NordicDFU
+    - target: RuuviLocalization
