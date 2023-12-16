@@ -28,7 +28,7 @@ jobs:
         run: rm -rf ${{ github.workspace }}/station.localization
 
       - name: Clone localisation submodule
-        run: git clone -b master https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
+        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
       - name: Install the Apple certificate and provisioning profiles
         env:
@@ -80,7 +80,7 @@ jobs:
 
       - name: Build app
         run: |
-          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates
+          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates -quiet
       - name: Export IPA
         env:
           EXPORT_PLIST: ${{ secrets.ADHOC_EXPORT_OPTIONS }}
