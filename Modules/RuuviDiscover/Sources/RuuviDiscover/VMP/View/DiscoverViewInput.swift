@@ -20,4 +20,7 @@ protocol DiscoverViewInput: UIViewController {
         showUpgradeFirmware: Bool,
         isDF3: Bool
     )
+    func showUpdateFirmwareDialog(
+        for uuid: String
+    )
 }

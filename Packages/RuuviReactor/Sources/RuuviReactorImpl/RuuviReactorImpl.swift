@@ -152,8 +152,6 @@ class RuuviReactorImpl: RuuviReactor {
         sqlitePersistence.readSensorSettings(ruuviTag).on { sqliteRecord in
             if let sensorSettings = sqliteRecord {
                 block(.update(sensorSettings))
-            } else {
-                assertionFailure()
             }
         }
         var sensorSettingsCombine: SensorSettingsCombine

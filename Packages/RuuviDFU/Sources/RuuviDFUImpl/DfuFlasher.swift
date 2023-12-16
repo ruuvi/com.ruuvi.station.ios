@@ -32,7 +32,8 @@ class DfuFlasher: NSObject {
     ) -> AnyPublisher<FlashResponse, Error> {
         guard let uuid = UUID(uuidString: uuid)
         else {
-            return Fail<FlashResponse, Error>(error: RuuviDfuError.failedToConstructUUID).eraseToAnyPublisher()
+            assertionFailure("Invalid UUID")
+            return Fail<FlashResponse, Error>(error: RuuviDfuError(description: "Invalid UUID")).eraseToAnyPublisher()
         }
         let subject = PassthroughSubject<FlashResponse, Error>()
         self.subject = subject

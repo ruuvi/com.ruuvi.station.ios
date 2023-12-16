@@ -89,6 +89,20 @@ extension DiscoverTableViewController: DiscoverViewInput {
         session = nil
     }
 
+    func showUpdateFirmwareDialog(
+        for uuid: String
+    ) {
+        let title = RuuviLocalization.DiscoverTable.UpdateFirmware.title
+        let message = RuuviLocalization.DiscoverTable.UpdateFirmware.message
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let cancelTitle = RuuviLocalization.cancel
+        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: title, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToUpdateFirmware(for: uuid)
+        }))
+        present(alert, animated: true)
+    }
+
     // swiftlint:disable:next function_parameter_count function_body_length
     func showSensorDetailsDialog(
         for tag: NFCSensor?,

@@ -41,6 +41,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var firmwareBuilder: RuuviFirmwareBuilder!
 
+    private weak var firmwareModule: RuuviFirmware?
     private weak var view: DiscoverViewInput?
     private var accessQueue = DispatchQueue(
         label: "com.ruuviDiscover.accessQueue", attributes: .concurrent
@@ -122,11 +123,15 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any != nil && $0.luid?.any == device.luid?.any }) {
-            addRuuviTagOwnership(
-                for: ruuviTag,
-                displayName: displayName,
-                firmwareVersion: nil
-            )
+            if device.mac != nil {
+                addRuuviTagOwnership(
+                    for: ruuviTag,
+                    displayName: displayName,
+                    firmwareVersion: nil
+                )
+            } else {
+                view?.showUpdateFirmwareDialog(for: ruuviTag.uuid)
+            }
         }
     }
 
@@ -260,6 +265,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         let firmwareModule = firmwareBuilder.build(uuid: sensor.id, currentFirmware: sensor.firmwareVersion)
         firmwareModule.output = self
         viewController.present(firmwareModule.viewController, animated: true)
+        self.firmwareModule = firmwareModule
     }
 
     func viewDidACopyMacAddress(of sensor: NFCSensor?) {
@@ -268,6 +274,27 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidACopySecret(of sensor: NFCSensor?) {
         UIPasteboard.general.string = sensor?.id
+    }
+
+    func viewDidConfirmToUpdateFirmware(for uuid: String) {
+        let firmwareModule = firmwareBuilder.build(uuid: uuid, currentFirmware: "<=2.5.9")
+        firmwareModule.output = self
+        let firmwareViewController = firmwareModule.viewController
+        firmwareViewController.presentationController?.delegate = self
+        viewController.present(firmwareViewController, animated: true)
+        self.firmwareModule = firmwareModule
+    }
+}
+
+extension DiscoverPresenter: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        guard presentationController.presentedViewController == firmwareModule?.viewController else {
+            return true
+        }
+        guard let firmwareModule, !firmwareModule.isSafeToDismiss() else {
+            return true
+        }
+        return false
     }
 }
 
