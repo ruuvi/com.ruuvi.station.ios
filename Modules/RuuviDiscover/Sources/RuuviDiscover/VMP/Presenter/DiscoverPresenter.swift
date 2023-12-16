@@ -122,11 +122,15 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any != nil && $0.luid?.any == device.luid?.any }) {
-            addRuuviTagOwnership(
-                for: ruuviTag,
-                displayName: displayName,
-                firmwareVersion: nil
-            )
+            if device.mac != nil {
+                addRuuviTagOwnership(
+                    for: ruuviTag,
+                    displayName: displayName,
+                    firmwareVersion: nil
+                )
+            } else {
+                view?.showUpdateFirmwareDialog(for: ruuviTag.uuid)
+            }
         }
     }
 
@@ -268,6 +272,12 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidACopySecret(of sensor: NFCSensor?) {
         UIPasteboard.general.string = sensor?.id
+    }
+
+    func viewDidConfirmToUpdateFirmware(for uuid: String) {
+        let firmwareModule = firmwareBuilder.build(uuid: uuid, currentFirmware: "<=2.5.9")
+        firmwareModule.output = self
+        viewController.present(firmwareModule.viewController, animated: true)
     }
 }
 
