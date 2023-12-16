@@ -11,11 +11,6 @@ final class FirmwarePresenter: RuuviFirmware {
         if let view = weakView {
             return view
         } else {
-            let viewModel = FirmwareViewModel(
-                uuid: uuid,
-                currentFirmware: currentFirmware,
-                interactor: interactor
-            )
             viewModel.output = self
             let view = UIHostingController(rootView: FirmwareView(viewModel: viewModel))
             weakView = view
@@ -27,6 +22,13 @@ final class FirmwarePresenter: RuuviFirmware {
     private let interactor: FirmwareInteractor
     private let uuid: String
     private let currentFirmware: String?
+    private lazy var viewModel: FirmwareViewModel = {
+        FirmwareViewModel(
+            uuid: uuid,
+            currentFirmware: currentFirmware,
+            interactor: interactor
+        )
+    }()
 
     init(
         uuid: String,
@@ -42,6 +44,15 @@ final class FirmwarePresenter: RuuviFirmware {
             ruuviDFU: ruuviDFU,
             firmwareRepository: firmwareRepository
         )
+    }
+
+    func isSafeToDismiss() -> Bool {
+        switch viewModel.state {
+        case .flashing:
+            false
+        default:
+            true
+        }
     }
 }
 

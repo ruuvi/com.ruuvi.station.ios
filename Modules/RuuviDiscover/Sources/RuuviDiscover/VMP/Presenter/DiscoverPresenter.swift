@@ -41,6 +41,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var firmwareBuilder: RuuviFirmwareBuilder!
 
+    private weak var firmwareModule: RuuviFirmware?
     private weak var view: DiscoverViewInput?
     private var accessQueue = DispatchQueue(
         label: "com.ruuviDiscover.accessQueue", attributes: .concurrent
@@ -264,6 +265,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         let firmwareModule = firmwareBuilder.build(uuid: sensor.id, currentFirmware: sensor.firmwareVersion)
         firmwareModule.output = self
         viewController.present(firmwareModule.viewController, animated: true)
+        self.firmwareModule = firmwareModule
     }
 
     func viewDidACopyMacAddress(of sensor: NFCSensor?) {
@@ -277,7 +279,22 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidConfirmToUpdateFirmware(for uuid: String) {
         let firmwareModule = firmwareBuilder.build(uuid: uuid, currentFirmware: "<=2.5.9")
         firmwareModule.output = self
-        viewController.present(firmwareModule.viewController, animated: true)
+        let firmwareViewController = firmwareModule.viewController
+        firmwareViewController.presentationController?.delegate = self
+        viewController.present(firmwareViewController, animated: true)
+        self.firmwareModule = firmwareModule
+    }
+}
+
+extension DiscoverPresenter: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        guard presentationController.presentedViewController == firmwareModule?.viewController else {
+            return true
+        }
+        guard let firmwareModule, !firmwareModule.isSafeToDismiss() else {
+            return true
+        }
+        return false
     }
 }
 
