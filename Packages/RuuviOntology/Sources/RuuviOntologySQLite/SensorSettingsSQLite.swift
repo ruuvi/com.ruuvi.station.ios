@@ -82,7 +82,7 @@ extension SensorSettingsSQLite: PersistableRecord {
 public extension SensorSettingsSQLite {
     static func createTable(in db: Database) throws {
         try db.create(table: SensorSettingsSQLite.databaseTableName, body: { table in
-            table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
+            table.column(SensorSettingsSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(SensorSettingsSQLite.luidColumn.name, .text)
             table.column(SensorSettingsSQLite.macIdColumn.name, .text)
             table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
