@@ -538,6 +538,26 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    private let dashboardSensorOrderIdKey =
+        "SettingsUserDefaults.dashboardSortedSensors"
+    var dashboardSensorOrder: [String] {
+        get {
+            UserDefaults.standard.value(
+                forKey: dashboardSensorOrderIdKey
+            ) as? [String] ?? []
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: dashboardSensorOrderIdKey)
+            NotificationCenter
+                .default
+                .post(
+                    name: .DashboardSensorOrderDidChange,
+                    object: self,
+                    userInfo: nil
+                )
+        }
+    }
+
     private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
     private var ruuviThemeId: Int {
         get {

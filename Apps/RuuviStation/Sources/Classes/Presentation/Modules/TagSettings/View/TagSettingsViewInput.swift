@@ -1,7 +1,9 @@
 import Foundation
+import RuuviOntology
 
 protocol TagSettingsViewInput: ViewInput {
     var viewModel: TagSettingsViewModel? { get set }
+    var dashboardSortingType: DashboardSortingType? { get set }
 
     func showTagClaimDialog()
     func showMacAddressDetail()

@@ -131,6 +131,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         } else {
             self.sensorSettings = emptySensorSettings()
         }
+        view.dashboardSortingType =
+            settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
         syncUnits()
         syncAllAlerts()
 

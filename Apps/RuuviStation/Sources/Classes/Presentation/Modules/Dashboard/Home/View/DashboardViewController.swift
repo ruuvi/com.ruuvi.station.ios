@@ -133,6 +133,8 @@ class DashboardViewController: UIViewController {
         cv.showsVerticalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
+        cv.dragDelegate = self
+        cv.dropDelegate = self
         cv.alwaysBounceVertical = true
         cv.refreshControl = refresher
         return cv
@@ -248,6 +250,7 @@ private extension DashboardViewController {
 }
 
 extension DashboardViewController {
+    // swiftlint:disable:next function_body_length
     private func viewToggleMenuOptions() -> UIMenu {
         // Card Type
         let imageViewTypeAction = UIAction(title: RuuviLocalization.imageCards) {
@@ -299,10 +302,27 @@ extension DashboardViewController {
             ]
         )
 
+        // Sensor ordering
+        let resetSensorSortingOrderAction = UIAction(
+            title: RuuviLocalization.resetOrder
+        ) {
+            [weak self] _ in
+            self?.output.viewDidResetManualSorting()
+        }
+        resetSensorSortingOrderAction.state = .off
+
+        let resetSensorSortingOrderMenu = UIMenu(
+            title: RuuviLocalization.ordering,
+            options: .displayInline,
+            children: [
+                resetSensorSortingOrderAction
+            ]
+        )
+
         return UIMenu(
             title: "",
             children: [
-                cardTypeMenu, cardActionMenu
+                cardTypeMenu, cardActionMenu, resetSensorSortingOrderMenu
             ]
         )
     }
@@ -535,6 +555,20 @@ private extension DashboardViewController {
                 self?.reloadCollectionView()
             }
     }
+
+    // MARK: Drag and Drop
+    private func dragPreviewParameters(
+        for cell: UICollectionViewCell
+    ) -> UIDragPreviewParameters? {
+        let previewParameters = UIDragPreviewParameters()
+        let path = UIBezierPath(
+            roundedRect: cell.contentView.frame,
+            cornerRadius: 8.0
+        )
+        previewParameters.visiblePath = path
+        previewParameters.backgroundColor = .clear
+        return previewParameters
+    }
 }
 
 extension DashboardViewController: UICollectionViewDataSource {
@@ -585,7 +619,6 @@ extension DashboardViewController: UICollectionViewDelegate {
     func collectionView(
         _: UICollectionView,
         willEndContextMenuInteraction _: UIContextMenuConfiguration,
-
         animator _: UIContextMenuInteractionAnimating?
     ) {
         highlightedViewModel = nil
@@ -630,6 +663,103 @@ extension DashboardViewController: UICollectionViewDelegate {
     func scrollViewDidEndScrollingAnimation(_: UIScrollView) {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         isListRefreshable = true
+    }
+}
+
+// MARK: UICollectionViewDragDelegate
+extension DashboardViewController: UICollectionViewDragDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        itemsForBeginning session: UIDragSession,
+        at indexPath: IndexPath
+    ) -> [UIDragItem] {
+        guard viewModels.count > 1 else { return [] }
+        let item = viewModels[indexPath.item]
+        let itemProvider = NSItemProvider(object: item as CardsViewModel)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        dragItem.localObject = item
+        return [dragItem]
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        dragPreviewParametersForItemAt indexPath: IndexPath
+    ) -> UIDragPreviewParameters? {
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return nil }
+        return dragPreviewParameters(for: cell)
+    }
+}
+
+// MARK: UICollectionViewDropDelegate
+extension DashboardViewController: UICollectionViewDropDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        dropSessionDidUpdate session: UIDropSession,
+        withDestinationIndexPath destinationIndexPath: IndexPath?
+    ) -> UICollectionViewDropProposal {
+        if collectionView.hasActiveDrag {
+            return UICollectionViewDropProposal(
+                operation: .move,
+                intent: .insertAtDestinationIndexPath
+            )
+        }
+        return UICollectionViewDropProposal(operation: .forbidden)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        performDropWith coordinator: UICollectionViewDropCoordinator
+    ) {
+        let destinationIndexPath: IndexPath
+
+        if let indexPath = coordinator.destinationIndexPath {
+            destinationIndexPath = indexPath
+        } else {
+            let row = collectionView.numberOfItems(inSection: 0)
+            destinationIndexPath = IndexPath(row: row, section: 0)
+        }
+
+        guard destinationIndexPath.row < viewModels.count else { return }
+
+        if coordinator.proposal.operation == .move {
+            reorderItems(
+                coordinator,
+                destinationIndexPath: destinationIndexPath,
+                collectionView: collectionView
+            )
+        }
+    }
+
+    func reorderItems(
+        _ coordinator: UICollectionViewDropCoordinator,
+        destinationIndexPath: IndexPath, collectionView: UICollectionView
+    ) {
+        guard let item = coordinator.items.first,
+              let sourceIndexPath = item.sourceIndexPath,
+              let dragItem = item.dragItem.localObject as? CardsViewModel else {
+            return
+        }
+
+        collectionView.performBatchUpdates({ [weak self] in
+            guard let self else { return }
+            self.viewModels.remove(at: sourceIndexPath.item)
+            self.viewModels.insert(dragItem, at: destinationIndexPath.item)
+            collectionView.deleteItems(at: [sourceIndexPath])
+            collectionView.insertItems(at: [destinationIndexPath])
+        }, completion: nil)
+
+        coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+
+        let macIds = viewModels.compactMap { $0.mac.value?.value }
+        output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        dropPreviewParametersForItemAt indexPath: IndexPath
+    ) -> UIDragPreviewParameters? {
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return nil }
+        return dragPreviewParameters(for: cell)
     }
 }
 
@@ -742,14 +872,18 @@ extension DashboardViewController: DashboardViewInput {
         present(alert, animated: true)
     }
 
-    func showSensorNameRenameDialog(for viewModel: CardsViewModel) {
+    func showSensorNameRenameDialog(
+        for viewModel: CardsViewModel,
+        sortingType: DashboardSortingType
+    ) {
         let defaultName = GlobalHelpers.ruuviTagDefaultName(
             from: viewModel.mac.value?.mac,
             luid: viewModel.luid.value?.value
         )
         let alert = UIAlertController(
             title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
-            message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
+            message: sortingType == .alphabetical ?
+                RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text : nil,
             preferredStyle: .alert
         )
         alert.addTextField { [weak self] alertTextField in
@@ -771,6 +905,38 @@ extension DashboardViewController: DashboardViewInput {
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
+    }
+
+    func showSensorSortingResetConfirmationDialog() {
+        let message = RuuviLocalization.resetOrderConfirmation
+        let alert = UIAlertController(
+            title: nil,
+            message: message,
+            preferredStyle: .alert
+        )
+
+        let cancelTitle = RuuviLocalization.cancel
+        alert.addAction(
+            UIAlertAction(
+                title: cancelTitle,
+                style: .cancel,
+                handler: nil
+            )
+        )
+
+        let confirmTitle = RuuviLocalization.confirm
+        alert.addAction(
+            UIAlertAction(
+                title: confirmTitle,
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidReorderSensors(
+                        with: .alphabetical, orderedIds: []
+                    )
+                }
+            )
+        )
+        present(alert, animated: true)
     }
 }
 

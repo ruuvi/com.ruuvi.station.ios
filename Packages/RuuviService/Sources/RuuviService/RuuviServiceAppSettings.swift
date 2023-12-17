@@ -53,4 +53,7 @@ public protocol RuuviServiceAppSettings {
 
     @discardableResult
     func set(profileLanguageCode: String) -> Future<String, RuuviServiceError>
+
+    @discardableResult
+    func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviServiceError>
 }
