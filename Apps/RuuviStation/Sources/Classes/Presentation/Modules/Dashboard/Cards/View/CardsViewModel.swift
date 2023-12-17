@@ -3,12 +3,13 @@ import Humidity
 import RuuviLocal
 import RuuviOntology
 import UIKit
+import MobileCoreServices
 
 enum CardType {
     case ruuvi
 }
 
-struct CardsViewModel {
+class CardsViewModel: NSObject {
     var type: CardType = .ruuvi
 
     var id: Observable<String?> = .init()
@@ -137,21 +138,22 @@ struct CardsViewModel {
     }
 }
 
-extension CardsViewModel: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(luid.value)
-        hasher.combine(mac.value)
-    }
-}
-
-extension CardsViewModel: Equatable {
-    public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        lhs.luid.value == rhs.luid.value && lhs.mac.value == rhs.mac.value
-    }
-}
-
 extension CardsViewModel: Reorderable {
     var orderElement: String {
         id.value ?? UUID().uuidString
+    }
+}
+
+// Comform to NSItemProviderWriting to enable drag and drop of item with CardsViewModel
+extension CardsViewModel: NSItemProviderWriting {
+    public static var writableTypeIdentifiersForItemProvider: [String] {
+        return [kUTTypePlainText as String]
+    }
+
+    public func loadData(
+        withTypeIdentifier typeIdentifier: String,
+        forItemProviderCompletionHandler completionHandler: @escaping (Data?, Error?) -> Void
+    ) -> Progress? {
+        return Progress()
     }
 }

@@ -24,4 +24,6 @@ protocol DashboardViewOutput {
     func viewDidChangeDashboardTapAction(type: DashboardTapActionType)
     func viewDidTriggerPullToRefresh()
     func viewDidRenameTag(to name: String, viewModel: CardsViewModel)
+    func viewDidReorderSensors(with type: DashboardSortingType, orderedIds: [String])
+    func viewDidResetManualSorting()
 }

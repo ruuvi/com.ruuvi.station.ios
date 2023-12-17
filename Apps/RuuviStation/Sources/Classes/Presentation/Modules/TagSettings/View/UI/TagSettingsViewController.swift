@@ -82,6 +82,8 @@ class TagSettingsViewController: UIViewController {
         }
     }
 
+    var dashboardSortingType: DashboardSortingType?
+
     private lazy var backButton: UIButton = {
         let button = UIButton()
         button.tintColor = .label
@@ -711,7 +713,11 @@ extension TagSettingsViewController {
                 return self?.tagNameCell ?? UITableViewCell()
             },
             action: { [weak self] _ in
-                self?.showSensorNameRenameDialog(name: self?.viewModel?.name.value)
+                guard let sortingType = self?.dashboardSortingType else { return }
+                self?.showSensorNameRenameDialog(
+                    name: self?.viewModel?.name.value,
+                    sortingType: sortingType
+                )
             }
         )
         return settingItem
@@ -3603,14 +3609,18 @@ extension TagSettingsViewController: TagSettingsBackgroundSelectionViewDelegate 
 // MARK: - Sensor name rename dialog
 
 extension TagSettingsViewController {
-    private func showSensorNameRenameDialog(name: String?) {
+    private func showSensorNameRenameDialog(
+        name: String?,
+        sortingType: DashboardSortingType
+    ) {
         let defaultName = GlobalHelpers.ruuviTagDefaultName(
             from: viewModel?.mac.value,
             luid: viewModel?.uuid.value
         )
         let alert = UIAlertController(
             title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
-            message: RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text,
+            message: sortingType == .alphabetical ?
+                RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text : nil,
             preferredStyle: .alert
         )
         alert.addTextField { [weak self] alertTextField in
