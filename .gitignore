@@ -3,6 +3,7 @@
 
 # Generated
 Ruuvi.xcodeproj
+**/Info.plist
 
 # Private 
 station/Resources/Plists/GoogleService-Info.plist
