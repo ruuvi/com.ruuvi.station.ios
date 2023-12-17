@@ -127,6 +127,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     sSelf.ruuviLocalSettings.cloudProfileLanguageCode = languageCode
                 }
 
+                if let dashboardSensorOrderString = cloudSettings.dashboardSensorOrder,
+                   let dashboardSensorOrder = RuuviCloudApiHelper.jsonArrayFromString(dashboardSensorOrderString),
+                   dashboardSensorOrder != sSelf.ruuviLocalSettings.dashboardSensorOrder {
+                    sSelf.ruuviLocalSettings.dashboardSensorOrder = dashboardSensorOrder
+                }
+
                 promise.succeed(value: cloudSettings)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))

@@ -83,6 +83,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var dashboardTapActionTypeToken: NSObjectProtocol?
     private var cloudSyncSuccessStateToken: NSObjectProtocol?
     private var cloudSyncFailStateToken: NSObjectProtocol?
+    private var sensorOrderChangeToken: NSObjectProtocol?
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
     private var viewModels: [CardsViewModel] = [] {
@@ -133,6 +134,7 @@ class DashboardPresenter: DashboardModuleInput {
         dashboardTapActionTypeToken?.invalidate()
         cloudSyncSuccessStateToken?.invalidate()
         cloudSyncFailStateToken?.invalidate()
+        sensorOrderChangeToken?.invalidate()
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
@@ -156,6 +158,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startObserveCalibrationSettingsChange()
         startObservingCloudSyncSuccessTokenState()
         startObservingCloudSyncFailTokenState()
+        startObservingSensorOrderChanges()
         pushNotificationsManager.registerForRemoteNotifications()
     }
 
@@ -244,7 +247,9 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerRename(for viewModel: CardsViewModel) {
-        view?.showSensorNameRenameDialog(for: viewModel)
+        let sortingType: DashboardSortingType =
+            settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
+        view?.showSensorNameRenameDialog(for: viewModel, sortingType: sortingType)
     }
 
     func viewDidTriggerShare(for viewModel: CardsViewModel) {
@@ -323,6 +328,19 @@ extension DashboardPresenter: DashboardViewOutput {
             .on(failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
+    }
+
+    func viewDidReorderSensors(
+        with type: DashboardSortingType,
+        orderedIds: [String]
+    ) {
+        settings.dashboardSensorOrder = orderedIds
+        ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds)
+        viewModels = reorder(viewModels)
+    }
+
+    func viewDidResetManualSorting() {
+        view?.showSensorSortingResetConfirmationDialog()
     }
 }
 
@@ -632,8 +650,15 @@ extension DashboardPresenter {
                 }
             }
 
-            viewModels.append(viewModel)
-            viewModels = reorder(viewModels)
+            if settings.dashboardSensorOrder.count == 0 {
+                viewModels.append(viewModel)
+                viewModels = reorder(viewModels)
+            } else {
+                // For manual sorting, newly added sensor will be sent to the top
+                viewModels.insert(viewModel, at: 0)
+                let macIds = viewModels.compactMap { $0.mac.value?.value }
+                viewDidReorderSensors(with: .manual, orderedIds: macIds)
+            }
         }
     }
 
@@ -662,25 +687,30 @@ extension DashboardPresenter {
     }
 
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
+        let sortedSensors: [String] = settings.dashboardSensorOrder
         let sortedAndUniqueArray = viewModels.reduce(
             into: [CardsViewModel]()
         ) { result, element in
             if !result.contains(element) {
-                // Insert the element into the result array while maintaining the sorted order
-                if let index = result.firstIndex(
-                    where: {
-                        $0.name.value?.lowercased() ?? "" >
-                            element.name.value?.lowercased() ?? ""
-                    }
-                ) {
-                    result.insert(element, at: index)
-                } else {
-                    // If no such index is found, append the element at the end
-                    result.append(element)
-                }
+                result.append(element)
             }
         }
-        return sortedAndUniqueArray
+
+        if !sortedSensors.isEmpty {
+            return sortedAndUniqueArray.sorted { (first, second) -> Bool in
+                guard let firstMacId = first.mac.value?.value,
+                      let secondMacId = second.mac.value?.value else { return false }
+                let firstIndex = sortedSensors.firstIndex(of: firstMacId) ?? Int.max
+                let secondIndex = sortedSensors.firstIndex(of: secondMacId) ?? Int.max
+                return firstIndex < secondIndex
+            }
+        } else {
+            return sortedAndUniqueArray.sorted { (first, second) -> Bool in
+                let firstName = first.name.value?.lowercased() ?? ""
+                let secondName = second.name.value?.lowercased() ?? ""
+                return firstName < secondName
+            }
+        }
     }
 
     private func syncAppSettingsToAppGroupContainer() {
@@ -1492,6 +1522,24 @@ extension DashboardPresenter {
                 queue: .main,
                 using: { [weak self] _ in
                     self?.forceLogoutUser()
+                }
+            )
+    }
+
+    private func startObservingSensorOrderChanges() {
+        sensorOrderChangeToken?.invalidate()
+        sensorOrderChangeToken = nil
+        sensorOrderChangeToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .DashboardSensorOrderDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.viewModels = self.reorder(self.viewModels)
+                    }
                 }
             )
     }

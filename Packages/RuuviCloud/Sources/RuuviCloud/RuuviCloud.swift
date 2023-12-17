@@ -183,6 +183,9 @@ public protocol RuuviCloud {
     func set(profileLanguageCode: String) -> Future<String, RuuviCloudError>
 
     @discardableResult
+    func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError>
+
+    @discardableResult
     func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,

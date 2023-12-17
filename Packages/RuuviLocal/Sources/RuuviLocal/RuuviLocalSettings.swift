@@ -24,6 +24,7 @@ public extension Notification.Name {
     static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
     static let LimitAlertNotificationsSettingsDidChange =
         Notification.Name("LimitAlertNotificationsSettingsDidChange")
+    static let DashboardSensorOrderDidChange = Notification.Name("DashboardSensorOrderDidChange")
 }
 
 public enum DashboardTypeKey: String {
@@ -81,6 +82,7 @@ public protocol RuuviLocalSettings {
     var dashboardEnabled: Bool { get set }
     var dashboardType: DashboardType { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }
+    var dashboardSensorOrder: [String] { get set }
     var theme: RuuviTheme { get set }
     var hideNFCForSensorContest: Bool { get set }
     var alertSound: RuuviAlertSound { get set }

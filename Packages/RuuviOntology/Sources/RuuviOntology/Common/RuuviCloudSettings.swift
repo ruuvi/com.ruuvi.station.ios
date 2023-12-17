@@ -18,4 +18,5 @@ public protocol RuuviCloudSettings {
     var pushAlertEnabled: Bool? { get }
     var emailAlertEnabled: Bool? { get }
     var profileLanguageCode: String? { get }
+    var dashboardSensorOrder: String? { get }
 }

@@ -232,4 +232,16 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
+
+    @discardableResult
+    public func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviServiceError> {
+        let promise = Promise<[String], RuuviServiceError>()
+        cloud.set(dashboardSensorOrder: dashboardSensorOrder)
+            .on(success: { dashboardSensorOrder in
+                promise.succeed(value: dashboardSensorOrder)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }
