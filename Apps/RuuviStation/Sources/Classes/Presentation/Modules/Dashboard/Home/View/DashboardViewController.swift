@@ -36,6 +36,12 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    var dashboardSortingType: DashboardSortingType! {
+        didSet {
+            viewButton.updateMenu(with: viewToggleMenuOptions())
+        }
+    }
+
     var userSignedInOnce: Bool = false {
         didSet {
             noSensorView.userSignedInOnce = userSignedInOnce
@@ -317,11 +323,18 @@ extension DashboardViewController {
             ]
         )
 
+        var menuItems: [UIMenuElement] = [
+            cardTypeMenu,
+            cardActionMenu,
+        ]
+
+        if dashboardSortingType == .manual {
+            menuItems.append(resetSensorSortingOrderMenu)
+        }
+
         return UIMenu(
             title: "",
-            children: [
-                cardTypeMenu, cardActionMenu, resetSensorSortingOrderMenu
-            ]
+            children: menuItems
         )
     }
 
