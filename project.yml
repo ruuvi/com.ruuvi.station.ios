@@ -82,7 +82,7 @@ targetTemplates:
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
-    version: 0.4.3
+    from: 0.5.1
   Charts:
     url: https://github.com/danielgindi/Charts
     from: 4.1.0
