@@ -247,9 +247,10 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerRename(for viewModel: CardsViewModel) {
-        let sortingType: DashboardSortingType =
-            settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
-        view?.showSensorNameRenameDialog(for: viewModel, sortingType: sortingType)
+        view?.showSensorNameRenameDialog(
+            for: viewModel,
+            sortingType: dashboardSortingType()
+        )
     }
 
     func viewDidTriggerShare(for viewModel: CardsViewModel) {
@@ -337,6 +338,7 @@ extension DashboardPresenter: DashboardViewOutput {
         settings.dashboardSensorOrder = orderedIds
         ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds)
         viewModels = reorder(viewModels)
+        view?.dashboardSortingType = dashboardSortingType()
     }
 
     func viewDidResetManualSorting() {
@@ -574,6 +576,7 @@ extension DashboardPresenter {
         view?.userSignedInOnce = settings.signedInAtleastOnce
         view?.dashboardType = settings.dashboardType
         view?.dashboardTapActionType = settings.dashboardTapActionType
+        view?.dashboardSortingType = dashboardSortingType()
 
         let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
@@ -650,7 +653,7 @@ extension DashboardPresenter {
                 }
             }
 
-            if settings.dashboardSensorOrder.count == 0 {
+            if dashboardSortingType() == .alphabetical {
                 viewModels.append(viewModel)
                 viewModels = reorder(viewModels)
             } else {
@@ -1918,6 +1921,10 @@ extension DashboardPresenter {
                 )
             }
         }
+    }
+
+    private func dashboardSortingType() -> DashboardSortingType {
+        return settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
     }
 }
 

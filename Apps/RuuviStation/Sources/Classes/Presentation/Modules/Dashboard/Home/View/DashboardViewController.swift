@@ -36,6 +36,12 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    var dashboardSortingType: DashboardSortingType! {
+        didSet {
+            viewButton.updateMenu(with: viewToggleMenuOptions())
+        }
+    }
+
     var userSignedInOnce: Bool = false {
         didSet {
             noSensorView.userSignedInOnce = userSignedInOnce
@@ -156,8 +162,6 @@ class DashboardViewController: UIViewController {
 
     private var isListRefreshable: Bool = true
     private var isRefreshing: Bool = false
-    /// The view model when context menu is presented after a card tap.
-    private var highlightedViewModel: CardsViewModel?
 
     deinit {
         appDidBecomeActiveToken?.invalidate()
@@ -319,11 +323,18 @@ extension DashboardViewController {
             ]
         )
 
+        var menuItems: [UIMenuElement] = [
+            cardTypeMenu,
+            cardActionMenu,
+        ]
+
+        if dashboardSortingType == .manual {
+            menuItems.append(resetSensorSortingOrderMenu)
+        }
+
         return UIMenu(
             title: "",
-            children: [
-                cardTypeMenu, cardActionMenu, resetSensorSortingOrderMenu
-            ]
+            children: menuItems
         )
     }
 
@@ -596,33 +607,6 @@ extension DashboardViewController: UICollectionViewDataSource {
 }
 
 extension DashboardViewController: UICollectionViewDelegate {
-    func collectionView(
-        _: UICollectionView,
-        contextMenuConfigurationForItemAt indexPath: IndexPath,
-        point _: CGPoint
-    ) -> UIContextMenuConfiguration? {
-        configureContextMenu(index: indexPath.row)
-    }
-
-    func configureContextMenu(index: Int) -> UIContextMenuConfiguration {
-        let context = UIContextMenuConfiguration(
-            identifier: nil,
-            previewProvider: nil
-        ) { [weak self]
-            _ -> UIMenu? in
-                self?.highlightedViewModel = self?.viewModels[index]
-                return self?.cardContextMenuOption(for: index)
-        }
-        return context
-    }
-
-    func collectionView(
-        _: UICollectionView,
-        willEndContextMenuInteraction _: UIContextMenuConfiguration,
-        animator _: UIContextMenuInteractionAnimating?
-    ) {
-        highlightedViewModel = nil
-    }
 
     func collectionView(
         _: UICollectionView,
@@ -767,12 +751,6 @@ extension DashboardViewController: UICollectionViewDropDelegate {
 
 extension DashboardViewController: DashboardViewInput {
     func applyUpdate(to viewModel: CardsViewModel) {
-        if let highlightedViewModel,
-           highlightedViewModel.luid.value != nil && highlightedViewModel.luid.value == viewModel.luid.value ||
-           highlightedViewModel.mac.value != nil && highlightedViewModel.mac.value == viewModel.mac.value {
-            return
-        }
-
         guard isListRefreshable
         else {
             return
