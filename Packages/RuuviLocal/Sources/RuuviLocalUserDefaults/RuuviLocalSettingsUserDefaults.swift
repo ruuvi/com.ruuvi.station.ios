@@ -42,10 +42,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
     var language: Language {
         get {
-            if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
+            if let savedCode = notificationServiceAppGroup?.string(forKey: languageUDKey) {
                 Language(rawValue: savedCode) ?? .english
-            } else if let regionCode = Locale.current.languageCode {
-                Language(rawValue: regionCode) ?? .english
             } else {
                 .english
             }

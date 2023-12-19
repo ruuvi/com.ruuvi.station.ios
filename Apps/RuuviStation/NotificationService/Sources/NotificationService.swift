@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
@@ -106,62 +107,45 @@ extension NotificationService {
             return ""
         }
 
-        var format = ""
+        let languageUDKey = "SettingsUserDegaults.languageUDKey"
+        let locale: Locale
+        if let languageCode = notificationServiceAppGroup?.string(forKey: languageUDKey) {
+            locale = Locale(identifier: languageCode)
+        } else {
+            locale = .current
+        }
+
         switch triggerType {
         case .under:
             switch alertType {
             case .temperature:
-                format = "alert_notification_temperature_low_threshold"
+                return RuuviLocalization.alertNotificationTemperatureLowThreshold(threshold, locale)
             case .humidity:
-                format = "alert_notification_humidity_low_threshold"
+                return RuuviLocalization.alertNotificationHumidityLowThreshold(threshold, locale)
             case .pressure:
-                format = "alert_notification_pressure_low_threshold"
+                return RuuviLocalization.alertNotificationPressureLowThreshold(threshold, locale)
             case .signal:
-                format = "alert_notification_rssi_low_threshold"
+                return RuuviLocalization.alertNotificationRssiLowThreshold(threshold, locale)
             case .movement:
-                let format = "LocalNotificationsManager.DidMove.title"
-                return localized(value: format)
-            default:
-                break
+                return RuuviLocalization.LocalNotificationsManager.DidMove.title // TODO: @rinat localize
+            case .offline:
+                return "" // TODO: @rinat obtain spec
             }
         case .over:
             switch alertType {
             case .temperature:
-                format = "alert_notification_temperature_high_threshold"
+                return RuuviLocalization.alertNotificationTemperatureHighThreshold(threshold, locale)
             case .humidity:
-                format = "alert_notification_humidity_high_threshold"
+                return RuuviLocalization.alertNotificationHumidityHighThreshold(threshold, locale)
             case .pressure:
-                format = "alert_notification_pressure_high_threshold"
+                return RuuviLocalization.alertNotificationPressureHighThreshold(threshold, locale)
             case .signal:
-                format = "alert_notification_rssi_high_threshold"
+                return RuuviLocalization.alertNotificationRssiHighThreshold(threshold, locale)
             case .movement:
-                let format = "LocalNotificationsManager.DidMove.title"
-                return localized(value: format)
-            default:
-                break
+                return RuuviLocalization.LocalNotificationsManager.DidMove.title // TODO: @rinat localize
+            case .offline:
+                return "" // TODO: @rinat obtain spec
             }
         }
-
-        return String(format: localized(value: format), threshold)
-    }
-
-    private func localized(value: String) -> String {
-        let languageUDKey = "SettingsUserDegaults.languageUDKey"
-        guard let languageCode = notificationServiceAppGroup?.string(forKey: languageUDKey),
-              let bundle = Bundle.main.path(
-                  forResource: languageCode,
-                  ofType: "lproj"
-              ),
-              let languageBundle = Bundle(path: bundle)
-        else {
-            return NSLocalizedString(value, comment: value)
-        }
-
-        return NSLocalizedString(
-            value,
-            tableName: nil,
-            bundle: languageBundle,
-            comment: value
-        )
     }
 }

@@ -178,7 +178,8 @@ class TagSettingsViewController: UIViewController {
 
     private lazy var temperatureAlertSection: TagSettingsSection? = {
         let sectionTitle = temperatureAlertFormat(
-            viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
+            viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na,
+            Locale.current
         )
         let section = TagSettingsSection(
             identifier: .alertTemperature,
@@ -203,7 +204,7 @@ class TagSettingsViewController: UIViewController {
 
     private lazy var humidityAlertSection: TagSettingsSection? = {
         let symbol = HumidityUnit.percent.symbol
-        let sectionTitle = airHumidityAlertFormat(symbol)
+        let sectionTitle = airHumidityAlertFormat(symbol, Locale.current)
         let section = TagSettingsSection(
             identifier: .alertHumidity,
             title: sectionTitle,
@@ -227,7 +228,7 @@ class TagSettingsViewController: UIViewController {
 
     private lazy var pressureAlertSection: TagSettingsSection? = {
         let sectionTitle = pressureAlertFormat(
-            viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
+            viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na, Locale.current
         )
         let section = TagSettingsSection(
             identifier: .alertPressure,
@@ -941,7 +942,7 @@ extension TagSettingsViewController {
         tableView.bind(viewModel.temperatureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
             sSelf.temperatureAlertSection?.title = sSelf.temperatureAlertFormat(
-                value?.symbol ?? RuuviLocalization.na
+                value?.symbol ?? RuuviLocalization.na, Locale.current
             )
         }
 
@@ -999,7 +1000,7 @@ extension TagSettingsViewController {
                 header, unit in
                     guard let sSelf = self else { return }
                     let sectionTitle = sSelf.temperatureAlertFormat(
-                        unit?.symbol ?? RuuviLocalization.na
+                        unit?.symbol ?? RuuviLocalization.na, Locale.current
                     )
                     header.setTitle(with: sectionTitle)
             }
@@ -1119,7 +1120,7 @@ extension TagSettingsViewController {
         tableView.bind(viewModel.pressureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
             sSelf.pressureAlertSection?.title = sSelf.pressureAlertFormat(
-                value?.symbol ?? RuuviLocalization.na
+                value?.symbol ?? RuuviLocalization.na, Locale.current
             )
         }
 
@@ -1179,7 +1180,7 @@ extension TagSettingsViewController {
                 [weak self] header, unit in
                 guard let sSelf = self else { return }
                 let sectionTitle = sSelf.pressureAlertFormat(
-                    unit?.symbol ?? RuuviLocalization.na
+                    unit?.symbol ?? RuuviLocalization.na, Locale.current
                 )
                 header.setTitle(with: sectionTitle)
             }
@@ -1876,13 +1877,27 @@ extension TagSettingsViewController {
         guard isViewLoaded else { return nil }
         let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min, let max {
-            return attributedString(from: format(Float(min), Float(max)))
+            return attributedString(from: format(Float(min), Float(max), Locale.current))
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
            let l = viewModel?.temperatureLowerBound.value?.converted(to: tu),
            let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
-            return attributedString(from: format(Float(l.value.round(to: 2)), Float(u.value.round(to: 2))))
+            return attributedString(
+                from: format(
+                    Float(
+                        l.value.round(
+                            to: 2
+                        )
+                    ),
+                    Float(
+                        u.value.round(
+                            to: 2
+                        )
+                    ),
+                    Locale.current
+                )
+            )
         } else {
             return nil
         }
@@ -1932,13 +1947,14 @@ extension TagSettingsViewController {
         guard isViewLoaded else { return nil }
         let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
         if let min, let max {
-            return attributedString(from: format(Float(min), Float(max)))
+            return attributedString(from: format(Float(min), Float(max), Locale.current))
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
            let u = viewModel?.relativeHumidityUpperBound.value {
             let message = format(
                 Float(l.round(to: 2)),
-                Float(u.round(to: 2))
+                Float(u.round(to: 2)),
+                Locale.current
             )
             return attributedString(from: message)
         } else {
@@ -1984,7 +2000,7 @@ extension TagSettingsViewController {
 
         if let minValue, let maxValue {
             return attributedString(
-                from: format(Float(minValue), Float(maxValue))
+                from: format(Float(minValue), Float(maxValue), Locale.current)
             )
         }
 
@@ -2001,7 +2017,8 @@ extension TagSettingsViewController {
             )
             let message = format(
                 Float(l.round(to: 2)),
-                Float(u.round(to: 2))
+                Float(u.round(to: 2)),
+                Locale.current
             )
             return attributedString(from: message)
         } else {
@@ -2063,7 +2080,7 @@ extension TagSettingsViewController {
 
         if let min, let max {
             return attributedString(
-                from: format(Float(min), Float(max))
+                from: format(Float(min), Float(max), Locale.current)
             )
         }
 
@@ -2071,7 +2088,8 @@ extension TagSettingsViewController {
            let upper = viewModel?.signalUpperBound.value {
             let message = format(
                 Float(lower),
-                Float(upper)
+                Float(upper),
+                Locale.current
             )
             return attributedString(from: message)
         } else {
@@ -3740,7 +3758,7 @@ extension TagSettingsViewController {
             alertTextField.delegate = self
             let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.min
             alertTextField.placeholder = format(
-                Float(minimumBound)
+                Float(minimumBound), Locale.current
             )
             alertTextField.keyboardType = .decimalPad
             alertMinRangeTextField = alertTextField
@@ -3757,7 +3775,7 @@ extension TagSettingsViewController {
             alertTextField.delegate = self
             let format = RuuviLocalization.TagSettings.AlertSettings.Dialog.max
             alertTextField.placeholder = format(
-                Float(maximumBound)
+                Float(maximumBound), Locale.current
             )
             alertTextField.keyboardType = .decimalPad
             alertMaxRangeTextField = alertTextField
