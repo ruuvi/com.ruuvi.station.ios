@@ -36,6 +36,30 @@ targets:
         excludes:
         - "*.entitlements"
         - Info.plist
+      - path: ../Widgets/Sources
     resources:
       - path: ../Sources/Resources/Strings/
       - path: ../Sources/Resources/Sounds/
+    dependencies:
+      - package: Swinject
+      - package: BTKit
+      - package: Future
+      - package: GRDB
+      - package: Humidity
+      - package: KeychainAccess
+      - target: RuuviUser
+        embed: true
+      - target: RuuviCloud
+        embed: true
+      - target: RuuviOntology
+        embed: true
+      - target: RuuviPool
+        embed: true
+      - target: RuuviLocal
+        embed: true
+      - target: RuuviPersistence
+        embed: true
+      - target: RuuviContext
+        embed: true
+      - target: RuuviLocalization
+        embed: true
