@@ -1,6 +1,9 @@
 ---
 targets:
   RuuviUser:
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: true
     templates:
     - Framework
     sources:

@@ -4,6 +4,7 @@ targets:
     settings:
       base:
         MERGEABLE_LIBRARY: false
+        APPLICATION_EXTENSION_API_ONLY: true
     templates:
     - CommonFramework
     sources:
