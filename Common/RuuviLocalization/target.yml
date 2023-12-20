@@ -19,6 +19,8 @@ targets:
         inputFiles:
           - $(SRCROOT)/station.localization/station.localization.json
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
+          - $(SRCROOT)/Common/RuuviLocalization/Templates/strings-swift5.stencil
+          - $(SRCROOT)/Common/RuuviLocalization/Templates/xcassets-swift5.stencil
         outputFiles:
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strings
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/sv.lproj/Localizable.strings

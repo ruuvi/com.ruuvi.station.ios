@@ -7,7 +7,7 @@ extension HumidityUnit: SelectionItemProtocol {
         switch self {
         case .percent: { _ in RuuviLocalization.HumidityUnit.Percent.title }
         case .gm3: { _ in RuuviLocalization.HumidityUnit.Gm3.title }
-        case .dew: { param in RuuviLocalization.HumidityUnit.Dew.title(param, Locale.current) }
+        case .dew: { param in RuuviLocalization.HumidityUnit.Dew.title(param) }
         }
     }
 

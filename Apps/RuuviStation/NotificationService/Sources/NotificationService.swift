@@ -127,7 +127,7 @@ extension NotificationService {
             case .signal:
                 return RuuviLocalization.alertNotificationRssiLowThreshold(threshold, locale)
             case .movement:
-                return RuuviLocalization.LocalNotificationsManager.DidMove.title // TODO: @rinat localize
+                return RuuviLocalization.LocalNotificationsManager.DidMove.title(locale)
             case .offline:
                 return "" // TODO: @rinat obtain spec
             }
@@ -142,7 +142,7 @@ extension NotificationService {
             case .signal:
                 return RuuviLocalization.alertNotificationRssiHighThreshold(threshold, locale)
             case .movement:
-                return RuuviLocalization.LocalNotificationsManager.DidMove.title // TODO: @rinat localize
+                return RuuviLocalization.LocalNotificationsManager.DidMove.title(locale)
             case .offline:
                 return "" // TODO: @rinat obtain spec
             }

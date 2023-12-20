@@ -9,11 +9,11 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
         let humidityFormat = RuuviLocalization.ExportService.humidity
         return [
             RuuviLocalization.ExportService.date,
-            tempFormat(units.temperatureUnit.symbol, Locale.current),
+            tempFormat(units.temperatureUnit.symbol),
             units.humidityUnit == .dew
-                ? humidityFormat(units.temperatureUnit.symbol, Locale.current)
-                : humidityFormat(units.humidityUnit.symbol, Locale.current),
-            pressureFormat(units.pressureUnit.symbol, Locale.current),
+                ? humidityFormat(units.temperatureUnit.symbol)
+                : humidityFormat(units.humidityUnit.symbol),
+            pressureFormat(units.pressureUnit.symbol),
             "RSSI" + " (\(RuuviLocalization.dBm))",
             RuuviLocalization.ExportService.accelerationX + " (\(RuuviLocalization.g))",
             RuuviLocalization.ExportService.accelerationY + " (\(RuuviLocalization.g))",
