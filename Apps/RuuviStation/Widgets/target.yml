@@ -17,6 +17,7 @@ targets:
     settings:
       base:
         CODE_SIGN_ENTITLEMENTS: Apps/RuuviStation/Widgets/Sources/Widgets.entitlements
+        APPLICATION_EXTENSION_API_ONLY: true
       configs:
         Alpha: 
           CODE_SIGN_IDENTITY: "iPhone Distribution"
@@ -44,18 +45,10 @@ targets:
       - package: Humidity
       - package: KeychainAccess
       - target: RuuviUser
-        embed: true
       - target: RuuviCloud
-        embed: true
       - target: RuuviOntology
-        embed: true
       - target: RuuviPool
-        embed: true
       - target: RuuviLocal
-        embed: true
       - target: RuuviPersistence
-        embed: true
       - target: RuuviContext
-        embed: true
       - target: RuuviLocalization
-        embed: true
