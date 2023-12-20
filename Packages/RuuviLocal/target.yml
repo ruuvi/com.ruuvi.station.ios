@@ -1,6 +1,10 @@
 ---
 targets:
   RuuviLocal:
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+        APPLICATION_EXTENSION_API_ONLY: true
     templates:
     - Framework
     sources:
