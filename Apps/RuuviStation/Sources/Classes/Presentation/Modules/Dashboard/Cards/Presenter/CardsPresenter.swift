@@ -49,10 +49,13 @@ class CardsPresenter {
     /// Index for visible card
     private var visibleViewModelIndex: Int = 0 {
         didSet {
+            currentVisibleViewModel = viewModels[visibleViewModelIndex]
             guard let view, shouldTriggerScroll else { return }
             view.scrollIndex = visibleViewModelIndex
         }
     }
+
+    private var currentVisibleViewModel: CardsViewModel?
 
     /// Whether bluetooth permission is already granted.
     private var isBluetoothPermissionGranted: Bool {
@@ -88,6 +91,7 @@ class CardsPresenter {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
+    private var sensorOrderChangeToken: NSObjectProtocol?
 
     func dismiss(completion: (() -> Void)?) {
         shutdownModule()
@@ -646,6 +650,33 @@ extension CardsPresenter {
             )
     }
 
+    private func startObservingSensorOrderChanges() {
+        sensorOrderChangeToken?.invalidate()
+        sensorOrderChangeToken = nil
+        sensorOrderChangeToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .DashboardSensorOrderDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.viewModels = self.reorder(self.viewModels)
+                        if let viewModel = self.currentVisibleViewModel {
+                            if let index = self.viewModels.firstIndex(where: {
+                                ($0.luid.value != nil && $0.luid.value == viewModel.luid.value) ||
+                                    ($0.mac.value != nil && $0.mac.value == viewModel.mac.value)
+                            }) {
+                                self.visibleViewModelIndex = index
+                            }
+                        }
+                        self.view?.scroll(to: self.visibleViewModelIndex)
+                    }
+                }
+            )
+    }
+
     /// The method handles all the operations when cloud mode toggle is turned on/off
     private func handleCloudModeState() {
         // Sync with cloud if cloud mode is turned on
@@ -705,25 +736,30 @@ extension CardsPresenter {
     }
 
     private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
+        let sortedSensors: [String] = settings.dashboardSensorOrder
         let sortedAndUniqueArray = viewModels.reduce(
             into: [CardsViewModel]()
         ) { result, element in
             if !result.contains(element) {
-                // Insert the element into the result array while maintaining the sorted order
-                if let index = result.firstIndex(
-                    where: {
-                        $0.name.value?.lowercased() ?? "" >
-                            element.name.value?.lowercased() ?? ""
-                    }
-                ) {
-                    result.insert(element, at: index)
-                } else {
-                    // If no such index is found, append the element at the end
-                    result.append(element)
-                }
+                result.append(element)
             }
         }
-        return sortedAndUniqueArray
+
+        if !sortedSensors.isEmpty {
+            return sortedAndUniqueArray.sorted { (first, second) -> Bool in
+                guard let firstMacId = first.mac.value?.value,
+                      let secondMacId = second.mac.value?.value else { return false }
+                let firstIndex = sortedSensors.firstIndex(of: firstMacId) ?? Int.max
+                let secondIndex = sortedSensors.firstIndex(of: secondMacId) ?? Int.max
+                return firstIndex < secondIndex
+            }
+        } else {
+            return sortedAndUniqueArray.sorted { (first, second) -> Bool in
+                let firstName = first.name.value?.lowercased() ?? ""
+                let secondName = second.name.value?.lowercased() ?? ""
+                return firstName < secondName
+            }
+        }
     }
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
@@ -796,6 +832,7 @@ extension CardsPresenter {
         didDisconnectToken?.invalidate()
         cloudModeToken?.invalidate()
         mutedTillTimer?.invalidate()
+        sensorOrderChangeToken?.invalidate()
         router.dismiss()
         NotificationCenter.default.removeObserver(
             self,
@@ -811,6 +848,7 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         startObservingAppState()
         startMutedTillTimer()
+        startObservingSensorOrderChanges()
     }
 
     func viewWillAppear() {
