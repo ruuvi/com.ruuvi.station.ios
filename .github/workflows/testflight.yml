@@ -4,14 +4,18 @@ on:
   pull_request:
     types:
       - closed
-    branches: [ testflight ]
+    branches: [testflight]
 
 jobs:
   build:
     if: github.event.pull_request.merged == true
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15'
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -24,18 +28,7 @@ jobs:
         run: rm -rf ${{ github.workspace }}/station.localization
 
       - name: Clone localisation submodule
-        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
-
-      - name: Cocoapods Cache
-        uses: actions/cache@v2
-        with:
-          path: Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
-
-      - name: CocoaPods Install
-        run: pod install
+        run: git clone -b master https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
       - name: Install the Apple certificate and provisioning profiles
         env:
@@ -66,10 +59,34 @@ jobs:
           echo -n "${{ secrets.INTENTS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match__AppStore_com.ruuvi.station.intents.mobileprovision
           echo -n "${{ secrets.PNSERVICE_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.pnservice.mobileprovision
 
+      - name: Increment build number
+        run: |
+          make set_build_number
+
+      - name: Tools cache
+        uses: actions/cache@v2
+        with:
+          path: .tools/
+          key: ${{ runner.os }}-tools-${{ hashFiles('/.tools/') }}
+          restore-keys: |
+            ${{ runner.os }}-tools-
+
+      - name: Make xcodeproj
+        run: |
+          make xcodeproj
+
+      - name: SPM Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/Ruuvi*/SourcePackages/
+          key: ${{ runner.os }}-Ruuvi-${{ hashFiles('Ruuvi.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-Ruuvi-
+
       - name: Build app
         run: |
-          xcodebuild -workspace station.xcworkspace -scheme station -configuration Release -archivePath ./Build/Station.xcarchive archive -allowProvisioningUpdates
-      
+          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Release -archivePath ./Build/Station.xcarchive archive -allowProvisioningUpdates -quiet
+
       - name: Export IPA
         env:
           EXPORT_PLIST: ${{ secrets.APPSTORE_EXPORT_OPTIONS }}

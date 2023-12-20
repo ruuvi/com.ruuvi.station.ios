@@ -40,13 +40,19 @@ import Foundation
     {% endif %}
     {% set translation string.translation|replace:'"','\"'|replace:'	','\t' %}
     {% if string.types %}
-    {{accessModifier}} static func {{string.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}({% call parametersBlock string.types %}, _ locale: Locale = Locale.current) -> String {
+    {{accessModifier}} static func {{string.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}({% call parametersBlock string.types %}) -> String {
+        {{enumName}}.tr("{{table}}", "{{string.key}}", {%+ call argumentsBlock string.types %}, fallback: "{{translation}}")
+    }
+    {{accessModifier}} static func {{string.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}({% call parametersBlock string.types %}, _ locale: Locale? = nil) -> String {
         {{enumName}}.tr("{{table}}", "{{string.key}}", {%+ call argumentsBlock string.types %}, fallback: "{{translation}}", locale: locale)
     }
     {% elif param.lookupFunction %}
     {{accessModifier}} static var {{string.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}: String { return {{enumName}}.tr("{{table}}", "{{string.key}}", fallback: "{{translation}}") }
     {% else %}
     {{accessModifier}} static let {{string.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{enumName}}.tr("{{table}}", "{{string.key}}", fallback: "{{translation}}")
+    {{accessModifier}} static func {{string.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}(_ locale: Locale? = nil) -> String {
+        {{enumName}}.tr("{{table}}", "{{string.key}}", fallback: "{{translation}}", locale: locale)
+    }
     {% endif %}
     {% endfor %}
     {% for child in item.children %}
@@ -75,13 +81,13 @@ import Foundation
 // MARK: - Implementation Details
 
 extension {{enumName}} {
-    private static func tr(_ table: String, _ key: String, _ args: CVarArg..., fallback value: String, locale: Locale = Locale.current) -> String {
+    private static func tr(_ table: String, _ key: String, _ args: CVarArg..., fallback value: String, locale: Locale? = nil) -> String {
         {% if param.lookupFunction %}
         let format = {{ param.lookupFunction }}(key, table, value)
         {% else %}
         let format: String
-        if let bundle = BundleToken.bundle.path(
-            forResource: locale.identifier,
+        if let locale, let languageCode = locale.languageCode, let bundle = BundleToken.bundle.path(
+            forResource: languageCode,
             ofType: "lproj"
         ), let languageBundle = Bundle(path: bundle) {
             format = languageBundle.localizedString(forKey: key, value: value, table: table)
@@ -90,7 +96,7 @@ extension {{enumName}} {
         }
         
         {% endif %}
-        return String(format: format, locale: locale, arguments: args)
+        return String(format: format, locale: locale ?? Locale.current, arguments: args)
     }
 }
 {% if not param.bundle and not param.lookupFunction %}
