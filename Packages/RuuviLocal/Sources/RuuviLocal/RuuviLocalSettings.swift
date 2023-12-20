@@ -1,31 +1,30 @@
 import Foundation
 import RuuviOntology
 
-extension Notification.Name {
-    public static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
-    public static let TemperatureAccuracyDidChange = Notification.Name("Settings.TemperatureAccuracyDidChange")
-    public static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
-    public static let HumidityAccuracyDidChange = Notification.Name("Settings.HumidityAccuracyDidChange")
-    public static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
-    public static let PressureUnitAccuracyChange = Notification.Name("Settings.PressureUnitAccuracyChange")
-    public static let LanguageDidChange = Notification.Name("LanguageDidChange")
-    public static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
-    public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
-    public static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
-    public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
-    public static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
-    public static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
-    public static let ChartStatsOnDidChange = Notification.Name("ChartStatsOnDidChange")
-    public static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
-    public static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
-    public static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
-    public static let DashboardTapActionTypeDidChange = Notification.Name("DashboardTapActionTypeDidChange")
-    public static let AppearanceSettingsDidChange = Notification.Name("AppearanceSettingsDidChange")
-    public static let AlertSoundSettingsDidChange = Notification.Name("AlertSoundSettingsDidChange")
-    public static let EmailAlertSettingsDidChange = Notification.Name("EmailAlertSettingsDidChange")
-    public static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
-    public static let LimitAlertNotificationsSettingsDidChange =
+public extension Notification.Name {
+    static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
+    static let TemperatureAccuracyDidChange = Notification.Name("Settings.TemperatureAccuracyDidChange")
+    static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
+    static let HumidityAccuracyDidChange = Notification.Name("Settings.HumidityAccuracyDidChange")
+    static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
+    static let PressureUnitAccuracyChange = Notification.Name("Settings.PressureUnitAccuracyChange")
+    static let LanguageDidChange = Notification.Name("LanguageDidChange")
+    static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
+    static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
+    static let ChartDurationHourDidChange = Notification.Name("ChartDurationHourDidChange")
+    static let ChartDrawDotsOnDidChange = Notification.Name("ChartDrawDotsOnDidChange")
+    static let ChartStatsOnDidChange = Notification.Name("ChartStatsOnDidChange")
+    static let CloudModeDidChange = Notification.Name("CloudModeDidChange")
+    static let SensorCalibrationDidChange = Notification.Name("CalibrationDidChange")
+    static let DashboardTypeDidChange = Notification.Name("DashboardTypeDidChange")
+    static let DashboardTapActionTypeDidChange = Notification.Name("DashboardTapActionTypeDidChange")
+    static let AppearanceSettingsDidChange = Notification.Name("AppearanceSettingsDidChange")
+    static let AlertSoundSettingsDidChange = Notification.Name("AlertSoundSettingsDidChange")
+    static let EmailAlertSettingsDidChange = Notification.Name("EmailAlertSettingsDidChange")
+    static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
+    static let LimitAlertNotificationsSettingsDidChange =
         Notification.Name("LimitAlertNotificationsSettingsDidChange")
+    static let DashboardSensorOrderDidChange = Notification.Name("DashboardSensorOrderDidChange")
 }
 
 public enum DashboardTypeKey: String {
@@ -57,8 +56,6 @@ public protocol RuuviLocalSettings {
     var cloudProfileLanguageCode: String? { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
-    var isWebTagDaemonOn: Bool { get set }
-    var webTagDaemonIntervalMinutes: Int { get set }
     var connectionTimeout: TimeInterval { get set }
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }
@@ -85,6 +82,7 @@ public protocol RuuviLocalSettings {
     var dashboardEnabled: Bool { get set }
     var dashboardType: DashboardType { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }
+    var dashboardSensorOrder: [String] { get set }
     var theme: RuuviTheme { get set }
     var hideNFCForSensorContest: Bool { get set }
     var alertSound: RuuviAlertSound { get set }

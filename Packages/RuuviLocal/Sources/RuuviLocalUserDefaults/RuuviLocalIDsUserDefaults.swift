@@ -1,10 +1,9 @@
 import Foundation
 import RuuviOntology
-import RuuviLocal
 
 class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
     func mac(for luid: LocalIdentifier) -> MACIdentifier? {
-        return UserDefaults.standard.string(forKey: luid.value)?.mac
+        UserDefaults.standard.string(forKey: luid.value)?.mac
     }
 
     func set(mac: MACIdentifier, for luid: LocalIdentifier) {
@@ -12,7 +11,7 @@ class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
     }
 
     func luid(for mac: MACIdentifier) -> LocalIdentifier? {
-        return UserDefaults.standard.string(forKey: mac.value)?.luid
+        UserDefaults.standard.string(forKey: mac.value)?.luid
     }
 
     func set(luid: LocalIdentifier, for mac: MACIdentifier) {

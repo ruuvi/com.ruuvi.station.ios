@@ -1,0 +1,15 @@
+---
+targets:
+  RuuviContext:
+    # https://github.com/groue/GRDB.swift/issues/642
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Context
+    dependencies:
+    - package: GRDB
+    - target: RuuviOntology

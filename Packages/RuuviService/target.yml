@@ -1,0 +1,19 @@
+---
+targets:
+  RuuviService:
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Service
+    dependencies:
+    - package: Future
+    - package: Humidity
+    - package: BTKit
+    - target: RuuviOntology
+    - target: RuuviStorage
+    - target: RuuviCloud
+    - target: RuuviPool
+    - target: RuuviLocal
+    - target: RuuviRepository
+    - target: RuuviCore

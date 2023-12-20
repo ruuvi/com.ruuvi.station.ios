@@ -1,0 +1,16 @@
+name: Checks for opened PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  swiftlint:
+    runs-on: ubuntu-latest
+    name: SwiftLint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint
+        uses: norio-nomura/action-swiftlint@3.2.1

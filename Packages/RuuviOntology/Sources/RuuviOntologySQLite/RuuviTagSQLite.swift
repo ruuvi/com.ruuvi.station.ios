@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RuuviOntology
 
 public struct RuuviTagSQLite: RuuviTagSensor {
     public var id: String
@@ -51,22 +50,22 @@ public struct RuuviTagSQLite: RuuviTagSensor {
     }
 }
 
-extension RuuviTagSQLite {
-    public static let idColumn = Column("id")
-    public static let macColumn = Column("mac")
-    public static let luidColumn = Column("luid")
-    public static let nameColumn = Column("name")
-    public static let versionColumn = Column("version")
-    public static let firmwareVersionColumn = Column("firmwareVersion")
-    public static let isConnectableColumn = Column("isConnectable")
-    public static let networkProviderColumn = Column("networkProvider")
-    public static let isClaimedColumn = Column("isClaimed")
-    public static let isOwnerColumn = Column("isOwner")
-    public static let owner = Column("owner")
-    public static let ownersPlan = Column("ownersPlan")
-    public static let isCloudSensor = Column("isCloudSensor")
-    public static let canShareColumn = Column("canShare")
-    public static let sharedToColumn = Column("sharedTo")
+public extension RuuviTagSQLite {
+    static let idColumn = Column("id")
+    static let macColumn = Column("mac")
+    static let luidColumn = Column("luid")
+    static let nameColumn = Column("name")
+    static let versionColumn = Column("version")
+    static let firmwareVersionColumn = Column("firmwareVersion")
+    static let isConnectableColumn = Column("isConnectable")
+    static let networkProviderColumn = Column("networkProvider")
+    static let isClaimedColumn = Column("isClaimed")
+    static let isOwnerColumn = Column("isOwner")
+    static let owner = Column("owner")
+    static let ownersPlan = Column("ownersPlan")
+    static let isCloudSensor = Column("isCloudSensor")
+    static let canShareColumn = Column("canShare")
+    static let sharedToColumn = Column("sharedTo")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -98,7 +97,7 @@ extension RuuviTagSQLite: FetchableRecord {
 
 extension RuuviTagSQLite: PersistableRecord {
     public static var databaseTableName: String {
-        return "ruuvi_tag_sensors"
+        "ruuvi_tag_sensors"
     }
 
     public func encode(to container: inout PersistenceContainer) {
@@ -119,8 +118,8 @@ extension RuuviTagSQLite: PersistableRecord {
     }
 }
 
-extension RuuviTagSQLite {
-    public static func createTable(in db: Database) throws {
+public extension RuuviTagSQLite {
+    static func createTable(in db: Database) throws {
         try db.create(table: RuuviTagSQLite.databaseTableName, body: { table in
             table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .abort)
             table.column(RuuviTagSQLite.macColumn.name, .text)

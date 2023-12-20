@@ -1,7 +1,6 @@
 import Foundation
 import GRDB
 import Humidity
-import RuuviOntology
 
 public struct RuuviTagLatestDataSQLite: RuuviTagSensorRecord {
     public var id: String
@@ -61,32 +60,32 @@ public struct RuuviTagLatestDataSQLite: RuuviTagSensorRecord {
     }
 }
 
-extension RuuviTagLatestDataSQLite {
-    public static let idColumn = Column("id")
-    public static let ruuviTagIdColumn = Column("ruuviTagId")
-    public static let luidColumn = Column("luid")
-    public static let dateColumn = Column("date")
-    public static let sourceColumn = Column("source")
-    public static let macColumn = Column("mac")
-    public static let rssiColumn = Column("rssi")
-    public static let celsiusColumn = Column("celsius")
-    public static let relativeHumidityInPercentColumn = Column("relativeHumidityInPercent")
-    public static let hectopascalsColumn = Column("hectopascals")
-    public static let accelerationXColumn = Column("accelerationX")
-    public static let accelerationYColumn = Column("accelerationY")
-    public static let accelerationZColumn = Column("accelerationZ")
-    public static let voltsColumn = Column("volts")
-    public static let movementCounterColumn = Column("movementCounter")
-    public static let measurementSequenceNumberColumn = Column("measurementSequenceNumber")
-    public static let txPowerColumn = Column("txPower")
-    public static let temperatureOffsetColumn = Column("temperatureOffset")
-    public static let humidityOffsetColumn = Column("humidityOffset")
-    public static let pressureOffsetColumn = Column("pressureOffset")
+public extension RuuviTagLatestDataSQLite {
+    static let idColumn = Column("id")
+    static let ruuviTagIdColumn = Column("ruuviTagId")
+    static let luidColumn = Column("luid")
+    static let dateColumn = Column("date")
+    static let sourceColumn = Column("source")
+    static let macColumn = Column("mac")
+    static let rssiColumn = Column("rssi")
+    static let celsiusColumn = Column("celsius")
+    static let relativeHumidityInPercentColumn = Column("relativeHumidityInPercent")
+    static let hectopascalsColumn = Column("hectopascals")
+    static let accelerationXColumn = Column("accelerationX")
+    static let accelerationYColumn = Column("accelerationY")
+    static let accelerationZColumn = Column("accelerationZ")
+    static let voltsColumn = Column("volts")
+    static let movementCounterColumn = Column("movementCounter")
+    static let measurementSequenceNumberColumn = Column("measurementSequenceNumber")
+    static let txPowerColumn = Column("txPower")
+    static let temperatureOffsetColumn = Column("temperatureOffset")
+    static let humidityOffsetColumn = Column("humidityOffset")
+    static let pressureOffsetColumn = Column("pressureOffset")
 }
 
 extension RuuviTagLatestDataSQLite: Equatable {
     public static func == (lhs: RuuviTagLatestDataSQLite, rhs: RuuviTagLatestDataSQLite) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }
 
@@ -95,7 +94,7 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
         id = row[RuuviTagLatestDataSQLite.idColumn]
         if let luidValue = String.fromDatabaseValue(row[RuuviTagLatestDataSQLite.luidColumn]) {
             luid = LocalIdentifierStruct(value: luidValue)
-        } else if let luidValue =  String.fromDatabaseValue(row[RuuviTagLatestDataSQLite.ruuviTagIdColumn]) {
+        } else if let luidValue = String.fromDatabaseValue(row[RuuviTagLatestDataSQLite.ruuviTagIdColumn]) {
             luid = LocalIdentifierStruct(value: luidValue)
         }
         date = row[RuuviTagLatestDataSQLite.dateColumn]
@@ -112,20 +111,24 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
             temperature = Temperature(value: celsius, unit: .celsius)
             if let relativeHumidity
                 = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn]),
-                let temperature = temperature {
-                humidity = Humidity(value: relativeHumidity,
-                                    unit: .relative(temperature: temperature))
+                let temperature {
+                humidity = Humidity(
+                    value: relativeHumidity,
+                    unit: .relative(temperature: temperature)
+                )
             }
         }
         if let hectopascals = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.hectopascalsColumn]) {
             pressure = Pressure(value: hectopascals, unit: .hectopascals)
         }
         if let accelerationX = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationXColumn]),
-            let accelerationY = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationYColumn]),
-            let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn]) {
-            acceleration = Acceleration(x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
-                                        y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
-                                        z: AccelerationMeasurement(value: accelerationZ, unit: .metersPerSecondSquared))
+           let accelerationY = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationYColumn]),
+           let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn]) {
+            acceleration = Acceleration(
+                x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
+                y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
+                z: AccelerationMeasurement(value: accelerationZ, unit: .metersPerSecondSquared)
+            )
         }
         if let volts = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.voltsColumn]) {
             voltage = Voltage(value: volts, unit: .volts)
@@ -141,7 +144,7 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
 
 extension RuuviTagLatestDataSQLite: PersistableRecord {
     public static var databaseTableName: String {
-        return "ruuvi_tag_sensor_record_latest"
+        "ruuvi_tag_sensor_record_latest"
     }
 
     public func encode(to container: inout PersistenceContainer) {
@@ -171,8 +174,8 @@ extension RuuviTagLatestDataSQLite: PersistableRecord {
     }
 }
 
-extension RuuviTagLatestDataSQLite {
-    public static func createTable(in db: Database) throws {
+public extension RuuviTagLatestDataSQLite {
+    static func createTable(in db: Database) throws {
         try db.create(table: RuuviTagLatestDataSQLite.databaseTableName, body: { table in
             table.column(RuuviTagLatestDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(RuuviTagLatestDataSQLite.ruuviTagIdColumn.name, .text).notNull()

@@ -1,7 +1,6 @@
-import XCTest
 @testable import RuuviOntology
+import XCTest
 
 final class RuuviOntologyTests: XCTestCase {
-    func testExample() {
-    }
+    func testExample() {}
 }

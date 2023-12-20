@@ -1,7 +1,7 @@
 import Foundation
 import Future
-import RuuviOntology
 import RuuviCloud
+import RuuviOntology
 
 public protocol RuuviServiceOwnership {
     @discardableResult

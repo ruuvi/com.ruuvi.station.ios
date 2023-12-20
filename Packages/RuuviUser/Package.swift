@@ -1,18 +1,20 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviUser",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviUser",
-            targets: ["RuuviUser"]),
+            targets: ["RuuviUser"]
+        ),
         .library(
             name: "RuuviUserCoordinator",
-            targets: ["RuuviUserCoordinator"])
+            targets: ["RuuviUserCoordinator"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.1")
@@ -29,6 +31,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviUserTests",
-            dependencies: ["RuuviUser"])
+            dependencies: ["RuuviUser"]
+        ),
     ]
 )

@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -9,34 +9,37 @@ let package = Package(
     products: [
         .library(
             name: "RuuviNotification",
-            targets: ["RuuviNotification"]),
+            targets: ["RuuviNotification"]
+        ),
         .library(
             name: "RuuviNotificationLocal",
-            targets: ["RuuviNotificationLocal"])
+            targets: ["RuuviNotificationLocal"]
+        ),
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviService"),
-        .package(path: "../RuuviVirtual")
     ],
     targets: [
         .target(
             name: "RuuviNotification",
-            dependencies: []),
+            dependencies: []
+        ),
         .target(
             name: "RuuviNotificationLocal",
             dependencies: [
                 "RuuviNotification",
-                "RuuviVirtual",
                 "RuuviService",
                 "RuuviLocal",
                 "RuuviStorage",
-                "RuuviOntology"
-            ]),
+                "RuuviOntology",
+            ]
+        ),
         .testTarget(
             name: "RuuviNotificationTests",
-            dependencies: ["RuuviNotification"])
+            dependencies: ["RuuviNotification"]
+        ),
     ]
 )

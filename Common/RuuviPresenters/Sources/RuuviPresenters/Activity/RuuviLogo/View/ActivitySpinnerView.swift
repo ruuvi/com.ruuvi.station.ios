@@ -1,17 +1,29 @@
+import SwiftUI
 import UIKit
 
-@IBDesignable
-class ActivitySpinnerView: UIView {
+// UIViewRepresentable wrapper for ActivitySpinnerView
+struct ActivitySpinnerViewRepresentable: UIViewRepresentable {
+    func makeUIView(context _: Context) -> ActivitySpinnerView {
+        let spinnerView = ActivitySpinnerView()
+        spinnerView.animate()
+        return spinnerView
+    }
 
+    func updateUIView(_: ActivitySpinnerView, context _: Context) {
+        // No op
+    }
+}
+
+class ActivitySpinnerView: UIView {
     private var strokeColor = UIColor(red: 0.21, green: 0.68, blue: 0.62, alpha: 1.00)
     override var layer: CAShapeLayer {
         // swiftlint:disable force_cast
-        return super.layer as! CAShapeLayer
+        super.layer as! CAShapeLayer
         // swiftlint:enable force_cast
     }
 
     override class var layerClass: AnyClass {
-        return CAShapeLayer.self
+        CAShapeLayer.self
     }
 
     override func layoutSubviews() {
@@ -38,8 +50,7 @@ class ActivitySpinnerView: UIView {
     }
 
     class var poses: [Pose] {
-
-        return [
+        [
             Pose(0.0, 0.000, 0.7),
             Pose(0.6, 0.500, 0.5),
             Pose(0.6, 1.000, 0.3),
@@ -47,7 +58,7 @@ class ActivitySpinnerView: UIView {
             Pose(0.2, 1.875, 0.1),
             Pose(0.2, 2.250, 0.3),
             Pose(0.2, 2.625, 0.5),
-            Pose(0.2, 3.000, 0.7)
+            Pose(0.2, 3.000, 0.7),
         ]
     }
 
@@ -105,5 +116,4 @@ class ActivitySpinnerView: UIView {
         animation.repeatCount = Float.infinity
         layer.add(animation, forKey: animation.keyPath)
     }
-
 }

@@ -1,10 +1,9 @@
 import Foundation
-import Humidity
 import Future
+import Humidity
+import RuuviLocal
 import RuuviOntology
 import RuuviStorage
-import RuuviService
-import RuuviLocal
 
 public final class RuuviServiceExportImpl: RuuviServiceExport {
     private let ruuviStorage: RuuviStorage
@@ -37,7 +36,7 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         ruuviTag.on(success: { [weak self] ruuviTag in
             let recordsOperation = self?.ruuviStorage.readAll(uuid, after: networkPuningDate)
             recordsOperation?.on(success: { [weak self] records in
-                let offsetedLogs = records.compactMap({ $0.with(sensorSettings: settings)})
+                let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
                 self?.csvLog(for: ruuviTag, with: offsetedLogs).on(success: { url in
                     promise.succeed(value: url)
                 }, failure: { error in
@@ -55,6 +54,7 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
 }
 
 // MARK: - Ruuvi Tag
+
 extension RuuviServiceExportImpl {
     // swiftlint:disable:next function_body_length
     private func csvLog(
@@ -82,7 +82,8 @@ extension RuuviServiceExportImpl {
                 var csvText = headersString + "\n"
 
                 func toString(_ value: Double?, format: String) -> String {
-                    guard let v = value else {
+                    guard let v = value
+                    else {
                         return self.emptyValueString
                     }
                     return String(format: format, v)
@@ -95,9 +96,11 @@ extension RuuviServiceExportImpl {
                         let t = self.measurementService.double(for: log.temperature)
                         let temperature: String = toString(t, format: "%.2f")
 
-                        let h = self.measurementService.double(for: log.humidity,
-                                                               temperature: log.temperature,
-                                                               isDecimal: false)
+                        let h = self.measurementService.double(
+                            for: log.humidity,
+                            temperature: log.temperature,
+                            isDecimal: false
+                        )
                         let humidity: String = toString(h, format: "%.2f")
 
                         var pressure: String
@@ -109,11 +112,10 @@ extension RuuviServiceExportImpl {
                             pressure = toString(p, format: "%.2f")
                         }
 
-                        var rssi: String
-                        if let rssiValue = log.rssi {
-                            rssi = "\(rssiValue)"
+                        let rssi: String = if let rssiValue = log.rssi {
+                            "\(rssiValue)"
                         } else {
-                            rssi = self.emptyValueString
+                            self.emptyValueString
                         }
 
                         let accelerationX: String = toString(log.acceleration?.x.value, format: "%.3f")
@@ -122,25 +124,22 @@ extension RuuviServiceExportImpl {
 
                         let voltage: String = toString(log.voltage?.converted(to: .volts).value, format: "%.3f")
 
-                        let movementCounter: String
-                        if let mc = log.movementCounter {
-                            movementCounter = "\(mc)"
+                        let movementCounter: String = if let mc = log.movementCounter {
+                            "\(mc)"
                         } else {
-                            movementCounter = self.emptyValueString
+                            self.emptyValueString
                         }
 
-                        var measurementSequenceNumber: String
-                        if let msn = log.measurementSequenceNumber {
-                            measurementSequenceNumber = "\(msn)"
+                        let measurementSequenceNumber: String = if let msn = log.measurementSequenceNumber {
+                            "\(msn)"
                         } else {
-                            measurementSequenceNumber = self.emptyValueString
+                            self.emptyValueString
                         }
 
-                        var txPower: String
-                        if let tx = log.txPower {
-                            txPower = "\(tx)"
+                        let txPower: String = if let tx = log.txPower {
+                            "\(tx)"
                         } else {
-                            txPower = self.emptyValueString
+                            self.emptyValueString
                         }
                         let newLine = "\(date)" + ","
                             + "\(temperature)" + ","

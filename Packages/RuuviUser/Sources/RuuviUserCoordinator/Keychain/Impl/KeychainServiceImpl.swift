@@ -2,7 +2,7 @@ import Foundation
 import KeychainAccess
 
 final class KeychainServiceImpl {
-    private let keychain: Keychain = Keychain(
+    private let keychain: Keychain = .init(
         service: "com.ruuvi.station",
         accessGroup: "4MUYJ4YYH4.com.ruuvi.station"
     )
@@ -15,7 +15,9 @@ final class KeychainServiceImpl {
         case userApiEmail
     }
 }
+
 // MARK: - Public
+
 extension KeychainServiceImpl: KeychainService {
     var ruuviUserApiKey: String? {
         get {
@@ -74,7 +76,7 @@ extension KeychainServiceImpl: KeychainService {
     }
 
     var userIsAuthorized: Bool {
-        return !((ruuviUserApiKey ?? "").isEmpty)
+        !((ruuviUserApiKey ?? "").isEmpty)
             && !((userApiEmail ?? "").isEmpty)
     }
 }

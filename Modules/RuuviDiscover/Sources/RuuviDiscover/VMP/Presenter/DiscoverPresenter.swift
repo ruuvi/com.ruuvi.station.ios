@@ -1,22 +1,23 @@
 // swiftlint:disable file_length
-import Foundation
 import BTKit
-import UIKit
-import Future
-import RuuviOntology
-import RuuviContext
-import RuuviReactor
-import RuuviLocal
-import RuuviService
-import RuuviVirtual
-import RuuviCore
-import RuuviPresenters
 import CoreBluetooth
 import CoreNFC
+import Foundation
+import Future
+import RuuviContext
+import RuuviCore
+import RuuviFirmware
+import RuuviLocal
+import RuuviLocalization
+import RuuviOntology
+import RuuviPresenters
+import RuuviReactor
+import RuuviService
+import UIKit
 
 class DiscoverPresenter: NSObject, RuuviDiscover {
     var viewController: UIViewController {
-        if let view = view {
+        if let view {
             return view
         } else {
             let storyboard = UIStoryboard.named("Discover", for: Self.self)
@@ -31,16 +32,16 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var router: AnyObject?
     weak var output: RuuviDiscoverOutput?
 
-    var virtualReactor: VirtualReactor!
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
-    var virtualService: VirtualService!
     var foreground: BTForeground!
     var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var ruuviReactor: RuuviReactor!
     var ruuviOwnershipService: RuuviServiceOwnership!
+    var firmwareBuilder: RuuviFirmwareBuilder!
 
+    private weak var firmwareModule: RuuviFirmware?
     private weak var view: DiscoverViewInput?
     private var accessQueue = DispatchQueue(
         label: "com.ruuviDiscover.accessQueue", attributes: .concurrent
@@ -48,7 +49,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var _persistedSensors: [RuuviTagSensor] = []
     private var persistedSensors: [RuuviTagSensor]! {
         get {
-            return accessQueue.sync {
+            accessQueue.sync {
                 _persistedSensors
             }
         }
@@ -65,7 +66,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var _ruuviTags = Set<RuuviTag>()
     private var ruuviTags: Set<RuuviTag> {
         get {
-            return accessQueue.sync {
+            accessQueue.sync {
                 _ruuviTags
             }
         }
@@ -75,6 +76,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
             }
         }
     }
+
     private var nfcSensor: NFCSensor?
 
     private var reloadTimer: Timer?
@@ -84,13 +86,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var persistedReactorToken: RuuviReactorToken?
     private lazy var ruuviLogoImage = UIImage.named("ruuvi_logo", for: Self.self)
     private var isBluetoothPermissionGranted: Bool {
-        if #available(iOS 13.1, *) {
-            return CBCentralManager.authorization == .allowedAlways
-        } else if #available(iOS 13.0, *) {
-            return CBCentralManager().authorization == .allowedAlways
-        }
-        // Before iOS 13, Bluetooth permissions are not required
-        return true
+        CBCentralManager.authorization == .allowedAlways
     }
 
     deinit {
@@ -103,6 +99,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 }
 
 // MARK: - DiscoverViewOutput
+
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
         view?.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
@@ -126,11 +123,15 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverRuuviTagViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any != nil && $0.luid?.any == device.luid?.any }) {
-            addRuuviTagOwnership(
-                for: ruuviTag,
-                displayName: displayName,
-                firmwareVersion: nil
-            )
+            if device.mac != nil {
+                addRuuviTagOwnership(
+                    for: ruuviTag,
+                    displayName: displayName,
+                    firmwareVersion: nil
+                )
+            } else {
+                view?.showUpdateFirmwareDialog(for: ruuviTag.uuid)
+            }
         }
     }
 
@@ -143,7 +144,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidTriggerBuySensors() {
-        guard let url = URL(string: "Ruuvi.BuySensors.URL.IOS".localized(for: Self.self))
+        guard let url = URL(string: RuuviLocalization.Ruuvi.BuySensors.Url.ios)
         else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
@@ -164,11 +165,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 if let (key, value) = parse(record: record) {
                     switch key {
                     case "idID":
-                        self.nfcSensor?.id = trimNulls(from: value)
+                        nfcSensor?.id = trimNulls(from: value)
                     case "adMAC":
-                        self.nfcSensor?.macId = trimNulls(from: value)
+                        nfcSensor?.macId = trimNulls(from: value)
                     case "swSW":
-                        self.nfcSensor?.firmwareVersion = trimNulls(from: value)
+                        nfcSensor?.firmwareVersion = trimNulls(from: value)
                     default:
                         break
                     }
@@ -188,29 +189,31 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 for: nfcSensor,
                 displayName: addedTag.name
             ) else { return }
-            self.view?.showSensorDetailsDialog(
+            view?.showSensorDetailsDialog(
                 for: nfcSensor,
                 message: message,
                 showAddSensor: false,
                 showGoToSensor: true,
+                showUpgradeFirmware: false,
                 isDF3: false
             )
             return
         }
 
         // If tag is not added get the name from the mac and show other info.
-        if let addableTag = ruuviTags.first(where: { ruuviTag in
+        if ruuviTags.first(where: { ruuviTag in
             ruuviTag.mac == nfcSensor?.macId
-        }) {
+        }) != nil {
             guard let message = self.message(
                 for: nfcSensor,
-                displayName: self.displayName(for: nfcSensor)
+                displayName: displayName(for: nfcSensor)
             ) else { return }
-            self.view?.showSensorDetailsDialog(
+            view?.showSensorDetailsDialog(
                 for: nfcSensor,
                 message: message,
                 showAddSensor: true,
                 showGoToSensor: false,
+                showUpgradeFirmware: false,
                 isDF3: false
             )
             return
@@ -221,21 +224,23 @@ extension DiscoverPresenter: DiscoverViewOutput {
         // is done when sensor is not yet seen by BT.
         // Show info for DF3 case to add the tag using BT and update FW.
         // TODO: Discuss about the other case to handle it.
-        guard let message = self.message(
+        guard let message = message(
             for: nfcSensor,
-            displayName: self.displayName(for: nfcSensor)
+            displayName: displayName(for: nfcSensor)
         ) else { return }
-        self.view?.showSensorDetailsDialog(
+        view?.showSensorDetailsDialog(
             for: nfcSensor,
             message: message,
             showAddSensor: false,
             showGoToSensor: false,
+            showUpgradeFirmware: true,
             isDF3: nfcSensor?.firmwareVersion == "2.5.9"
         )
     }
 
     func viewDidAddDeviceWithNFC(with tag: NFCSensor?) {
-        guard let displayName = displayName(for: tag) else {
+        guard let displayName = displayName(for: tag)
+        else {
             return
         }
         if let ruuviTag = ruuviTags.first(where: { $0.mac != nil && $0.mac == tag?.macId }) {
@@ -255,6 +260,14 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
 
+    func viewDidAskToUpgradeFirmware(of sensor: NFCSensor?) {
+        guard let sensor else { return }
+        let firmwareModule = firmwareBuilder.build(uuid: sensor.id, currentFirmware: sensor.firmwareVersion)
+        firmwareModule.output = self
+        viewController.present(firmwareModule.viewController, animated: true)
+        self.firmwareModule = firmwareModule
+    }
+
     func viewDidACopyMacAddress(of sensor: NFCSensor?) {
         UIPasteboard.general.string = sensor?.macId
     }
@@ -262,40 +275,58 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidACopySecret(of sensor: NFCSensor?) {
         UIPasteboard.general.string = sensor?.id
     }
+
+    func viewDidConfirmToUpdateFirmware(for uuid: String) {
+        let firmwareModule = firmwareBuilder.build(uuid: uuid, currentFirmware: "<=2.5.9")
+        firmwareModule.output = self
+        let firmwareViewController = firmwareModule.viewController
+        firmwareViewController.presentationController?.delegate = self
+        viewController.present(firmwareViewController, animated: true)
+        self.firmwareModule = firmwareModule
+    }
 }
 
- extension DiscoverPresenter {
-    func onDidPick(location: Location) {
-        virtualService.add(provider: .openWeatherMap, location: location)
-            .on(success: { [weak self] virtualSensor in
-                guard let sSelf = self else { return }
-                sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+extension DiscoverPresenter: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        guard presentationController.presentedViewController == firmwareModule?.viewController else {
+            return true
+        }
+        guard let firmwareModule, !firmwareModule.isSafeToDismiss() else {
+            return true
+        }
+        return false
     }
- }
+}
+
+// MARK: - RuuviFirmwareOutput
+
+extension DiscoverPresenter: RuuviFirmwareOutput {
+    func ruuviFirmwareSuccessfullyUpgraded(_ ruuviDiscover: RuuviFirmware) {
+        ruuviDiscover.viewController.dismiss(animated: true)
+    }
+}
 
 // MARK: - Private
+
 extension DiscoverPresenter {
     private func startObservingPersistedRuuviSensors() {
-        persistedReactorToken = ruuviReactor.observe({ [weak self] (change) in
+        persistedReactorToken = ruuviReactor.observe { [weak self] change in
+            guard let self else { return }
             switch change {
-            case .initial(let sensors):
-                guard let sSelf = self else { return }
-                self?.persistedSensors = sensors
-            case .insert(let sensor):
-                self?.persistedSensors.append(sensor)
-            case .delete(let sensor):
-                self?.persistedSensors.removeAll(where: {$0.any == sensor})
+            case let .initial(sensors):
+                persistedSensors = sensors
+            case let .insert(sensor):
+                persistedSensors.append(sensor)
+            case let .delete(sensor):
+                persistedSensors.removeAll(where: { $0.any == sensor })
             default:
                 return
             }
-        })
+        }
     }
 
     private func startObservingLost() {
-        lostToken = foreground.lost(self, options: [.lostDeviceDelay(10)], closure: { (observer, device) in
+        lostToken = foreground.lost(self, options: [.lostDeviceDelay(10)], closure: { observer, device in
             if let ruuviTag = device.ruuvi?.tag {
                 observer.ruuviTags.remove(ruuviTag)
             }
@@ -307,7 +338,7 @@ extension DiscoverPresenter {
     }
 
     private func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { (observer, state) in
+        stateToken = foreground.state(self, closure: { observer, state in
             observer.view?.isBluetoothEnabled = state == .poweredOn
             if state == .poweredOff || !self.isBluetoothPermissionGranted {
                 observer.ruuviTags.removeAll()
@@ -322,7 +353,7 @@ extension DiscoverPresenter {
     }
 
     private func startScanning() {
-        scanToken = foreground.scan(self) { (observer, device) in
+        scanToken = foreground.scan(self) { observer, device in
             if let ruuviTag = device.ruuvi?.tag {
                 // when mode is changed, the device should be replaced
                 if let sameUUID = observer.ruuviTags.first(where: { $0.uuid == ruuviTag.uuid }), sameUUID != ruuviTag {
@@ -341,9 +372,10 @@ extension DiscoverPresenter {
         reloadTimer = Timer.scheduledTimer(
             withTimeInterval: 3,
             repeats: true,
-            block: { [weak self] (_) in
-            self?.updateViewDevices()
-        })
+            block: { [weak self] _ in
+                self?.updateViewDevices()
+            }
+        )
         // don't wait for timer, reload after 0.5 sec
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.updateViewDevices()
@@ -355,8 +387,8 @@ extension DiscoverPresenter {
     }
 
     private func updateViewDevices() {
-        let ruuviTags = ruuviTags.map { (ruuviTag) -> DiscoverRuuviTagViewModel in
-            return DiscoverRuuviTagViewModel(
+        let ruuviTags = ruuviTags.map { ruuviTag -> DiscoverRuuviTagViewModel in
+            DiscoverRuuviTagViewModel(
                 luid: ruuviTag.luid?.any,
                 isConnectable: ruuviTag.isConnectable,
                 rssi: ruuviTag.rssi,
@@ -369,23 +401,23 @@ extension DiscoverPresenter {
     }
 
     private func visibleTags(ruuviTags: [DiscoverRuuviTagViewModel]) -> [DiscoverRuuviTagViewModel] {
-        let filtered = ruuviTags.filter({ tag in
+        let filtered = ruuviTags.filter { tag in
             !persistedSensors.contains(where: { persistedTag in
                 if let tagLuid = tag.luid?.value,
-                    let persistedTagLuid = persistedTag.luid?.value {
-                    return tagLuid == persistedTagLuid
+                   let persistedTagLuid = persistedTag.luid?.value {
+                    tagLuid == persistedTagLuid
                 } else if let tagMacId = tag.mac,
-                            let persistedTagMacId = persistedTag.macId?.value {
-                    return tagMacId == persistedTagMacId
+                          let persistedTagMacId = persistedTag.macId?.value {
+                    tagMacId == persistedTagMacId
                 } else {
-                    return false
+                    false
                 }
             })
-        }).sorted(by: {
+        }.sorted(by: {
             if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
-                return rssi0 > rssi1
+                rssi0 > rssi1
             } else {
-                return false
+                false
             }
         })
 
@@ -417,25 +449,27 @@ extension DiscoverPresenter {
     }
 
     private func displayName(for tag: NFCSensor?) -> String? {
-        guard let tag = tag else {
+        guard let tag
+        else {
             return nil
         }
-        return "DiscoverTable.RuuviDevice.prefix".localized(for: Self.self)
-        + " " + tag.macId.replacingOccurrences(of: ":", with: "").suffix(4)
+        return RuuviLocalization.DiscoverTable.RuuviDevice.prefix
+            + " " + tag.macId.replacingOccurrences(of: ":", with: "").suffix(4)
     }
 
     private func message(for tag: NFCSensor?, displayName: String?) -> String? {
-        guard let tag = tag,
-                let displayName = displayName else {
+        guard let tag,
+              let displayName
+        else {
             return nil
         }
 
-        let nameString = "\("name".localized(for: Self.self))\n\(displayName)"
-        let macIdString = "\("mac_address".localized(for: Self.self))\n\(tag.macId)"
-        let uniqueIdString = "\("unique_id".localized(for: Self.self))\n\(tag.id)"
-        let fwString = "\("firmware_version".localized(for: Self.self))\n\(tag.firmwareVersion)"
+        let nameString = "\(RuuviLocalization.name)\n\(displayName)"
+        let macIdString = "\(RuuviLocalization.macAddress)\n\(tag.macId)"
+        let uniqueIdString = "\(RuuviLocalization.uniqueId)\n\(tag.id)"
+        let fwString = "\(RuuviLocalization.firmwareVersion)\n\(tag.firmwareVersion)"
 
-        return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n".localized(for: Self.self)
+        return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n"
     }
 
     private func addRuuviTagOwnership(
@@ -446,34 +480,19 @@ extension DiscoverPresenter {
         ruuviOwnershipService.add(
             sensor: ruuviTag.with(name: displayName)
                 .with(firmwareVersion: firmwareVersion ?? ""),
-            record: ruuviTag.with(source: .advertisement))
-            .on(success: { [weak self] anyRuuviTagSensor in
-                guard let sSelf = self else { return }
-                sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-    }
-
-    private func trimNulls(from string: String) -> String {
-        return string.replacingOccurrences(of: "\0", with: "")
-    }
-}
-
-extension DiscoverPresenter {
-    // Will be deprecated in near future. Currently retained to support already
-    // added web tags.
-    private func persistWebTag(with provider: VirtualProvider) {
-        let operation = virtualService.add(
-            provider: provider,
-            name: "Test Virtual Sensor"
+            record: ruuviTag.with(source: .advertisement)
         )
-        operation.on(success: { [weak self] virtualSensor in
+        .on(success: { [weak self] anyRuuviTagSensor in
             guard let sSelf = self else { return }
-            sSelf.output?.ruuvi(discover: sSelf, didAdd: virtualSensor)
+            sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }
+
+    private func trimNulls(from string: String) -> String {
+        string.replacingOccurrences(of: "\0", with: "")
+    }
 }
+
 // swiftlint:enable file_length

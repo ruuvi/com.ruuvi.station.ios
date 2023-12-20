@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ruuvi_activity_presenter_logo.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

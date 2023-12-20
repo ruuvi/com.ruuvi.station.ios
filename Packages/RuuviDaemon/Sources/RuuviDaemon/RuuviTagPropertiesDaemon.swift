@@ -1,7 +1,7 @@
 import Foundation
 
-extension Notification.Name {
-    public static let RuuviTagPropertiesDaemonDidFail = Notification.Name("RuuviTagPropertiesDaemonDidFail")
+public extension Notification.Name {
+    static let RuuviTagPropertiesDaemonDidFail = Notification.Name("RuuviTagPropertiesDaemonDidFail")
 }
 
 public enum RuuviTagPropertiesDaemonDidFailKey: String {

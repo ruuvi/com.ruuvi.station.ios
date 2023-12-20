@@ -1,0 +1,13 @@
+---
+targets:
+  RuuviPool:
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Pool
+    dependencies:
+    - package: Future
+    - target: RuuviOntology
+    - target: RuuviPersistence
+    - target: RuuviLocal

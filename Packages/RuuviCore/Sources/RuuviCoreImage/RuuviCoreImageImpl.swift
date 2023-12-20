@@ -1,8 +1,7 @@
-import UIKit
+import AVFoundation
 import CoreGraphics
 import Foundation
-import AVFoundation
-import RuuviCore
+import UIKit
 
 public final class RuuviCoreImageImpl: RuuviCoreImage {
     public init() {}
@@ -25,12 +24,10 @@ extension UIImage {
         let imageAspectRatio = self.size.width / self.size.height
         let canvasAspectRatio = size.width / size.height
 
-        var resizeFactor: CGFloat
-
-        if imageAspectRatio > canvasAspectRatio {
-            resizeFactor = size.width / self.size.width
+        let resizeFactor: CGFloat = if imageAspectRatio > canvasAspectRatio {
+            size.width / self.size.width
         } else {
-            resizeFactor = size.height / self.size.height
+            size.height / self.size.height
         }
 
         let scaledSize = CGSize(width: self.size.width * resizeFactor, height: self.size.height * resizeFactor)

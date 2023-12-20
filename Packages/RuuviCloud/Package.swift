@@ -1,27 +1,31 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviCloud",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviCloud",
-            targets: ["RuuviCloud"]),
+            targets: ["RuuviCloud"]
+        ),
         .library(
             name: "RuuviCloudApi",
-            targets: ["RuuviCloudApi"]),
+            targets: ["RuuviCloudApi"]
+        ),
         .library(
             name: "RuuviCloudPure",
-            targets: ["RuuviCloudPure"])
+            targets: ["RuuviCloudPure"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
-        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0")),
+        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
         .package(path: "../RuuviOntology"),
-        .package(path: "../RuuviUser")
+        .package(path: "../RuuviUser"),
+        .package(path: "../RuuviPool"),
     ],
     targets: [
         .target(
@@ -29,7 +33,8 @@ let package = Package(
             dependencies: [
                 "Future",
                 "RuuviOntology",
-                "RuuviUser"
+                "RuuviPool",
+                "RuuviUser",
             ]
         ),
         .target(
@@ -38,7 +43,7 @@ let package = Package(
                 "RuuviCloud",
                 "RuuviOntology",
                 "Future",
-                "BTKit"
+                "BTKit",
             ]
         ),
         .target(
@@ -48,11 +53,12 @@ let package = Package(
                 "RuuviCloudApi",
                 "RuuviOntology",
                 "RuuviUser",
-                "Future"
+                "Future",
             ]
         ),
         .testTarget(
             name: "RuuviCloudTests",
-            dependencies: ["RuuviCloud"])
+            dependencies: ["RuuviCloud"]
+        ),
     ]
 )

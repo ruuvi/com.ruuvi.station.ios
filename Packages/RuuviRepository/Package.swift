@@ -1,24 +1,26 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviRepository",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviRepository",
-            targets: ["RuuviRepository"]),
+            targets: ["RuuviRepository"]
+        ),
         .library(
             name: "RuuviRepositoryCoordinator",
-            targets: ["RuuviRepositoryCoordinator"])
+            targets: ["RuuviRepositoryCoordinator"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPool"),
-        .package(path: "../RuuviStorage")
+        .package(path: "../RuuviStorage"),
     ],
     targets: [
         .target(
@@ -27,7 +29,7 @@ let package = Package(
                 "RuuviOntology",
                 "RuuviPool",
                 "RuuviStorage",
-                "Future"
+                "Future",
             ]
         ),
         .target(
@@ -37,11 +39,12 @@ let package = Package(
                 "RuuviOntology",
                 "RuuviPool",
                 "RuuviStorage",
-                "Future"
+                "Future",
             ]
         ),
         .testTarget(
             name: "RuuviRepositoryTests",
-            dependencies: ["RuuviRepository"])
+            dependencies: ["RuuviRepository"]
+        ),
     ]
 )

@@ -9,10 +9,10 @@ public protocol RuuviLocalConnections {
     func unpairAllConnection()
 }
 
-extension Notification.Name {
-    public static let ConnectionPersistenceDidStartToKeepConnection =
+public extension Notification.Name {
+    static let ConnectionPersistenceDidStartToKeepConnection =
         Notification.Name("ConnectionPersistenceDidStartToKeepConnection")
-    public static let ConnectionPersistenceDidStopToKeepConnection =
+    static let ConnectionPersistenceDidStopToKeepConnection =
         Notification.Name("ConnectionPersistenceDidStopToKeepConnection")
 }
 

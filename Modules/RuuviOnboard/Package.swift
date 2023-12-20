@@ -6,22 +6,24 @@ import PackageDescription
 let package = Package(
     name: "RuuviOnboard",
     defaultLocalization: "en",
-    platforms: [.iOS(.v11), .macOS(.v10_15)],
+    platforms: [.iOS(.v13), .macOS(.v10_15)],
     products: [
         .library(
             name: "RuuviOnboard",
-            targets: ["RuuviOnboard"])
+            targets: ["RuuviOnboard"]
+        ),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(path: "../../Packages/RuuviUser")
     ],
     targets: [
         .target(
             name: "RuuviOnboard",
-            dependencies: []),
+            dependencies: ["RuuviUser"]
+        ),
         .testTarget(
             name: "RuuviOnboardTests",
-            dependencies: ["RuuviOnboard"])
+            dependencies: ["RuuviOnboard"]
+        ),
     ]
 )

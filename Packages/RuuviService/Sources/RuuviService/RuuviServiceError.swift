@@ -1,10 +1,10 @@
-import Foundation
-import RuuviStorage
-import RuuviCloud
-import RuuviPool
-import RuuviLocal
-import RuuviRepository
 import BTKit
+import Foundation
+import RuuviCloud
+import RuuviLocal
+import RuuviPool
+import RuuviRepository
+import RuuviStorage
 
 public enum RuuviServiceError: Error {
     case ruuviRepository(RuuviRepositoryError)

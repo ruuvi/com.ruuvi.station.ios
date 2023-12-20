@@ -1,7 +1,6 @@
-import XCTest
 @testable import RuuviContext
+import XCTest
 
 final class RuuviContextTests: XCTestCase {
-    func testExample() {
-    }
+    func testExample() {}
 }

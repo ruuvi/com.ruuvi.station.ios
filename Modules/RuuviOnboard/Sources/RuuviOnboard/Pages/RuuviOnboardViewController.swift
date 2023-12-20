@@ -1,14 +1,18 @@
-import UIKit
+import RuuviLocalization
 import RuuviUser
-import RuuviBundleUtils
+import UIKit
 
 // swiftlint:disable file_length
 
 protocol RuuviOnboardViewControllerOutput: AnyObject {
-    func ruuviOnboardPages(_ viewController: RuuviOnboardViewController,
-                           didFinish sender: Any?)
-    func ruuviOnboardCloudSignIn(_ viewController: RuuviOnboardViewController,
-                                 didPresentSignIn sender: Any?)
+    func ruuviOnboardPages(
+        _ viewController: RuuviOnboardViewController,
+        didFinish sender: Any?
+    )
+    func ruuviOnboardCloudSignIn(
+        _ viewController: RuuviOnboardViewController,
+        didPresentSignIn sender: Any?
+    )
 }
 
 enum OnboardPageType: Int {
@@ -27,10 +31,8 @@ struct OnboardViewModel {
     var pageType: OnboardPageType
     var title: String
     var subtitle: String
-    // swiftlint:disable redundant_optional_initialization
-    var sub_subtitle: String? = nil
-    var image: String? = nil
-    // swiftlint:enable redundant_optional_initialization
+    var sub_subtitle: String?
+    var image: String?
 }
 
 class RuuviOnboardViewController: UIViewController {
@@ -41,13 +43,16 @@ class RuuviOnboardViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: UIImage.named(RuuviAssets.bg_layer,
-                                                  for: Self.self))
+        let iv = UIImageView(image: UIImage.named(
+            RuuviAssets.bg_layer,
+            for: Self.self
+        ))
         iv.backgroundColor = .clear
         return iv
     }()
@@ -64,11 +69,13 @@ class RuuviOnboardViewController: UIViewController {
     private lazy var skipButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.setTitle("onboarding_skip".localized(for: Self.self), for: .normal)
+        button.setTitle(RuuviLocalization.onboardingSkip, for: .normal)
         button.titleLabel?.font = UIFont.Muli(.bold, size: 14)
-        button.addTarget(self,
-                         action: #selector(handleSkipButtonTap),
-                         for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(handleSkipButtonTap),
+            for: .touchUpInside
+        )
         button.underline()
         return button
     }()
@@ -76,8 +83,10 @@ class RuuviOnboardViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        let cv = UICollectionView(frame: .zero,
-                                  collectionViewLayout: layout)
+        let cv = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
         cv.backgroundColor = .clear
         cv.delegate = self
         cv.dataSource = self
@@ -107,7 +116,6 @@ class RuuviOnboardViewController: UIViewController {
 }
 
 extension RuuviOnboardViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -118,12 +126,12 @@ extension RuuviOnboardViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
-
 }
 
 extension RuuviOnboardViewController {
     private func isUserAuthorized() -> Bool {
-        guard let isAuthorized = ruuviUser?.isAuthorized else {
+        guard let isAuthorized = ruuviUser?.isAuthorized
+        else {
             return false
         }
         return isAuthorized
@@ -140,9 +148,11 @@ extension RuuviOnboardViewController {
         currentPage = lastPageIndex
         pageControl.currentPage = lastPageIndex
         let indexPath = IndexPath(item: lastPageIndex, section: 0)
-        collectionView.scrollToItem(at: indexPath,
-                                    at: .centeredHorizontally,
-                                    animated: false)
+        collectionView.scrollToItem(
+            at: indexPath,
+            at: .centeredHorizontally,
+            animated: false
+        )
     }
 
     private func updateSkipButtonState() {
@@ -151,7 +161,8 @@ extension RuuviOnboardViewController {
 
     private func showDiscoverPage() {
         viewModels = constructOnboardingPages()
-        guard isUserAuthorized() else {
+        guard isUserAuthorized()
+        else {
             return
         }
         navigationController?.setNavigationBarHidden(false, animated: false)
@@ -160,17 +171,24 @@ extension RuuviOnboardViewController {
 }
 
 extension RuuviOnboardViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        return viewModels.count
+    func collectionView(
+        _: UICollectionView,
+        numberOfItemsInSection _: Int
+    ) -> Int {
+        viewModels.count
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         let viewModel = viewModels[indexPath.item]
-        guard let cell = cell(collectionView: collectionView,
-                              indexPath: indexPath,
-                              viewModel: viewModel) else {
+        guard let cell = cell(
+            collectionView: collectionView,
+            indexPath: indexPath,
+            viewModel: viewModel
+        )
+        else {
             fatalError()
         }
 
@@ -179,7 +197,6 @@ extension RuuviOnboardViewController: UICollectionViewDataSource {
 }
 
 extension RuuviOnboardViewController: UICollectionViewDelegate {
-
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
         let yPoint = scrollView.frame.size.height / 2
@@ -193,25 +210,28 @@ extension RuuviOnboardViewController: UICollectionViewDelegate {
 
 extension RuuviOnboardViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
+        _: UICollectionView,
+        layout _: UICollectionViewLayout,
+        sizeForItemAt _: IndexPath
     ) -> CGSize {
-        return CGSize(width: view.bounds.width, height: view.bounds.height)
+        CGSize(width: view.bounds.width, height: view.bounds.height)
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    func collectionView(
+        _: UICollectionView,
+        layout _: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt _: Int
+    ) -> CGFloat {
+        0
     }
 }
 
 extension RuuviOnboardViewController {
-
-    private func cell(collectionView: UICollectionView,
-                      indexPath: IndexPath,
-                      viewModel: OnboardViewModel) -> UICollectionViewCell? {
+    private func cell(
+        collectionView: UICollectionView,
+        indexPath: IndexPath,
+        viewModel: OnboardViewModel
+    ) -> UICollectionViewCell? {
         switch viewModel.pageType {
         case .measure:
             let cell = collectionView.dequeueReusableCell(
@@ -242,16 +262,12 @@ extension RuuviOnboardViewController {
             cell?.delegate = self
             cell?.configure(with: viewModel)
             return cell
-        default:
-            return UICollectionViewCell()
         }
-
     }
-
 }
 
 extension RuuviOnboardViewController: RuuviOnboardSignInCellDelegate {
-    func didTapContinueButton(sender: RuuviOnboardSignInCell) {
+    func didTapContinueButton(sender _: RuuviOnboardSignInCell) {
         if let authorized = ruuviUser?.isAuthorized, authorized {
             showDiscoverPage()
         } else {
@@ -276,58 +292,71 @@ extension RuuviOnboardViewController {
         view.addSubview(collectionView)
         collectionView.fillSuperview()
 
-        collectionView.register(RuuviOnboardStartCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierMeasure)
-        collectionView.register(RuuviOnboardCoreFeaturesCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierCoreFeatures)
-        collectionView.register(RuuviOnboardGatewayFeaturesCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierGatewayFeatures)
-        collectionView.register(RuuviOnboardSignInCell.self,
-                                forCellWithReuseIdentifier: Self.reuseIdentifierSignIn)
+        collectionView.register(
+            RuuviOnboardStartCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierMeasure
+        )
+        collectionView.register(
+            RuuviOnboardCoreFeaturesCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierCoreFeatures
+        )
+        collectionView.register(
+            RuuviOnboardGatewayFeaturesCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierGatewayFeatures
+        )
+        collectionView.register(
+            RuuviOnboardSignInCell.self,
+            forCellWithReuseIdentifier: Self.reuseIdentifierSignIn
+        )
     }
 
     private func setUpHeaderView() {
         let headerView = UIView(color: .clear)
         view.addSubview(headerView)
-        headerView.anchor(top: view.safeTopAnchor,
-                          leading: view.safeLeadingAnchor,
-                          bottom: nil,
-                          trailing: view.safeTrailingAnchor,
-                          padding: .init(top: 0, left: 12, bottom: 0, right: 12),
-                          size: .init(width: 0, height: 44))
+        headerView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeadingAnchor,
+            bottom: nil,
+            trailing: view.safeTrailingAnchor,
+            padding: .init(top: 0, left: 12, bottom: 0, right: 12),
+            size: .init(width: 0, height: 44)
+        )
 
         headerView.addSubview(pageControl)
         pageControl.centerInSuperview()
 
         headerView.addSubview(skipButton)
-        skipButton.anchor(top: nil,
-                          leading: nil,
-                          bottom: nil,
-                          trailing: headerView.trailingAnchor)
+        skipButton.anchor(
+            top: nil,
+            leading: nil,
+            bottom: nil,
+            trailing: headerView.trailingAnchor
+        )
         skipButton.centerYInSuperview()
     }
 }
 
-extension RuuviOnboardViewController {
-
-    fileprivate static func createLayout() -> UICollectionViewLayout {
-        let sectionProvider = { (_: Int,
-                                 _: NSCollectionLayoutEnvironment)
+private extension RuuviOnboardViewController {
+    static func createLayout() -> UICollectionViewLayout {
+        let sectionProvider = { (
+            _: Int,
+            _: NSCollectionLayoutEnvironment
+        )
             -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .fractionalHeight(1)
-            )
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
-            let section = NSCollectionLayoutSection(group: group)
-            return section
+        let section = NSCollectionLayoutSection(group: group)
+        return section
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()
@@ -340,72 +369,71 @@ extension RuuviOnboardViewController {
     }
 
     // swiftlint:disable:next function_body_length
-    fileprivate func constructOnboardingPages() -> [OnboardViewModel] {
-
+    func constructOnboardingPages() -> [OnboardViewModel] {
         let meaureItem = OnboardViewModel(
             pageType: .measure,
-            title: "onboarding_measure_your_world".localized(for: Self.self),
-            subtitle: "onboarding_with_ruuvi_sensors".localized(for: Self.self),
-            sub_subtitle: "onboarding_swipe_to_continue".localized(for: Self.self)
+            title: RuuviLocalization.onboardingMeasureYourWorld,
+            subtitle: RuuviLocalization.onboardingWithRuuviSensors,
+            sub_subtitle: RuuviLocalization.onboardingSwipeToContinue
         )
 
         let dashboardItem = OnboardViewModel(
             pageType: .dashboard,
-            title: "onboarding_dashboard".localized(for: Self.self),
-            subtitle: "onboarding_follow_measurement".localized(for: Self.self),
+            title: RuuviLocalization.onboardingDashboard,
+            subtitle: RuuviLocalization.onboardingFollowMeasurement,
             image: RuuviAssets.dashboard
         )
 
         let sensorItem = OnboardViewModel(
             pageType: .sensors,
-            title: "onboarding_your_sensors".localized(for: Self.self),
-            subtitle: "onboarding_personalise".localized(for: Self.self),
+            title: RuuviLocalization.onboardingYourSensors,
+            subtitle: RuuviLocalization.onboardingPersonalise,
             image: RuuviAssets.sensors
         )
 
         let historyItem = OnboardViewModel(
             pageType: .history,
-            title: "onboarding_history".localized(for: Self.self),
-            subtitle: "onboarding_explore_detailed".localized(for: Self.self),
+            title: RuuviLocalization.onboardingHistory,
+            subtitle: RuuviLocalization.onboardingExploreDetailed,
             image: RuuviAssets.history
         )
 
         let alertItem = OnboardViewModel(
             pageType: .alerts,
-            title: "onboarding_alerts".localized(for: Self.self),
-            subtitle: "onboarding_set_custom".localized(for: Self.self),
+            title: RuuviLocalization.onboardingAlerts,
+            subtitle: RuuviLocalization.onboardingSetCustom,
             image: RuuviAssets.alerts
         )
 
         let shareItem = OnboardViewModel(
             pageType: .share,
-            title: "onboarding_share_your_sensors".localized(for: Self.self),
-            subtitle: "onboarding_sharees_can_use".localized(for: Self.self),
+            title: RuuviLocalization.onboardingShareYourSensors,
+            subtitle: RuuviLocalization.onboardingShareesCanUse,
             image: RuuviAssets.share
         )
 
         let widgetItem = OnboardViewModel(
             pageType: .widgets,
-            title: "onboarding_handy_widgets".localized(for: Self.self),
-            subtitle: "onboarding_access_widgets".localized(for: Self.self),
+            title: RuuviLocalization.onboardingHandyWidgets,
+            subtitle: RuuviLocalization.onboardingAccessWidgets,
             image: RuuviAssets.widgets
         )
 
         let webItem = OnboardViewModel(
             pageType: .web,
-            title: "onboarding_station_web".localized(for: Self.self),
-            subtitle: "onboarding_web_pros".localized(for: Self.self),
+            title: RuuviLocalization.onboardingStationWeb,
+            subtitle: RuuviLocalization.onboardingWebPros,
             image: RuuviAssets.web
         )
 
         let signInItem = OnboardViewModel(
             pageType: .signIn,
             title: isUserAuthorized() ?
-                "onboarding_thats_it_already_signed_in".localized(for: Self.self) :
-                "onboarding_thats_it".localized(for: Self.self),
+            RuuviLocalization.onboardingThatsItAlreadySignedIn :
+                RuuviLocalization.onboardingThatsIt,
             subtitle: isUserAuthorized() ?
-                "onboarding_go_to_sign_in_already_signed_in".localized(for: Self.self) :
-                "onboarding_go_to_sign_in".localized(for: Self.self)
+            RuuviLocalization.onboardingGoToSignInAlreadySignedIn :
+                RuuviLocalization.onboardingGoToSignIn
         )
 
         return [
@@ -417,7 +445,7 @@ extension RuuviOnboardViewController {
             shareItem,
             widgetItem,
             webItem,
-            signInItem
+            signInItem,
         ]
     }
 }

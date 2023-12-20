@@ -1,20 +1,19 @@
 // swiftlint:disable file_length
 import Foundation
 import RuuviOntology
-import RuuviVirtual
-import RuuviNotifier
 
 // MARK: - Process Physical Sensors
-extension RuuviNotifierImpl {
 
+public extension RuuviNotifierImpl {
     // swiftlint:disable:next function_body_length
-    public func process(record record: RuuviTagSensorRecord, trigger: Bool) {
+    func process(record: RuuviTagSensorRecord, trigger: Bool) {
         guard let luid = record.luid,
-                ruuviAlertService.hasRegistrations(for: record) else {
+              ruuviAlertService.hasRegistrations(for: record)
+        else {
             return
         }
         var isTriggered = false
-        AlertType.allCases.forEach { (type) in
+        AlertType.allCases.forEach { type in
             switch type {
             case .temperature:
                 let isTemperature = process(
@@ -54,9 +53,11 @@ extension RuuviNotifierImpl {
                 isTriggered = isTriggered || isSignal
                 notify(alertType: type, uuid: luid.value, isTriggered: isSignal)
             case .movement:
-                let isMovement = process(movement: type,
-                                         record: record,
-                                         trigger: trigger)
+                let isMovement = process(
+                    movement: type,
+                    record: record,
+                    trigger: trigger
+                )
                 isTriggered = isTriggered || isMovement
                 notify(alertType: type, uuid: luid.value, isTriggered: isMovement)
             default:
@@ -73,63 +74,36 @@ extension RuuviNotifierImpl {
     }
 }
 
-// MARK: - Process Virtual Sensors
-extension RuuviNotifierImpl {
-    public func process(data: VirtualData, for sensor: VirtualSensor) {
-        var isTriggered = false
-        AlertType.allCases.forEach { (type) in
-            switch type {
-            case .temperature:
-                isTriggered = process(temperature: data.temperature,
-                                      alertType: type,
-                                      identifier: sensor.id.luid)
-                    || isTriggered
-            case .relativeHumidity:
-                let isRelativeHumidity = process(
-                    relativeHumidity: data.humidity,
-                    temperature: data.temperature,
-                    alertType: type,
-                    identifier: sensor.id.luid
-                )
-                isTriggered = isTriggered || isRelativeHumidity
-                    || isTriggered
-            case .pressure:
-                isTriggered = process(pressure: data.pressure,
-                                      alertType: type,
-                                      identifier: sensor.id.luid)
-            default:
-                break
-            }
-        }
-
-        if ruuviAlertService.hasRegistrations(for: sensor) {
-            notify(uuid: sensor.id, isTriggered: isTriggered)
-        }
-    }
-
-}
 // MARK: - Process Network Sensors
-extension RuuviNotifierImpl {
+
+public extension RuuviNotifierImpl {
     // swiftlint:disable:next function_body_length
-    public func processNetwork(record: RuuviTagSensorRecord,
-                               trigger: Bool,
-                               for identifier: MACIdentifier) {
-        guard ruuviAlertService.hasRegistrations(for: record) else {
+    func processNetwork(
+        record: RuuviTagSensorRecord,
+        trigger: Bool,
+        for identifier: MACIdentifier
+    ) {
+        guard ruuviAlertService.hasRegistrations(for: record)
+        else {
             return
         }
 
         var isTriggered = false
-        AlertType.allCases.forEach { (type) in
+        AlertType.allCases.forEach { type in
             switch type {
             case .temperature:
-                let isTemperature = process(temperature: record.temperature,
-                                      alertType: type,
-                                      identifier: identifier,
-                                      trigger: trigger)
+                let isTemperature = process(
+                    temperature: record.temperature,
+                    alertType: type,
+                    identifier: identifier,
+                    trigger: trigger
+                )
                 isTriggered = isTriggered || isTemperature
-                notify(alertType: type,
-                       uuid: identifier.value,
-                       isTriggered: isTemperature)
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isTemperature
+                )
             case .relativeHumidity:
                 let isRelativeHumidity = process(
                     relativeHumidity: record.humidity,
@@ -139,36 +113,48 @@ extension RuuviNotifierImpl {
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isRelativeHumidity
-                notify(alertType: type,
-                       uuid: identifier.value,
-                       isTriggered: isRelativeHumidity)
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isRelativeHumidity
+                )
             case .pressure:
-                let isPressure = process(pressure: record.pressure,
-                                      alertType: type,
-                                      identifier: identifier,
-                                      trigger: trigger)
+                let isPressure = process(
+                    pressure: record.pressure,
+                    alertType: type,
+                    identifier: identifier,
+                    trigger: trigger
+                )
                 isTriggered = isTriggered || isPressure
-                notify(alertType: type,
-                       uuid: identifier.value,
-                       isTriggered: isPressure)
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isPressure
+                )
             case .signal:
-                let isSignal = process(signal: record.rssi,
-                                      alertType: type,
-                                      identifier: identifier,
-                                      trigger: trigger)
+                let isSignal = process(
+                    signal: record.rssi,
+                    alertType: type,
+                    identifier: identifier,
+                    trigger: trigger
+                )
                 isTriggered = isTriggered || isSignal
-                notify(alertType: type,
-                       uuid: identifier.value,
-                       isTriggered: isSignal)
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isSignal
+                )
             case .cloudConnection:
                 let isCloudConnection = processCloudConnection(
                     alertType: type,
                     identifier: identifier
                 )
                 isTriggered = isTriggered || isCloudConnection
-                notify(alertType: type,
-                       uuid: identifier.value,
-                       isTriggered: isCloudConnection)
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isCloudConnection
+                )
             default:
                 break
             }
@@ -177,16 +163,18 @@ extension RuuviNotifierImpl {
         notify(uuid: identifier.value, isTriggered: isTriggered)
     }
 }
+
 // MARK: - Notify
+
 extension RuuviNotifierImpl {
     private func notify(uuid: String, isTriggered: Bool) {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             if let observers = sSelf.observations[uuid] {
-                for i in 0..<observers.count {
+                for i in 0 ..< observers.count {
                     if let pointer = observers.pointer(at: i),
-                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                            as? RuuviNotifierObserver {
+                       let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                       as? RuuviNotifierObserver {
                         observer.ruuvi(
                             notifier: sSelf,
                             isTriggered: isTriggered,
@@ -202,10 +190,10 @@ extension RuuviNotifierImpl {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             if let observers = sSelf.observations[uuid] {
-                for i in 0..<observers.count {
+                for i in 0 ..< observers.count {
                     if let pointer = observers.pointer(at: i),
-                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                            as? RuuviNotifierObserver {
+                       let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                       as? RuuviNotifierObserver {
                         observer.ruuvi(
                             notifier: sSelf,
                             alertType: alertType,
@@ -218,7 +206,9 @@ extension RuuviNotifierImpl {
         }
     }
 }
+
 // MARK: - Private
+
 extension RuuviNotifierImpl {
     private func process(
         temperature: Temperature?,
@@ -226,8 +216,8 @@ extension RuuviNotifierImpl {
         identifier: Identifier?,
         trigger: Bool = true
     ) -> Bool {
-        guard let identifier = identifier else { return false }
-        if case .temperature(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
+        guard let identifier else { return false }
+        if case let .temperature(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let l = Temperature(lower),
            let u = Temperature(upper),
            let t = temperature {
@@ -258,7 +248,7 @@ extension RuuviNotifierImpl {
             }
             return isLower || isUpper
         } else {
-             return false
+            return false
         }
     }
 
@@ -269,8 +259,8 @@ extension RuuviNotifierImpl {
         identifier: Identifier?,
         trigger: Bool = true
     ) -> Bool {
-        guard let identifier = identifier else { return false }
-        if case .relativeHumidity(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
+        guard let identifier else { return false }
+        if case let .relativeHumidity(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let t = temperature,
            let rh = relativeHumidity?.converted(to: .relative(temperature: t)) {
             let isLower = rh.value < lower
@@ -310,11 +300,11 @@ extension RuuviNotifierImpl {
         identifier: Identifier?,
         trigger: Bool = true
     ) -> Bool {
-        guard let identifier = identifier else { return false }
-        if case .pressure(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
+        guard let identifier else { return false }
+        if case let .pressure(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let l = Pressure(lower),
            let u = Pressure(upper),
-           let pressure = pressure {
+           let pressure {
             let isLower = pressure < l
             let isUpper = pressure > u
             if trigger {
@@ -352,11 +342,13 @@ extension RuuviNotifierImpl {
         identifier: Identifier?,
         trigger: Bool = true
     ) -> Bool {
-        guard let identifier = identifier else { return false }
-        if case .signal(let lower, let upper) = ruuviAlertService
-            .alert(for: identifier.value,
-                   of: alertType),
-           let signal = signal {
+        guard let identifier else { return false }
+        if case let .signal(lower, upper) = ruuviAlertService
+            .alert(
+                for: identifier.value,
+                of: alertType
+            ),
+            let signal {
             let isLower = Double(signal) < lower
             let isUpper = Double(signal) > upper
             if trigger {
@@ -394,8 +386,8 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let luid = record.luid else { return false }
-        if case .movement(let last) = ruuviAlertService.alert(for: luid.value, of: movement),
-            let movementCounter = record.movementCounter {
+        if case let .movement(last) = ruuviAlertService.alert(for: luid.value, of: movement),
+           let movementCounter = record.movementCounter {
             let isGreater = movementCounter > last
             if trigger {
                 if isGreater {
@@ -420,12 +412,13 @@ extension RuuviNotifierImpl {
         alertType: AlertType,
         identifier: MACIdentifier?
     ) -> Bool {
-        guard let identifier = identifier else { return false }
+        guard let identifier else { return false }
 
-        if case .cloudConnection(let unseenDuration) = ruuviAlertService
-            .alert(for: identifier.value,
-                   of: alertType) {
-
+        if case let .cloudConnection(unseenDuration) = ruuviAlertService
+            .alert(
+                for: identifier.value,
+                of: alertType
+            ) {
             let calendar = Calendar.current
             let thresholdDateTime = calendar.date(
                 byAdding: .second, value: -Int(unseenDuration), to: Date()
@@ -449,5 +442,4 @@ extension RuuviNotifierImpl {
         // Default case, don't trigger alert
         return false
     }
-
 }

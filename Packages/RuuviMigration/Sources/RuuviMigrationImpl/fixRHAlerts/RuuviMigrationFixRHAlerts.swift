@@ -1,12 +1,10 @@
 import Foundation
-import UIKit
+import RuuviContext
 import RuuviLocal
 import RuuviPool
-import RuuviContext
-import RuuviVirtual
-import RuuviStorage
 import RuuviService
-import RuuviMigration
+import RuuviStorage
+import UIKit
 
 final class RuuviMigrationFixRHAlerts: RuuviMigration {
     private let ruuviStorage: RuuviStorage

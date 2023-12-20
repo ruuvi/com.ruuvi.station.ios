@@ -1,7 +1,6 @@
-import UIKit
 import Future
 import RuuviOntology
-import RuuviLocal
+import UIKit
 
 final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     init(imagePersistence: ImagePersistence) {
@@ -22,7 +21,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     private var usedBackgrounds: [Int] {
         if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int],
-            ub.count == bgMaxIndex {
+           ub.count == bgMaxIndex {
             return ub
         } else {
             let ub = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
@@ -37,7 +36,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     func setNextDefaultBackground(for identifier: Identifier) -> UIImage? {
         var id = backgroundId(for: identifier)
-        if id >= bgMinIndex && id < bgMaxIndex {
+        if id >= bgMinIndex, id < bgMaxIndex {
             id += 1
             setBackground(id, for: identifier)
         } else if id >= bgMaxIndex {
@@ -52,12 +51,12 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func getCustomBackground(for identifier: Identifier) -> UIImage? {
-        return imagePersistence.fetchBg(for: identifier)
+        imagePersistence.fetchBg(for: identifier)
     }
 
     func getBackground(for identifier: Identifier) -> UIImage? {
         let id = backgroundId(for: identifier)
-        if id >= bgMinIndex && id <= bgMaxIndex {
+        if id >= bgMinIndex, id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
             return getCustomBackground(for: identifier)
@@ -65,8 +64,8 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func getOrGenerateBackground(for identifier: Identifier) -> UIImage? {
-        var id = backgroundId(for: identifier)
-        if id >= bgMinIndex && id <= bgMaxIndex {
+        let id = backgroundId(for: identifier)
+        if id >= bgMinIndex, id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
             if let custom = getCustomBackground(for: identifier) {
@@ -94,11 +93,13 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             }
             NotificationCenter
                 .default
-                .post(name: .BackgroundPersistenceDidChangeBackground,
-                      object: nil,
-                      userInfo: [userInfoKey: identifier])
+                .post(
+                    name: .BackgroundPersistenceDidChangeBackground,
+                    object: nil,
+                    userInfo: [userInfoKey: identifier]
+                )
             promise.succeed(value: url)
-        }, failure: { (error) in
+        }, failure: { error in
             promise.fail(error: error)
         })
         return promise.future
@@ -120,10 +121,12 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
         NotificationCenter
             .default
-            .post(name: .BackgroundPersistenceDidChangeBackground,
-                  object: nil,
-                  userInfo: [userInfoKey: identifier])
-        if id >= bgMinIndex && id <= bgMaxIndex {
+            .post(
+                name: .BackgroundPersistenceDidChangeBackground,
+                object: nil,
+                userInfo: [userInfoKey: identifier]
+            )
+        if id >= bgMinIndex, id <= bgMaxIndex {
             var array = usedBackgrounds
             array[id - bgMinIndex] += 1
             UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
@@ -142,7 +145,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         let array = usedBackgrounds
         var result: Int
         if let min = array.min() {
-            let indicies = array.enumerated().compactMap({ $1 == min ? $0 + bgMinIndex : nil })
+            let indicies = array.enumerated().compactMap { $1 == min ? $0 + bgMinIndex : nil }
             if indicies.count == 0 {
                 result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
             } else {
@@ -158,6 +161,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
         return result
     }
+
     // swiftlint:enable legacy_random
 
     func backgroundUploadProgress(for identifier: Identifier) -> Double? {
@@ -180,12 +184,14 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
         NotificationCenter
             .default
-            .post(name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
-                  object: nil,
-                  userInfo: [
+            .post(
+                name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
+                object: nil,
+                userInfo: [
                     userInfoKey: identifier,
-                    BPDidUpdateBackgroundUploadProgressKey.progress: percentage
-                  ])
+                    BPDidUpdateBackgroundUploadProgressKey.progress: percentage,
+                ]
+            )
         UserDefaults.standard.setValue(percentage, forKey: key)
     }
 

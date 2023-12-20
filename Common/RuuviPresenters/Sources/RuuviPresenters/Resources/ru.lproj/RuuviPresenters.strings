@@ -1,8 +1,0 @@
-"ErrorPresenterAlert.Error" = "Ошибка";
-"ErrorPresenterAlert.OK" = "OK";
-"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";
-"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
-"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
-"PermissionPresenter.settings" = "Настройки";
-"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию";
-"Cancel" = "Отмена";

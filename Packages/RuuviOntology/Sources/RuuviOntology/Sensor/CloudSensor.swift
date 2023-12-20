@@ -1,8 +1,8 @@
 import Foundation
 
-extension CloudSensor {
-    public var ruuviTagSensor: RuuviTagSensor {
-        return RuuviTagSensorStruct(
+public extension CloudSensor {
+    var ruuviTagSensor: RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: 5,
             firmwareVersion: nil,
             luid: nil,
@@ -19,8 +19,8 @@ extension CloudSensor {
         )
     }
 
-    public func with(email: String) -> CloudSensor {
-        return CloudSensorStruct(
+    func with(email: String) -> CloudSensor {
+        CloudSensorStruct(
             id: id,
             name: name,
             isClaimed: email == owner,
@@ -84,9 +84,9 @@ public struct CloudSensorStruct: CloudSensor {
     }
 }
 
-extension CloudSensor {
-    public var any: AnyCloudSensor {
-        return AnyCloudSensor(object: self)
+public extension CloudSensor {
+    var any: AnyCloudSensor {
+        AnyCloudSensor(object: self)
     }
 }
 
@@ -98,59 +98,59 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
     }
 
     public var id: String {
-        return object.id
+        object.id
     }
 
     public var name: String {
-        return object.name
+        object.name
     }
 
     public var isClaimed: Bool {
-        return object.isClaimed
+        object.isClaimed
     }
 
     public var isOwner: Bool {
-        return object.isOwner
+        object.isOwner
     }
 
     public var owner: String? {
-        return object.owner
+        object.owner
     }
 
     public var ownersPlan: String? {
-        return object.ownersPlan
+        object.ownersPlan
     }
 
     public var picture: URL? {
-        return object.picture
+        object.picture
     }
 
     public var offsetTemperature: Double? {
-        return object.offsetTemperature
+        object.offsetTemperature
     }
 
     public var offsetHumidity: Double? {
-        return object.offsetHumidity
+        object.offsetHumidity
     }
 
     public var offsetPressure: Double? {
-        return object.offsetPressure
+        object.offsetPressure
     }
 
     public var isCloudSensor: Bool? {
-        return object.isCloudSensor
+        object.isCloudSensor
     }
 
     public var canShare: Bool {
-        return object.canShare
+        object.canShare
     }
 
     public var sharedTo: [String] {
-        return object.sharedTo
+        object.sharedTo
     }
 
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -158,6 +158,6 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
     }
 
     public var orderElement: String {
-        return id
+        id
     }
 }

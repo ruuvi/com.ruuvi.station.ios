@@ -2,11 +2,10 @@ import Foundation
 import RuuviOntology
 
 class CalibrationPersistenceUserDefaults: CalibrationPersistence {
-
     private let humidityOffsetDatePrefixUDKey =
-    "CalibrationPersistenceUserDefaults.humidityOffsetDate"
+        "CalibrationPersistenceUserDefaults.humidityOffsetDate"
     private let humidityOffsetPrefixUDKey =
-    "CalibrationPersistenceUserDefaults.humidityOffset"
+        "CalibrationPersistenceUserDefaults.humidityOffset"
 
     func humidityOffset(for identifier: Identifier) -> (Double, Date?) {
         let uuid = identifier.value

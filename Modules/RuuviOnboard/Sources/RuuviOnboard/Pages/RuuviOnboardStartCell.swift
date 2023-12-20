@@ -1,12 +1,12 @@
 import UIKit
 
 class RuuviOnboardStartCell: UICollectionViewCell {
-
     private lazy var beaverImageView: UIImageView = {
         let iv = UIImageView(
             image: UIImage.named(
-            RuuviAssets.beaver_start,
-            for: Self.self),
+                RuuviAssets.beaver_start,
+                for: Self.self
+            ),
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
@@ -45,15 +45,14 @@ class RuuviOnboardStartCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension RuuviOnboardStartCell {
-
-    fileprivate func setUpUI() {
-
+private extension RuuviOnboardStartCell {
+    func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
         container.fillSuperview()
@@ -66,26 +65,36 @@ extension RuuviOnboardStartCell {
         textStack.spacing = 12
 
         container.addSubview(textStack)
-        textStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeadingAnchor,
-                         bottom: nil,
-                         trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44+12, left: 16,
-                                        bottom: 0, right: 16))
+        textStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 44 + 12,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
 
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
-        beaverContainerView.anchor(top: textStack.bottomAnchor,
-                                   leading: container.leadingAnchor,
-                                   bottom: container.bottomAnchor,
-                                   trailing: container.trailingAnchor)
+        beaverContainerView.anchor(
+            top: textStack.bottomAnchor,
+            leading: container.leadingAnchor,
+            bottom: container.bottomAnchor,
+            trailing: container.trailingAnchor
+        )
         beaverContainerView.addSubview(beaverImageView)
 
-        beaverImageView.anchor(top: nil,
-                               leading: beaverContainerView.safeLeadingAnchor,
-                               bottom: nil,
-                               trailing: beaverContainerView.safeTrailingAnchor,
-                               size: .init(width: 0, height: self.bounds.height/2))
+        beaverImageView.anchor(
+            top: nil,
+            leading: beaverContainerView.safeLeadingAnchor,
+            bottom: nil,
+            trailing: beaverContainerView.safeTrailingAnchor,
+            size: .init(width: 0, height: bounds.height / 2)
+        )
         beaverImageView.centerYInSuperview()
     }
 }

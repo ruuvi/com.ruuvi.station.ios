@@ -1,0 +1,32 @@
+---
+targets:
+  RuuviLocalization:
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - CommonFramework
+    sources:
+    - path: Sources
+      name: Localization
+    - path: Sources/RuuviLocalization.swift
+      optional: true
+    - path: Sources/RuuviColor.swift
+      optional: true
+    preBuildScripts:
+      - path: ../../scripts/build/generate_resources.sh
+        name: Generate Resources
+        inputFiles:
+          - $(SRCROOT)/station.localization/station.localization.json
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
+          - $(SRCROOT)/Common/RuuviLocalization/Templates/strings-swift5.stencil
+          - $(SRCROOT)/Common/RuuviLocalization/Templates/xcassets-swift5.stencil
+        outputFiles:
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/sv.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/ru.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/fi.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/fr.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/de.lproj/Localizable.strings
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviLocalization.swift
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviColor.swift

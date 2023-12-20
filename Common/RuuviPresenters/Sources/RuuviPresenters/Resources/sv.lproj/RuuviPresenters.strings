@@ -1,8 +1,0 @@
-"ErrorPresenterAlert.Error" = "Fel";
-"ErrorPresenterAlert.OK" = "OK";
-"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station behöver tillgång till dina bilder för att använda den här funktionen.";
-"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station behöver tillgång kameran för att använda den här funktionen.";
-"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station behöver tillgång till din plats för att använda den här funktionen.";
-"PermissionPresenter.settings" = "Inställningar";
-"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station behöver behörighett ill Push-meddelanden för att aktivera den här funktionen.";
-"Cancel" = "Avbryt";

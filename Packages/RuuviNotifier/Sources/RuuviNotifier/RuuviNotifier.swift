@@ -1,10 +1,8 @@
 import Foundation
 import RuuviOntology
-import RuuviVirtual
 
 public protocol RuuviNotifier {
     func process(record ruuviTag: RuuviTagSensorRecord, trigger: Bool)
-    func process(data: VirtualData, for sensor: VirtualSensor)
     func processNetwork(record: RuuviTagSensorRecord, trigger: Bool, for identifier: MACIdentifier)
 
     func subscribe<T: RuuviNotifierObserver>(_ observer: T, to uuid: String)
@@ -14,18 +12,22 @@ public protocol RuuviNotifier {
 public protocol RuuviNotifierObserver: AnyObject {
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String)
     // Optional method
-    func ruuvi(notifier: RuuviNotifier,
-               alertType: AlertType,
-               isTriggered: Bool,
-               for uuid: String)
+    func ruuvi(
+        notifier: RuuviNotifier,
+        alertType: AlertType,
+        isTriggered: Bool,
+        for uuid: String
+    )
 }
 
-extension RuuviNotifierObserver {
+public extension RuuviNotifierObserver {
     // Optional method implementation
-    public func ruuvi(notifier: RuuviNotifier,
-                      alertType: AlertType,
-                      isTriggered: Bool,
-                      for uuid: String) {}
+    func ruuvi(
+        notifier _: RuuviNotifier,
+        alertType _: AlertType,
+        isTriggered _: Bool,
+        for _: String
+    ) {}
 }
 
 public protocol RuuviNotifierTitles {

@@ -1,0 +1,19 @@
+---
+targets:
+  RuuviReactor:
+    # https://github.com/groue/GRDB.swift/issues/642
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Reactor
+    dependencies:
+    - package: Humidity
+    - package: Future
+    - package: GRDB
+    - target: RuuviOntology
+    - target: RuuviPersistence
+    - target: RuuviContext

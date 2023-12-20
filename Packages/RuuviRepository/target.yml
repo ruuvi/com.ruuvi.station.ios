@@ -1,0 +1,13 @@
+---
+targets:
+  RuuviRepository:
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Repository
+    dependencies:
+    - package: Future
+    - target: RuuviOntology
+    - target: RuuviPool
+    - target: RuuviStorage

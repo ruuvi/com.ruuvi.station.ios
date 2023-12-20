@@ -1,9 +1,9 @@
-import Foundation
 import BTKit
+import Foundation
 
-extension RuuviTag {
-    public func with(name: String) -> RuuviTagSensor {
-        return RuuviTagSensorStruct(
+public extension RuuviTag {
+    func with(name: String) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
             version: version,
             firmwareVersion: nil,
             luid: uuid.luid,

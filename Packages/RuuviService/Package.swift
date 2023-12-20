@@ -1,61 +1,80 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviService",
-    platforms: [.macOS(.v10_15), .iOS(.v11)],
+    platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(
             name: "RuuviService",
-            targets: ["RuuviService"]),
+            targets: ["RuuviService"]
+        ),
         .library(
             name: "RuuviServiceAlert",
-            targets: ["RuuviServiceAlert"]),
+            targets: ["RuuviServiceAlert"]
+        ),
+        .library(
+            name: "RuuviServiceAuth",
+            targets: ["RuuviServiceAuth"]
+        ),
+        .library(
+            name: "RuuviServiceCloudNotification",
+            targets: ["RuuviServiceCloudNotification"]
+        ),
         .library(
             name: "RuuviServiceAppSettings",
-            targets: ["RuuviServiceAppSettings"]),
+            targets: ["RuuviServiceAppSettings"]
+        ),
         .library(
             name: "RuuviServiceCloudSync",
-            targets: ["RuuviServiceCloudSync"]),
+            targets: ["RuuviServiceCloudSync"]
+        ),
         .library(
             name: "RuuviServiceOffsetCalibration",
-            targets: ["RuuviServiceOffsetCalibration"]),
+            targets: ["RuuviServiceOffsetCalibration"]
+        ),
         .library(
             name: "RuuviServiceOwnership",
-            targets: ["RuuviServiceOwnership"]),
+            targets: ["RuuviServiceOwnership"]
+        ),
         .library(
             name: "RuuviServiceSensorProperties",
-            targets: ["RuuviServiceSensorProperties"]),
+            targets: ["RuuviServiceSensorProperties"]
+        ),
         .library(
             name: "RuuviServiceSensorRecords",
-            targets: ["RuuviServiceSensorRecords"]),
+            targets: ["RuuviServiceSensorRecords"]
+        ),
         .library(
             name: "RuuviServiceMeasurement",
-            targets: ["RuuviServiceMeasurement"]),
+            targets: ["RuuviServiceMeasurement"]
+        ),
         .library(
             name: "RuuviServiceExport",
-            targets: ["RuuviServiceExport"]),
+            targets: ["RuuviServiceExport"]
+        ),
         .library(
             name: "RuuviServiceGATT",
-            targets: ["RuuviServiceGATT"]),
+            targets: ["RuuviServiceGATT"]
+        ),
         .library(
             name: "RuuviServiceFactory",
             targets: ["RuuviServiceFactory"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
-        .package(url: "https://github.com/rinat-enikeev/BTKit", .upToNextMinor(from: "0.3.0")),
+        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviCloud"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviRepository"),
-        .package(path: "../RuuviCore")
+        .package(path: "../RuuviCore"),
     ],
     targets: [
         .target(
@@ -68,13 +87,29 @@ let package = Package(
                 "RuuviPool",
                 "RuuviLocal",
                 "RuuviRepository",
-                "RuuviCore"
+                "RuuviCore",
             ]
         ),
         .target(
             name: "RuuviServiceAlert",
             dependencies: [
                 "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceAuth",
+            dependencies: [
+                "RuuviService"
+            ]
+        ),
+        .target(
+            name: "RuuviServiceCloudNotification",
+            dependencies: [
+                "RuuviService",
+                .product(
+                    name: "RuuviCloudApi",
+                    package: "RuuviCloud"
+                ),
             ]
         ),
         .target(
@@ -123,7 +158,7 @@ let package = Package(
             name: "RuuviServiceGATT",
             dependencies: [
                 "RuuviService",
-                "BTKit"
+                "BTKit",
             ]
         ),
         .target(
@@ -132,24 +167,27 @@ let package = Package(
                 "RuuviService",
                 "RuuviLocal",
                 "RuuviOntology",
-                "Humidity"
+                "Humidity",
             ]
         ),
         .target(
             name: "RuuviServiceFactory",
             dependencies: [
                 "RuuviService",
+                "RuuviServiceAuth",
                 "RuuviServiceAlert",
                 "RuuviServiceAppSettings",
                 "RuuviServiceCloudSync",
                 "RuuviServiceOffsetCalibration",
                 "RuuviServiceOwnership",
                 "RuuviServiceSensorProperties",
-                "RuuviServiceSensorRecords"
+                "RuuviServiceSensorRecords",
+                "RuuviServiceCloudNotification",
             ]
         ),
         .testTarget(
             name: "RuuviServiceTests",
-            dependencies: ["RuuviService"])
+            dependencies: ["RuuviService"]
+        ),
     ]
 )

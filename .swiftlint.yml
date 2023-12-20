@@ -1,13 +1,14 @@
+trailing_comma:
+  mandatory_comma: true
+opening_brace:
+  allow_multiline_func: true
 nesting:
   type_level: 3
-excluded: # paths to ignore during linting. Takes precedence over `included`.
+excluded:
   - Carthage
   - Pods
-  - stationTests
-  - Package
-  - station/ThirdParty
-disabled_rules: # rule identifiers to exclude from running
+disabled_rules:
+  - closure_parameter_position
   - identifier_name
   - force_try
-  - closure_parameter_position
   - todo

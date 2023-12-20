@@ -1,0 +1,17 @@
+---
+targets:
+  RuuviMigration:
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Migration
+    dependencies:
+    - package: Humidity
+    - package: Future
+    - target: RuuviOntology
+    - target: RuuviLocal
+    - target: RuuviPool
+    - target: RuuviContext
+    - target: RuuviStorage
+    - target: RuuviService

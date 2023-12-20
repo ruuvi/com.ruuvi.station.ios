@@ -1,49 +1,36 @@
 import Foundation
-import GRDB
 import Future
-import RuuviOntology
+import GRDB
 import RuuviContext
+import RuuviOntology
 import RuuviPersistence
-import RuuviReactor
-#if canImport(RuuviOntologyRealm)
-import RuuviOntologyRealm
-#endif
-#if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
-#endif
 
 class RuuviReactorImpl: RuuviReactor {
     typealias SQLiteEntity = RuuviTagSQLite
-    typealias RealmEntity = RuuviTagRealm
 
     private let sqliteContext: SQLiteContext
-    private let realmContext: RealmContext
     private let sqlitePersistence: RuuviPersistence
-    private let realmPersistence: RuuviPersistence
 
     init(
         sqliteContext: SQLiteContext,
-        realmContext: RealmContext,
-        sqlitePersistence: RuuviPersistence,
-        realmPersistence: RuuviPersistence
+        sqlitePersistence: RuuviPersistence
     ) {
         self.sqliteContext = sqliteContext
-        self.realmContext = realmContext
         self.sqlitePersistence = sqlitePersistence
-        self.realmPersistence = realmPersistence
     }
 
     private lazy var entityCombine = RuuviTagSubjectCombine(
-        sqlite: sqliteContext,
-        realm: realmContext
+        sqlite: sqliteContext
     )
     private lazy var recordCombines = [String: RuuviTagRecordSubjectCombine]()
     private lazy var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
     private lazy var latestRecordCombines = [String: RuuviTagLatestRecordSubjectCombine]()
     private lazy var sensorSettingsCombines = [String: SensorSettingsCombine]()
 
-    func observe(_ luid: LocalIdentifier,
-                 _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RuuviReactorToken {
+    func observe(
+        _ luid: LocalIdentifier,
+        _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void
+    ) -> RuuviReactorToken {
         var recordCombine: RuuviTagRecordSubjectCombine
         if let combine = recordCombines[luid.value] {
             recordCombine = combine
@@ -51,8 +38,7 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = RuuviTagRecordSubjectCombine(
                 luid: luid,
                 macId: nil,
-                sqlite: sqliteContext,
-                realm: realmContext
+                sqlite: sqliteContext
             )
             recordCombines[luid.value] = combine
             recordCombine = combine
@@ -70,14 +56,13 @@ class RuuviReactorImpl: RuuviReactor {
 
     func observe(_ block: @escaping (RuuviReactorChange<AnyRuuviTagSensor>) -> Void) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readAll()
-        let realmOperation = realmPersistence.readAll()
-        Future.zip(realmOperation, sqliteOperation)
-            .on(success: { realmEntities, sqliteEntities in
-            let combinedValues = sqliteEntities + realmEntities
-            block(.initial(combinedValues))
-        }, failure: { error in
-            block(.error(.ruuviPersistence(error)))
-        })
+        sqliteOperation
+            .on(success: { sqliteEntities in
+                let combinedValues = sqliteEntities
+                block(.initial(combinedValues))
+            }, failure: { error in
+                block(.error(.ruuviPersistence(error)))
+            })
 
         let insert = entityCombine.insertSubject.sink { value in
             block(.insert(value))
@@ -95,14 +80,16 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLast(_ ruuviTag: RuuviTagSensor,
-                     _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken {
+    func observeLast(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
+    ) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLast(ruuviTag)
-        let realmOperation = realmPersistence.readLast(ruuviTag)
-        Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
-            let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
-            block(.update(result))
-        })
+        sqliteOperation
+            .on(success: { sqliteRecord in
+                let result = [sqliteRecord].compactMap { $0?.any }.last
+                block(.update(result))
+            })
         var recordCombine: RuuviTagLastRecordSubjectCombine
         if let combine = lastRecordCombines[ruuviTag.id] {
             recordCombine = combine
@@ -110,13 +97,12 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = RuuviTagLastRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
-                sqlite: sqliteContext,
-                realm: realmContext
+                sqlite: sqliteContext
             )
             lastRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
         }
-        let cancellable = recordCombine.subject.sink { (record) in
+        let cancellable = recordCombine.subject.sink { record in
             block(.update(record))
         }
         if !recordCombine.isServing {
@@ -127,12 +113,13 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observeLatest(_ ruuviTag: RuuviTagSensor,
-                       _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RuuviReactorToken {
+    func observeLatest(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
+    ) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readLatest(ruuviTag)
-        let realmOperation = realmPersistence.readLatest(ruuviTag)
-        Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
-            let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
+        sqliteOperation.on(success: { sqliteRecord in
+            let result = [sqliteRecord].compactMap { $0?.any }.last
             block(.update(result))
         })
         var recordCombine: RuuviTagLatestRecordSubjectCombine
@@ -142,13 +129,12 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = RuuviTagLatestRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
-                sqlite: sqliteContext,
-                realm: realmContext
+                sqlite: sqliteContext
             )
             latestRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
         }
-        let cancellable = recordCombine.subject.sink { (record) in
+        let cancellable = recordCombine.subject.sink { record in
             block(.update(record))
         }
         if !recordCombine.isServing {
@@ -159,17 +145,13 @@ class RuuviReactorImpl: RuuviReactor {
         }
     }
 
-    func observe(_ ruuviTag: RuuviTagSensor,
-                 _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void) -> RuuviReactorToken {
-        sqlitePersistence.readSensorSettings(ruuviTag).on { [weak self] sqliteRecord in
+    func observe(
+        _ ruuviTag: RuuviTagSensor,
+        _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void
+    ) -> RuuviReactorToken {
+        sqlitePersistence.readSensorSettings(ruuviTag).on { sqliteRecord in
             if let sensorSettings = sqliteRecord {
                 block(.update(sensorSettings))
-            } else {
-                self?.realmPersistence.readSensorSettings(ruuviTag).on(success: { realmRecord in
-                    if let sensorSettings = realmRecord {
-                        block(.update(sensorSettings))
-                    }
-                })
             }
         }
         var sensorSettingsCombine: SensorSettingsCombine
@@ -179,8 +161,7 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = SensorSettingsCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
-                sqlite: sqliteContext,
-                realm: realmContext
+                sqlite: sqliteContext
             )
             sensorSettingsCombines[ruuviTag.id] = combine
             sensorSettingsCombine = combine

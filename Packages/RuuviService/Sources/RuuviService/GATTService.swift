@@ -1,13 +1,13 @@
+import BTKit
 import Foundation
 import Future
-import BTKit
 import RuuviOntology
 
-extension Notification.Name {
-    public static let RuuviTagReadLogsOperationDidStart = Notification.Name("RuuviTagReadLogsOperationDidStart")
-    public static let RuuviTagReadLogsOperationDidFail = Notification.Name("RuuviTagReadLogsOperationDidFail")
-    public static let RuuviTagReadLogsOperationProgress = Notification.Name("RuuviTagReadLogsOperationProgress")
-    public static let RuuviTagReadLogsOperationDidFinish = Notification.Name("RuuviTagReadLogsOperationDidFinish")
+public extension Notification.Name {
+    static let RuuviTagReadLogsOperationDidStart = Notification.Name("RuuviTagReadLogsOperationDidStart")
+    static let RuuviTagReadLogsOperationDidFail = Notification.Name("RuuviTagReadLogsOperationDidFail")
+    static let RuuviTagReadLogsOperationProgress = Notification.Name("RuuviTagReadLogsOperationProgress")
+    static let RuuviTagReadLogsOperationDidFinish = Notification.Name("RuuviTagReadLogsOperationDidFinish")
 }
 
 public enum RuuviTagReadLogsOperationDidStartKey: String {
@@ -49,15 +49,15 @@ public protocol GATTService {
     func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError>
 }
 
-extension GATTService {
+public extension GATTService {
     @discardableResult
-    public func syncLogs(
+    func syncLogs(
         uuid: String,
         mac: String?,
         from: Date,
         settings: SensorSettings?
     ) -> Future<Bool, RuuviServiceError> {
-        return syncLogs(
+        syncLogs(
             uuid: uuid,
             mac: mac,
             from: from,
@@ -69,7 +69,7 @@ extension GATTService {
     }
 
     @discardableResult
-    public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
-        return stopGattSync(for: uuid)
+    func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
+        stopGattSync(for: uuid)
     }
 }

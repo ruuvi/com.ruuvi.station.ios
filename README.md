@@ -1,7 +1,6 @@
 # Ruuvi Station
 
 [![Swift Version][swift-image]][swift-url]
-[![Build Status](https://travis-ci.org/ruuvi/com.ruuvi.station.ios.svg?branch=master)](https://travis-ci.org/ruuvi/com.ruuvi.station.ios)
 [![License][license-image]][license-url]
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -47,15 +46,28 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## How to use
 
-1. Clone the repo with the recursive parameter  ```git clone --recursive https://github.com/ruuvi/com.ruuvi.station.ios.git```
-2. ```cd``` into repo and run: ```pod install --repo-update```
-3. Open ```station.xcworkspace```
-4. Configure Signing  
-Optional: 
-5. Obtain [OpenWeatherMap](https://openweathermap.org) API Key and put it into ```/station/Classes/Networking/Assembly/Networking.plist```
-6. Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
+1. Clone the repo with the recursive parameter  
+```zsh
+git clone --recursive https://github.com/ruuvi/com.ruuvi.station.ios.git
+cd com.ruuvi.station.ios
+```
 
-Build and Run on your device!
+2. Make and open the `Ruuvi.xcodeproj`
+```zsh
+make
+xed Ruuvi.xcodeproj
+```
+
+3. Configure Signing
+   
+4. Build and Run on your device!
+
+<details>
+<summary>Optionally</summary>
+   
+Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
+   
+</details>
 
 ## Get in touch
 

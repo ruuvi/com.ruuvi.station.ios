@@ -1,8 +1,0 @@
-"ErrorPresenterAlert.Error" = "Virhe";
-"ErrorPresenterAlert.OK" = "OK";
-"PermissionPresenter.NoPhotoLibraryAccess.message" = "Tämä ominaisuus vaatii oikeuden gallerian käyttöön.";
-"PermissionPresenter.NoCameraAccess.message" = "Tämä ominaisuus vaatii oikeuden kameran käyttöön.";
-"PermissionPresenter.NoLocationAccess.message" = "Tämä ominaisuus vaatii oikeuden paikkatiedon käyttöön.";
-"PermissionPresenter.settings" = "Asetukset";
-"PermissionPresenter.NoPushNotificationsPermission.message" = "Tämä ominaisuus vaatii oikeuden palveluilmoitusten näyttämiseen.";
-"Cancel" = "Peruuta";

@@ -1,6 +1,6 @@
 import UIKit
 
-struct RuuviAssets {
+enum RuuviAssets {
     static let bg_layer = "onboarding_bg_layer"
     static let beaver_start = "onboarding_beaver_start"
     static let dashboard = "onboarding_dashboard"
@@ -12,7 +12,4 @@ struct RuuviAssets {
     static let web = "onboarding_web"
     static let beaver_sign_in = "onboarding_beaver_sign_in"
     static let gateway = "gateway"
-
-    // Color
-    static let ruuviTintColor = UIColor(named: "RuuviTintColor")
 }

@@ -1,6 +1,5 @@
 import Foundation
 import RuuviLocal
-import RuuviMigration
 
 final class MigrationManagerToPrune240: RuuviMigration {
     private var settings: RuuviLocalSettings

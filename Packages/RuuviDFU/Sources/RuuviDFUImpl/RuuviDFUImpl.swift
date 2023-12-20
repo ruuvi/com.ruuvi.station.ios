@@ -1,11 +1,10 @@
-import Foundation
-import RuuviDFU
 import Combine
+import Foundation
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 public struct RuuviDFUImpl: RuuviDFU {
@@ -19,7 +18,7 @@ public struct RuuviDFUImpl: RuuviDFU {
         _ observer: T,
         closure: @escaping (T, DFUDevice) -> Void
     ) -> RuuviDFUToken {
-        return scanner.scan(observer, closure: closure)
+        scanner.scan(observer, closure: closure)
     }
 
     @discardableResult
@@ -27,21 +26,21 @@ public struct RuuviDFUImpl: RuuviDFU {
         _ observer: T,
         closure: @escaping (T, DFUDevice) -> Void
     ) -> RuuviDFUToken {
-        return scanner.lost(observer, closure: closure)
+        scanner.lost(observer, closure: closure)
     }
 
     public func firmwareFromUrl(url: URL) -> DFUFirmware? {
-        return try? DFUFirmware(urlToZipFile: url, type: .softdeviceBootloaderApplication)
+        try? DFUFirmware(urlToZipFile: url, type: .softdeviceBootloaderApplication)
     }
 
     public func flashFirmware(
         uuid: String,
         with firmware: DFUFirmware
     ) -> AnyPublisher<FlashResponse, Error> {
-        return flasher.flashFirmware(uuid: uuid, with: firmware)
+        flasher.flashFirmware(uuid: uuid, with: firmware)
     }
 
     public func stopFlashFirmware(device: DFUDevice) -> Bool {
-        return flasher.stopFlashFirmware(device: device)
+        flasher.stopFlashFirmware(device: device)
     }
 }

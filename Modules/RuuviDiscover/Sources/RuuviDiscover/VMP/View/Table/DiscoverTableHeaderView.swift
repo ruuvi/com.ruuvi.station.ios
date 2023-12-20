@@ -1,32 +1,23 @@
-import UIKit
 import CoreBluetooth
 import CoreNFC
+import RuuviLocalization
+import UIKit
 
 protocol DiscoverTableHeaderViewDelegate: NSObjectProtocol {
     func didTapAddWithNFCButton(sender: DiscoverTableHeaderView)
 }
 
 class DiscoverTableHeaderView: UIView {
-
     weak var delegate: DiscoverTableHeaderViewDelegate?
 
     // ----- Private
     private var isNFCAvailable: Bool {
-        return NFCNDEFReaderSession.readingAvailable
+        NFCNDEFReaderSession.readingAvailable
     }
 
     private var isBluetoothPermissionGranted: Bool {
-        if #available(iOS 13.1, *) {
-            return CBCentralManager.authorization == .allowedAlways
-        } else if #available(iOS 13.0, *) {
-            return CBCentralManager().authorization == .allowedAlways
-        }
-        // Before iOS 13, Bluetooth permissions are not required
-        return true
+        CBCentralManager.authorization == .allowedAlways
     }
-
-    private let addSensorDescriptionKey: String = "add_sensor_description"
-    private let addSensorViaNFCKey: String = "add_sensor_via_nfc"
 
     // UI
     private lazy var descriptionLabel = createDescriptionLabel()
@@ -41,7 +32,8 @@ class DiscoverTableHeaderView: UIView {
         setupView()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -52,13 +44,15 @@ class DiscoverTableHeaderView: UIView {
 
         headerView.addSubview(descriptionLabel)
 
-        if isBluetoothPermissionGranted && isNFCAvailable {
+        if isBluetoothPermissionGranted, isNFCAvailable {
             headerView.addSubview(nfcButton)
         }
 
-        setupLayout(headerView: headerView,
-                    descriptionLabel: descriptionLabel,
-                    button: nfcButton)
+        setupLayout(
+            headerView: headerView,
+            descriptionLabel: descriptionLabel,
+            button: nfcButton
+        )
     }
 
     private func createHeaderView() -> UIView {
@@ -73,8 +67,8 @@ class DiscoverTableHeaderView: UIView {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.numberOfLines = 0
 
-        let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
-        let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
+        let addSensorString: String = RuuviLocalization.addSensorDescription
+        let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
             (isBluetoothPermissionGranted && isNFCAvailable) ?
             (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
@@ -91,16 +85,18 @@ class DiscoverTableHeaderView: UIView {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
-        button.setTitle("add_with_nfc".localized(for: Self.self), for: .normal)
+        button.setTitle(RuuviLocalization.addWithNfc, for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.setInsets(forContentPadding: .zero, imageTitlePadding: 8)
         if let font = UIFont(name: "Muli-Regular", size: 16) {
             button.titleLabel?.font = font
         }
-        button.tintColor = UIColor(named: "RuuviTintColor")
-        button.addTarget(self,
-                         action: #selector(handleButtonTap),
-                         for: .touchUpInside)
+        button.tintColor = RuuviColor.tintColor.color
+        button.addTarget(
+            self,
+            action: #selector(handleButtonTap),
+            for: .touchUpInside
+        )
         return button
     }
 
@@ -113,7 +109,7 @@ class DiscoverTableHeaderView: UIView {
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor)
+            descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
         ])
 
         // variable constraints
@@ -131,12 +127,12 @@ class DiscoverTableHeaderView: UIView {
             .bottomAnchor
             .constraint(equalTo: headerView.bottomAnchor)
 
-        if isBluetoothPermissionGranted && isNFCAvailable {
+        if isBluetoothPermissionGranted, isNFCAvailable {
             NSLayoutConstraint.activate([
                 nfcButtonTopConstraint,
                 button.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
                 button.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
-                nfcButtonBottomConstraint
+                nfcButtonBottomConstraint,
             ])
         } else {
             NSLayoutConstraint.activate([
@@ -152,18 +148,18 @@ class DiscoverTableHeaderView: UIView {
 
 extension DiscoverTableHeaderView {
     func handleNFCButtonViewVisibility(show: Bool) {
-        if isBluetoothPermissionGranted && isNFCAvailable {
+        if isBluetoothPermissionGranted, isNFCAvailable {
             nfcButtonTopConstraint.isActive = show
             nfcButtonBottomConstraint.isActive = show
             nfcButton.isHidden = !show
         }
         descriptionLabelBottomConstraint.isActive = !show
-        let addSensorString: String = addSensorDescriptionKey.localized(for: Self.self)
-        let addSensorViaNFCString = addSensorViaNFCKey.localized(for: Self.self)
+        let addSensorString: String = RuuviLocalization.addSensorDescription
+        let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
             (show && isBluetoothPermissionGranted && isNFCAvailable) ?
             (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
-        descriptionLabel.text =  descriptionString
+        descriptionLabel.text = descriptionString
     }
 }
 
@@ -172,13 +168,13 @@ extension UIButton {
         forContentPadding contentPadding: UIEdgeInsets,
         imageTitlePadding: CGFloat
     ) {
-        self.contentEdgeInsets = UIEdgeInsets(
+        contentEdgeInsets = UIEdgeInsets(
             top: contentPadding.top,
             left: contentPadding.left,
             bottom: contentPadding.bottom,
             right: contentPadding.right + imageTitlePadding
         )
-        self.titleEdgeInsets = UIEdgeInsets(
+        titleEdgeInsets = UIEdgeInsets(
             top: 0,
             left: imageTitlePadding,
             bottom: 0,
@@ -189,11 +185,11 @@ extension UIButton {
 
 extension UIView {
     func constraints(to view: UIView, padding: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
-        return [
-            self.topAnchor.constraint(equalTo: view.topAnchor, constant: padding.top),
-            self.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding.left),
-            self.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding.bottom),
-            self.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding.right)
+        [
+            topAnchor.constraint(equalTo: view.topAnchor, constant: padding.top),
+            leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding.left),
+            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding.bottom),
+            trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding.right),
         ]
     }
 }

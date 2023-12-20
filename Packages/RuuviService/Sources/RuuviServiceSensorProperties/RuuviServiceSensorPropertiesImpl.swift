@@ -1,12 +1,11 @@
 import Foundation
-import UIKit
 import Future
+import RuuviCloud
+import RuuviCore
+import RuuviLocal
 import RuuviOntology
 import RuuviPool
-import RuuviCloud
-import RuuviLocal
-import RuuviCore
-import RuuviService
+import UIKit
 
 public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
     private let pool: RuuviPool
@@ -40,7 +39,6 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
-
         } else {
             let namedSensor = sensor.with(name: name)
             pool.update(namedSensor)
@@ -51,28 +49,6 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                 })
         }
         return promise.future
-    }
-
-    public func set(
-        image: UIImage,
-        for sensor: VirtualSensor
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-        localImages.setCustomBackground(
-            image: image,
-            for: sensor.id.luid
-        ).on(success: { url in
-            promise.succeed(value: url)
-        }, failure: { error in
-            promise.fail(error: .ruuviLocal(error))
-        })
-        return promise.future
-    }
-
-    public func setNextDefaultBackground(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
-        let luid = sensor.id.luid
-        let macId: MACIdentifier? = nil
-        return setNextDefaultBackground(luid: luid, macId: macId)
     }
 
     public func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
@@ -90,7 +66,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     ) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
         let identifier = macId ?? luid
-        if let identifier = identifier {
+        if let identifier {
             if let image = localImages.setNextDefaultBackground(for: identifier) {
                 promise.succeed(value: image)
             } else {
@@ -111,7 +87,8 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let croppedImage = coreImage.cropped(image: image, to: maxSize)
-        guard let jpegData = croppedImage.jpegData(compressionQuality: 0.6) else {
+        guard let jpegData = croppedImage.jpegData(compressionQuality: 0.6)
+        else {
             promise.fail(error: .failedToGetJpegRepresentation)
             return promise.future
         }
@@ -135,7 +112,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                     for: mac
                 )
                 local = localImages.setCustomBackground(image: image, for: mac)
-            } else if let luid = luid {
+            } else if let luid {
                 local = localImages.setCustomBackground(image: image, for: luid)
             } else {
                 promise.fail(error: .bothLuidAndMacAreNil)
@@ -144,7 +121,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         } else {
             if let mac = macId {
                 local = localImages.setCustomBackground(image: image, for: mac)
-            } else if let luid = luid {
+            } else if let luid {
                 local = localImages.setCustomBackground(image: image, for: luid)
             } else {
                 promise.fail(error: .bothLuidAndMacAreNil)
@@ -152,11 +129,11 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             }
         }
 
-        if let local = local, let remote = remote {
+        if let local, let remote {
             if let mac = macId {
                 localImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
             }
-            remote.on(success: {_ in
+            remote.on(success: { _ in
                 local.on(success: { localUrl in
                     if let mac = macId {
                         self.localImages.deleteBackgroundUploadProgress(for: mac)
@@ -168,7 +145,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
-        } else if let local = local {
+        } else if let local {
             local.on(success: { url in
                 promise.succeed(value: url)
             }, failure: { error in
@@ -181,14 +158,8 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         return promise.future
     }
 
-    public func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
-        let luid = sensor.id.luid
-        let macId: MACIdentifier? = nil
-        return getImage(luid: luid, macId: macId)
-    }
-
     public func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
-        return getImage(luid: sensor.luid, macId: sensor.macId)
+        getImage(luid: sensor.luid, macId: sensor.macId)
     }
 
     public func removeImage(for sensor: RuuviTagSensor) {
@@ -204,14 +175,11 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         }
     }
 
-    public func removeImage(for sensor: VirtualSensor) {
-        localImages.deleteCustomBackground(for: sensor.id.luid)
-    }
-
     @discardableResult
     private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
-        guard let macId = sensor.macId else {
+        guard let macId = sensor.macId
+        else {
             promise.fail(error: .macIdIsNil)
             return promise.future
         }
@@ -226,17 +194,17 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
 
     private func getImage(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
-        if let macId = macId {
+        if let macId {
             if let image = localImages.getBackground(for: macId) {
                 promise.succeed(value: image)
-            } else if let luid = luid, let image = localImages.getOrGenerateBackground(for: luid) {
+            } else if let luid, let image = localImages.getOrGenerateBackground(for: luid) {
                 promise.succeed(value: image)
             } else if let image = localImages.getOrGenerateBackground(for: macId) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .failedToFindOrGenerateBackgroundImage)
             }
-        } else if let luid = luid {
+        } else if let luid {
             if let image = localImages.getOrGenerateBackground(for: luid) {
                 promise.succeed(value: image)
             } else {

@@ -1,7 +1,6 @@
 import Foundation
 import RuuviLocal
 import RuuviService
-import RuuviDaemon
 
 class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSettings: RuuviLocalSettings
@@ -39,14 +38,17 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     }
 
     func stop() {
-        guard let thread = thread else {
+        guard let thread
+        else {
             return
         }
-        perform(#selector(RuuviDaemonCloudSyncWorker.stopDaemon),
-                on: thread,
-                with: nil,
-                waitUntilDone: false,
-                modes: [RunLoop.Mode.default.rawValue])
+        perform(
+            #selector(RuuviDaemonCloudSyncWorker.stopDaemon),
+            on: thread,
+            with: nil,
+            waitUntilDone: false,
+            modes: [RunLoop.Mode.default.rawValue]
+        )
     }
 
     @objc private func stopDaemon() {

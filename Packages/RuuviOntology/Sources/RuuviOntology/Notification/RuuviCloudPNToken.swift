@@ -11,9 +11,11 @@ public struct RuuviCloudPNTokenStruct: RuuviCloudPNToken {
     public var lastAccessed: TimeInterval?
     public var name: String?
 
-    public init(id: Int,
-                lastAccessed: TimeInterval? = nil,
-                name: String? = nil) {
+    public init(
+        id: Int,
+        lastAccessed: TimeInterval? = nil,
+        name: String? = nil
+    ) {
         self.id = id
         self.lastAccessed = lastAccessed
         self.name = name

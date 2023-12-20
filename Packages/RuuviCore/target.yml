@@ -1,0 +1,10 @@
+---
+targets:
+  RuuviCore:
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Core
+    dependencies:
+    - package: Future

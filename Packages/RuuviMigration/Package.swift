@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -9,24 +9,26 @@ let package = Package(
     products: [
         .library(
             name: "RuuviMigration",
-            targets: ["RuuviMigration"]),
+            targets: ["RuuviMigration"]
+        ),
         .library(
             name: "RuuviMigrationImpl",
-            targets: ["RuuviMigrationImpl"])
+            targets: ["RuuviMigrationImpl"]
+        ),
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviContext"),
-        .package(path: "../RuuviVirtual"),
         .package(path: "../RuuviStorage"),
-        .package(path: "../RuuviService")
+        .package(path: "../RuuviService"),
     ],
     targets: [
         .target(
             name: "RuuviMigration",
-            dependencies: []),
+            dependencies: []
+        ),
         .target(
             name: "RuuviMigrationImpl",
             dependencies: [
@@ -34,14 +36,14 @@ let package = Package(
                 "RuuviLocal",
                 "RuuviPool",
                 "RuuviContext",
-                "RuuviVirtual",
                 "RuuviStorage",
                 "RuuviService",
                 .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
-                .product(name: "RuuviVirtualModel", package: "RuuviVirtual")
-            ]),
+            ]
+        ),
         .testTarget(
             name: "RuuviMigrationTests",
-            dependencies: ["RuuviMigration"])
+            dependencies: ["RuuviMigration"]
+        ),
     ]
 )

@@ -36,11 +36,11 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
         }
 
         public var lastMeasurement: UserApiSensorRecord? {
-            return measurements?.first
+            measurements?.first
         }
 
         public var alerts: RuuviCloudSensorAlerts {
-            return RuuviCloudApiGetAlertSensor(
+            RuuviCloudApiGetAlertSensor(
                 sensor: sensor, apiAlerts: apiAlerts ?? []
             )
         }

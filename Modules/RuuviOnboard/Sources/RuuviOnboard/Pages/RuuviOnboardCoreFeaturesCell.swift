@@ -1,9 +1,9 @@
 import UIKit
 
 class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
-
     private lazy var appImageView: UIImageView = {
-        let iv = UIImageView(image: nil,
+        let iv = UIImageView(
+            image: nil,
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
@@ -33,15 +33,14 @@ class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
         setUpUI()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension RuuviOnboardCoreFeaturesCell {
-
-    fileprivate func setUpUI() {
-
+private extension RuuviOnboardCoreFeaturesCell {
+    func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
         container.fillSuperview()
@@ -54,26 +53,33 @@ extension RuuviOnboardCoreFeaturesCell {
         textStack.spacing = 12
 
         container.addSubview(textStack)
-        textStack.anchor(top: container.safeTopAnchor,
-                         leading: container.safeLeadingAnchor,
-                         bottom: nil,
-                         trailing: container.safeTrailingAnchor,
-                         padding: .init(top: 44+12, left: 16,
-                                        bottom: 0, right: 16))
+        textStack.anchor(
+            top: container.safeTopAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 44 + 12,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
 
         container.addSubview(appImageView)
-        appImageView.anchor(top: textStack.bottomAnchor,
-                            leading: container.safeLeadingAnchor,
-                            bottom: nil,
-                            trailing: container.safeTrailingAnchor,
-                            padding: .init(top: 30, left: 0, bottom: 0, right: 0))
+        appImageView.anchor(
+            top: textStack.bottomAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(top: 30, left: 0, bottom: 0, right: 0)
+        )
         appImageView.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor).isActive = true
     }
 }
 
 extension RuuviOnboardCoreFeaturesCell {
     func configure(with viewModel: OnboardViewModel) {
-
         switch viewModel.pageType {
         case .sensors:
             subtitleLabel.font = UIFont.Montserrat(.extraBold, size: 36)
@@ -85,7 +91,8 @@ extension RuuviOnboardCoreFeaturesCell {
 
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
-        guard let image = viewModel.image else {
+        guard let image = viewModel.image
+        else {
             return
         }
         appImageView.image = UIImage.named(image, for: Self.self)

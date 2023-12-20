@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -9,22 +9,24 @@ let package = Package(
     products: [
         .library(
             name: "RuuviReactor",
-            targets: ["RuuviReactor"]),
+            targets: ["RuuviReactor"]
+        ),
         .library(
             name: "RuuviReactorImpl",
-            targets: ["RuuviReactorImpl"])
+            targets: ["RuuviReactorImpl"]
+        ),
     ],
     dependencies: [
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPersistence"),
-        .package(path: "../RuuviContext")
+        .package(path: "../RuuviContext"),
     ],
     targets: [
         .target(
             name: "RuuviReactor",
             dependencies: [
                 "RuuviOntology",
-                "RuuviPersistence"
+                "RuuviPersistence",
             ]
         ),
         .target(
@@ -34,11 +36,12 @@ let package = Package(
                 "RuuviContext",
                 "RuuviPersistence",
                 .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
-                .product(name: "RuuviOntologySQLite", package: "RuuviOntology")
+                .product(name: "RuuviOntologySQLite", package: "RuuviOntology"),
             ]
         ),
         .testTarget(
             name: "RuuviReactorTests",
-            dependencies: ["RuuviReactor"])
+            dependencies: ["RuuviReactor"]
+        ),
     ]
 )

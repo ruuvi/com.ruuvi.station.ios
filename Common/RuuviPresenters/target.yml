@@ -1,0 +1,10 @@
+---
+targets:
+  RuuviPresenters:
+    templates:
+    - CommonFramework
+    sources:
+    - path: Sources
+      name: Presenters
+    dependencies:
+    - target: RuuviLocalization

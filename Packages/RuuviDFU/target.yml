@@ -1,0 +1,10 @@
+---
+targets:
+  RuuviDFU:
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: DFU
+    dependencies:
+    - package: NordicDFU

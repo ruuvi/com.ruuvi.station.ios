@@ -19,36 +19,37 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case pushAlertEnabled = "ALERT_PUSH_ENABLED"
     case emailAlertEnabled = "ALERT_EMAIL_ENABLED"
     case profileLanguageCode = "PROFILE_LANGUAGE_CODE"
+    case dashboardSensorOrder = "SENSOR_ORDER"
 }
 
-extension TemperatureUnit {
-    public var ruuviCloudApiSettingString: String {
+public extension TemperatureUnit {
+    var ruuviCloudApiSettingString: String {
         switch self {
         case .celsius:
-            return "C"
+            "C"
         case .fahrenheit:
-            return "F"
+            "F"
         case .kelvin:
-            return "K"
+            "K"
         }
     }
 }
 
-extension HumidityUnit {
-    public var ruuviCloudApiSettingString: String {
+public extension HumidityUnit {
+    var ruuviCloudApiSettingString: String {
         switch self {
         case .percent:
-            return "0"
+            "0"
         case .gm3:
-            return "1"
+            "1"
         case .dew:
-            return "2"
+            "2"
         }
     }
 }
 
-extension UnitPressure {
-    public var ruuviCloudApiSettingString: String {
+public extension UnitPressure {
+    var ruuviCloudApiSettingString: String {
         switch self {
         case .hectopascals:
             return "1"
@@ -63,109 +64,109 @@ extension UnitPressure {
     }
 }
 
-extension Int {
-    public var ruuviCloudApiSettingString: String {
-        return String(self)
+public extension Int {
+    var ruuviCloudApiSettingString: String {
+        String(self)
     }
 }
 
-extension Bool {
-    public var chartBoolSettingString: String {
-        return self ? "true" : "false"
+public extension Bool {
+    var chartBoolSettingString: String {
+        self ? "true" : "false"
     }
 }
 
-extension String {
-    public var ruuviCloudApiSettingUnitTemperature: TemperatureUnit? {
+public extension String {
+    var ruuviCloudApiSettingUnitTemperature: TemperatureUnit? {
         switch self {
         case "C":
-            return .celsius
+            .celsius
         case "F":
-            return .fahrenheit
+            .fahrenheit
         case "K":
-            return .kelvin
+            .kelvin
         default:
-            return nil
+            nil
         }
     }
 
-    public var ruuviCloudApiSettingUnitHumidity: HumidityUnit? {
+    var ruuviCloudApiSettingUnitHumidity: HumidityUnit? {
         switch self {
         case "0":
-            return .percent
+            .percent
         case "1":
-            return .gm3
+            .gm3
         case "2":
-            return .dew
+            .dew
         default:
-            return nil
+            nil
         }
     }
 
-    public var ruuviCloudApiSettingUnitPressure: UnitPressure? {
+    var ruuviCloudApiSettingUnitPressure: UnitPressure? {
         switch self {
         case "0":
             // v2.0 -> iOS doesn't support Pa. Instead when Pa
             // is received from sync we set hPa on iOS.
-            return .hectopascals
+            .hectopascals
         case "1":
-            return .hectopascals
+            .hectopascals
         case "2":
-            return .millimetersOfMercury
+            .millimetersOfMercury
         case "3":
-            return .inchesOfMercury
+            .inchesOfMercury
         default:
-            return nil
+            nil
         }
     }
 
-    public var ruuviCloudApiSettingBoolean: Bool? {
+    var ruuviCloudApiSettingBoolean: Bool? {
         switch self {
         case "true":
-            return true
+            true
         case "false":
-            return false
+            false
         default:
-            return nil
+            nil
         }
     }
 
-    public var ruuviCloudApiSettingChartViewPeriod: Int? {
-        return Int(self)
+    var ruuviCloudApiSettingChartViewPeriod: Int? {
+        Int(self)
     }
 
-    public var ruuviCloudApiSettingsMeasurementAccuracyUnit: MeasurementAccuracyType {
+    var ruuviCloudApiSettingsMeasurementAccuracyUnit: MeasurementAccuracyType {
         switch self {
         case "0":
-            return .zero
+            .zero
         case "1":
-            return .one
+            .one
         case "2":
-            return .two
+            .two
         default:
-            return .two
+            .two
         }
     }
 
-    public var ruuviCloudApiSettingsDashboardType: DashboardType {
+    var ruuviCloudApiSettingsDashboardType: DashboardType {
         switch self {
         case "image":
-            return .image
+            .image
         case "simple":
-            return .simple
+            .simple
         default:
-            return .image
+            .image
         }
     }
 
-    public var ruuviCloudApiSettingsDashboardTapActionType: DashboardTapActionType {
+    var ruuviCloudApiSettingsDashboardTapActionType: DashboardTapActionType {
         switch self {
         case "card":
-            return .card
+            .card
         case "chart":
-            return .chart
+            .chart
         default:
-            return .card
+            .card
         }
     }
 }

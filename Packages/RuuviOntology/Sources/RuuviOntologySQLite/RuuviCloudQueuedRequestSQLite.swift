@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RuuviOntology
 
 public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
     public var id: Int64?
@@ -22,8 +21,8 @@ public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
         successDate: Date?,
         attempts: Int?,
         requestBodyData: Data?,
-        additionalData: Data?) {
-
+        additionalData: Data?
+    ) {
         self.id = id
         self.type = type
         self.status = status
@@ -36,16 +35,16 @@ public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
     }
 }
 
-extension RuuviCloudQueuedRequestSQLite {
-    public static let idColumn = Column("id")
-    public static let typeColumn = Column("requestType")
-    public static let statusColumn = Column("statusType")
-    public static let uniqueKeyColumn = Column("uniqueKey")
-    public static let requestDateColumn = Column("requestDate")
-    public static let successDateColumn = Column("successDate")
-    public static let attemptsColumn = Column("attempts")
-    public static let requestBodyDataColumn = Column("requestBodyData")
-    public static let additionalDataColumn = Column("additionalData")
+public extension RuuviCloudQueuedRequestSQLite {
+    static let idColumn = Column("id")
+    static let typeColumn = Column("requestType")
+    static let statusColumn = Column("statusType")
+    static let uniqueKeyColumn = Column("uniqueKey")
+    static let requestDateColumn = Column("requestDate")
+    static let successDateColumn = Column("successDate")
+    static let attemptsColumn = Column("attempts")
+    static let requestBodyDataColumn = Column("requestBodyData")
+    static let additionalDataColumn = Column("additionalData")
 }
 
 extension RuuviCloudQueuedRequestSQLite: FetchableRecord {
@@ -67,7 +66,7 @@ extension RuuviCloudQueuedRequestSQLite: FetchableRecord {
 
 extension RuuviCloudQueuedRequestSQLite: PersistableRecord {
     public static var databaseTableName: String {
-        return "cloud_queued_requests"
+        "cloud_queued_requests"
     }
 
     public func encode(to container: inout PersistenceContainer) {
@@ -83,11 +82,13 @@ extension RuuviCloudQueuedRequestSQLite: PersistableRecord {
     }
 }
 
-extension RuuviCloudQueuedRequestSQLite {
-    public static func createTable(in db: Database) throws {
+public extension RuuviCloudQueuedRequestSQLite {
+    static func createTable(in db: Database) throws {
         try db.create(table: RuuviCloudQueuedRequestSQLite.databaseTableName, body: { table in
-            table.autoIncrementedPrimaryKey(RuuviCloudQueuedRequestSQLite.idColumn.name,
-                                            onConflict: .fail)
+            table.autoIncrementedPrimaryKey(
+                RuuviCloudQueuedRequestSQLite.idColumn.name,
+                onConflict: .fail
+            )
             table.column(RuuviCloudQueuedRequestSQLite.typeColumn.name, .integer)
             table.column(RuuviCloudQueuedRequestSQLite.statusColumn.name, .integer)
             table.column(RuuviCloudQueuedRequestSQLite.uniqueKeyColumn.name, .text)
@@ -100,8 +101,8 @@ extension RuuviCloudQueuedRequestSQLite {
     }
 }
 
-extension RuuviCloudQueuedRequestSQLite {
-    public var queuedRequest: RuuviCloudQueuedRequest {
+public extension RuuviCloudQueuedRequestSQLite {
+    var queuedRequest: RuuviCloudQueuedRequest {
         RuuviCloudQueuedRequestStruct(
             id: id,
             type: type,
@@ -116,9 +117,9 @@ extension RuuviCloudQueuedRequestSQLite {
     }
 }
 
-extension RuuviCloudQueuedRequest {
-    public var sqlite: RuuviCloudQueuedRequestSQLite {
-        return RuuviCloudQueuedRequestSQLite(
+public extension RuuviCloudQueuedRequest {
+    var sqlite: RuuviCloudQueuedRequestSQLite {
+        RuuviCloudQueuedRequestSQLite(
             id: id,
             type: type,
             status: status,

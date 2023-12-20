@@ -1,9 +1,8 @@
 import Foundation
 import Future
-import RuuviOntology
 import RuuviCloud
+import RuuviOntology
 import RuuviPool
-import RuuviService
 
 public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration {
     private let cloud: RuuviCloud
@@ -46,24 +45,23 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
-        let cloudUpdate: Future<AnyRuuviTagSensor, RuuviCloudError>
-        switch type {
+        let cloudUpdate: Future<AnyRuuviTagSensor, RuuviCloudError> = switch type {
         case .temperature:
-            cloudUpdate = cloud.update(
+            cloud.update(
                 temperatureOffset: offset ?? 0,
                 humidityOffset: nil,
                 pressureOffset: nil,
                 for: sensor
             )
         case .humidity:
-            cloudUpdate = cloud.update(
+            cloud.update(
                 temperatureOffset: nil,
                 humidityOffset: (offset ?? 0) * 100, // fraction locally, % on cloud
                 pressureOffset: nil,
                 for: sensor
             )
         case .pressure:
-            cloudUpdate = cloud.update(
+            cloud.update(
                 temperatureOffset: nil,
                 humidityOffset: nil,
                 pressureOffset: (offset ?? 0) * 100, // hPA locally, Pa on cloud

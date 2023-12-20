@@ -1,6 +1,5 @@
 import Foundation
 import RuuviOntology
-import RuuviLocal
 
 final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let syncStatusPrefix = "RuuviLocalSyncStateUserDefaults.syncState."
@@ -17,15 +16,14 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
                 .default
                 .post(name: .NetworkSyncDidChangeStatus, object: nil, userInfo: [
                     NetworkSyncStatusKey.status: status,
-                    NetworkSyncStatusKey.mac: macId
+                    NetworkSyncStatusKey.mac: macId,
                 ])
         }
         switch status {
         case .complete, .onError:
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1),
-                                          execute: { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
                 self?.setSyncStatus(.none, for: macId)
-            })
+            }
         case .syncing:
             DispatchQueue.main.async { [weak self] in
                 self?.syncStatus = .syncing
@@ -43,31 +41,31 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     }
 
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?) {
-        guard let macId = macId else { return }
+        guard let macId else { return }
         UserDefaults.standard.set(date, forKey: syncDatePrefix + macId.mac)
         DispatchQueue.main.async {
             NotificationCenter
                 .default
-                .post(name: .NetworkHistorySyncDidCompleteForSensor,
-                      object: nil,
-                      userInfo: [
-                    NetworkSyncStatusKey.mac: macId
-                ])
+                .post(
+                    name: .NetworkHistorySyncDidCompleteForSensor,
+                    object: nil,
+                    userInfo: [NetworkSyncStatusKey.mac: macId]
+                )
         }
     }
 
     func getSyncDate(for macId: MACIdentifier?) -> Date? {
-        guard let macId = macId else { assertionFailure(); return nil }
+        guard let macId else { assertionFailure(); return nil }
         return UserDefaults.standard.value(forKey: syncDatePrefix + macId.mac) as? Date
     }
 
     func setGattSyncDate(_ date: Date?, for macId: MACIdentifier?) {
-        guard let macId = macId else { return }
+        guard let macId else { return }
         UserDefaults.standard.set(date, forKey: gattSyncDatePrefix + macId.mac)
     }
 
     func getGattSyncDate(for macId: MACIdentifier?) -> Date? {
-        guard let macId = macId else { assertionFailure(); return nil }
+        guard let macId else { assertionFailure(); return nil }
         return UserDefaults.standard.value(forKey: gattSyncDatePrefix + macId.mac) as? Date
     }
 
@@ -80,12 +78,12 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     }
 
     func getSyncDate() -> Date? {
-        return UserDefaults.standard.value(forKey: syncDateAllIDKey) as? Date
+        UserDefaults.standard.value(forKey: syncDateAllIDKey) as? Date
     }
 
     func setDownloadFullHistory(for macId: MACIdentifier?, downloadFull: Bool?) {
-        guard let macId = macId else { return }
-        if let downloadFull = downloadFull {
+        guard let macId else { return }
+        if let downloadFull {
             UserDefaults.standard.set(downloadFull, forKey: fullHistorySyncPrefix + macId.mac)
         } else {
             UserDefaults.standard.removeObject(forKey: fullHistorySyncPrefix + macId.mac)
@@ -93,7 +91,7 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     }
 
     func downloadFullHistory(for macId: MACIdentifier?) -> Bool? {
-        guard let macId = macId else { assertionFailure(); return nil }
+        guard let macId else { assertionFailure(); return nil }
         return UserDefaults.standard.value(forKey: fullHistorySyncPrefix + macId.mac) as? Bool
     }
 
@@ -102,7 +100,7 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
 
     var syncStatus: NetworkSyncStatus {
         get {
-            return NetworkSyncStatus(rawValue: syncStatusInt) ?? NetworkSyncStatus.none
+            NetworkSyncStatus(rawValue: syncStatusInt) ?? NetworkSyncStatus.none
         }
         set {
             syncStatusInt = newValue.rawValue

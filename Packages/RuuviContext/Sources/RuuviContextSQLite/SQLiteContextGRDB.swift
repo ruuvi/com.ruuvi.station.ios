@@ -1,10 +1,6 @@
 import Foundation
 import GRDB
-import RuuviContext
 import RuuviOntology
-#if canImport(RuuviOntologySQLite)
-import RuuviOntologySQLite
-#endif
 
 class SQLiteContextGRDB: SQLiteContext {
     let database: GRDBDatabase = SQLiteGRDBDatabase.shared
@@ -17,21 +13,23 @@ public protocol DatabaseService {
 }
 
 class SQLiteGRDBDatabase: GRDBDatabase {
-
     static let shared: SQLiteGRDBDatabase = {
         let instance = try! SQLiteGRDBDatabase()
         return instance
     }()
 
     static var databasePath: String {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                                .userDomainMask, true).first! as NSString
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory,
+            .userDomainMask,
+            true
+        ).first! as NSString
         let databasePath = documentsPath.appendingPathComponent("grdb.sqlite")
         return databasePath
     }
 
     var dbPath: String {
-        return Self.databasePath
+        Self.databasePath
     }
 
     private(set) var dbPool: DatabasePool
@@ -79,12 +77,13 @@ extension SQLiteGRDBDatabase {
         }
 
         // v2
-        migrator.registerMigration("Add isClaimedColumn column") { (db) in
+        migrator.registerMigration("Add isClaimedColumn column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
-                    .contains(where: {$0.name == RuuviTagSQLite.isClaimedColumn.name}) == false else {
+                .contains(where: { $0.name == RuuviTagSQLite.isClaimedColumn.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagSQLite.databaseTableName) { (t) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName) { t in
                 t.add(column: RuuviTagSQLite.isClaimedColumn.name, .boolean)
                     .notNull()
                     .defaults(to: false)
@@ -101,10 +100,11 @@ extension SQLiteGRDBDatabase {
             try SensorSettingsSQLite.createTable(in: db)
 
             guard try db.columns(in: RuuviTagDataSQLite.databaseTableName)
-                    .contains(where: {$0.name == RuuviTagDataSQLite.temperatureOffsetColumn.name}) == false else {
+                .contains(where: { $0.name == RuuviTagDataSQLite.temperatureOffsetColumn.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagDataSQLite.temperatureOffsetColumn.name, .double)
                     .notNull().defaults(to: 0.0)
                 t.add(column: RuuviTagDataSQLite.humidityOffsetColumn.name, .double)
@@ -117,10 +117,11 @@ extension SQLiteGRDBDatabase {
         // v4
         migrator.registerMigration("Create RuuviTagDataSQLite source column") { db in
             guard try db.columns(in: RuuviTagDataSQLite.databaseTableName)
-                    .contains(where: {$0.name == RuuviTagDataSQLite.sourceColumn.name}) == false else {
+                .contains(where: { $0.name == RuuviTagDataSQLite.sourceColumn.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagDataSQLite.sourceColumn.name, .text)
                     .notNull().defaults(to: "unknown")
             })
@@ -129,30 +130,33 @@ extension SQLiteGRDBDatabase {
         // v5
         migrator.registerMigration("Create RuuviTagDataSQLite luid column") { db in
             guard try db.columns(in: RuuviTagDataSQLite.databaseTableName)
-                    .contains(where: {$0.name == RuuviTagDataSQLite.luidColumn.name}) == false else {
+                .contains(where: { $0.name == RuuviTagDataSQLite.luidColumn.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagDataSQLite.luidColumn.name, .text)
             })
         }
         // v6
         migrator.registerMigration("Create RuuviTagSQLite isCloudSensor column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
-                    .contains(where: {$0.name == RuuviTagSQLite.isCloudSensor.name}) == false else {
+                .contains(where: { $0.name == RuuviTagSQLite.isCloudSensor.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagSQLite.isCloudSensor.name, .boolean)
             })
         }
         // v7
         migrator.registerMigration("Create RuuviTagSQLite firmwareVersion column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
-                    .contains(where: {$0.name == RuuviTagSQLite.firmwareVersionColumn.name}) == false else {
+                .contains(where: { $0.name == RuuviTagSQLite.firmwareVersionColumn.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagSQLite.firmwareVersionColumn.name, .text)
             })
         }
@@ -167,12 +171,13 @@ extension SQLiteGRDBDatabase {
         // v9
         migrator.registerMigration("Create RuuviTagSQLite canShare column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
-                    .contains(
-                        where: { $0.name == RuuviTagSQLite.canShareColumn.name}
-                    ) == false else {
+                .contains(
+                    where: { $0.name == RuuviTagSQLite.canShareColumn.name }
+                ) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
                 t.add(
                     column: RuuviTagSQLite.canShareColumn.name, .boolean
                 ).defaults(to: false)
@@ -181,12 +186,13 @@ extension SQLiteGRDBDatabase {
         // v10
         migrator.registerMigration("Create RuuviTagSQLite sharedTo column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
-                    .contains(
-                        where: { $0.name == RuuviTagSQLite.sharedToColumn.name}
-                    ) == false else {
+                .contains(
+                    where: { $0.name == RuuviTagSQLite.sharedToColumn.name }
+                ) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagSQLite.sharedToColumn.name, .text)
                     .defaults(to: "")
             })
@@ -194,10 +200,11 @@ extension SQLiteGRDBDatabase {
         // v11
         migrator.registerMigration("Create RuuviTagSQLite ownersPlan column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
-                .contains(where: {$0.name == RuuviTagSQLite.ownersPlan.name}) == false else {
+                .contains(where: { $0.name == RuuviTagSQLite.ownersPlan.name }) == false
+            else {
                 return
             }
-            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { (t) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagSQLite.ownersPlan.name, .text)
             })
         }

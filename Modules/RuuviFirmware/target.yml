@@ -1,0 +1,15 @@
+---
+targets:
+  RuuviFirmware:
+    sources:
+    - path: Sources
+      name: Firmware
+    settings:
+      base:
+        MERGEABLE_LIBRARY: false
+    templates:
+    - Module
+    dependencies:
+    - package: BTKit
+    - target: RuuviDFU
+    - target: RuuviLocalization

@@ -1,5 +1,5 @@
-import Future
 import Foundation
+import Future
 import RuuviOntology
 
 public protocol RuuviPersistence {
@@ -62,6 +62,7 @@ public protocol RuuviPersistence {
     func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError>
 
     // MARK: - Queued cloud requests
+
     @discardableResult
     func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
 

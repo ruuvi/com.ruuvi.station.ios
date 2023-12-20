@@ -35,14 +35,20 @@ public protocol RuuviServiceMeasurement {
     func stringWithoutSign(temperature: Double?) -> String
 
     // Humidity
-    func double(for humidity: Humidity,
-                temperature: Temperature,
-                isDecimal: Bool) -> Double?
-    func string(for humidity: Humidity?,
-                temperature: Temperature?,
-                allowSettings: Bool) -> String
-    func stringWithoutSign(for humidity: Humidity?,
-                           temperature: Temperature?) -> String
+    func double(
+        for humidity: Humidity,
+        temperature: Temperature,
+        isDecimal: Bool
+    ) -> Double?
+    func string(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        allowSettings: Bool
+    ) -> String
+    func stringWithoutSign(
+        for humidity: Humidity?,
+        temperature: Temperature?
+    ) -> String
     func stringWithoutSign(humidity: Double?) -> String
 
     // Pressure
@@ -68,73 +74,81 @@ public protocol RuuviServiceMeasurement {
     func string(for measurement: Double?) -> String
 }
 
-extension RuuviServiceMeasurement {
-    public func double(for temperature: Temperature?) -> Double? {
-        guard let temperature = temperature else {
+public extension RuuviServiceMeasurement {
+    func double(for temperature: Temperature?) -> Double? {
+        guard let temperature
+        else {
             return nil
         }
         return double(for: temperature)
     }
 
-    public func double(for humidity: Humidity?,
-                       temperature: Temperature?,
-                       isDecimal: Bool) -> Double? {
-        guard let temperature = temperature,
-            let humidity = humidity else {
+    func double(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        isDecimal: Bool
+    ) -> Double? {
+        guard let temperature,
+              let humidity
+        else {
             return nil
         }
-        return double(for: humidity,
-                      temperature: temperature,
-                      isDecimal: isDecimal)
+        return double(
+            for: humidity,
+            temperature: temperature,
+            isDecimal: isDecimal
+        )
     }
 
-    public func double(for pressure: Pressure?) -> Double? {
-        guard let pressure = pressure else {
+    func double(for pressure: Pressure?) -> Double? {
+        guard let pressure
+        else {
             return nil
         }
         return double(for: pressure)
     }
 
-    public func double(for voltage: Voltage?) -> Double? {
-        guard let voltage = voltage else {
+    func double(for voltage: Voltage?) -> Double? {
+        guard let voltage
+        else {
             return nil
         }
         return double(for: voltage)
     }
 }
 
-extension Language {
-    public var locale: Locale {
+public extension Language {
+    var locale: Locale {
         switch self {
         case .english:
-            return Locale(identifier: "en_US")
+            Locale(identifier: "en_US")
         case .russian:
-            return Locale(identifier: "ru_RU")
+            Locale(identifier: "ru_RU")
         case .finnish:
-            return Locale(identifier: "fi")
+            Locale(identifier: "fi")
         case .french:
-            return Locale(identifier: "fr")
+            Locale(identifier: "fr")
         case .swedish:
-            return Locale(identifier: "sv")
+            Locale(identifier: "sv")
         case .german:
-            return Locale(identifier: "de")
+            Locale(identifier: "de")
         }
     }
 
-    public var humidityLanguage: HumiditySettings.Language {
+    var humidityLanguage: HumiditySettings.Language {
         switch self {
         case .german:
-            return .en
+            .en
         case .russian:
-            return .ru
+            .ru
         case .finnish:
-            return .fi
+            .fi
         case .french:
-            return .en
+            .en
         case .swedish:
-            return .sv
+            .sv
         case .english:
-            return .en
+            .en
         }
     }
 }

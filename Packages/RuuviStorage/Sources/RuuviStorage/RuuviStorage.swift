@@ -30,6 +30,7 @@ public protocol RuuviStorage {
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError>
 
     // MARK: - Queued cloud requests
+
     func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>
     func readQueuedRequests(
         for key: String
@@ -40,5 +41,5 @@ public protocol RuuviStorage {
 }
 
 public protocol RuuviStorageFactory {
-    func create(realm: RuuviPersistence, sqlite: RuuviPersistence) -> RuuviStorage
+    func create(sqlite: RuuviPersistence) -> RuuviStorage
 }

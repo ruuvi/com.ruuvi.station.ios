@@ -1,12 +1,11 @@
 import BTKit
 import Foundation
-import RuuviOntology
-import RuuviStorage
-import RuuviReactor
 import RuuviLocal
-import RuuviPool
+import RuuviOntology
 import RuuviPersistence
-import RuuviDaemon
+import RuuviPool
+import RuuviReactor
+import RuuviStorage
 
 // swiftlint:disable:next type_body_length
 public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTagAdvertisementDaemon {
@@ -26,8 +25,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var cloudModeOnToken: NSObjectProtocol?
     private var daemonRestartToken: NSObjectProtocol?
     private var saveInterval: TimeInterval {
-        return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
+        TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
+
     private var advertisementSequence = [String: Int?]() // uuid: int
 
     @objc private class RuuviTagWrapper: NSObject {
@@ -38,18 +38,18 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     deinit {
-        observeTokens.forEach({ $0.invalidate() })
+        observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
         ruuviTagsToken?.invalidate()
-        if let isOnToken = isOnToken {
+        if let isOnToken {
             NotificationCenter.default.removeObserver(isOnToken)
         }
-        sensorSettingsTokens.forEach({ $0.invalidate() })
+        sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
-        if let cloudModeOnToken = cloudModeOnToken {
+        if let cloudModeOnToken {
             NotificationCenter.default.removeObserver(cloudModeOnToken)
         }
-        if let daemonRestartToken = daemonRestartToken {
+        if let daemonRestartToken {
             NotificationCenter.default.removeObserver(daemonRestartToken)
         }
     }
@@ -69,9 +69,11 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         super.init()
         isOnToken = NotificationCenter
             .default
-            .addObserver(forName: .isAdvertisementDaemonOnDidChange,
-                         object: nil,
-                         queue: .main) { [weak self] _ in
+            .addObserver(
+                forName: .isAdvertisementDaemonOnDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.settings.isAdvertisementDaemonOn {
                     sSelf.start()
@@ -82,18 +84,22 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
         cloudModeOnToken = NotificationCenter
             .default
-            .addObserver(forName: .CloudModeDidChange,
-                         object: nil,
-                         queue: .main) { [weak self] _ in
+            .addObserver(
+                forName: .CloudModeDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.restartObserving()
             }
 
         daemonRestartToken = NotificationCenter
             .default
-            .addObserver(forName: .RuuviTagAdvertisementDaemonShouldRestart,
-                         object: nil,
-                         queue: .main) { [weak self] _ in
+            .addObserver(
+                forName: .RuuviTagAdvertisementDaemonShouldRestart,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.restart()
             }
@@ -101,37 +107,39 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     public func start() {
         start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe { [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
-                case .initial(let ruuviTags):
+                case let .initial(ruuviTags):
                     sSelf.ruuviTags = ruuviTags
                     sSelf.reloadSensorSettings()
                     sSelf.restartObserving()
-                case .update(let ruuviTag):
+                case let .update(ruuviTag):
                     if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
                         sSelf.ruuviTags[index] = ruuviTag
                     }
                     sSelf.restartObserving()
-                case .insert(let ruuviTag):
+                case let .insert(ruuviTag):
                     sSelf.ruuviTags.append(ruuviTag)
                     sSelf.restartObserving()
-                case .delete(let ruuviTag):
+                case let .delete(ruuviTag):
                     sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
                     sSelf.restartObserving()
-                case .error(let error):
+                case let .error(error):
                     sSelf.post(error: .ruuviReactor(error))
                 }
-            })
+            }
         }
     }
 
     public func stop() {
-        perform(#selector(RuuviTagAdvertisementDaemonBTKit.stopDaemon),
-                on: thread,
-                with: nil,
-                waitUntilDone: false,
-                modes: [RunLoop.Mode.default.rawValue])
+        perform(
+            #selector(RuuviTagAdvertisementDaemonBTKit.stopDaemon),
+            on: thread,
+            with: nil,
+            waitUntilDone: false,
+            modes: [RunLoop.Mode.default.rawValue]
+        )
     }
 
     public func restart() {
@@ -142,30 +150,31 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     @objc private func stopDaemon() {
-        observeTokens.forEach({ $0.invalidate() })
+        observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
-        sensorSettingsTokens.forEach({ $0.invalidate() })
+        sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
         ruuviTagsToken?.invalidate()
         stopWork()
     }
+
     private func reloadSensorSettings() {
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviStorage.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
-                if let sensorSettings = sensorSettings {
+            ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
+                if let sensorSettings {
                     self?.sensorSettingsList.append(sensorSettings)
                 }
             }
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func restartObserving() {
-        observeTokens.forEach({ $0.invalidate() })
+        observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
 
-        sensorSettingsTokens.forEach({ $0.invalidate() })
+        sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
 
         for ruuviTag in ruuviTags {
@@ -174,32 +183,36 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 continue
             }
             guard let luid = ruuviTag.luid else { continue }
-            observeTokens.append(foreground.observe(self,
-                                                    uuid: luid.value,
-                                                    options: [.callbackQueue(.untouch)]) {
-                [weak self] (_, device) in
+            observeTokens.append(foreground.observe(
+                self,
+                uuid: luid.value,
+                options: [.callbackQueue(.untouch)]
+            ) {
+                [weak self] _, device in
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag, !tag.isConnected {
-                    sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.persist(wrapper:)),
-                                  on: sSelf.thread,
-                                  with: RuuviTagWrapper(device: tag),
-                                  waitUntilDone: false,
-                                  modes: [RunLoop.Mode.default.rawValue])
+                    sSelf.perform(
+                        #selector(RuuviTagAdvertisementDaemonBTKit.persist(wrapper:)),
+                        on: sSelf.thread,
+                        with: RuuviTagWrapper(device: tag),
+                        waitUntilDone: false,
+                        modes: [RunLoop.Mode.default.rawValue]
+                    )
                 }
             })
-            sensorSettingsTokens.append(ruuviReactor.observe(ruuviTag, { [weak self] change in
+            sensorSettingsTokens.append(ruuviReactor.observe(ruuviTag) { [weak self] change in
                 switch change {
-                case .delete(let sensorSettings):
+                case let .delete(sensorSettings):
                     if let dIndex = self?.sensorSettingsList.firstIndex(
                         where: { $0.id == sensorSettings.id }
                     ) {
                         self?.sensorSettingsList.remove(at: dIndex)
                     }
-                case .insert(let sensorSettings):
+                case let .insert(sensorSettings):
                     self?.sensorSettingsList.append(sensorSettings)
                     // remove last update timestamp to force add new record in db
                     self?.savedDate.removeValue(forKey: luid.value)
-                case .update(let sensorSettings):
+                case let .update(sensorSettings):
                     if let uIndex = self?.sensorSettingsList.firstIndex(
                         where: { $0.id == sensorSettings.id }
                     ) {
@@ -210,7 +223,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                     self?.savedDate.removeValue(forKey: luid.value)
                 default: break
                 }
-            }))
+            })
         }
     }
 
@@ -220,7 +233,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         // Otherwise respect the settings
         guard wrapper.device.luid != nil else { return }
         if settings.appIsOnForeground {
-            if let previous = advertisementSequence[uuid], let previous = previous {
+            if let previous = advertisementSequence[uuid], let previous {
                 if let next = wrapper.device.measurementSequenceNumber, next > previous {
                     persist(wrapper.device, uuid)
                 }
@@ -246,9 +259,11 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         DispatchQueue.main.async {
             NotificationCenter
                 .default
-                .post(name: .RuuviTagAdvertisementDaemonDidFail,
-                      object: nil,
-                      userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                .post(
+                    name: .RuuviTagAdvertisementDaemonDidFail,
+                    object: nil,
+                    userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error]
+                )
         }
     }
 
@@ -265,7 +280,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         ).on(success: { _ in
             self.createLatestRecord(with: record)
         }, failure: { [weak self] error in
-            if case RuuviPoolError.ruuviPersistence(let persistenceError) = error {
+            if case let RuuviPoolError.ruuviPersistence(persistenceError) = error {
                 switch persistenceError {
                 case .failedToFindRuuviTag:
                     self?.ruuviTags.removeAll(where: { $0.id == uuid })
@@ -282,14 +297,15 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         if let ruuviTag = ruuviTags.first(where: {
             if let luid = $0.luid?.value, let recordLuid = record.luid?.value,
                luid == recordLuid {
-                return true
+                true
             } else {
-                return false
+                false
             }
         }) {
             ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
                 let advertisement = record.with(source: .advertisement)
-                guard localRecord != nil else {
+                guard localRecord != nil
+                else {
                     self?.ruuviPool.createLast(record)
                     return
                 }

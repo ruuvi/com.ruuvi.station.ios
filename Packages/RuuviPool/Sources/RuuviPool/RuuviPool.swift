@@ -39,6 +39,7 @@ public protocol RuuviPool {
     ) -> Future<SensorSettings, RuuviPoolError>
 
     // MARK: - Queued cloud requests
+
     @discardableResult
     func createQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
     @discardableResult
@@ -47,13 +48,13 @@ public protocol RuuviPool {
     func deleteQueuedRequests() -> Future<Bool, RuuviPoolError>
 }
 
-extension RuuviPool {
-    public func updateOffsetCorrection(
+public extension RuuviPool {
+    func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor
     ) -> Future<SensorSettings, RuuviPoolError> {
-        return updateOffsetCorrection(
+        updateOffsetCorrection(
             type: type,
             with: value,
             of: ruuviTag,

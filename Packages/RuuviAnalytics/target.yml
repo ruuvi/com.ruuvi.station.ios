@@ -1,0 +1,19 @@
+---
+targets:
+  RuuviAnalytics:
+    name: RuuviAnalytics
+    templates:
+    - Framework
+    sources:
+    - path: Sources
+      name: Analytics
+    dependencies:
+    - package: Humidity
+    - package: Future
+    - package: Firebase
+      product: FirebaseAnalytics
+    - target: RuuviStorage
+    - target: RuuviLocal
+    - target: RuuviOntology
+    - target: RuuviUser
+    - target: RuuviService

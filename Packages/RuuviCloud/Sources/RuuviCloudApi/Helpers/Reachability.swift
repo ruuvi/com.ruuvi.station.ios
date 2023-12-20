@@ -1,7 +1,6 @@
 import Network
 
-struct Reachability {
-
+enum Reachability {
     private static let monitor = NWPathMonitor()
 
     static var active = false
@@ -13,8 +12,8 @@ struct Reachability {
         guard monitor.pathUpdateHandler == nil else { return }
 
         monitor.pathUpdateHandler = { update in
-            Self.active = update.status == .satisfied ? true : false
-            Self.expensive = update.isExpensive ? true : false
+            active = update.status == .satisfied ? true : false
+            expensive = update.isExpensive ? true : false
         }
 
         monitor.start(queue: DispatchQueue(label: "InternetMonitor"))
