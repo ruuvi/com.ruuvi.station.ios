@@ -1,7 +1,7 @@
 import UIKit
 
 public final class ActivityPresenterRuuviLogo: ActivityPresenter {
-    let minAnimationTime: CFTimeInterval = 1.0
+    let minAnimationTime: CFTimeInterval = 1.5
     var startTime: CFTimeInterval?
     let window = UIWindow(frame: UIScreen.main.bounds)
     let activityPresenterViewProvider: ActivityPresenterViewProvider
@@ -45,10 +45,10 @@ public extension ActivityPresenterRuuviLogo {
         let additionalWaitTime = immediately ? 0 :
             executionTime < minAnimationTime ? (minAnimationTime - executionTime) : 0
         DispatchQueue.main.asyncAfter(deadline: .now() + additionalWaitTime) { [weak self] in
-            self?.activityPresenterViewProvider.updateState(.dismiss)
+            self?.window.isHidden = true
             self?.appWindow?.makeKeyAndVisible()
             self?.appWindow = nil
-            self?.window.isHidden = true
+            self?.activityPresenterViewProvider.updateState(.dismiss)
         }
     }
 }
