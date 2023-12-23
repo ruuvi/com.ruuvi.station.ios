@@ -10,6 +10,8 @@ final class FirmwareViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published var downloadProgress: Double = 0
     @Published var flashProgress: Double = 0
+    @Published var isBatteryLow: Bool = false
+
     var output: FirmwareViewModelOutput?
     private let input = PassthroughSubject<Event, Never>()
     private let uuid: String
@@ -42,6 +44,8 @@ final class FirmwareViewModel: ObservableObject {
         )
         .assign(to: \.state, on: self)
         .store(in: &bag)
+
+        interactor.batteryIsLow.assign(to: &$isBatteryLow)
     }
 
     func send(event: Event) {
@@ -50,6 +54,10 @@ final class FirmwareViewModel: ObservableObject {
 
     func finish() {
         output?.firmwareUpgradeDidFinishSuccessfully()
+    }
+
+    func ensureBatteryHasEnoughPower(uuid: String) {
+        interactor.ensureBatteryHasEnoughPower(uuid: uuid)
     }
 }
 

@@ -18,18 +18,53 @@ enum FirmwareError: Error {
 }
 
 final class FirmwareInteractor {
+    var batteryIsLow = CurrentValueSubject<Bool, Never>(false)
     private let background: BTBackground
+    private let foreground: BTForeground
     private let firmwareRepository: FirmwareRepository
     private let ruuviDFU: RuuviDFU
+    private var ruuviTagObservationToken: ObservationToken?
 
     init(
         background: BTBackground,
+        foreground: BTForeground,
         ruuviDFU: RuuviDFU,
         firmwareRepository: FirmwareRepository
     ) {
         self.background = background
+        self.foreground = foreground
         self.ruuviDFU = ruuviDFU
         self.firmwareRepository = firmwareRepository
+    }
+
+    deinit {
+        ruuviTagObservationToken?.invalidate()
+    }
+
+    func ensureBatteryHasEnoughPower(uuid: String) {
+        ruuviTagObservationToken?.invalidate()
+        ruuviTagObservationToken = foreground.observe(self, uuid: uuid) { observer, device in
+            if let ruuviTag = device.ruuvi?.tag {
+                self.batteryIsLow.value = observer.batteryNeedsReplacement(ruuviTag: ruuviTag)
+            }
+        }
+    }
+
+    private func batteryNeedsReplacement(
+        ruuviTag: RuuviTag
+    ) -> Bool {
+        if let temperature = ruuviTag.celsius,
+            let voltage = ruuviTag.volts {
+            if temperature < 0, temperature >= -20 {
+                voltage < 2.3
+            } else if temperature < -20 {
+                voltage < 2
+            } else {
+                voltage < 2.5
+            }
+        } else {
+            false
+        }
     }
 
     func loadLatestGitHubRelease() -> AnyPublisher<GitHubRelease, Error> {
