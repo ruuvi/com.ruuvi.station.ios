@@ -395,6 +395,8 @@ extension TagSettingsAlertConfigCell {
             alertLimitSliderView.disable(disable)
         case .alertRSSI:
             noticeView.disable(disable)
+            alertLimitDescriptionView.disable(disable)
+            alertLimitSliderView.disable(disable)
         case .alertMovement, .alertConnection:
             additionalTextView.disable(disable)
         default: break
