@@ -29,7 +29,7 @@ public final class ErrorPresenterAlert: ErrorPresenter {
                     let feedback = UINotificationFeedbackGenerator()
                     feedback.notificationOccurred(.error)
                     feedback.prepare()
-                    UIApplication.shared.topViewController()?.present(alert, animated: true)
+                    RuuviPresenterHelper.topViewController()?.present(alert, animated: true)
                 }
             }
         }
