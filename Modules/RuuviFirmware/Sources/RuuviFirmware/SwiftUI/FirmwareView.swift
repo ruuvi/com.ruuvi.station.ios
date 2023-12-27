@@ -362,6 +362,9 @@ struct FirmwareView: View {
                 alignment: .top
             )
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
+            .onAppear {
+                viewModel.ensureBatteryHasEnoughPower(uuid: uuid)
+            }
             .eraseToAnyView()
         case .flashing:
             VStack(alignment: .center, spacing: 24) {
@@ -425,6 +428,14 @@ struct FirmwareView: View {
         VStack {
             content
         }
+        .alert(isPresented: $viewModel.isBatteryLow) {
+            Alert(
+                title: Text(""),
+                message: Text(texts.lowBatteryWarningMessage),
+                dismissButton: .cancel(Text(texts.okTitle))
+            )
+        }
+        .padding()
         .accentColor(.red)
         .navigationBarBackButtonHidden(true)
         .onAppear {

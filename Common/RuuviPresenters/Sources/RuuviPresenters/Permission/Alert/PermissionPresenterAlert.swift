@@ -25,7 +25,7 @@ public final class PermissionPresenterAlert: PermissionPresenter {
     }
 
     private func presentAlert(with message: String) {
-        guard let viewController = UIApplication.shared.topViewController() else { return }
+        guard let viewController = RuuviPresenterHelper.topViewController() else { return }
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let cancel = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil)
         let actionTitle = RuuviLocalization.PermissionPresenter.settings
