@@ -1541,6 +1541,7 @@ extension DashboardPresenter {
                 using: { [weak self] _ in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
+                        self.view?.dashboardSortingType = self.dashboardSortingType()
                         self.viewModels = self.reorder(self.viewModels)
                     }
                 }
