@@ -76,7 +76,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
-    private var cloudRequestStateToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
     private var exportFileUrl: URL?
     private var previousAdvertisementSequence: Int?
@@ -108,8 +107,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         appDidBecomeActiveToken?.invalidate()
         alertDidChangeToken?.invalidate()
         backgroundToken?.invalidate()
-        cloudRequestStateToken?.invalidate()
         timer?.invalidate()
+        RuuviCloudRequestStateObserverManager
+            .shared
+            .stopObserving(for: ruuviTag.macId?.value)
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -1143,27 +1144,17 @@ extension TagSettingsPresenter {
     }
 
     private func startObservingCloudRequestState() {
-        cloudRequestStateToken?.invalidate()
-        cloudRequestStateToken = nil
+        guard let macId = ruuviTag.macId?.value else { return }
+        // Stop if already observing
+        RuuviCloudRequestStateObserverManager
+            .shared
+            .stopObserving(for: macId)
 
-        cloudRequestStateToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .RuuviCloudRequestStateDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] notification in
-                    guard let self,
-                          let userInfo = notification.userInfo,
-                          let macId = userInfo[RuuviCloudRequestStateKey.macId] as? String,
-                          macId == self.ruuviTag.macId?.value,
-                          let state = userInfo[RuuviCloudRequestStateKey.state] as? RuuviCloudRequestStateType
-                    else {
-                        return
-                    }
-                    self.presentActivityIndicator(with: state)
-                }
-            )
+        RuuviCloudRequestStateObserverManager
+            .shared
+            .startObserving(for: macId) { [weak self] state in
+                self?.presentActivityIndicator(with: state)
+            }
     }
 
     private func reloadMutedTill() {
