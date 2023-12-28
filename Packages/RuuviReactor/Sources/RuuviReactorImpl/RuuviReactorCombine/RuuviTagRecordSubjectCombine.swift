@@ -13,7 +13,7 @@ final class RuuviTagRecordSubjectCombine {
 
     let subject = PassthroughSubject<[AnyRuuviTagSensorRecord], Never>()
 
-    private var ruuviTagDataTransactionObserver: TransactionObserver?
+    private var ruuviTagDataTransactionObserver: AnyDatabaseCancellable?
 
     init(
         luid: LocalIdentifier?,
@@ -25,6 +25,10 @@ final class RuuviTagRecordSubjectCombine {
         self.macId = macId
     }
 
+    deinit {
+        ruuviTagDataTransactionObserver?.cancel()
+    }
+
     func start() {
         isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
@@ -32,13 +36,19 @@ final class RuuviTagRecordSubjectCombine {
                 (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
                     || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
             )
-        let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
-            try! request.fetchAll(db)
+
+        let observation = ValueObservation.tracking { db in
+            try request.fetchAll(db)
         }.removeDuplicates()
 
-        ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
-            [weak self] records in
-            self?.subject.send(records.map(\.any))
-        }
+        ruuviTagDataTransactionObserver = observation.start(
+            in: sqlite.database.dbPool,
+            onError: { error in
+                print(error.localizedDescription)
+            },
+            onChange: { [weak self] records in
+                self?.subject.send(records.map(\.any))
+            }
+        )
     }
 }
