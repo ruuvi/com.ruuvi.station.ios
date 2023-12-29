@@ -1256,6 +1256,15 @@ extension TagSettingsViewController {
                     disable: !hasMeasurement || !GlobalHelpers.getBool(from: isClaimed),
                     identifier: .alertRSSI
                 )
+                // Disable active signal alert if tag is unclaimed.
+                if !isClaimed.bound,
+                    let isSignalAlertOn = self?.viewModel?.isSignalAlertOn.value,
+                   isSignalAlertOn {
+                    self?.output.viewDidChangeAlertState(
+                        for: .signal(lower: 0, upper: 0),
+                        isOn: false
+                    )
+                }
             }
         }
 
