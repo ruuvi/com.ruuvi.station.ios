@@ -130,13 +130,14 @@ extension NoSensorView {
             centerButtonStackView.subviews.forEach { $0.removeFromSuperview() }
         }
 
-        let buttons = userSignInOnce ? [signInButton, addSensorButton] : [addSensorButton]
+        let buttons = userSignInOnce ? [addSensorButton] : [signInButton, addSensorButton]
         for button in buttons {
             centerButtonStackView.addArrangedSubview(button)
         }
         messageLabel.text = userSignInOnce ?
-            RuuviLocalization.dashboardNoSensorsMessageSignedOut :
-            RuuviLocalization.dashboardNoSensorsMessage
+            RuuviLocalization.dashboardNoSensorsMessage :
+            RuuviLocalization.dashboardNoSensorsMessageSignedOut
+
         centerButtonCenterYAnchor.isActive =
             userSignInOnce ? activateCenterButtonStackConstraint() : true
     }
