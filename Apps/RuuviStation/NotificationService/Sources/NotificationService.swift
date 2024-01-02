@@ -79,6 +79,8 @@ extension NotificationService {
             .signal
         case "movement":
             .movement
+        case "offline":
+            .offline
         default:
             nil
         }
@@ -129,7 +131,9 @@ extension NotificationService {
             case .movement:
                 return RuuviLocalization.LocalNotificationsManager.DidMove.title(locale)
             case .offline:
-                return "" // TODO: @rinat obtain spec
+                // No message for alert type under for offline since
+                // the trigger is always 'Over' i.e. Sensor has been offline over x mins.
+                return ""
             }
         case .over:
             switch alertType {
@@ -144,7 +148,7 @@ extension NotificationService {
             case .movement:
                 return RuuviLocalization.LocalNotificationsManager.DidMove.title(locale)
             case .offline:
-                return "" // TODO: @rinat obtain spec
+                return RuuviLocalization.alertNotificationOfflineMessage(threshold, locale)
             }
         }
     }
