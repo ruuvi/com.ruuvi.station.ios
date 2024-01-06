@@ -10,7 +10,7 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
 
     private lazy var beaverImageView: UIImageView = {
         let iv = UIImageView(
-            image: RuuviAsset.Resources.onboardingBeaverSignIn.image,
+            image: RuuviAsset.Onboarding.onboardingBeaverSignIn.image,
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear

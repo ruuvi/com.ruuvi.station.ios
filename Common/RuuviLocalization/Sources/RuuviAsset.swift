@@ -22,7 +22,7 @@ public typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 public enum RuuviAsset {
-    public enum Resources {
+    public enum Onboarding {
       public static let gateway = ImageAsset(name: "gateway")
       public static let onboardingAlerts = ImageAsset(name: "onboarding_alerts")
       public static let onboardingBeaverSignIn = ImageAsset(name: "onboarding_beaver_sign_in")

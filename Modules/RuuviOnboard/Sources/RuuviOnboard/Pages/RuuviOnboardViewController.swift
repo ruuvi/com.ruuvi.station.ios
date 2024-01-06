@@ -49,7 +49,7 @@ class RuuviOnboardViewController: UIViewController {
     }
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: RuuviAsset.Resources.onboardingBgLayer.image)
+        let iv = UIImageView(image: RuuviAsset.Onboarding.onboardingBgLayer.image)
         iv.backgroundColor = .clear
         return iv
     }()
@@ -378,49 +378,49 @@ private extension RuuviOnboardViewController {
             pageType: .dashboard,
             title: RuuviLocalization.onboardingDashboard,
             subtitle: RuuviLocalization.onboardingFollowMeasurement,
-            image: RuuviAsset.Resources.onboardingDashboard.image
+            image: RuuviAsset.Onboarding.onboardingDashboard.image
         )
 
         let sensorItem = OnboardViewModel(
             pageType: .sensors,
             title: RuuviLocalization.onboardingYourSensors,
             subtitle: RuuviLocalization.onboardingPersonalise,
-            image: RuuviAsset.Resources.onboardingSensors.image
+            image: RuuviAsset.Onboarding.onboardingSensors.image
         )
 
         let historyItem = OnboardViewModel(
             pageType: .history,
             title: RuuviLocalization.onboardingHistory,
             subtitle: RuuviLocalization.onboardingExploreDetailed,
-            image: RuuviAsset.Resources.onboardingHistory.image
+            image: RuuviAsset.Onboarding.onboardingHistory.image
         )
 
         let alertItem = OnboardViewModel(
             pageType: .alerts,
             title: RuuviLocalization.onboardingAlerts,
             subtitle: RuuviLocalization.onboardingSetCustom,
-            image: RuuviAsset.Resources.onboardingAlerts.image
+            image: RuuviAsset.Onboarding.onboardingAlerts.image
         )
 
         let shareItem = OnboardViewModel(
             pageType: .share,
             title: RuuviLocalization.onboardingShareYourSensors,
             subtitle: RuuviLocalization.onboardingShareesCanUse,
-            image: RuuviAsset.Resources.onboardingShare.image
+            image: RuuviAsset.Onboarding.onboardingShare.image
         )
 
         let widgetItem = OnboardViewModel(
             pageType: .widgets,
             title: RuuviLocalization.onboardingHandyWidgets,
             subtitle: RuuviLocalization.onboardingAccessWidgets,
-            image: RuuviAsset.Resources.onboardingWidgets.image
+            image: RuuviAsset.Onboarding.onboardingWidgets.image
         )
 
         let webItem = OnboardViewModel(
             pageType: .web,
             title: RuuviLocalization.onboardingStationWeb,
             subtitle: RuuviLocalization.onboardingWebPros,
-            image: RuuviAsset.Resources.onboardingWeb.image
+            image: RuuviAsset.Onboarding.onboardingWeb.image
         )
 
         let signInItem = OnboardViewModel(

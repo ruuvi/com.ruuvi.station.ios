@@ -4,7 +4,7 @@ import UIKit
 class RuuviOnboardStartCell: UICollectionViewCell {
     private lazy var beaverImageView: UIImageView = {
         let iv = UIImageView(
-            image: RuuviAsset.Resources.onboardingBeaverStart.image,
+            image: RuuviAsset.Onboarding.onboardingBeaverStart.image,
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
