@@ -1,12 +1,10 @@
+import RuuviLocalization
 import UIKit
 
 class RuuviOnboardStartCell: UICollectionViewCell {
     private lazy var beaverImageView: UIImageView = {
         let iv = UIImageView(
-            image: UIImage.named(
-                RuuviAssets.beaver_start,
-                for: Self.self
-            ),
+            image: RuuviAsset.Resources.onboardingBeaverStart.image,
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear

@@ -95,6 +95,6 @@ extension RuuviOnboardCoreFeaturesCell {
         else {
             return
         }
-        appImageView.image = UIImage.named(image, for: Self.self)
+        appImageView.image = image
     }
 }

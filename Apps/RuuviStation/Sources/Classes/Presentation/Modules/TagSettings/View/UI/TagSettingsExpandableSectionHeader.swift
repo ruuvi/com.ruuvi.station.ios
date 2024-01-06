@@ -43,7 +43,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     lazy var arrowView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
-        iv.image = RuuviAssets.dropDownArrowImage
+        iv.image = RuuviAsset.arrowDropDown.image
         iv.tintColor = RuuviColor.tintColor.color
         iv.contentMode = .scaleAspectFit
         return iv
@@ -249,12 +249,12 @@ extension TagSettingsExpandableSectionHeader {
             mutedTillLabel.text = AppDateFormatter
                 .shared
                 .shortTimeString(from: date)
-            alertIcon.image = RuuviAssets.alertOffImage
+            alertIcon.image = RuuviAsset.iconAlertOff.image
             alertIcon.tintColor = RuuviColor.logoTintColor.color
             return
         } else {
             mutedTillLabel.isHidden = true
-            alertIcon.image = isOn ? RuuviAssets.alertOnImage : nil
+            alertIcon.image = isOn ? RuuviAsset.iconAlertOn.image : nil
             alertIcon.tintColor = RuuviColor.logoTintColor.color
             removeAlertAnimations()
         }
@@ -266,13 +266,13 @@ extension TagSettingsExpandableSectionHeader {
         }
         switch state {
         case .registered:
-            alertIcon.image = RuuviAssets.alertOnImage
+            alertIcon.image = RuuviAsset.iconAlertOn.image
             alertIcon.tintColor = RuuviColor.logoTintColor.color
             removeAlertAnimations()
         case .firing:
             alertIcon.alpha = 1.0
             alertIcon.tintColor = RuuviColor.orangeColor.color
-            alertIcon.image = RuuviAssets.alertActiveImage
+            alertIcon.image = RuuviAsset.iconAlertActive.image
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 UIView.animate(
                     withDuration: 0.5,

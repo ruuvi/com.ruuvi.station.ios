@@ -84,7 +84,6 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var stateToken: ObservationToken?
     private var lostToken: ObservationToken?
     private var persistedReactorToken: RuuviReactorToken?
-    private lazy var ruuviLogoImage = UIImage.named("ruuvi_logo", for: Self.self)
     private var isBluetoothPermissionGranted: Bool {
         CBCentralManager.authorization == .allowedAlways
     }
@@ -394,7 +393,7 @@ extension DiscoverPresenter {
                 rssi: ruuviTag.rssi,
                 mac: ruuviTag.mac,
                 name: nil,
-                logo: ruuviLogoImage
+                logo: RuuviAsset.ruuviLogo.image
             )
         }
         view?.ruuviTags = visibleTags(ruuviTags: ruuviTags)

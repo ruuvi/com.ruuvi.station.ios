@@ -24,9 +24,9 @@ class CardsLargeImageCell: UICollectionViewCell {
         return label
     }()
 
-    private lazy var humidityView = CardsIndicatorView(icon: RuuviAssets.humidityImage)
-    private lazy var pressureView = CardsIndicatorView(icon: RuuviAssets.pressureImage)
-    private lazy var movementView = CardsIndicatorView(icon: RuuviAssets.movementCounterImage)
+    private lazy var humidityView = CardsIndicatorView(icon: RuuviAsset.iconMeasureHumidity.image)
+    private lazy var pressureView = CardsIndicatorView(icon: RuuviAsset.iconMeasurePressure.image)
+    private lazy var movementView = CardsIndicatorView(icon: RuuviAsset.iconMeasureMovement.image)
 
     private lazy var batteryLevelView = BatteryLevelView(fontSize: 12)
 
@@ -335,15 +335,15 @@ extension CardsLargeImageCell {
             case .unknown:
                 dataSourceIconView.image = nil
             case .advertisement:
-                dataSourceIconView.image = RuuviAssets.advertisementImage
+                dataSourceIconView.image = RuuviAsset.iconBluetooth.image
             case .heartbeat:
-                dataSourceIconView.image = RuuviAssets.heartbeatImage
+                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .log:
-                dataSourceIconView.image = RuuviAssets.heartbeatImage
+                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .ruuviNetwork:
-                dataSourceIconView.image = RuuviAssets.ruuviNetworkImage
+                dataSourceIconView.image = RuuviAsset.iconGateway.image
             case .weatherProvider:
-                dataSourceIconView.image = RuuviAssets.weatherProviderImage
+                dataSourceIconView.image = RuuviAsset.iconWeatherstation.image
             }
         } else {
             dataSourceIconView.image = nil

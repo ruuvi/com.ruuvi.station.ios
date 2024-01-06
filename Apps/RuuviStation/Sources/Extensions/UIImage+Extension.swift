@@ -1,12 +1,7 @@
 import UIKit
 
-extension UIImage? {
+extension UIImage {
     func resize(targetWidth: CGFloat = 100) -> UIImage? {
-        guard let self
-        else {
-            return nil
-        }
-
         let aspectRatio = self.size.width / self.size.height
         let targetHeight = targetWidth / aspectRatio
 
@@ -19,11 +14,6 @@ extension UIImage? {
     }
 
     func resize(targetHeight: CGFloat) -> UIImage? {
-        guard let self
-        else {
-            return nil
-        }
-
         let scale = targetHeight / self.size.height
         let newWidth = self.size.width * scale
         let newSize = CGSize(width: newWidth, height: targetHeight)

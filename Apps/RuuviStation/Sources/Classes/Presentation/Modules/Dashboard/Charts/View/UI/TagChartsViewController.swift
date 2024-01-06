@@ -83,7 +83,7 @@ class TagChartsViewController: UIViewController {
             menu: historyLengthOptions(),
             titleColor: .white,
             title: RuuviLocalization.day1,
-            icon: RuuviAssets.dropDownArrowImage,
+            icon: RuuviAsset.arrowDropDown.image,
             iconTintColor: RuuviColor.logoTintColor.color,
             iconSize: .init(width: 14, height: 14),
             preccedingIcon: false
@@ -93,7 +93,7 @@ class TagChartsViewController: UIViewController {
     private lazy var moreButton: UIButton = {
         let button = UIButton()
         button.tintColor = .white
-        button.setImage(RuuviAssets.threeDotMoreImage, for: .normal)
+        button.setImage(RuuviAsset.more3dot.image, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.showsMenuAsPrimaryAction = true
         button.menu = moreButtonOptions()
@@ -137,7 +137,7 @@ class TagChartsViewController: UIViewController {
             menu: nil,
             titleColor: .white,
             title: RuuviLocalization.TagCharts.Sync.title,
-            icon: UIImage(named: "icon_sync_bt"),
+            icon: RuuviAsset.iconSyncBt.image,
             iconTintColor: .white,
             iconSize: .init(width: 22, height: 22),
             preccedingIcon: true
@@ -738,15 +738,15 @@ extension TagChartsViewController: TagChartsViewInput {
         case .unknown:
             dataSourceIconView.image = nil
         case .advertisement:
-            dataSourceIconView.image = RuuviAssets.advertisementImage
+            dataSourceIconView.image = RuuviAsset.iconBluetooth.image
         case .heartbeat:
-            dataSourceIconView.image = RuuviAssets.heartbeatImage
+            dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
         case .log:
-            dataSourceIconView.image = RuuviAssets.heartbeatImage
+            dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
         case .ruuviNetwork:
-            dataSourceIconView.image = RuuviAssets.ruuviNetworkImage
+            dataSourceIconView.image = RuuviAsset.iconGateway.image
         case .weatherProvider:
-            dataSourceIconView.image = RuuviAssets.weatherProviderImage
+            dataSourceIconView.image = RuuviAsset.iconWeatherstation.image
         }
     }
 

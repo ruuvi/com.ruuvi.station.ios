@@ -41,7 +41,7 @@ class DashboardImageCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
-        iv.image = RuuviAssets.threeDotMoreImage
+        iv.image = RuuviAsset.more3dot.image
         iv.tintColor = RuuviColor.dashboardIndicatorBig.color
         return iv
     }()
@@ -431,15 +431,15 @@ extension DashboardImageCell {
             case .unknown:
                 dataSourceIconView.image = nil
             case .advertisement:
-                dataSourceIconView.image = RuuviAssets.advertisementImage
+                dataSourceIconView.image = RuuviAsset.iconBluetooth.image
             case .heartbeat:
-                dataSourceIconView.image = RuuviAssets.heartbeatImage
+                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .log:
-                dataSourceIconView.image = RuuviAssets.heartbeatImage
+                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .ruuviNetwork:
-                dataSourceIconView.image = RuuviAssets.ruuviNetworkImage
+                dataSourceIconView.image = RuuviAsset.iconGateway.image
             case .weatherProvider:
-                dataSourceIconView.image = RuuviAssets.weatherProviderImage
+                dataSourceIconView.image = RuuviAsset.iconWeatherstation.image
             }
         } else {
             dataSourceIconView.image = nil
@@ -525,9 +525,9 @@ extension DashboardImageCell {
                 alertButton.isUserInteractionEnabled = false
             case .registered:
                 alertButton.isUserInteractionEnabled = true
-                if alertIcon.image != RuuviAssets.alertOnImage {
+                if alertIcon.image != RuuviAsset.iconAlertOn.image {
                     alertIcon.alpha = 1
-                    alertIcon.image = RuuviAssets.alertOnImage
+                    alertIcon.image = RuuviAsset.iconAlertOn.image
                     removeAlertAnimations()
                 }
                 alertIcon.tintColor = RuuviColor.logoTintColor.color
@@ -535,8 +535,8 @@ extension DashboardImageCell {
                 alertButton.isUserInteractionEnabled = true
                 alertIcon.alpha = 1.0
                 alertIcon.tintColor = RuuviColor.orangeColor.color
-                if alertIcon.image != RuuviAssets.alertActiveImage {
-                    alertIcon.image = RuuviAssets.alertActiveImage
+                if alertIcon.image != RuuviAsset.iconAlertActive.image {
+                    alertIcon.image = RuuviAsset.iconAlertActive.image
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     UIView.animate(

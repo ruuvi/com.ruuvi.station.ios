@@ -311,11 +311,11 @@ extension DiscoverTableViewController {
         if let rssi = device.rssi {
             cell.rssiLabel.text = "\(rssi)" + " " + RuuviLocalization.dBm
             if rssi < -80 {
-                cell.rssiImageView.image = UIImage.named("icon-connection-1", for: Self.self)
+                cell.rssiImageView.image = RuuviAsset.iconConnection1.image
             } else if rssi < -50 {
-                cell.rssiImageView.image = UIImage.named("icon-connection-2", for: Self.self)
+                cell.rssiImageView.image = RuuviAsset.iconConnection2.image
             } else {
-                cell.rssiImageView.image = UIImage.named("icon-connection-3", for: Self.self)
+                cell.rssiImageView.image = RuuviAsset.iconConnection3.image
             }
         } else {
             cell.rssiImageView.image = nil
