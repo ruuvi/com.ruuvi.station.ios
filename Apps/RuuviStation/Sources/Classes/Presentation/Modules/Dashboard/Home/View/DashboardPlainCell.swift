@@ -383,9 +383,7 @@ extension DashboardPlainCell {
                 dataSourceIconView.image = nil
             case .advertisement:
                 dataSourceIconView.image = RuuviAsset.iconBluetooth.image
-            case .heartbeat:
-                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
-            case .log:
+            case .heartbeat, .log:
                 dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .ruuviNetwork:
                 dataSourceIconView.image = RuuviAsset.iconGateway.image
