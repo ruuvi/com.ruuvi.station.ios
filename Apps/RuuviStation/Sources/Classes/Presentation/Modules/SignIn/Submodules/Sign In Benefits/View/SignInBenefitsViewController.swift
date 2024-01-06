@@ -9,7 +9,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
     // UI Componenets starts
     private lazy var closeButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
-            image: RuuviAssets.closeButtonImage,
+            image: RuuviAsset.dismissModalIcon.image,
             style: .plain,
             target: self,
             action: #selector(handleCloseButtonTap)
@@ -19,7 +19,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
     }()
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: RuuviAssets.signInBgLayer)
+        let iv = UIImageView(image: RuuviAsset.signInBgLayer.image)
         iv.backgroundColor = .clear
         return iv
     }()

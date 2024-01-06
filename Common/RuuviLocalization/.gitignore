@@ -7,4 +7,5 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 RuuviLocalization.swift
 RuuviColor.swift
+RuuviAsset.swift
 Localizable.strings

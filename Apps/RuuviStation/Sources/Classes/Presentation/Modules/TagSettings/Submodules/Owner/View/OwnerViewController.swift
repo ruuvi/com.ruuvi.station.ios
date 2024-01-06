@@ -39,7 +39,7 @@ final class OwnerViewController: UIViewController {
     private lazy var backButton: UIButton = {
         let button = UIButton()
         button.tintColor = .label
-        let buttonImage = RuuviAssets.backButtonImage
+        let buttonImage = RuuviAsset.chevronBack.image
         button.setImage(buttonImage, for: .normal)
         button.setImage(buttonImage, for: .highlighted)
         button.imageView?.tintColor = .label

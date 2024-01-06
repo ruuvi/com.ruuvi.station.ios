@@ -1,19 +1,19 @@
+import RuuviLocalization
 import SwiftUI
 
 public struct RuuviBoardView: View {
     @State private var isPortrait = false
-    private let boardImageName = "ruuvitag-b8-and-older-button-location"
     public init() {}
 
     public var body: some View {
         HStack {
             if isPortrait {
-                Image(boardImageName, bundle: .pod(RuuviFirmwareDummyClass.self))
+                RuuviAsset.ruuvitagB8AndOlderButtonLocation.swiftUIImage
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else {
                 Spacer()
-                Image(boardImageName, bundle: .pod(RuuviFirmwareDummyClass.self))
+                RuuviAsset.ruuvitagB8AndOlderButtonLocation.swiftUIImage
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .scaledToFit()

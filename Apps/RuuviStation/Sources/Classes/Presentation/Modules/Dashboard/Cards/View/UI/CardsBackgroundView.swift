@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 class CardsBackgroundView: UIView {
@@ -12,7 +13,7 @@ class CardsBackgroundView: UIView {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.backgroundColor = .clear
-        iv.image = UIImage(named: "tag_bg_layer")
+        iv.image = RuuviAsset.tagBgLayer.image
         return iv
     }()
 
