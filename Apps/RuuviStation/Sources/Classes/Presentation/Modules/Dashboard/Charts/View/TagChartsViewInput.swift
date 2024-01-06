@@ -1,5 +1,5 @@
 import BTKit
-import Charts
+import DGCharts
 import Foundation
 import RuuviLocal
 import RuuviOntology

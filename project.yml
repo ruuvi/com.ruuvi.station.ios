@@ -83,9 +83,9 @@ packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
     from: 0.5.2
-  Charts:
+  DGCharts:
     url: https://github.com/danielgindi/Charts
-    from: 4.1.0
+    from: 5.0.0
   LightRoute:
     url: https://github.com/rinat-enikeev/LightRoute
     from: 2.2.2

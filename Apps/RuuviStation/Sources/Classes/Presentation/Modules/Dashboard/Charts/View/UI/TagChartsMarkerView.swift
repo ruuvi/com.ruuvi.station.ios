@@ -1,4 +1,4 @@
-import Charts
+import DGCharts
 import RuuviLocalization
 import RuuviService
 import UIKit

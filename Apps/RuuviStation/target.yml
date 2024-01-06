@@ -14,7 +14,7 @@ targets:
       - target: "station.intents"
       - target: "station.pnservice"
       - package: BTKit
-      - package: Charts
+      - package: DGCharts
       - package: GRDB
       - package: LightRoute
       - package: Swinject
