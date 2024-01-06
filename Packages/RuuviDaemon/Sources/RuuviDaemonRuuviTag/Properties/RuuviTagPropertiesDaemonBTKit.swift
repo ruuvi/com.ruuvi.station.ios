@@ -184,6 +184,10 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             }
             if observer.idPersistence.luid(for: macId)?.any != luid.any {
                 observer.idPersistence.set(luid: luid, for: macId)
+                observer.sqiltePersistence.readOne(macId.mac)
+                    .on { [weak observer] sensor in
+                        observer?.ruuviPool.update(sensor.with(luid: luid))
+                    }
             }
         })
         scanTokens.append(scanToken)
