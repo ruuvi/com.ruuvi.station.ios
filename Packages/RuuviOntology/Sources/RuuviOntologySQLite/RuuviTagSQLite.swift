@@ -121,7 +121,7 @@ extension RuuviTagSQLite: PersistableRecord {
 public extension RuuviTagSQLite {
     static func createTable(in db: Database) throws {
         try db.create(table: RuuviTagSQLite.databaseTableName, body: { table in
-            table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .abort)
+            table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(RuuviTagSQLite.macColumn.name, .text)
             table.column(RuuviTagSQLite.luidColumn.name, .text)
             table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
