@@ -34,6 +34,7 @@ final class FirmwarePresenter: RuuviFirmware {
         uuid: String,
         currentFirmware: String?,
         background: BTBackground,
+        foreground: BTForeground,
         ruuviDFU: RuuviDFU,
         firmwareRepository: FirmwareRepository
     ) {
@@ -41,9 +42,11 @@ final class FirmwarePresenter: RuuviFirmware {
         self.currentFirmware = currentFirmware
         interactor = FirmwareInteractor(
             background: background,
+            foreground: foreground,
             ruuviDFU: ruuviDFU,
             firmwareRepository: firmwareRepository
         )
+        interactor.ensureBatteryHasEnoughPower(uuid: uuid)
     }
 
     func isSafeToDismiss() -> Bool {

@@ -1243,10 +1243,28 @@ extension TagSettingsViewController {
             }
 
             rssiAlertCell.bind(viewModel.latestMeasurement) { cell, measurement in
+                let isClaimed = GlobalHelpers.getBool(from: viewModel.isClaimedTag.value)
                 cell.disableEditing(
-                    disable: measurement == nil,
+                    disable: measurement == nil || !isClaimed,
                     identifier: .alertRSSI
                 )
+            }
+
+            rssiAlertCell.bind(viewModel.isClaimedTag) { [weak self] cell, isClaimed in
+                let hasMeasurement = GlobalHelpers.getBool(from: self?.hasMeasurement())
+                cell.disableEditing(
+                    disable: !hasMeasurement || !GlobalHelpers.getBool(from: isClaimed),
+                    identifier: .alertRSSI
+                )
+                // Disable active signal alert if tag is unclaimed.
+                if !isClaimed.bound,
+                    let isSignalAlertOn = self?.viewModel?.isSignalAlertOn.value,
+                   isSignalAlertOn {
+                    self?.output.viewDidChangeAlertState(
+                        for: .signal(lower: 0, upper: 0),
+                        isOn: false
+                    )
+                }
             }
         }
 
@@ -1603,7 +1621,8 @@ extension TagSettingsViewController {
 
     private func rssiAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = rssiMinMaxForSliders()
-        let disableRssi = !hasMeasurement()
+        let disableRssi = !hasMeasurement() ||
+            !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.rssiAlertCell?.showNoticeView()
@@ -3485,7 +3504,8 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         selectedMaxValue: rssiUpperBound()
                     )
                     rssiAlertCell.disableEditing(
-                        disable: GlobalHelpers.getBool(from: !hasMeasurement()),
+                        disable: GlobalHelpers.getBool(from: !hasMeasurement()) ||
+                            !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value),
                         identifier: currentSection.identifier
                     )
                 }

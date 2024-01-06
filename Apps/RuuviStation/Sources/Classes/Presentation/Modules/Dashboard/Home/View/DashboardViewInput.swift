@@ -8,6 +8,7 @@ protocol DashboardViewInput: ViewInput {
     var dashboardTapActionType: DashboardTapActionType! { get set }
     var dashboardSortingType: DashboardSortingType! { get set }
     var userSignedInOnce: Bool { get set }
+    var isAuthorized: Bool { get set }
     func applyUpdate(to viewModel: CardsViewModel)
     func showNoSensorsAddedMessage(show: Bool)
     func showBluetoothDisabled(userDeclined: Bool)

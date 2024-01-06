@@ -574,6 +574,7 @@ extension DashboardPresenter: TagSettingsModuleOutput {
 extension DashboardPresenter {
     private func syncViewModels() {
         view?.userSignedInOnce = settings.signedInAtleastOnce
+        view?.isAuthorized = ruuviUser.isAuthorized
         view?.dashboardType = settings.dashboardType
         view?.dashboardTapActionType = settings.dashboardTapActionType
         view?.dashboardSortingType = dashboardSortingType()
@@ -1541,6 +1542,7 @@ extension DashboardPresenter {
                 using: { [weak self] _ in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
+                        self.view?.dashboardSortingType = self.dashboardSortingType()
                         self.viewModels = self.reorder(self.viewModels)
                     }
                 }
