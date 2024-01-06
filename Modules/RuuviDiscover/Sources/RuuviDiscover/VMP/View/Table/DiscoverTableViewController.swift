@@ -51,6 +51,12 @@ class DiscoverTableViewController: UIViewController {
 // MARK: - DiscoverViewInput
 
 extension DiscoverTableViewController: DiscoverViewInput {
+    func style() {
+        actionButton.tintColor = RuuviColor.tintColor.color
+        navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
+        view.backgroundColor = RuuviColor.primary.color
+    }
+
     func localize() {
         navigationItem.title = RuuviLocalization.DiscoverTable.NavigationItem.title
     }
@@ -213,6 +219,7 @@ extension DiscoverTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         localize()
+        style()
         configureViews()
         updateUI()
         output.viewDidLoad()
@@ -276,6 +283,7 @@ extension DiscoverTableViewController: UITableViewDataSource {
             cell.descriptionLabel.text = isBluetoothEnabled
             ? RuuviLocalization.DiscoverTable.NoDevicesSection.NotFound.text
             : RuuviLocalization.DiscoverTable.NoDevicesSection.BluetoothDisabled.text
+            cell.descriptionLabel.textColor = RuuviColor.menuTextColor.color
             return cell
         }
     }
@@ -306,6 +314,7 @@ extension DiscoverTableViewController: UITableViewDelegate {
 extension DiscoverTableViewController {
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverRuuviTagViewModel) {
         cell.identifierLabel.text = displayName(for: device)
+        cell.identifierLabel.textColor = RuuviColor.menuTextColor.color
 
         // RSSI
         if let rssi = device.rssi {
