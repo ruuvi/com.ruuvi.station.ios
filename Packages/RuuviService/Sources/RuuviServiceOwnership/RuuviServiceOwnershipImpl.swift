@@ -220,7 +220,6 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             }
         }
         propertiesService.removeImage(for: sensor)
-        localIDs.clear(sensor: sensor)
         Future.zip([
             deleteTagOperation,
             deleteRecordsOperation,

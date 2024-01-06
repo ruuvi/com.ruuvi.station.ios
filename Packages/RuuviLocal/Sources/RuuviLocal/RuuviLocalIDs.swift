@@ -6,5 +6,4 @@ public protocol RuuviLocalIDs {
     func set(mac: MACIdentifier, for luid: LocalIdentifier)
     func luid(for mac: MACIdentifier) -> LocalIdentifier?
     func set(luid: LocalIdentifier, for mac: MACIdentifier)
-    func clear(sensor: RuuviTagSensor)
 }

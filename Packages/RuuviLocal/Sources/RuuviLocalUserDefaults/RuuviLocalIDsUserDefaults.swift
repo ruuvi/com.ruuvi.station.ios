@@ -17,13 +17,4 @@ class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
     func set(luid: LocalIdentifier, for mac: MACIdentifier) {
         UserDefaults.standard.set(luid.value, forKey: mac.value)
     }
-
-    func clear(sensor: RuuviTagSensor) {
-        if let luid = sensor.luid {
-            UserDefaults.standard.set(nil, forKey: luid.value)
-        }
-        if let macId = sensor.macId {
-            UserDefaults.standard.set(nil, forKey: macId.value)
-        }
-    }
 }
