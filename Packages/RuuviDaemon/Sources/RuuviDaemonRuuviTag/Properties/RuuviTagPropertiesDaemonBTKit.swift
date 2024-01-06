@@ -111,6 +111,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
 
     private func restartObserving() {
         removeTokens()
+        listenToUuidChangesForMac()
         for ruuviTag in ruuviTags {
             if let luid = ruuviTag.luid {
                 observeTokens.append(foreground.observe(
@@ -171,6 +172,22 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     })
             }
         }
+    }
+
+    private func listenToUuidChangesForMac() {
+        let scanToken = foreground.scan(self, closure: { [weak self] _, device in
+            guard let self,
+                  let tag = device.ruuvi?.tag,
+                  let luid = tag.luid,
+                  let macId = tag.macId
+            else {
+                return
+            }
+            if idPersistence.luid(for: macId)?.any != luid.any {
+                idPersistence.set(luid: luid, for: macId)
+            }
+        })
+        scanTokens.append(scanToken)
     }
 
     private func scanRemoteSensor(ruuviTag: AnyRuuviTagSensor) {
