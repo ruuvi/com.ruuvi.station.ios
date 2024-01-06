@@ -1,0 +1,62 @@
+BUILD_NUMBER: &BUILD_NUMBER 1
+APP_VERSION: &APP_VERSION 1.0.0
+PROJECT_NAME: &PROJECT_NAME RuuviX
+DEVELOPMENT_TEAM: &DEVELOPMENT_TEAM 4MUYJ4YYH4
+BUNDLE_ID_PREFIX: &BUNDLE_ID_PREFIX com.ruuvi
+
+attributes:
+  ORGANIZATIONNAME: Ruuvi Innovations Oy
+
+settings:
+  base:
+    CURRENT_PROJECT_VERSION: *BUILD_NUMBER
+    MARKETING_VERSION: *APP_VERSION
+    DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
+
+name: *PROJECT_NAME
+
+options:
+  bundleIdPrefix: *BUNDLE_ID_PREFIX
+  developmentLanguage: en
+  supportedDestinations: [iOS, macOS]
+  deploymentTarget:
+    iOS: 16.0
+    macOS: 13.0
+
+targetTemplates:
+  CommonFramework:
+    name: "${target_name}"
+    type: framework
+    supportedDestinations: [iOS, macOS]
+    info:
+      path: Common/${target_name}/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+    settings:
+      base:
+        DEVELOPMENT_TEAM: *DEVELOPMENT_TEAM
+        TARGETED_DEVICE_FAMILY: 1,2
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruuvi.station.${target_name}
+        PRODUCT_NAME: "${target_name}"
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        MERGEABLE_LIBRARY: false
+
+packages:
+  BTKit:
+    url: https://github.com/ruuvi/BTKit
+    from: 0.5.2
+  swift-composable-architecture:
+    url: https://github.com/pointfreeco/swift-composable-architecture.git
+    branch: observation-beta
+
+include:
+- Common/RuuviLocalization/target.yml
+- Apps/StationX/target.yml
+
+configs:
+  Alpha: debug
+  Debug: debug
+  Release: release

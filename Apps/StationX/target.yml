@@ -1,0 +1,74 @@
+--- 
+targets:
+  stationX:
+    type: application
+    deploymentTarget:
+      iOS: 16.0
+      macOS: 13.0
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - path: Sources/
+        name: StationX
+        excludes:
+        - "*.entitlements"
+        - Info.plist
+    dependencies:
+      - package: BTKit
+      - package: swift-composable-architecture
+        product: ComposableArchitecture
+      - target: RuuviLocalization
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Ruuvi Station X
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight, UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
+        BGTaskSchedulerPermittedIdentifiers: [com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning]
+        FirebaseMessagingAutoInitEnabled: false
+        LSApplicationQueriesSchemes: [https, http, mailto]
+        LSRequiresIPhoneOS: true
+        NFCReaderUsageDescription: Allows user to claim a RuuviTag using NFC when the user has physical access to the sensor
+        NSBluetoothAlwaysUsageDescription: The app uses Bluetooth LE to read data from Ruuvi Sensors
+        NSBluetoothPeripheralUsageDescription: The app uses Bluetooth LE to read data from RuuviTag sensors.
+        NSCameraUsageDescription: Ruuvi Station needs to access your camera in order to be able to capture photos and use them as sensor background.
+        NSLocationAlwaysAndWhenInUseUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
+        NSLocationAlwaysUsageDescription: Ruuvi Station needs to access your location while being in background in order to pull data for Virtual Sensors for your current location and display alerts.
+        NSLocationUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
+        NSLocationWhenInUseUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
+        NSPhotoLibraryUsageDescription: Ruuvi Station needs to access your camera roll to enable selecting the background for the sensor.
+        NSUserActivityTypes: [RuuviTagSelectionIntent]
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Muli-SemiBoldItalic.ttf,Muli-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
+        UIBackgroundModes: [bluetooth-central, processing, remote-notification]
+        UIRequiredDeviceCapabilities: [armv7]
+        UIRequiresFullScreen: true
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight,UIInterfaceOrientationPortrait,  UIInterfaceOrientationPortraitUpsideDown]
+        UIViewControllerBasedStatusBarAppearance: true
+    settings:
+      base:
+        MERGED_BINARY_TYPE: "manual"
+        TARGETED_DEVICE_FAMILY: 1,2
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: true
+        CODE_SIGN_ENTITLEMENTS: Apps/StationX/Sources/Station.entitlements
+      configs:
+        Alpha: 
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.stationX"
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.stationX"
+    postCompileScripts:
+      - path: ../../scripts/build/lint.sh
+        name: Lint
+        basedOnDependencyAnalysis: false
+schemes:
+  stationX:
+    build:
+      targets:
+        stationX: all

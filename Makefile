@@ -4,6 +4,10 @@
 xcodeproj: installed_xcodegen installed_swiftgen installed_swiftlint
 	scripts/generate_project.sh
 
+# make station X project
+x: installed_xcodegen installed_swiftgen installed_swiftlint
+	scripts/generate_project_x.sh
+
 # install firebase
 installed_firebase: .tools/firebase/firebase
 
