@@ -90,7 +90,6 @@ public enum RuuviAsset {
     public static let ruuviCloud = ImageAsset(name: "ruuvi-cloud")
     public static let ruuviActivityPresenterLogo = ImageAsset(name: "ruuvi_activity_presenter_logo")
     public static let ruuviLogo = ImageAsset(name: "ruuvi_logo")
-    public static let ruuviLogoDarkBgPdf = ImageAsset(name: "ruuvi_logo_dark_bg_pdf")
     public static let ruuviStation = ImageAsset(name: "ruuvi_station")
     public static let ruuvitagB8AndOlderButtonLocation = ImageAsset(name: "ruuvitag-b8-and-older-button-location")
     public static let setAlerts = ImageAsset(name: "set_alerts")
