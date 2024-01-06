@@ -745,8 +745,6 @@ extension TagChartsViewController: TagChartsViewInput {
             dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
         case .ruuviNetwork:
             dataSourceIconView.image = RuuviAsset.iconGateway.image
-        case .weatherProvider:
-            dataSourceIconView.image = RuuviAsset.iconWeatherstation.image
         }
     }
 

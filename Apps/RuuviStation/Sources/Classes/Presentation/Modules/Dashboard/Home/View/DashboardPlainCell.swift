@@ -389,15 +389,13 @@ extension DashboardPlainCell {
                 dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .ruuviNetwork:
                 dataSourceIconView.image = RuuviAsset.iconGateway.image
-            case .weatherProvider:
-                dataSourceIconView.image = RuuviAsset.iconWeatherstation.image
             }
         } else {
             dataSourceIconView.image = nil
         }
 
         switch viewModel.source.value {
-        case .ruuviNetwork, .weatherProvider:
+        case .ruuviNetwork:
             dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularWidth
         default:
             dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth

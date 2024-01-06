@@ -342,8 +342,6 @@ extension CardsLargeImageCell {
                 dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
             case .ruuviNetwork:
                 dataSourceIconView.image = RuuviAsset.iconGateway.image
-            case .weatherProvider:
-                dataSourceIconView.image = RuuviAsset.iconWeatherstation.image
             }
         } else {
             dataSourceIconView.image = nil

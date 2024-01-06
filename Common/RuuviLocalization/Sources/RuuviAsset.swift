@@ -78,7 +78,6 @@ public enum RuuviAsset {
     public static let iconMeasureSignal = ImageAsset(name: "icon-measure-signal")
     public static let iconRefresh = ImageAsset(name: "icon-refresh")
     public static let iconWarning = ImageAsset(name: "icon-warning")
-    public static let iconWeatherstation = ImageAsset(name: "icon-weatherstation")
     public static let iconBackArrow = ImageAsset(name: "icon_back_arrow")
     public static let iconSyncBt = ImageAsset(name: "icon_sync_bt")
     public static let iphoneIcon = ImageAsset(name: "iphone_icon")
