@@ -1,5 +1,5 @@
 import BTKit
-import Charts
+import DGCharts
 import CoreBluetooth
 import Foundation
 import Future

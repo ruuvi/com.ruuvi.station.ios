@@ -1,5 +1,5 @@
 import BTKit
-import Charts
+import DGCharts
 // swiftlint:disable file_length
 import Foundation
 import GestureInstructions
