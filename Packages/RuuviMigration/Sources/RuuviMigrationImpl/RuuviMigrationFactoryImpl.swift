@@ -8,6 +8,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let settings: RuuviLocalSettings
     private let idPersistence: RuuviLocalIDs
     private let ruuviPool: RuuviPool
+    private let sqliteContext: SQLiteContext
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
     private let ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration
@@ -16,6 +17,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         settings: RuuviLocalSettings,
         idPersistence: RuuviLocalIDs,
         ruuviPool: RuuviPool,
+        sqliteContext: SQLiteContext,
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert,
         ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration
@@ -23,6 +25,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         self.settings = settings
         self.idPersistence = idPersistence
         self.ruuviPool = ruuviPool
+        self.sqliteContext = sqliteContext
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
         self.ruuviOffsetCalibrationService = ruuviOffsetCalibrationService
@@ -50,6 +53,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             ruuviAlertService: ruuviAlertService
         )
         let toNetworkPull60 = MigrationManagerToNetworkPull60(settings: settings)
+        let isExcludedFromBackup = MigrationManagerIsExcludedFromBackup(sqliteContext: sqliteContext)
         return [
             toAlertService,
             toPrune240,
@@ -59,6 +63,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             toTimeouts,
             fixRHAlerts,
             toNetworkPull60,
+            isExcludedFromBackup,
         ]
     }
 }

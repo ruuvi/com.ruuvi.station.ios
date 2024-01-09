@@ -8,7 +8,7 @@ final class KeychainServiceImpl {
     )
     .label("Ruuvi Station")
     .synchronizable(false)
-    .accessibility(.afterFirstUnlock)
+    .accessibility(.afterFirstUnlockThisDeviceOnly)
 
     private enum Account: String {
         case ruuviUserApi
