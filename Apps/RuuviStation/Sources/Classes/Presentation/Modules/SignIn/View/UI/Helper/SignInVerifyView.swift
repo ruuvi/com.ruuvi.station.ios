@@ -124,7 +124,7 @@ extension SignInVerifyView {
             trailing: beaverContainerView.trailingAnchor
         )
         beaverImageView.constrainHeight(constant: 400)
-        beaverImageView.image = RuuviAssets.signInBeaver.resize(targetHeight: 400)
+        beaverImageView.image = RuuviAsset.beaverMail.image.resize(targetHeight: 400)
         beaverImageView.centerYInSuperview()
     }
 }

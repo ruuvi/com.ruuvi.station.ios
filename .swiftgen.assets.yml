@@ -1,13 +1,3 @@
-xcassets:
-  - inputs: ./Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
-    outputs:
-      - templatePath: ./Common/RuuviLocalization/Templates/xcassets-swift5.stencil
-        output: ./Common/RuuviLocalization/Sources/RuuviColor.swift
-        params:
-          forceProvidesNamespaces: true 
-          publicAccess: true             
-          enumName: RuuviColor
-
 strings:
   - inputs: ./Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strings
     outputs:
@@ -16,4 +6,22 @@ strings:
         params:
           forceProvidesNamespaces: true 
           publicAccess: true             
-          enumName: RuuviLocalization        
+          enumName: RuuviLocalization
+
+xcassets:
+  - inputs: ./Common/RuuviLocalization/Sources/Resources/RuuviAssets.xcassets
+    outputs:
+      - templatePath: ./Common/RuuviLocalization/Templates/xcassets-swift5.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviAsset.swift
+        params:
+          forceProvidesNamespaces: true 
+          publicAccess: true             
+          enumName: RuuviAsset
+  - inputs: ./Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
+    outputs:
+      - templatePath: ./Common/RuuviLocalization/Templates/xcassets-swift5.stencil
+        output: ./Common/RuuviLocalization/Sources/RuuviColor.swift
+        params:
+          forceProvidesNamespaces: true 
+          publicAccess: true             
+          enumName: RuuviColor

@@ -62,7 +62,7 @@ class CardsViewController: UIViewController {
     // Ruuvi Logo
     private lazy var ruuviLogoView: UIImageView = {
         let iv = UIImageView(
-            image: UIImage(named: "ruuvi_logo_"),
+            image: RuuviAsset.ruuviLogo.image.withRenderingMode(.alwaysTemplate),
             contentMode: .scaleAspectFit
         )
         iv.tintColor = .white
@@ -73,7 +73,7 @@ class CardsViewController: UIViewController {
     private lazy var backButton: UIButton = {
         let button = UIButton()
         button.tintColor = .white
-        let buttonImage = RuuviAssets.backButtonImage
+        let buttonImage = RuuviAsset.chevronBack.image
         button.setImage(buttonImage, for: .normal)
         button.setImage(buttonImage, for: .highlighted)
         button.imageView?.tintColor = .white
@@ -98,7 +98,7 @@ class CardsViewController: UIViewController {
     }()
 
     private lazy var chartButton: RuuviCustomButton = {
-        let button = RuuviCustomButton(icon: RuuviAssets.chartsIcon)
+        let button = RuuviCustomButton(icon: RuuviAsset.iconChartsButton.image)
         button.backgroundColor = .clear
         button.addGestureRecognizer(
             UITapGestureRecognizer(
@@ -111,7 +111,7 @@ class CardsViewController: UIViewController {
 
     private lazy var settingsButton: RuuviCustomButton = {
         let button = RuuviCustomButton(
-            icon: RuuviAssets.settingsIcon,
+            icon: RuuviAsset.baselineSettingsWhite48pt.image,
             iconSize: .init(width: 26, height: 25)
         )
         button.backgroundColor = .clear
@@ -505,7 +505,7 @@ extension CardsViewController {
     }
 
     func showChart(module: UIViewController) {
-        chartButton.image = RuuviAssets.cardsIcon
+        chartButton.image = RuuviAsset.iconCardsButton.image
         chartViewBackground.alpha = 1
         collectionView.isHidden = true
         module.willMove(toParent: self)
@@ -517,7 +517,7 @@ extension CardsViewController {
     }
 
     func dismissChart() {
-        chartButton.image = RuuviAssets.chartsIcon
+        chartButton.image = RuuviAsset.iconChartsButton.image
         chartViewBackground.alpha = 0
         children.forEach {
             $0.willMove(toParent: nil)
@@ -791,7 +791,7 @@ extension CardsViewController {
         ]
 
         if mutedTills.first(where: { $0 != nil }) != nil {
-            alertButton.image = RuuviAssets.alertOffImage
+            alertButton.image = RuuviAsset.iconAlertOff.image
             removeAlertAnimations(alpha: 0.5)
             return
         }
@@ -799,14 +799,14 @@ extension CardsViewController {
         if let state = currentVisibleItem?.alertState.value {
             switch state {
             case .empty:
-                alertButton.image = RuuviAssets.alertOffImage
+                alertButton.image = RuuviAsset.iconAlertOff.image
                 removeAlertAnimations(alpha: 0.5)
             case .registered:
-                alertButton.image = RuuviAssets.alertOnImage
+                alertButton.image = RuuviAsset.iconAlertOn.image
                 removeAlertAnimations()
             case .firing:
                 alertButton.alpha = 1.0
-                alertButton.image = RuuviAssets.alertActiveImage
+                alertButton.image = RuuviAsset.iconAlertActive.image
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     UIView.animate(
                         withDuration: 0.5,

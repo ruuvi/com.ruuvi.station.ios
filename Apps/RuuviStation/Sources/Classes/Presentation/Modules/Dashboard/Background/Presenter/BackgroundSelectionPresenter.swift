@@ -155,7 +155,7 @@ extension BackgroundSelectionPresenter {
             let model = DefaultBackgroundModel(
                 id: i,
                 image: image,
-                thumbnail: image.resize()
+                thumbnail: image?.resize()
             )
             defaultImages.append(model)
         }

@@ -62,10 +62,7 @@ struct ActivityPresenterContentView: View {
     private var contentImage: Image? {
         switch state {
         case .loading:
-            Image(
-                ActivityPresenterAssets.activityLogoRuuvi,
-                bundle: .pod(ActivityPresenterViewProvider.self)
-            )
+            RuuviAsset.ruuviActivityPresenterLogo.swiftUIImage
         case .success:
             Image(systemName: "checkmark")
         case .failed:

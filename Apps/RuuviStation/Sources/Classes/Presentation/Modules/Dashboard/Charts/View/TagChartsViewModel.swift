@@ -1,4 +1,4 @@
-import Charts
+import DGCharts
 import Humidity
 import RuuviOntology
 import UIKit

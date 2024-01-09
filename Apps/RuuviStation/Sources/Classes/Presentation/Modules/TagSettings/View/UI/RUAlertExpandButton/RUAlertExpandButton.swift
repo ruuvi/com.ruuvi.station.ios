@@ -15,7 +15,7 @@ class RUAlertExpandButton: UIView {
     lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
-        iv.image = UIImage(named: "chevron.down")
+        iv.image = RuuviAsset.chevronDown.image
         iv.tintColor = RuuviColor.tintColor.color
         iv.contentMode = .scaleAspectFit
         return iv

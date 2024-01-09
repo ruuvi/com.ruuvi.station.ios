@@ -1,4 +1,4 @@
-import Charts
+import DGCharts
 import Foundation
 
 public class YAxisValueFormatter: NSObject, AxisValueFormatter {

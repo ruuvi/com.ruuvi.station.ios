@@ -7,7 +7,6 @@ public enum RuuviTagSensorRecordSource: String {
     case log
     case heartbeat
     case ruuviNetwork
-    case weatherProvider
 }
 
 public protocol RuuviTagSensorRecord: PhysicalSensor {

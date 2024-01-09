@@ -14,12 +14,15 @@ targets:
       optional: true
     - path: Sources/RuuviColor.swift
       optional: true
+    - path: Sources/RuuviAsset.swift
+      optional: true
     preBuildScripts:
       - path: ../../scripts/build/generate_resources.sh
         name: Generate Resources
         inputFiles:
           - $(SRCROOT)/station.localization/station.localization.json
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviColors.xcassets
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/RuuviAssets.xcassets
           - $(SRCROOT)/Common/RuuviLocalization/Templates/strings-swift5.stencil
           - $(SRCROOT)/Common/RuuviLocalization/Templates/xcassets-swift5.stencil
         outputFiles:
@@ -31,3 +34,4 @@ targets:
           - $(SRCROOT)/Common/RuuviLocalization/Sources/Resources/de.lproj/Localizable.strings
           - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviLocalization.swift
           - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviColor.swift
+          - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviAsset.swift

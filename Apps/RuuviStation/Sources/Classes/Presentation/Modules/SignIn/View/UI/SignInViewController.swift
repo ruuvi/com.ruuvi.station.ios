@@ -21,7 +21,7 @@ class SignInViewController: UIViewController {
     // UI Componenets starts
     private lazy var backButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
-            image: RuuviAssets.backButtonImage,
+            image: RuuviAsset.chevronBack.image,
             style: .plain,
             target: self,
             action: #selector(handleBackButtonTap)
@@ -31,7 +31,7 @@ class SignInViewController: UIViewController {
     }()
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: RuuviAssets.signInBgLayer)
+        let iv = UIImageView(image: RuuviAsset.signInBgLayer.image)
         iv.backgroundColor = .clear
         return iv
     }()
