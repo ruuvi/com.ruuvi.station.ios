@@ -58,6 +58,7 @@ private final class MigrationAssembly: Assembly {
             let settings = r.resolve(RuuviLocalSettings.self)!
             let idPersistence = r.resolve(RuuviLocalIDs.self)!
             let ruuviPool = r.resolve(RuuviPool.self)!
+            let sqliteContext = r.resolve(SQLiteContext.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
             let ruuviOffsetCalibrationService = r.resolve(RuuviServiceOffsetCalibration.self)!
@@ -65,6 +66,7 @@ private final class MigrationAssembly: Assembly {
                 settings: settings,
                 idPersistence: idPersistence,
                 ruuviPool: ruuviPool,
+                sqliteContext: sqliteContext,
                 ruuviStorage: ruuviStorage,
                 ruuviAlertService: ruuviAlertService,
                 ruuviOffsetCalibrationService: ruuviOffsetCalibrationService

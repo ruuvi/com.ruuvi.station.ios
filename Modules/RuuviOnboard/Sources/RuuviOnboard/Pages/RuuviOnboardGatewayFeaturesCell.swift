@@ -31,10 +31,7 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
 
     private lazy var gateWayImageView: UIImageView = {
         let iv = UIImageView(
-            image: UIImage.named(
-                RuuviAssets.gateway,
-                for: Self.self
-            ),
+            image: RuuviAsset.Onboarding.gateway.image,
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
@@ -165,6 +162,6 @@ extension RuuviOnboardGatewayFeaturesCell {
         else {
             return
         }
-        appImageView.image = UIImage.named(image, for: Self.self)
+        appImageView.image = image
     }
 }

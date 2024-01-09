@@ -111,7 +111,7 @@ class DashboardViewController: UIViewController {
     // Ruuvi Logo
     private lazy var ruuviLogoView: UIImageView = {
         let iv = UIImageView(
-            image: UIImage(named: "ruuvi_logo_"),
+            image: RuuviAsset.ruuviLogo.image.withRenderingMode(.alwaysTemplate),
             contentMode: .scaleAspectFit
         )
         iv.backgroundColor = .clear
@@ -123,7 +123,7 @@ class DashboardViewController: UIViewController {
     private lazy var menuButton: UIButton = {
         let button = UIButton()
         button.tintColor = RuuviColor.menuTintColor.color
-        let menuImage = UIImage(named: "baseline_menu_white_48pt")
+        let menuImage = RuuviAsset.baselineMenuWhite48pt.image
         button.setImage(menuImage, for: .normal)
         button.setImage(menuImage, for: .highlighted)
         button.backgroundColor = .clear
@@ -140,7 +140,7 @@ class DashboardViewController: UIViewController {
             menu: viewToggleMenuOptions(),
             titleColor: RuuviColor.dashboardIndicator.color,
             title: RuuviLocalization.view,
-            icon: RuuviAssets.dropDownArrowImage,
+            icon: RuuviAsset.arrowDropDown.image,
             iconTintColor: RuuviColor.logoTintColor.color,
             iconSize: .init(width: 14, height: 14),
             preccedingIcon: false

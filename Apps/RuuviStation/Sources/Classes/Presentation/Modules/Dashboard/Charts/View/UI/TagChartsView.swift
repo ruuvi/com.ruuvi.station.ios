@@ -1,4 +1,4 @@
-import Charts
+import DGCharts
 import RuuviLocal
 import RuuviLocalization
 import RuuviOntology

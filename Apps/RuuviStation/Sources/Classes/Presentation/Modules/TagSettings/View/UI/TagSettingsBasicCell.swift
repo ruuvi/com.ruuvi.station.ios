@@ -113,7 +113,7 @@ class TagSettingsBasicCell: UITableViewCell {
     func setAccessory(type: TagSettingsBasicAccessory) {
         switch type {
         case .pencil:
-            iconView.image = RuuviAssets.editPenImage
+            iconView.image = RuuviAsset.editPen.image
             iconView.tintColor = RuuviColor.tintColor.color
             iconHiddenWidthConstraints.forEach { anchor in
                 anchor.isActive = false

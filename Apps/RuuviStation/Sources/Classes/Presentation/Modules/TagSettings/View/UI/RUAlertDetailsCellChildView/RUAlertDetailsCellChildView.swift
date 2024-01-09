@@ -22,7 +22,7 @@ class RUAlertDetailsCellChildView: UIView {
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
-        iv.image = RuuviAssets.editPenImage
+        iv.image = RuuviAsset.editPen.image
         iv.tintColor = RuuviColor.tintColor.color
         iv.contentMode = .scaleAspectFit
         return iv
