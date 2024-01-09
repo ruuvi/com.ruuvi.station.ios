@@ -136,9 +136,16 @@ public extension WidgetViewModel {
     internal func measurementTime(from entry: WidgetEntry) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale.autoupdatingCurrent
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter.string(from: entry.record?.date ?? Date())
+        let date = entry.record?.date ?? Date()
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+        } else {
+            formatter.dateStyle = .short
+            formatter.timeStyle = .none
+        }
+        return formatter.string(from: date)
     }
 }
 
