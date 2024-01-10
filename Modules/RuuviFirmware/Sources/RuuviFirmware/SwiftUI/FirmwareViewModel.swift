@@ -59,6 +59,10 @@ final class FirmwareViewModel: ObservableObject {
     func ensureBatteryHasEnoughPower(uuid: String) {
         interactor.ensureBatteryHasEnoughPower(uuid: uuid)
     }
+
+    func restartPropertiesDaemon() {
+        interactor.restartPropertiesDaemon()
+    }
 }
 
 // MARK: - Feedbacks

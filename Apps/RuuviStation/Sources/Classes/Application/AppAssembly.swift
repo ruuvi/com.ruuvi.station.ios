@@ -640,8 +640,11 @@ private final class ModulesAssembly: Assembly {
             let permissionsManager = r.resolve(RuuviCorePermission.self)!
             let permissionPresenter = r.resolve(PermissionPresenter.self)!
             let foreground = r.resolve(BTForeground.self)!
+            let background = r.resolve(BTBackground.self)!
             let ruuviReactor = r.resolve(RuuviReactor.self)!
             let ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)!
+            let propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)!
+            let ruuviDFU = r.resolve(RuuviDFU.self)!
 
             let factory = RuuviDiscoverFactory()
             let dependencies = RuuviDiscoverDependencies(
@@ -650,6 +653,9 @@ private final class ModulesAssembly: Assembly {
                 permissionsManager: permissionsManager,
                 permissionPresenter: permissionPresenter,
                 foreground: foreground,
+                background: background,
+                propertiesDaemon: propertiesDaemon,
+                ruuviDFU: ruuviDFU,
                 ruuviReactor: ruuviReactor,
                 ruuviOwnershipService: ruuviOwnershipService,
                 firmwareBuilder: RuuviFirmwareBuilder()

@@ -6,6 +6,8 @@ import Foundation
 import Future
 import RuuviContext
 import RuuviCore
+import RuuviDaemon
+import RuuviDFU
 import RuuviFirmware
 import RuuviLocal
 import RuuviLocalization
@@ -35,6 +37,9 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var errorPresenter: ErrorPresenter!
     var activityPresenter: ActivityPresenter!
     var foreground: BTForeground!
+    var background: BTBackground!
+    var propertiesDaemon: RuuviTagPropertiesDaemon!
+    var ruuviDFU: RuuviDFU!
     var permissionsManager: RuuviCorePermission!
     var permissionPresenter: PermissionPresenter!
     var ruuviReactor: RuuviReactor!
@@ -261,7 +266,16 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidAskToUpgradeFirmware(of sensor: NFCSensor?) {
         guard let sensor else { return }
-        let firmwareModule = firmwareBuilder.build(uuid: sensor.id, currentFirmware: sensor.firmwareVersion)
+        let firmwareModule = firmwareBuilder.build(
+            uuid: sensor.id,
+            currentFirmware: sensor.firmwareVersion,
+            dependencies: RuuviFirmwareDependencies(
+                background: background,
+                foreground: foreground,
+                propertiesDaemon: propertiesDaemon,
+                ruuviDFU: ruuviDFU
+            )
+        )
         firmwareModule.output = self
         viewController.present(firmwareModule.viewController, animated: true)
         self.firmwareModule = firmwareModule
@@ -276,7 +290,16 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidConfirmToUpdateFirmware(for uuid: String) {
-        let firmwareModule = firmwareBuilder.build(uuid: uuid, currentFirmware: "<=2.5.9")
+        let firmwareModule = firmwareBuilder.build(
+            uuid: uuid,
+            currentFirmware: "<=2.5.9",
+            dependencies: RuuviFirmwareDependencies(
+                background: background,
+                foreground: foreground,
+                propertiesDaemon: propertiesDaemon,
+                ruuviDFU: ruuviDFU
+            )
+        )
         firmwareModule.output = self
         let firmwareViewController = firmwareModule.viewController
         firmwareViewController.presentationController?.delegate = self

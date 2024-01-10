@@ -39,16 +39,6 @@ final class DFUViewModel: ObservableObject {
         }
     }
 
-    private class RuuviTagPropertiesDaemonPair: NSObject {
-        var ruuviTag: AnyRuuviTagSensor
-        var device: RuuviTag
-
-        init(ruuviTag: AnyRuuviTagSensor, device: RuuviTag) {
-            self.ruuviTag = ruuviTag
-            self.device = device
-        }
-    }
-
     init(
         interactor: DFUInteractorInput,
         foreground: BTForeground,
