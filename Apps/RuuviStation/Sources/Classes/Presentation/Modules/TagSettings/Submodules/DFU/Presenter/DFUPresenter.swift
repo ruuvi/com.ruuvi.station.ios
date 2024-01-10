@@ -15,12 +15,13 @@ final class DFUPresenter: DFUModuleInput {
         if let view = weakView {
             return view
         } else {
+            viewModel.output = self
             let view = UIHostingController(rootView: DFUUIView(viewModel: viewModel))
             weakView = view
             return view
         }
     }
-
+    var output: DFUModuleOutput?
     private weak var weakView: UIViewController?
     private let viewModel: DFUViewModel
     private let interactor: DFUInteractorInput
@@ -77,5 +78,11 @@ final class DFUPresenter: DFUModuleInput {
         default:
             true
         }
+    }
+}
+
+extension DFUPresenter: DFUViewModelOutput {
+    func firmwareUpgradeDidFinishSuccessfully() {
+        output?.dfuModuleSuccessfullyUpgraded(self)
     }
 }

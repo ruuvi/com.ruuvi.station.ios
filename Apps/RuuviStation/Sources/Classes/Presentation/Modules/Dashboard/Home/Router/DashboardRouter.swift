@@ -213,15 +213,14 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
+        module.output = self
         dfuModule = module
         transitionHandler
-            .navigationController?
-            .pushViewController(
+            .present(
                 module.viewController,
                 animated: true
             )
-        transitionHandler
-            .navigationController?
+        module.viewController
             .presentationController?
             .delegate = self
     }
@@ -264,6 +263,16 @@ extension DashboardRouter: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(
         _: UIPresentationController
     ) -> Bool {
-        delegate.shouldDismissDiscover()
+        if let dfuModule {
+            dfuModule.isSafeToDismiss()
+        } else {
+            delegate.shouldDismissDiscover()
+        }
+    }
+}
+
+extension DashboardRouter: DFUModuleOutput {
+    func dfuModuleSuccessfullyUpgraded(_ dfuModule: DFUModuleInput) {
+        dfuModule.viewController.dismiss(animated: true)
     }
 }
