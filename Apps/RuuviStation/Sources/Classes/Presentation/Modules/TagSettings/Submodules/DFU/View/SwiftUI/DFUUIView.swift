@@ -32,6 +32,7 @@ struct DFUUIView: View {
         let successfulTitle = RuuviLocalization.DFUUIView.successfulTitle
         let errorTitle = RuuviLocalization.ErrorPresenterAlert.error
         let dbMigrationErrorTitle = RuuviLocalization.DFUUIView.DBMigration.Error.message
+        let finish = RuuviLocalization.DfuFlash.Finish.text
     }
 
     private let muliBold16 = Font(UIFont.Muli(.bold, size: 16))
@@ -435,16 +436,38 @@ struct DFUUIView: View {
                 .eraseToAnyView()
         case let .firmwareAfterUpdate(currentRelease):
             viewModel.storeUpdatedFirmware(currentRelease: currentRelease)
-            return Text(texts.successfulTitle)
-                .font(muliRegular16)
-                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
+            return VStack {
+                Text(texts.successfulTitle)
+                    .font(muliRegular16)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .topLeading
+                    )
+                    .padding()
+                Button(
+                    action: {
+                        viewModel.finish()
+                    },
+                    label: {
+                        Text(texts.finish)
+                            .font(muliBold16)
+                            .frame(maxWidth: .infinity)
+                    }
+                )
+                .buttonStyle(
+                    LargeButtonStyle(
+                        backgroundColor: RuuviColor.tintColor.swiftUIColor,
+                        foregroundColor: Color.white,
+                        isDisabled: false
+                    )
                 )
                 .padding()
-                .eraseToAnyView()
+                .frame(maxWidth: .infinity)
+            }
+            .padding()
+            .eraseToAnyView()
         }
     }
 

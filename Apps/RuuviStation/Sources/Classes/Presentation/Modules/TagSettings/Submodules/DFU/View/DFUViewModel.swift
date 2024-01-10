@@ -11,12 +11,18 @@ import RuuviPool
 import RuuviPresenters
 import RuuviStorage
 
+protocol DFUViewModelOutput: AnyObject {
+    func firmwareUpgradeDidFinishSuccessfully()
+}
+
 final class DFUViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published var downloadProgress: Double = 0
     @Published var flashProgress: Double = 0
     @Published var isMigrationFailed: Bool = false
 
+    var output: DFUViewModelOutput?
+    
     private var bag = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event, Never>()
     private let interactor: DFUInteractorInput
@@ -93,6 +99,10 @@ final class DFUViewModel: ObservableObject {
 
     func send(event: Event) {
         input.send(event)
+    }
+
+    func finish() {
+        output?.firmwareUpgradeDidFinishSuccessfully()
     }
 
     func storeUpdatedFirmware(currentRelease: CurrentRelease?) {

@@ -6,7 +6,7 @@ import UIKit
 
 class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     weak var transitionHandler: UIViewController!
-    private var dfuModule: DFUModuleInput?
+    private weak var dfuModule: DFUModuleInput?
     private var backgroundSelectionModule: BackgroundSelectionModuleInput?
 
     func dismiss(completion: (() -> Void)?) {
@@ -62,15 +62,14 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
         let module = factory.create(for: ruuviTag)
+        module.output = self
         dfuModule = module
         transitionHandler
-            .navigationController?
-            .pushViewController(
+            .present(
                 module.viewController,
                 animated: true
             )
-        transitionHandler
-            .navigationController?
+        module.viewController
             .presentationController?
             .delegate = self
     }
@@ -119,6 +118,12 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
 
 extension TagSettingsRouter: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
-        dfuModule?.isSafeToDismiss() ?? false
+        dfuModule?.isSafeToDismiss() ?? true
+    }
+}
+
+extension TagSettingsRouter: DFUModuleOutput {
+    func dfuModuleSuccessfullyUpgraded(_ dfuModule: DFUModuleInput) {
+        dfuModule.viewController.dismiss(animated: true)
     }
 }
