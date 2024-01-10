@@ -11,6 +11,8 @@ targets:
     - package: Future
     - target: RuuviOntology
     - target: RuuviContext
+    - target: RuuviDaemon
+    - target: RuuviDFU
     - target: RuuviReactor
     - target: RuuviLocal
     - target: RuuviService

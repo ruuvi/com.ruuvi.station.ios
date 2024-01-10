@@ -1,11 +1,24 @@
 import BTKit
+import RuuviDaemon
 import RuuviDFU
 
 public struct RuuviFirmwareDependencies {
     public var background: BTBackground
     public var foreground: BTForeground
+    public var propertiesDaemon: RuuviTagPropertiesDaemon
     public var ruuviDFU: RuuviDFU
-    public var firmwareRepository: FirmwareRepository
+
+    public init(
+        background: BTBackground,
+        foreground: BTForeground,
+        propertiesDaemon: RuuviTagPropertiesDaemon,
+        ruuviDFU: RuuviDFU
+    ) {
+        self.background = background
+        self.foreground = foreground
+        self.propertiesDaemon = propertiesDaemon
+        self.ruuviDFU = ruuviDFU
+    }
 }
 
 public final class RuuviFirmwareBuilder {
@@ -14,27 +27,17 @@ public final class RuuviFirmwareBuilder {
     public func build(
         uuid: String,
         currentFirmware: String? = nil,
-        dependencies: RuuviFirmwareDependencies = .default
+        dependencies: RuuviFirmwareDependencies
     ) -> RuuviFirmware {
         let presenter = FirmwarePresenter(
             uuid: uuid,
             currentFirmware: currentFirmware,
             background: dependencies.background,
             foreground: dependencies.foreground,
+            propertiesDaemon: dependencies.propertiesDaemon,
             ruuviDFU: dependencies.ruuviDFU,
-            firmwareRepository: dependencies.firmwareRepository
-        )
-        return presenter
-    }
-}
-
-public extension RuuviFirmwareDependencies {
-    static var `default`: Self {
-        RuuviFirmwareDependencies(
-            background: BTKit.background,
-            foreground: BTKit.foreground,
-            ruuviDFU: RuuviDFUImpl.shared,
             firmwareRepository: FirmwareRepositoryImpl()
         )
+        return presenter
     }
 }
