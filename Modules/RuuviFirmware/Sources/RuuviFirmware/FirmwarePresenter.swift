@@ -1,4 +1,5 @@
 import BTKit
+import RuuviDaemon
 import RuuviDFU
 import SwiftUI
 import UIKit
@@ -35,6 +36,7 @@ final class FirmwarePresenter: RuuviFirmware {
         currentFirmware: String?,
         background: BTBackground,
         foreground: BTForeground,
+        propertiesDaemon: RuuviTagPropertiesDaemon,
         ruuviDFU: RuuviDFU,
         firmwareRepository: FirmwareRepository
     ) {
@@ -43,6 +45,7 @@ final class FirmwarePresenter: RuuviFirmware {
         interactor = FirmwareInteractor(
             background: background,
             foreground: foreground,
+            propertiesDaemon: propertiesDaemon,
             ruuviDFU: ruuviDFU,
             firmwareRepository: firmwareRepository
         )

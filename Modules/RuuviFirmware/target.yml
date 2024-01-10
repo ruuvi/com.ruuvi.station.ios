@@ -11,5 +11,6 @@ targets:
     - Module
     dependencies:
     - package: BTKit
+    - target: RuuviDaemon
     - target: RuuviDFU
     - target: RuuviLocalization

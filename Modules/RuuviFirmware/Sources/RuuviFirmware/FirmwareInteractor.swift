@@ -1,6 +1,7 @@
 import BTKit
 import Combine
 import Foundation
+import RuuviDaemon
 import RuuviDFU
 
 struct CurrentRelease {
@@ -21,6 +22,7 @@ final class FirmwareInteractor {
     var batteryIsLow = CurrentValueSubject<Bool, Never>(false)
     private let background: BTBackground
     private let foreground: BTForeground
+    private let propertiesDaemon: RuuviTagPropertiesDaemon
     private let firmwareRepository: FirmwareRepository
     private let ruuviDFU: RuuviDFU
     private var ruuviTagObservationToken: ObservationToken?
@@ -28,17 +30,23 @@ final class FirmwareInteractor {
     init(
         background: BTBackground,
         foreground: BTForeground,
+        propertiesDaemon: RuuviTagPropertiesDaemon,
         ruuviDFU: RuuviDFU,
         firmwareRepository: FirmwareRepository
     ) {
         self.background = background
         self.foreground = foreground
+        self.propertiesDaemon = propertiesDaemon
         self.ruuviDFU = ruuviDFU
         self.firmwareRepository = firmwareRepository
     }
 
     deinit {
         ruuviTagObservationToken?.invalidate()
+    }
+
+    func restartPropertiesDaemon() {
+        propertiesDaemon.start()
     }
 
     func ensureBatteryHasEnoughPower(uuid: String) {

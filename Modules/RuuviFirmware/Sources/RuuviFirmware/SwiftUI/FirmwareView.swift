@@ -440,6 +440,11 @@ struct FirmwareView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             viewModel.send(event: .onAppear)
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
+        .onDisappear {
+            viewModel.restartPropertiesDaemon()
+            UIApplication.shared.isIdleTimerDisabled = false
         }
     }
 }

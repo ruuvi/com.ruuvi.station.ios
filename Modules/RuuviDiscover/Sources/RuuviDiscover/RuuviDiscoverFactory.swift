@@ -2,6 +2,8 @@ import BTKit
 import Foundation
 import RuuviContext
 import RuuviCore
+import RuuviDaemon
+import RuuviDFU
 import RuuviFirmware
 import RuuviLocal
 import RuuviPresenters
@@ -14,6 +16,9 @@ public struct RuuviDiscoverDependencies {
     var permissionsManager: RuuviCorePermission
     var permissionPresenter: PermissionPresenter
     var foreground: BTForeground
+    var background: BTBackground
+    var propertiesDaemon: RuuviTagPropertiesDaemon
+    var ruuviDFU: RuuviDFU
     var ruuviReactor: RuuviReactor
     var ruuviOwnershipService: RuuviServiceOwnership
     var firmwareBuilder: RuuviFirmwareBuilder
@@ -24,6 +29,9 @@ public struct RuuviDiscoverDependencies {
         permissionsManager: RuuviCorePermission,
         permissionPresenter: PermissionPresenter,
         foreground: BTForeground,
+        background: BTBackground,
+        propertiesDaemon: RuuviTagPropertiesDaemon,
+        ruuviDFU: RuuviDFU,
         ruuviReactor: RuuviReactor,
         ruuviOwnershipService: RuuviServiceOwnership,
         firmwareBuilder: RuuviFirmwareBuilder
@@ -33,6 +41,9 @@ public struct RuuviDiscoverDependencies {
         self.permissionsManager = permissionsManager
         self.permissionPresenter = permissionPresenter
         self.foreground = foreground
+        self.background = background
+        self.propertiesDaemon = propertiesDaemon
+        self.ruuviDFU = ruuviDFU
         self.ruuviReactor = ruuviReactor
         self.ruuviOwnershipService = ruuviOwnershipService
         self.firmwareBuilder = firmwareBuilder
@@ -49,6 +60,9 @@ public final class RuuviDiscoverFactory {
         presenter.permissionsManager = dependencies.permissionsManager
         presenter.permissionPresenter = dependencies.permissionPresenter
         presenter.foreground = dependencies.foreground
+        presenter.background = dependencies.background
+        presenter.propertiesDaemon = dependencies.propertiesDaemon
+        presenter.ruuviDFU = dependencies.ruuviDFU
         presenter.ruuviReactor = dependencies.ruuviReactor
         presenter.ruuviOwnershipService = dependencies.ruuviOwnershipService
         presenter.firmwareBuilder = dependencies.firmwareBuilder
