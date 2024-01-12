@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocalization
 
 public enum WidgetSensorEnum: Int {
     case temperature = 1
@@ -21,7 +22,7 @@ extension WidgetSensorEnum {
         case .pressure:
             settings.pressureUnit.symbol
         case .movement_counter:
-            "Cards.Movements.title".localized
+            RuuviLocalization.Cards.Movements.title
         case .battery_voltage:
             "v"
         case .acceleration_x,
