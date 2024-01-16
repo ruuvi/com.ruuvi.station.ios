@@ -44,7 +44,7 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet var ruuviCloudTitleLabel: UILabel!
     @IBOutlet var ruuviCloudCell: UITableViewCell!
 
-    #if DEVELOPMENT
+    #if DEBUG
         private let showDefaults = true
         private let showDevices = true
     #else
