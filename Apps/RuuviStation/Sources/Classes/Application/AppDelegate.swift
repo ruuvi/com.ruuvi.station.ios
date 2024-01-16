@@ -214,7 +214,7 @@ extension AppDelegate {
             if let viewModel = controller.viewModels.first(where: { viewModel in
                 viewModel.mac.value?.value == uuid || viewModel.luid.value == uuid.luid.any
             }) {
-                controller.output.viewDidTriggerOpenCardImageView(for: viewModel)
+                controller.output.viewDidTriggerOpenSensorCardFromWidget(for: viewModel)
             }
         }
 
