@@ -22,9 +22,13 @@ targets:
       - package: NordicDFU
       - package: GestureInstructions
       - package: Firebase
+        product: FirebaseAnalytics
+      - package: Firebase
         product: FirebaseMessaging
       - package: Firebase
         product: FirebaseRemoteConfig
+      - package: Firebase
+        product: FirebaseCrashlytics
       - package: KeychainAccess
       - package: Humidity
       - package: Future

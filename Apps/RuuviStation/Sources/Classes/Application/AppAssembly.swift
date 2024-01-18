@@ -529,21 +529,20 @@ private final class BusinessAssembly: Assembly {
             return factory.createUser()
         }.inObjectScope(.container)
 
-        #if canImport(RuuviAnalytics)
-            container.register(RuuviAnalytics.self) { r in
-                let ruuviUser = r.resolve(RuuviUser.self)!
-                let ruuviStorage = r.resolve(RuuviStorage.self)!
-                let settings = r.resolve(RuuviLocalSettings.self)!
-                let alertService = r.resolve(RuuviServiceAlert.self)!
-                let service = RuuviAnalyticsImpl(
-                    ruuviUser: ruuviUser,
-                    ruuviStorage: ruuviStorage,
-                    settings: settings,
-                    alertService: alertService
-                )
-                return service
-            }
-        #endif
+        container.register(RuuviAnalytics.self) { r in
+            let ruuviUser = r.resolve(RuuviUser.self)!
+            let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let alertService = r.resolve(RuuviServiceAlert.self)!
+            let service = RuuviAnalyticsImpl(
+                ruuviUser: ruuviUser,
+                ruuviStorage: ruuviStorage,
+                settings: settings,
+                alertService: alertService
+            )
+            return service
+        }
+
         container.register(UniversalLinkCoordinator.self, factory: { r in
             let coordinator = UniversalLinkCoordinatorImpl()
             let router = UniversalLinkRouterImpl()
