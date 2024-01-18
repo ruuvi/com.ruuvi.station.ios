@@ -5,9 +5,6 @@ import Future
 import GRDB
 import RuuviContext
 import RuuviOntology
-#if canImport(FirebaseCrashlytics)
-    import FirebaseCrashlytics
-#endif
 
 // swiftlint:disable type_body_length
 public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
@@ -56,7 +53,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: true)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -71,7 +67,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: true)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -86,7 +81,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: true)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -101,7 +95,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: true)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -118,7 +111,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: true)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -135,7 +127,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -157,7 +148,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     promise.fail(error: .failedToFindRuuviTag)
                 }
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -176,7 +166,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -207,7 +196,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -240,7 +228,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -287,7 +274,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -315,7 +301,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -338,7 +323,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -359,7 +343,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteRecord)
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -380,7 +363,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteRecord)
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -398,7 +380,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: deletedCount > 0)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -430,7 +411,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: true)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -462,7 +442,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: success)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -478,7 +457,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: deletedCount > 0)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -497,7 +475,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: deletedCount > 0)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -513,7 +490,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: count)
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -530,7 +506,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: count)
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -550,7 +525,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: sqliteSensorSettings)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -628,8 +602,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: sqliteSensorSettings)
         } catch let e {
-            print(e)
-            reportToCrashlytics(error: e)
             promise.fail(error: .grdb(e))
         }
 
@@ -653,7 +625,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: success)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -685,7 +656,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
                 promise.succeed(value: sqliteEntities.map { $0 })
             } catch {
-                self?.reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         }
@@ -778,7 +748,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
             promise.succeed(value: success)
         } catch {
-            reportToCrashlytics(error: error)
             promise.fail(error: .grdb(error))
         }
         return promise.future
@@ -803,13 +772,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
 // MARK: - Private
 
 extension RuuviPersistenceSQLite {
-    func reportToCrashlytics(error: Error, method: String = #function, line: Int = #line) {
-        #if canImport(FirebaseCrashlytics)
-            Crashlytics.crashlytics().log("\(method)(line: \(line)")
-            Crashlytics.crashlytics().record(error: error)
-        #endif
-    }
-
     /// Create or Update a queued request.
     private func createQueueRequest(
         isCreate: Bool,
@@ -826,7 +788,6 @@ extension RuuviPersistenceSQLite {
                 }
                 promise.succeed(value: true)
             } catch {
-                reportToCrashlytics(error: error)
                 promise.fail(error: .grdb(error))
             }
         } else {
