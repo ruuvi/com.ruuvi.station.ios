@@ -1,7 +1,6 @@
 import Foundation
-#if canImport(FirebaseAnalytics)
-    import FirebaseAnalytics
-#endif
+import FirebaseAnalytics
+import RuuviAnalytics
 import RuuviLocal
 import RuuviOntology
 import RuuviService
@@ -225,9 +224,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case let .useSimpleWidget(isUsing):
             isUsing.description
         }
-        #if canImport(FirebaseAnalytics)
-            Analytics.setUserProperty(value, forName: property.name)
-        #endif
+        Analytics.setUserProperty(value, forName: property.name)
     }
 
     // swiftlint:disable:next large_tuple

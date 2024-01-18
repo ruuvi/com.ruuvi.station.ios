@@ -1,4 +1,5 @@
 import FirebaseCore
+import FirebaseCrashlytics
 import FirebaseMessaging
 import UIKit
 #if DEBUG && canImport(FLEX)

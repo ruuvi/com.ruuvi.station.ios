@@ -33,6 +33,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     private var sensorSettingsTokens = [String: RuuviReactorToken]()
     private var cloudModeOnToken: NSObjectProtocol?
     private var daemonRestartToken: NSObjectProtocol?
+    private let heartbeatQueue = DispatchQueue(label: "RuuviTagHeartbeatDaemonBTKit.heartbeatQueue")
 
     // swiftlint:disable:next function_body_length
     public init(
@@ -287,7 +288,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
         uuid: String
     ) {
         createRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
-        observer.savedDate[uuid] = Date()
+        heartbeatQueue.async { [weak observer] in
+            observer?.savedDate[uuid] = Date()
+        }
     }
 
     private func createRecord(
@@ -359,7 +362,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             .connect(
                 for: self,
                 uuid: uuid,
-                options: [.callbackQueue(.untouch)],
+                options: [.callbackQueue(.dispatch(heartbeatQueue))],
                 connected: connectedHandler(for: uuid),
                 heartbeat: heartbeatHandler(),
                 disconnected: disconnectedHandler(for: uuid)
@@ -375,7 +378,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             .disconnect(
                 for: self,
                 uuid: uuid,
-                options: [.callbackQueue(.untouch)],
+                options: [.callbackQueue(.dispatch(heartbeatQueue))],
                 result: disconnectedHandler(for: uuid)
             )
     }
@@ -435,28 +438,33 @@ extension RuuviTagHeartbeatDaemonBTKit {
         ruuviTags.forEach { ruuviTagSensor in
             sensorSettingsTokens[ruuviTagSensor.id] = ruuviReactor.observe(
                 ruuviTagSensor, { [weak self] change in
+                    guard let self else { return }
                     switch change {
                     case let .update(updateSensorSettings):
-                        if let updateIndex = self?.sensorSettingsList.firstIndex(
+                        if let updateIndex = self.sensorSettingsList.firstIndex(
                             where: { $0.id == updateSensorSettings.id }
                         ) {
-                            self?.sensorSettingsList[updateIndex] = updateSensorSettings
+                            self.sensorSettingsList[updateIndex] = updateSensorSettings
                         } else {
-                            self?.sensorSettingsList.append(updateSensorSettings)
+                            self.sensorSettingsList.append(updateSensorSettings)
                         }
                         if let luid = ruuviTagSensor.luid?.value {
-                            self?.savedDate.removeValue(forKey: luid)
+                            self.heartbeatQueue.async { [weak self] in
+                                self?.savedDate.removeValue(forKey: luid)
+                            }
                         }
                     case let .insert(sensorSettings):
-                        self?.sensorSettingsList.append(sensorSettings)
+                        self.sensorSettingsList.append(sensorSettings)
                         if let luid = ruuviTagSensor.luid?.value {
-                            self?.savedDate.removeValue(forKey: luid)
+                            self.heartbeatQueue.async { [weak self] in
+                                self?.savedDate.removeValue(forKey: luid)
+                            }
                         }
                     case let .delete(deleteSensorSettings):
-                        if let deleteIndex = self?.sensorSettingsList.firstIndex(
+                        if let deleteIndex = self.sensorSettingsList.firstIndex(
                             where: { $0.id == deleteSensorSettings.id }
                         ) {
-                            self?.sensorSettingsList.remove(at: deleteIndex)
+                            self.sensorSettingsList.remove(at: deleteIndex)
                         }
                     default:
                         break
