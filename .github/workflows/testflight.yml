@@ -105,7 +105,7 @@ jobs:
 
       - name: Upload dSYM to Firebase
         run: |
-          find ./Build/Station.xcarchive -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
+          find ./Build/Station.xcarchive -name '*.dSYM.zip' | xargs -I \{\} ./.tools/firebase/firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
 
       - name: Upload to testflight
         run: |
