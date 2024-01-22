@@ -97,6 +97,7 @@ targets:
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
           OTHER_LDFLAGS: -ld_classic
+          DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym"
         Debug:
           CODE_SIGN_STYLE: Automatic
           OTHER_LDFLAGS: -ld_classic
@@ -115,6 +116,16 @@ targets:
         inputFiles:
           - $(SRCROOT)/Apps/RuuviStation/Sources/Classes/Networking/Assembly/Networking.plist
           - $(SRCROOT)/Apps/RuuviStation/Sources/Resources/Plists/GoogleService-Info.plist
+        runOnlyWhenInstalling: true
+        basedOnDependencyAnalysis: false
+      - path: ../../scripts/build/upload_dsyms.sh
+        name: Upload dSYMs
+        inputFiles:
+          - ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}
+          - ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}
+          - ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist
+          - $(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)
         runOnlyWhenInstalling: true
         basedOnDependencyAnalysis: false
 schemes:
