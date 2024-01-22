@@ -107,11 +107,11 @@ jobs:
 
       - name: Zip dSYM files
         run: |
-          find ${{ runner.temp }}/export -name '*.dSYM' | xargs -I \{\} zip -r \{\}.zip \{\}
+          find ./Build/Station_Dev.xcarchive -name '*.dSYM' | xargs -I \{\} zip -r \{\}.zip \{\}
 
       - name: Upload dSYM to Firebase
         run: |
-          find ${{ runner.temp }}/export -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
+          find ./Build/Station_Dev.xcarchive -name '*.dSYM.zip' | xargs -I \{\} firebase crashlytics:upload-symbols --app ${{ secrets.GOOGLE_APP_ID }} -g \{\}
 
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}
