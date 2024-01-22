@@ -22,7 +22,7 @@ final class DFUViewModel: ObservableObject {
     @Published var isMigrationFailed: Bool = false
 
     var output: DFUViewModelOutput?
-    
+
     private var bag = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event, Never>()
     private let interactor: DFUInteractorInput
