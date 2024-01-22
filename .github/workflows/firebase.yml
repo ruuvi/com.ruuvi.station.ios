@@ -105,14 +105,6 @@ jobs:
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
             --release-notes "${{ steps.build_changelog.outputs.changelog }}"
 
-      - name: Zip dSYM files
-        run: |
-          find ./Build/Station_Dev.xcarchive -name '*.dSYM' | xargs -I \{\} zip -r \{\}.zip \{\}
-
-      - name: Upload dSYM to Firebase
-        run: |
-          find ./Build/Station_Dev.xcarchive -name '*.dSYM.zip' | xargs -I \{\} ./.tools/firebase/firebase crashlytics:symbols:upload --app ${{ secrets.GOOGLE_APP_ID }} \{\}
-
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}
         run: |

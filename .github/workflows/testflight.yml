@@ -95,18 +95,6 @@ jobs:
           echo -n "$EXPORT_PLIST" | base64 --decode > $EXPORT_PLIST_PATH
           xcodebuild -exportArchive -archivePath ./Build/Station.xcarchive -exportOptionsPlist $EXPORT_PLIST_PATH -exportPath ${{ runner.temp }}/export
 
-      - name: Install firebase CLI
-        run: |
-          make installed_firebase
-
-      - name: Zip dSYM files
-        run: |
-          find ./Build/Station.xcarchive -name '*.dSYM' | xargs -I \{\} zip -r \{\}.zip \{\}
-
-      - name: Upload dSYM to Firebase
-        run: |
-          find ./Build/Station.xcarchive -name '*.dSYM.zip' | xargs -I \{\} ./.tools/firebase/firebase crashlytics:symbols:upload --app ${{ secrets.GOOGLE_APP_ID }} \{\}
-
       - name: Upload to testflight
         run: |
           IPA_PATH=$RUNNER_TEMP/export/station.ipa
