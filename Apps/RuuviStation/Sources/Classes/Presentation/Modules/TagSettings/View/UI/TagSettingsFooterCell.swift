@@ -1,11 +1,12 @@
 import UIKit
+import RuuviLocalization
 
 class TagSettingsFooterCell: UITableViewCell {
     private lazy var noteLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.textColor = .secondaryLabel
+        label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
         label.font = UIFont.Muli(.regular, size: 12)
         return label
     }()

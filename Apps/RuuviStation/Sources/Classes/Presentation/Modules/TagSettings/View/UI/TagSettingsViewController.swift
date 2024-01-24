@@ -1676,10 +1676,10 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.movementAlertCell?
-                    .setAlertAddtionalText(with: RuuviLocalization.TagSettings.Alerts.Movement.description)
+                    .setNoticeText(with: RuuviLocalization.TagSettings.Alerts.Movement.description)
                 self?.movementAlertCell?.hideAlertRangeSetter()
-                self?.movementAlertCell?.hideNoticeView()
-                self?.movementAlertCell?.showAdditionalTextview()
+                self?.movementAlertCell?.showNoticeView()
+                self?.movementAlertCell?.hideAdditionalTextview()
                 self?.movementAlertCell?.delegate = self
                 self?.movementAlertCell?.disableEditing(
                     disable: disableMovement,
@@ -2801,9 +2801,9 @@ extension TagSettingsViewController {
 
             moreInfoBatteryVoltageCell.bind(viewModel.batteryNeedsReplacement) { [weak self]
                 cell, needsReplacement in
-                    guard let sSelf = self else { return }
-                    let (status, color) = sSelf.formattedBatteryStatus(from: needsReplacement)
-                    cell.configure(note: status, noteColor: color)
+                guard let sSelf = self else { return }
+                let (status, color) = sSelf.formattedBatteryStatus(from: needsReplacement)
+                cell.configure(note: status, noteColor: color)
             }
         }
 
@@ -3083,7 +3083,7 @@ extension TagSettingsViewController {
         if let batteryLow {
             // swiftlint:disable:next line_length
             let batteryStatus = batteryLow ? "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Replace.message))" : "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Ok.message))"
-            let indicatorColor = batteryLow ? .red : RuuviColor.tintColor.color
+            let indicatorColor = batteryLow ? RuuviColor.orangeColor.color : RuuviColor.tintColor.color
             return (status: batteryStatus, color: indicatorColor)
         } else {
             return (status: nil, color: nil)
