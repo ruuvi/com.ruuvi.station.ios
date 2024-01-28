@@ -40,8 +40,8 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.textColor = .label
-        label.font = .systemFont(ofSize: 13)
+        label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
+        label.font = UIFont.Muli(.regular, size: 12)
         return label
     }()
 
@@ -50,8 +50,8 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         label.text = RuuviLocalization.off
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.textColor = .label
-        label.font = .systemFont(ofSize: 14)
+        label.textColor = RuuviColor.textColor.color
+        label.font = UIFont.Muli(.regular, size: 14)
         return label
     }()
 
@@ -93,8 +93,8 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.textColor = .label
-        label.font = .systemFont(ofSize: 14)
+        label.textColor = RuuviColor.textColor.color
+        label.font = UIFont.Muli(.regular, size: 14)
         return label
     }()
 
@@ -149,7 +149,7 @@ extension TagSettingsAlertConfigCell {
         noticeView.addSubview(noticeLabel)
         noticeLabel.fillSuperview(padding: .init(
             top: 8,
-            left: 8,
+            left: 12,
             bottom: 8,
             right: 8
         ))
@@ -261,7 +261,7 @@ extension TagSettingsAlertConfigCell {
         additionalTextViewHiddenHeight.isActive = true
 
         additionalTextView.addSubview(additionalTextLabel)
-        additionalTextLabel.fillSuperview(padding: .init(top: 0, left: 16, bottom: 0, right: 16))
+        additionalTextLabel.fillSuperview(padding: .init(top: 0, left: 14, bottom: 0, right: 16))
 
         setCustomDescriptionView.delegate = self
         alertLimitDescriptionView.delegate = self

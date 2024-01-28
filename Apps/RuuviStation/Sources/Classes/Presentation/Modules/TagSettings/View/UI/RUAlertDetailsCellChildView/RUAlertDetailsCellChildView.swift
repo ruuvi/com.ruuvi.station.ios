@@ -14,7 +14,7 @@ class RUAlertDetailsCellChildView: UIView {
         let label = UILabel()
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.textColor = .label
+        label.textColor = RuuviColor.textColor.color
         label.font = UIFont.Muli(.regular, size: 14)
         return label
     }()

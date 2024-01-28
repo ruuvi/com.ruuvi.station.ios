@@ -10,6 +10,7 @@ protocol DashboardViewOutput {
     func viewDidTriggerMenu()
     func viewDidTriggerBuySensors()
     func viewDidTriggerOpenCardImageView(for viewModel: CardsViewModel?)
+    func viewDidTriggerOpenSensorCardFromWidget(for viewModel: CardsViewModel?)
     func viewDidTriggerSettings(for viewModel: CardsViewModel)
     func viewDidTriggerChart(for viewModel: CardsViewModel)
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel)
