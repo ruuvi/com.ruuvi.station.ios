@@ -112,7 +112,6 @@ extension NotificationService {
             return ""
         }
 
-        let languageUDKey = "SettingsUserDegaults.languageUDKey"
         let locale: Locale
         if let languageCode = notificationServiceAppGroup?.string(forKey: languageUDKey) {
             locale = Locale(identifier: languageCode)
