@@ -17,14 +17,20 @@ import UIKit
 
 class TagChartViewData: NSObject {
     var chartType: MeasurementType
+    var upperAlertValue: Double?
     var chartData: LineChartData?
+    var lowerAlertValue: Double?
 
     init(
+        upperAlertValue: Double?,
         chartType: MeasurementType,
-        chartData: LineChartData?
+        chartData: LineChartData?,
+        lowerAlertValue: Double?
     ) {
+        self.upperAlertValue = upperAlertValue
         self.chartType = chartType
         self.chartData = chartData
+        self.lowerAlertValue = lowerAlertValue
     }
 }
 
@@ -775,28 +781,49 @@ extension TagChartsViewPresenter {
 
         // Create datasets only if collection has at least one chart entry
         if temparatureData.count > 0 {
-            let temperatureDataSet = TagChartsHelper.newDataSet(entries: temparatureData)
+            let isOn = alertService.isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag)
+            let temperatureDataSet = TagChartsHelper.newDataSet(
+                upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag) : nil,
+                entries: temparatureData,
+                lowerAlertValue: isOn ? alertService.lowerCelsius(for: ruuviTag) : nil
+            )
             let temperatureChartData = TagChartViewData(
+                upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag) : nil,
                 chartType: .temperature,
-                chartData: LineChartData(dataSet: temperatureDataSet)
+                chartData: LineChartData(dataSet: temperatureDataSet),
+                lowerAlertValue: isOn ? alertService.lowerCelsius(for: ruuviTag) : nil
             )
             datasource.append(temperatureChartData)
         }
 
         if humidityData.count > 0 {
-            let humidityChartDataSet = TagChartsHelper.newDataSet(entries: humidityData)
+            let isOn = alertService.isOn(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: ruuviTag)
+            let humidityChartDataSet = TagChartsHelper.newDataSet(
+                upperAlertValue: isOn ? alertService.upperRelativeHumidity(for: ruuviTag) : nil,
+                entries: humidityData,
+                lowerAlertValue: isOn ? alertService.lowerRelativeHumidity(for: ruuviTag) : nil
+            )
             let humidityChartData = TagChartViewData(
+                upperAlertValue: isOn ? alertService.upperRelativeHumidity(for: ruuviTag) : nil,
                 chartType: .humidity,
-                chartData: LineChartData(dataSet: humidityChartDataSet)
+                chartData: LineChartData(dataSet: humidityChartDataSet),
+                lowerAlertValue: isOn ? alertService.lowerRelativeHumidity(for: ruuviTag) : nil
             )
             datasource.append(humidityChartData)
         }
 
         if pressureData.count > 0 {
-            let pressureChartDataSet = TagChartsHelper.newDataSet(entries: pressureData)
+            let isOn = alertService.isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag)
+            let pressureChartDataSet = TagChartsHelper.newDataSet(
+                upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag) : nil,
+                entries: pressureData,
+                lowerAlertValue: isOn ? alertService.lowerPressure(for: ruuviTag) : nil
+            )
             let pressureChartData = TagChartViewData(
+                upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag) : nil,
                 chartType: .pressure,
-                chartData: LineChartData(dataSet: pressureChartDataSet)
+                chartData: LineChartData(dataSet: pressureChartDataSet),
+                lowerAlertValue: isOn ? alertService.lowerPressure(for: ruuviTag) : nil
             )
             datasource.append(pressureChartData)
         }
