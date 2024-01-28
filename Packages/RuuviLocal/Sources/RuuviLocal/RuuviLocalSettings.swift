@@ -109,4 +109,7 @@ public protocol RuuviLocalSettings {
 
     func syncDialogHidden(for luid: LocalIdentifier) -> Bool
     func setSyncDialogHidden(for luid: LocalIdentifier)
+
+    func setNotificationsBadgeCount(value: Int)
+    func notificationsBadgeCount() -> Int
 }
