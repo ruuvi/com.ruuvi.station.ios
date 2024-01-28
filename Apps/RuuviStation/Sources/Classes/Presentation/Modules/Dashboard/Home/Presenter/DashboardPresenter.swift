@@ -229,6 +229,14 @@ extension DashboardPresenter: DashboardViewOutput {
         openCardView(viewModel: viewModel, showCharts: false)
     }
 
+    func viewDidTriggerOpenSensorCardFromWidget(for viewModel: CardsViewModel?) {
+        guard let viewModel else { return }
+        openCardView(
+            viewModel: viewModel, 
+            showCharts: settings.dashboardTapActionType == .chart
+        )
+    }
+
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel) {
         switch settings.dashboardTapActionType {
         case .card:
