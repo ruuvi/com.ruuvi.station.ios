@@ -123,6 +123,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             }
             content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
             content.categoryIdentifier = blast.id
+            setAlertBadge(for: content)
 
             ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
@@ -171,6 +172,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
             content.categoryIdentifier = blast.id
             content.title = title
+            setAlertBadge(for: content)
 
             ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
@@ -218,6 +220,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             }
             content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
             content.categoryIdentifier = blast.id
+            setAlertBadge(for: content)
 
             content.title = title
 
@@ -308,6 +311,7 @@ public extension RuuviNotificationLocalImpl {
             content.title = title
             content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
             content.categoryIdentifier = lowHigh.id
+            setAlertBadge(for: content)
 
             let body: String = switch type {
             case .temperature:
@@ -662,6 +666,13 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             value: settings.alertsMuteIntervalMinutes,
             to: shown
         ) ?? Date()
+    }
+
+    private func setAlertBadge(for content: UNMutableNotificationContent) {
+        let currentCount = settings.notificationsBadgeCount()
+        let newBadgeCount = currentCount + 1
+        content.badge = newBadgeCount as NSNumber
+        settings.setNotificationsBadgeCount(value: newBadgeCount)
     }
 }
 

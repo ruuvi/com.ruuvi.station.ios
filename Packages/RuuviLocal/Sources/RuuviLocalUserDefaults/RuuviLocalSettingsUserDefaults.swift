@@ -679,6 +679,23 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             }
         }
     }
+
+    private let notificationsBadgeCountUDKey = "SettingsUserDefaults.notificationsBadgeCount"
+    func setNotificationsBadgeCount(value: Int) {
+        notificationServiceAppGroup?
+            .set(
+                value,
+                forKey: notificationsBadgeCountUDKey
+            )
+        notificationServiceAppGroup?.synchronize()
+    }
+
+    func notificationsBadgeCount() -> Int {
+        return notificationServiceAppGroup?
+            .integer(
+                forKey: notificationsBadgeCountUDKey
+            ) ?? 0
+    }
 }
 
 // swiftlint:enable type_body_length file_length

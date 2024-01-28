@@ -17,6 +17,8 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
+    private let languageUDKey = "SettingsUserDegaults.languageUDKey"
+    private let notificationsBadgeCountUDKey = "SettingsUserDefaults.notificationsBadgeCount"
 
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
@@ -60,6 +62,7 @@ class NotificationService: UNNotificationServiceExtension {
                     bestAttemptContent.body = sensorName
                 }
             }
+            setAlertBadge(for: bestAttemptContent)
 
             contentHandler(bestAttemptContent)
         }
@@ -109,7 +112,6 @@ extension NotificationService {
             return ""
         }
 
-        let languageUDKey = "SettingsUserDegaults.languageUDKey"
         let locale: Locale
         if let languageCode = notificationServiceAppGroup?.string(forKey: languageUDKey) {
             locale = Locale(identifier: languageCode)
@@ -151,5 +153,18 @@ extension NotificationService {
                 return RuuviLocalization.alertNotificationOfflineMessage(threshold, locale)
             }
         }
+    }
+
+    private func setAlertBadge(for content: UNMutableNotificationContent) {
+        let currentValue = notificationServiceAppGroup?
+            .integer(
+                forKey: notificationsBadgeCountUDKey
+            ) ?? 0
+        notificationServiceAppGroup?
+            .set(
+                currentValue + 1,
+                forKey: notificationsBadgeCountUDKey
+            )
+        content.badge = (currentValue + 1) as NSNumber
     }
 }

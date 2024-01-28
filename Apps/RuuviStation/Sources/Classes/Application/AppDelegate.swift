@@ -96,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        resetNotificationsBadge()
         appStateService.applicationDidBecomeActive(application)
     }
 
@@ -220,5 +221,22 @@ extension AppDelegate {
         }
 
         window?.makeKeyAndVisible()
+    }
+}
+
+// MARK: Notifications badge reset
+extension AppDelegate {
+    private func resetNotificationsBadge() {
+        if #available(iOS 16.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(0) { [weak self] error in
+                guard error == nil else {
+                    return
+                }
+                self?.settings.setNotificationsBadgeCount(value: 0)
+            }
+        } else {
+            settings.setNotificationsBadgeCount(value: 0)
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
     }
 }
