@@ -76,8 +76,6 @@ extension DefaultsTableViewController {
             cell.titleLabel.text = viewModel.title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
-            cell.isOnSwitch.onTintColor = RuuviColor.switchEnabledTint.color
-            cell.isOnSwitch.thumbTintColor = RuuviColor.tintColor.color
             cell.delegate = self
             return cell
         case .stepper:
