@@ -41,12 +41,6 @@ final class FeatureTogglesViewController: UITableViewController {
     }
 
     private func layoutViews() {
-        let headerView = headerView
-
-        let sourceSwitch = sourceSwitch
-        sourceSwitch.onTintColor = .clear
-        sourceSwitch.thumbTintColor = RuuviColor.tintColor.color
-
         let sourceLabel = sourceLabel
         headerView.translatesAutoresizingMaskIntoConstraints = false
         sourceSwitch.translatesAutoresizingMaskIntoConstraints = false
