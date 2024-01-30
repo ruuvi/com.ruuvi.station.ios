@@ -232,7 +232,7 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewDidTriggerOpenSensorCardFromWidget(for viewModel: CardsViewModel?) {
         guard let viewModel else { return }
         openCardView(
-            viewModel: viewModel, 
+            viewModel: viewModel,
             showCharts: settings.dashboardTapActionType == .chart
         )
     }
