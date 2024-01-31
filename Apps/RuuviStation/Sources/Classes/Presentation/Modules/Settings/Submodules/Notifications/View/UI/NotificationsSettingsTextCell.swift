@@ -13,9 +13,7 @@ class NotificationsSettingsTextCell: UITableViewCell {
 
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor
-            .dashboardIndicator.color
-            .withAlphaComponent(0.6)
+        label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont.Muli(.regular, size: 13)

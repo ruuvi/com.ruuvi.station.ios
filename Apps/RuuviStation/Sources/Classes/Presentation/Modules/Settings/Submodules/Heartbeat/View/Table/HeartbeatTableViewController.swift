@@ -75,7 +75,7 @@ extension HeartbeatTableViewController {
     override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
-        footerLabel.textColor = RuuviColor.textColor.color
+        footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
         footerLabel.font = UIFont.Muli(.regular, size: 13)
         footerLabel.numberOfLines = 0
         footerLabel.text = RuuviLocalization.Settings.BackgroundScanning.Footer.message
