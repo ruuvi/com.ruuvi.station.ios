@@ -17,7 +17,7 @@ class RuuviLinkTextView: UITextView {
     weak var linkDelegate: RuuviLinkTextViewDelegate?
 
     convenience init(
-        textColor: UIColor? = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6),
+        textColor: UIColor? = RuuviColor.textColor.color.withAlphaComponent(0.6),
         linkColor: UIColor? = RuuviColor.textColor.color,
         fullTextString: String?,
         linkString: String?,
