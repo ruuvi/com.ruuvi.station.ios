@@ -59,7 +59,9 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 switch change {
                 case let .initial(ruuviTags):
                     sSelf.ruuviTags = ruuviTags
-                    sSelf.restartObserving()
+                    if !ruuviTags.isEmpty {
+                        sSelf.restartObserving()
+                    }
                 case let .update(ruuviTag):
                     if let index = sSelf.ruuviTags
                         .firstIndex(
