@@ -216,7 +216,6 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
 public extension RuuviNotificationLocalImpl {
 
-    // swiftlint:disable:next function_body_length
     func notify(
         _ reason: LowHighNotificationReason,
         _ type: LowHighNotificationType,
