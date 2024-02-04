@@ -28,6 +28,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             buildChartIntervalSeconds(),
             buildChartDurationHours(),
             saveAdvertisementsInterval(),
+            saveHeartbeatsForgroundInterval(),
             buildAskForReviewFirstTime(),
             buildAskForReviewLater(),
             buildDashboardCardTapAction(),
@@ -188,6 +189,19 @@ extension DefaultsPresenter {
             observer.settings.chartDurationHours = chartDurationHours.bound
         }
         return chartDurationHours
+    }
+
+    private func saveHeartbeatsForgroundInterval() -> DefaultsViewModel {
+        let heartbeatsInterval = DefaultsViewModel()
+        heartbeatsInterval.title = RuuviLocalization.Defaults.BackgroundScanning.Foreground.interval
+        heartbeatsInterval.integer.value = settings.saveHeartbeatsForegroundIntervalSeconds
+        heartbeatsInterval.unit = .seconds
+        heartbeatsInterval.type.value = .stepper
+
+        bind(heartbeatsInterval.integer, fire: false) { observer, interval in
+            observer.settings.saveHeartbeatsForegroundIntervalSeconds = interval.bound
+        }
+        return heartbeatsInterval
     }
 
     private func saveAdvertisementsInterval() -> DefaultsViewModel {

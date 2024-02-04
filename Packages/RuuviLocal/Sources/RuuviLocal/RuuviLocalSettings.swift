@@ -62,6 +62,7 @@ public protocol RuuviLocalSettings {
     var alertsMuteIntervalMinutes: Int { get set }
     var saveHeartbeats: Bool { get set }
     var saveHeartbeatsIntervalMinutes: Int { get set }
+    var saveHeartbeatsForegroundIntervalSeconds: Int { get set }
     var webPullIntervalMinutes: Int { get set }
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }

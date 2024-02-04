@@ -282,6 +282,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDegaults.saveHeartbeatsIntervalMinutes", defaultValue: 5)
     var saveHeartbeatsIntervalMinutes: Int
 
+    @UserDefault("SettingsUserDefaults.saveHeartbeatsForegroundIntervalSeconds", defaultValue: 2)
+    var saveHeartbeatsForegroundIntervalSeconds: Int
+
     @UserDefault("SettingsUserDegaults.webPullIntervalMinutes", defaultValue: 15)
     var webPullIntervalMinutes: Int
 
