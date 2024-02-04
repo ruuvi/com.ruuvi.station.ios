@@ -3,6 +3,13 @@ import Foundation
 
 public protocol RuuviTagSensor: PhysicalSensor, Versionable, Claimable, Connectable, Nameable, Shareable {}
 
+public enum SensorOwnership {
+    case claimedByMe
+    case sharedWithMe
+    case locallyAddedButNotMine
+    case locallyAddedAndNotClaimed
+}
+
 public extension RuuviTagSensor {
     var id: String {
         if let macId,
@@ -12,6 +19,19 @@ public extension RuuviTagSensor {
             luid.value
         } else {
             fatalError()
+        }
+    }
+
+    var ownership: SensorOwnership {
+        switch (isClaimed, isCloud, isOwner) {
+        case (true, _, _):
+            return .claimedByMe
+        case (false, true, false):
+            return .sharedWithMe
+        case (false, _, false):
+            return .locallyAddedButNotMine
+        case (false, _, true):
+            return .locallyAddedAndNotClaimed
         }
     }
 

@@ -92,26 +92,24 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
         // No op.
     }
 
-    func updateView(claimedAndOwned: Bool, locallyOwned: Bool, shared: Bool) {
-        var message = ""
-        if claimedAndOwned {
-            message = RuuviLocalization.removeClaimedSensorDescription
+    func updateView(ownership: SensorOwnership) {
+        switch ownership {
+        case .claimedByMe:
+            messageLabel.text = RuuviLocalization.removeClaimedSensorDescription
+            removeButtonConstraintClaimedSensor.isActive = true
+            removeButtonConstraintOtherSensor.isActive = false
+            removeCloudHistoryActionContainer.isHidden = false
+        case .sharedWithMe:
+            messageLabel.text = RuuviLocalization.removeSharedSensorDescription
+            removeButtonConstraintClaimedSensor.isActive = false
+            removeButtonConstraintOtherSensor.isActive = true
+            removeCloudHistoryActionContainer.isHidden = true
+        case .locallyAddedButNotMine, .locallyAddedAndNotClaimed:
+            messageLabel.text = RuuviLocalization.removeLocalSensorDescription
+            removeButtonConstraintClaimedSensor.isActive = false
+            removeButtonConstraintOtherSensor.isActive = true
+            removeCloudHistoryActionContainer.isHidden = true
         }
-
-        if locallyOwned {
-            message = RuuviLocalization.removeLocalSensorDescription
-        }
-
-        if shared {
-            message = RuuviLocalization.removeSharedSensorDescription
-        }
-
-        messageLabel.text = message
-
-        removeButtonConstraintClaimedSensor.isActive = claimedAndOwned
-        removeButtonConstraintOtherSensor.isActive = locallyOwned || shared
-
-        removeCloudHistoryActionContainer.isHidden = locallyOwned || shared
     }
 
     func showHistoryDataRemovalConfirmationDialog() {

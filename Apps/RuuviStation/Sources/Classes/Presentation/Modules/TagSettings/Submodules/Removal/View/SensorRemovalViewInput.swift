@@ -1,6 +1,7 @@
 import Foundation
+import RuuviOntology
 
 protocol SensorRemovalViewInput: ViewInput {
-    func updateView(claimedAndOwned: Bool, locallyOwned: Bool, shared: Bool)
+    func updateView(ownership: SensorOwnership)
     func showHistoryDataRemovalConfirmationDialog()
 }

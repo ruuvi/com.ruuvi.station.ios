@@ -30,11 +30,7 @@ final class SensorRemovalPresenter: SensorRemovalModuleInput {
 extension SensorRemovalPresenter: SensorRemovalViewOutput {
     func viewDidLoad() {
         guard let ruuviTag else { return }
-        view?.updateView(
-            claimedAndOwned: ruuviTag.isClaimed && ruuviTag.isOwner,
-            locallyOwned: !ruuviTag.isClaimed && ruuviTag.isOwner,
-            shared: !ruuviTag.isOwner
-        )
+        view?.updateView(ownership: ruuviTag.ownership)
     }
 
     func viewDidTriggerRemoveTag() {
