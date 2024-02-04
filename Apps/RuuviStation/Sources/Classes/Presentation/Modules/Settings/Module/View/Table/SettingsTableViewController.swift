@@ -76,9 +76,9 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = RuuviLocalization.Settings.NavigationItem.title
-        temperatureTitleLabel.text = RuuviLocalization.Settings.Label.temperature
-        humidityTitleLabel.text = RuuviLocalization.Settings.Label.humidity
-        pressureTitleLabel.text = RuuviLocalization.Settings.Label.pressure
+        temperatureTitleLabel.text = RuuviLocalization.Settings.Label.TemperatureUnit.text
+        humidityTitleLabel.text = RuuviLocalization.Settings.Label.HumidityUnit.text
+        pressureTitleLabel.text = RuuviLocalization.Settings.Label.PressureUnit.text
         languageTitleLabel.text = RuuviLocalization.Settings.Label.Language.text
         defaultsTitleLabel.text = RuuviLocalization.Settings.Label.defaults
         devicesTitleLabel.text = RuuviLocalization.DfuDevicesScanner.Title.text
