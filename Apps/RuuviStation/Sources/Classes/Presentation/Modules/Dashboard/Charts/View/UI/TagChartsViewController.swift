@@ -1050,7 +1050,13 @@ extension TagChartsViewController {
         view.setXAxisRenderer()
         view.setChartStatVisible(show: showChartStat)
 
-        calculateMinMaxForChart(for: view)
+        // Calculation of min/max depends on the chart
+        // internal viewport state. Give it a chance to
+        // redraw itself before calculation.
+        // Fixes https://github.com/ruuvi/com.ruuvi.station.ios/issues/1758
+        DispatchQueue.main.async { [weak self] in
+            self?.calculateMinMaxForChart(for: view)
+        }
     }
 
     private func clearChartData() {
