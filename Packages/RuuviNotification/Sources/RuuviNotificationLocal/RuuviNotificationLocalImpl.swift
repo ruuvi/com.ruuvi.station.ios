@@ -40,20 +40,6 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         self.ruuviAlertService = ruuviAlertService
     }
 
-    var lowTemperatureAlerts = [String: Date]()
-    var highTemperatureAlerts = [String: Date]()
-    var lowHumidityAlerts = [String: Date]()
-    var highHumidityAlerts = [String: Date]()
-    var lowRelativeHumidityAlerts = [String: Date]()
-    var highRelativeHumidityAlerts = [String: Date]()
-    var lowPressureAlerts = [String: Date]()
-    var highPressureAlerts = [String: Date]()
-    var lowSignalAlerts = [String: Date]()
-    var highSignalAlerts = [String: Date]()
-    var movementAlerts = [String: Date]()
-    var connectAlerts = [String: Date]()
-    var disconnectAlerts = [String: Date]()
-
     private let lowHigh = LocalAlertCategory(
         id: "com.ruuvi.station.alerts.lh",
         disable: "com.ruuvi.station.alerts.lh.disable",
@@ -68,6 +54,13 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         uuidKey: "com.ruuvi.station.alerts.blast.uuid",
         typeKey: "com.ruuvi.station.alerts.blast.type"
     )
+
+    private let dateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale.autoupdatingCurrent
+        df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        return df
+    }()
 
     private var alertDidChangeToken: NSObjectProtocol?
 
@@ -90,150 +83,131 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     }
 
     public func showDidConnect(uuid: String, title: String) {
-        var needsToShow: Bool
-        let cache: [String: Date] = connectAlerts
+        isMuted(for: .connection, uuid: uuid) { [weak self] muted in
+            guard !muted else { return }
+            guard let sSelf = self else { return }
 
-        if let shownDate = cache[uuid] {
-            var intervalPassed = true
-            if settings.limitAlertNotificationsEnabled {
-                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
-            }
-
-            if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
-                needsToShow = intervalPassed && (Date() > mutedTill)
-            } else {
-                needsToShow = intervalPassed
-            }
-        } else if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
-            needsToShow = Date() > mutedTill
-        } else {
-            needsToShow = true
-        }
-
-        if needsToShow {
             let content = UNMutableNotificationContent()
             content.title = title
-            switch settings.alertSound {
+            switch sSelf.settings.alertSound {
             case .systemDefault:
                 content.sound = .default
             default:
                 content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                    named: UNNotificationSoundName(
+                        rawValue: sSelf.settings.alertSound.rawValue
+                    )
                 )
             }
-            content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
-            content.categoryIdentifier = blast.id
-            setAlertBadge(for: content)
+            content.userInfo = [
+                sSelf.blast.uuidKey: uuid,
+                sSelf.blast.typeKey: BlastNotificationType.connection.rawValue,
+            ]
+            content.categoryIdentifier = sSelf.blast.id
+            sSelf.setAlertBadge(for: content)
 
-            ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                let trigger = UNTimeIntervalNotificationTrigger(
+                    timeInterval: 0.1,
+                    repeats: false
+                )
+                let request = UNNotificationRequest(
+                    identifier: UUID().uuidString,
+                    content: content,
+                    trigger: trigger
+                )
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
             })
-
-            connectAlerts[uuid] = Date()
         }
     }
 
     public func showDidDisconnect(uuid: String, title: String) {
-        var needsToShow: Bool
-        let cache: [String: Date] = disconnectAlerts
+        isMuted(for: .connection, uuid: uuid) { [weak self] muted in
+            guard !muted else { return }
 
-        if let shownDate = cache[uuid] {
-            var intervalPassed = true
-            if settings.limitAlertNotificationsEnabled {
-                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
-            }
-
-            if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
-                needsToShow = intervalPassed && (Date() > mutedTill)
-            } else {
-                needsToShow = intervalPassed
-            }
-        } else if let mutedTill = ruuviAlertService.mutedTill(type: .connection, for: uuid) {
-            needsToShow = Date() > mutedTill
-        } else {
-            needsToShow = true
-        }
-
-        if needsToShow {
+            guard let sSelf = self else { return }
             let content = UNMutableNotificationContent()
-            switch settings.alertSound {
+            switch sSelf.settings.alertSound {
             case .systemDefault:
                 content.sound = .default
             default:
                 content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                    named: UNNotificationSoundName(
+                        rawValue: sSelf.settings.alertSound.rawValue
+                    )
                 )
             }
-            content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
-            content.categoryIdentifier = blast.id
+            content.userInfo = [
+                sSelf.blast.uuidKey: uuid,
+                sSelf.blast.typeKey: BlastNotificationType.connection.rawValue,
+            ]
+            content.categoryIdentifier = sSelf.blast.id
             content.title = title
-            setAlertBadge(for: content)
+            sSelf.setAlertBadge(for: content)
 
-            ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                let trigger = UNTimeIntervalNotificationTrigger(
+                    timeInterval: 0.1,
+                    repeats: false
+                )
+                let request = UNNotificationRequest(
+                    identifier: UUID().uuidString,
+                    content: content,
+                    trigger: trigger
+                )
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
             })
-
-            disconnectAlerts[uuid] = Date()
         }
     }
 
     public func notifyDidMove(for uuid: String, counter _: Int, title: String) {
-        var needsToShow: Bool
-        let cache: [String: Date] = movementAlerts
+        isMuted(for: .movement(last: 0), uuid: uuid) { [weak self] muted in
+            guard !muted else { return }
 
-        if let shownDate = cache[uuid] {
-            var intervalPassed = true
-            if settings.limitAlertNotificationsEnabled {
-                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
-            }
+            guard let sSelf = self else { return }
 
-            if let mutedTill = ruuviAlertService.mutedTill(type: .movement(last: 0), for: uuid) {
-                needsToShow = intervalPassed && (Date() > mutedTill)
-            } else {
-                needsToShow = intervalPassed
-            }
-        } else if let mutedTill = ruuviAlertService.mutedTill(type: .movement(last: 0), for: uuid) {
-            needsToShow = Date() > mutedTill
-        } else {
-            needsToShow = true
-        }
-
-        if needsToShow {
             let content = UNMutableNotificationContent()
-            switch settings.alertSound {
+            switch sSelf.settings.alertSound {
             case .systemDefault:
                 content.sound = .default
             default:
                 content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                    named: UNNotificationSoundName(rawValue: sSelf.settings.alertSound.rawValue)
                 )
             }
-            content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
-            content.categoryIdentifier = blast.id
-            setAlertBadge(for: content)
+            content.userInfo = [
+                sSelf.blast.uuidKey: uuid,
+                sSelf.blast.typeKey: BlastNotificationType.movement.rawValue,
+            ]
+            content.categoryIdentifier = sSelf.blast.id
+            sSelf.setAlertBadge(for: content)
 
             content.title = title
 
-            ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                let trigger = UNTimeIntervalNotificationTrigger(
+                    timeInterval: 0.1,
+                    repeats: false
+                )
+                let request = UNNotificationRequest(
+                    identifier: UUID().uuidString,
+                    content: content,
+                    trigger: trigger
+                )
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.setTriggered(for: Self.alertType(from: .movement), uuid: uuid)
             })
-
-            movementAlerts[uuid] = Date()
         }
     }
 }
@@ -241,131 +215,65 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 // MARK: - Notify
 
 public extension RuuviNotificationLocalImpl {
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+
+    // swiftlint:disable:next function_body_length
     func notify(
         _ reason: LowHighNotificationReason,
         _ type: LowHighNotificationType,
         for uuid: String,
         title: String
     ) {
-        var needsToShow: Bool
-        let cache: [String: Date] = switch reason {
-        case .low:
-            switch type {
-            case .temperature:
-                lowTemperatureAlerts
-            case .relativeHumidity:
-                lowRelativeHumidityAlerts
-            case .humidity:
-                lowHumidityAlerts
-            case .pressure:
-                lowPressureAlerts
-            case .signal:
-                lowSignalAlerts
-            }
-        case .high:
-            switch type {
-            case .temperature:
-                highTemperatureAlerts
-            case .relativeHumidity:
-                highRelativeHumidityAlerts
-            case .humidity:
-                highHumidityAlerts
-            case .pressure:
-                highPressureAlerts
-            case .signal:
-                highSignalAlerts
-            }
-        }
+        isMuted(for: Self.alertType(from: type), uuid: uuid) { [weak self] muted in
+            guard !muted else { return }
+            guard let sSelf = self else { return }
 
-        if let shownDate = cache[uuid] {
-            var intervalPassed = false
-            if settings.limitAlertNotificationsEnabled {
-                intervalPassed = Date() > lastTriggerOffset(from: shownDate)
-            } else {
-                intervalPassed =
-                    Date().timeIntervalSince(shownDate) >=
-                    TimeInterval(settings.saveHeartbeatsIntervalMinutes * 60)
-            }
-
-            if let mutedTill = ruuviAlertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
-                needsToShow = intervalPassed && (Date() > mutedTill)
-            } else {
-                needsToShow = intervalPassed
-            }
-        } else if let mutedTill = ruuviAlertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
-            needsToShow = Date() > mutedTill
-        } else {
-            needsToShow = true
-        }
-        if needsToShow {
             let content = UNMutableNotificationContent()
-            switch settings.alertSound {
+            switch sSelf.settings.alertSound {
             case .systemDefault:
                 content.sound = .default
             default:
                 content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue)
+                    named: UNNotificationSoundName(
+                        rawValue: sSelf.settings.alertSound.rawValue
+                    )
                 )
             }
             content.title = title
-            content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
-            content.categoryIdentifier = lowHigh.id
-            setAlertBadge(for: content)
+            content.userInfo = [
+                sSelf.lowHigh.uuidKey: uuid,
+                sSelf.lowHigh.typeKey: type.rawValue,
+            ]
+            content.categoryIdentifier = sSelf.lowHigh.id
+            sSelf.setAlertBadge(for: content)
 
             let body: String = switch type {
             case .temperature:
-                ruuviAlertService.temperatureDescription(for: uuid) ?? ""
+                sSelf.ruuviAlertService.temperatureDescription(for: uuid) ?? ""
             case .relativeHumidity:
-                ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
+                sSelf.ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
             case .humidity:
-                ruuviAlertService.humidityDescription(for: uuid) ?? ""
+                sSelf.ruuviAlertService.humidityDescription(for: uuid) ?? ""
             case .pressure:
-                ruuviAlertService.pressureDescription(for: uuid) ?? ""
+                sSelf.ruuviAlertService.pressureDescription(for: uuid) ?? ""
             case .signal:
-                ruuviAlertService.signalDescription(for: uuid) ?? ""
+                sSelf.ruuviAlertService.signalDescription(for: uuid) ?? ""
             }
             content.body = body
 
-            ruuviStorage.readOne(id(for: uuid)).on(success: { ruuviTag in
+            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
                 content.subtitle = ruuviTag.name
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let trigger = UNTimeIntervalNotificationTrigger(
+                    timeInterval: 0.1,
+                    repeats: false
+                )
                 let request = UNNotificationRequest(
                     identifier: uuid + type.rawValue,
                     content: content,
                     trigger: trigger
                 )
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                self?.setTriggered(for: Self.alertType(from: type), uuid: uuid)
             })
-
-            switch reason {
-            case .low:
-                switch type {
-                case .temperature:
-                    lowTemperatureAlerts[uuid] = Date()
-                case .relativeHumidity:
-                    lowRelativeHumidityAlerts[uuid] = Date()
-                case .humidity:
-                    lowHumidityAlerts[uuid] = Date()
-                case .pressure:
-                    lowPressureAlerts[uuid] = Date()
-                case .signal:
-                    lowSignalAlerts[uuid] = Date()
-                }
-            case .high:
-                switch type {
-                case .temperature:
-                    highTemperatureAlerts[uuid] = Date()
-                case .relativeHumidity:
-                    highRelativeHumidityAlerts[uuid] = Date()
-                case .humidity:
-                    highHumidityAlerts[uuid] = Date()
-                case .pressure:
-                    highPressureAlerts[uuid] = Date()
-                case .signal:
-                    highSignalAlerts[uuid] = Date()
-                }
-            }
         }
     }
 }
@@ -400,7 +308,7 @@ extension RuuviNotificationLocalImpl {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next cyclomatic_complexity
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -421,32 +329,22 @@ extension RuuviNotificationLocalImpl {
                     if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value {
                         switch type {
                         case .temperature:
-                            self?.lowTemperatureAlerts[uuid] = nil
-                            self?.highTemperatureAlerts[uuid] = nil
                             if !isOn {
                                 self?.cancel(.temperature, for: uuid)
                             }
                         case .relativeHumidity:
-                            self?.lowRelativeHumidityAlerts[uuid] = nil
-                            self?.highRelativeHumidityAlerts[uuid] = nil
                             if !isOn {
                                 self?.cancel(.relativeHumidity, for: uuid)
                             }
                         case .humidity:
-                            self?.lowHumidityAlerts[uuid] = nil
-                            self?.highHumidityAlerts[uuid] = nil
                             if !isOn {
                                 self?.cancel(.humidity, for: uuid)
                             }
                         case .pressure:
-                            self?.lowPressureAlerts[uuid] = nil
-                            self?.highPressureAlerts[uuid] = nil
                             if !isOn {
                                 self?.cancel(.pressure, for: uuid)
                             }
                         case .signal:
-                            self?.lowSignalAlerts[uuid] = nil
-                            self?.highSignalAlerts[uuid] = nil
                             if !isOn {
                                 self?.cancel(.signal, for: uuid)
                             }
@@ -601,27 +499,13 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         else {
             assertionFailure(); return
         }
-        // TODO: @rinat go with sensors instead of pure uuid
-        let ruuviTag = RuuviTagSensorStruct(
-            version: 5,
-            firmwareVersion: nil,
-            luid: uuid.luid,
-            macId: uuid.mac,
-            isConnectable: true,
-            name: "",
-            isClaimed: false,
-            isOwner: false,
-            owner: nil,
-            ownersPlan: nil,
-            isCloudSensor: false,
-            canShare: false,
-            sharedTo: []
-        )
-        ruuviAlertService.mute(
-            type: Self.alertType(from: type),
-            for: ruuviTag,
-            till: date
-        )
+        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+            self?.ruuviAlertService.mute(
+                type: Self.alertType(from: type),
+                for: ruuviTag,
+                till: date
+            )
+        })
     }
 
     private func mute(type: BlastNotificationType, uuid: String) {
@@ -629,27 +513,13 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         else {
             assertionFailure(); return
         }
-        // TODO: @rinat go with sensors instead of pure uuid
-        let ruuviTag = RuuviTagSensorStruct(
-            version: 5,
-            firmwareVersion: nil,
-            luid: uuid.luid,
-            macId: uuid.mac,
-            isConnectable: true,
-            name: "",
-            isClaimed: false,
-            isOwner: false,
-            owner: nil,
-            ownersPlan: nil,
-            isCloudSensor: false,
-            canShare: false,
-            sharedTo: []
-        )
-        ruuviAlertService.mute(
-            type: Self.alertType(from: type),
-            for: ruuviTag,
-            till: date
-        )
+        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+            self?.ruuviAlertService.mute(
+                type: Self.alertType(from: type),
+                for: ruuviTag,
+                till: date
+            )
+        })
     }
 
     private func muteOffset() -> Date? {
@@ -660,10 +530,72 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         )
     }
 
-    private func lastTriggerOffset(from shown: Date) -> Date {
+    private func isMuted(
+        for type: AlertType,
+        uuid: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+            guard let self = self else { return }
+            if let triggeredAt = self.ruuviAlertService.triggeredAt(for: ruuviTag, of: type),
+               let date = self.dateFormatter.date(from: triggeredAt) {
+                let intervalPassed = Date() > self.muteOffset(from: date)
+                self.evaluateMutedState(
+                    for: type,
+                    uuid: uuid,
+                    intervalPassed: intervalPassed,
+                    completion: completion
+                )
+            } else {
+                self.evaluateMutedState(
+                    for: type,
+                    uuid: uuid,
+                    intervalPassed: true,
+                    completion: completion
+                )
+            }
+        })
+    }
+
+    private func evaluateMutedState(
+        for type: AlertType, uuid: String,
+        intervalPassed: Bool,
+        completion: @escaping (Bool) -> Void
+    ) {
+        if let mutedTill = ruuviAlertService.mutedTill(type: type, for: uuid) {
+            completion(!(intervalPassed && mutedTill > Date()))
+        } else {
+            completion(!intervalPassed)
+        }
+    }
+
+    private func setTriggered(
+        for type: AlertType,
+        uuid: String
+    ) {
+        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
+            sSelf.ruuviAlertService.trigger(
+                type: type,
+                trigerred: true,
+                trigerredAt: sSelf.dateFormatter.string(from: Date()),
+                for: ruuviTag
+            )
+        })
+    }
+
+    /// Limit alert notification settings prevents new alerts within one hour
+    /// of last one. When the settings is off we still will prevent new notifications
+    /// based on save heartbeats background interval minutes (5mins).
+    /// When app is in foreground we save heartbeats every 2 seconds, but that's not
+    /// very user friendly to trigger notifications as that frequent alerts basically
+    /// makes app unusable by spamming. Besides, if user is in foreground they will
+    /// see the alert bells anyway.
+    private func muteOffset(from shown: Date) -> Date {
         Calendar.current.date(
             byAdding: .minute,
-            value: settings.alertsMuteIntervalMinutes,
+            value: settings.limitAlertNotificationsEnabled ?
+                settings.alertsMuteIntervalMinutes : settings.saveHeartbeatsIntervalMinutes,
             to: shown
         ) ?? Date()
     }
@@ -673,6 +605,13 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         let newBadgeCount = currentCount + 1
         content.badge = newBadgeCount as NSNumber
         settings.setNotificationsBadgeCount(value: newBadgeCount)
+    }
+
+    private func ruuviTag(
+        for uuid: String,
+        completion: @escaping(AnyRuuviTagSensor) -> Void
+    ) {
+        ruuviStorage.readOne(uuid).on(success: completion)
     }
 }
 

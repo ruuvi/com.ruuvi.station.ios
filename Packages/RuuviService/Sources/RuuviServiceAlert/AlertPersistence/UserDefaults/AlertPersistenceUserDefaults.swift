@@ -92,6 +92,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.connectionAlertDescriptionUDKeyPrefix."
     private let connectionAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertMuteTillDateUDKeyPrefix."
+    private let connectionAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.connectionAlertIsTriggeredUDKeyPrefix."
+    private let connectionAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.connectionAlertTriggeredAtUDKeyPrefix."
 
     // cloud connection
     private let cloudConnectionAlertIsOnUDKeyPrefix
@@ -385,7 +389,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             prefs.set(trigerred, forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.set(trigerred, forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: temperatureAlertTriggeredAtUDKeyPrefix + uuid)
         case .relativeHumidity:
             prefs.set(trigerred, forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
@@ -405,7 +409,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(trigerred, forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: movementAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
-            break
+            prefs.set(trigerred, forKey: connectionAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: connectionAlertTriggeredAtUDKeyPrefix + uuid)
         }
     }
 
@@ -426,7 +431,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .movement:
             prefs.bool(forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
         case .connection:
-            nil
+            prefs.bool(forKey: connectionAlertIsTriggeredUDKeyPrefix + uuid)
         }
     }
 
@@ -447,7 +452,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .movement:
             prefs.string(forKey: movementAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
-            nil
+            prefs.string(forKey: connectionAlertTriggeredAtUDKeyPrefix + uuid)
         }
     }
 }
