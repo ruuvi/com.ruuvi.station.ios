@@ -798,6 +798,7 @@ extension DashboardPresenter {
     }
 
     private func startObservingBluetoothState() {
+        guard !ruuviTags.filter({ !$0.isCloud  }).isEmpty else { return }
         stateToken = foreground.state(self, closure: { observer, state in
             if state != .poweredOn || !self.isBluetoothPermissionGranted {
                 observer.view?.showBluetoothDisabled(
