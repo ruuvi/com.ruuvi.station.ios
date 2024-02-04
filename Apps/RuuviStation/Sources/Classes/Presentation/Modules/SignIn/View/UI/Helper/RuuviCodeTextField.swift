@@ -8,5 +8,6 @@ class RuuviCodeTextField: UITextField {
     override public func deleteBackward() {
         text = ""
         previousEntry?.becomeFirstResponder()
+        previousEntry?.text = ""
     }
 }
