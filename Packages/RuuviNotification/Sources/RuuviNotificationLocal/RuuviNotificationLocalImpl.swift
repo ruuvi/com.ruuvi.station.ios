@@ -84,9 +84,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public func showDidConnect(uuid: String, title: String) {
         isMuted(for: .connection, uuid: uuid) { [weak self] muted in
-            if muted {
-                return
-            }
+            guard !muted else { return }
             guard let sSelf = self else { return }
 
             let content = UNMutableNotificationContent()
@@ -129,9 +127,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public func showDidDisconnect(uuid: String, title: String) {
         isMuted(for: .connection, uuid: uuid) { [weak self] muted in
-            if muted {
-                return
-            }
+            guard !muted else { return }
 
             guard let sSelf = self else { return }
             let content = UNMutableNotificationContent()
@@ -174,9 +170,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
     public func notifyDidMove(for uuid: String, counter _: Int, title: String) {
         isMuted(for: .movement(last: 0), uuid: uuid) { [weak self] muted in
-            if muted {
-                return
-            }
+            guard !muted else { return }
 
             guard let sSelf = self else { return }
 
@@ -230,9 +224,7 @@ public extension RuuviNotificationLocalImpl {
         title: String
     ) {
         isMuted(for: Self.alertType(from: type), uuid: uuid) { [weak self] muted in
-            if muted {
-                return
-            }
+            guard !muted else { return }
             guard let sSelf = self else { return }
 
             let content = UNMutableNotificationContent()
