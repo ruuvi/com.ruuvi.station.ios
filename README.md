@@ -83,15 +83,8 @@ We would love you for the contribution to **Ruuvi Station**, check the ``LICENSE
 
 ## Branches
 
-AppStore build source code is available at `master` branch. 
-
-Public Beta build source code is available at `beta` branch. 
-
-Latest TestFlight build source code is available at `testflight` branch.
-
-Internal Alpha build source code is available at `alpha` branch. 
-
-Development source code is available at `dev` branch.  
+Development source code is available at `main` branch.  
+AppStore, Testflight build source code is available at associate release branches i.e. `release/x.x.x` branch. 
 
 <!-- Please don't remove this: Grab your social icons from https://github.com/carlsednaoui/gitsocial -->
 
