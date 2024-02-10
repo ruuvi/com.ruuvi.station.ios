@@ -100,7 +100,7 @@ targets:
           DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym"
           OTHER_SWIFT_FLAGS:
           - $(inherited)
-          - -DALPHA=1
+          - -DALPHA
         Debug:
           CODE_SIGN_STYLE: Automatic
           OTHER_LDFLAGS: -ld_classic
