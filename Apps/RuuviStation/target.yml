@@ -98,9 +98,9 @@ targets:
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station"
           OTHER_LDFLAGS: -ld_classic
           DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym"
-          GCC_PREPROCESSOR_DEFINITIONS: 
+          OTHER_SWIFT_FLAGS:
           - $(inherited)
-          - "ALPHA=1"
+          - -DALPHA=1
         Debug:
           CODE_SIGN_STYLE: Automatic
           OTHER_LDFLAGS: -ld_classic
