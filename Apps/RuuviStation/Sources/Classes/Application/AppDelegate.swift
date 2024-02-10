@@ -1,9 +1,10 @@
+import FirebaseAnalytics
 import FirebaseCore
 import FirebaseCrashlytics
 import FirebaseMessaging
 import UIKit
-#if DEBUG && canImport(FLEX)
-    import FLEX
+#if (DEBUG || ALPHA) && canImport(FLEX)
+import FLEX
 #endif
 import RuuviContext
 import RuuviCore
@@ -37,6 +38,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setPreferrerdLanguage()
 
         FirebaseApp.configure()
+        #if DEBUG || ALPHA
+        Analytics.setAnalyticsCollectionEnabled(false)
+        #endif
+
         Messaging.messaging().delegate = self
         pnManager = r.resolve(RuuviCorePN.self)
 
@@ -64,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
 
-        #if DEBUG && canImport(FLEX)
+        #if (DEBUG || ALPHA) && canImport(FLEX)
             FLEXManager.shared.registerGlobalEntry(
                 withName: "Feature Toggles",
                 viewControllerFutureBlock: { r.resolve(FeatureTogglesViewController.self) ?? UIViewController()

@@ -150,6 +150,6 @@ include:
 - Apps/RuuviStation/Intents/target.yml
 
 configs:
-  Alpha: debug
+  Alpha: release
   Debug: debug
   Release: release
