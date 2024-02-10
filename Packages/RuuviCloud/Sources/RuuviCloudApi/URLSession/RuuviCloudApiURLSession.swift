@@ -323,7 +323,7 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         .on(success: { [weak self] (response: RuuviCloudApiSensorImageUploadResponse) in
             let url = response.uploadURL
             self?.upload(url: url, with: imageData, mimeType: .jpg, progress: { percentage in
-                #if DEBUG
+                #if DEBUG || ALPHA
                     debugPrint(percentage)
                 #endif
                 uploadProgress?(percentage)
@@ -379,7 +379,7 @@ extension RuuviCloudApiURLSession {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         if let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
-            #if DEBUG
+            #if DEBUG || ALPHA
                 request.setValue(
                     "Station_iOS_Debug/Build_\(buildNumber)/\(endpoint.rawValue)",
                     forHTTPHeaderField: "User-Agent"
@@ -405,7 +405,7 @@ extension RuuviCloudApiURLSession {
                 promise.fail(error: .networking(error))
             } else {
                 if let data {
-                    #if DEBUG
+                    #if DEBUG || ALPHA
                         if let object = try? JSONSerialization.jsonObject(with: data, options: []),
                            let jsonData = try? JSONSerialization.data(
                                withJSONObject: object,
@@ -425,7 +425,7 @@ extension RuuviCloudApiURLSession {
                             promise.fail(error: userApiError)
                         }
                     } catch {
-                        #if DEBUG
+                        #if DEBUG || ALPHA
                             debugPrint("❌ Parsing Error", dump(error))
                         #endif
                         promise.fail(error: .parsing(error))

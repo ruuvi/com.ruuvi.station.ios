@@ -18,6 +18,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
@@ -89,9 +91,9 @@ jobs:
           echo -n "$EXPORT_PLIST" | base64 --decode > $EXPORT_PLIST_PATH
           xcodebuild -exportArchive -archivePath ./Build/Station_Dev.xcarchive -exportOptionsPlist $EXPORT_PLIST_PATH -exportPath ${{ runner.temp }}/export
 
-      - name: Build Changelog
-        id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v4.1.0
+      - name: Get latest commit message
+        id: latest_commit
+        run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
 
       - name: Install firebase CLI
         run: |
@@ -103,7 +105,7 @@ jobs:
             --app ${{ secrets.GOOGLE_APP_ID }} \
             --token ${{ secrets.FIREBASE_REFRESH_TOKEN }} \
             --groups ${{ secrets.ALPHA_TESTERS_GROUP }} \
-            --release-notes "${{ steps.build_changelog.outputs.changelog }}"
+            --release-notes "${{ steps.latest_commit.outputs.message }}"
 
       - name: Clean up keychain and provisioning profiles
         if: ${{ always() }}

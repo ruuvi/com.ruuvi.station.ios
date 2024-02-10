@@ -224,7 +224,11 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case let .useSimpleWidget(isUsing):
             isUsing.description
         }
+        #if DEBUG || ALPHA
+        // skip using analytics
+        #else
         Analytics.setUserProperty(value, forName: property.name)
+        #endif
     }
 
     // swiftlint:disable:next large_tuple
