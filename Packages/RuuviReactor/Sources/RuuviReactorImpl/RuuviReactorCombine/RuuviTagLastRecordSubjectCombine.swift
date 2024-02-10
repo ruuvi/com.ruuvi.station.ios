@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import GRDB
+import RuuviAnalytics
 import RuuviContext
 import RuuviOntology
 
@@ -13,16 +14,23 @@ final class RuuviTagLastRecordSubjectCombine {
 
     let subject = PassthroughSubject<AnyRuuviTagSensorRecord, Never>()
 
-    private var ruuviTagDataTransactionObserver: TransactionObserver?
+    private let errorReporter: RuuviErrorReporter
+    private var ruuviTagDataTransactionObserver: AnyDatabaseCancellable?
 
     init(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
-        sqlite: SQLiteContext
+        sqlite: SQLiteContext,
+        errorReporter: RuuviErrorReporter
     ) {
         self.sqlite = sqlite
         self.luid = luid
         self.macId = macId
+        self.errorReporter = errorReporter
+    }
+
+    deinit {
+        ruuviTagDataTransactionObserver?.cancel()
     }
 
     func start() {
@@ -33,13 +41,21 @@ final class RuuviTagLastRecordSubjectCombine {
                 (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
                     || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
             )
-        let observation = request.observationForFirst()
 
-        ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
-            [weak self] record in
-            if let lastRecord = record?.any {
-                self?.subject.send(lastRecord)
-            }
+        let observation = ValueObservation.tracking { db in
+            try request.fetchOne(db)
         }
+
+        ruuviTagDataTransactionObserver = observation.start(
+            in: sqlite.database.dbPool,
+            onError: { [weak self] error in
+                self?.errorReporter.report(error: error)
+            },
+            onChange: { [weak self] record in
+                if let lastRecord = record?.any {
+                    self?.subject.send(lastRecord)
+                }
+            }
+        )
     }
 }

@@ -14,6 +14,7 @@ targets:
     - package: Humidity
     - package: Future
     - package: GRDB
+    - target: RuuviAnalytics
     - target: RuuviOntology
     - target: RuuviPersistence
     - target: RuuviContext

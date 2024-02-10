@@ -115,7 +115,7 @@ packages:
     from: 4.2.1
   GRDB: 
     url: https://github.com/groue/GRDB.swift
-    from: 4.14.0
+    from: 6.24.2
   FLEX: 
     url: https://github.com/FLEXTool/FLEX.git
     from: 5.22.10

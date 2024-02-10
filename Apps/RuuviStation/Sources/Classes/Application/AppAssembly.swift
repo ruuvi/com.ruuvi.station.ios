@@ -115,13 +115,19 @@ private final class PersistenceAssembly: Assembly {
             RuuviReactorFactoryImpl()
         }
 
+        container.register(RuuviErrorReporter.self) { _ in
+            return RuuviErrorReporterImpl()
+        }.inObjectScope(.container)
+
         container.register(RuuviReactor.self) { r in
             let factory = r.resolve(RuuviReactorFactory.self)!
             let sqliteContext = r.resolve(SQLiteContext.self)!
             let sqltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
+            let errorReporter = r.resolve(RuuviErrorReporter.self)!
             return factory.create(
                 sqliteContext: sqliteContext,
-                sqlitePersistence: sqltePersistence
+                sqlitePersistence: sqltePersistence,
+                errorReporter: errorReporter
             )
         }.inObjectScope(.container)
 
