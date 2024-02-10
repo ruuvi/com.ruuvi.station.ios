@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import GRDB
+import RuuviAnalytics
 import RuuviContext
 import RuuviOntology
 
@@ -13,6 +14,7 @@ final class SensorSettingsCombine {
     let updateSubject = PassthroughSubject<SensorSettings, Never>()
     let deleteSubject = PassthroughSubject<SensorSettings, Never>()
 
+    private let errorReporter: RuuviErrorReporter
     private var previousData: [SensorSettingsSQLite] = []
     private var ruuviTagDataTransactionObserver: AnyDatabaseCancellable?
 
@@ -23,11 +25,13 @@ final class SensorSettingsCombine {
     init(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
-        sqlite: SQLiteContext
+        sqlite: SQLiteContext,
+        errorReporter: RuuviErrorReporter
     ) {
         self.luid = luid
         self.macId = macId
         self.sqlite = sqlite
+        self.errorReporter = errorReporter
 
         let request = SensorSettingsSQLite
             .filter(
@@ -43,8 +47,8 @@ final class SensorSettingsCombine {
 
             ruuviTagDataTransactionObserver = observation.start(
                 in: sqlite.database.dbPool
-            ) { error in
-                print(error.localizedDescription)
+            ) { [weak self] error in
+                self?.errorReporter.report(error: error)
             } onChange: { [weak self] newData in
                 guard let self else { return }
                 // Find inserts (present in newData but not in previousData)

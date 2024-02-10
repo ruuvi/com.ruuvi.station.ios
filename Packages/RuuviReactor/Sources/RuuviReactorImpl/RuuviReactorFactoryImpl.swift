@@ -1,4 +1,5 @@
 import Foundation
+import RuuviAnalytics
 import RuuviContext
 import RuuviPersistence
 
@@ -7,11 +8,13 @@ public final class RuuviReactorFactoryImpl: RuuviReactorFactory {
 
     public func create(
         sqliteContext: SQLiteContext,
-        sqlitePersistence: RuuviPersistence
+        sqlitePersistence: RuuviPersistence,
+        errorReporter: RuuviErrorReporter
     ) -> RuuviReactor {
         RuuviReactorImpl(
             sqliteContext: sqliteContext,
-            sqlitePersistence: sqlitePersistence
+            sqlitePersistence: sqlitePersistence,
+            errorReporter: errorReporter
         )
     }
 }

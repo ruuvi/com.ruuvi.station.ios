@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import GRDB
+import RuuviAnalytics
 import RuuviContext
 import RuuviOntology
 import RuuviPersistence
@@ -10,17 +11,21 @@ class RuuviReactorImpl: RuuviReactor {
 
     private let sqliteContext: SQLiteContext
     private let sqlitePersistence: RuuviPersistence
+    private let errorReporter: RuuviErrorReporter
 
     init(
         sqliteContext: SQLiteContext,
-        sqlitePersistence: RuuviPersistence
+        sqlitePersistence: RuuviPersistence,
+        errorReporter: RuuviErrorReporter
     ) {
         self.sqliteContext = sqliteContext
         self.sqlitePersistence = sqlitePersistence
+        self.errorReporter = errorReporter
     }
 
     private lazy var entityCombine = RuuviTagSubjectCombine(
-        sqlite: sqliteContext
+        sqlite: sqliteContext,
+        errorReporter: errorReporter
     )
     private lazy var recordCombines = [String: RuuviTagRecordSubjectCombine]()
     private lazy var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
@@ -38,7 +43,8 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = RuuviTagRecordSubjectCombine(
                 luid: luid,
                 macId: nil,
-                sqlite: sqliteContext
+                sqlite: sqliteContext,
+                errorReporter: errorReporter
             )
             recordCombines[luid.value] = combine
             recordCombine = combine
@@ -97,7 +103,8 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = RuuviTagLastRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
-                sqlite: sqliteContext
+                sqlite: sqliteContext,
+                errorReporter: errorReporter
             )
             lastRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
@@ -129,7 +136,8 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = RuuviTagLatestRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
-                sqlite: sqliteContext
+                sqlite: sqliteContext,
+                errorReporter: errorReporter
             )
             latestRecordCombines[ruuviTag.id] = combine
             recordCombine = combine
@@ -161,7 +169,8 @@ class RuuviReactorImpl: RuuviReactor {
             let combine = SensorSettingsCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
-                sqlite: sqliteContext
+                sqlite: sqliteContext,
+                errorReporter: errorReporter
             )
             sensorSettingsCombines[ruuviTag.id] = combine
             sensorSettingsCombine = combine
