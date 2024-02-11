@@ -629,15 +629,22 @@ extension TagChartsViewPresenter {
     }
 
     private func startObservingSensorSettingsChanges() {
-        sensorSettingsToken = ruuviReactor.observe(ruuviTag) { reactorChange in
+        sensorSettingsToken = ruuviReactor.observe(ruuviTag) { [weak self] reactorChange in
+            guard let self else { return }
             switch reactorChange {
             case let .update(settings):
                 self.sensorSettings = settings
-                self.reloadChartsWithSensorSettingsChanges(with: settings)
+                self.reloadChartsWithSensorSettingsChanges()
             case let .insert(sensorSettings):
                 self.sensorSettings = sensorSettings
-                self.reloadChartsWithSensorSettingsChanges(with: sensorSettings)
-            default: break
+                self.reloadChartsWithSensorSettingsChanges()
+            case let .initial(initialSensorSettings):
+                self.sensorSettings = initialSensorSettings.first
+            case let .error(error):
+                self.errorPresenter.present(error: error)
+            case .delete:
+                self.sensorSettings = nil
+                self.reloadChartsWithSensorSettingsChanges()
             }
         }
     }
@@ -676,7 +683,7 @@ extension TagChartsViewPresenter {
             )
     }
 
-    private func reloadChartsWithSensorSettingsChanges(with _: SensorSettings) {
+    private func reloadChartsWithSensorSettingsChanges() {
         interactor.restartObservingData()
     }
 

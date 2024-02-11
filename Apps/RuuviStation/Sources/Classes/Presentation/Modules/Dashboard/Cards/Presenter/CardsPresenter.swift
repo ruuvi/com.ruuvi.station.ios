@@ -418,7 +418,28 @@ extension CardsPresenter {
         alertHandler.process(record: record, trigger: false)
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    private func updateSensorSettings(
+        _ updatedSensorSettings: SensorSettings,
+        _ ruuviTagSensor: AnyRuuviTagSensor
+    ) {
+        if let updateIndex = sensorSettings.firstIndex(
+            where: { $0.id == updatedSensorSettings.id }
+        ) {
+            sensorSettings[updateIndex] = updatedSensorSettings
+            if let viewModel = viewModels.first(where: {
+                $0.id.value == ruuviTagSensor.id
+            }) {
+                notifySensorSettingsUpdate(
+                    sensorSettings: updatedSensorSettings,
+                    viewModel: viewModel
+                )
+            }
+        } else {
+            sensorSettings.append(updatedSensorSettings)
+        }
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
     private func observeSensorSettings() {
         sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
@@ -440,21 +461,7 @@ extension CardsPresenter {
                                 )
                             }
                         case let .update(updateSensorSettings):
-                            if let updateIndex = self?.sensorSettings.firstIndex(
-                                where: { $0.id == updateSensorSettings.id }
-                            ) {
-                                self?.sensorSettings[updateIndex] = updateSensorSettings
-                                if let viewModel = sSelf.viewModels.first(where: {
-                                    $0.id.value == ruuviTagSensor.id
-                                }) {
-                                    self?.notifySensorSettingsUpdate(
-                                        sensorSettings: updateSensorSettings,
-                                        viewModel: viewModel
-                                    )
-                                }
-                            } else {
-                                self?.sensorSettings.append(updateSensorSettings)
-                            }
+                            self?.updateSensorSettings(updateSensorSettings, ruuviTagSensor)
                         case let .delete(deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettings.firstIndex(
                                 where: { $0.id == deleteSensorSettings.id }
@@ -469,7 +476,12 @@ extension CardsPresenter {
                                     viewModel: viewModel
                                 )
                             }
-                        default: break
+                        case let .initial(initialSensorSettings):
+                            initialSensorSettings.forEach {
+                                self?.updateSensorSettings($0, ruuviTagSensor)
+                            }
+                        case let .error(error):
+                            self?.errorPresenter.present(error: error)
                         }
                     }
                 )

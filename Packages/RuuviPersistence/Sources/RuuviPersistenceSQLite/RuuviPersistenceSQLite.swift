@@ -545,7 +545,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
-    // swiftlint:disable:next function_body_length
     public func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,

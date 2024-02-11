@@ -169,7 +169,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next cyclomatic_complexity
     private func restartObserving() {
         observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
@@ -213,18 +213,27 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                     // remove last update timestamp to force add new record in db
                     self?.savedDate.removeValue(forKey: luid.value)
                 case let .update(sensorSettings):
-                    if let uIndex = self?.sensorSettingsList.firstIndex(
-                        where: { $0.id == sensorSettings.id }
-                    ) {
-                        self?.sensorSettingsList[uIndex] = sensorSettings
-                    } else {
-                        self?.sensorSettingsList.append(sensorSettings)
+                    self?.updateSensorSettings(sensorSettings, luid)
+                case let .initial(initialSensorSettings):
+                    initialSensorSettings.forEach {
+                        self?.updateSensorSettings($0, luid)
                     }
-                    self?.savedDate.removeValue(forKey: luid.value)
-                default: break
+                case let .error(error):
+                    self?.post(error: .ruuviReactor(error))
                 }
             })
         }
+    }
+
+    private func updateSensorSettings(_ sensorSettings: SensorSettings, _ luid: LocalIdentifier) {
+        if let uIndex = sensorSettingsList.firstIndex(
+            where: { $0.id == sensorSettings.id }
+        ) {
+            sensorSettingsList[uIndex] = sensorSettings
+        } else {
+            sensorSettingsList.append(sensorSettings)
+        }
+        savedDate.removeValue(forKey: luid.value)
     }
 
     @objc private func persist(wrapper: RuuviTagWrapper) {
