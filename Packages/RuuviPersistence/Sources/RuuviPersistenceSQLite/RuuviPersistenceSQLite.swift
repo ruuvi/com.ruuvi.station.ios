@@ -560,11 +560,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
                 temperatureOffset: nil,
-                temperatureOffsetDate: nil,
                 humidityOffset: nil,
-                humidityOffsetDate: nil,
-                pressureOffset: nil,
-                pressureOffsetDate: nil
+                pressureOffset: nil
             )
             try database.dbPool.read { db in
                 let request = Settings.filter(
@@ -579,13 +576,10 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             switch type {
             case .humidity:
                 sqliteSensorSettings.humidityOffset = value
-                sqliteSensorSettings.humidityOffsetDate = value == nil ? nil : Date()
             case .pressure:
                 sqliteSensorSettings.pressureOffset = value
-                sqliteSensorSettings.pressureOffsetDate = value == nil ? nil : Date()
             default:
                 sqliteSensorSettings.temperatureOffset = value
-                sqliteSensorSettings.temperatureOffsetDate = value == nil ? nil : Date()
             }
             try database.dbPool.write { db in
                 if isAddNewRecord {

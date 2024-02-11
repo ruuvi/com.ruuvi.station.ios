@@ -1819,11 +1819,8 @@ extension TagSettingsPresenter {
             luid: ruuviTag.luid,
             macId: ruuviTag.macId,
             temperatureOffset: nil,
-            temperatureOffsetDate: nil,
             humidityOffset: nil,
-            humidityOffsetDate: nil,
-            pressureOffset: nil,
-            pressureOffsetDate: nil
+            pressureOffset: nil
         )
     }
 }

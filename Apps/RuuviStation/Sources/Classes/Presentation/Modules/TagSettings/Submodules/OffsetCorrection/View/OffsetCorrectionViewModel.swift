@@ -11,7 +11,6 @@ class OffsetCorrectionViewModel {
     var originalValue: Observable<Double?> = .init()
     var updateAt: Observable<Date?> = .init()
     var offsetCorrectionValue: Observable<Double?> = .init()
-    var offsetCorrectionDate: Observable<Date?> = .init()
     var correctedValue: Observable<Double?> = .init()
 
     let temperatureUnit: Observable<TemperatureUnit?> = .init()
@@ -70,13 +69,10 @@ class OffsetCorrectionViewModel {
         switch type {
         case .temperature:
             offsetCorrectionValue.value = sensorSettings.temperatureOffset
-            offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         case .humidity:
             offsetCorrectionValue.value = sensorSettings.humidityOffset
-            offsetCorrectionDate.value = sensorSettings.humidityOffsetDate
         case .pressure:
             offsetCorrectionValue.value = sensorSettings.pressureOffset
-            offsetCorrectionDate.value = sensorSettings.pressureOffsetDate
         }
 
         if let value = offsetCorrectionValue.value, value != 0 {
