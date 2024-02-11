@@ -64,7 +64,7 @@ final class SensorSettingsCombine {
 
                     // Find updates (present in both, but maybe different in some other properties)
                     let updates = newData.filter { newItem in
-                        self.previousData.contains { $0 == newItem }
+                        self.previousData.contains { $0.id == newItem.id && $0 != newItem }
                     }
 
                     if !inserts.isEmpty {
@@ -98,10 +98,7 @@ extension SensorSettingsSQLite: Equatable {
         lhs.luid?.any == rhs.luid?.any
         && lhs.macId?.any == rhs.macId?.any
         && lhs.temperatureOffset == rhs.temperatureOffset
-        && lhs.temperatureOffsetDate == rhs.temperatureOffsetDate
         && lhs.humidityOffset == rhs.humidityOffset
-        && lhs.humidityOffsetDate == rhs.humidityOffsetDate
         && lhs.pressureOffset == rhs.pressureOffset
-        && lhs.pressureOffsetDate == rhs.pressureOffsetDate
     }
 }
