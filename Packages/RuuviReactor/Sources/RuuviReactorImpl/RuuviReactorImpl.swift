@@ -159,11 +159,11 @@ class RuuviReactorImpl: RuuviReactor {
     ) -> RuuviReactorToken {
         sqlitePersistence.readSensorSettings(ruuviTag).on { sqliteRecord in
             if let sensorSettings = sqliteRecord {
-                block(.update(sensorSettings))
+                block(.initial([sensorSettings]))
             }
         }
         var sensorSettingsCombine: SensorSettingsCombine
-        if let combine = sensorSettingsCombines[ruuviTag.id] {
+         if let combine = sensorSettingsCombines[ruuviTag.id] {
             sensorSettingsCombine = combine
         } else {
             let combine = SensorSettingsCombine(

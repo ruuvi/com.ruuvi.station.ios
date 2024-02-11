@@ -441,19 +441,12 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 ruuviTagSensor, { [weak self] change in
                     guard let self else { return }
                     switch change {
+                    case let .initial(initialSensorSettings):
+                        initialSensorSettings.forEach {
+                            self.updateSensorSettings(ruuviTagSensor, $0)
+                        }
                     case let .update(updateSensorSettings):
-                        if let updateIndex = self.sensorSettingsList.firstIndex(
-                            where: { $0.id == updateSensorSettings.id }
-                        ) {
-                            self.sensorSettingsList[updateIndex] = updateSensorSettings
-                        } else {
-                            self.sensorSettingsList.append(updateSensorSettings)
-                        }
-                        if let luid = ruuviTagSensor.luid?.value {
-                            self.heartbeatQueue.async { [weak self] in
-                                self?.savedDate.removeValue(forKey: luid)
-                            }
-                        }
+                        self.updateSensorSettings(ruuviTagSensor, updateSensorSettings)
                     case let .insert(sensorSettings):
                         self.sensorSettingsList.append(sensorSettings)
                         if let luid = ruuviTagSensor.luid?.value {
@@ -472,6 +465,24 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     }
                 }
             )
+        }
+    }
+
+    private func updateSensorSettings(
+        _ ruuviTagSensor: AnyRuuviTagSensor,
+        _ sensorSettings: SensorSettings
+    ) {
+        if let updateIndex = sensorSettingsList.firstIndex(
+            where: { $0.id == sensorSettings.id }
+        ) {
+            sensorSettingsList[updateIndex] = sensorSettings
+        } else {
+            sensorSettingsList.append(sensorSettings)
+        }
+        if let luid = ruuviTagSensor.luid?.value {
+            heartbeatQueue.async { [weak self] in
+                self?.savedDate.removeValue(forKey: luid)
+            }
         }
     }
 }

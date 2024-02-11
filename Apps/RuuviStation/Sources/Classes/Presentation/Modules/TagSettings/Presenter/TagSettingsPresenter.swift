@@ -1016,7 +1016,10 @@ extension TagSettingsPresenter {
                 self?.sensorSettings = updateSensorSettings
             case .delete:
                 self?.sensorSettings = self?.emptySensorSettings()
-            default: break
+            case let .initial(initialSensorSettings):
+                self?.sensorSettings = initialSensorSettings.first
+            case let .error(error):
+                self?.errorPresenter.present(error: error)
             }
         }
     }
