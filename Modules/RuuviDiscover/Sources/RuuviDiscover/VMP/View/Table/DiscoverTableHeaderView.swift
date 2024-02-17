@@ -43,15 +43,12 @@ class DiscoverTableHeaderView: UIView {
         addSubview(headerView)
 
         headerView.addSubview(descriptionLabel)
-
-        if isBluetoothPermissionGranted, isNFCAvailable {
-            headerView.addSubview(nfcButton)
-        }
+        headerView.addSubview(nfcButton)
 
         setupLayout(
             headerView: headerView,
             descriptionLabel: descriptionLabel,
-            button: nfcButton
+            nfcButton: nfcButton
         )
     }
 
@@ -101,7 +98,7 @@ class DiscoverTableHeaderView: UIView {
     }
 
     private func setupLayout(
-        headerView: UIView, descriptionLabel: UILabel, button: UIButton
+        headerView: UIView, descriptionLabel: UILabel, nfcButton: UIButton
     ) {
         let headerPadding = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         NSLayoutConstraint.activate(headerView.constraints(to: self, padding: headerPadding))
@@ -112,13 +109,18 @@ class DiscoverTableHeaderView: UIView {
             descriptionLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
         ])
 
+        NSLayoutConstraint.activate([
+            nfcButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            nfcButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+        ])
+
         // variable constraints
-        nfcButtonTopConstraint = button
+        nfcButtonTopConstraint = nfcButton
             .topAnchor
             .constraint(
                 equalTo: descriptionLabel.bottomAnchor, constant: 12
             )
-        nfcButtonBottomConstraint = button
+        nfcButtonBottomConstraint = nfcButton
             .bottomAnchor
             .constraint(
                 equalTo: headerView.bottomAnchor, constant: -12
@@ -127,11 +129,11 @@ class DiscoverTableHeaderView: UIView {
             .bottomAnchor
             .constraint(equalTo: headerView.bottomAnchor)
 
+        nfcButton.isHidden = !(isBluetoothPermissionGranted && isNFCAvailable)
+
         if isBluetoothPermissionGranted, isNFCAvailable {
             NSLayoutConstraint.activate([
                 nfcButtonTopConstraint,
-                button.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-                button.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
                 nfcButtonBottomConstraint,
             ])
         } else {
@@ -148,12 +150,24 @@ class DiscoverTableHeaderView: UIView {
 
 extension DiscoverTableHeaderView {
     func handleNFCButtonViewVisibility(show: Bool) {
-        if isBluetoothPermissionGranted, isNFCAvailable {
-            nfcButtonTopConstraint.isActive = show
-            nfcButtonBottomConstraint.isActive = show
-            nfcButton.isHidden = !show
+        nfcButton.isHidden = !show
+        if show {
+            NSLayoutConstraint.deactivate([
+                descriptionLabelBottomConstraint
+            ])
+            NSLayoutConstraint.activate([
+                nfcButtonTopConstraint,
+                nfcButtonBottomConstraint,
+            ])
+        } else {
+            NSLayoutConstraint.deactivate([
+                nfcButtonTopConstraint,
+                nfcButtonBottomConstraint,
+            ])
+            NSLayoutConstraint.activate([
+                descriptionLabelBottomConstraint
+            ])
         }
-        descriptionLabelBottomConstraint.isActive = !show
         let addSensorString: String = RuuviLocalization.addSensorDescription
         let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
