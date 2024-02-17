@@ -16,6 +16,7 @@ final class RuuviTagLatestRecordSubjectCombine {
 
     private let errorReporter: RuuviErrorReporter
     private var ruuviTagDataTransactionObserver: AnyDatabaseCancellable?
+    private var previousRecord: RuuviTagLatestDataSQLite?
 
     deinit {
         ruuviTagDataTransactionObserver?.cancel()
@@ -52,8 +53,10 @@ final class RuuviTagLatestRecordSubjectCombine {
                 self?.errorReporter.report(error: error)
             },
             onChange: { [weak self] record in
-                if let lastRecord = record?.any {
-                    self?.subject.send(lastRecord)
+                let previousDate = self?.previousRecord?.date ?? Date.distantPast
+                if let lastRecord = record, lastRecord.date > previousDate {
+                    self?.subject.send(lastRecord.any)
+                    self?.previousRecord = lastRecord
                 }
             }
         )
