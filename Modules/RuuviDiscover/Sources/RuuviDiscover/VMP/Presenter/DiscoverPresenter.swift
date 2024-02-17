@@ -184,18 +184,22 @@ extension DiscoverPresenter: DiscoverViewOutput {
         // Stop NFC session
         view?.stopNFCSession()
 
+        guard let message = self.message(
+            for: nfcSensor,
+            displayName: displayName(for: nfcSensor)
+        ) else { return }
+
         // If tag is already added show the name from RuuviStation alongside
         // other info.
         if let addedTag = persistedSensors.first(where: { ruuviTag in
             ruuviTag.macId?.mac == nfcSensor?.macId
         }) {
-            guard let message = self.message(
-                for: nfcSensor,
-                displayName: addedTag.name
-            ) else { return }
             view?.showSensorDetailsDialog(
                 for: nfcSensor,
-                message: message,
+                message: self.message(
+                    for: nfcSensor,
+                    displayName: addedTag.name
+                ) ?? message,
                 showAddSensor: false,
                 showGoToSensor: true,
                 showUpgradeFirmware: false,
@@ -208,10 +212,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
         if ruuviTags.first(where: { ruuviTag in
             ruuviTag.mac == nfcSensor?.macId
         }) != nil {
-            guard let message = self.message(
-                for: nfcSensor,
-                displayName: displayName(for: nfcSensor)
-            ) else { return }
             view?.showSensorDetailsDialog(
                 for: nfcSensor,
                 message: message,
@@ -223,23 +223,73 @@ extension DiscoverPresenter: DiscoverViewOutput {
             return
         }
 
-        // Got mac id from scan, but no match in the persisted tag or available tag.
-        // which means either its a DF3 tag where mac id is not present or NFC scan
-        // is done when sensor is not yet seen by BT.
-        // Show info for DF3 case to add the tag using BT and update FW.
-        // TODO: Discuss about the other case to handle it.
-        guard let message = message(
-            for: nfcSensor,
-            displayName: displayName(for: nfcSensor)
-        ) else { return }
-        view?.showSensorDetailsDialog(
-            for: nfcSensor,
-            message: message,
-            showAddSensor: false,
-            showGoToSensor: false,
-            showUpgradeFirmware: true,
-            isDF3: nfcSensor?.firmwareVersion == "2.5.9"
-        )
+        if nfcSensor?.firmwareVersion == "2.5.9" {
+            view?.showSensorDetailsDialog(
+                for: nfcSensor,
+                message: message,
+                showAddSensor: false,
+                showGoToSensor: false,
+                showUpgradeFirmware: true,
+                isDF3: true
+            )
+        } else {
+            // for longlife sensors with advertisement interval of 8995 ms 
+            // we have to wait for discover the be able to hear the advertisement
+            activityPresenter.show(with: .loading(message: nil), atPosition: .center)
+            waitTenSecondsAndCheckIfTagWasSeenByBluetooth(
+                message: message,
+                numberOfAttempts: 7,
+                completion: { [weak self] in
+                    self?.activityPresenter.dismiss(immediately: true)
+                }
+            )
+        }
+    }
+
+    private func waitTenSecondsAndCheckIfTagWasSeenByBluetooth(
+        message: String,
+        numberOfAttempts: Int,
+        completion: @escaping () -> Void
+    ) {
+        guard numberOfAttempts > 0 else {
+            // Got mac id from scan, but no match in the persisted tag or available tag.
+            // which means either its a DF3 tag where mac id is not present or NFC scan
+            // is done when sensor is not yet seen by BT even after waiting for a minute.
+            // Show info for DF3 case to add the tag using BT and update FW.
+            view?.showSensorDetailsDialog(
+                for: nfcSensor,
+                message: message,
+                showAddSensor: false,
+                showGoToSensor: false,
+                showUpgradeFirmware: true,
+                isDF3: nfcSensor?.firmwareVersion == "2.5.9"
+            )
+            completion()
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+            guard let self else { return }
+            if self.ruuviTags.first(where: { [weak self] ruuviTag in
+                ruuviTag.mac == self?.nfcSensor?.macId
+            }) != nil {
+                self.view?.showSensorDetailsDialog(
+                    for: self.nfcSensor,
+                    message: message,
+                    showAddSensor: true,
+                    showGoToSensor: false,
+                    showUpgradeFirmware: false,
+                    isDF3: false
+                )
+                completion()
+            } else {
+                self.waitTenSecondsAndCheckIfTagWasSeenByBluetooth(
+                    message: message,
+                    numberOfAttempts: numberOfAttempts - 1,
+                    completion: completion
+                )
+            }
+        }
     }
 
     func viewDidAddDeviceWithNFC(with tag: NFCSensor?) {
