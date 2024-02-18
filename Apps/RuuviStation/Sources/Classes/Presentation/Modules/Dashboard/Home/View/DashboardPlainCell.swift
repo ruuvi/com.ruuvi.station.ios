@@ -137,7 +137,7 @@ class DashboardPlainCell: UICollectionViewCell {
             bottom: nil,
             trailing: nil,
             padding: .init(top: 4, left: 12, bottom: 0, right: 0),
-            size: .init(width: 18, height: 18)
+            size: .init(width: 24, height: 18)
         )
 
         container.addSubview(alertButton)
@@ -149,8 +149,8 @@ class DashboardPlainCell: UICollectionViewCell {
             leading: alertIcon.trailingAnchor,
             bottom: nil,
             trailing: container.trailingAnchor,
-            padding: .init(top: 0, left: 10, bottom: 0, right: 14),
-            size: .init(width: 18, height: 18)
+            padding: .init(top: 0, left: 4, bottom: 0, right: 8),
+            size: .init(width: 24, height: 18)
         )
 
         container.addSubview(moreButton)

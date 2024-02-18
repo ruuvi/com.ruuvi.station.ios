@@ -3572,8 +3572,8 @@ private extension TagSettingsViewController {
             leading: backBarButtonItemView.leadingAnchor,
             bottom: backBarButtonItemView.bottomAnchor,
             trailing: backBarButtonItemView.trailingAnchor,
-            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-            size: .init(width: 40, height: 40)
+            padding: .init(top: 0, left: -16, bottom: 0, right: 0),
+            size: .init(width: 48, height: 48)
         )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
 
@@ -3584,8 +3584,8 @@ private extension TagSettingsViewController {
             leading: rightBarButtonItemView.leadingAnchor,
             bottom: rightBarButtonItemView.bottomAnchor,
             trailing: rightBarButtonItemView.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: -8),
-            size: .init(width: 40, height: 40)
+            padding: .init(top: 0, left: 0, bottom: 0, right: -14),
+            size: .init(width: 48, height: 48)
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonItemView)
 

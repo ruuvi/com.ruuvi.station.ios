@@ -93,8 +93,8 @@ private extension BackgroundSelectionViewController {
             leading: leftBarButtonView.leadingAnchor,
             bottom: leftBarButtonView.bottomAnchor,
             trailing: leftBarButtonView.trailingAnchor,
-            padding: .init(top: 0, left: -12, bottom: 0, right: 0),
-            size: .init(width: 40, height: 40)
+            padding: .init(top: 0, left: -16, bottom: 0, right: 0),
+            size: .init(width: 48, height: 48)
         )
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
