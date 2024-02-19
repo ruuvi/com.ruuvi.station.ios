@@ -245,7 +245,6 @@ private extension DashboardViewController {
                             at: .top,
                             animated: false
                         )
-                        self.collectionView.contentOffset.y = -8
                     }
                 )
             }

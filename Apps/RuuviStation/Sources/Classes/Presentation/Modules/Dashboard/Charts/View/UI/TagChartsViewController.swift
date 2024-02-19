@@ -266,7 +266,7 @@ class TagChartsViewController: UIViewController {
                 bottom: 0,
                 right: 8
             ),
-            size: .init(width: 18, height: 18)
+            size: .init(width: 24, height: 18)
         )
         moreButton.centerYInSuperview()
 
@@ -280,7 +280,7 @@ class TagChartsViewController: UIViewController {
                 top: 0,
                 left: 0,
                 bottom: 0,
-                right: 8
+                right: 4
             ),
             size: .init(
                 width: 0,
