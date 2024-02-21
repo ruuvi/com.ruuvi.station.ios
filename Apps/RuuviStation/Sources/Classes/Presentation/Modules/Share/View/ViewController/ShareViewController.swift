@@ -246,6 +246,7 @@ extension ShareViewController {
         cell.emailLabel.text = viewModel.sharedEmails.value?[indexPath.row]
         cell.emailLabel.textColor = RuuviColor.textColor.color
         cell.unshareButton.tintColor = RuuviColor.textColor.color
+        cell.unshareButton.setImage(RuuviAsset.smallCrossClearIcon.image, for: .normal)
         cell.delegate = self
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
