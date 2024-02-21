@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public struct SensorSettingsSQLite: SensorSettings {
+public struct SensorSettingsSQLite: SensorSettings, Equatable {
     public var luid: LocalIdentifier?
     public var macId: MACIdentifier?
     public var temperatureOffset: Double?
@@ -20,6 +20,14 @@ public struct SensorSettingsSQLite: SensorSettings {
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+    }
+
+    public static func == (lhs: SensorSettingsSQLite, rhs: SensorSettingsSQLite) -> Bool {
+        lhs.luid?.any == rhs.luid?.any
+        && lhs.macId?.any == rhs.macId?.any
+        && lhs.temperatureOffset == rhs.temperatureOffset
+        && lhs.humidityOffset == rhs.humidityOffset
+        && lhs.pressureOffset == rhs.pressureOffset
     }
 }
 

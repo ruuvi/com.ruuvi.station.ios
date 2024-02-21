@@ -53,7 +53,7 @@ final class RuuviTagSubjectCombine {
 
                     // Find updates (present in both, but maybe different in some other properties)
                     let updates = newData.filter { newItem in
-                        self.previousData.contains { $0.id == newItem.id && $0.any != newItem.any }
+                        self.previousData.contains { $0.id == newItem.id && $0 != newItem }
                     }
 
                     if !inserts.isEmpty {
