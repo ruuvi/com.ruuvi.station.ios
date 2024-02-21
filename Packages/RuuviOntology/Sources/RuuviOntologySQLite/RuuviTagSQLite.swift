@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public struct RuuviTagSQLite: RuuviTagSensor {
+public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
     public var id: String
     public var macId: MACIdentifier?
     public var luid: LocalIdentifier?
@@ -47,6 +47,23 @@ public struct RuuviTagSQLite: RuuviTagSensor {
         self.isCloudSensor = isCloudSensor
         self.canShare = canShare
         self.sharedTo = sharedTo
+    }
+
+    public static func == (lhs: RuuviTagSQLite, rhs: RuuviTagSQLite) -> Bool {
+        return lhs.id == rhs.id
+        && lhs.macId?.any == rhs.macId?.any
+        && lhs.luid?.any == rhs.luid?.any
+        && lhs.name == rhs.name
+        && lhs.version == rhs.version
+        && lhs.firmwareVersion == rhs.firmwareVersion
+        && lhs.isConnectable == rhs.isConnectable
+        && lhs.isClaimed == rhs.isClaimed
+        && lhs.isOwner == rhs.isOwner
+        && lhs.owner == rhs.owner
+        && lhs.ownersPlan == rhs.ownersPlan
+        && lhs.isCloudSensor == rhs.isCloudSensor
+        && lhs.canShare == rhs.canShare
+        && lhs.sharedTo == rhs.sharedTo
     }
 }
 
