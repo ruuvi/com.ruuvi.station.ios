@@ -35,8 +35,7 @@ class SQLiteGRDBDatabase: GRDBDatabase {
     private(set) var dbPool: DatabasePool
 
     private init() throws {
-        var configuration = Configuration()
-
+        let configuration = Configuration()
         let pool = try DatabasePool(path: SQLiteGRDBDatabase.databasePath, configuration: configuration)
         try pool.write { database in
             try database.execute(sql: "PRAGMA auto_vacuum = FULL")
