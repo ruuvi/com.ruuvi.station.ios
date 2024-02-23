@@ -36,7 +36,6 @@ class SQLiteGRDBDatabase: GRDBDatabase {
 
     private init() throws {
         var configuration = Configuration()
-        configuration.qos = .userInitiated
 
         let pool = try DatabasePool(path: SQLiteGRDBDatabase.databasePath, configuration: configuration)
         try pool.write { database in
