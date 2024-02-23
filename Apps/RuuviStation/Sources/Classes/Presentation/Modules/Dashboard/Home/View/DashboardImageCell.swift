@@ -37,13 +37,18 @@ class DashboardImageCell: UICollectionViewCell {
         return button
     }()
 
-    private lazy var moreIcon: UIImageView = {
+    private lazy var moreIconView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         iv.image = RuuviAsset.more3dot.image
         iv.tintColor = RuuviColor.dashboardIndicatorBig.color
-        return iv
+        view.addSubview(iv)
+        iv.fillSuperview(padding: .init(top: 12, left: 0, bottom: 2, right: 4))
+        return view
     }()
 
     /// This is used as a touch target only, and we will keep it accessible from
@@ -171,18 +176,17 @@ class DashboardImageCell: UICollectionViewCell {
         container.addSubview(alertButton)
         alertButton.match(view: alertIcon)
 
-        container.addSubview(moreIcon)
-        moreIcon.anchor(
-            top: alertIcon.topAnchor,
+        container.addSubview(moreIconView)
+        moreIconView.anchor(
+            top: container.topAnchor,
             leading: alertIcon.trailingAnchor,
             bottom: nil,
             trailing: container.trailingAnchor,
-            padding: .init(top: 0, left: 4, bottom: 0, right: 8),
-            size: .init(width: 24, height: 18)
+            size: .init(width: 36, height: 32)
         )
 
         container.addSubview(moreButton)
-        moreButton.match(view: moreIcon)
+        moreButton.match(view: moreIconView)
 
         container.addSubview(temperatureLabel)
         temperatureLabel.anchor(
