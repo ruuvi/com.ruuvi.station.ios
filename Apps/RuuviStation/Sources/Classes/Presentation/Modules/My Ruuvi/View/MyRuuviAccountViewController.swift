@@ -5,6 +5,7 @@ import UIKit
 class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
 
+    @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet var headerTitleLabel: UILabel!
     @IBOutlet var loggedInLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
@@ -74,6 +75,10 @@ extension MyRuuviAccountViewController {
     }
 
     private func configureViews() {
+        dismissButton.setImage(
+            RuuviAsset.dismissModalIcon.image,
+            for: .normal
+        )
         headerTitleLabel.text = RuuviLocalization.Menu.Label.MyRuuviAccount.text
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)

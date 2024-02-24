@@ -76,6 +76,7 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = RuuviLocalization.Settings.NavigationItem.title
+        navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
         temperatureTitleLabel.text = RuuviLocalization.Settings.Label.TemperatureUnit.text
         humidityTitleLabel.text = RuuviLocalization.Settings.Label.HumidityUnit.text
         pressureTitleLabel.text = RuuviLocalization.Settings.Label.PressureUnit.text
