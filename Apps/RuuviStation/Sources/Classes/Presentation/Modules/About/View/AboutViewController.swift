@@ -4,6 +4,7 @@ import UIKit
 class AboutViewController: UIViewController {
     var output: AboutViewOutput!
 
+    @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet var headerTitleLabel: UILabel!
     @IBOutlet var aboutTextView: UITextView!
     @IBOutlet var versionLabel: UILabel!
@@ -97,6 +98,10 @@ extension AboutViewController: UITextViewDelegate {
 
 extension AboutViewController {
     private func configureViews() {
+        dismissButton.setImage(
+            RuuviAsset.dismissModalIcon.image,
+            for: .normal
+        )
         headerTitleLabel.text = RuuviLocalization.About.AboutHelp.header
         configureTextView()
         bindViewModel()

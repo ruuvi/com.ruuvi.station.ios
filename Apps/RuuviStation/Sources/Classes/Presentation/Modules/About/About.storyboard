@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -175,6 +175,7 @@
                         <outlet property="aboutTextView" destination="pyx-d9-7cb" id="KnS-FS-hFt"/>
                         <outlet property="addedTagsLabel" destination="DQc-Dj-qjx" id="Cb5-s2-ra4"/>
                         <outlet property="databaseSizeLable" destination="8cl-Gj-SSM" id="52A-4u-X9Z"/>
+                        <outlet property="dismissButton" destination="FWL-lH-VPV" id="OLl-1B-1tA"/>
                         <outlet property="headerTitleLabel" destination="ol5-6m-wqF" id="V9G-Zh-5ws"/>
                         <outlet property="storedMeasurementsLabel" destination="Nhq-tg-RXR" id="lfF-HF-veI"/>
                         <outlet property="versionLabel" destination="YZT-Oy-FFh" id="Uqa-1k-Seb"/>
@@ -202,7 +203,7 @@
             <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="labelColor">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>
