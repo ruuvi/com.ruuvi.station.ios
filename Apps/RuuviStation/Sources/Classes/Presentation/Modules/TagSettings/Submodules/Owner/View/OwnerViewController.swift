@@ -30,10 +30,10 @@ final class OwnerViewController: UIViewController {
         return label
     }()
 
-    lazy var removeCloudHistorySwitch: RuuviUISwitch = {
-        let toggle = RuuviUISwitch()
-        toggle.isOn = false
-        return toggle
+    lazy var removeCloudHistorySwitch: RuuviSwitchView = {
+        let switchView = RuuviSwitchView()
+        switchView.toggleState(with: false)
+        return switchView
     }()
 
     private lazy var backButton: UIButton = {
@@ -134,14 +134,19 @@ extension OwnerViewController: OwnerViewInput {
         let title = RuuviLocalization.dialogAreYouSure
         let message = RuuviLocalization.dialogOperationUndone
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(
-            title: RuuviLocalization.confirm,
-            style: .destructive,
-            handler: { [weak self] _ in
-                guard let self else { return }
-                output?.viewDidConfirmUnclaim(removeCloudHistory: removeCloudHistorySwitch.isOn)
-            }
-        ))
+        controller.addAction(
+            UIAlertAction(
+                title: RuuviLocalization.confirm,
+                style: .destructive,
+                handler: {
+                    [weak self] _ in
+                    guard let self else { return }
+                    output?.viewDidConfirmUnclaim(
+                        removeCloudHistory: removeCloudHistorySwitch.isOn()
+                    )
+                }
+            )
+        )
         controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
@@ -169,7 +174,7 @@ extension OwnerViewController {
         horizontalStackView.spacing = 8
         horizontalStackView.distribution = .fill
         horizontalStackView.axis = .horizontal
-        removeCloudHistorySwitch.constrainWidth(constant: 51)
+        removeCloudHistorySwitch.widthLessThanOrEqualTo(constant: 80)
 
         let verticalStackView = UIStackView(arrangedSubviews: [
             horizontalStackView, removeCloudHistoryDescriptionLabel

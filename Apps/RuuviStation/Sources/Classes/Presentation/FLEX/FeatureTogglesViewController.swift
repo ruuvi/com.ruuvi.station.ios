@@ -6,7 +6,7 @@ final class FeatureTogglesViewController: UITableViewController {
 
     init() {
         headerView = UIView()
-        sourceSwitch = RuuviUISwitch()
+        sourceSwitch = RuuviSwitchView()
         sourceLabel = Self.makeSourceLabel()
         super.init(nibName: nil, bundle: nil)
     }
@@ -17,27 +17,17 @@ final class FeatureTogglesViewController: UITableViewController {
     }
 
     private let headerView: UIView
-    private let sourceSwitch: RuuviUISwitch
+    private let sourceSwitch: RuuviSwitchView
     private let sourceLabel: UILabel
     private let features = Feature.allCases
     private static let featureCellReuseIdentifier = "FeatureCellReuseIdentifier"
 
     private func setupViews() {
         view.backgroundColor = RuuviColor.primary.color
+        sourceSwitch.delegate = self
         headerView.addSubview(sourceSwitch)
         headerView.addSubview(sourceLabel)
         tableView.tableHeaderView = headerView
-        sourceSwitch.addTarget(self, action: #selector(sourceSwitchValueChanged(_:)), for: .valueChanged)
-    }
-
-    @objc
-    private func sourceSwitchValueChanged(_: Any) {
-        if sourceSwitch.isOn {
-            featureToggleService.source = .local
-        } else {
-            featureToggleService.source = .remote
-        }
-        tableView.reloadData()
     }
 
     private func layoutViews() {
@@ -68,7 +58,7 @@ final class FeatureTogglesViewController: UITableViewController {
         super.viewDidLoad()
         setupViews()
         layoutViews()
-        sourceSwitch.isOn = featureToggleService.source == .local
+        sourceSwitch.toggleState(with: featureToggleService.source == .local)
     }
 }
 
@@ -77,7 +67,7 @@ final class FeatureTogglesViewController: UITableViewController {
 extension FeatureTogglesViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard sourceSwitch.isOn else { return }
+        guard sourceSwitch.isOn() else { return }
         let feature = features[indexPath.row]
         if featureToggleService.isEnabled(feature) {
             featureToggleService.disableLocal(feature)
@@ -109,6 +99,14 @@ extension FeatureTogglesViewController {
             cell.accessoryType = .none
         }
         return cell
+    }
+}
+
+// MARK: - RuuviSwitchViewDelegate
+extension FeatureTogglesViewController: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        featureToggleService.source = isOn ? .local : .remote
+        tableView.reloadData()
     }
 }
 

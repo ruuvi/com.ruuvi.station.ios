@@ -26,15 +26,10 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
         return label
     }()
 
-    lazy var statusSwitch: RuuviUISwitch = {
-        let toggle = RuuviUISwitch()
-        toggle.isOn = false
-        toggle.addTarget(
-            self,
-            action: #selector(handleStatusToggle),
-            for: .valueChanged
-        )
-        return toggle
+    lazy var statusSwitch: RuuviSwitchView = {
+        let toggleView = RuuviSwitchView(delegate: self)
+        toggleView.toggleState(with: false)
+        return toggleView
     }()
 
     override init(
@@ -59,52 +54,44 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
 
         backgroundColor = .clear
 
-        let textStack = UIStackView(arrangedSubviews: [
-            titleLabel, subtitleLabel
+        // Contains the title for the item, and switch view
+        let topStack = UIStackView(arrangedSubviews: [
+            titleLabel, statusSwitch
         ])
-        textStack.spacing = 4
-        textStack.distribution = .fillProportionally
-        textStack.axis = .vertical
-        contentView.addSubview(textStack)
-        textStack.anchor(
-            top: contentView.safeTopAnchor,
-            leading: contentView.safeLeftAnchor,
-            bottom: contentView.safeBottomAnchor,
-            trailing: nil,
+        topStack.spacing = 4
+        topStack.distribution = .fillProportionally
+        topStack.axis = .horizontal
+
+        // Contains the content stack, and subtitle.
+        let contentStack = UIStackView(arrangedSubviews: [
+            topStack, subtitleLabel
+        ])
+        contentStack.spacing = 8
+        contentStack.distribution = .fillProportionally
+        contentStack.axis = .vertical
+        contentView.addSubview(contentStack)
+        contentStack.fillSuperviewToSafeArea(
             padding: .init(
-                top: 12,
-                left: 20,
-                bottom: 12,
-                right: 0
-            )
+            top: 12,
+            left: 20,
+            bottom: 12,
+            right: 16)
         )
-
-        contentView.addSubview(statusSwitch)
-        statusSwitch.anchor(
-            top: nil,
-            leading: textStack.trailingAnchor,
-            bottom: nil,
-            trailing: contentView.safeRightAnchor,
-            padding: .init(top: 0, left: 8, bottom: 0, right: 12)
-        )
-        statusSwitch.centerYInSuperview()
     }
+}
 
-    @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
-        delegate?.didToggleSwitch(isOn: sender.isOn, sender: self)
+// MARK: - RuuviSwitchViewDelegate
+extension NotificationsSettingsSwitchCell: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        delegate?.didToggleSwitch(isOn: isOn, sender: self)
     }
 }
 
 // MARK: - SETTERS
-
 extension NotificationsSettingsSwitchCell {
     func configure(title: String?, subtitle: String?, value: Bool?) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
-        if let value {
-            statusSwitch.setOn(value, animated: false)
-        } else {
-            statusSwitch.setOn(false, animated: false)
-        }
+        statusSwitch.toggleState(with: value ?? false)
     }
 }

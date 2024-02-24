@@ -23,11 +23,10 @@ class TagSettingsSwitchCell: UITableViewCell {
         return activityIndicator
     }()
 
-    lazy var statusSwitch: RuuviUISwitch = {
-        let toggle = RuuviUISwitch()
-        toggle.isOn = false
-        toggle.addTarget(self, action: #selector(handleStatusToggle), for: .valueChanged)
-        return toggle
+    lazy var statusSwitch: RuuviSwitchView = {
+        let toggleView = RuuviSwitchView(delegate: self)
+        toggleView.toggleState(with: false)
+        return toggleView
     }()
 
     lazy var seprator = UIView(color: RuuviColor.lineColor.color)
@@ -88,9 +87,9 @@ class TagSettingsSwitchCell: UITableViewCell {
                 left: 8,
                 bottom: 0,
                 right: 12
-            ),
-            size: .init(width: 51, height: 0)
+            )
         )
+        statusSwitch.widthLessThanOrEqualTo(constant: 80)
         statusSwitch.centerYInSuperview()
 
         addSubview(seprator)
@@ -102,9 +101,12 @@ class TagSettingsSwitchCell: UITableViewCell {
             size: .init(width: 0, height: 1)
         )
     }
+}
 
-    @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
-        delegate?.didToggleSwitch(isOn: sender.isOn, sender: self)
+// MARK: - RuuviSwitchViewDelegate
+extension TagSettingsSwitchCell: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        delegate?.didToggleSwitch(isOn: isOn, sender: self)
     }
 }
 
@@ -116,15 +118,11 @@ extension TagSettingsSwitchCell {
     }
 
     func configureSwitch(value: Bool?) {
-        if let value {
-            statusSwitch.setOn(value, animated: false)
-        } else {
-            statusSwitch.setOn(false, animated: false)
-        }
+        statusSwitch.toggleState(with: value ?? false)
     }
 
     func disableSwitch(disable: Bool) {
-        statusSwitch.isEnabled = !disable
+        statusSwitch.disableEditing(disable: disable)
     }
 
     func configurePairingAnimation(start: Bool) {
