@@ -75,7 +75,7 @@ extension DefaultsTableViewController {
             // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
-            cell.isOnSwitch.isOn = viewModel.boolean.value ?? false
+            cell.isOnSwitch.toggleState(with: viewModel.boolean.value ?? false)
             cell.delegate = self
             return cell
         case .stepper:

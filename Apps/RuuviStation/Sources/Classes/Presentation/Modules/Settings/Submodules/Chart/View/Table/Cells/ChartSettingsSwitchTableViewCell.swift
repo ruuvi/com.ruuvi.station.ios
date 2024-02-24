@@ -8,9 +8,17 @@ class ChartSettingsSwitchTableViewCell: UITableViewCell {
     weak var delegate: ChartSettingsSwitchTableViewCellDelegate?
 
     @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var isOnSwitch: UISwitch!
+    @IBOutlet weak var isOnSwitch: RuuviSwitchView!
 
-    @IBAction func isOnSwitchValueChanged(_: Any) {
-        delegate?.chartSettingsSwitch(cell: self, didChange: isOnSwitch.isOn)
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        isOnSwitch.delegate = self
+    }
+}
+
+// MARK: - RuuviSwitchViewDelegate
+extension ChartSettingsSwitchTableViewCell: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        delegate?.chartSettingsSwitch(cell: self, didChange: isOn)
     }
 }

@@ -46,10 +46,10 @@ class SensorRemovalViewController: UIViewController {
         return label
     }()
 
-    lazy var removeCloudHistorySwitch: RuuviUISwitch = {
-        let toggle = RuuviUISwitch()
-        toggle.isOn = false
-        return toggle
+    lazy var removeCloudHistorySwitch: RuuviSwitchView = {
+        let switchView = RuuviSwitchView()
+        switchView.toggleState(with: false)
+        return switchView
     }()
 
     private lazy var removeButton: UIButton = {
@@ -116,14 +116,19 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
         let title = RuuviLocalization.dialogAreYouSure
         let message = RuuviLocalization.dialogOperationUndone
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(
-            title: RuuviLocalization.confirm,
-            style: .destructive,
-            handler: { [weak self] _ in
-                guard let self else { return }
-                output?.viewDidConfirmTagRemoval(with: removeCloudHistorySwitch.isOn)
-            }
-        ))
+        controller.addAction(
+            UIAlertAction(
+                title: RuuviLocalization.confirm,
+                style: .destructive,
+                handler: {
+                    [weak self] _ in
+                    guard let self else { return }
+                    output?.viewDidConfirmTagRemoval(
+                        with: removeCloudHistorySwitch.isOn()
+                    )
+                }
+            )
+        )
         controller.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
@@ -172,7 +177,8 @@ extension SensorRemovalViewController {
         horizontalStackView.spacing = 8
         horizontalStackView.distribution = .fill
         horizontalStackView.axis = .horizontal
-        removeCloudHistorySwitch.constrainWidth(constant: 51)
+        removeCloudHistorySwitch.widthLessThanOrEqualTo(constant: 80)
+        removeCloudHistorySwitch.constrainHeight(constant: 50)
 
         let verticalStackView = UIStackView(arrangedSubviews: [
             horizontalStackView, removeCloudHistoryDescriptionLabel
@@ -182,7 +188,7 @@ extension SensorRemovalViewController {
         verticalStackView.axis = .vertical
 
         removeCloudHistoryActionContainer.addSubview(verticalStackView)
-        verticalStackView.fillSuperview()
+        verticalStackView.fillSuperview(padding: .init(top: 0, left: 0, bottom: 0, right: 4))
 
         view.addSubview(removeCloudHistoryActionContainer)
         removeCloudHistoryActionContainer.anchor(

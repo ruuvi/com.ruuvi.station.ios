@@ -59,7 +59,7 @@ extension ChartSettingsTableViewController {
                 .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
-            cell.isOnSwitch.isOn = value
+            cell.isOnSwitch.toggleState(with: value)
             cell.delegate = self
             return cell
         case let .stepper(title, value, unitSingular, unitPlural):

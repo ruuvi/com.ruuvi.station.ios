@@ -11,7 +11,7 @@ class HeartbeatTableViewController: UITableViewController {
     }
 
     @IBOutlet var bgScanningTitleLabel: UILabel!
-    @IBOutlet var bgScanningSwitch: RuuviUISwitch!
+    @IBOutlet weak var bgScanningSwitch: RuuviSwitchView!
     @IBOutlet var bgScanningIntervalTitleLabel: UILabel!
     @IBOutlet var bgScanningIntervalValueLabel: UILabel!
     @IBOutlet var bgScanningIntervalStepper: UIStepper!
@@ -46,10 +46,6 @@ extension HeartbeatTableViewController: HeartbeatViewInput {
 extension HeartbeatTableViewController {
     @IBAction func bgScanningIntervalStepperValueChanged(_: Any) {
         viewModel.bgScanningInterval.value = Int(bgScanningIntervalStepper.value)
-    }
-
-    @IBAction func bgScanningSwitchValueChanged(_: Any) {
-        viewModel.bgScanningState.value = bgScanningSwitch.isOn
     }
 }
 
@@ -91,12 +87,13 @@ extension HeartbeatTableViewController {
     private func updateUIComponent() {
         tableView.sectionFooterHeight = UITableView.automaticDimension
         bgScanningIntervalStepper.layer.cornerRadius = 8
+        bgScanningSwitch.delegate = self
     }
 
     private func bindViewModel() {
         if isViewLoaded {
             bgScanningSwitch.bind(viewModel.bgScanningState) { view, isOn in
-                view.isOn = isOn.bound
+                view.toggleState(with: isOn.bound)
             }
             bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { label, interval in
                 if interval.bound > 0 {
@@ -111,5 +108,12 @@ extension HeartbeatTableViewController {
                 stepper.value = Double(interval.bound)
             }
         }
+    }
+}
+
+// MARK: - RuuviSwitchViewDelegate
+extension HeartbeatTableViewController: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        viewModel.bgScanningState.value = isOn
     }
 }

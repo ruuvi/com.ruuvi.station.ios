@@ -45,21 +45,10 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         return label
     }()
 
-    private lazy var statusLabel: UILabel = {
-        let label = UILabel()
-        label.text = RuuviLocalization.off
-        label.textAlignment = .right
-        label.numberOfLines = 0
-        label.textColor = RuuviColor.textColor.color
-        label.font = UIFont.Muli(.regular, size: 14)
-        return label
-    }()
-
-    private lazy var statusSwitch: RuuviUISwitch = {
-        let toggle = RuuviUISwitch()
-        toggle.isOn = false
-        toggle.addTarget(self, action: #selector(handleStatusToggle), for: .valueChanged)
-        return toggle
+    lazy var statusSwitch: RuuviSwitchView = {
+        let toggleView = RuuviSwitchView(delegate: self)
+        toggleView.toggleState(with: false)
+        return toggleView
     }()
 
     private lazy var setCustomDescriptionView = RUAlertDetailsCellChildView()
@@ -171,21 +160,13 @@ extension TagSettingsAlertConfigCell {
             size: .init(width: 0, height: 44)
         )
 
-        statusContainerView.addSubview(statusLabel)
-        statusLabel.anchor(
-            top: statusContainerView.topAnchor,
-            leading: statusContainerView.leadingAnchor,
-            bottom: statusContainerView.bottomAnchor,
-            trailing: nil
-        )
-
         statusContainerView.addSubview(statusSwitch)
         statusSwitch.anchor(
             top: nil,
-            leading: statusLabel.trailingAnchor,
+            leading: nil,
             bottom: nil,
             trailing: statusContainerView.trailingAnchor,
-            padding: .init(top: 0, left: 12, bottom: 0, right: 4)
+            padding: .init(top: 0, left: 0, bottom: 0, right: 2)
         )
         statusSwitch.sizeToFit()
         statusSwitch.centerYInSuperview()
@@ -269,11 +250,10 @@ extension TagSettingsAlertConfigCell {
     }
 }
 
-// MARK: - Private action
-
-extension TagSettingsAlertConfigCell {
-    @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
-        delegate?.didChangeAlertState(sender: self, didToggle: sender.isOn)
+// MARK: - RuuviSwitchViewDelegate
+extension TagSettingsAlertConfigCell: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        delegate?.didChangeAlertState(sender: self, didToggle: isOn)
     }
 }
 
@@ -281,10 +261,7 @@ extension TagSettingsAlertConfigCell {
 
 extension TagSettingsAlertConfigCell {
     func setStatus(with value: Bool?) {
-        if let value {
-            statusLabel.text = value ? RuuviLocalization.on : RuuviLocalization.off
-            statusSwitch.setOn(value, animated: false)
-        }
+        statusSwitch.toggleState(with: value ?? false)
     }
 
     func setCustomDescription(with string: String?) {
@@ -385,8 +362,7 @@ extension TagSettingsAlertConfigCell {
         disable: Bool,
         identifier: TagSettingsSectionIdentifier
     ) {
-        statusSwitch.disable(disable)
-        statusLabel.disable(disable)
+        statusSwitch.disableEditing(disable: disable)
         setCustomDescriptionView.disable(disable)
 
         switch identifier {

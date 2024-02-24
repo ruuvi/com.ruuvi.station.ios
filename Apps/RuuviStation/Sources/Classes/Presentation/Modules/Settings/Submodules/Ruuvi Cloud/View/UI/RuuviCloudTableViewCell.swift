@@ -17,15 +17,10 @@ class RuuviCloudTableViewCell: UITableViewCell {
         return label
     }()
 
-    lazy var statusSwitch: RuuviUISwitch = {
-        let toggle = RuuviUISwitch()
-        toggle.isOn = false
-        toggle.addTarget(
-            self,
-            action: #selector(handleStatusToggle),
-            for: .valueChanged
-        )
-        return toggle
+    lazy var statusSwitch: RuuviSwitchView = {
+        let toggleView = RuuviSwitchView(delegate: self)
+        toggleView.toggleState(with: false)
+        return toggleView
     }()
 
     override init(
@@ -70,25 +65,23 @@ class RuuviCloudTableViewCell: UITableViewCell {
             leading: titleLabel.trailingAnchor,
             bottom: nil,
             trailing: safeRightAnchor,
-            padding: .init(top: 0, left: 8, bottom: 0, right: 12)
+            padding: .init(top: 0, left: 8, bottom: 0, right: 16)
         )
         statusSwitch.centerYInSuperview()
     }
+}
 
-    @objc private func handleStatusToggle(_ sender: RuuviUISwitch) {
-        delegate?.didToggleSwitch(isOn: sender.isOn, sender: self)
+// MARK: - RuuviSwitchViewDelegate
+extension RuuviCloudTableViewCell: RuuviSwitchViewDelegate {
+    func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
+        delegate?.didToggleSwitch(isOn: isOn, sender: self)
     }
 }
 
 // MARK: - SETTERS
-
 extension RuuviCloudTableViewCell {
     func configure(title: String?, value: Bool?) {
         titleLabel.text = title
-        if let value {
-            statusSwitch.setOn(value, animated: false)
-        } else {
-            statusSwitch.setOn(false, animated: false)
-        }
+        statusSwitch.toggleState(with: value ?? false)
     }
 }
