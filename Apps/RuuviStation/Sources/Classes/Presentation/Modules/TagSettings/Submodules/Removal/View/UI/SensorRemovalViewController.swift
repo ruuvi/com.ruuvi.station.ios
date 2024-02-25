@@ -26,30 +26,9 @@ class SensorRemovalViewController: UIViewController {
     }()
 
     private var removeCloudHistoryActionContainer = UIView(color: .clear)
-    private lazy var removeCloudHistoryTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = RuuviLocalization.removeCloudHistoryTitle
-        label.textColor = RuuviColor.textColor.color
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 14)
-        return label
-    }()
-
-    private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
-        let label = UILabel()
-        label.text = RuuviLocalization.removeCloudHistoryDescription
-        label.textColor = RuuviColor.textColor.color
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
-        return label
-    }()
-
-    lazy var removeCloudHistorySwitch: RuuviSwitchView = {
-        let switchView = RuuviSwitchView()
-        switchView.toggleState(with: false)
-        return switchView
+    private lazy var removeCloudHistoryCheckbox: RuuviCheckboxViewProvider = {
+        let provider = RuuviCheckboxViewProvider(stateHolder: RuuviCheckboxViewState())
+        return provider
     }()
 
     private lazy var removeButton: UIButton = {
@@ -124,7 +103,7 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
                     [weak self] _ in
                     guard let self else { return }
                     output?.viewDidConfirmTagRemoval(
-                        with: removeCloudHistorySwitch.isOn()
+                        with: removeCloudHistoryCheckbox.isChecked
                     )
                 }
             )
@@ -160,7 +139,6 @@ extension SensorRemovalViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
     }
 
-    // swiftlint:disable:next function_body_length
     private func setUpContentView() {
         view.addSubview(messageLabel)
         messageLabel.anchor(
@@ -171,24 +149,16 @@ extension SensorRemovalViewController {
             padding: .init(top: 16, left: 12, bottom: 0, right: 12)
         )
 
-        let horizontalStackView = UIStackView(arrangedSubviews: [
-            removeCloudHistoryTitleLabel, removeCloudHistorySwitch
-        ])
-        horizontalStackView.spacing = 8
-        horizontalStackView.distribution = .fill
-        horizontalStackView.axis = .horizontal
-        removeCloudHistorySwitch.widthLessThanOrEqualTo(constant: 80)
-        removeCloudHistorySwitch.constrainHeight(constant: 50)
+        let removeCloudHistoryCheckboxVC = removeCloudHistoryCheckbox.makeViewController(
+            title: RuuviLocalization.removeCloudHistoryDescription
+        )
+        removeCloudHistoryCheckboxVC.view.backgroundColor = .clear
+        addChild(removeCloudHistoryCheckboxVC)
+        view.addSubview(removeCloudHistoryCheckboxVC.view)
+        removeCloudHistoryCheckboxVC.didMove(toParent: self)
 
-        let verticalStackView = UIStackView(arrangedSubviews: [
-            horizontalStackView, removeCloudHistoryDescriptionLabel
-        ])
-        verticalStackView.spacing = 10
-        verticalStackView.distribution = .fill
-        verticalStackView.axis = .vertical
-
-        removeCloudHistoryActionContainer.addSubview(verticalStackView)
-        verticalStackView.fillSuperview(padding: .init(top: 0, left: 0, bottom: 0, right: 4))
+        removeCloudHistoryActionContainer.addSubview(removeCloudHistoryCheckboxVC.view)
+        removeCloudHistoryCheckboxVC.view.fillSuperview()
 
         view.addSubview(removeCloudHistoryActionContainer)
         removeCloudHistoryActionContainer.anchor(
@@ -196,7 +166,7 @@ extension SensorRemovalViewController {
             leading: view.safeLeftAnchor,
             bottom: nil,
             trailing: view.safeRightAnchor,
-            padding: .init(top: 30, left: 12, bottom: 0, right: 12)
+            padding: .init(top: 24, left: 12, bottom: 0, right: 12)
         )
 
         view.addSubview(removeButton)
