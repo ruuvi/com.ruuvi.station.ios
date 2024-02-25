@@ -54,12 +54,13 @@ extension ChartSettingsTableViewController {
         let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
 
         switch cellViewModel.type {
-        case let .switcher(title, value):
+        case let .switcher(title, value, hideStatusLabel):
             let cell = tableView
                 .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.toggleState(with: value)
+            cell.isOnSwitch.hideStatusLabel(hide: hideStatusLabel)
             cell.delegate = self
             return cell
         case let .stepper(title, value, unitSingular, unitPlural):

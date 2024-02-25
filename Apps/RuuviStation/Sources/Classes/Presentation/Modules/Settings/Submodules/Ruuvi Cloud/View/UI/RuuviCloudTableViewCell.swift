@@ -12,7 +12,7 @@ class RuuviCloudTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
         return label
     }()
@@ -80,8 +80,13 @@ extension RuuviCloudTableViewCell: RuuviSwitchViewDelegate {
 
 // MARK: - SETTERS
 extension RuuviCloudTableViewCell {
-    func configure(title: String?, value: Bool?) {
+    func configure(
+        title: String?,
+        value: Bool?,
+        hideStatusLabel: Bool
+    ) {
         titleLabel.text = title
         statusSwitch.toggleState(with: value ?? false)
+        statusSwitch.hideStatusLabel(hide: hideStatusLabel)
     }
 }

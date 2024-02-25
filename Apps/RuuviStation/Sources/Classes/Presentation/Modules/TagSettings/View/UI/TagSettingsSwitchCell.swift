@@ -117,8 +117,12 @@ extension TagSettingsSwitchCell {
         titleLabel.text = title
     }
 
-    func configureSwitch(value: Bool?) {
+    func configureSwitch(
+        value: Bool?,
+        hideStatusLabel: Bool
+    ) {
         statusSwitch.toggleState(with: value ?? false)
+        statusSwitch.hideStatusLabel(hide: hideStatusLabel)
     }
 
     func disableSwitch(disable: Bool) {

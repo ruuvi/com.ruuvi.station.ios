@@ -100,6 +100,8 @@ struct TagSettingsViewModel {
 
     var latestMeasurement: Observable<RuuviTagSensorRecord?> = .init()
 
+    let hideSwitchStatusLabel: Observable<Bool?> = .init(false)
+
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity
         temperature.value = record.temperature

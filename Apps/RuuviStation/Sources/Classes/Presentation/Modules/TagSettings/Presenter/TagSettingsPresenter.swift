@@ -123,6 +123,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         // Note:(Temporary solution) ViewModel should not depend on this.
         let tagViewModel = TagSettingsViewModel()
         tagViewModel.isAuthorized.value = ruuviUser.isAuthorized
+        tagViewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel = tagViewModel
 
         self.ruuviTag = ruuviTag

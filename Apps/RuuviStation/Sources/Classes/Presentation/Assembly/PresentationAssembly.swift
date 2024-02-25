@@ -1,4 +1,5 @@
 import RuuviCore
+import RuuviLocal
 import RuuviPresenters
 import Swinject
 
@@ -22,6 +23,7 @@ class PresentationAssembly: Assembly {
         container.register(FeatureTogglesViewController.self) { r in
             let controller = FeatureTogglesViewController()
             controller.featureToggleService = r.resolve(FeatureToggleService.self)
+            controller.settings = r.resolve(RuuviLocalSettings.self)
             return controller
         }
 

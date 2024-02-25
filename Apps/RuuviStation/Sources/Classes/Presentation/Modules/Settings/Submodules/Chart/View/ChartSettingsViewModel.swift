@@ -38,5 +38,5 @@ enum ChartSettingsCellType {
         unitSingular: ChartSettingsIntegerUnit,
         unitPlural: ChartSettingsIntegerUnit
     )
-    case switcher(title: String, value: Bool)
+    case switcher(title: String, value: Bool, hideStatusLabel: Bool)
 }

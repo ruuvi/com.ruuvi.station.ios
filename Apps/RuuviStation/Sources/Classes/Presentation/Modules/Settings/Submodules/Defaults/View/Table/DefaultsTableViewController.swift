@@ -76,6 +76,7 @@ extension DefaultsTableViewController {
             cell.titleLabel.text = viewModel.title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.isOnSwitch.toggleState(with: viewModel.boolean.value ?? false)
+            cell.isOnSwitch.hideStatusLabel(hide: viewModel.hideStatusLabel.value ?? false)
             cell.delegate = self
             return cell
         case .stepper:

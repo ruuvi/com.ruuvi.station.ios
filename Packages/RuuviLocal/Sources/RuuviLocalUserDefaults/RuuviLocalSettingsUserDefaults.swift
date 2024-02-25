@@ -683,6 +683,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.showSwitchStatusLabel", defaultValue: true)
+    var showSwitchStatusLabel: Bool
+
     private let notificationsBadgeCountUDKey = "SettingsUserDefaults.notificationsBadgeCount"
     func setNotificationsBadgeCount(value: Int) {
         notificationServiceAppGroup?

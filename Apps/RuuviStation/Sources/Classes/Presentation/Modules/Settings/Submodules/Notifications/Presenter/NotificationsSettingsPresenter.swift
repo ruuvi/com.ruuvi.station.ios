@@ -74,6 +74,7 @@ extension NotificationsSettingsPresenter {
         viewModel.title = RuuviLocalization.settingsEmailAlerts
         viewModel.subtitle = RuuviLocalization.settingsEmailAlertsDescription
         viewModel.boolean.value = settings.emailAlertEnabled
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .email
 
@@ -91,6 +92,7 @@ extension NotificationsSettingsPresenter {
         viewModel.title = RuuviLocalization.settingsPushAlerts
         viewModel.subtitle = RuuviLocalization.settingsPushAlertsDescription
         viewModel.boolean.value = settings.pushAlertEnabled
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .push
 
@@ -108,6 +110,7 @@ extension NotificationsSettingsPresenter {
         viewModel.title = RuuviLocalization.settingsAlertLimitNotification
         viewModel.subtitle = RuuviLocalization.settingsAlertLimitNotificationDescription
         viewModel.boolean.value = settings.limitAlertNotificationsEnabled
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .limitAlert
 
