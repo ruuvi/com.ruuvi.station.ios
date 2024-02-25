@@ -10,30 +10,9 @@ final class OwnerViewController: UIViewController {
     @IBOutlet var removeCloudHistoryActionContainer: UIView!
     @IBOutlet var claimOwnershipButton: UIButton!
 
-    private lazy var removeCloudHistoryTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = RuuviLocalization.removeCloudHistoryTitle
-        label.textColor = RuuviColor.textColor.color
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 14)
-        return label
-    }()
-
-    private lazy var removeCloudHistoryDescriptionLabel: UILabel = {
-        let label = UILabel()
-        label.text = RuuviLocalization.removeCloudHistoryDescription
-        label.textColor = RuuviColor.textColor.color
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
-        return label
-    }()
-
-    lazy var removeCloudHistorySwitch: RuuviSwitchView = {
-        let switchView = RuuviSwitchView()
-        switchView.toggleState(with: false)
-        return switchView
+    private lazy var removeCloudHistoryCheckbox: RuuviCheckboxViewProvider = {
+        let provider = RuuviCheckboxViewProvider(stateHolder: RuuviCheckboxViewState())
+        return provider
     }()
 
     private lazy var backButton: UIButton = {
@@ -142,7 +121,7 @@ extension OwnerViewController: OwnerViewInput {
                     [weak self] _ in
                     guard let self else { return }
                     output?.viewDidConfirmUnclaim(
-                        removeCloudHistory: removeCloudHistorySwitch.isOn()
+                        removeCloudHistory: removeCloudHistoryCheckbox.isChecked
                     )
                 }
             )
@@ -168,23 +147,16 @@ extension OwnerViewController {
     }
 
     private func setUpCloudHistoryContentView() {
-        let horizontalStackView = UIStackView(arrangedSubviews: [
-            removeCloudHistoryTitleLabel, removeCloudHistorySwitch
-        ])
-        horizontalStackView.spacing = 8
-        horizontalStackView.distribution = .fill
-        horizontalStackView.axis = .horizontal
-        removeCloudHistorySwitch.widthLessThanOrEqualTo(constant: 80)
+        let removeCloudHistoryCheckboxVC = removeCloudHistoryCheckbox.makeViewController(
+            title: RuuviLocalization.removeCloudHistoryDescription
+        )
+        removeCloudHistoryCheckboxVC.view.backgroundColor = .clear
+        addChild(removeCloudHistoryCheckboxVC)
+        view.addSubview(removeCloudHistoryCheckboxVC.view)
+        removeCloudHistoryCheckboxVC.didMove(toParent: self)
 
-        let verticalStackView = UIStackView(arrangedSubviews: [
-            horizontalStackView, removeCloudHistoryDescriptionLabel
-        ])
-        verticalStackView.spacing = 10
-        verticalStackView.distribution = .fill
-        verticalStackView.axis = .vertical
-
-        removeCloudHistoryActionContainer.addSubview(verticalStackView)
-        verticalStackView.fillSuperview()
+        removeCloudHistoryActionContainer.addSubview(removeCloudHistoryCheckboxVC.view)
+        removeCloudHistoryCheckboxVC.view.fillSuperview()
 
         view.addSubview(removeCloudHistoryActionContainer)
         removeCloudHistoryActionContainer.anchor(
@@ -192,7 +164,7 @@ extension OwnerViewController {
             leading: claimOwnershipDescriptionLabel.leadingAnchor,
             bottom: nil,
             trailing: claimOwnershipDescriptionLabel.trailingAnchor,
-            padding: .init(top: 30, left: 0, bottom: 0, right: 0)
+            padding: .init(top: 24, left: 0, bottom: 0, right: 0)
         )
         removeCloudHistoryActionContainer.isHidden = true
 
