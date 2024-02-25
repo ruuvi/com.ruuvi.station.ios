@@ -9,6 +9,7 @@ class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
 
     func configure() {
         let viewModel = HeartbeatViewModel()
+        viewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.bgScanningState.value = settings.saveHeartbeats
         viewModel.bgScanningInterval.value = settings.saveHeartbeatsIntervalMinutes
 

@@ -111,7 +111,8 @@ extension NotificationsSettingsTableViewController {
             cell.configure(
                 title: viewModel.title,
                 subtitle: viewModel.subtitle,
-                value: viewModel.boolean.value
+                value: viewModel.boolean.value,
+                hideStatusLabel: viewModel.hideStatusLabel.value ?? false
             )
             cell.delegate = self
             return cell

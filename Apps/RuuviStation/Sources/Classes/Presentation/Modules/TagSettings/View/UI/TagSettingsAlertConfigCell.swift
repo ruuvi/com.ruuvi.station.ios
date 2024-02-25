@@ -260,8 +260,12 @@ extension TagSettingsAlertConfigCell: RuuviSwitchViewDelegate {
 // MARK: - Pubic Setters
 
 extension TagSettingsAlertConfigCell {
-    func setStatus(with value: Bool?) {
+    func setStatus(
+        with value: Bool?,
+        hideStatusLabel: Bool
+    ) {
         statusSwitch.toggleState(with: value ?? false)
+        statusSwitch.hideStatusLabel(hide: hideStatusLabel)
     }
 
     func setCustomDescription(with string: String?) {

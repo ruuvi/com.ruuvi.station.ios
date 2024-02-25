@@ -12,7 +12,7 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
         let label = UILabel()
         label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.font = UIFont.Muli(.bold, size: 16)
         return label
     }()
@@ -59,15 +59,16 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
             titleLabel, statusSwitch
         ])
         topStack.spacing = 4
-        topStack.distribution = .fillProportionally
+        topStack.distribution = .fill
         topStack.axis = .horizontal
+        statusSwitch.widthLessThanOrEqualTo(constant: 100)
 
         // Contains the content stack, and subtitle.
         let contentStack = UIStackView(arrangedSubviews: [
             topStack, subtitleLabel
         ])
         contentStack.spacing = 8
-        contentStack.distribution = .fillProportionally
+        contentStack.distribution = .fill
         contentStack.axis = .vertical
         contentView.addSubview(contentStack)
         contentStack.fillSuperviewToSafeArea(
@@ -89,9 +90,15 @@ extension NotificationsSettingsSwitchCell: RuuviSwitchViewDelegate {
 
 // MARK: - SETTERS
 extension NotificationsSettingsSwitchCell {
-    func configure(title: String?, subtitle: String?, value: Bool?) {
+    func configure(
+        title: String?,
+        subtitle: String?,
+        value: Bool?,
+        hideStatusLabel: Bool
+    ) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
         statusSwitch.toggleState(with: value ?? false)
+        statusSwitch.hideStatusLabel(hide: hideStatusLabel)
     }
 }

@@ -92,8 +92,9 @@ extension HeartbeatTableViewController {
 
     private func bindViewModel() {
         if isViewLoaded {
-            bgScanningSwitch.bind(viewModel.bgScanningState) { view, isOn in
+            bgScanningSwitch.bind(viewModel.bgScanningState) { [weak self] view, isOn in
                 view.toggleState(with: isOn.bound)
+                view.hideStatusLabel(hide: self?.viewModel.hideSwitchStatusLabel.value ?? false)
             }
             bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { label, interval in
                 if interval.bound > 0 {

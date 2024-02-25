@@ -805,6 +805,7 @@ extension TagSettingsViewController {
 // MARK: - BLUETOOTH SECTION
 
 extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
+    // swiftlint:disable:next function_body_length
     private func bindBluetoothSection() {
         guard let viewModel
         else {
@@ -812,14 +813,22 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
         }
 
         if let btPairCell {
-            btPairCell.bind(viewModel.isConnected) { [weak self] cell, isConnected in
-                cell.configureSwitch(value: isConnected.bound)
+            btPairCell.bind(viewModel.isConnected) {
+                [weak self] cell,
+                isConnected in
+                cell.configureSwitch(
+                    value: isConnected.bound,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
                 cell.disableSwitch(disable: false)
                 self?.reloadAlertSectionHeaders()
             }
 
             btPairCell.bind(viewModel.keepConnection) { cell, keepConnection in
-                cell.configureSwitch(value: keepConnection.bound)
+                cell.configureSwitch(
+                    value: keepConnection.bound,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             let keepConnection = viewModel.keepConnection
@@ -947,7 +956,10 @@ extension TagSettingsViewController {
 
         if let temperatureAlertCell {
             temperatureAlertCell.bind(viewModel.isTemperatureAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             temperatureAlertCell.bind(viewModel.temperatureAlertDescription) {
@@ -1036,7 +1048,10 @@ extension TagSettingsViewController {
 
         if let humidityAlertCell {
             humidityAlertCell.bind(viewModel.isRelativeHumidityAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             humidityAlertCell.bind(viewModel.relativeHumidityAlertDescription) {
@@ -1125,7 +1140,10 @@ extension TagSettingsViewController {
 
         if let pressureAlertCell {
             pressureAlertCell.bind(viewModel.isPressureAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             pressureAlertCell.bind(viewModel.pressureAlertDescription) {
@@ -1215,7 +1233,10 @@ extension TagSettingsViewController {
         // RSSI
         if let rssiAlertCell {
             rssiAlertCell.bind(viewModel.isSignalAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             rssiAlertCell.bind(viewModel.signalAlertDescription) {
@@ -1301,7 +1322,10 @@ extension TagSettingsViewController {
         // Movement
         if let movementAlertCell {
             movementAlertCell.bind(viewModel.isMovementAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             movementAlertCell.bind(viewModel.movementAlertDescription) {
@@ -1352,7 +1376,10 @@ extension TagSettingsViewController {
         // Connection
         if let connectionAlertCell {
             connectionAlertCell.bind(viewModel.isConnectionAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             connectionAlertCell.bind(viewModel.connectionAlertDescription) {
@@ -1406,7 +1433,10 @@ extension TagSettingsViewController {
 
         if let cloudConnectionAlertCell {
             cloudConnectionAlertCell.bind(viewModel.isCloudConnectionAlertOn) { cell, value in
-                cell.setStatus(with: value)
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
             }
 
             cloudConnectionAlertCell.bind(viewModel.cloudConnectionAlertUnseenDuration) {
@@ -1502,8 +1532,12 @@ extension TagSettingsViewController {
         let (minRange, maxRange) = temperatureMinMaxForSliders()
         let disableTemperature = !hasMeasurement()
         let settingItem = TagSettingsItem(
-            createdCell: { [weak self] in
-                self?.temperatureAlertCell?.setStatus(with: self?.viewModel?.isTemperatureAlertOn.value)
+            createdCell: {
+                [weak self] in
+                self?.temperatureAlertCell?.setStatus(
+                    with: self?.viewModel?.isTemperatureAlertOn.value,
+                    hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                )
                 self?.temperatureAlertCell?
                     .setCustomDescription(
                         with: self?.alertCustomDescription(from: self?.viewModel?
@@ -1538,9 +1572,12 @@ extension TagSettingsViewController {
         let (minRange, maxRange) = humidityMinMaxForSliders()
         let disableHumidity = !showHumidityOffsetCorrection() || !hasMeasurement()
         let settingItem = TagSettingsItem(
-            createdCell: { [weak self] in
+            createdCell: {
+                [weak self] in
                 self?.humidityAlertCell?.setStatus(
-                    with: self?.viewModel?.isRelativeHumidityAlertOn.value)
+                    with: self?.viewModel?.isRelativeHumidityAlertOn.value,
+                    hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                )
                 self?.humidityAlertCell?
                     .setCustomDescription(
                         with: self?.alertCustomDescription(from: self?.viewModel?
@@ -1577,9 +1614,13 @@ extension TagSettingsViewController {
         let (minRange, maxRange) = pressureMinMaxForSliders()
         let disablePressure = !showPressureOffsetCorrection() || !hasMeasurement()
         let settingItem = TagSettingsItem(
-            createdCell: { [weak self] in
+            createdCell: {
+                [weak self] in
                 self?.pressureAlertCell?.showAlertRangeSetter()
-                self?.pressureAlertCell?.setStatus(with: self?.viewModel?.isPressureAlertOn.value)
+                self?.pressureAlertCell?.setStatus(
+                    with: self?.viewModel?.isPressureAlertOn.value,
+                    hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                )
                 self?.pressureAlertCell?
                     .setCustomDescription(
                         with: self?.alertCustomDescription(from: self?.viewModel?
@@ -1624,13 +1665,17 @@ extension TagSettingsViewController {
         let disableRssi = !hasMeasurement() ||
             !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
         let settingItem = TagSettingsItem(
-            createdCell: { [weak self] in
+            createdCell: {
+                [weak self] in
                 self?.rssiAlertCell?.showNoticeView()
                 self?.rssiAlertCell?
                     .setNoticeText(with: RuuviLocalization.rssiAlertDescription)
                 self?.rssiAlertCell?.showAlertRangeSetter()
                 self?.rssiAlertCell?
-                    .setStatus(with: self?.viewModel?.isSignalAlertOn.value)
+                    .setStatus(
+                        with: self?.viewModel?.isSignalAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
                 self?.rssiAlertCell?
                     .setCustomDescription(
                         with: self?.alertCustomDescription(from: self?.viewModel?
@@ -3943,7 +3988,10 @@ extension TagSettingsViewController: TagSettingsViewInput {
 
     func resetKeepConnectionSwitch() {
         if let btPairCell {
-            btPairCell.configureSwitch(value: false)
+            btPairCell.configureSwitch(
+                value: false,
+                hideStatusLabel: viewModel?.hideSwitchStatusLabel.value ?? false
+            )
             btPairCell.disableSwitch(disable: false)
         }
     }

@@ -12,6 +12,10 @@ class RuuviSwitchView: UIView {
     // MARK: - Public
     weak var delegate: RuuviSwitchViewDelegate?
 
+    // MARK: - Private
+    private var shouldHideStatusLabel: Bool = false
+    private var statusLabelHiddenWidthConstraint: NSLayoutConstraint?
+
     // MARK: - UI Components
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
@@ -37,10 +41,13 @@ class RuuviSwitchView: UIView {
     }()
 
     convenience init(
+        hideStatusLabel: Bool = false,
         delegate: RuuviSwitchViewDelegate? = nil
     ) {
         self.init()
+        self.shouldHideStatusLabel = hideStatusLabel
         self.delegate = delegate
+        setup()
     }
 
     override init(frame: CGRect) {
@@ -69,6 +76,10 @@ extension RuuviSwitchView {
         statusLabel.disable(disable)
     }
 
+    func hideStatusLabel(hide: Bool) {
+        statusLabelHiddenWidthConstraint?.isActive = hide
+    }
+
     func isOn() -> Bool {
         return statusSwitch.isOn
     }
@@ -86,6 +97,8 @@ extension RuuviSwitchView {
             bottom: bottomAnchor,
             trailing: nil
         )
+        statusLabelHiddenWidthConstraint = statusLabel.widthAnchor.constraint(equalToConstant: 0)
+        statusLabelHiddenWidthConstraint?.isActive = shouldHideStatusLabel
 
         addSubview(statusSwitch)
         statusSwitch.anchor(

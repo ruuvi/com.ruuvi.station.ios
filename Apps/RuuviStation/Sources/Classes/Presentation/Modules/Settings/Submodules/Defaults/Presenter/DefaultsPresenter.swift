@@ -16,6 +16,28 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     )
 
     func configure(output: DefaultsModuleOutput) {
+        configureViewModels()
+        self.output = output
+    }
+
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss()
+        completion?()
+    }
+}
+
+// MARK: - DefaultsViewOutput
+
+extension DefaultsPresenter: DefaultsViewOutput {
+    func viewDidTriggerUseDevServer(useDevServer: Bool?) {
+        changeRuuviCloudEndpoint(useDevServer: useDevServer)
+    }
+}
+
+// MARK: Private
+
+extension DefaultsPresenter {
+    private func configureViewModels() {
         view.viewModels = [
             buildWelcomeShown(),
             buildChartsSwipeInstruction(),
@@ -39,31 +61,15 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             buildShowEmailAlertSettings(),
             buildShowPushAlertSettings(),
             buildIsAuthorized(),
+            buildShowStatusLabelSettings(),
         ]
-        self.output = output
     }
 
-    func dismiss(completion: (() -> Void)?) {
-        router.dismiss()
-        completion?()
-    }
-}
-
-// MARK: - DefaultsViewOutput
-
-extension DefaultsPresenter: DefaultsViewOutput {
-    func viewDidTriggerUseDevServer(useDevServer: Bool?) {
-        changeRuuviCloudEndpoint(useDevServer: useDevServer)
-    }
-}
-
-// MARK: Private
-
-extension DefaultsPresenter {
     private func buildWelcomeShown() -> DefaultsViewModel {
         let welcomeShown = DefaultsViewModel()
         welcomeShown.title = RuuviLocalization.Defaults.WelcomeShown.title
         welcomeShown.boolean.value = settings.welcomeShown
+        welcomeShown.hideStatusLabel.value = !settings.showSwitchStatusLabel
         welcomeShown.type.value = .switcher
 
         bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
@@ -78,6 +84,8 @@ extension DefaultsPresenter {
             = RuuviLocalization.Defaults.ChartsSwipeInstructionWasShown.title
         tagChartsLandscapeSwipeInstructionWasShown.boolean.value
             = settings.tagChartsLandscapeSwipeInstructionWasShown
+        tagChartsLandscapeSwipeInstructionWasShown.hideStatusLabel.value =
+                !settings.showSwitchStatusLabel
         tagChartsLandscapeSwipeInstructionWasShown.type.value = .switcher
 
         bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) {
@@ -118,6 +126,8 @@ extension DefaultsPresenter {
         let cardsSwipeHint = DefaultsViewModel()
         cardsSwipeHint.title = RuuviLocalization.Defaults.CardsSwipeHint.title
         cardsSwipeHint.boolean.value = settings.cardsSwipeHintWasShown
+        cardsSwipeHint.hideStatusLabel.value =
+                !settings.showSwitchStatusLabel
         cardsSwipeHint.type.value = .switcher
 
         bind(cardsSwipeHint.boolean, fire: false) { observer, cardsSwipeHintWasShown in
@@ -263,6 +273,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.DashboardTapActionChart.title
         viewModel.boolean.value = settings.dashboardTapActionType == .chart
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
@@ -281,6 +292,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.DevServer.title
         viewModel.boolean.value = useDevServer
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         // This is a different settings than all other local settings.
@@ -305,6 +317,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.HideNFC.title
         viewModel.boolean.value = settings.hideNFCForSensorContest
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(
@@ -320,6 +333,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowEmailAlertsSettings.title
         viewModel.boolean.value = settings.showEmailAlertSettings
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
@@ -333,10 +347,26 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowPushAlertsSettings.title
         viewModel.boolean.value = settings.showPushAlertSettings
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
             observer.settings.showPushAlertSettings = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowStatusLabelSettings() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
+        viewModel.boolean.value = settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.showSwitchStatusLabel = GlobalHelpers.getBool(from: show)
+            observer.configureViewModels()
         }
 
         return viewModel

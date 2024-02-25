@@ -3,6 +3,7 @@ import RuuviLocalization
 
 class HeartbeatViewModel {
     var bgScanningState = Observable<Bool?>()
+    var hideSwitchStatusLabel = Observable<Bool?>()
     var bgScanningInterval = Observable<Int?>(1)
 
     var bgScanningTitle: String {

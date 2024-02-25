@@ -13,6 +13,7 @@ class DefaultsViewModel: Identifiable {
     var type: Observable<DefaultsType?> = .init()
     // Value for switcher type
     var boolean: Observable<Bool?> = .init()
+    var hideStatusLabel: Observable<Bool?> = .init(false)
     // Value for stepper type
     var integer: Observable<Int?> = .init()
     // Value for plain type

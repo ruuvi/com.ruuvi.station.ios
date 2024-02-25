@@ -24,6 +24,7 @@ class NotificationsSettingsViewModel: Identifiable {
         .init()
     // Value for switcher type
     var boolean: Observable<Bool?> = .init()
+    var hideStatusLabel: Observable<Bool?> = .init()
     // Value for plain type
     var value: Observable<String?> = .init()
 }

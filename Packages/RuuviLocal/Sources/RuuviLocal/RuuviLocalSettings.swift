@@ -92,6 +92,7 @@ public protocol RuuviLocalSettings {
     var showPushAlertSettings: Bool { get set }
     var pushAlertEnabled: Bool { get set }
     var limitAlertNotificationsEnabled: Bool { get set }
+    var showSwitchStatusLabel: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

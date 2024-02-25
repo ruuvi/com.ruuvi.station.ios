@@ -86,7 +86,11 @@ extension RuuviCloudTableViewController {
             fatalError()
         }
         let viewModel = viewModels[indexPath.row]
-        cell.configure(title: viewModel.title, value: viewModel.boolean.value)
+        cell.configure(
+            title: viewModel.title,
+            value: viewModel.boolean.value,
+            hideStatusLabel: viewModel.hideStatusLabel.value ?? false
+        )
         cell.delegate = self
         return cell
     }

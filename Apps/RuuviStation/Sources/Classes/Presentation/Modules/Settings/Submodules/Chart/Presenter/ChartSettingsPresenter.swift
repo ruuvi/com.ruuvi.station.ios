@@ -60,7 +60,8 @@ extension ChartSettingsPresenter {
         let value = !settings.chartDownsamplingOn
         let type: ChartSettingsCellType = .switcher(
             title: title,
-            value: value
+            value: value,
+            hideStatusLabel: !settings.showSwitchStatusLabel
         )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
@@ -77,7 +78,8 @@ extension ChartSettingsPresenter {
         let value = settings.chartDrawDotsOn
         let type: ChartSettingsCellType = .switcher(
             title: title,
-            value: value
+            value: value,
+            hideStatusLabel: !settings.showSwitchStatusLabel
         )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value

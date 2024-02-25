@@ -1,8 +1,10 @@
+import RuuviLocal
 import RuuviLocalization
 import UIKit
 
 final class FeatureTogglesViewController: UITableViewController {
     var featureToggleService: FeatureToggleService!
+    var settings: RuuviLocalSettings!
 
     init() {
         headerView = UIView()
@@ -25,6 +27,7 @@ final class FeatureTogglesViewController: UITableViewController {
     private func setupViews() {
         view.backgroundColor = RuuviColor.primary.color
         sourceSwitch.delegate = self
+        sourceSwitch.hideStatusLabel(hide: !settings.showSwitchStatusLabel)
         headerView.addSubview(sourceSwitch)
         headerView.addSubview(sourceLabel)
         tableView.tableHeaderView = headerView
