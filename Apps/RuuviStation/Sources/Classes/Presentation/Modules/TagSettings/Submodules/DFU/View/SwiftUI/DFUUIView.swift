@@ -41,37 +41,38 @@ struct DFUUIView: View {
     @State private var isBatteryLow = false
 
     var body: some View {
-        VStack {
-            content
-                .alert(isPresented: $viewModel.isMigrationFailed) {
-                    Alert(
-                        title: Text(texts.errorTitle),
-                        message: Text(texts.dbMigrationErrorTitle),
-                        dismissButton: .cancel(Text(texts.okTitle))
-                    )
-                }
-        }
-        .background(RuuviColor.primary.swiftUIColor)
-        .edgesIgnoringSafeArea(.all)
-        .navigationBarTitle(
-            texts.navigationTitle
-        )
-        .accentColor(.red)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: goBack) {
-            HStack {
-                Image("chevron_back")
-                    .foregroundColor(.primary)
+        NavigationView {
+            ZStack {
+                content
+                    .alert(isPresented: $viewModel.isMigrationFailed) {
+                        Alert(
+                            title: Text(texts.errorTitle),
+                            message: Text(texts.dbMigrationErrorTitle),
+                            dismissButton: .cancel(Text(texts.okTitle))
+                        )
+                    }
             }
-        })
-        .onAppear {
-            viewModel.send(event: .onAppear)
-            UIApplication.shared.isIdleTimerDisabled = true
+            .background(RuuviColor.primary.swiftUIColor)
+            .edgesIgnoringSafeArea([.leading, .trailing, .bottom])
+            .navigationBarTitle(texts.navigationTitle)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: Button(action: goBack) {
+                HStack {
+                    RuuviAsset.dismissModalIcon.swiftUIImage
+                        .foregroundColor(.primary)
+                }
+            })
+            .onAppear {
+                viewModel.send(event: .onAppear)
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+            .onDisappear {
+                viewModel.restartPropertiesDaemon()
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
         }
-        .onDisappear {
-            viewModel.restartPropertiesDaemon()
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        .modifier(NavigationBarModifier(backgroundColor: RuuviColor.primary.color))
     }
 
     private var content: some View {
