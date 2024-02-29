@@ -42,7 +42,7 @@ extension AppDateFormatter {
 
     func graphXAxisDateString(from date: Date) -> String {
         let calendar = Calendar.autoupdatingCurrent
-        let dateComponents = calendar.dateComponents([.day, .month], from: date)
+        let dateComponents = calendar.dateComponents([.day, .month, .year], from: date)
         if let formattedDate = calendar.date(from: dateComponents) {
             return graphXAxisDateFormatter.string(from: formattedDate)
         } else {
