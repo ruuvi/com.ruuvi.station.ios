@@ -11,7 +11,7 @@ class RuuviCloudTableViewController: UITableViewController {
     }
 
     init() {
-        super.init(style: .grouped)
+        super.init(style: .plain)
     }
 
     @available(*, unavailable)
@@ -51,6 +51,7 @@ private extension RuuviCloudTableViewController {
     }
 
     func setUpTableView() {
+        tableView.tableHeaderView = UIView()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.register(
             RuuviCloudTableViewCell.self,

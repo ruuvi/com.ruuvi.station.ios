@@ -14,6 +14,7 @@ class ChartSettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.tableHeaderView = UIView()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         localize()
         styleViews()

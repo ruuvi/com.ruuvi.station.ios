@@ -43,17 +43,31 @@ struct DFUUIView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                content
-                    .alert(isPresented: $viewModel.isMigrationFailed) {
-                        Alert(
-                            title: Text(texts.errorTitle),
-                            message: Text(texts.dbMigrationErrorTitle),
-                            dismissButton: .cancel(Text(texts.okTitle))
-                        )
-                    }
+                VStack {
+                    content
+                        .alert(
+                            isPresented: $viewModel.isMigrationFailed
+                        ) {
+                            Alert(
+                                title: Text(
+                                    texts.errorTitle
+                                ),
+                                message: Text(
+                                    texts.dbMigrationErrorTitle
+                                ),
+                                dismissButton: .cancel(
+                                    Text(
+                                        texts.okTitle
+                                    )
+                                )
+                            )
+                        }
+                }.padding(
+                    .top, 48
+                )
             }
             .background(RuuviColor.primary.swiftUIColor)
-            .edgesIgnoringSafeArea([.leading, .trailing, .bottom])
+            .edgesIgnoringSafeArea(.all)
             .navigationBarTitle(texts.navigationTitle)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
@@ -72,7 +86,6 @@ struct DFUUIView: View {
                 UIApplication.shared.isIdleTimerDisabled = false
             }
         }
-        .modifier(NavigationBarModifier(backgroundColor: RuuviColor.primary.color))
     }
 
     private var content: some View {

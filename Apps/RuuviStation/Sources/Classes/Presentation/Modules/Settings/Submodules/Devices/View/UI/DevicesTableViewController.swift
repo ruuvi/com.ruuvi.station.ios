@@ -12,7 +12,7 @@ class DevicesTableViewController: UITableViewController {
     private let reuseIndentifier: String = "reuseIndentifier"
 
     init() {
-        super.init(style: .grouped)
+        super.init(style: .plain)
     }
 
     @available(*, unavailable)

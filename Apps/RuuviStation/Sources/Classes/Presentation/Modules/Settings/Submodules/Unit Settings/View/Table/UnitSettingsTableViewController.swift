@@ -62,6 +62,7 @@ extension UnitSettingsTableViewController: UnitSettingsViewInput {
     }
 
     private func styleViews() {
+        tableView.tableHeaderView = UIView()
         view.backgroundColor = RuuviColor.primary.color
     }
 }

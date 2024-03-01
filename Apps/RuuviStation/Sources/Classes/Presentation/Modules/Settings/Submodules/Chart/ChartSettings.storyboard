@@ -18,13 +18,12 @@
         <scene sceneID="I82-4C-N0X">
             <objects>
                 <tableViewController storyboardIdentifier="ChartSettingsTableViewController" id="OjO-bV-5dQ" customClass="ChartSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="VGo-Tu-EOG">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="VGo-Tu-EOG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="RuuviPrimary"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChartSettingsSwitchTableViewCell" id="uoB-8T-dsW" customClass="ChartSettingsSwitchTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.5" width="414" height="47"/>
+                                <rect key="frame" x="0.0" y="50" width="414" height="47"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uoB-8T-dsW" id="xGs-dl-eqH">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="47"/>
@@ -62,7 +61,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChartSettingsStepperTableViewCell" id="gg0-u5-vzZ" customClass="ChartSettingsStepperTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="102.5" width="414" height="47"/>
+                                <rect key="frame" x="0.0" y="97" width="414" height="47"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gg0-u5-vzZ" id="Rwl-wW-QVX">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="47"/>
@@ -102,7 +101,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ChartSettingsDisclosureTableViewCell" textLabel="usP-w3-XIW" style="IBUITableViewCellStyleDefault" id="X75-YS-g9S" customClass="ChartSettingsDisclosureTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="149.5" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="144" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X75-YS-g9S" id="8S6-nD-IfR">
                                     <rect key="frame" x="0.0" y="0.0" width="383.5" height="43.5"/>
@@ -140,9 +139,6 @@
     <resources>
         <namedColor name="RuuviMenuTextColor">
             <color red="0.030999999493360519" green="0.23499999940395355" blue="0.23899999260902405" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="RuuviPrimary">
-            <color red="0.93699997663497925" green="0.94499999284744263" blue="0.94499999284744263" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="RuuviTintColor">
             <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
