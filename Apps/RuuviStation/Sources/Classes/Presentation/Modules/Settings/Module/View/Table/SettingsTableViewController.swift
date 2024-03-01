@@ -232,6 +232,7 @@ extension SettingsTableViewController {
     }
 
     private func updateNavBarTitleFont() {
+        tableView.tableHeaderView = UIView()
         navigationController?.navigationBar.titleTextAttributes =
             [NSAttributedString.Key.font: UIFont.Muli(.bold, size: 18)]
     }
