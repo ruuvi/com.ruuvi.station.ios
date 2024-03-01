@@ -11,7 +11,7 @@ class NotificationsSettingsTableViewController: UITableViewController {
     }
 
     init(title: String) {
-        super.init(style: .grouped)
+        super.init(style: .plain)
         self.title = title
     }
 
@@ -48,6 +48,7 @@ private extension NotificationsSettingsTableViewController {
     }
 
     func setUpTableView() {
+        tableView.tableHeaderView = UIView()
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 120
         tableView.sectionFooterHeight = UITableView.automaticDimension

@@ -16,7 +16,7 @@ class PushAlertSoundSelectionTableViewController: UITableViewController {
     private var audioPlayer: AVAudioPlayer?
 
     init(title: String) {
-        super.init(style: .grouped)
+        super.init(style: .plain)
         self.title = title
     }
 
@@ -66,6 +66,7 @@ private extension PushAlertSoundSelectionTableViewController {
     }
 
     func setUpTableView() {
+        tableView.tableHeaderView = UIView()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.register(
             PushAlertSelectionTableViewCell.self,

@@ -11,7 +11,7 @@ class AppearanceSettingsTableViewController: UITableViewController {
     }
 
     init(title: String) {
-        super.init(style: .grouped)
+        super.init(style: .plain)
         self.title = title
     }
 
@@ -47,6 +47,7 @@ private extension AppearanceSettingsTableViewController {
     }
 
     func setUpTableView() {
+        tableView.tableHeaderView = UIView()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.register(
             AppearanceSettingsTableViewBasicCell.self,
