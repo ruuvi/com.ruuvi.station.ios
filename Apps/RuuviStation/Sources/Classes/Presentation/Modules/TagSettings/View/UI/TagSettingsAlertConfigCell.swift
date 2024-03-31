@@ -67,7 +67,7 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         slider.colorBetweenHandles = RuuviColor.tintColor.color
         slider.handleColor = RuuviColor.tintColor.color
         slider.backgroundColor = .clear
-        slider.tintColor = RuuviColor.tintColor.color.withAlphaComponent(0.2)
+        slider.tintColor = RuuviColor.graphAlertColor.color
         slider.hideLabels = true
         return slider
     }()
