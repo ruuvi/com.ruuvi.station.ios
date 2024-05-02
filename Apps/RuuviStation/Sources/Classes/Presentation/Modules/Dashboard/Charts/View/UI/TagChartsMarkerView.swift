@@ -104,17 +104,7 @@ class TagChartsMarkerView: MarkerImage {
     }
 
     override func refreshContent(entry: ChartDataEntry, highlight _: Highlight) {
-        var value = ""
-        switch type {
-        case .temperature:
-            value = measurementService.stringWithoutSign(temperature: entry.y)
-        case .humidity:
-            value = measurementService.stringWithoutSign(humidity: entry.y)
-        case .pressure:
-            value = measurementService.stringWithoutSign(pressure: entry.y)
-        default: break
-        }
-
+        let value = GlobalHelpers().formattedString(from: entry.y.round(to: 2))
         labelText = value + " " + unit
             + "\n" +
             AppDateFormatter.shared.graphMarkerDateString(from: entry.x)
