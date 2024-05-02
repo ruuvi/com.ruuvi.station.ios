@@ -1260,7 +1260,8 @@ extension TagChartsViewController {
                 min: minVisibleYValue,
                 max: maxVisibleYValue,
                 avg: averageYValue,
-                type: type
+                type: type,
+                measurementService: measurementService
             )
         }
     }

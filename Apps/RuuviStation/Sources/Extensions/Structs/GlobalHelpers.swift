@@ -30,10 +30,12 @@ struct GlobalHelpers {
         }
     }
 
-    func formattedString(from double: Double) -> String {
+    func formattedString(from double: Double, toPlace: Int = 2) -> String {
         let formatter = NumberFormatter()
         formatter.locale = Locale.autoupdatingCurrent
         formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = toPlace
+        formatter.maximumFractionDigits = toPlace
         return formatter.string(from: NSNumber(value: double)) ?? "0"
     }
 }

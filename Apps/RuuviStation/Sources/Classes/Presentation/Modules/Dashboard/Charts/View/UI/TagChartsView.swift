@@ -5,6 +5,8 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
+// swiftlint:disable file_length
+
 protocol TagChartsViewDelegate: NSObjectProtocol {
     func chartDidTranslate(_ chartView: TagChartsView)
     func chartValueDidSelect(
@@ -310,16 +312,20 @@ extension TagChartsView {
         min: Double,
         max: Double,
         avg: Double,
-        type _: MeasurementType
+        type: MeasurementType,
+        measurementService: RuuviServiceMeasurement
     ) {
-        let roundedTo = 2
-        let minText = RuuviLocalization.chartStatMin + ": " +
-            GlobalHelpers().formattedString(from: min.round(to: roundedTo))
-        let maxText = RuuviLocalization.chartStatMax + ": " +
-            GlobalHelpers().formattedString(from: max.round(to: roundedTo))
-        let avgText = RuuviLocalization.chartStatAvg + ": " +
-            GlobalHelpers().formattedString(from: avg.round(to: roundedTo))
-
+        let (
+            minText,
+            maxText,
+            avgText
+        ) = createMeasurementStrings(
+            type: type,
+            min: min,
+            max: max,
+            avg: avg,
+            measurementService: measurementService
+        )
         chartMinMaxAvgLabel.text = minText + " " + maxText + " " + avgText
     }
 
@@ -355,3 +361,72 @@ extension TagChartsView {
         return min(leftAxis.axisMaximum, Double(pt.y))
     }
 }
+
+extension TagChartsView {
+
+    private func createMeasurementStrings(
+        type: MeasurementType,
+        min: Double?,
+        max: Double?,
+        avg: Double?,
+        measurementService: RuuviServiceMeasurement
+    ) ->
+    // swiftlint:disable:next large_tuple
+    (
+        String,
+        String,
+        String
+    ) {
+        let minValue = formattedMeasurementString(
+            for: type,
+            value: min,
+            measurementService: measurementService
+        )
+        let minText = RuuviLocalization.chartStatMin + ": " + minValue
+
+        let maxValue = formattedMeasurementString(
+            for: type,
+            value: max,
+            measurementService: measurementService
+        )
+        let maxText = RuuviLocalization.chartStatMax + ": " + maxValue
+
+        let avgValue = formattedMeasurementString(
+            for: type,
+            value: avg,
+            measurementService: measurementService
+        )
+        let avgText = RuuviLocalization.chartStatAvg + ": " + avgValue
+
+        return (
+            minText,
+            maxText,
+            avgText
+        )
+    }
+
+    private func formattedMeasurementString(
+        for type: MeasurementType,
+        value: Double?,
+        measurementService: RuuviServiceMeasurement
+    ) -> String {
+        switch type {
+        case .temperature:
+            return measurementService.stringWithoutSign(
+                temperature: value
+            )
+        case .humidity:
+            return measurementService.stringWithoutSign(
+                humidity: value
+            )
+        case .pressure:
+            return measurementService.stringWithoutSign(
+                pressure: value
+            )
+        default:
+            return ""
+        }
+    }
+}
+
+// swiftlint:enable file_length
