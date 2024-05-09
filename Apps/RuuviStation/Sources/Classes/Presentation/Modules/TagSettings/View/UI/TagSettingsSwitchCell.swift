@@ -89,7 +89,7 @@ class TagSettingsSwitchCell: UITableViewCell {
                 right: 12
             )
         )
-        statusSwitch.widthLessThanOrEqualTo(constant: 80)
+        statusSwitch.widthLessThanOrEqualTo(constant: 350)
         statusSwitch.centerYInSuperview()
 
         addSubview(seprator)

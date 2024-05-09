@@ -21,7 +21,7 @@ class RuuviSwitchView: UIView {
         let label = UILabel()
         label.text = RuuviLocalization.off
         label.textAlignment = .right
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.textColor = RuuviColor.textColor.color
         label.font = UIFont.Muli(.regular, size: 14)
         return label
@@ -106,7 +106,8 @@ extension RuuviSwitchView {
             leading: statusLabel.trailingAnchor,
             bottom: nil,
             trailing: trailingAnchor,
-            padding: .init(top: 0, left: 10, bottom: 0, right: 0)
+            padding: .init(top: 0, left: 10, bottom: 0, right: 0),
+            size: .init(width: 50, height: 0)
         )
         statusSwitch.sizeToFit()
         statusSwitch.centerYInSuperview()
