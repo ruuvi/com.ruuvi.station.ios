@@ -1122,7 +1122,7 @@ extension TagChartsViewController {
         )
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func calculateAlertFillIfNeeded(for view: TagChartsView) {
         if let data = view.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
@@ -1130,7 +1130,7 @@ extension TagChartsViewController {
             let maxY = view.highestVisibleY
             let minY = view.lowestVisibleY
 
-            let color = RuuviColor.graphFillColor.color
+            let colorRegular = RuuviColor.graphFillColor.color
             let colorAlert = RuuviColor.graphAlertColor.color
 
             if let upperAlertValue = view.upperAlertValue, let lowerAlertValue = view.lowerAlertValue {
@@ -1142,8 +1142,25 @@ extension TagChartsViewController {
                         1,
                     ]
                     gradientColors = [
-                        color.cgColor,
-                        color.cgColor,
+                        colorRegular.cgColor,
+                        colorRegular.cgColor,
+                    ] as CFArray
+                    if let gradient = CGGradient(
+                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                        colors: gradientColors,
+                        locations: colorLocations
+                    ) {
+                        dataSet.drawFilledEnabled = true
+                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
+                    }
+                } else if minY >= lowerAlertValue && minY >= upperAlertValue {
+                    colorLocations = [
+                        0,
+                        1,
+                    ]
+                    gradientColors = [
+                        colorAlert.cgColor,
+                        colorAlert.cgColor,
                     ] as CFArray
                     if let gradient = CGGradient(
                         colorsSpace: CGColorSpaceCreateDeviceRGB(),
@@ -1162,8 +1179,8 @@ extension TagChartsViewController {
                         1,
                     ]
                     gradientColors = [
-                        color.cgColor,
-                        color.cgColor,
+                        colorRegular.cgColor,
+                        colorRegular.cgColor,
                         colorAlert.cgColor,
                         colorAlert.cgColor,
                     ] as CFArray
@@ -1186,8 +1203,8 @@ extension TagChartsViewController {
                     gradientColors = [
                         colorAlert.cgColor,
                         colorAlert.cgColor,
-                        color.cgColor,
-                        color.cgColor,
+                        colorRegular.cgColor,
+                        colorRegular.cgColor,
                     ] as CFArray
                     if let gradient = CGGradient(
                         colorsSpace: CGColorSpaceCreateDeviceRGB(),
@@ -1211,8 +1228,8 @@ extension TagChartsViewController {
                     gradientColors = [
                         colorAlert.cgColor,
                         colorAlert.cgColor,
-                        color.cgColor,
-                        color.cgColor,
+                        colorRegular.cgColor,
+                        colorRegular.cgColor,
                         colorAlert.cgColor,
                         colorAlert.cgColor,
                     ] as CFArray
