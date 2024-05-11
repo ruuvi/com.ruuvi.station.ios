@@ -315,18 +315,14 @@ extension TagChartsView {
         type: MeasurementType,
         measurementService: RuuviServiceMeasurement
     ) {
-        let (
-            minText,
-            maxText,
-            avgText
-        ) = createMeasurementStrings(
+        let measurement = createMeasurementStrings(
             type: type,
             min: min,
             max: max,
             avg: avg,
             measurementService: measurementService
         )
-        chartMinMaxAvgLabel.text = minText + " " + maxText + " " + avgText
+        chartMinMaxAvgLabel.text = measurement
     }
 
     func clearChartStat() {
@@ -370,39 +366,26 @@ extension TagChartsView {
         max: Double?,
         avg: Double?,
         measurementService: RuuviServiceMeasurement
-    ) ->
-    // swiftlint:disable:next large_tuple
-    (
-        String,
-        String,
-        String
-    ) {
+    ) -> String {
         let minValue = formattedMeasurementString(
             for: type,
             value: min,
             measurementService: measurementService
         )
-        let minText = RuuviLocalization.chartStatMin + ": " + minValue
 
         let maxValue = formattedMeasurementString(
             for: type,
             value: max,
             measurementService: measurementService
         )
-        let maxText = RuuviLocalization.chartStatMax + ": " + maxValue
 
         let avgValue = formattedMeasurementString(
             for: type,
             value: avg,
             measurementService: measurementService
         )
-        let avgText = RuuviLocalization.chartStatAvg + ": " + avgValue
 
-        return (
-            minText,
-            maxText,
-            avgText
-        )
+        return RuuviLocalization.chartMinMaxAvg(minValue, maxValue, avgValue)
     }
 
     private func formattedMeasurementString(
