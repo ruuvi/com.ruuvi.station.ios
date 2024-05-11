@@ -121,6 +121,14 @@ class TagSettingsViewController: UIViewController {
 
     private lazy var headerContentView = TagSettingsBackgroundSelectionView()
 
+    private lazy var numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+
     /// The limit for the tag name is 32 characters
     private var tagNameTextField = UITextField()
     private let tagNameCharaterLimit: Int = 32
@@ -1938,9 +1946,18 @@ extension TagSettingsViewController {
         max: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.description
         if let min, let max {
-            return attributedString(from: format(Float(min), Float(max)))
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
         }
 
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
@@ -1948,15 +1965,11 @@ extension TagSettingsViewController {
            let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
             return attributedString(
                 from: format(
-                    Float(
-                        l.value.round(
-                            to: 2
-                        )
+                    formatNumber(
+                        from: l.value
                     ),
-                    Float(
-                        u.value.round(
-                            to: 2
-                        )
+                    formatNumber(
+                        from: u.value
                     )
                 )
             )
@@ -2001,23 +2014,43 @@ extension TagSettingsViewController {
         )
     }
 
+    private func formatNumber(from value: CGFloat?) -> String {
+        guard let value = value else { return "" }
+        let number = NSNumber(value: Float(value))
+        return numberFormatter.string(from: number) ?? ""
+    }
+
     // Humidity
     private func humidityAlertRangeDescription(
         from min: CGFloat? = nil,
         max: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.description
         if let min, let max {
-            return attributedString(from: format(Float(min), Float(max)))
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
         }
         if let l = viewModel?.relativeHumidityLowerBound.value,
            let u = viewModel?.relativeHumidityUpperBound.value {
-            let message = format(
-                Float(l.round(to: 2)),
-                Float(u.round(to: 2))
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: l
+                    ),
+                    formatNumber(
+                        from: u
+                    )
+                )
             )
-            return attributedString(from: message)
         } else {
             return nil
         }
@@ -2057,11 +2090,18 @@ extension TagSettingsViewController {
         maxValue: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.description
 
         if let minValue, let maxValue {
             return attributedString(
-                from: format(Float(minValue), Float(maxValue))
+                from: format(
+                    formatNumber(
+                        from: minValue
+                    ),
+                    formatNumber(
+                        from: maxValue
+                    )
+                )
             )
         }
 
@@ -2076,11 +2116,16 @@ extension TagSettingsViewController {
                 min(upper, pu.alertRange.upperBound),
                 pu.alertRange.lowerBound
             )
-            let message = format(
-                Float(l.round(to: 2)),
-                Float(u.round(to: 2))
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: l
+                    ),
+                    formatNumber(
+                        from: u
+                    )
+                )
             )
-            return attributedString(from: message)
         } else {
             return nil
         }
@@ -2136,21 +2181,33 @@ extension TagSettingsViewController {
         max: CGFloat? = nil
     ) -> NSMutableAttributedString? {
         guard isViewLoaded else { return nil }
-        let format = RuuviLocalization.TagSettings.Alerts.Temperature.description
+        let format = RuuviLocalization.TagSettings.Alerts.description
 
         if let min, let max {
             return attributedString(
-                from: format(Float(min), Float(max))
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
             )
         }
 
         if let lower = viewModel?.signalLowerBound.value,
            let upper = viewModel?.signalUpperBound.value {
-            let message = format(
-                Float(lower),
-                Float(upper)
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
             )
-            return attributedString(from: message)
         } else {
             return nil
         }
