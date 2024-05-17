@@ -996,14 +996,7 @@ extension TagSettingsViewController {
             temperatureAlertCell.bind(viewModel.temperatureUnit) {
                 [weak self] cell, _ in
                 guard let sSelf = self else { return }
-                let (minRange, maxRange) = sSelf.temperatureMinMaxForSliders()
-                cell.setAlertLimitDescription(description: sSelf.temperatureAlertRangeDescription())
-                cell.setAlertRange(
-                    minValue: minRange,
-                    selectedMinValue: sSelf.temperatureLowerBound(),
-                    maxValue: maxRange,
-                    selectedMaxValue: sSelf.temperatureUpperBound()
-                )
+                sSelf.updateTemperatureAlertSlider(for: cell)
             }
 
             temperatureAlertCell.bind(viewModel.latestMeasurement) { cell, measurement in
@@ -1011,6 +1004,12 @@ extension TagSettingsViewController {
                     disable: measurement == nil,
                     identifier: .alertTemperature
                 )
+            }
+
+            temperatureAlertCell.bind(viewModel.showCustomTempAlertBound) {
+                [weak self] cell, _ in
+                guard let sSelf = self else { return }
+                sSelf.updateTemperatureAlertSlider(for: cell)
             }
         }
 
@@ -1980,38 +1979,66 @@ extension TagSettingsViewController {
 
     private func temperatureLowerBound() -> CGFloat {
         guard isViewLoaded else { return 0 }
+        let (customLowerBound, _) = customTempAlertBound()
         guard let temperatureUnit = viewModel?.temperatureUnit.value
         else {
             let range = TemperatureUnit.celsius.alertRange
-            return CGFloat(range.lowerBound)
+            return showCustomTempAlertBound() ? customLowerBound : CGFloat(range.lowerBound)
         }
         if let lower = viewModel?.temperatureLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
             return CGFloat(lower.value)
         } else {
-            return CGFloat(temperatureUnit.alertRange.lowerBound)
+            return showCustomTempAlertBound() ? customLowerBound : CGFloat(temperatureUnit.alertRange.lowerBound)
         }
     }
 
     private func temperatureUpperBound() -> CGFloat {
         guard isViewLoaded else { return 0 }
+        let (_, customUpperBound) = customTempAlertBound()
         guard let temperatureUnit = viewModel?.temperatureUnit.value
         else {
             let range = TemperatureUnit.celsius.alertRange
-            return CGFloat(range.upperBound)
+            return showCustomTempAlertBound() ? customUpperBound : CGFloat(range.upperBound)
         }
         if let upper = viewModel?.temperatureUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
             return CGFloat(upper.value)
         } else {
-            return CGFloat(temperatureUnit.alertRange.upperBound)
+            return showCustomTempAlertBound() ? customUpperBound : CGFloat(temperatureUnit.alertRange.upperBound)
         }
     }
 
     private func temperatureMinMaxForSliders() -> (minimum: CGFloat, maximum: CGFloat) {
         let tu = viewModel?.temperatureUnit.value ?? .celsius
+        let (customLowerBound, customUpperBound) = customTempAlertBound()
         return (
-            minimum: CGFloat(tu.alertRange.lowerBound),
-            maximum: CGFloat(tu.alertRange.upperBound)
+            minimum: CGFloat(
+                showCustomTempAlertBound() ? customLowerBound : tu.alertRange.lowerBound
+            ),
+            maximum: CGFloat(
+                showCustomTempAlertBound() ? customUpperBound : tu.alertRange.upperBound
+            )
         )
+    }
+
+    private func updateTemperatureAlertSlider(for cell: TagSettingsAlertConfigCell) {
+        let (minRange, maxRange) = temperatureMinMaxForSliders()
+        cell.setAlertLimitDescription(description: temperatureAlertRangeDescription())
+        cell.setAlertRange(
+            minValue: minRange,
+            selectedMinValue: temperatureLowerBound(),
+            maxValue: maxRange,
+            selectedMaxValue: temperatureUpperBound()
+        )
+    }
+
+    private func showCustomTempAlertBound() -> Bool {
+        viewModel?.showCustomTempAlertBound.value ?? false
+    }
+
+    private func customTempAlertBound() -> (lower: Double, upper: Double) {
+        let customLowerBound = viewModel?.customTemperatureLowerBound.value?.value ?? -55
+        let customUpperBound = viewModel?.customTemperatureUpperBound.value?.value ?? 150
+        return (lower: customLowerBound, upper: customUpperBound)
     }
 
     private func formatNumber(from value: CGFloat?) -> String {
@@ -2578,10 +2605,18 @@ extension TagSettingsViewController {
     }
 
     private func temperatureAlertRange() -> (minimum: Double, maximum: Double) {
-        let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
+        let unit = viewModel?.temperatureUnit.value?.unitTemperature ?? .celsius
+        guard let customLowerBound = viewModel?.customTemperatureLowerBound.value?.converted(to: unit),
+              let customUpperBound = viewModel?.customTemperatureUpperBound.value?.converted(to: unit) else {
+            let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
+            return (
+                minimum: temperatureUnit.alertRange.lowerBound,
+                maximum: temperatureUnit.alertRange.upperBound
+            )
+        }
         return (
-            minimum: temperatureUnit.alertRange.lowerBound,
-            maximum: temperatureUnit.alertRange.upperBound
+            minimum: customLowerBound.value,
+            maximum: customUpperBound.value
         )
     }
 

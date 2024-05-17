@@ -93,6 +93,8 @@ public protocol RuuviLocalSettings {
     var pushAlertEnabled: Bool { get set }
     var limitAlertNotificationsEnabled: Bool { get set }
     var showSwitchStatusLabel: Bool { get set }
+    var customTempAlertLowerBound: Double { get set }
+    var customTempAlertUpperBound: Double { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
@@ -114,4 +116,7 @@ public protocol RuuviLocalSettings {
 
     func setNotificationsBadgeCount(value: Int)
     func notificationsBadgeCount() -> Int
+
+    func showCustomTempAlertBound(for id: String) -> Bool
+    func setShowCustomTempAlertBound(for id: String)
 }

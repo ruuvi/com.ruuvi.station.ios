@@ -669,6 +669,19 @@ extension TagSettingsPresenter {
             }
         }
         viewModel.temperatureAlertMutedTill.value = alertService.mutedTill(type: temperature, for: ruuviTag)
+
+        // Set custom temp lower and upper bound and boolean manage the state
+        viewModel.customTemperatureLowerBound.value = Temperature(
+            settings.customTempAlertLowerBound,
+            unit: .celsius
+        )
+        viewModel.customTemperatureUpperBound.value = Temperature(
+            settings.customTempAlertUpperBound,
+            unit: .celsius
+        )
+        viewModel.showCustomTempAlertBound.value = settings.showCustomTempAlertBound(
+            for: ruuviTag.id
+        )
     }
 
     private func sync(relativeHumidity: AlertType, ruuviTag: RuuviTagSensor) {
@@ -1395,6 +1408,13 @@ extension TagSettingsPresenter {
         let lowerBound = Temperature(Double(lower), unit: tu.unitTemperature)
         viewModel.temperatureLowerBound.value = lowerBound
 
+        let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
+        let standardMinmimumBound = temperatureUnit.alertRange.lowerBound
+        if lower < standardMinmimumBound {
+            settings.setShowCustomTempAlertBound(for: ruuviTag.id)
+            viewModel.showCustomTempAlertBound.value = true
+        }
+
         guard let l = lowerBound?.converted(to: .celsius).value else { return }
         lowTemperatureDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
@@ -1408,6 +1428,14 @@ extension TagSettingsPresenter {
         guard let tu = viewModel?.temperatureUnit.value else { return }
         let upperBound = Temperature(Double(upper), unit: tu.unitTemperature)
         viewModel.temperatureUpperBound.value = upperBound
+
+        let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
+        let standardMaximumBound = temperatureUnit.alertRange.upperBound
+
+        if upper > standardMaximumBound {
+            settings.setShowCustomTempAlertBound(for: ruuviTag.id)
+            viewModel.showCustomTempAlertBound.value = true
+        }
 
         guard let u = upperBound?.converted(to: .celsius).value else { return }
         upperTemperatureDebouncer.run { [weak self] in

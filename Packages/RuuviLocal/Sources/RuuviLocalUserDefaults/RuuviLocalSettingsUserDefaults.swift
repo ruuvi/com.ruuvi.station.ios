@@ -702,6 +702,21 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 forKey: notificationsBadgeCountUDKey
             ) ?? 0
     }
+
+    @UserDefault("SettingsUserDefaults.customTempAlertLowerBound", defaultValue: -55)
+    var customTempAlertLowerBound: Double
+
+    @UserDefault("SettingsUserDefaults.customTempAlertUpperBound", defaultValue: 150)
+    var customTempAlertUpperBound: Double
+
+    private let showCustomTempAlertBoundUDKey = "SettingsUserDefaults.showCustomTempAlertBoundUDKey"
+    func showCustomTempAlertBound(for id: String) -> Bool {
+        UserDefaults.standard.value(forKey: showCustomTempAlertBoundUDKey + id) as? Bool ?? false
+    }
+
+    func setShowCustomTempAlertBound(for id: String) {
+        UserDefaults.standard.set(true, forKey: showCustomTempAlertBoundUDKey + id)
+    }
 }
 
 // swiftlint:enable type_body_length file_length
