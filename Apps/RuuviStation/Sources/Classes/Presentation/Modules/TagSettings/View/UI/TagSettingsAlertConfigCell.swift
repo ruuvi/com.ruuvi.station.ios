@@ -93,6 +93,9 @@ class TagSettingsAlertConfigCell: UITableViewCell {
     private var alertLimitSliderViewHiddenHeight: NSLayoutConstraint!
     private var additionalTextViewHiddenHeight: NSLayoutConstraint!
 
+    private var selectedMinimumValue: CGFloat = 0
+    private var selectedMaximumValue: CGFloat = 0
+
     // Init
     override init(
         style: UITableViewCell.CellStyle,
@@ -248,6 +251,16 @@ extension TagSettingsAlertConfigCell {
         alertLimitDescriptionView.delegate = self
         alertLimitSliderView.delegate = self
     }
+
+    /// Checks if there is change between two values.
+    /// Used for slider value. Due to limitation on the RangeSleekSlider
+    /// its impossible to know whether minimum or maximum value is changed
+    /// when step = 1 as it resets both value. So, value of 12.34 becomes 12.
+    /// So this method returns two if difference between two value is greater
+    /// than 1.
+    private func isValueChanged(a: CGFloat, b: CGFloat) -> Bool {
+        abs(a - b) >= 1
+    }
 }
 
 // MARK: - RuuviSwitchViewDelegate
@@ -296,10 +309,12 @@ extension TagSettingsAlertConfigCell {
 
         if let selectedMinValue {
             alertLimitSliderView.selectedMinValue = selectedMinValue
+            selectedMinimumValue = selectedMinValue
         }
 
         if let selectedMaxValue {
             alertLimitSliderView.selectedMaxValue = selectedMaxValue
+            selectedMaximumValue = selectedMaxValue
         }
         alertLimitSliderView.refresh()
     }
@@ -400,18 +415,40 @@ extension TagSettingsAlertConfigCell: RUAlertDetailsCellChildViewDelegate {
 
 extension TagSettingsAlertConfigCell: RangeSeekSliderDelegate {
     func rangeSeekSlider(_: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
+        let minimumValue =
+        isValueChanged(
+            a: minValue,
+            b: selectedMinimumValue
+        ) ? minValue : selectedMinimumValue
+        let maximumValue =
+        isValueChanged(
+            a: maxValue,
+            b: selectedMaximumValue
+        ) ? maxValue : selectedMaximumValue
+
         delegate?.didChangeAlertRange(
             sender: self,
-            didSlideTo: minValue,
-            maxValue: maxValue
+            didSlideTo: minimumValue,
+            maxValue: maximumValue
         )
     }
 
     func didEndTouches(in _: RangeSeekSlider) {
+        let minimumValue =
+        isValueChanged(
+            a: alertLimitSliderView.selectedMinValue,
+            b: selectedMinimumValue
+        ) ? alertLimitSliderView.selectedMinValue : selectedMinimumValue
+        let maximumValue =
+        isValueChanged(
+            a: alertLimitSliderView.selectedMaxValue,
+            b: selectedMaximumValue
+        ) ? alertLimitSliderView.selectedMaxValue : selectedMaximumValue
+
         delegate?.didSetAlertRange(
             sender: self,
-            minValue: alertLimitSliderView.selectedMinValue,
-            maxValue: alertLimitSliderView.selectedMaxValue
+            minValue: minimumValue,
+            maxValue: maximumValue
         )
     }
 }
