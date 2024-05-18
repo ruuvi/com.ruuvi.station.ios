@@ -448,13 +448,16 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     private let cloud: RuuviCloud
     private let alertPersistence: AlertPersistence
     private let localIDs: RuuviLocalIDs
+    private var ruuviLocalSettings: RuuviLocalSettings
 
     public init(
         cloud: RuuviCloud,
-        localIDs: RuuviLocalIDs
+        localIDs: RuuviLocalIDs,
+        ruuviLocalSettings: RuuviLocalSettings
     ) {
         self.cloud = cloud
         self.localIDs = localIDs
+        self.ruuviLocalSettings = ruuviLocalSettings
         alertPersistence = AlertPersistenceUserDefaults()
     }
 
@@ -470,6 +473,15 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 switch cloudAlert.type {
                 case .temperature:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    // This sets the increased limit for external sensor when synced to cloud
+                    // data.
+                    let temperatureUnit = ruuviLocalSettings.temperatureUnit
+                    let standardMinmimumBound = temperatureUnit.alertRange.lowerBound
+                    let standardMaximumBound = temperatureUnit.alertRange.upperBound
+                    if min < standardMinmimumBound || max > standardMaximumBound {
+                        ruuviLocalSettings.setShowCustomTempAlertBound(for: physicalSensor.id)
+                    }
+
                     type = .temperature(lower: min, upper: max)
                     setTemperature(description: cloudAlert.description, for: physicalSensor)
                 case .humidity:
