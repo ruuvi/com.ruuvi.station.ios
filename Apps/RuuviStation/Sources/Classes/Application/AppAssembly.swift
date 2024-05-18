@@ -408,9 +408,11 @@ private final class BusinessAssembly: Assembly {
             let factory = r.resolve(RuuviServiceFactory.self)!
             let cloud = r.resolve(RuuviCloud.self)!
             let localIDs = r.resolve(RuuviLocalIDs.self)!
+            let ruuviLocalSettings = r.resolve(RuuviLocalSettings.self)!
             return factory.createAlert(
                 ruuviCloud: cloud,
-                ruuviLocalIDs: localIDs
+                ruuviLocalIDs: localIDs,
+                ruuviLocalSettings: ruuviLocalSettings
             )
         }
 

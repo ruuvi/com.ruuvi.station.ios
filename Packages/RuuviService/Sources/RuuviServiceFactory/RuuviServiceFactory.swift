@@ -58,7 +58,8 @@ public protocol RuuviServiceFactory {
 
     func createAlert(
         ruuviCloud: RuuviCloud,
-        ruuviLocalIDs: RuuviLocalIDs
+        ruuviLocalIDs: RuuviLocalIDs,
+        ruuviLocalSettings: RuuviLocalSettings
     ) -> RuuviServiceAlert
 
     // swiftlint:disable:next function_parameter_count
@@ -180,11 +181,13 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
 
     public func createAlert(
         ruuviCloud: RuuviCloud,
-        ruuviLocalIDs: RuuviLocalIDs
+        ruuviLocalIDs: RuuviLocalIDs,
+        ruuviLocalSettings: RuuviLocalSettings
     ) -> RuuviServiceAlert {
         RuuviServiceAlertImpl(
             cloud: ruuviCloud,
-            localIDs: ruuviLocalIDs
+            localIDs: ruuviLocalIDs,
+            ruuviLocalSettings: ruuviLocalSettings
         )
     }
 
