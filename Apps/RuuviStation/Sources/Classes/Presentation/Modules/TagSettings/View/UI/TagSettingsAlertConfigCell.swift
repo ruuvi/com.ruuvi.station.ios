@@ -87,11 +87,21 @@ class TagSettingsAlertConfigCell: UITableViewCell {
         return label
     }()
 
+    private lazy var latestMeasurementLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.5)
+        label.font = UIFont.Muli(.regular, size: 14)
+        return label
+    }()
+
     // Height constraint variables
     private var noticeViewHiddenHeight: NSLayoutConstraint!
     private var alertLimitDescriptionViewHiddenHeight: NSLayoutConstraint!
     private var alertLimitSliderViewHiddenHeight: NSLayoutConstraint!
     private var additionalTextViewHiddenHeight: NSLayoutConstraint!
+    private var latestMeasurementLabelHiddenHeight: NSLayoutConstraint!
 
     private var selectedMinimumValue: CGFloat = 0
     private var selectedMaximumValue: CGFloat = 0
@@ -235,7 +245,7 @@ extension TagSettingsAlertConfigCell {
         additionalTextView.anchor(
             top: alertLimitSliderView.bottomAnchor,
             leading: safeLeftAnchor,
-            bottom: safeBottomAnchor,
+            bottom: nil,
             trailing: safeRightAnchor,
             size: .init(width: 0, height: 44)
         )
@@ -250,6 +260,19 @@ extension TagSettingsAlertConfigCell {
         setCustomDescriptionView.delegate = self
         alertLimitDescriptionView.delegate = self
         alertLimitSliderView.delegate = self
+
+        addSubview(latestMeasurementLabel)
+        latestMeasurementLabel.anchor(
+            top: additionalTextView.bottomAnchor,
+            leading: safeLeftAnchor,
+            bottom: safeBottomAnchor,
+            trailing: safeRightAnchor,
+            padding: .init(top: 0, left: 14, bottom: 12, right: 16)
+        )
+        latestMeasurementLabelHiddenHeight = latestMeasurementLabel.heightAnchor.constraint(
+            equalToConstant: 0
+        )
+        latestMeasurementLabelHiddenHeight.isActive = false
     }
 
     /// Checks if there is change between two values.
@@ -327,6 +350,11 @@ extension TagSettingsAlertConfigCell {
         noticeLabel.text = string
     }
 
+    func setLatestMeasurementText(with string: String) {
+        let formattedString = RuuviLocalization.latestMeasuredValue(string)
+        latestMeasurementLabel.text = formattedString
+    }
+
     func hideAlertRangeSetter() {
         hideAlertLimitDescription()
         hideAlertRangeSlider()
@@ -377,12 +405,23 @@ extension TagSettingsAlertConfigCell {
         noticeView.alpha = 1
     }
 
+    func hideLatestMeasurement() {
+        latestMeasurementLabelHiddenHeight.isActive = true
+        latestMeasurementLabel.alpha = 0
+    }
+
+    func showLatestMeasurement() {
+        latestMeasurementLabelHiddenHeight.isActive = false
+        latestMeasurementLabel.alpha = 1
+    }
+
     func disableEditing(
         disable: Bool,
         identifier: TagSettingsSectionIdentifier
     ) {
         statusSwitch.disableEditing(disable: disable)
         setCustomDescriptionView.disable(disable)
+        latestMeasurementLabel.disable(disable)
 
         switch identifier {
         case .alertTemperature, .alertHumidity, .alertPressure:

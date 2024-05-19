@@ -192,7 +192,7 @@ class TagSettingsViewController: UIViewController {
             identifier: .alertTemperature,
             title: sectionTitle,
             cells: [
-                termperatureAlertItem()
+                temperatureAlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -999,10 +999,22 @@ extension TagSettingsViewController {
                 sSelf.updateTemperatureAlertSlider(for: cell)
             }
 
-            temperatureAlertCell.bind(viewModel.latestMeasurement) { cell, measurement in
+            temperatureAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
                 cell.disableEditing(
                     disable: measurement == nil,
                     identifier: .alertTemperature
+                )
+                guard let sSelf = self else {
+                    return
+                }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .temperature(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
                 )
             }
 
@@ -1104,6 +1116,14 @@ extension TagSettingsViewController {
                     disable: measurement == nil || !sSelf.showHumidityOffsetCorrection(),
                     identifier: .alertHumidity
                 )
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .relativeHumidity(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
             }
         }
 
@@ -1196,6 +1216,14 @@ extension TagSettingsViewController {
                     disable: measurement == nil || !sSelf.showPressureOffsetCorrection(),
                     identifier: .alertPressure
                 )
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .pressure(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
             }
         }
 
@@ -1270,11 +1298,21 @@ extension TagSettingsViewController {
                 )
             }
 
-            rssiAlertCell.bind(viewModel.latestMeasurement) { cell, measurement in
+            rssiAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
                 let isClaimed = GlobalHelpers.getBool(from: viewModel.isClaimedTag.value)
                 cell.disableEditing(
                     disable: measurement == nil || !isClaimed,
                     identifier: .alertRSSI
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .signal(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
                 )
             }
 
@@ -1535,9 +1573,10 @@ extension TagSettingsViewController {
         temperatureAlertSection!
     }
 
-    private func termperatureAlertItem() -> TagSettingsItem {
+    private func temperatureAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = temperatureMinMaxForSliders()
         let disableTemperature = !hasMeasurement()
+        let latestMeasurement = latestValue(for: .temperature(lower: 0, upper: 0))
         let settingItem = TagSettingsItem(
             createdCell: {
                 [weak self] in
@@ -1557,6 +1596,7 @@ extension TagSettingsViewController {
                     maxValue: maxRange,
                     selectedMaxValue: self?.temperatureUpperBound()
                 )
+                self?.temperatureAlertCell?.setLatestMeasurementText(with: latestMeasurement)
                 self?.temperatureAlertCell?.disableEditing(
                     disable: disableTemperature,
                     identifier: .alertTemperature
@@ -1578,6 +1618,7 @@ extension TagSettingsViewController {
     private func humidityAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = humidityMinMaxForSliders()
         let disableHumidity = !showHumidityOffsetCorrection() || !hasMeasurement()
+        let latestMeasurement = latestValue(for: .relativeHumidity(lower: 0, upper: 0))
         let settingItem = TagSettingsItem(
             createdCell: {
                 [weak self] in
@@ -1599,6 +1640,7 @@ extension TagSettingsViewController {
                         maxValue: maxRange,
                         selectedMaxValue: self?.humidityUpperBound()
                     )
+                self?.humidityAlertCell?.setLatestMeasurementText(with: latestMeasurement)
                 self?.humidityAlertCell?.disableEditing(
                     disable: disableHumidity,
                     identifier: .alertHumidity
@@ -1620,6 +1662,7 @@ extension TagSettingsViewController {
     private func pressureAlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = pressureMinMaxForSliders()
         let disablePressure = !showPressureOffsetCorrection() || !hasMeasurement()
+        let latestMeasurement = latestValue(for: .pressure(lower: 0, upper: 0))
         let settingItem = TagSettingsItem(
             createdCell: {
                 [weak self] in
@@ -1640,6 +1683,7 @@ extension TagSettingsViewController {
                     maxValue: maxRange,
                     selectedMaxValue: self?.pressureUpperBound()
                 )
+                self?.pressureAlertCell?.setLatestMeasurementText(with: latestMeasurement)
                 self?.pressureAlertCell?.disableEditing(
                     disable: disablePressure,
                     identifier: .alertPressure
@@ -1671,6 +1715,7 @@ extension TagSettingsViewController {
         let (minRange, maxRange) = rssiMinMaxForSliders()
         let disableRssi = !hasMeasurement() ||
             !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
+        let latestMeasurement = latestValue(for: .signal(lower: 0, upper: 0))
         let settingItem = TagSettingsItem(
             createdCell: {
                 [weak self] in
@@ -1695,6 +1740,7 @@ extension TagSettingsViewController {
                     maxValue: maxRange,
                     selectedMaxValue: self?.rssiUpperBound()
                 )
+                self?.rssiAlertCell?.setLatestMeasurementText(with: latestMeasurement)
                 self?.rssiAlertCell?.disableEditing(
                     disable: disableRssi,
                     identifier: .alertRSSI
@@ -1732,6 +1778,7 @@ extension TagSettingsViewController {
                 self?.movementAlertCell?.hideAlertRangeSetter()
                 self?.movementAlertCell?.showNoticeView()
                 self?.movementAlertCell?.hideAdditionalTextview()
+                self?.movementAlertCell?.hideLatestMeasurement()
                 self?.movementAlertCell?.delegate = self
                 self?.movementAlertCell?.disableEditing(
                     disable: disableMovement,
@@ -1767,6 +1814,7 @@ extension TagSettingsViewController {
                     .setAlertAddtionalText(with: RuuviLocalization.TagSettings.Alerts.Connection.description)
                 self?.connectionAlertCell?.hideAlertRangeSetter()
                 self?.connectionAlertCell?.hideNoticeView()
+                self?.connectionAlertCell?.hideLatestMeasurement()
                 self?.connectionAlertCell?.showAdditionalTextview()
                 self?.connectionAlertCell?.disableEditing(
                     disable: disableConnection,
@@ -1802,6 +1850,7 @@ extension TagSettingsViewController {
                 self?.cloudConnectionAlertCell?.hideAlertRangeSlider()
                 self?.cloudConnectionAlertCell?.showAlertLimitDescription()
                 self?.cloudConnectionAlertCell?.hideNoticeView()
+                self?.cloudConnectionAlertCell?.hideLatestMeasurement()
                 self?.cloudConnectionAlertCell?.hideAdditionalTextview()
                 self?.cloudConnectionAlertCell?
                     .setCustomDescription(
@@ -2045,6 +2094,48 @@ extension TagSettingsViewController {
         guard let value = value else { return "" }
         let number = NSNumber(value: Float(value))
         return numberFormatter.string(from: number) ?? ""
+    }
+
+    private func latestValue(for type: AlertType) -> String {
+        switch type {
+        case .temperature:
+            if let temp = measurementService?.string(
+                for: viewModel?.latestMeasurement.value?.temperature,
+                allowSettings: true
+            ) {
+                return temp
+            } else {
+                return RuuviLocalization.na
+            }
+        case .relativeHumidity:
+            if let humidity = measurementService?.string(
+                for: viewModel?.latestMeasurement.value?.humidity,
+                temperature: viewModel?.latestMeasurement.value?.temperature,
+                allowSettings: true
+            ) {
+                return humidity
+            } else {
+                return RuuviLocalization.na
+            }
+        case .pressure:
+            if let pressure = measurementService?.string(
+                for: viewModel?.latestMeasurement.value?.pressure,
+                allowSettings: true
+            ) {
+                return pressure
+            } else {
+                return RuuviLocalization.na
+            }
+        case .signal:
+            if let signal = viewModel?.latestMeasurement.value?.rssi {
+                let symbol = RuuviLocalization.dBm
+                return "\(signal)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        default:
+            return RuuviLocalization.na
+        }
     }
 
     // Humidity
@@ -3584,6 +3675,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             case .alertTemperature:
                 if let temperatureAlertCell {
                     let (minRange, maxRange) = temperatureMinMaxForSliders()
+                    let latest = latestValue(for: .temperature(lower: 0, upper: 0))
                     temperatureAlertCell.setAlertLimitDescription(description: temperatureAlertRangeDescription())
                     temperatureAlertCell.setAlertRange(
                         minValue: minRange,
@@ -3591,6 +3683,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         maxValue: maxRange,
                         selectedMaxValue: temperatureUpperBound()
                     )
+                    temperatureAlertCell.setLatestMeasurementText(with: latest)
                     temperatureAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(from: !hasMeasurement()),
                         identifier: currentSection.identifier
@@ -3599,6 +3692,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             case .alertHumidity:
                 if let humidityAlertCell {
                     let (minRange, maxRange) = humidityMinMaxForSliders()
+                    let latest = latestValue(for: .relativeHumidity(lower: 0, upper: 0))
                     humidityAlertCell.setAlertLimitDescription(description: humidityAlertRangeDescription())
                     humidityAlertCell.setAlertRange(
                         minValue: minRange,
@@ -3606,6 +3700,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         maxValue: maxRange,
                         selectedMaxValue: humidityUpperBound()
                     )
+                    humidityAlertCell.setLatestMeasurementText(with: latest)
                     humidityAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(
                             from: !showHumidityOffsetCorrection() || !hasMeasurement()
@@ -3616,6 +3711,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             case .alertPressure:
                 if let pressureAlertCell {
                     let (minRange, maxRange) = pressureMinMaxForSliders()
+                    let latest = latestValue(for: .pressure(lower: 0, upper: 0))
                     pressureAlertCell.setAlertLimitDescription(description: pressureAlertRangeDescription())
                     pressureAlertCell.setAlertRange(
                         minValue: minRange,
@@ -3623,6 +3719,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         maxValue: maxRange,
                         selectedMaxValue: pressureUpperBound()
                     )
+                    pressureAlertCell.setLatestMeasurementText(with: latest)
                     pressureAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(
                             from: !showPressureOffsetCorrection() || !hasMeasurement()
@@ -3633,6 +3730,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             case .alertRSSI:
                 if let rssiAlertCell {
                     let (minRange, maxRange) = rssiMinMaxForSliders()
+                    let latest = latestValue(for: .signal(lower: 0, upper: 0))
                     rssiAlertCell.setAlertLimitDescription(description: rssiAlertRangeDescription())
                     rssiAlertCell.setAlertRange(
                         minValue: minRange,
@@ -3640,6 +3738,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         maxValue: maxRange,
                         selectedMaxValue: rssiUpperBound()
                     )
+                    rssiAlertCell.setLatestMeasurementText(with: latest)
                     rssiAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(from: !hasMeasurement()) ||
                             !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value),
