@@ -288,6 +288,20 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         temperature: Temperature?,
         allowSettings: Bool
     ) -> String {
+        return string(
+            for: humidity,
+            temperature: temperature,
+            allowSettings: allowSettings,
+            unit: units.humidityUnit
+        )
+    }
+
+    public func string(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        allowSettings: Bool,
+        unit: HumidityUnit
+    ) -> String {
         guard let humidity,
               let temperature
         else {
@@ -303,7 +317,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         } else {
             humidityFormatter.numberFormatter = commonNumberFormatter
         }
-        switch units.humidityUnit {
+        switch unit {
         case .percent:
             return humidityFormatter.string(from: humidityWithTemperature)
         case .gm3:

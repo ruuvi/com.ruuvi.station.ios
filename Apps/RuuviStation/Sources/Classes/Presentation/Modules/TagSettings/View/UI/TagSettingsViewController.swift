@@ -2111,7 +2111,8 @@ extension TagSettingsViewController {
             if let humidity = measurementService?.string(
                 for: viewModel?.latestMeasurement.value?.humidity,
                 temperature: viewModel?.latestMeasurement.value?.temperature,
-                allowSettings: true
+                allowSettings: true,
+                unit: .percent
             ) {
                 return humidity
             } else {
