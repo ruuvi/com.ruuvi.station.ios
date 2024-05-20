@@ -45,6 +45,12 @@ public protocol RuuviServiceMeasurement {
         temperature: Temperature?,
         allowSettings: Bool
     ) -> String
+    func string(
+        for humidity: Humidity?,
+        temperature: Temperature?,
+        allowSettings: Bool,
+        unit: HumidityUnit
+    ) -> String
     func stringWithoutSign(
         for humidity: Humidity?,
         temperature: Temperature?
