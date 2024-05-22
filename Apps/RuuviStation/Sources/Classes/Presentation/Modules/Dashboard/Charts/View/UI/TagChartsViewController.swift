@@ -560,7 +560,6 @@ extension TagChartsViewController: TagChartsViewDelegate {
         guard chartViews.count > 1
         else {
             calculateMinMaxForChart(for: chartView)
-            calculateAlertFillIfNeeded(for: chartView)
             return
         }
         let sourceMatrix = chartView.viewPortHandler.touchMatrix
@@ -577,7 +576,6 @@ extension TagChartsViewController: TagChartsViewDelegate {
 
         for view in chartViews {
             calculateMinMaxForChart(for: view)
-            calculateAlertFillIfNeeded(for: view)
         }
     }
 
@@ -642,24 +640,27 @@ extension TagChartsViewController: TagChartsViewInput {
             switch data.chartType {
             case .temperature:
                 populateChartView(
-                    from: data,
+                    from: data.chartData,
                     title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
+                    type: data.chartType,
                     unit: settings.temperatureUnit.symbol,
                     settings: settings,
                     view: temperatureChartView
                 )
             case .humidity:
                 populateChartView(
-                    from: data,
+                    from: data.chartData,
                     title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+                    type: data.chartType,
                     unit: settings.humidityUnit.symbol,
                     settings: settings,
                     view: humidityChartView
                 )
             case .pressure:
                 populateChartView(
-                    from: data,
+                    from: data.chartData,
                     title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+                    type: data.chartType,
                     unit: settings.pressureUnit.symbol,
                     settings: settings,
                     view: pressureChartView
@@ -1027,25 +1028,25 @@ extension TagChartsViewController {
         }
     }
 
+    // swiftlint:disable:next function_parameter_count
     private func populateChartView(
-        from data: TagChartViewData,
+        from data: LineChartData?,
         title: String,
+        type: MeasurementType,
         unit: String,
         settings: RuuviLocalSettings,
         view: TagChartsView
     ) {
         view.setChartLabel(
             with: title,
-            type: data.chartType,
+            type: type,
             measurementService: measurementService,
             unit: unit
         )
-        view.data = data.chartData
-        view.lowerAlertValue = data.lowerAlertValue
-        view.upperAlertValue = data.upperAlertValue
+        view.data = data
         view.setSettings(settings: settings)
         view.localize()
-        view.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
+        view.setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
         view.setXAxisRenderer()
         view.setChartStatVisible(show: showChartStat)
 
@@ -1055,9 +1056,7 @@ extension TagChartsViewController {
         // Fixes https://github.com/ruuvi/com.ruuvi.station.ios/issues/1758
         DispatchQueue.main.async { [weak self] in
             self?.calculateMinMaxForChart(for: view)
-            self?.calculateAlertFillIfNeeded(for: view)
         }
-        calculateAlertFillIfNeeded(for: view)
     }
 
     private func clearChartData() {
@@ -1120,131 +1119,6 @@ extension TagChartsViewController {
                 self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
             }
         )
-    }
-
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    private func calculateAlertFillIfNeeded(for view: TagChartsView) {
-        if let data = view.data,
-           let dataSet = data.dataSets.first as? LineChartDataSet {
-
-            let maxY = view.highestVisibleY
-            let minY = view.lowestVisibleY
-
-            let colorRegular = RuuviColor.graphFillColor.color
-            let colorAlert = RuuviColor.graphAlertColor.color
-
-            if let upperAlertValue = view.upperAlertValue, let lowerAlertValue = view.lowerAlertValue {
-                let colorLocations: [CGFloat]
-                let gradientColors: CFArray
-                if lowerAlertValue <= minY && upperAlertValue >= maxY {
-                    colorLocations = [
-                        0,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if minY >= lowerAlertValue && minY >= upperAlertValue {
-                    colorLocations = [
-                        0,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if lowerAlertValue <= minY && upperAlertValue <= maxY {
-                    let alertRelativeY = (upperAlertValue - minY) / (maxY - minY)
-                    colorLocations = [
-                        0,
-                        alertRelativeY,
-                        alertRelativeY + .leastNonzeroMagnitude,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if lowerAlertValue >= minY && upperAlertValue >= maxY {
-                    let alertRelativeY = (lowerAlertValue - minY) / (maxY - minY)
-                    colorLocations = [
-                        0,
-                        alertRelativeY,
-                        alertRelativeY + .leastNonzeroMagnitude,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if lowerAlertValue >= minY && upperAlertValue <= maxY {
-                    let lowerAlertRelativeY = (lowerAlertValue - minY) / (maxY - minY)
-                    let upperAlertRelativeY = (upperAlertValue - minY) / (maxY - minY)
-                    colorLocations = [
-                        0,
-                        lowerAlertRelativeY,
-                        lowerAlertRelativeY + .leastNonzeroMagnitude,
-                        upperAlertRelativeY,
-                        upperAlertRelativeY + .leastNonzeroMagnitude,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                    ] as CFArray
-
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                }
-            }
-        }
     }
 
     private func calculateMinMaxForChart(for view: TagChartsView) {

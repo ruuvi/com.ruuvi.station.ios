@@ -19,8 +19,7 @@ protocol TagChartsViewDelegate: NSObjectProtocol {
 
 class TagChartsView: LineChartView {
     weak var chartDelegate: TagChartsViewDelegate?
-    var lowerAlertValue: Double?
-    var upperAlertValue: Double?
+
     private var settings: RuuviLocalSettings!
     private var chartName: String = ""
 
@@ -249,12 +248,7 @@ extension TagChartsView {
         isFirstEntry: Bool
     ) {
         if isFirstEntry {
-            let emptyDataSet = LineChartData(
-                dataSet: TagChartsHelper.newDataSet(
-                    upperAlertValue: upperAlertValue,
-                    lowerAlertValue: lowerAlertValue
-                )
-            )
+            let emptyDataSet = LineChartData(dataSet: TagChartsHelper.newDataSet())
             data = emptyDataSet
         }
 
@@ -331,30 +325,6 @@ extension TagChartsView {
 
     func setChartStatVisible(show: Bool) {
         chartMinMaxAvgLabel.isHidden = !show
-    }
-
-    /// The lowest y-index (value on the y-axis) that is still visible on he chart.
-    var lowestVisibleY: Double {
-        var pt = CGPoint(
-            x: viewPortHandler.contentLeft,
-            y: viewPortHandler.contentBottom
-        )
-
-        getTransformer(forAxis: .left).pixelToValues(&pt)
-
-        return max(leftAxis.axisMinimum, Double(pt.y))
-    }
-
-    /// The highest y-index (value on the y-axis) that is still visible on the chart.
-    var highestVisibleY: Double {
-        var pt = CGPoint(
-            x: viewPortHandler.contentLeft,
-            y: viewPortHandler.contentTop
-        )
-
-        getTransformer(forAxis: .left).pixelToValues(&pt)
-
-        return min(leftAxis.axisMaximum, Double(pt.y))
     }
 }
 
