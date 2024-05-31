@@ -100,6 +100,8 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
             view?.historyLengthInHours = settings.chartDurationHours
             view?.showChartStat = settings.chartStatsOn
             view?.showChartAll = settings.chartShowAll
+            view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
+            view?.useNewGraphRendering = settings.useNewGraphRendering
         }
     }
 
@@ -798,7 +800,8 @@ extension TagChartsViewPresenter {
                 lowerAlertValue: isOn ? alertService.lowerCelsius(for: ruuviTag)
                     .flatMap {
                         Temperature($0, unit: .celsius)
-                    }.map { measurementService.double(for: $0) } : nil
+                    }.map { measurementService.double(for: $0) } : nil,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
             let temperatureChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag)
@@ -827,7 +830,8 @@ extension TagChartsViewPresenter {
                 entries: humidityData,
                 lowerAlertValue: (isOn && isRelative) ? alertService.lowerRelativeHumidity(
                     for: ruuviTag
-                ).map { $0 * 100 } : nil
+                ).map { $0 * 100 } : nil,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
             let humidityChartData = TagChartViewData(
                 upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(for: ruuviTag).map {
@@ -853,7 +857,8 @@ extension TagChartsViewPresenter {
                 lowerAlertValue: isOn ? alertService.lowerPressure(for: ruuviTag)
                     .flatMap {
                         Pressure($0, unit: .hectopascals)
-                    }.map { measurementService.double(for: $0) } : nil
+                    }.map { measurementService.double(for: $0) } : nil,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
             let pressureChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag)

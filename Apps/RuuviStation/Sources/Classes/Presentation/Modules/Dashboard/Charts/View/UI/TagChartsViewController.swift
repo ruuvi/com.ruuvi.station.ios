@@ -16,6 +16,8 @@ class TagChartsViewController: UIViewController {
     private var chartModules: [MeasurementType] = []
 
     var viewModel: TagChartsViewModel = .init(type: .ruuvi)
+    var showAlertRangeInGraph: Bool = true
+    var useNewGraphRendering: Bool = false
 
     var historyLengthInDay: Int = 1 {
         didSet {
@@ -112,6 +114,21 @@ class TagChartsViewController: UIViewController {
         return sv
     }()
 
+    lazy var collectionView: UICollectionView = {
+        let cv = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: TagChartsCollectionViewFlowLayout()
+        )
+        cv.backgroundColor = .clear
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(
+            TagChartsCollectionViewCell.self,
+            forCellWithReuseIdentifier: cellId
+        )
+        return cv
+    }()
+
     private var chartViews: [TagChartsView] = []
 
     lazy var temperatureChartView = TagChartsView()
@@ -185,6 +202,9 @@ class TagChartsViewController: UIViewController {
     private let maximumHistoryLimit: Int = 10 // Days
     private var timer: Timer?
 
+    private var chartViewData: [TagChartViewData] = []
+    private var settings: RuuviLocalSettings!
+
     deinit {
         timer?.invalidate()
     }
@@ -218,14 +238,23 @@ class TagChartsViewController: UIViewController {
         )
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
         coordinator.animate(alongsideTransition: { _ in
         }, completion: { [weak self] _ in
-            self?.updateScrollviewBehaviour()
-            self?.updateChartsCollectionConstaints(
-                from: self?.chartModules ?? [],
-                withAnimation: true
-            )
+            guard let sSelf = self else { return }
+            if sSelf.useNewGraphRendering {
+                sSelf.collectionView.collectionViewLayout.invalidateLayout()
+                sSelf.collectionView.reloadData()
+            } else {
+                sSelf.updateScrollviewBehaviour()
+                sSelf.updateChartsCollectionConstaints(
+                    from: sSelf.chartModules,
+                    withAnimation: true
+                )
+            }
             self?.output.viewDidTransition()
         })
         super.viewWillTransition(to: size, with: coordinator)
@@ -339,50 +368,61 @@ class TagChartsViewController: UIViewController {
         syncButton.centerYInSuperview()
         syncButton.alpha = 1
 
-        view.addSubview(scrollView)
-        scrollView.anchor(
-            top: chartToolbarView.bottomAnchor,
-            leading: view.safeLeftAnchor,
-            bottom: view.safeBottomAnchor,
-            trailing: view.safeRightAnchor,
-            padding: .init(top: 6, left: 0, bottom: 28, right: 0)
-        )
+        if useNewGraphRendering {
+            view.addSubview(collectionView)
+            collectionView.anchor(
+                top: chartToolbarView.bottomAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: view.safeBottomAnchor,
+                trailing: view.safeRightAnchor,
+                padding: .init(top: 6, left: 0, bottom: 28, right: 0)
+            )
+        } else {
+            view.addSubview(scrollView)
+            scrollView.anchor(
+                top: chartToolbarView.bottomAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: view.safeBottomAnchor,
+                trailing: view.safeRightAnchor,
+                padding: .init(top: 6, left: 0, bottom: 28, right: 0)
+            )
 
-        scrollView.addSubview(temperatureChartView)
-        temperatureChartView.anchor(
-            top: scrollView.topAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
-        temperatureChartViewHeight.isActive = true
-        temperatureChartView.chartDelegate = self
+            scrollView.addSubview(temperatureChartView)
+            temperatureChartView.anchor(
+                top: scrollView.topAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
+            temperatureChartViewHeight.isActive = true
+            temperatureChartView.chartDelegate = self
 
-        scrollView.addSubview(humidityChartView)
-        humidityChartView.anchor(
-            top: temperatureChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
-        humidityChartViewHeight.isActive = true
-        humidityChartView.chartDelegate = self
+            scrollView.addSubview(humidityChartView)
+            humidityChartView.anchor(
+                top: temperatureChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
+            humidityChartViewHeight.isActive = true
+            humidityChartView.chartDelegate = self
 
-        scrollView.addSubview(pressureChartView)
-        pressureChartView.anchor(
-            top: humidityChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: scrollView.bottomAnchor,
-            trailing: scrollView.trailingAnchor
-        )
-        pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
-        pressureChartViewHeight.isActive = true
-        pressureChartView.chartDelegate = self
+            scrollView.addSubview(pressureChartView)
+            pressureChartView.anchor(
+                top: humidityChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: scrollView.bottomAnchor,
+                trailing: scrollView.trailingAnchor
+            )
+            pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
+            pressureChartViewHeight.isActive = true
+            pressureChartView.chartDelegate = self
+        }
 
         view.addSubview(noDataLabel)
         noDataLabel.anchor(
@@ -396,19 +436,36 @@ class TagChartsViewController: UIViewController {
 
         let footerView = UIView(color: .clear)
         view.addSubview(footerView)
-        footerView.anchor(
-            top: scrollView.bottomAnchor,
-            leading: view.safeLeftAnchor,
-            bottom: view.safeBottomAnchor,
-            trailing: view.safeRightAnchor,
-            padding: .init(
-                top: 4,
-                left: 16,
-                bottom: 8,
-                right: 16
-            ),
-            size: .init(width: 0, height: 26)
-        )
+
+        if useNewGraphRendering {
+            footerView.anchor(
+                top: collectionView.bottomAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: view.safeBottomAnchor,
+                trailing: view.safeRightAnchor,
+                padding: .init(
+                    top: 4,
+                    left: 16,
+                    bottom: 8,
+                    right: 16
+                ),
+                size: .init(width: 0, height: 26)
+            )
+        } else {
+            footerView.anchor(
+                top: scrollView.bottomAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: view.safeBottomAnchor,
+                trailing: view.safeRightAnchor,
+                padding: .init(
+                    top: 4,
+                    left: 16,
+                    bottom: 8,
+                    right: 16
+                ),
+                size: .init(width: 0, height: 26)
+            )
+        }
 
         footerView.addSubview(updatedAtLabel)
         updatedAtLabel.anchor(
@@ -560,7 +617,9 @@ extension TagChartsViewController: TagChartsViewDelegate {
         guard chartViews.count > 1
         else {
             calculateMinMaxForChart(for: chartView)
-            calculateAlertFillIfNeeded(for: chartView)
+            if showAlertRangeInGraph {
+                calculateAlertFillIfNeeded(for: chartView)
+            }
             return
         }
         let sourceMatrix = chartView.viewPortHandler.touchMatrix
@@ -577,7 +636,9 @@ extension TagChartsViewController: TagChartsViewDelegate {
 
         for view in chartViews {
             calculateMinMaxForChart(for: view)
-            calculateAlertFillIfNeeded(for: view)
+            if showAlertRangeInGraph {
+                calculateAlertFillIfNeeded(for: chartView)
+            }
         }
     }
 
@@ -608,6 +669,37 @@ extension TagChartsViewController: TagChartsViewDelegate {
     }
 }
 
+extension TagChartsViewController: UICollectionViewDelegate {
+
+}
+
+extension TagChartsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return chartViewData.count
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: cellId,
+            for: indexPath
+        ) as? TagChartsCollectionViewCell else {
+            fatalError()
+        }
+        let data = chartViewData[indexPath.item]
+        cell.populateChartView(
+            from: data,
+            settings: settings,
+            measurementService: measurementService,
+            measurementType: chartModules[indexPath.item],
+            showAlertRangeInGraph: showAlertRangeInGraph
+        )
+        return cell
+    }
+}
+
 // MARK: - TagChartsViewInput
 
 extension TagChartsViewController: TagChartsViewInput {
@@ -621,51 +713,60 @@ extension TagChartsViewController: TagChartsViewInput {
 
     func createChartViews(from: [MeasurementType]) {
         chartModules = from
-        updateChartsCollectionConstaints(from: from)
+        if !useNewGraphRendering {
+            updateChartsCollectionConstaints(from: from)
+        }
     }
 
     func setChartViewData(
         from chartViewData: [TagChartViewData],
         settings: RuuviLocalSettings
     ) {
-        if chartViewData.count == 0 {
+        if useNewGraphRendering {
+            self.chartViewData = chartViewData
+            self.settings = settings
+            collectionView.reloadData()
+        } else {
+            if chartViewData.count == 0 {
+                clearChartData()
+                showNoDataLabel()
+                hideChartViews()
+                return
+            }
+
             clearChartData()
-            showNoDataLabel()
-            hideChartViews()
-            return
-        }
+            hideNoDataLabel()
+            showChartViews()
 
-        hideNoDataLabel()
-        showChartViews()
-
-        for data in chartViewData {
-            switch data.chartType {
-            case .temperature:
-                populateChartView(
-                    from: data,
-                    title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
-                    unit: settings.temperatureUnit.symbol,
-                    settings: settings,
-                    view: temperatureChartView
-                )
-            case .humidity:
-                populateChartView(
-                    from: data,
-                    title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
-                    unit: settings.humidityUnit.symbol,
-                    settings: settings,
-                    view: humidityChartView
-                )
-            case .pressure:
-                populateChartView(
-                    from: data,
-                    title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
-                    unit: settings.pressureUnit.symbol,
-                    settings: settings,
-                    view: pressureChartView
-                )
-            default:
-                break
+            for data in chartViewData {
+                switch data.chartType {
+                case .temperature:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
+                        unit: settings.temperatureUnit.symbol,
+                        settings: settings,
+                        view: temperatureChartView
+                    )
+                case .humidity:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+                        unit: settings.humidityUnit.symbol,
+                        settings: settings,
+                        view: humidityChartView
+                    )
+                case .pressure:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+                        unit: settings.pressureUnit.symbol,
+                        settings: settings,
+                        view: pressureChartView
+                    )
+                default:
+                    break
+                }
             }
         }
     }
@@ -677,26 +778,33 @@ extension TagChartsViewController: TagChartsViewInput {
         isFirstEntry: Bool,
         settings: RuuviLocalSettings
     ) {
-        hideNoDataLabel()
-        showChartViews()
+        if useNewGraphRendering {
+            // Do something
+        } else {
+            hideNoDataLabel()
+            showChartViews()
 
-        temperatureChartView.setSettings(settings: settings)
-        temperatureChartView.updateDataSet(
-            with: temperatureEntries,
-            isFirstEntry: isFirstEntry
-        )
+            temperatureChartView.setSettings(settings: settings)
+            temperatureChartView.updateDataSet(
+                with: temperatureEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
 
-        humidityChartView.setSettings(settings: settings)
-        humidityChartView.updateDataSet(
-            with: humidityEntries,
-            isFirstEntry: isFirstEntry
-        )
+            humidityChartView.setSettings(settings: settings)
+            humidityChartView.updateDataSet(
+                with: humidityEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
 
-        pressureChartView.setSettings(settings: settings)
-        pressureChartView.updateDataSet(
-            with: pressureEntries,
-            isFirstEntry: isFirstEntry
-        )
+            pressureChartView.setSettings(settings: settings)
+            pressureChartView.updateDataSet(
+                with: pressureEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+        }
     }
 
     func updateLatestMeasurement(
@@ -705,26 +813,30 @@ extension TagChartsViewController: TagChartsViewInput {
         pressure: ChartDataEntry?,
         settings: RuuviLocalSettings
     ) {
-        temperatureChartView.updateLatest(
-            with: temperature,
-            type: .temperature,
-            measurementService: measurementService,
-            unit: settings.temperatureUnit.symbol
-        )
-        humidityChartView.updateLatest(
-            with: humidity,
-            type: .humidity,
-            measurementService: measurementService,
-            unit: settings.humidityUnit == .dew ?
+        if useNewGraphRendering {
+            // Do something
+        } else {
+            temperatureChartView.updateLatest(
+                with: temperature,
+                type: .temperature,
+                measurementService: measurementService,
+                unit: settings.temperatureUnit.symbol
+            )
+            humidityChartView.updateLatest(
+                with: humidity,
+                type: .humidity,
+                measurementService: measurementService,
+                unit: settings.humidityUnit == .dew ?
                 settings.temperatureUnit.symbol :
-                settings.humidityUnit.symbol
-        )
-        pressureChartView.updateLatest(
-            with: pressure,
-            type: .pressure,
-            measurementService: measurementService,
-            unit: settings.pressureUnit.symbol
-        )
+                    settings.humidityUnit.symbol
+            )
+            pressureChartView.updateLatest(
+                with: pressure,
+                type: .pressure,
+                measurementService: measurementService,
+                unit: settings.pressureUnit.symbol
+            )
+        }
     }
 
     func updateLatestRecordStatus(with record: RuuviTagSensorRecord) {
@@ -1054,10 +1166,15 @@ extension TagChartsViewController {
         // redraw itself before calculation.
         // Fixes https://github.com/ruuvi/com.ruuvi.station.ios/issues/1758
         DispatchQueue.main.async { [weak self] in
-            self?.calculateMinMaxForChart(for: view)
-            self?.calculateAlertFillIfNeeded(for: view)
+            guard let sSelf = self else { return }
+            sSelf.calculateMinMaxForChart(for: view)
+            if sSelf.showAlertRangeInGraph {
+                sSelf.calculateAlertFillIfNeeded(for: view)
+            }
         }
-        calculateAlertFillIfNeeded(for: view)
+        if showAlertRangeInGraph {
+            calculateAlertFillIfNeeded(for: view)
+        }
     }
 
     private func clearChartData() {

@@ -185,6 +185,7 @@ extension TagChartsView {
     }
 
     func clearChartData() {
+        data = nil
         clearValues()
         resetCustomAxisMinMax()
         resetZoom()
@@ -193,8 +194,8 @@ extension TagChartsView {
     }
 
     func setYAxisLimit(min: Double, max: Double) {
-        leftAxis.axisMinimum = min - 1
-        leftAxis.axisMaximum = max + 1
+        leftAxis.axisMinimum = min
+        leftAxis.axisMaximum = max
         leftYAxisRenderer = CustomYAxisRenderer(
             viewPortHandler: viewPortHandler,
             axis: leftAxis,
@@ -208,8 +209,8 @@ extension TagChartsView {
         // swiftlint:disable:next line_length
         // Ref: https://github.com/danielgindi/Charts/blob/29e4f58f7cb20cbc0e4bd9b3fb060479b42c06c5/Source/Charts/Renderers/YAxisRenderer.swift#L136
         if leftAxis.entries.count > 0 {
-            leftAxis.drawTopYLabelEntryEnabled = false
-            leftAxis.drawBottomYLabelEntryEnabled = false
+//            leftAxis.drawTopYLabelEntryEnabled = false
+//            leftAxis.drawBottomYLabelEntryEnabled = false
         }
     }
 
@@ -246,13 +247,15 @@ extension TagChartsView {
 
     func updateDataSet(
         with newData: [ChartDataEntry],
-        isFirstEntry: Bool
+        isFirstEntry: Bool,
+        showAlertRangeInGraph: Bool
     ) {
         if isFirstEntry {
             let emptyDataSet = LineChartData(
                 dataSet: TagChartsHelper.newDataSet(
                     upperAlertValue: upperAlertValue,
-                    lowerAlertValue: lowerAlertValue
+                    lowerAlertValue: lowerAlertValue,
+                    showAlertRangeInGraph: showAlertRangeInGraph
                 )
             )
             data = emptyDataSet

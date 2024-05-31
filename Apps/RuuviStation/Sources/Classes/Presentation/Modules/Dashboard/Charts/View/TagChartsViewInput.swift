@@ -9,6 +9,8 @@ protocol TagChartsViewInput: ViewInput {
     var historyLengthInHours: Int { get set }
     var showChartStat: Bool { get set }
     var showChartAll: Bool { get set }
+    var showAlertRangeInGraph: Bool { get set }
+    var useNewGraphRendering: Bool { get set }
     var viewIsVisible: Bool { get }
     func createChartViews(from: [MeasurementType])
     func clearChartHistory()

@@ -4,6 +4,7 @@ import RuuviLocalization
 import RuuviUser
 import WidgetKit
 
+// swiftlint:disable file_length
 class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
@@ -62,6 +63,8 @@ extension DefaultsPresenter {
             buildShowPushAlertSettings(),
             buildIsAuthorized(),
             buildShowStatusLabelSettings(),
+            buildShowAlertRangeInGraph(),
+            buildUseNewChartsRendering(),
         ]
     }
 
@@ -360,13 +363,42 @@ extension DefaultsPresenter {
     private func buildShowStatusLabelSettings() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
-        viewModel.boolean.value = settings.showSwitchStatusLabel
+        viewModel.boolean.value = settings.showAlertsRangeInGraph
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showSwitchStatusLabel = GlobalHelpers.getBool(from: show)
-            observer.configureViewModels()
+            observer.settings.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowAlertRangeInGraph() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show alert range in graph"
+//        viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
+        viewModel.boolean.value = settings.showAlertsRangeInGraph
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildUseNewChartsRendering() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+//        viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
+        viewModel.title = "Use improved graph rendering"
+        viewModel.boolean.value = settings.useNewGraphRendering
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.useNewGraphRendering = GlobalHelpers.getBool(from: show)
         }
 
         return viewModel
@@ -392,3 +424,5 @@ extension DefaultsPresenter {
         output?.defaultsModuleDidDismiss(module: self)
     }
 }
+
+// swiftlint:enable file_length
