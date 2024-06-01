@@ -95,7 +95,7 @@ class OffsetCorrectionAppleViewController: UIViewController {
         originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
             switch self?.viewModel.type {
             case .humidity:
-                label.text = "\((value.bound * 100).round(to: 2))%)"
+                label.text = "\((value.bound * 100).round(to: 2))%"
             case .pressure:
                 label.text = self?.measurementService.string(
                     for: Pressure(value, unit: .hectopascals),
