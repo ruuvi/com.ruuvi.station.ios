@@ -246,13 +246,15 @@ extension TagChartsView {
 
     func updateDataSet(
         with newData: [ChartDataEntry],
-        isFirstEntry: Bool
+        isFirstEntry: Bool,
+        showAlertRangeInGraph: Bool
     ) {
         if isFirstEntry {
             let emptyDataSet = LineChartData(
                 dataSet: TagChartsHelper.newDataSet(
                     upperAlertValue: upperAlertValue,
-                    lowerAlertValue: lowerAlertValue
+                    lowerAlertValue: lowerAlertValue,
+                    showAlertRangeInGraph: showAlertRangeInGraph
                 )
             )
             data = emptyDataSet

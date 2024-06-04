@@ -65,6 +65,8 @@ extension DefaultsPresenter {
             buildShowPushAlertSettings(),
             buildIsAuthorized(),
             buildShowStatusLabelSettings(),
+            buildShowAlertRangeInGraph(),
+            buildUseNewChartsRendering(),
         ]
     }
 
@@ -376,13 +378,40 @@ extension DefaultsPresenter {
     private func buildShowStatusLabelSettings() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
-        viewModel.boolean.value = settings.showSwitchStatusLabel
+        viewModel.boolean.value = settings.showAlertsRangeInGraph
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showSwitchStatusLabel = GlobalHelpers.getBool(from: show)
-            observer.configureViewModels()
+            observer.settings.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowAlertRangeInGraph() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.ShowAlertRangeInCharts.title
+        viewModel.boolean.value = settings.showAlertsRangeInGraph
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildUseNewChartsRendering() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.UseNewChart.title
+        viewModel.boolean.value = settings.useNewGraphRendering
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.useNewGraphRendering = GlobalHelpers.getBool(from: show)
         }
 
         return viewModel
