@@ -94,6 +94,9 @@ public protocol RuuviLocalSettings {
     var pushAlertEnabled: Bool { get set }
     var limitAlertNotificationsEnabled: Bool { get set }
     var showSwitchStatusLabel: Bool { get set }
+    var showAlertsRangeInGraph: Bool { get set }
+    var useNewGraphRendering: Bool { get set }
+
     var customTempAlertLowerBound: Double { get set }
     var customTempAlertUpperBound: Double { get set }
 

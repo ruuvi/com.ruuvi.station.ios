@@ -8,7 +8,8 @@ enum TagChartsHelper {
     static func newDataSet(
         upperAlertValue: Double?,
         entries: [ChartDataEntry] = [],
-        lowerAlertValue: Double?
+        lowerAlertValue: Double?,
+        showAlertRangeInGraph: Bool
     ) -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet(entries: entries)
         lineChartDataSet.axisDependency = .left
@@ -26,38 +27,40 @@ enum TagChartsHelper {
         lineChartDataSet.drawFilledEnabled = true
         lineChartDataSet.highlightEnabled = true
 
-        let color = RuuviColor.graphFillColor.color
-        let alertColor = RuuviColor.graphAlertColor.color
+        if showAlertRangeInGraph {
+            let lineColor = RuuviColor.graphLineColor.color
+            let alertColor = RuuviColor.graphAlertColor.color
 
-        if let upperAlertValue, let lowerAlertValue {
-            lineChartDataSet.isDrawLineWithGradientEnabled = true
-            lineChartDataSet.colors = [alertColor, alertColor, color, color, alertColor, alertColor]
-            lineChartDataSet.gradientPositions = [
-                -.infinity,
-                lowerAlertValue,
-                lowerAlertValue + .leastNonzeroMagnitude,
-                upperAlertValue,
-                upperAlertValue + .leastNonzeroMagnitude,
-                .infinity,
-            ]
-        } else if let upperAlertValue {
-            lineChartDataSet.isDrawLineWithGradientEnabled = true
-            lineChartDataSet.colors = [color, color, alertColor, alertColor]
-            lineChartDataSet.gradientPositions = [
-                -.infinity,
-                upperAlertValue,
-                upperAlertValue + .leastNonzeroMagnitude,
-                .infinity,
-            ]
-        } else if let lowerAlertValue {
-            lineChartDataSet.isDrawLineWithGradientEnabled = true
-            lineChartDataSet.colors = [alertColor, alertColor, color, color]
-            lineChartDataSet.gradientPositions = [
-                -.infinity,
-                 lowerAlertValue,
-                 lowerAlertValue + .leastNonzeroMagnitude,
-                .infinity,
-            ]
+            if let upperAlertValue, let lowerAlertValue {
+                lineChartDataSet.isDrawLineWithGradientEnabled = true
+                lineChartDataSet.colors = [alertColor, alertColor, lineColor, lineColor, alertColor, alertColor]
+                lineChartDataSet.gradientPositions = [
+                    -.infinity,
+                     lowerAlertValue,
+                     lowerAlertValue + .leastNonzeroMagnitude,
+                     upperAlertValue,
+                     upperAlertValue + .leastNonzeroMagnitude,
+                     .infinity,
+                ]
+            } else if let upperAlertValue {
+                lineChartDataSet.isDrawLineWithGradientEnabled = true
+                lineChartDataSet.colors = [lineColor, lineColor, alertColor, alertColor]
+                lineChartDataSet.gradientPositions = [
+                    -.infinity,
+                     upperAlertValue,
+                     upperAlertValue + .leastNonzeroMagnitude,
+                     .infinity,
+                ]
+            } else if let lowerAlertValue {
+                lineChartDataSet.isDrawLineWithGradientEnabled = true
+                lineChartDataSet.colors = [alertColor, alertColor, lineColor, lineColor]
+                lineChartDataSet.gradientPositions = [
+                    -.infinity,
+                     lowerAlertValue,
+                     lowerAlertValue + .leastNonzeroMagnitude,
+                     .infinity,
+                ]
+            }
         }
 
         return lineChartDataSet

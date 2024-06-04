@@ -720,6 +720,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     func setShowCustomTempAlertBound(for id: String) {
         UserDefaults.standard.set(true, forKey: showCustomTempAlertBoundUDKey + id)
     }
+
+    @UserDefault("SettingsUserDefaults.showAlertsRangeInGraph", defaultValue: true)
+    var showAlertsRangeInGraph: Bool
+    @UserDefault("SettingsUserDefaults.useNewGraphRendering", defaultValue: false)
+    var useNewGraphRendering: Bool
 }
 
 // swiftlint:enable type_body_length file_length
