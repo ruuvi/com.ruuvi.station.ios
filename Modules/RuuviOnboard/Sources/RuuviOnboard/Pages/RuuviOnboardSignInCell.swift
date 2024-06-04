@@ -35,6 +35,12 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
         return label
     }()
 
+    private lazy var tosCheckbox: RuuviOnboardCheckboxProvider = {
+        let provider = RuuviOnboardCheckboxProvider()
+        provider.delegate = self
+        return provider
+    }()
+
     private lazy var continueButton: UIButton = {
         let button = UIButton(color: RuuviColor.tintColor.color, cornerRadius: 22)
         button.setTitle(
@@ -51,6 +57,8 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
         return button
     }()
 
+    private let tosURLString: String = "https://ruuvi.com/privacy"
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()
@@ -63,6 +71,8 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
 }
 
 private extension RuuviOnboardSignInCell {
+
+    // swiftlint:disable:next function_body_length
     func setUpUI() {
         let container = UIView(color: .clear)
         contentView.addSubview(container)
@@ -89,9 +99,30 @@ private extension RuuviOnboardSignInCell {
             )
         )
 
+        let tosCheckboxVC = tosCheckbox.makeViewController(
+            title: RuuviLocalization.onboardingStartTosTitle,
+            titleMarkupString: RuuviLocalization.onboardingStartTosLink,
+            titleLink: tosURLString
+        )
+        tosCheckboxVC.view.backgroundColor = .clear
+        container.addSubview(tosCheckboxVC.view)
+
+        tosCheckboxVC.view.anchor(
+            top: textStack.bottomAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 16,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
+
         container.addSubview(continueButton)
         continueButton.anchor(
-            top: textStack.bottomAnchor,
+            top: tosCheckboxVC.view.bottomAnchor,
             leading: nil,
             bottom: nil,
             trailing: nil,
@@ -100,6 +131,7 @@ private extension RuuviOnboardSignInCell {
         )
         continueButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 140).isActive = true
         continueButton.centerXInSuperview()
+        setContinueButtonEnabled(false)
 
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
@@ -120,17 +152,35 @@ private extension RuuviOnboardSignInCell {
         )
         beaverImageView.centerYInSuperview()
     }
+
+    private func setContinueButtonEnabled(_ enabled: Bool) {
+        continueButton.isEnabled = enabled
+        continueButton.alpha = enabled ? 1 : 0.6
+    }
 }
 
+// MARK: - Private action
 private extension RuuviOnboardSignInCell {
     @objc func handleContinueTap() {
         delegate?.didTapContinueButton(sender: self)
     }
 }
 
+// MARK: - Public
 extension RuuviOnboardSignInCell {
     func configure(with viewModel: OnboardViewModel) {
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
+        setContinueButtonEnabled(false)
+    }
+}
+
+// MARK: - RuuviOnboardCheckboxViewDelegate
+extension RuuviOnboardSignInCell: RuuviOnboardCheckboxViewDelegate {
+    func didCheckCheckbox(
+        isChecked: Bool,
+        sender: RuuviOnboardCheckboxProvider
+    ) {
+        setContinueButtonEnabled(isChecked)
     }
 }
