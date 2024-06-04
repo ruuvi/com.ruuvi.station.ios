@@ -245,6 +245,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
 
+    @UserDefault("SettingsUserDefaults.tosAccepted", defaultValue: false)
+    var tosAccepted: Bool
+
     @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
     var tagChartsLandscapeSwipeInstructionWasShown: Bool
 

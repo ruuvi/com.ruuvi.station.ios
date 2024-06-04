@@ -51,6 +51,7 @@ public protocol RuuviLocalSettings {
     var pressureUnit: UnitPressure { get set }
     var pressureAccuracy: MeasurementAccuracyType { get set }
     var welcomeShown: Bool { get set }
+    var tosAccepted: Bool { get set }
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
     var cloudProfileLanguageCode: String? { get set }

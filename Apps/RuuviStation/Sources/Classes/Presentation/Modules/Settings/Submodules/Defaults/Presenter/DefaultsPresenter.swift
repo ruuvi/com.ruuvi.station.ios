@@ -4,6 +4,8 @@ import RuuviLocalization
 import RuuviUser
 import WidgetKit
 
+// swiftlint:disable file_length
+
 class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
@@ -40,6 +42,7 @@ extension DefaultsPresenter {
     private func configureViewModels() {
         view.viewModels = [
             buildWelcomeShown(),
+            buildTOSAccepted(),
             buildChartsSwipeInstruction(),
             buildConnectionTimeout(),
             buildServiceTimeout(),
@@ -74,6 +77,19 @@ extension DefaultsPresenter {
 
         bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
             observer.settings.welcomeShown = welcomeShown.bound
+        }
+        return welcomeShown
+    }
+
+    private func buildTOSAccepted() -> DefaultsViewModel {
+        let welcomeShown = DefaultsViewModel()
+        welcomeShown.title = RuuviLocalization.Defaults.TOSAccepted.title
+        welcomeShown.boolean.value = settings.tosAccepted
+        welcomeShown.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        welcomeShown.type.value = .switcher
+
+        bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
+            observer.settings.tosAccepted = welcomeShown.bound
         }
         return welcomeShown
     }
@@ -392,3 +408,5 @@ extension DefaultsPresenter {
         output?.defaultsModuleDidDismiss(module: self)
     }
 }
+
+// swiftlint:enable file_length

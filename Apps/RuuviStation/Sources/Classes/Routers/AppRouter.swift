@@ -17,7 +17,7 @@ final class AppRouter {
             return navigationController
         } else {
             let rootViewController: UIViewController
-            if settings.welcomeShown {
+            if settings.welcomeShown && settings.tosAccepted {
                 let controller = dashboardViewController()
                 rootViewController = controller
             } else {
@@ -72,7 +72,7 @@ final class AppRouter {
     /// Prepare root view controller When app launched from widget tapped.
     func prepareRootViewControllerWidgets() {
         let rootViewController: UIViewController
-        if settings.welcomeShown {
+        if settings.welcomeShown && settings.tosAccepted {
             if let weakDashboardController {
                 rootViewController = weakDashboardController
             } else {
@@ -123,6 +123,7 @@ extension AppRouter: OnboardRouterDelegate {
 
     private func presentDashboard() {
         settings.welcomeShown = true
+        settings.tosAccepted = true
         AppUtility.lockOrientation(.all)
         let controller = dashboardViewController()
         navigationController.setNavigationBarHidden(false, animated: false)
