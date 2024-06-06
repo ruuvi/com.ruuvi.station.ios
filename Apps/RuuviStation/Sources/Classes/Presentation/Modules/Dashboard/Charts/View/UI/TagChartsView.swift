@@ -201,18 +201,17 @@ extension TagChartsView {
             transformer: getTransformer(forAxis: .left)
         )
 
+        // Ensure entries are calculated
+        leftAxis.calculate(min: leftAxis.axisMinimum, max: leftAxis.axisMaximum)
+
         // Set these values if entries greater than 0, otherwise the implementation of
         // YAxisRenderer within Charts lib could lead to crash in looping though the range as
         // the range of labels is modified by these below booleans and could end up in a state
-        // where starting range could be greater then the ending range.
-        // swiftlint:disable:next line_length
-        // Ref: https://github.com/danielgindi/Charts/blob/29e4f58f7cb20cbc0e4bd9b3fb060479b42c06c5/Source/Charts/Renderers/YAxisRenderer.swift#L136
-        if leftAxis.entries.count > 0 {
-            leftAxis.drawTopYLabelEntryEnabled = false
-            leftAxis.drawBottomYLabelEntryEnabled = false
-        }
+        // where starting range could be greater than the ending range.
+        let entriesNotZero = leftAxis.entries.count > 0
+        leftAxis.drawTopYLabelEntryEnabled = !entriesNotZero
+        leftAxis.drawBottomYLabelEntryEnabled = !entriesNotZero
     }
-
     func setXAxisRenderer() {
         let axisRenderer = CustomXAxisRenderer(
             from: 0,
