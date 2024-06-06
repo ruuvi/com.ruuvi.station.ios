@@ -1390,6 +1390,13 @@ extension TagChartsViewController {
                 type = .pressure
             }
 
+            if minVisibleYValue == Double.greatestFiniteMagnitude {
+                minVisibleYValue = 0
+            }
+            if maxVisibleYValue == -Double.greatestFiniteMagnitude {
+                maxVisibleYValue = 0
+            }
+
             view.setChartStat(
                 min: minVisibleYValue,
                 max: maxVisibleYValue,
