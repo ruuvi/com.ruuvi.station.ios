@@ -69,13 +69,20 @@ struct RuuviOnboardViewCheckboxView: View {
     let titleMarkupString: String
     let titleLink: String
     @EnvironmentObject var checkboxState: RuuviOnboardCheckboxState
+    @State private var height: CGFloat = .zero
 
     var body: some View {
         Toggle(isOn: $checkboxState.isChecked) {
-            titleView()
-                .foregroundColor(.white)
+            TitleView(
+                title: title,
+                titleMarkupString: titleMarkupString,
+                titleLink: titleLink,
+                dynamicHeight: $height
+            )
+            .foregroundColor(.white)
             .frame(
                 maxWidth: .infinity,
+                minHeight: height,
                 alignment: .leading
             )
             .onTapGesture {
@@ -85,22 +92,55 @@ struct RuuviOnboardViewCheckboxView: View {
             }
         }
         .toggleStyle(CheckboxToggleStyle())
+        .padding(.vertical)
     }
 
-    @ViewBuilder
-    private func titleView() -> some View {
-        // TODO: Avoid hardcoding the link
-        Text("\(strippedTitle()) \(Text("[\(titleMarkupString)](https://ruuvi.com/privacy)").underline())")
-            .font(Font(UIFont.Muli(.semiBoldItalic, size: 15)))
-            .foregroundColor(.white)
-            .accentColor(.white)
-    }
+    struct TitleView: UIViewRepresentable {
+        let title: String
+        let titleMarkupString: String
+        let titleLink: String
+        @Binding var dynamicHeight: CGFloat
 
-    /// Returns the non link part of title when title has link inside
-    private func strippedTitle() -> String {
-        return title.replacingOccurrences(of: titleMarkupString, with: "")
-    }
+        func makeCoordinator() -> Coordinator {
+            Coordinator(self)
+        }
 
+        class Coordinator: NSObject, RuuviOnboardAttributedLinkViewDelegate {
+            var parent: TitleView
+
+            init(_ parent: TitleView) {
+                self.parent = parent
+            }
+
+            func didTapLink(url: String) {
+                guard let url = URL(string: url) else { return }
+                UIApplication.shared.open(url)
+            }
+        }
+
+        func makeUIView(context: Context) -> RuuviOnboardAttributedLinkView {
+            let view = RuuviOnboardAttributedLinkView(
+                fullTextString: title,
+                linkString: titleMarkupString,
+                link: titleLink
+            )
+            view.linkDelegate = context.coordinator
+            view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+            return view
+        }
+
+        func updateUIView(_ uiView: RuuviOnboardAttributedLinkView, context: Context) {
+            DispatchQueue.main.async {
+                dynamicHeight = uiView.sizeThatFits(
+                    CGSize(
+                        width: uiView.bounds.width,
+                        height: CGFloat.greatestFiniteMagnitude
+                    )
+                ).height
+            }
+        }
+    }
 }
 
 // MARK: - View Modifier
