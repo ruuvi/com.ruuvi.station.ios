@@ -57,8 +57,6 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
         return button
     }()
 
-    private let tosURLString: String = "https://ruuvi.com/privacy"
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()
@@ -101,8 +99,8 @@ private extension RuuviOnboardSignInCell {
 
         let tosCheckboxVC = tosCheckbox.makeViewController(
             title: RuuviLocalization.onboardingStartTosTitle,
-            titleMarkupString: RuuviLocalization.onboardingStartTosLink,
-            titleLink: tosURLString
+            titleMarkupString: RuuviLocalization.onboardingStartTosLinkMarkup,
+            titleLink: RuuviLocalization.onboardingStartTosLink
         )
         tosCheckboxVC.view.backgroundColor = .clear
         container.addSubview(tosCheckboxVC.view)
@@ -153,9 +151,16 @@ private extension RuuviOnboardSignInCell {
         beaverImageView.centerYInSuperview()
     }
 
-    private func setContinueButtonEnabled(_ enabled: Bool) {
+    private func setContinueButtonEnabled(
+        _ enabled: Bool,
+        animated: Bool = false
+    ) {
         continueButton.isEnabled = enabled
-        continueButton.alpha = enabled ? 1 : 0.6
+        UIView.animate(withDuration: animated ? 0.5 : 0,
+                       animations: {
+            [weak self] in
+            self?.continueButton.alpha = enabled ? 1 : 0.3
+        })
     }
 }
 
@@ -181,6 +186,6 @@ extension RuuviOnboardSignInCell: RuuviOnboardCheckboxViewDelegate {
         isChecked: Bool,
         sender: RuuviOnboardCheckboxProvider
     ) {
-        setContinueButtonEnabled(isChecked)
+        setContinueButtonEnabled(isChecked, animated: true)
     }
 }
