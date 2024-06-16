@@ -96,18 +96,6 @@ class TagSettingsViewController: UIViewController {
         return button
     }()
 
-    private lazy var exportButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .label
-        let buttonImage = UIImage(systemName: "square.and.arrow.up")
-        button.setImage(buttonImage, for: .normal)
-        button.setImage(buttonImage, for: .highlighted)
-        button.imageView?.tintColor = .label
-        button.backgroundColor = .clear
-        button.addTarget(self, action: #selector(exportButtonDidTap), for: .touchUpInside)
-        return button
-    }()
-
     private lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.backgroundColor = .clear
@@ -3796,7 +3784,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
 }
 
 private extension TagSettingsViewController {
-    // swiftlint:disable:next function_body_length
+
     func setUpUI() {
         title = RuuviLocalization.TagSettings.NavigationItem.title
 
@@ -3813,18 +3801,6 @@ private extension TagSettingsViewController {
             size: .init(width: 48, height: 48)
         )
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
-
-        let rightBarButtonItemView = UIView()
-        rightBarButtonItemView.addSubview(exportButton)
-        exportButton.anchor(
-            top: rightBarButtonItemView.topAnchor,
-            leading: rightBarButtonItemView.leadingAnchor,
-            bottom: rightBarButtonItemView.bottomAnchor,
-            trailing: rightBarButtonItemView.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: -14),
-            size: .init(width: 48, height: 48)
-        )
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonItemView)
 
         let container = UIView(color: .clear)
         view.addSubview(container)
@@ -3863,10 +3839,6 @@ private extension TagSettingsViewController {
 private extension TagSettingsViewController {
     @objc func backButtonDidTap() {
         output.viewDidAskToDismiss()
-    }
-
-    @objc func exportButtonDidTap() {
-        output.viewDidTapOnExport()
     }
 }
 
@@ -4211,22 +4183,6 @@ extension TagSettingsViewController: TagSettingsViewInput {
         if let btPairCell {
             btPairCell.configurePairingAnimation(start: true)
         }
-    }
-
-    func showCSVExportLocationDialog() {
-        let title = RuuviLocalization.exportHistory
-        let message = RuuviLocalization.exportCsvFeatureLocation
-        let controller = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
-        controller.addAction(UIAlertAction(
-            title: RuuviLocalization.ok,
-            style: .cancel,
-            handler: nil
-        ))
-        present(controller, animated: true)
     }
 }
 
