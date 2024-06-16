@@ -12,6 +12,7 @@ class HeartbeatTableViewController: UITableViewController {
 
     @IBOutlet var bgScanningTitleLabel: UILabel!
     @IBOutlet weak var bgScanningSwitch: RuuviSwitchView!
+    @IBOutlet weak var bgScannigIntervalCell: UITableViewCell!
     @IBOutlet var bgScanningIntervalTitleLabel: UILabel!
     @IBOutlet var bgScanningIntervalValueLabel: UILabel!
     @IBOutlet var bgScanningIntervalStepper: UIStepper!
@@ -69,15 +70,18 @@ extension HeartbeatTableViewController {
     }
 
     override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
-        let footerView = UIView()
-        let footerLabel = UILabel()
-        footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
-        footerLabel.font = UIFont.Muli(.regular, size: 13)
-        footerLabel.numberOfLines = 0
-        footerLabel.text = RuuviLocalization.Settings.BackgroundScanning.Footer.message
-        footerView.addSubview(footerLabel)
-        footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
-        return footerView
+        if let isOn = viewModel.bgScanningState.value, isOn {
+            let footerView = UIView()
+            let footerLabel = UILabel()
+            footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
+            footerLabel.font = UIFont.Muli(.regular, size: 13)
+            footerLabel.numberOfLines = 0
+            footerLabel.text = RuuviLocalization.Settings.BackgroundScanning.Footer.message
+            footerView.addSubview(footerLabel)
+            footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
+            return footerView
+        }
+        return nil
     }
 }
 
@@ -95,6 +99,8 @@ extension HeartbeatTableViewController {
             bgScanningSwitch.bind(viewModel.bgScanningState) { [weak self] view, isOn in
                 view.toggleState(with: isOn.bound)
                 view.hideStatusLabel(hide: self?.viewModel.hideSwitchStatusLabel.value ?? false)
+                self?.bgScannigIntervalCell.isHidden = !isOn.bound
+                self?.tableView.reloadData()
             }
             bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { label, interval in
                 if interval.bound > 0 {
