@@ -79,7 +79,7 @@ class DashboardViewController: UIViewController {
             cell?.configure(with: viewModel, measurementService: measurementService)
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
-            cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
+            cell?.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
             return cell
         case .simple:
             let cell = collectionView.dequeueReusableCell(
@@ -89,7 +89,7 @@ class DashboardViewController: UIViewController {
             cell?.configure(with: viewModel, measurementService: measurementService)
             cell?.restartAlertAnimation(for: viewModel)
             cell?.delegate = self
-            cell?.moreButton.menu = cardContextMenuOption(for: indexPath.item)
+            cell?.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
             return cell
         case .none:
             return nil
@@ -354,7 +354,7 @@ extension DashboardViewController {
         )
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func cardContextMenuOption(for index: Int) -> UIMenu {
         let fullImageViewAction = UIAction(title: RuuviLocalization.fullImageView) {
             [weak self] _ in
@@ -398,6 +398,25 @@ extension DashboardViewController {
             }
         }
 
+        let moveUpAction = UIAction(title: RuuviLocalization.moveUp) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                let moveToIndex = index-1
+                guard moveToIndex >= 0 else { return }
+                self?.moveItem(viewModel, from: index, to: moveToIndex)
+            }
+        }
+
+        let moveDownAction = UIAction(title: RuuviLocalization.moveDown) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                guard let sSelf = self else { return }
+                let moveToIndex = index+1
+                guard moveToIndex < sSelf.viewModels.count else { return }
+                self?.moveItem(viewModel, from: index, to: moveToIndex)
+            }
+        }
+
         let removeSensorAction = UIAction(title: RuuviLocalization.remove) {
             [weak self] _ in
             if let viewModel = self?.viewModels[index] {
@@ -413,6 +432,26 @@ extension DashboardViewController {
             renameAction,
         ]
 
+        // Add sensor move up and down action only if there are at least two sensors.
+        // Do not show move up button for first time, and move down button for last item.
+        if viewModels.count >= 1 {
+
+          if index == 0 {
+              contextMenuActions += [
+                  moveDownAction,
+              ]
+          } else if index == viewModels.count - 1 {
+              contextMenuActions += [
+                  moveUpAction,
+              ]
+          } else {
+              contextMenuActions += [
+                  moveUpAction,
+                  moveDownAction,
+              ]
+          }
+        }
+
         let viewModel = viewModels[index]
         if let canShare = viewModel.canShareTag.value,
            canShare {
@@ -422,6 +461,49 @@ extension DashboardViewController {
         contextMenuActions.append(removeSensorAction)
 
         return UIMenu(title: "", children: contextMenuActions)
+    }
+
+  private func moveItem( _ item: CardsViewModel, from index: Int, to: Int) {
+      let sourceIndexPath = IndexPath(item: index, section: 0)
+      let destinationIndexPath = IndexPath(item: to, section: 0)
+
+      collectionView.performBatchUpdates({ [weak self] in
+          guard let self else { return }
+          self.viewModels.remove(at: sourceIndexPath.item)
+          self.viewModels.insert(item, at: destinationIndexPath.item)
+          collectionView.deleteItems(at: [sourceIndexPath])
+          collectionView.insertItems(at: [destinationIndexPath])
+      }, completion: nil)
+
+      // Reset the menu item for source and destionation cell
+      if let sourceCell = collectionView.cellForItem(
+        at: sourceIndexPath
+      ) as? DashboardCell {
+          sourceCell.resetMenu(
+            menu: cardContextMenuOption(
+                for: sourceIndexPath.item
+            )
+          )
+      }
+      if let destinationCell = collectionView.cellForItem(
+        at: destinationIndexPath
+      ) as? DashboardCell {
+          destinationCell.resetMenu(
+            menu: cardContextMenuOption(
+                for: destinationIndexPath.item
+            )
+          )
+      }
+
+      // Scroll to destination indexpath
+      collectionView.scrollToItem(
+        at: destinationIndexPath,
+        at: .centeredVertically,
+        animated: true
+      )
+
+      let macIds = viewModels.compactMap { $0.mac.value?.value }
+      output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
     }
 }
 

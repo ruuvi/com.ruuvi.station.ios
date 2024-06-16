@@ -7,7 +7,7 @@ import UIKit
 
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
-class DashboardImageCell: UICollectionViewCell {
+class DashboardImageCell: DashboardCell {
     private lazy var cardBackgroundView = CardsBackgroundView()
 
     private lazy var ruuviTagNameLabel: UILabel = {
@@ -53,7 +53,7 @@ class DashboardImageCell: UICollectionViewCell {
 
     /// This is used as a touch target only, and we will keep it accessible from
     /// other class to be able to set it's actions.
-    lazy var moreButton: UIButton = {
+    private lazy var moreButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
         button.showsMenuAsPrimaryAction = true
@@ -130,6 +130,253 @@ class DashboardImageCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    override func configure(
+        with viewModel: CardsViewModel,
+        measurementService: RuuviServiceMeasurement?
+    ) {
+        self.viewModel = viewModel
+
+        cardBackgroundView
+            .setBackgroundImage(
+                with: viewModel.background.value,
+                withAnimation: false
+            )
+
+        // Name
+        ruuviTagNameLabel.text = viewModel.name.value
+
+        // Temp
+        if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
+            temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
+        } else {
+            temperatureLabel.text = RuuviLocalization.na
+        }
+
+        if let temperatureUnit = measurementService?.units.temperatureUnit {
+            temperatureUnitLabel.text = temperatureUnit.symbol
+        } else {
+            temperatureUnitLabel.text = RuuviLocalization.na
+        }
+
+        // Humidity
+        if let humidity = viewModel.humidity.value,
+           let measurementService {
+            hideHumidityView(hide: false)
+            let humidityValue = measurementService.stringWithoutSign(
+                for: humidity,
+                temperature: viewModel.temperature.value
+            )
+            let humidityUnit = measurementService.units.humidityUnit
+            let humidityUnitSymbol = humidityUnit.symbol
+            let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
+            let unit = humidityUnit == .dew ? temperatureUnitSymbol
+                : humidityUnitSymbol
+            humidityView.setValue(
+                with: humidityValue,
+                unit: unit
+            )
+        } else {
+            hideHumidityView(hide: true)
+        }
+
+        // Pressure
+        if let pressure = viewModel.pressure.value {
+            hidePressureView(hide: false)
+            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
+            pressureView.setValue(
+                with: pressureValue,
+                unit: measurementService?.units.pressureUnit.symbol
+            )
+        } else {
+            hidePressureView(hide: true)
+        }
+
+        // Movement
+        switch viewModel.type {
+        case .ruuvi:
+            if let movement = viewModel.movementCounter.value {
+                hideMovementView(hide: false)
+                movementView.setValue(
+                    with: "\(movement)",
+                    unit: RuuviLocalization.Cards.Movements.title
+                )
+            } else {
+                hideMovementView(hide: true)
+            }
+        }
+
+        // Ago
+        if let date = viewModel.date.value?.ruuviAgo() {
+            updatedAtLabel.text = date
+        } else {
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
+        }
+        startTimer(with: viewModel.date.value)
+
+        // Source
+        if let source = viewModel.source.value {
+            switch source {
+            case .unknown:
+                dataSourceIconView.image = nil
+            case .advertisement:
+                dataSourceIconView.image = RuuviAsset.iconBluetooth.image
+            case .heartbeat, .log:
+                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
+            case .ruuviNetwork:
+                dataSourceIconView.image = RuuviAsset.iconGateway.image
+            }
+        } else {
+            dataSourceIconView.image = nil
+        }
+
+        switch viewModel.source.value {
+        case .ruuviNetwork:
+            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularWidth
+        default:
+            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
+        }
+
+        dataSourceIconView.image = dataSourceIconView
+            .image?
+            .withRenderingMode(.alwaysTemplate)
+
+        // Battery state
+        if let batteryLow = viewModel.batteryNeedsReplacement.value,
+           batteryLow {
+            batteryLevelView.isHidden = false
+        } else {
+            batteryLevelView.isHidden = true
+        }
+    }
+
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    override func restartAlertAnimation(for viewModel: CardsViewModel) {
+        // Alert
+        let alertVisible = viewModel.isCloud.value ?? false || viewModel.isConnected.value ?? false
+
+        let mutedTills = [
+            viewModel.temperatureAlertMutedTill.value,
+            viewModel.relativeHumidityAlertMutedTill.value,
+            viewModel.pressureAlertMutedTill.value,
+            viewModel.signalAlertMutedTill.value,
+            viewModel.movementAlertMutedTill.value,
+            viewModel.connectionAlertMutedTill.value,
+        ]
+
+        if mutedTills.first(where: { $0 != nil }) != nil || !alertVisible {
+            alertIcon.image = nil
+            alertButton.isUserInteractionEnabled = false
+            removeAlertAnimations(alpha: 0)
+            return
+        }
+
+        if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
+           let temperatureAlertState = viewModel.temperatureAlertState.value {
+            highlightTemperatureValues(highlight: temperatureAlertState == .firing)
+        } else {
+            highlightTemperatureValues(highlight: false)
+        }
+
+        if let isOn = viewModel.isRelativeHumidityAlertOn.value, isOn,
+           let rhAlertState = viewModel.relativeHumidityAlertState.value {
+            humidityView.changeColor(highlight: rhAlertState == .firing)
+        } else {
+            humidityView.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isPressureAlertOn.value, isOn,
+           let pressureAlertState = viewModel.pressureAlertState.value {
+            pressureView.changeColor(highlight: pressureAlertState == .firing)
+        } else {
+            pressureView.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isMovementAlertOn.value, isOn,
+           let movementAlertState = viewModel.movementAlertState.value {
+            movementView.changeColor(highlight: movementAlertState == .firing)
+        } else {
+            movementView.changeColor(highlight: false)
+        }
+
+        if let state = viewModel.alertState.value {
+            switch state {
+            case .empty:
+                if alertIcon.image != nil {
+                    alertIcon.alpha = 0
+                    alertIcon.image = nil
+                    removeAlertAnimations(alpha: 0)
+                }
+                alertButton.isUserInteractionEnabled = false
+            case .registered:
+                alertButton.isUserInteractionEnabled = true
+                if alertIcon.image != RuuviAsset.iconAlertOn.image {
+                    alertIcon.alpha = 1
+                    alertIcon.image = RuuviAsset.iconAlertOn.image
+                    removeAlertAnimations()
+                }
+                alertIcon.tintColor = RuuviColor.logoTintColor.color
+            case .firing:
+                alertButton.isUserInteractionEnabled = true
+                alertIcon.alpha = 1.0
+                alertIcon.tintColor = RuuviColor.orangeColor.color
+                if alertIcon.image != RuuviAsset.iconAlertActive.image {
+                    alertIcon.image = RuuviAsset.iconAlertActive.image
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    UIView.animate(
+                        withDuration: 0.5,
+                        delay: 0,
+                        options: [
+                            .repeat,
+                            .autoreverse,
+                        ],
+                        animations: { [weak self] in
+                            self?.alertIcon.alpha = 0.0
+                        }
+                    )
+                }
+            }
+        } else {
+            alertIcon.image = nil
+            alertButton.isUserInteractionEnabled = false
+            removeAlertAnimations(alpha: 0)
+        }
+    }
+
+    override func removeAlertAnimations(alpha: Double = 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.alertIcon.layer.removeAllAnimations()
+            self?.alertIcon.alpha = alpha
+        }
+    }
+
+    override func resetMenu(menu: UIMenu) {
+        moreButton.menu = menu
+    }
+}
+
+extension DashboardImageCell {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        viewModel = nil
+        ruuviTagNameLabel.text = nil
+        temperatureLabel.text = nil
+        temperatureUnitLabel.text = nil
+        humidityView.clearValues()
+        pressureView.clearValues()
+        movementView.clearValues()
+        updatedAtLabel.text = nil
+        batteryLevelView.isHidden = true
+        timer?.invalidate()
+        alertIcon.image = nil
+        alertIcon.layer.removeAllAnimations()
+        highlightTemperatureValues(highlight: false)
+        dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
+    }
+}
+
+extension DashboardImageCell {
     // swiftlint:disable:next function_body_length
     fileprivate func setUpUI() {
         let container = UIView(
@@ -321,249 +568,6 @@ class DashboardImageCell: UICollectionViewCell {
             )
         )
         batteryLevelView.isHidden = true
-    }
-}
-
-extension DashboardImageCell {
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        viewModel = nil
-        ruuviTagNameLabel.text = nil
-        temperatureLabel.text = nil
-        temperatureUnitLabel.text = nil
-        humidityView.clearValues()
-        pressureView.clearValues()
-        movementView.clearValues()
-        updatedAtLabel.text = nil
-        batteryLevelView.isHidden = true
-        timer?.invalidate()
-        alertIcon.image = nil
-        alertIcon.layer.removeAllAnimations()
-        highlightTemperatureValues(highlight: false)
-        dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
-    }
-}
-
-extension DashboardImageCell {
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    func configure(
-        with viewModel: CardsViewModel,
-        measurementService: RuuviServiceMeasurement?
-    ) {
-        self.viewModel = viewModel
-
-        cardBackgroundView
-            .setBackgroundImage(
-                with: viewModel.background.value,
-                withAnimation: false
-            )
-
-        // Name
-        ruuviTagNameLabel.text = viewModel.name.value
-
-        // Temp
-        if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
-            temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
-        } else {
-            temperatureLabel.text = RuuviLocalization.na
-        }
-
-        if let temperatureUnit = measurementService?.units.temperatureUnit {
-            temperatureUnitLabel.text = temperatureUnit.symbol
-        } else {
-            temperatureUnitLabel.text = RuuviLocalization.na
-        }
-
-        // Humidity
-        if let humidity = viewModel.humidity.value,
-           let measurementService {
-            hideHumidityView(hide: false)
-            let humidityValue = measurementService.stringWithoutSign(
-                for: humidity,
-                temperature: viewModel.temperature.value
-            )
-            let humidityUnit = measurementService.units.humidityUnit
-            let humidityUnitSymbol = humidityUnit.symbol
-            let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
-            let unit = humidityUnit == .dew ? temperatureUnitSymbol
-                : humidityUnitSymbol
-            humidityView.setValue(
-                with: humidityValue,
-                unit: unit
-            )
-        } else {
-            hideHumidityView(hide: true)
-        }
-
-        // Pressure
-        if let pressure = viewModel.pressure.value {
-            hidePressureView(hide: false)
-            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
-            pressureView.setValue(
-                with: pressureValue,
-                unit: measurementService?.units.pressureUnit.symbol
-            )
-        } else {
-            hidePressureView(hide: true)
-        }
-
-        // Movement
-        switch viewModel.type {
-        case .ruuvi:
-            if let movement = viewModel.movementCounter.value {
-                hideMovementView(hide: false)
-                movementView.setValue(
-                    with: "\(movement)",
-                    unit: RuuviLocalization.Cards.Movements.title
-                )
-            } else {
-                hideMovementView(hide: true)
-            }
-        }
-
-        // Ago
-        if let date = viewModel.date.value?.ruuviAgo() {
-            updatedAtLabel.text = date
-        } else {
-            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
-        }
-        startTimer(with: viewModel.date.value)
-
-        // Source
-        if let source = viewModel.source.value {
-            switch source {
-            case .unknown:
-                dataSourceIconView.image = nil
-            case .advertisement:
-                dataSourceIconView.image = RuuviAsset.iconBluetooth.image
-            case .heartbeat, .log:
-                dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
-            case .ruuviNetwork:
-                dataSourceIconView.image = RuuviAsset.iconGateway.image
-            }
-        } else {
-            dataSourceIconView.image = nil
-        }
-
-        switch viewModel.source.value {
-        case .ruuviNetwork:
-            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularWidth
-        default:
-            dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
-        }
-
-        dataSourceIconView.image = dataSourceIconView
-            .image?
-            .withRenderingMode(.alwaysTemplate)
-
-        // Battery state
-        if let batteryLow = viewModel.batteryNeedsReplacement.value,
-           batteryLow {
-            batteryLevelView.isHidden = false
-        } else {
-            batteryLevelView.isHidden = true
-        }
-    }
-
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    func restartAlertAnimation(for viewModel: CardsViewModel) {
-        // Alert
-        let alertVisible = viewModel.isCloud.value ?? false || viewModel.isConnected.value ?? false
-
-        let mutedTills = [
-            viewModel.temperatureAlertMutedTill.value,
-            viewModel.relativeHumidityAlertMutedTill.value,
-            viewModel.pressureAlertMutedTill.value,
-            viewModel.signalAlertMutedTill.value,
-            viewModel.movementAlertMutedTill.value,
-            viewModel.connectionAlertMutedTill.value,
-        ]
-
-        if mutedTills.first(where: { $0 != nil }) != nil || !alertVisible {
-            alertIcon.image = nil
-            alertButton.isUserInteractionEnabled = false
-            removeAlertAnimations(alpha: 0)
-            return
-        }
-
-        if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
-           let temperatureAlertState = viewModel.temperatureAlertState.value {
-            highlightTemperatureValues(highlight: temperatureAlertState == .firing)
-        } else {
-            highlightTemperatureValues(highlight: false)
-        }
-
-        if let isOn = viewModel.isRelativeHumidityAlertOn.value, isOn,
-           let rhAlertState = viewModel.relativeHumidityAlertState.value {
-            humidityView.changeColor(highlight: rhAlertState == .firing)
-        } else {
-            humidityView.changeColor(highlight: false)
-        }
-
-        if let isOn = viewModel.isPressureAlertOn.value, isOn,
-           let pressureAlertState = viewModel.pressureAlertState.value {
-            pressureView.changeColor(highlight: pressureAlertState == .firing)
-        } else {
-            pressureView.changeColor(highlight: false)
-        }
-
-        if let isOn = viewModel.isMovementAlertOn.value, isOn,
-           let movementAlertState = viewModel.movementAlertState.value {
-            movementView.changeColor(highlight: movementAlertState == .firing)
-        } else {
-            movementView.changeColor(highlight: false)
-        }
-
-        if let state = viewModel.alertState.value {
-            switch state {
-            case .empty:
-                if alertIcon.image != nil {
-                    alertIcon.alpha = 0
-                    alertIcon.image = nil
-                    removeAlertAnimations(alpha: 0)
-                }
-                alertButton.isUserInteractionEnabled = false
-            case .registered:
-                alertButton.isUserInteractionEnabled = true
-                if alertIcon.image != RuuviAsset.iconAlertOn.image {
-                    alertIcon.alpha = 1
-                    alertIcon.image = RuuviAsset.iconAlertOn.image
-                    removeAlertAnimations()
-                }
-                alertIcon.tintColor = RuuviColor.logoTintColor.color
-            case .firing:
-                alertButton.isUserInteractionEnabled = true
-                alertIcon.alpha = 1.0
-                alertIcon.tintColor = RuuviColor.orangeColor.color
-                if alertIcon.image != RuuviAsset.iconAlertActive.image {
-                    alertIcon.image = RuuviAsset.iconAlertActive.image
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    UIView.animate(
-                        withDuration: 0.5,
-                        delay: 0,
-                        options: [
-                            .repeat,
-                            .autoreverse,
-                        ],
-                        animations: { [weak self] in
-                            self?.alertIcon.alpha = 0.0
-                        }
-                    )
-                }
-            }
-        } else {
-            alertIcon.image = nil
-            alertButton.isUserInteractionEnabled = false
-            removeAlertAnimations(alpha: 0)
-        }
-    }
-
-    func removeAlertAnimations(alpha: Double = 1) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.alertIcon.layer.removeAllAnimations()
-            self?.alertIcon.alpha = alpha
-        }
     }
 }
 
