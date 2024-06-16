@@ -16,6 +16,7 @@ protocol DashboardViewOutput {
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel)
     func viewDidTriggerRename(for viewModel: CardsViewModel)
     func viewDidTriggerShare(for viewModel: CardsViewModel)
+    func viewDidTriggerRemove(for viewModel: CardsViewModel)
     func viewDidTriggerDashboardCard(for viewModel: CardsViewModel)
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel)
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel)

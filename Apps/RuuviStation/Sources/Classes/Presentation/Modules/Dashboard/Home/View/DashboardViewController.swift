@@ -354,6 +354,7 @@ extension DashboardViewController {
         )
     }
 
+    // swiftlint:disable:next function_body_length
     private func cardContextMenuOption(for index: Int) -> UIMenu {
         let fullImageViewAction = UIAction(title: RuuviLocalization.fullImageView) {
             [weak self] _ in
@@ -397,6 +398,13 @@ extension DashboardViewController {
             }
         }
 
+        let removeSensorAction = UIAction(title: RuuviLocalization.remove) {
+            [weak self] _ in
+            if let viewModel = self?.viewModels[index] {
+                self?.output.viewDidTriggerRemove(for: viewModel)
+            }
+        }
+
         var contextMenuActions: [UIAction] = [
             fullImageViewAction,
             historyViewAction,
@@ -410,6 +418,8 @@ extension DashboardViewController {
            canShare {
             contextMenuActions.append(shareSensorAction)
         }
+
+        contextMenuActions.append(removeSensorAction)
 
         return UIMenu(title: "", children: contextMenuActions)
     }
