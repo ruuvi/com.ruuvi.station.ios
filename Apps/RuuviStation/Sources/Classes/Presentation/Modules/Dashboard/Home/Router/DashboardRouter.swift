@@ -257,6 +257,23 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                 module.configure(sensor: sensor)
             }
     }
+
+    func openRemove(
+      for ruuviTag: RuuviTagSensor,
+      output: SensorRemovalModuleOutput
+    ) {
+        let factory: SensorRemovalModuleFactory = SensorRemovalModuleFactoryImpl()
+        let module = factory.create()
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+        if let presenter = module.output as? SensorRemovalModuleInput {
+            presenter.configure(ruuviTag: ruuviTag, output: output)
+        }
+    }
 }
 
 extension DashboardRouter: UIAdaptivePresentationControllerDelegate {

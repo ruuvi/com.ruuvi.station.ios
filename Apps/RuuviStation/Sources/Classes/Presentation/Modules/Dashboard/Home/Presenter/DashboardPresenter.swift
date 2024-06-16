@@ -267,6 +267,12 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
 
+    func viewDidTriggerRemove(for viewModel: CardsViewModel) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+            router.openRemove(for: ruuviTag, output: self)
+        }
+    }
+
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -573,6 +579,23 @@ extension DashboardPresenter: TagSettingsModuleOutput {
     }
 
     func tagSettingsDidDismiss(module: TagSettingsModuleInput) {
+        module.dismiss(completion: nil)
+    }
+}
+
+// MARK: - SensorRemovalModuleOutput
+
+extension DashboardPresenter: SensorRemovalModuleOutput {
+    func sensorRemovalDidRemoveTag(
+        module: SensorRemovalModuleInput,
+        ruuviTag: RuuviTagSensor
+    ) {
+        module.dismiss(completion: { [weak self] in
+            self?.startObservingRuuviTags()
+        })
+    }
+
+    func sensorRemovalDidDismiss(module: SensorRemovalModuleInput) {
         module.dismiss(completion: nil)
     }
 }
