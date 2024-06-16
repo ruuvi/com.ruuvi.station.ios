@@ -14,5 +14,4 @@ protocol TagSettingsViewInput: ViewInput {
     func showKeepConnectionCloudModeDialog()
     func stopKeepConnectionAnimatingDots()
     func startKeepConnectionAnimatingDots()
-    func showCSVExportLocationDialog()
 }

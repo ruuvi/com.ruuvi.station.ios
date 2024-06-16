@@ -14,7 +14,6 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
     func viewDidTapShareButton()
-    func viewDidTapOnExport()
     func viewDidTapOnOwner()
     func viewDidTriggerFirmwareUpdateDialog()
     func viewDidConfirmFirmwareUpdate()

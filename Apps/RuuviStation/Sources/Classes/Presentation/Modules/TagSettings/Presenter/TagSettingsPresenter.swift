@@ -400,10 +400,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         router.openUpdateFirmware(ruuviTag: ruuviTag)
     }
 
-    func viewDidTapOnExport() {
-        view.showCSVExportLocationDialog()
-    }
-
     func viewDidTapOnOwner() {
         if viewModel.isClaimedTag.value == false {
             ruuviTagSensorOwnerCheckToken?.invalidate()
