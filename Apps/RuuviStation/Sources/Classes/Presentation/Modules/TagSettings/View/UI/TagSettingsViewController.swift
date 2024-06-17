@@ -27,13 +27,14 @@ enum TagSettingsSectionIdentifier {
 }
 
 enum TagSettingsItemCellIdentifier: Int {
-    case generalName = 0
-    case generalOwner = 1
-    case generalOwnersPlan = 2
-    case generalShare = 3
-    case offsetTemperature = 4
-    case offsetHumidity = 5
-    case offsetPressure = 6
+    case generalChangeBackground = 0
+    case generalName = 1
+    case generalOwner = 2
+    case generalOwnersPlan = 3
+    case generalShare = 4
+    case offsetTemperature = 5
+    case offsetHumidity = 6
+    case offsetPressure = 7
 }
 
 class TagSettingsSection {
@@ -126,6 +127,7 @@ class TagSettingsViewController: UIViewController {
     private var alertMaxRangeTextField = UITextField()
     private var cloudConnectionAlertDelayTextField = UITextField()
     private let cloudConnectionAlertDelayCharaterLimit: Int = 2
+    private let commonHeaderHeight: CGFloat = 48
 
     private let pairedString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Paired.title
     private let pairingString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Pairing.title
@@ -141,6 +143,11 @@ class TagSettingsViewController: UIViewController {
 
     // Weak reference to the cells
     // General section
+    private lazy var changeBackgroundCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
     private lazy var tagNameCell: TagSettingsBasicCell? = TagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
@@ -355,6 +362,7 @@ class TagSettingsViewController: UIViewController {
     )
 
     deinit {
+        changeBackgroundCell = nil
         tagNameCell = nil
         tagOwnerCell = nil
         tagOwnersPlanCell = nil
@@ -669,7 +677,8 @@ extension TagSettingsViewController {
 
     private func itemsForGeneralSection(showPlan: Bool = false) -> [TagSettingsItem] {
         var availableItems: [TagSettingsItem] = [
-            tagNameSettingItem()
+            changeBackgroundItem(),
+            tagNameSettingItem(),
         ]
         if showOwner() {
             availableItems.append(tagOwnerSettingItem())
@@ -695,6 +704,24 @@ extension TagSettingsViewController {
             headerType: .simple
         )
         return section
+    }
+
+    private func changeBackgroundItem() -> TagSettingsItem {
+        let settingItem = TagSettingsItem(
+            identifier: .generalChangeBackground,
+            createdCell: { [weak self] in
+                self?.changeBackgroundCell?.configure(
+                    title: RuuviLocalization.TagSettings.BackgroundImageLabel.text,
+                    value: nil
+                )
+                self?.changeBackgroundCell?.setAccessory(type: .background)
+                return self?.changeBackgroundCell ?? UITableViewCell()
+            },
+            action: { [weak self] _ in
+                self?.didTapChangeBackground()
+            }
+        )
+        return settingItem
     }
 
     private func tagNameSettingItem() -> TagSettingsItem {
@@ -3455,8 +3482,19 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
         cell.action?(cell)
     }
 
-    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-        48
+    func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let sectionItem = tableViewSections[section]
+        switch sectionItem.headerType {
+        case .simple:
+            switch sectionItem.identifier {
+            case .general:
+                return 0
+            default:
+                return commonHeaderHeight
+            }
+        default:
+            return commonHeaderHeight
+        }
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
@@ -3467,12 +3505,18 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
         let sectionItem = tableViewSections[section]
         switch sectionItem.headerType {
         case .simple:
-            let view = TagSettingsSimpleSectionHeader()
-            view.setTitle(
-                with: sectionItem.title,
-                section: section
-            )
-            return view
+            switch sectionItem.identifier {
+            case .general:
+                return nil
+            default:
+                let view = TagSettingsSimpleSectionHeader()
+                view.setTitle(
+                    with: sectionItem.title,
+                    section: section
+                )
+                return view
+            }
+
         case .expandable:
 
             switch sectionItem.identifier {
