@@ -698,7 +698,7 @@ extension TagSettingsViewController {
         let availableItems = itemsForGeneralSection()
         let section = TagSettingsSection(
             identifier: .general,
-            title: RuuviLocalization.TagSettings.SectionHeader.General.title.capitalized,
+            title: "",
             cells: availableItems,
             collapsed: false,
             headerType: .simple
