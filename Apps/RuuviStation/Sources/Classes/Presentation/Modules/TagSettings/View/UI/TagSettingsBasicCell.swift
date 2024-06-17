@@ -4,6 +4,7 @@ import UIKit
 enum TagSettingsBasicAccessory {
     case pencil
     case chevron
+    case background
     case none
 }
 
@@ -79,7 +80,7 @@ class TagSettingsBasicCell: UITableViewCell {
             bottom: nil,
             trailing: safeRightAnchor,
             padding: .init(top: 0, left: 8, bottom: 0, right: 12),
-            size: .init(width: 16, height: 16)
+            size: .init(width: 18, height: 18)
         )
         iconView.centerYInSuperview()
         iconHiddenWidthConstraints = [
@@ -121,6 +122,12 @@ class TagSettingsBasicCell: UITableViewCell {
         case .chevron:
             iconView.image = UIImage(systemName: "chevron.right")
             iconView.tintColor = .secondaryLabel
+            iconHiddenWidthConstraints.forEach { anchor in
+                anchor.isActive = false
+            }
+        case .background:
+            iconView.image = UIImage(systemName: "camera.fill")
+            iconView.tintColor = RuuviColor.tintColor.color
             iconHiddenWidthConstraints.forEach { anchor in
                 anchor.isActive = false
             }
