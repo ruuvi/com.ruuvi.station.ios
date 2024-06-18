@@ -3088,8 +3088,9 @@ extension TagSettingsViewController {
 
         // RSSI
         if let moreInfoRSSICell {
-            moreInfoRSSICell.bind(viewModel.rssi) { cell, rssi in
-                cell.configure(value: rssi?.stringValue)
+            moreInfoRSSICell.bind(viewModel.latestMeasurement) {
+              [weak self] cell, _ in
+              cell.configure(value: self?.latestValue(for: .signal(lower: 0, upper: 0)))
             }
         }
 
@@ -3254,23 +3255,30 @@ extension TagSettingsViewController {
                 self?.moreInfoTxPowerCell?.selectionStyle = .none
                 return self?.moreInfoTxPowerCell ?? UITableViewCell()
             },
-            action: nil
+            action: { [weak self] _ in
+                self?.output.viewDidTapOnTxPower()
+            }
         )
         return settingItem
     }
 
     private func moreInfoRSSIItem() -> TagSettingsItem {
+        var rssi: String = ""
+        if let signal = viewModel?.rssi.value?.stringValue {
+          let symbol = RuuviLocalization.dBm
+          rssi = "\(signal)" + " \(symbol)"
+        } else {
+          rssi = latestValue(for: .signal(lower: 0, upper: 0))
+        }
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoRSSICell?.configure(
                     title: RuuviLocalization.TagSettings.RssiTitleLabel.text,
-                    value: self?.viewModel?.rssi.value.stringValue
+                    value: rssi
                 )
                 return self?.moreInfoRSSICell ?? UITableViewCell()
             },
-            action: { [weak self] _ in
-                self?.output.viewDidTapOnTxPower()
-            }
+            action: nil
         )
         return settingItem
     }
@@ -3816,6 +3824,11 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                             !showPressureOffsetCorrection()
                     )
                 }
+            case .moreInfo:
+              if let moreInfoRSSICell {
+                let signal = latestValue(for: .signal(lower: 0, upper: 0))
+                moreInfoRSSICell.configure(value: signal)
+              }
             default:
                 break
             }
