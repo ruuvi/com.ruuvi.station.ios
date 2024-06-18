@@ -124,6 +124,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         let tagViewModel = TagSettingsViewModel()
         tagViewModel.isAuthorized.value = ruuviUser.isAuthorized
         tagViewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
+        tagViewModel.rssi.value = latestMeasurement?.rssi
         viewModel = tagViewModel
 
         self.ruuviTag = ruuviTag
