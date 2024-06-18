@@ -85,6 +85,7 @@ class DashboardPlainCell: DashboardCell {
     }()
 
     private lazy var batteryLevelView = BatteryLevelView()
+    private lazy var noDataView = NoDataView()
 
     private var temperatureViewHeight: NSLayoutConstraint!
     private var humidityViewHeight: NSLayoutConstraint!
@@ -178,8 +179,10 @@ class DashboardPlainCell: DashboardCell {
         // Ago
         if let date = viewModel.date.value?.ruuviAgo() {
             updatedAtLabel.text = date
+            noDataView.isHidden = true
         } else {
             updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
+            noDataView.isHidden = false
         }
 
         startTimer(with: viewModel.date.value)
@@ -344,6 +347,7 @@ extension DashboardPlainCell {
         alertIcon.layer.removeAllAnimations()
         alertButton.isUserInteractionEnabled = false
         dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
+        noDataView.isHidden = true
     }
 }
 
@@ -373,31 +377,6 @@ extension DashboardPlainCell {
         ruuviTagNameLabel.heightAnchor.constraint(
             greaterThanOrEqualToConstant: 14
         ).isActive = true
-
-        container.addSubview(alertIcon)
-        alertIcon.anchor(
-            top: ruuviTagNameLabel.topAnchor,
-            leading: ruuviTagNameLabel.trailingAnchor,
-            bottom: nil,
-            trailing: nil,
-            padding: .init(top: 4, left: 12, bottom: 0, right: 0),
-            size: .init(width: 24, height: 18)
-        )
-
-        container.addSubview(alertButton)
-        alertButton.match(view: alertIcon)
-
-        container.addSubview(moreIconView)
-        moreIconView.anchor(
-            top: container.topAnchor,
-            leading: alertIcon.trailingAnchor,
-            bottom: nil,
-            trailing: container.trailingAnchor,
-            size: .init(width: 36, height: 32)
-        )
-
-        container.addSubview(moreButton)
-        moreButton.match(view: moreIconView)
 
         let leftContainerView = UIView()
         container.addSubview(leftContainerView)
@@ -522,6 +501,41 @@ extension DashboardPlainCell {
             )
         )
         batteryLevelView.isHidden = true
+
+        container.addSubview(alertIcon)
+        alertIcon.anchor(
+            top: ruuviTagNameLabel.topAnchor,
+            leading: ruuviTagNameLabel.trailingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 4, left: 12, bottom: 0, right: 0),
+            size: .init(width: 24, height: 18)
+        )
+
+        container.addSubview(alertButton)
+        alertButton.match(view: alertIcon)
+
+        container.addSubview(moreIconView)
+        moreIconView.anchor(
+            top: container.topAnchor,
+            leading: alertIcon.trailingAnchor,
+            bottom: nil,
+            trailing: container.trailingAnchor,
+            size: .init(width: 36, height: 32)
+        )
+
+        container.addSubview(moreButton)
+        moreButton.match(view: moreIconView)
+
+        // No data view
+        container.insertSubview(noDataView, belowSubview: moreIconView)
+        noDataView.anchor(
+          top: ruuviTagNameLabel.bottomAnchor,
+          leading: container.leadingAnchor,
+          bottom: container.bottomAnchor,
+          trailing: container.trailingAnchor
+        )
+        noDataView.isHidden = true
     }
 }
 
