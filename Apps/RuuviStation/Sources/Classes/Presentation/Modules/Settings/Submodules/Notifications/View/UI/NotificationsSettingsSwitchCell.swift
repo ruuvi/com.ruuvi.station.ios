@@ -61,7 +61,7 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
         topStack.spacing = 4
         topStack.distribution = .fill
         topStack.axis = .horizontal
-        statusSwitch.widthLessThanOrEqualTo(constant: 100)
+        statusSwitch.widthLessThanOrEqualTo(constant: 150)
 
         // Contains the content stack, and subtitle.
         let contentStack = UIStackView(arrangedSubviews: [
