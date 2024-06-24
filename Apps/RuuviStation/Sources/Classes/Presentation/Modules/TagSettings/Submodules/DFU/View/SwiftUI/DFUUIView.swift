@@ -107,9 +107,11 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case let .error(error):
-            return Text(error.localizedDescription)
-                .font(muliRegular16)
-                .eraseToAnyView()
+            return ZStack {
+                Color.clear
+                Text(error.localizedDescription)
+                    .font(muliRegular16)
+            }.eraseToAnyView()
         case let .loaded(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
