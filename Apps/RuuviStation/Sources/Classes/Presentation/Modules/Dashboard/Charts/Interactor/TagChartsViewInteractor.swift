@@ -265,10 +265,14 @@ extension TagChartsViewInteractor {
             sSelf.lastMeasurement = record.measurement
             sSelf.lastMeasurementRecord = record
             var chartsCases = MeasurementType.chartsCases
+            if record.temperature == nil {
+                chartsCases.removeAll { $0 == .temperature }
+            }
             if record.humidity == nil {
-                chartsCases.remove(at: 1)
-            } else if record.pressure == nil {
-                chartsCases.remove(at: 2)
+                chartsCases.removeAll { $0 == .humidity }
+            }
+            if record.pressure == nil {
+                chartsCases.removeAll { $0 == .pressure }
             }
             sSelf.presenter.createChartModules(from: chartsCases)
             sSelf.presenter.updateLatestRecord(record)
