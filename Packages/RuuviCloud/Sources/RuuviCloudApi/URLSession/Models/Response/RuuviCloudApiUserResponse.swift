@@ -84,6 +84,10 @@ extension RuuviCloudApiSensor: CloudSensor {
         []
     }
 
+    public var maxHistoryDays: Int? {
+        nil
+    }
+
     /// Returns the 'id' of the sensor
     public var id: String {
         sensorId
