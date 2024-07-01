@@ -56,6 +56,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         presenter.authService = r.resolve(RuuviServiceAuth.self)
         presenter.pnManager = r.resolve(RuuviCorePN.self)
         presenter.cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
+        presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
         router.delegate = presenter
 
         let interactor = DashboardInteractor()

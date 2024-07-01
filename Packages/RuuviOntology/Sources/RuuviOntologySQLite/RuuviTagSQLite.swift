@@ -16,6 +16,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
     public var isCloudSensor: Bool?
     public var canShare: Bool
     public var sharedTo: [String]
+    public var maxHistoryDays: Int?
 
     public init(
         id: String,
@@ -31,7 +32,8 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         ownersPlan: String?,
         isCloudSensor: Bool?,
         canShare: Bool,
-        sharedTo: [String]
+        sharedTo: [String],
+        maxHistoryDays: Int?
     ) {
         self.id = id
         self.macId = macId
@@ -47,6 +49,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         self.isCloudSensor = isCloudSensor
         self.canShare = canShare
         self.sharedTo = sharedTo
+        self.maxHistoryDays = maxHistoryDays
     }
 
     public static func == (lhs: RuuviTagSQLite, rhs: RuuviTagSQLite) -> Bool {
@@ -64,6 +67,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         && lhs.isCloudSensor == rhs.isCloudSensor
         && lhs.canShare == rhs.canShare
         && lhs.sharedTo == rhs.sharedTo
+        && lhs.maxHistoryDays == rhs.maxHistoryDays
     }
 }
 
@@ -83,6 +87,7 @@ public extension RuuviTagSQLite {
     static let isCloudSensor = Column("isCloudSensor")
     static let canShareColumn = Column("canShare")
     static let sharedToColumn = Column("sharedTo")
+    static let maxHistoryDaysColumn = Column("maxHistoryDays")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -104,6 +109,7 @@ extension RuuviTagSQLite: FetchableRecord {
         ownersPlan = row[RuuviTagSQLite.ownersPlan]
         isCloudSensor = row[RuuviTagSQLite.isCloudSensor]
         canShare = row[RuuviTagSQLite.canShareColumn]
+        maxHistoryDays = row[RuuviTagSQLite.maxHistoryDaysColumn]
         if let sharedToColumn = row[RuuviTagSQLite.sharedToColumn] as? String {
             sharedTo = sharedToColumn.components(separatedBy: ",")
         } else {
@@ -132,6 +138,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.isCloudSensor] = isCloudSensor
         container[RuuviTagSQLite.canShareColumn] = canShare
         container[RuuviTagSQLite.sharedToColumn] = sharedTo.joined(separator: ",")
+        container[RuuviTagSQLite.maxHistoryDaysColumn] = maxHistoryDays
     }
 }
 
@@ -156,6 +163,7 @@ public extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
             table.column(RuuviTagSQLite.canShareColumn.name, .boolean)
             table.column(RuuviTagSQLite.sharedToColumn.name, .text)
+            table.column(RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
         })
     }
 }

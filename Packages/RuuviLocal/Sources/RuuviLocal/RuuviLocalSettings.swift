@@ -96,6 +96,9 @@ public protocol RuuviLocalSettings {
     var showSwitchStatusLabel: Bool { get set }
     var showAlertsRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }
+    var syncHistoryAfterSigningIn: Bool { get set }
+    var syncHistoryIndividua: Bool { get set }
+    var syncHistoryAfterSigningIn: Bool { get set }
 
     var customTempAlertLowerBound: Double { get set }
     var customTempAlertUpperBound: Double { get set }

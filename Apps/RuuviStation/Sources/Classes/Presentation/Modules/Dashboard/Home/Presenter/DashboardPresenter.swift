@@ -50,6 +50,7 @@ class DashboardPresenter: DashboardModuleInput {
     var activityPresenter: ActivityPresenter!
     var pnManager: RuuviCorePN!
     var cloudNotificationService: RuuviServiceCloudNotification!
+    var cloudSyncService: RuuviServiceCloudSync!
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
     private var advertisementTokens = [ObservationToken]()
@@ -160,6 +161,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingCloudSyncFailTokenState()
         startObservingSensorOrderChanges()
         pushNotificationsManager.registerForRemoteNotifications()
+        cloudSyncService.syncAllHistory()
     }
 
     func viewWillAppear() {
@@ -422,6 +424,7 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
         module: SignInBenefitsModuleInput,
         didSuccessfulyLogin _: Any?
     ) {
+        cloudSyncService.syncAllHistory()
         startObservingRuuviTags()
         startObservingCloudModeNotification()
         module.dismiss(completion: {

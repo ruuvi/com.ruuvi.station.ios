@@ -416,6 +416,48 @@ extension DefaultsPresenter {
 
         return viewModel
     }
+
+    private func buildDoHistorySyncAfterSignIn() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.UseNewChart.title
+        viewModel.boolean.value = settings.useNewGraphRendering
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.useNewGraphRendering = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildDoIndividualHistorySync() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.UseNewChart.title
+        viewModel.boolean.value = settings.useNewGraphRendering
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.useNewGraphRendering = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
+
+    private func buildDoLegacyHistorySync() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.UseNewChart.title
+        viewModel.boolean.value = settings.useNewGraphRendering
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, show in
+            observer.settings.useNewGraphRendering = GlobalHelpers.getBool(from: show)
+        }
+
+        return viewModel
+    }
 }
 
 extension DefaultsPresenter {
