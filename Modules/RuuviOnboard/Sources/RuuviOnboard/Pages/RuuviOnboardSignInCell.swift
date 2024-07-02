@@ -3,6 +3,10 @@ import UIKit
 
 protocol RuuviOnboardSignInCellDelegate: NSObjectProtocol {
     func didTapContinueButton(sender: RuuviOnboardSignInCell)
+    func didProvideAnalyticsConsent(
+        isConsentGiven: Bool,
+        sender: RuuviOnboardSignInCell
+    )
 }
 
 class RuuviOnboardSignInCell: UICollectionViewCell {
@@ -36,6 +40,12 @@ class RuuviOnboardSignInCell: UICollectionViewCell {
     }()
 
     private lazy var tosCheckbox: RuuviOnboardCheckboxProvider = {
+        let provider = RuuviOnboardCheckboxProvider()
+        provider.delegate = self
+        return provider
+    }()
+
+    private lazy var analyticsCheckbox: RuuviOnboardCheckboxProvider = {
         let provider = RuuviOnboardCheckboxProvider()
         provider.delegate = self
         return provider
@@ -118,9 +128,30 @@ private extension RuuviOnboardSignInCell {
             )
         )
 
+        let analyticsCheckboxVC = analyticsCheckbox.makeViewController(
+            title: RuuviLocalization.onboardingStartAnonymousDataCollectionTitle,
+            titleMarkupString: "",
+            titleLink: ""
+        )
+        analyticsCheckboxVC.view.backgroundColor = .clear
+        container.addSubview(analyticsCheckboxVC.view)
+
+        analyticsCheckboxVC.view.anchor(
+            top: tosCheckboxVC.view.bottomAnchor,
+            leading: container.safeLeadingAnchor,
+            bottom: nil,
+            trailing: container.safeTrailingAnchor,
+            padding: .init(
+                top: 8,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        )
+
         container.addSubview(continueButton)
         continueButton.anchor(
-            top: tosCheckboxVC.view.bottomAnchor,
+            top: analyticsCheckboxVC.view.bottomAnchor,
             leading: nil,
             bottom: nil,
             trailing: nil,
@@ -173,10 +204,16 @@ private extension RuuviOnboardSignInCell {
 
 // MARK: - Public
 extension RuuviOnboardSignInCell {
-    func configure(with viewModel: OnboardViewModel) {
+    func configure(
+        with viewModel: OnboardViewModel,
+        tosAccepted: Bool,
+        analyticsConsentGiven: Bool
+    ) {
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
-        setContinueButtonEnabled(false)
+        tosCheckbox.setChecked(tosAccepted)
+        analyticsCheckbox.setChecked(analyticsConsentGiven)
+        setContinueButtonEnabled(tosAccepted)
     }
 }
 
@@ -186,6 +223,16 @@ extension RuuviOnboardSignInCell: RuuviOnboardCheckboxViewDelegate {
         isChecked: Bool,
         sender: RuuviOnboardCheckboxProvider
     ) {
-        setContinueButtonEnabled(isChecked, animated: true)
+        if sender == tosCheckbox {
+            setContinueButtonEnabled(
+                isChecked,
+                animated: true
+            )
+        } else if sender == analyticsCheckbox {
+            delegate?.didProvideAnalyticsConsent(
+                isConsentGiven: isChecked,
+                sender: self
+            )
+        }
     }
 }

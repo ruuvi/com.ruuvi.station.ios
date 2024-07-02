@@ -1,3 +1,4 @@
+import RuuviLocal
 import RuuviOnboard
 import RuuviUser
 import UIKit
@@ -12,6 +13,10 @@ protocol OnboardRouterDelegate: AnyObject {
     func onboardRouterDidShowSignIn(
         _ router: OnboardRouter,
         output: SignInBenefitsModuleOutput
+    )
+    func ruuviOnboardDidProvideAnalyticsConsent(
+        _ router: OnboardRouter,
+        consentGiven: Bool
     )
 }
 
@@ -28,7 +33,12 @@ final class OnboardRouter {
             return onboard
         } else {
             let ruuviUser = r.resolve(RuuviUser.self)!
-            let onboard = RuuviOnboardPages(ruuviUser: ruuviUser)
+            let settings = r.resolve(RuuviLocalSettings.self)!
+            let onboard = RuuviOnboardPages(
+                ruuviUser: ruuviUser,
+                tosAccepted: settings.tosAccepted,
+                analyticsConsentGiven: settings.analyticsConsentGiven
+            )
             onboard.router = self
             onboard.output = self
             weakOnboard = onboard
@@ -46,6 +56,16 @@ extension OnboardRouter: RuuviOnboardOutput {
 
     func ruuviOnboardDidShowSignIn(_: RuuviOnboard) {
         delegate?.onboardRouterDidShowSignIn(self, output: self)
+    }
+
+    func ruuviOnboardDidProvideAnalyticsConsent(
+        _ ruuviOnboard: RuuviOnboard,
+        consentGiven: Bool
+    ) {
+        delegate?.ruuviOnboardDidProvideAnalyticsConsent(
+            self,
+            consentGiven: consentGiven
+        )
     }
 }
 

@@ -248,6 +248,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.tosAccepted", defaultValue: false)
     var tosAccepted: Bool
 
+    @UserDefault("SettingsUserDefaults.analyticsConsentGiven", defaultValue: false)
+    var analyticsConsentGiven: Bool
+
     @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
     var tagChartsLandscapeSwipeInstructionWasShown: Bool
 

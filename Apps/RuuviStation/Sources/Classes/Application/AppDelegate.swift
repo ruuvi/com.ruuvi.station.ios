@@ -6,6 +6,7 @@ import UIKit
 #if (DEBUG || ALPHA) && canImport(FLEX)
 import FLEX
 #endif
+import RuuviAnalytics
 import RuuviContext
 import RuuviCore
 import RuuviLocal
@@ -80,6 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let appRouter = AppRouter()
         appRouter.settings = r.resolve(RuuviLocalSettings.self)
+        appRouter.ruuviAnalytics = r.resolve(RuuviAnalytics.self)
         window?.rootViewController = appRouter.viewController
         window?.makeKeyAndVisible()
         self.appRouter = appRouter

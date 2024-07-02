@@ -135,7 +135,6 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         self.ruuviStorage = ruuviStorage
         self.settings = settings
         self.alertService = alertService
-        self.setConsentSettings()
     }
 
     public func update() {
@@ -185,6 +184,10 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.language(settings.language))
         set(.useSimpleWidget(settings.useSimpleWidget))
         set(.alertRSSI(0))
+    }
+
+    public func setConsent(allowed: Bool) {
+        setConsentSettings(allowed: allowed)
     }
 
     private func set(_ property: Properties) {
@@ -276,12 +279,12 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         return (temperatureAlertCount, humidityAlertCount, pressureAlertCount, movementAlertCount)
     }
 
-    private func setConsentSettings() {
+    private func setConsentSettings(allowed: Bool) {
         let consentSettings: [ConsentType: ConsentStatus] = [
             .adStorage: .denied,
             .adUserData: .denied,
             .adPersonalization: .denied,
-            .analyticsStorage: .granted,
+            .analyticsStorage: allowed ? .granted : .denied,
         ]
         #if DEBUG || ALPHA
         // skip using analytics
