@@ -12,15 +12,25 @@ public final class RuuviOnboardPages: RuuviOnboard {
             let view = RuuviOnboardViewController()
             view.output = self
             view.ruuviUser = ruuviUser
+            view.tosAccepted = tosAccepted
+            view.analyticsConsentGiven = analyticsConsentGiven
             weakView = view
             return view
         }
     }
 
     private let ruuviUser: RuuviUser
+    private var tosAccepted: Bool
+    private var analyticsConsentGiven: Bool
 
-    public init(ruuviUser: RuuviUser) {
+    public init(
+        ruuviUser: RuuviUser,
+        tosAccepted: Bool,
+        analyticsConsentGiven: Bool
+    ) {
         self.ruuviUser = ruuviUser
+        self.tosAccepted = tosAccepted
+        self.analyticsConsentGiven = analyticsConsentGiven
     }
 
     private weak var weakView: UIViewController?
@@ -39,5 +49,16 @@ extension RuuviOnboardPages: RuuviOnboardViewControllerOutput {
         didPresentSignIn _: Any?
     ) {
         output?.ruuviOnboardDidShowSignIn(self)
+    }
+
+    func ruuviOnboardAnalytics(
+        _ viewController: RuuviOnboardViewController,
+        didProvideAnalyticsConsent isConsentGiven: Bool,
+        sender: Any?
+    ) {
+        output?.ruuviOnboardDidProvideAnalyticsConsent(
+            self,
+            consentGiven: isConsentGiven
+        )
     }
 }

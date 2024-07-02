@@ -13,6 +13,11 @@ protocol RuuviOnboardViewControllerOutput: AnyObject {
         _ viewController: RuuviOnboardViewController,
         didPresentSignIn sender: Any?
     )
+    func ruuviOnboardAnalytics(
+        _ viewController: RuuviOnboardViewController,
+        didProvideAnalyticsConsent isConsentGiven: Bool,
+        sender: Any?
+    )
 }
 
 enum OnboardPageType: Int {
@@ -30,7 +35,7 @@ enum OnboardPageType: Int {
 struct OnboardViewModel {
     var pageType: OnboardPageType
     var title: String
-    var subtitle: String
+    var subtitle: String?
     var sub_subtitle: String?
     var image: UIImage?
 }
@@ -38,6 +43,8 @@ struct OnboardViewModel {
 class RuuviOnboardViewController: UIViewController {
     var output: RuuviOnboardViewControllerOutput?
     var ruuviUser: RuuviUser?
+    var tosAccepted: Bool = false
+    var analyticsConsentGiven: Bool = false
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -102,6 +109,9 @@ class RuuviOnboardViewController: UIViewController {
         didSet {
             pageControl.numberOfPages = viewModels.count
             collectionView.reloadData()
+            if tosAccepted && !analyticsConsentGiven {
+                scrollToLast()
+            }
         }
     }
 
@@ -141,6 +151,8 @@ extension RuuviOnboardViewController {
     }
 
     private func scrollToLast() {
+        collectionView.layoutIfNeeded()
+        guard collectionView.numberOfItems(inSection: 0) > 0 else { return }
         let lastPageIndex = viewModels.count - 1
         currentPage = lastPageIndex
         pageControl.currentPage = lastPageIndex
@@ -257,7 +269,11 @@ extension RuuviOnboardViewController {
                 for: indexPath
             ) as? RuuviOnboardSignInCell
             cell?.delegate = self
-            cell?.configure(with: viewModel)
+            cell?.configure(
+                with: viewModel,
+                tosAccepted: tosAccepted,
+                analyticsConsentGiven: analyticsConsentGiven
+            )
             return cell
         }
     }
@@ -270,6 +286,17 @@ extension RuuviOnboardViewController: RuuviOnboardSignInCellDelegate {
         } else {
             output?.ruuviOnboardCloudSignIn(self, didPresentSignIn: nil)
         }
+    }
+
+    func didProvideAnalyticsConsent(
+        isConsentGiven: Bool,
+        sender: RuuviOnboardSignInCell
+    ) {
+        output?.ruuviOnboardAnalytics(
+            self,
+            didProvideAnalyticsConsent: isConsentGiven,
+            sender: nil
+        )
     }
 }
 
@@ -428,9 +455,7 @@ private extension RuuviOnboardViewController {
             title: isUserAuthorized() ?
             RuuviLocalization.onboardingThatsItAlreadySignedIn :
                 RuuviLocalization.onboardingThatsIt,
-            subtitle: isUserAuthorized() ?
-            RuuviLocalization.onboardingGoToSignInAlreadySignedIn :
-                RuuviLocalization.onboardingGoToSignIn
+            subtitle: nil
         )
 
         return [

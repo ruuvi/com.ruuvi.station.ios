@@ -47,6 +47,10 @@ public class RuuviOnboardCheckboxProvider: NSObject {
         )
     }
 
+    public func setChecked(_ isChecked: Bool) {
+        stateHolder.isChecked = isChecked
+    }
+
     // MARK: - Private
     private func setupSubscriptions() {
       stateHolder.$isChecked
@@ -92,7 +96,7 @@ struct RuuviOnboardViewCheckboxView: View {
             }
         }
         .toggleStyle(CheckboxToggleStyle())
-        .padding(.vertical)
+        .padding(.vertical, 4)
     }
 
     struct TitleView: UIViewRepresentable {
