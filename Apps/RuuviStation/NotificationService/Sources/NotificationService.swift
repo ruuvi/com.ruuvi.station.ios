@@ -45,8 +45,13 @@ class NotificationService: UNNotificationServiceExtension {
            let bestAttemptContent {
             // If this value is not available on data, show formatted message.
             // Otherwise don't do anything.
-            let showLocallyFormattedMessage = userInfo["showLocallyFormatted"] as? Bool ?? true
-            if showLocallyFormattedMessage {
+            var showLocallyFormatted: Bool = true
+            // Its a shame that properties from userInfo are always string somehow.
+            // So, cast it as string and compare with 'false' value.
+            if let showLocallyFormattedMessage = userInfo["showLocallyFormatted"] as? String {
+                showLocallyFormatted = showLocallyFormattedMessage != "false"
+            }
+            if showLocallyFormatted {
                 if let sensorName = userInfo["name"] as? String,
                    let alertType = userInfo["alertType"] as? String,
                    let triggerType = userInfo["triggerType"] as? String,
