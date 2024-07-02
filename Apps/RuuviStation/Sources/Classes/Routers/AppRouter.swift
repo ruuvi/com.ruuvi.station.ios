@@ -13,6 +13,8 @@ final class AppRouter {
     var settings: RuuviLocalSettings!
     var ruuviAnalytics: RuuviAnalytics!
 
+    private var analyticsConsentGiven: Bool = false
+
     // navigation controller
     private var navigationController: UINavigationController {
         if let navigationController = weakNavigationController {
@@ -127,15 +129,16 @@ extension AppRouter: OnboardRouterDelegate {
         _ router: OnboardRouter,
         consentGiven: Bool
     ) {
-        ruuviAnalytics.setConsent(
-            allowed: consentGiven
-        )
+        analyticsConsentGiven = consentGiven
     }
 
     private func presentDashboard() {
         settings.welcomeShown = true
         settings.tosAccepted = true
         settings.analyticsConsentGiven = true
+        ruuviAnalytics.setConsent(
+            allowed: analyticsConsentGiven
+        )
         AppUtility.lockOrientation(.all)
         let controller = dashboardViewController()
         navigationController.setNavigationBarHidden(false, animated: false)

@@ -206,13 +206,11 @@ private extension RuuviOnboardSignInCell {
 extension RuuviOnboardSignInCell {
     func configure(
         with viewModel: OnboardViewModel,
-        tosAccepted: Bool,
-        analyticsConsentGiven: Bool
-    ) {
+        tosAccepted: Bool) {
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
         tosCheckbox.setChecked(tosAccepted)
-        analyticsCheckbox.setChecked(analyticsConsentGiven)
+        analyticsCheckbox.setChecked(false)
         setContinueButtonEnabled(tosAccepted)
     }
 }

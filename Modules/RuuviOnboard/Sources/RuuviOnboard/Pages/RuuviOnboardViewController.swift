@@ -271,8 +271,7 @@ extension RuuviOnboardViewController {
             cell?.delegate = self
             cell?.configure(
                 with: viewModel,
-                tosAccepted: tosAccepted,
-                analyticsConsentGiven: analyticsConsentGiven
+                tosAccepted: tosAccepted
             )
             return cell
         }
