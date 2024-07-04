@@ -14,6 +14,7 @@ class TagChartsViewInteractor {
     var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
+    var cloudSyncService: RuuviServiceCloudSync!
     var settings: RuuviLocalSettings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
@@ -88,6 +89,7 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         lastMeasurementRecord = nil
         restartScheduler()
         fetchLast()
+        syncFullHistory(for: ruuviTag)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.fetchPoints { [weak self] in
@@ -373,6 +375,17 @@ extension TagChartsViewInteractor {
         }, failure: { [weak self] error in
             self?.presenter.interactorDidError(.ruuviStorage(error))
         }, completion: competion)
+    }
+
+    private func syncFullHistory(for ruuviTag: RuuviTagSensor) {
+        if settings.historySyncForEachSensor {
+            cloudSyncService.sync(
+                sensor: ruuviTag
+            ).on(success: {
+                [weak self] _ in
+                self?.restartScheduler()
+            })
+        }
     }
 
     // MARK: - Charts

@@ -65,7 +65,7 @@ extension SQLiteGRDBDatabase {
         }
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func migrate(dbPool: DatabasePool) throws {
         var migrator = GRDB.DatabaseMigrator()
 
@@ -205,6 +205,17 @@ extension SQLiteGRDBDatabase {
             }
             try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
                 t.add(column: RuuviTagSQLite.ownersPlan.name, .text)
+            })
+        }
+        // v12
+        migrator.registerMigration("Create RuuviTagSQLite maxHistoryDays column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagSQLite.maxHistoryDaysColumn.name }) == false
+            else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
+                t.add(column: RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
             })
         }
 

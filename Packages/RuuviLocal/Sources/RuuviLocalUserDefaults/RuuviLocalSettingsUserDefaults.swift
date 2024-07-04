@@ -728,6 +728,13 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var showAlertsRangeInGraph: Bool
     @UserDefault("SettingsUserDefaults.useNewGraphRendering", defaultValue: false)
     var useNewGraphRendering: Bool
+
+    @UserDefault("SettingsUserDefaults.historySyncLegacy", defaultValue: false)
+    var historySyncLegacy: Bool
+    @UserDefault("SettingsUserDefaults.historySyncOnDashboard", defaultValue: false)
+    var historySyncOnDashboard: Bool
+    @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
+    var historySyncForEachSensor: Bool
 }
 
 // swiftlint:enable type_body_length file_length

@@ -98,6 +98,17 @@ public protocol RuuviLocalSettings {
     var showAlertsRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }
 
+    /// Syncs full history for all sensoers after code verification
+    /// on sign in, before presenting dashboard. Heavy after sign in
+    /// specially if the connection is poor.
+    var historySyncLegacy: Bool { get set }
+    /// Syncs full history for all sensors after sign in is completed
+    /// and user lands on dashboard. Heavy and can cause lag on dashboard.
+    var historySyncOnDashboard: Bool { get set }
+    /// Syncs full history for each sensor when associated charts
+    /// is presented. Much efficient.
+    var historySyncForEachSensor: Bool { get set }
+
     var customTempAlertLowerBound: Double { get set }
     var customTempAlertUpperBound: Double { get set }
 
