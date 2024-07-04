@@ -818,7 +818,8 @@ public final class RuuviCloudPure: RuuviCloud {
                             offsetPressure: sensor.offsetPressure,
                             isCloudSensor: true,
                             canShare: sensor.canShare,
-                            sharedTo: sensor.sharedTo ?? []
+                            sharedTo: sensor.sharedTo ?? [],
+                            maxHistoryDays: sensor.subscription?.maxHistoryDays
                         ),
                         record: self?.decodeSensorRecord(
                             macId: sensor.sensor.mac,

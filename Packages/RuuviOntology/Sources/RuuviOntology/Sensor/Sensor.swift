@@ -41,11 +41,21 @@ public protocol Calibratable {
     var offsetPressure: Double? { get } // in hPa
 }
 
-public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture, Calibratable, Shareable {}
+public protocol CloudSensor: Sensor,
+                             Nameable,
+                             Claimable,
+                             HasRemotePicture,
+                             Calibratable,
+                             Shareable,
+                             HistoryFetchable {}
 
 public protocol Shareable {
     var canShare: Bool { get }
     var sharedTo: [String] { get } // emails
+}
+
+public protocol HistoryFetchable {
+    var maxHistoryDays: Int? { get }
 }
 
 public protocol ShareableSensor: Sensor, Shareable {}

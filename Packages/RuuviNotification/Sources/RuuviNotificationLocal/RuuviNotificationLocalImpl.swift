@@ -436,7 +436,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     ownersPlan: nil,
                     isCloudSensor: false,
                     canShare: false,
-                    sharedTo: []
+                    sharedTo: [],
+                    maxHistoryDays: nil
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
             case lowHigh.mute:
@@ -463,7 +464,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     ownersPlan: nil,
                     isCloudSensor: false,
                     canShare: false,
-                    sharedTo: []
+                    sharedTo: [],
+                    maxHistoryDays: nil
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
             case blast.mute:

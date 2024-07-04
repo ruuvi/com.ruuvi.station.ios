@@ -45,7 +45,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             ownersPlan: ruuviTag.ownersPlan,
             isCloudSensor: ruuviTag.isCloudSensor,
             canShare: ruuviTag.canShare,
-            sharedTo: ruuviTag.sharedTo
+            sharedTo: ruuviTag.sharedTo,
+            maxHistoryDays: ruuviTag.maxHistoryDays
         )
         do {
             try database.dbPool.write { db in
@@ -402,7 +403,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             ownersPlan: ruuviTag.ownersPlan,
             isCloudSensor: ruuviTag.isCloudSensor,
             canShare: ruuviTag.canShare,
-            sharedTo: ruuviTag.sharedTo
+            sharedTo: ruuviTag.sharedTo,
+            maxHistoryDays: ruuviTag.maxHistoryDays
         )
 
         do {
@@ -433,7 +435,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             ownersPlan: ruuviTag.ownersPlan,
             isCloudSensor: ruuviTag.isCloudSensor,
             canShare: ruuviTag.canShare,
-            sharedTo: ruuviTag.sharedTo
+            sharedTo: ruuviTag.sharedTo,
+            maxHistoryDays: ruuviTag.maxHistoryDays
         )
         do {
             var success = false

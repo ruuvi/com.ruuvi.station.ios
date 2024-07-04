@@ -86,6 +86,10 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
         sensor.sharedTo
     }
 
+    public var maxHistoryDays: Int? {
+        subscription?.maxHistoryDays
+    }
+
     public static func == (lhs: AnyCloudSensorDense, rhs: AnyCloudSensorDense) -> Bool {
         lhs.id == rhs.id
     }

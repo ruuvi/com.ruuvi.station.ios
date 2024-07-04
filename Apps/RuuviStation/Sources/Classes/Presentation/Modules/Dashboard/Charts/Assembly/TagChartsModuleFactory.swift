@@ -48,6 +48,7 @@ final class TagChartsModuleFactoryImpl: TagChartsModuleFactory {
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
         interactor.ruuviPool = r.resolve(RuuviPool.self)
         interactor.ruuviStorage = r.resolve(RuuviStorage.self)
+        interactor.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
         interactor.ruuviSensorRecords = r.resolve(RuuviServiceSensorRecords.self)
         interactor.featureToggleService = r.resolve(FeatureToggleService.self)
         interactor.localSyncState = r.resolve(RuuviLocalSyncState.self)
