@@ -21,6 +21,7 @@ final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
 
     private var ruuviTag: RuuviTagSensor?
     private var secret: String?
+    private var macId: String?
 
     private var timer: Timer?
     private var gattTimeoutSeconds: Double = 15
@@ -60,11 +61,18 @@ extension SensorForceClaimPresenter: SensorForceClaimViewOutput {
                     switch key {
                     case "idID":
                         secret = value
+                    case "adMAC":
+                        macId = trimNulls(from: value)
                     default:
                         break
                     }
                 }
             }
+        }
+        if let nfcMacId = macId, let tagMacId = ruuviTag?.macId?.mac,
+           nfcMacId != tagMacId {
+            view?.showWrongTagScanDialog()
+            return
         }
         // Claim
         contestSensor(with: secret)
@@ -155,5 +163,9 @@ extension SensorForceClaimPresenter {
             return nil
         }
         return nil
+    }
+
+    private func trimNulls(from string: String) -> String {
+        string.replacingOccurrences(of: "\0", with: "")
     }
 }
