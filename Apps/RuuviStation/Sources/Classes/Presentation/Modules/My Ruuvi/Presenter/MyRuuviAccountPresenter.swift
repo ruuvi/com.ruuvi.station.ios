@@ -82,14 +82,16 @@ extension MyRuuviAccountPresenter {
         ) { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.activityPresenter.show(with: .loading(message: nil))
-            sSelf.cloudNotificationService.unregister(
-                token: sSelf.pnManager.fcmToken,
-                tokenId: nil
-            ).on(success: { _ in
-                sSelf.pnManager.fcmToken = nil
-                sSelf.pnManager.fcmTokenLastRefreshed = nil
-                sSelf.activityPresenter.update(with: .success(message: nil))
-            })
+            if let token = sSelf.pnManager.fcmToken, !token.isEmpty {
+                sSelf.cloudNotificationService.unregister(
+                    token: token,
+                    tokenId: nil
+                ).on(success: { _ in
+                    sSelf.pnManager.fcmToken = nil
+                    sSelf.pnManager.fcmTokenLastRefreshed = nil
+                    sSelf.activityPresenter.update(with: .success(message: nil))
+                })
+            }
 
             sSelf.authService.logout()
                 .on(success: { _ in
