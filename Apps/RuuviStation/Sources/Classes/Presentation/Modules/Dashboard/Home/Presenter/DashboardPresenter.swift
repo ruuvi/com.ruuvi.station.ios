@@ -1901,13 +1901,15 @@ extension DashboardPresenter {
     private func forceLogoutUser() {
         guard ruuviUser.isAuthorized else { return }
         activityPresenter.show(with: .loading(message: nil))
-        cloudNotificationService.unregister(
-            token: pnManager.fcmToken,
-            tokenId: nil
-        ).on(success: { [weak self] _ in
-            self?.pnManager.fcmToken = nil
-            self?.pnManager.fcmTokenLastRefreshed = nil
-        })
+        if let token = pnManager.fcmToken, !token.isEmpty {
+            cloudNotificationService.unregister(
+                token: pnManager.fcmToken,
+                tokenId: nil
+            ).on(success: { [weak self] _ in
+                self?.pnManager.fcmToken = nil
+                self?.pnManager.fcmTokenLastRefreshed = nil
+            })
+        }
 
         authService.logout()
             .on(success: { [weak self] _ in
