@@ -159,6 +159,17 @@ extension SensorForceClaimViewController: SensorForceClaimViewInput {
         )
         present(controller, animated: true)
     }
+
+    func showWrongTagScanDialog() {
+        let message = RuuviLocalization.claimWrongSensorScanned
+        let controller = UIAlertController(
+            title: nil, message: message, preferredStyle: .alert
+        )
+        controller.addAction(
+            UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil)
+        )
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - PRIVATE SET UI

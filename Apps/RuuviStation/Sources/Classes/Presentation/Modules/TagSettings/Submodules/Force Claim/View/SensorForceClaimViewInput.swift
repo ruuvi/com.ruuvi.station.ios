@@ -5,4 +5,5 @@ protocol SensorForceClaimViewInput: ViewInput {
     func stopNFCSession()
     func hideNFCButton()
     func showGATTConnectionTimeoutDialog()
+    func showWrongTagScanDialog()
 }
