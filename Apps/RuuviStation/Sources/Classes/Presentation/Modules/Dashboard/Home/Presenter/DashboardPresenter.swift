@@ -78,6 +78,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var pressureUnitToken: NSObjectProtocol?
     private var pressureAccuracyToken: NSObjectProtocol?
     private var languageToken: NSObjectProtocol?
+    private var widgetRefreshIntervalToken: NSObjectProtocol?
     private var systemLanguageChangeToken: NSObjectProtocol?
     private var calibrationSettingsToken: NSObjectProtocol?
     private var dashboardTypeToken: NSObjectProtocol?
@@ -129,6 +130,7 @@ class DashboardPresenter: DashboardModuleInput {
         pressureUnitToken?.invalidate()
         pressureAccuracyToken?.invalidate()
         languageToken?.invalidate()
+        widgetRefreshIntervalToken?.invalidate()
         systemLanguageChangeToken?.invalidate()
         calibrationSettingsToken?.invalidate()
         dashboardTypeToken?.invalidate()
@@ -751,6 +753,7 @@ extension DashboardPresenter {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func syncAppSettingsToAppGroupContainer() {
         appGroupDefaults?.set(
             ruuviUser.isAuthorized,
@@ -806,6 +809,17 @@ extension DashboardPresenter {
         appGroupDefaults?.set(
             settings.pressureAccuracy.value,
             forKey: AppGroupConstants.pressureAccuracyKey
+        )
+
+        // Widget refresh interval
+        appGroupDefaults?.set(
+            settings.widgetRefreshIntervalMinutes,
+            forKey: AppGroupConstants.widgetRefreshIntervalKey
+        )
+
+        appGroupDefaults?.set(
+            settings.forceRefreshWidget,
+            forKey: AppGroupConstants.forceRefreshWidgetKey
         )
 
         // Reload widget
@@ -1501,6 +1515,16 @@ extension DashboardPresenter {
             .default
             .addObserver(
                 forName: .LanguageDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    self?.syncAppSettingsToAppGroupContainer()
+                }
+            )        
+        widgetRefreshIntervalToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .WidgetRefreshIntervalDidChange,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in

@@ -25,6 +25,7 @@ public extension Notification.Name {
     static let LimitAlertNotificationsSettingsDidChange =
         Notification.Name("LimitAlertNotificationsSettingsDidChange")
     static let DashboardSensorOrderDidChange = Notification.Name("DashboardSensorOrderDidChange")
+    static let WidgetRefreshIntervalDidChange = Notification.Name("WidgetRefreshIntervalDidChange")
 }
 
 public enum DashboardTypeKey: String {
@@ -74,6 +75,8 @@ public protocol RuuviLocalSettings {
     var chartStatsOn: Bool { get set }
     var chartShowAll: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
+    var widgetRefreshIntervalMinutes: Int { get set }
+    var forceRefreshWidget: Bool { get set }
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }
     var cloudModeEnabled: Bool { get set }
