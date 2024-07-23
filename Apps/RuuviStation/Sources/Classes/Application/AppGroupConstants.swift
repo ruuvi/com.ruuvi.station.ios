@@ -12,4 +12,6 @@ enum AppGroupConstants {
     static let pressureUnitKey = "pressureUnitKey"
     static let pressureAccuracyKey = "pressureAccuracyKey"
     static let useDevServerKey = "useDevServerKey"
+    static let widgetRefreshIntervalKey = "widgetRefreshIntervalKey"
+    static let forceRefreshWidgetKey = "forceRefreshWidgetKey"
 }

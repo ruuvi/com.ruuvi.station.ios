@@ -7,6 +7,7 @@ import SwiftUI
 public final class WidgetViewModel: ObservableObject {
     private let widgetAssembly = WidgetAssembly.shared.assembler.resolver
     private let appGroupDefaults = UserDefaults(suiteName: Constants.appGroupBundleId.rawValue)
+    private let userDefaultsQueue = DispatchQueue(label: Constants.queue.rawValue)
 
     private var ruuviCloud: RuuviCloud!
     private var ruuviUser: RuuviUser!
@@ -25,6 +26,7 @@ public extension WidgetViewModel {
         else {
             return
         }
+        foceRefreshWidget(false)
         ruuviCloud.loadSensorsDense(
             for: nil,
             measurements: true,
@@ -95,6 +97,33 @@ public extension WidgetViewModel {
 
     func locale() -> Locale {
         getLanguage().locale
+    }
+
+    func refreshIntervalMins() -> Int {
+        if let interval = appGroupDefaults?
+            .integer(
+                forKey: Constants.widgetRefreshIntervalKey.rawValue
+            ), interval > 0 {
+            return interval
+        }
+        return 60
+    }
+
+    func shouldForceRefresh() -> Bool {
+        if let forceRefresh = appGroupDefaults?
+            .bool(forKey: Constants.forceRefreshWidgetKey.rawValue) {
+            return forceRefresh
+        }
+        return false
+    }
+
+    func foceRefreshWidget(_ refresh: Bool) {
+        userDefaultsQueue.sync {
+            appGroupDefaults?.set(
+                refresh,
+                forKey: Constants.forceRefreshWidgetKey.rawValue
+            )
+        }
     }
 
     /// Returns value for inline widget

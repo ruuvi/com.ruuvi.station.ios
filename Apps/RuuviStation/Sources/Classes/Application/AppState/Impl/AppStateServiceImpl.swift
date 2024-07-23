@@ -19,6 +19,10 @@ class AppStateServiceImpl: AppStateService {
     var userPropertiesService: RuuviAnalytics!
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
+    private let appGroupDefaults = UserDefaults(
+        suiteName: AppGroupConstants.appGroupSuiteIdentifier
+    )
+
     func application(
         _: UIApplication,
         didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
@@ -61,7 +65,15 @@ class AppStateServiceImpl: AppStateService {
         if ruuviUser.isAuthorized {
             cloudSyncDaemon.stop()
 #if canImport(WidgetKit)
-            WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.simpleWidgetKindId)
+            // Refresh widgets regardless of interval if user moves the app
+            // to background.
+            appGroupDefaults?.set(
+                true,
+                forKey: AppGroupConstants.forceRefreshWidgetKey
+            )
+            WidgetCenter.shared.reloadTimelines(
+                ofKind: AppAssemblyConstants.simpleWidgetKindId
+            )
 #endif
         }
         propertiesDaemon.stop()

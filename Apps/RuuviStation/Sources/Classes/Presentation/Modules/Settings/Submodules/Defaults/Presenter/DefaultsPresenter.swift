@@ -49,6 +49,8 @@ extension DefaultsPresenter {
             buildCardsSwipeHint(),
             buildAlertsMuteInterval(),
             buildWebPullInterval(),
+            buildNetworkPullingInterval(),
+            buildWidgetRefreshInterval(),
             buildPruningOffsetHours(),
             buildChartIntervalSeconds(),
             buildChartDurationHours(),
@@ -181,6 +183,32 @@ extension DefaultsPresenter {
             observer.settings.webPullIntervalMinutes = webPullInterval.bound
         }
         return webPullInterval
+    }
+
+    private func buildNetworkPullingInterval() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.NetworkPullingInterval.title
+        viewModel.integer.value = settings.networkPullIntervalSeconds
+        viewModel.unit = .seconds
+        viewModel.type.value = .stepper
+
+        bind(viewModel.integer, fire: false) { observer, interval in
+            observer.settings.networkPullIntervalSeconds = interval.bound
+        }
+        return viewModel
+    }
+
+    private func buildWidgetRefreshInterval() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.WidgetsRefreshInterval.title
+        viewModel.integer.value = settings.widgetRefreshIntervalMinutes
+        viewModel.unit = .minutes
+        viewModel.type.value = .stepper
+
+        bind(viewModel.integer, fire: false) { observer, interval in
+            observer.settings.widgetRefreshIntervalMinutes = interval.bound
+        }
+        return viewModel
     }
 
     private func buildPruningOffsetHours() -> DefaultsViewModel {

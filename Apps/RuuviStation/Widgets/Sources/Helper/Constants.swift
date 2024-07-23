@@ -2,6 +2,7 @@ import Foundation
 
 public enum Constants: String {
     case appGroupBundleId = "group.com.ruuvi.station.widgets"
+    case queue = "com.ruuvi.station.widgets.userDefaultsQueue"
 
     case ruuviCloudBaseURL = "https://network.ruuvi.com"
     case ruuviCloudBaseURLDev = "https://j9ul2pfmol.execute-api.eu-central-1.amazonaws.com"
@@ -19,6 +20,8 @@ public enum Constants: String {
     case pressureUnitKey
     case pressureAccuracyKey
     case useDevServerKey
+    case widgetRefreshIntervalKey
+    case forceRefreshWidgetKey
 
     case ruuviLogo = "ruuvi_logo"
     case ruuviLogoEye = "eye_circle"

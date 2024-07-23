@@ -316,6 +316,22 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 60)
     var networkPullIntervalSeconds: Int
 
+    @UserDefault("SettingsUserDefaults.widgetRefreshIntervalMinutes", defaultValue: 60)
+    var widgetRefreshIntervalMinutes: Int {
+        didSet {
+            NotificationCenter
+                .default
+                .post(
+                    name: .WidgetRefreshIntervalDidChange,
+                    object: self,
+                    userInfo: nil
+                )
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.forceRefreshWidget", defaultValue: false)
+    var forceRefreshWidget: Bool
+
     @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: 240)
     var networkPruningIntervalHours: Int
 
