@@ -15,12 +15,7 @@ struct SimpleWidgetView: View {
                         .frame(width: geometry.size.width * 0.35, alignment: .leading)
                         .foregroundColor(Color.logoColor)
                     Spacer()
-                    if #available(iOSApplicationExtension 17.0, *) {
-                        measurementTimeView(for: entry)
-                            .invalidatableContent()
-                    } else {
-                        measurementTimeView(for: entry)
-                    }
+                    measurementTimeView(for: entry)
                 }.padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
 
                 Spacer()
