@@ -1520,7 +1520,7 @@ extension DashboardPresenter {
                 using: { [weak self] _ in
                     self?.syncAppSettingsToAppGroupContainer()
                 }
-            )        
+            )
         widgetRefreshIntervalToken = NotificationCenter
             .default
             .addObserver(
