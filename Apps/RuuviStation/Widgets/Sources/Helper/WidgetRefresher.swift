@@ -1,4 +1,5 @@
 import AppIntents
+import WidgetKit
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct WidgetRefresher: AppIntent {
@@ -8,6 +9,7 @@ struct WidgetRefresher: AppIntent {
     func perform() async throws -> some IntentResult {
         let viewModel = WidgetViewModel()
         viewModel.foceRefreshWidget(true)
+        WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }
 }
