@@ -213,21 +213,14 @@ extension AppDelegate: RuuviNotificationLocalOutput {
 extension AppDelegate {
     private func openSelectedCard(
         for uuid: String,
-        application _: UIApplication? = nil
+        application: UIApplication? = nil
     ) {
-        appRouter?.prepareRootViewControllerWidgets()
-        window?.rootViewController = appRouter?.viewController
-
-        if let navigationController = appRouter?.viewController as? UINavigationController,
-           let controller = navigationController.viewControllers.last as? DashboardViewController {
-            if let viewModel = controller.viewModels.first(where: { viewModel in
-                viewModel.mac.value?.value == uuid || viewModel.luid.value == uuid.luid.any
-            }) {
-                controller.output.viewDidTriggerOpenSensorCardFromWidget(for: viewModel)
-            }
-        }
-
-        window?.makeKeyAndVisible()
+        settings.setCardToOpenFromWidget(for: uuid)
+        appStateService
+            .applicationDidOpenWithWidgetDeepLink(
+                application,
+                macId: uuid
+            )
     }
 }
 

@@ -10,5 +10,5 @@ protocol AppStateService {
     func applicationDidEnterBackground(_ application: UIApplication)
     func applicationWillEnterForeground(_ application: UIApplication)
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL)
-    func applicationDidOpenWithWidgetDeepLink(_ application: UIApplication, macId: String)
+    func applicationDidOpenWithWidgetDeepLink(_ application: UIApplication?, macId: String)
 }

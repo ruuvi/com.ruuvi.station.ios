@@ -72,24 +72,6 @@ final class AppRouter {
         weakDashboardController = module
         return module
     }
-
-    /// Prepare root view controller When app launched from widget tapped.
-    func prepareRootViewControllerWidgets() {
-        let rootViewController: UIViewController
-        if settings.welcomeShown && settings.tosAccepted {
-            if let weakDashboardController {
-                rootViewController = weakDashboardController
-            } else {
-                let controller = dashboardViewController()
-                rootViewController = controller
-            }
-        } else {
-            rootViewController = onboardRouter().viewController
-        }
-        let navigationController = UINavigationController(rootViewController: rootViewController)
-        navigationController.navigationBar.tintColor = .clear
-        weakNavigationController = navigationController
-    }
 }
 
 extension AppRouter: OnboardRouterDelegate {
