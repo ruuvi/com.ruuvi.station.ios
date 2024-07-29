@@ -55,7 +55,9 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
-        // do nothing yet
+        if let cardToOpen = settings.cardToOpenFromWidget() {
+            universalLinkCoordinator.processWidgetLink(macId: cardToOpen)
+        }
     }
 
     func applicationDidEnterBackground(_: UIApplication) {
@@ -96,7 +98,7 @@ class AppStateServiceImpl: AppStateService {
         universalLinkCoordinator.processUniversalLink(url: url)
     }
 
-    func applicationDidOpenWithWidgetDeepLink(_: UIApplication, macId: String) {
+    func applicationDidOpenWithWidgetDeepLink(_: UIApplication?, macId: String) {
         universalLinkCoordinator.processWidgetLink(macId: macId)
     }
 }

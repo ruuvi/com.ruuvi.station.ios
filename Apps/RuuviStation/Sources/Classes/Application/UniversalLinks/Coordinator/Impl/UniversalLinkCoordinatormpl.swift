@@ -41,12 +41,24 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
     }
 
     func processWidgetLink(macId: String) {
-        settings.setCardToOpenFromWidget(for: macId)
         NotificationCenter.default.post(
             name: .DidOpenWithWidgetDeepLink,
             object: nil,
             userInfo: [WidgetDeepLinkMacIdKey.macId: macId]
         )
+        DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
+            guard let topViewController = UIApplication.shared.topViewController()
+            else {
+                return
+            }
+            sSelf.router
+                .openSensorCard(
+                    with: macId,
+                    settings: sSelf.settings,
+                    from: topViewController
+                )
+        }
     }
 }
 
